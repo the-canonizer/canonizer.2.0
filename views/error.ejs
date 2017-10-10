@@ -1,0 +1,6 @@
+@html.extend('layout',function(model){
+	@html.block('body',function(model){
+    <p>@model.status</p>
+    <pre>@model.stack</pre>
+  })
+})
