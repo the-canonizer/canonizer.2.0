@@ -55,8 +55,18 @@
                         </form>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            <i class="fa fa-fw fa-user"></i>Register or Sign in</a>
+                        <i class="fa fa-fw fa-user"></i>
+                        @if(Auth::check())
+                        <div class="dropdown">
+                            <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown">{{ Auth::user()->first_name . ' ' . Auth::user()->last_name}} </a>
+                            <span class="caret"></span></button>
+                            <ul class="dropdown-menu">
+                                <li><a href="javascript:void(0)">Accoun Settings</a></li>
+                                <li><a href="{{ url('/logout')}}">Logout</a></li>
+                            </ul>                        @else
+                            <a class="nav-link" href="{{ url('/register')}}"> Register </a> <a href="{{ url('/login')}}"> or Sign in</a>
+                            @endif
+                        </div>
                     </li>
                 </ul>
                 <ul class="navbar-nav navbar-sidenav" id="exampleAccordion">
