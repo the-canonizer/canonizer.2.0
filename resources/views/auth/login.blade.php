@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
 <div class="page-titlePnl">
-    <h1 class="page-title">Create Account</h1>
+    <h1 class="page-title">Login</h1>
 </div>       	
 <div class="right-whitePnl">
     <form action="{{ url('/login')}}" method="post">
