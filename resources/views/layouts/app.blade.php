@@ -54,19 +54,21 @@
                             </div>
                         </form>
                     </li>
-                    <li class="nav-item">
-                        <i class="fa fa-fw fa-user"></i>
+                    <li class="nav-item dropdown_li">
                         @if(Auth::check())
                         <div class="dropdown">
-                            <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown">{{ Auth::user()->first_name . ' ' . Auth::user()->last_name}} </a>
-                            <span class="caret"></span></button>
+                            <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-fw fa-user"></i> {{ Auth::user()->first_name . ' ' . Auth::user()->last_name}} </a>
+                            <span class="caret"></span>
                             <ul class="dropdown-menu">
-                                <li><a href="javascript:void(0)">Accoun Settings</a></li>
+                                <li><a href="javascript:void(0)">Account Settings</a></li>
                                 <li><a href="{{ url('/logout')}}">Logout</a></li>
-                            </ul>                        @else
-                            <a class="nav-link" href="{{ url('/register')}}"> Register </a> <a href="{{ url('/login')}}"> or Sign in</a>
-                            @endif
+                            </ul>                        
+
                         </div>
+                        @else
+                        <a class="nav-link" href="{{ url('/login')}}"><i class="fa fa-fw fa-user"></i> Log in</a>
+                        <a class="nav-link" href="{{ url('/register')}}"><i class="fa fa-fw fa-user"></i> Register </a>
+                        @endif
                     </li>
                 </ul>
                 <ul class="navbar-nav navbar-sidenav" id="exampleAccordion">

@@ -564,6 +564,48 @@ h1.page-title{
     background: -moz-linear-gradient(right, #ffefd2 , #eeeff3); /* For Firefox 3.6 to 15 */
     background: linear-gradient(to right, #ffefd2 , #eeeff3); /* Standard syntax */
 }
+.search-box .nav-item .nav-link{
+    display:inline-block;
+        color: #000;
+    font-size: 14px;
+    width:auto;
+}
+.search-box .nav-item .nav-link:hover{
+    color: #0100ff;
+}
+.search-box .dropdown_li i.fa-user{
+    float:left;
+    margin-right:5px;
+    margin-top: 3px;
+}
+.search-box .dropdown_li a{
+    float:left;
+    max-width: 150px;
+    overflow:hidden;
+    white-space: nowrap;
+    text-overflow:ellipsis;
+    color:#000;
+    padding: 5px;
+}
+.search-box .dropdown_li .dropdown-menu {
+    margin-top:30px;
+    padding: 0px;
+    right: 0px;
+    left: auto;
+}
+.search-box .dropdown_li ul li a{
+    width: 100%;
+    padding: 5px 15px;
+    font-size: 14px;
+    background-color: #f9f9f9;
+    border-bottom: 1px solid #fff;
+    border-radius: 3px;
+    max-width:initial;
+}
+.search-box .dropdown_li ul li a:hover{
+    background-color: #fff;
+    color: #0100ff;
+}
 @media (min-width: 1200px) {
 .card-columns {
 	column-count: 2;
@@ -750,4 +792,13 @@ body.sidenav-toggled .right-whitePnl {
 .card-columns {
 	column-count: 1;
 }
+}
+.help-block{
+    color: red;
+    font-size: 13px;
+}
+.remember-me{
+    float:left;
+    width:25px;
+    margin-top: 5px;
 }

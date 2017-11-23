@@ -54,19 +54,21 @@
                             </div>
                         </form>
                     </li>
-                    <li class="nav-item">
-                        <i class="fa fa-fw fa-user"></i>
+                    <li class="nav-item dropdown_li">
                         <?php if(Auth::check()): ?>
                         <div class="dropdown">
-                            <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown"><?php echo e(Auth::user()->first_name . ' ' . Auth::user()->last_name); ?> </a>
-                            <span class="caret"></span></button>
+                            <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-fw fa-user"></i> <?php echo e(Auth::user()->first_name . ' ' . Auth::user()->last_name); ?> </a>
+                            <span class="caret"></span>
                             <ul class="dropdown-menu">
-                                <li><a href="javascript:void(0)">Accoun Settings</a></li>
+                                <li><a href="javascript:void(0)">Account Settings</a></li>
                                 <li><a href="<?php echo e(url('/logout')); ?>">Logout</a></li>
-                            </ul>                        <?php else: ?>
-                            <a class="nav-link" href="<?php echo e(url('/register')); ?>"> Register </a> <a href="<?php echo e(url('/login')); ?>"> or Sign in</a>
-                            <?php endif; ?>
+                            </ul>                        
+
                         </div>
+                        <?php else: ?>
+                        <a class="nav-link" href="<?php echo e(url('/login')); ?>"><i class="fa fa-fw fa-user"></i> Log in</a>
+                        <a class="nav-link" href="<?php echo e(url('/register')); ?>"><i class="fa fa-fw fa-user"></i> Register </a>
+                        <?php endif; ?>
                     </li>
                 </ul>
                 <ul class="navbar-nav navbar-sidenav" id="exampleAccordion">

@@ -3618,6 +3618,7 @@ class ComposerStaticInit1b77c477e22c379d0a7eedb7e2efafec
         'TijsVerkoyen\\CssToInlineStyles\\Css\\Property\\Property' => __DIR__ . '/..' . '/tijsverkoyen/css-to-inline-styles/src/Css/Property/Property.php',
         'TijsVerkoyen\\CssToInlineStyles\\Css\\Rule\\Processor' => __DIR__ . '/..' . '/tijsverkoyen/css-to-inline-styles/src/Css/Rule/Processor.php',
         'TijsVerkoyen\\CssToInlineStyles\\Css\\Rule\\Rule' => __DIR__ . '/..' . '/tijsverkoyen/css-to-inline-styles/src/Css/Rule/Rule.php',
+        'UpdatePersonTableAddColumn' => __DIR__ . '/../..' . '/database/migrations/2017_11_23_112118_update_person_table_add_column.php',
         'UpdatePersonTableForCid' => __DIR__ . '/../..' . '/database/migrations/2017_11_21_133956_update_person_table_for_cid.php',
         'UpdatePersonTableSchema' => __DIR__ . '/../..' . '/database/migrations/2017_11_21_134021_update_person_table_schema.php',
         'Webmozart\\Assert\\Assert' => __DIR__ . '/..' . '/webmozart/assert/src/Assert.php',
