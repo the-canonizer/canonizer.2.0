@@ -11,12 +11,15 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', 'HomeController@index');
 
 Route::get('register','Auth\RegisterController@showRegistrationForm');
 Route::post('register','Auth\RegisterController@register');
 Route::get('logout','Auth\LoginController@logout');
 Route::get('login','Auth\LoginController@showLoginForm');
 Route::post('login','Auth\LoginController@login');
+Route::get('forgetpassword','Auth\ForgotPasswordController@showLinkRequestForm');
+Route::post('forgetpassword','Auth\ForgotPasswordController@sendResetLinkEmail');
+Route::get('resetlinksent','Auth\ForgotPasswordController@resetLinkSent');
+Route::get('resetpassword/{token}','Auth\ResetPasswordController@showResetForm');
+Route::post('reset','Auth\ResetPasswordController@reset');
