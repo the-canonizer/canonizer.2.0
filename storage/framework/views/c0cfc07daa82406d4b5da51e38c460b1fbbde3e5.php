@@ -25,7 +25,7 @@
         <?php $__env->startSection('sidebar'); ?>
         <nav class="navbar navbar-expand-lg" id="mainNav">
             <a class="navbar-brand" href="<?php echo e(url('/')); ?>">
-                <img src="img/logo.png">
+                <img src="<?php echo e(url('/img/logo.png')); ?>">
             </a>
             <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -74,7 +74,7 @@
                 <ul class="navbar-nav navbar-sidenav" id="exampleAccordion">
                     <ul class="uppermenu">
                         <li class="nav-item">
-                            <a class="nav-link" href="#">
+                            <a class="nav-link" href="<?php echo e(url('/')); ?>">
                                 <span class="nav-link-text">Canonizer Main</span>
                             </a>
                         </li>
@@ -89,7 +89,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">
+                            <a class="nav-link" href="<?php echo e(url('/topic/create')); ?>">
                                 <span class="nav-link-text">Create New Topic</span>
                             </a>
                         </li>
