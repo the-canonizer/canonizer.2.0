@@ -4,6 +4,7 @@
     <h1 class="page-title">Login</h1>
 </div>       	
 <div class="right-whitePnl">
+<div class="col-sm-5 margin-btm-2">
     <form action="{{ url('/login')}}" method="post">
         <input type="hidden" name="_token" value="{{ csrf_token() }}">
         <div class="form-group">
@@ -21,13 +22,10 @@
 
         <div class="form-group">            
             <input type="checkbox" name="remember" class="form-control remember-me" id="remember"> Remember Me
+            <a href='{{ url('/forgetpassword') }}' class="pull-right">Forget Password </a>
         </div>
-        <div class="form-group">   
-            <a href='{{ url('/forgetpassword') }}'>Forget Password </a>
-        </div>
-
-        <a href="{{ url('/')}}" class="btn btn-default" />
-        <button type="submit" class="btn btn-prijmary">Submit</button>
+        <button type="submit" class="btn btn-login">Log in</button>
     </form>
+ </div>   
 </div>  <!-- /.right-whitePnl-->
 @endsection
