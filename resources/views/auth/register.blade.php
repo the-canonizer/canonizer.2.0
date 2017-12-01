@@ -4,6 +4,7 @@
     <h1 class="page-title">Create Account</h1>
 </div>       	
 <div class="right-whitePnl">
+<div class="col-sm-5 margin-btm-2">
     <form action="{{ url('/register')}}" method="post">
         <input type="hidden" name="_token" value="{{ csrf_token() }}">
         <div class="form-group">
@@ -40,10 +41,8 @@
             <input type="password" name="password_confirmation" class="form-control" id="pwd_confirm">
             
         </div>
-<!--        <div class="checkbox">
-            <label><input type="checkbox"> Remember me</label>
-        </div>-->
-        <button type="submit" class="btn btn-default">Submit</button>
+        <button type="submit" class="btn btn-login">Create your account</button>
     </form>
+</div>    
 </div>  <!-- /.right-whitePnl-->
 @endsection
