@@ -17,6 +17,12 @@
         <link href="<?php echo e(URL::asset('/font-awesome/css/font-awesome.min.css')); ?>" rel="stylesheet" type="text/css">
         <!-- Custom styles for this template-->
         <link href="<?php echo e(URL::asset('/css/canonizer.css')); ?>" rel="stylesheet">
+        
+        <!-- jquery  -->
+        <script src="<?php echo e(URL::asset('/js/jquery.min.js')); ?>"></script>
+        <script src="<?php echo e(URL::asset('/js/jquery.min.js')); ?>"></script>
+        <script src="<?php echo e(URL::asset('/js/jquery-ui/jquery-ui.js')); ?>"></script>
+        <link href="<?php echo e(URL::asset('/js/jquery-ui/jquery-ui.css')); ?>" rel="stylesheet" type="text/css">
 
 
     </head>
@@ -67,7 +73,7 @@
                         </div>
                         <?php else: ?>
                         <a class="nav-link" href="<?php echo e(url('/login')); ?>"><i class="fa fa-fw fa-user"></i> Log in</a>
-                        <a class="nav-link" href="<?php echo e(url('/register')); ?>"><i class="fa fa-fw fa-user"></i> Register </a>
+                        <a class="nav-link" href="<?php echo e(url('/register')); ?>"><i class="fa fa-fw fa-user-plus"></i> Register </a>
                         <?php endif; ?>
                     </li>
                 </ul>

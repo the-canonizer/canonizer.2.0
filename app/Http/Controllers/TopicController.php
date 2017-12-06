@@ -2,17 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Foundation\Auth\RedirectsUsers;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
+use App\Model\Topic;
+use DB;
 
-class TopicController extends Controller
-{
+class TopicController extends Controller {
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
+    public function index() {
         //
     }
 
@@ -21,8 +25,7 @@ class TopicController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
+    public function create() {
         return view('topics.create');
     }
 
@@ -32,9 +35,29 @@ class TopicController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-        //
+    public function store(Request $request) {
+        $all = $request->all();
+        DB::beginTransaction();
+
+        try {
+            $topic = new Topic();
+            $topic->topic_name = $all['topic_name'];
+            $topic->namespace = $all['namespace'];
+            $topic->submit_time = time();
+            $topic->submitter = Auth::user()->id;
+            $topic->go_live_time = strtotime($all['go_live_time']);
+            $topic->language = $all['language'];
+            $topic->note = $all['note'];
+            $topic->save();
+            DB::commit();
+
+            Session::flash('success', "Topic created successfully. Its under review, once approved it will be visible to all");
+        } catch (Exception $e) {
+            DB::rollback();
+            Session::flash('error', "Fail to create topic, please try later.");
+        }
+
+        return redirect()->back();
     }
 
     /**
@@ -43,8 +66,7 @@ class TopicController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
+    public function show($id) {
         //
     }
 
@@ -54,8 +76,7 @@ class TopicController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
-    {
+    public function edit($id) {
         //
     }
 
@@ -66,8 +87,7 @@ class TopicController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
-    {
+    public function update(Request $request, $id) {
         //
     }
 
@@ -77,8 +97,8 @@ class TopicController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
-    {
+    public function destroy($id) {
         //
     }
+
 }

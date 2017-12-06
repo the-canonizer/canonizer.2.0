@@ -2,34 +2,63 @@
 @section('content')
 <div class="page-titlePnl">
     <h1 class="page-title">Create Topic</h1>
-</div>       	
+</div> 
+
+@if(Session::has('error'))
+<div class="alert alert-danger">
+    <strong>Error!</strong>{{ Session::get('error')}}    
+</div>
+@endif
+
+@if(Session::has('success'))
+<div class="alert alert-success">
+    <strong>Success!</strong>{{ Session::get('success')}}    
+</div>
+@endif
+
+
 <div class="right-whitePnl">
-<div class="col-sm-6 margin-btm-2">
-    <form action="" method="post">
-        <div class="form-group">
-        	<label for="topic name">Topic Name </label>
-             <input type="text" name="" class="form-control" id="" value="">
-        </div>
-        <div class="form-group">
-            <label for="language">Language</label>
-            <select class="form-control">
-            	<option>English</option>
-                <option>French</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="Topic Number">Parent Topic</label>
-            <select class="form-control">
-            	<option>1</option>
-                <option>2</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="">Additional Note</label>
-            <textarea class="form-control" rows="4"></textarea>
-        </div>    
-        
-        <button type="submit" class="btn btn-login">Create Topic</button>
-    </form>
-</div>  <!-- /.right-whitePnl-->
-@endsection
+    <div class="col-sm-6 margin-btm-2">
+        <form action="{{ url('/topic')}}" method="post">
+            <input type="hidden" name="_token" value="{{ csrf_token() }}">
+            <div class="form-group">
+                <label for="topic name">Topic Name </label>
+                <input type="text" name="topic_name" class="form-control" id="" value="">
+            </div>            
+            <div class="form-group">
+                <label for="namespace">Name Space</label>
+                <input type="text" name="namespace" class="form-control" id="" value="">
+                <span class="note-label"><strong>Note</strong>: Name space is categorization of your topic, it can be something like: General,crypto_currency etc.</span>
+            </div>
+            <div class="form-group">
+                <label for="language">Language</label>
+                <select class="form-control" name="language">
+                    <option value="English">English</option>
+                    <option value="French">French</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="Topic Number">To Go Live Date</label>
+                <input type="text" name="go_live_time" value="" id="datepicker" class="form-control"/>
+            </div>
+            <div class="form-group">
+                <label for="">Additional Note</label>
+                <textarea class="form-control" rows="4" name="note"></textarea>
+            </div>    
+
+            <button type="submit" class="btn btn-login">Create Topic</button>
+        </form>
+    </div>  <!-- /.right-whitePnl-->
+
+    <script>
+        $(document).ready(function () {
+            $("#datepicker").datepicker({
+                changeMonth: true,
+                changeYear: true
+            });
+        })
+    </script>
+
+
+    @endsection
+

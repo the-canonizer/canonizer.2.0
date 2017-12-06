@@ -25,98 +25,24 @@
             <div class="content">
                 <div class="tree">
                     <ul class="mainouter">
-                                              
+                        @foreach($topics as $key=>$topic)
+                        <?php
+                        $camps = [];
+                        $camps = $topic->childrens($topic->topic_num, $topic->camp_num);
+                        ?>
                         <li>
-                            <span class="parent"><i class="fa fa-arrow-down"></i> Theories of Mind and Consciousness <div class="badge">48.25</div></span>
+                            <span class="{{ (count($camps) > 0) ? 'parent' : '' }}"><i class="{{ (count($camps) > 0) ? 'fa fa-arrow-down' : ''}}"></i> {{ $topic->title}} <div class="badge">48.25</div></span>
+                            @if(count($camps) > 0)
                             <ul>
-                                <li>
-                                    <span><i class="fa fa-arrow-down"></i> Approachable Via Science <div class="badge">44</div></span> 
-                                    <ul>
-                                        <li>
-                                            <span><i class="fa fa-arrow-down"></i> Representational Qualia Theory <div class="badge">34.5</div></span> 
-                                            <ul>
-                                                <li>
-                                                    <span><i class="fa fa-arrow-down"></i> Dualism <div class="badge">23.5</div></span>
-                                                    <ul>
-                                                        <li>
-                                                            <span><i class="fa fa-arrow-down"></i> Property Dualism <div class="badge">17.5</div></span> 
-                                                            <ul>
-                                                                <li>
-                                                                    <span><i class="fa fa-arrow-down"></i> Mind-Brain Identity Theory <div class="badge">10.5</div></span>
-                                                                    <ul>
-                                                                        <li>
-                                                                            <span><i class="fa fa-arrow-down"></i> Functional Property Dualism <div class="badge">10.5</div></span>
-                                                                            <ul>
-                                                                                <li>
-                                                                                    <span><i class="fa fa-arrow-down"></i> Computational Functionalism <div class="badge">2</div></span>
-                                                                                    <ul>
-                                                                                        <li>
-                                                                                            <span>Quasi-functionalism <div class="badge">1</div></span> 
-                                                                                        </li>
-                                                                                    </ul> 
-                                                                                </li>
+                                @foreach($camps as $camp)  
+                               
+                                   @include('partials.child_camps',$camp)
 
-                                                                                <li>
-                                                                                    <span>Hierarchical Systems Theory <div class="badge">1</div></span> 
-                                                                                </li>
-                                                                            </ul> 
-
-                                                                        </li>
-                                                                    </ul> 
-                                                                </li>
-                                                                <li>
-                                                                    <span><i class="fa fa-arrow-down"></i> Material Property Dualism <div class="badge">4.5</div></span>
-                                                                    <ul>
-                                                                        <li>
-                                                                            <span>Penrose-Hameroff Orchestrated Objective Reduction(Orch OR) theory <div class="badge">2.5</div></span>
-                                                                        </li>
-                                                                        <li>
-                                                                            <span>Macro Material Property Dualism <div class="badge">1</div></span> 
-                                                                        </li>
-                                                                    </ul>                                                                        </li>
-                                                            </ul>
-                                                        </li>
-                                                    </ul> 
-                                                </li>
-                                            </ul>
-                                        </li>
-                                    </ul>
-                                </li>
+                                @endforeach
                             </ul>
+                            @endif
                         </li>
-                        <li>
-                            <span class="parent"><i class="fa fa-arrow-down"></i> What is God ? <div class="badge">17.5</div></span> 
-                            <ul>
-                                <li>
-                                    <span>Approachable Via Science</span> 
-                                </li>
-                            </ul>        
-                        </li>
-                        <li>
-                            <span class="parent"><i class="fa fa-arrow-down"></i> The Hard Problem of Consciousness <div class="badge">17.5</div></span>
-                            <ul>
-                                <li>
-                                    <span>Approachable Via Science</span> 
-                                </li>
-                            </ul>  
-                        </li>
-                        <li>
-                            <span class="parent"><i class="fa fa-arrow-down"></i> Religious Preference <div class="badge">17.5</div></span> 
-                            <ul>
-                                <li>
-                                    <span>Approachable Via Science</span> 
-                                </li>
-                            </ul> 
-                        </li>
-                        <li>
-                            <span class="parent"><i class="fa fa-arrow-right"></i> Right to Use Technology to Improve Ourselves? 
-                                <div class="badge">17.5</div></span>
-                            <ul>
-                                <li>
-                                    <span> Approachable Via Science</span> 
-                                </li>
-                            </ul>  
-                        </li>
+                        @endforeach
                     </ul>
                 </div>
 

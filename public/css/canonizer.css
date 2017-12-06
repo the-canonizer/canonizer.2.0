@@ -823,3 +823,7 @@ body.sidenav-toggled .right-whitePnl {
 .margin-btm-2{
 	margin-bottom:2rem;
 }
+.note-label{
+    font-size: 13px;
+    color: #112cea;
+}

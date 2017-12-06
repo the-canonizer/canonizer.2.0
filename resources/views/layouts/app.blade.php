@@ -17,6 +17,12 @@
         <link href="{{ URL::asset('/font-awesome/css/font-awesome.min.css') }}" rel="stylesheet" type="text/css">
         <!-- Custom styles for this template-->
         <link href="{{ URL::asset('/css/canonizer.css') }}" rel="stylesheet">
+        
+        <!-- jquery  -->
+        <script src="{{ URL::asset('/js/jquery.min.js') }}"></script>
+        <script src="{{ URL::asset('/js/jquery.min.js') }}"></script>
+        <script src="{{ URL::asset('/js/jquery-ui/jquery-ui.js') }}"></script>
+        <link href="{{ URL::asset('/js/jquery-ui/jquery-ui.css') }}" rel="stylesheet" type="text/css">
 
 
     </head>
