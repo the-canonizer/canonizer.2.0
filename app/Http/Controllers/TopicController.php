@@ -7,9 +7,16 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
 use App\Model\Topic;
+use App\Model\Camp;
 use DB;
+use Validator;
 
 class TopicController extends Controller {
+    
+    public function __construct()
+    {
+        //$this->middleware('auth'); //->except('logout');
+    }
 
     /**
      * Display a listing of the resource.
@@ -99,6 +106,47 @@ class TopicController extends Controller {
      */
     public function destroy($id) {
         //
+    }
+    
+    public function create_camp(Request $request, $topicnum,$campnum){
+        $topic = Camp::where('topic_num',$topicnum)->where('camp_name','=','Agreement')->groupBy('topic_num')->orderBy('submit_time', 'desc')->first();
+        $camp = Camp::where('topic_num',$topicnum)->where('camp_num','=', $campnum)->groupBy('camp_num')->orderBy('submit_time', 'desc')->first();
+        $campWithParents = Camp::campNameWithAncestors($camp,'');
+        $nickNames  = DB::table('nick_name')->select('nick_name_id','nick_name')->get();
+        
+        return view('topics.camp_create',  ['topic'=>$topic,'parentcampnum'=>$campnum,'parentcamp'=>$campWithParents,'nickNames'=>$nickNames]);
+    }
+    
+    public function store_camp(Request $request){
+        $all = $request->all();
+        $validator = Validator::make($request->all(), [
+            'nick_name'=>'required',
+            'camp_name' => 'required',
+            'title'=>'required',
+            'go_live_time'=>'required',
+            'note'=>'required',
+        ]);
+        if ($validator->fails()) {
+            return back()->withErrors($validator->errors())->withInput($request->all());
+        }
+        
+        
+        $camp = new Camp();
+        $camp->topic_num = $all['topic_num'];
+        $camp->parent_camp_num = $all['parent_camp_num'];
+        $camp->title = $all['title'];
+        $camp->camp_name = $all['camp_name'];
+        $camp->go_live_time = strtotime($all['go_live_time']);
+        $camp->language = $all['language'];
+        $camp->nick_name_id = $all['nick_name'];
+        $camp->note = $all['note'];
+        
+        $camp->save();
+        
+        return redirect()->route('home')->with(['success'=>'Camp Created Successfully.']);
+        
+        
+        
     }
 
 }

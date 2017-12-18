@@ -1,4 +1,16 @@
 <?php $__env->startSection('content'); ?>
+<?php if(Session::has('error')): ?>
+<div class="alert alert-danger">
+    <strong>Error!</strong><?php echo e(Session::get('error')); ?>    
+</div>
+<?php endif; ?>
+
+<?php if(Session::has('success')): ?>
+<div class="alert alert-success">
+    <strong>Success!</strong><?php echo e(Session::get('success')); ?>    
+</div>
+<?php endif; ?>
+
 <div class="page-titlePnl">
     <h1 class="page-title">Canonizer Main Page</h1>
     <small>( This is a free open source prototype being developed by volunteers. <br>
@@ -24,24 +36,24 @@
             <div class="content">
                 <div class="tree">
                     <ul class="mainouter">
-                        <?php $__currentLoopData = $topics; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key=>$topic): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                        <?php
-                        $camps = [];
-                        $camps = $topic->childrens($topic->topic_num, $topic->camp_num);
-                        ?>
-                        <li>
-                            <span class="<?php echo e((count($camps) > 0) ? 'parent' : ''); ?>"><i class="<?php echo e((count($camps) > 0) ? 'fa fa-arrow-down' : ''); ?>"></i> <?php echo e($topic->title); ?> <div class="badge">48.25</div></span>
-                            <?php if(count($camps) > 0): ?>
-                            <ul>
-                                <?php $__currentLoopData = $camps; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $camp): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>  
-                               
-                                   <?php echo $__env->make('partials.child_camps',$camp, array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-
-                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                            </ul>
-                            <?php endif; ?>
-                        </li>
-                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                        
+                       <?php $__currentLoopData = $topics; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $k=>$topic): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                         <?php
+                            $childs = [];
+                            $childs = $topic->childrens($topic->topic_num,$topic->camp_num);
+                         
+                         ?>
+                          <li>
+                              <span class="<?php echo e((count($childs) > 0) ? 'parent' : ''); ?>"><i class="fa fa-arrow-right"></i> <?php echo e($topic->title); ?> <div class="badge">48.25</div></span>
+                              <ul>
+                                  <li><span><a href="<?php echo e(route('camp.create',['topicnum'=>$topic->topic_num,'campnum'=>$topic->camp_num])); ?>">Create A New Camp </a></span></li>
+                                  <?php if(count($childs) > 0): ?>
+                                    <?php echo $__env->make('partials.child_camps',['childs'=>$childs], array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+                                  <?php endif; ?>
+                              </ul>
+                              
+                          </li>
+                       <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </ul>
                 </div>
 

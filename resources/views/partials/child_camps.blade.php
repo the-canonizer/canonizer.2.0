@@ -1,17 +1,13 @@
-<?php
-$childcamps = [];
-$childcamps = $camp->childrens($camp->topic_num, $camp->camp_num);
-?>
-
-<li>  
-    <span class="{{ (count($childcamps) > 0) ? 'parent' : '' }}"><i class="{{ (count($childcamps) > 0) ? 'fa fa-arrow-down' : 'fa fa-arrow-right'}}"></i> {{ $camp->title}} <div class="badge">44</div></span>
-    @if(count($childcamps) > 0)                                    
-    <ul>
-        @foreach($childcamps as $camp)
-
-        
-        @endforeach
-
-    </ul>
-    @endif
-</li>
+ 
+    @foreach($childs as $child)    
+    <li>        
+        <span class="{{ (count($child->childrens($child->topic_num,$child->camp_num)) > 0) ? 'parent' : '' }}"><i class="fa fa-arrow-down"></i> {{ $child->title}} <div class="badge">48.25</div></span>
+        <ul>
+            <li><span><a href="{{ route('camp.create',['topicnum'=>$child->topic_num,'campnum'=>$child->camp_num])}}">Create A New Camp</a></span></li>
+            @if(count($child->childrens($child->topic_num,$child->camp_num)) > 0)
+           
+            @endif
+        </ul>
+       
+    </li>
+    @endforeach

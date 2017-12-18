@@ -1,17 +1,5 @@
 @extends('layouts.app')
 @section('content')
-@if(Session::has('error'))
-<div class="alert alert-danger">
-    <strong>Error!</strong>{{ Session::get('error')}}    
-</div>
-@endif
-
-@if(Session::has('success'))
-<div class="alert alert-success">
-    <strong>Success!</strong>{{ Session::get('success')}}    
-</div>
-@endif
-
 <div class="page-titlePnl">
     <h1 class="page-title">Canonizer Main Page</h1>
     <small>( This is a free open source prototype being developed by volunteers. <br>
@@ -37,24 +25,24 @@
             <div class="content">
                 <div class="tree">
                     <ul class="mainouter">
-                        
-                       @foreach($topics as $k=>$topic)
-                         <?php
-                            $childs = [];
-                            $childs = $topic->childrens($topic->topic_num,$topic->camp_num);
-                         
-                         ?>
-                          <li>
-                              <span class="{{ (count($childs) > 0) ? 'parent' : '' }}"><i class="fa fa-arrow-right"></i> {{ $topic->title}} <div class="badge">48.25</div></span>
-                              <ul>
-                                  <li><span><a href="{{ route('camp.create',['topicnum'=>$topic->topic_num,'campnum'=>$topic->camp_num])}}">Create A New Camp </a></span></li>
-                                  @if(count($childs) > 0)
-                                    @include('partials.child_camps',['childs'=>$childs])
-                                  @endif
-                              </ul>
-                              
-                          </li>
-                       @endforeach
+                        @foreach($topics as $key=>$topic)
+                        <?php
+                        $camps = [];
+                        $camps = $topic->childrens($topic->topic_num, $topic->camp_num);
+                        ?>
+                        <li>
+                            <span class="{{ (count($camps) > 0) ? 'parent' : '' }}"><i class="{{ (count($camps) > 0) ? 'fa fa-arrow-down' : ''}}"></i> {{ $topic->title}} <div class="badge">48.25</div></span>
+                            @if(count($camps) > 0)
+                            <ul>
+                                @foreach($camps as $camp)  
+                               
+                                   @include('partials.child_camps',$camp)
+
+                                @endforeach
+                            </ul>
+                            @endif
+                        </li>
+                        @endforeach
                     </ul>
                 </div>
 
