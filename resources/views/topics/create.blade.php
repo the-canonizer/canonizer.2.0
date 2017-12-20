@@ -50,6 +50,8 @@
         </form>
     </div>  <!-- /.right-whitePnl-->
 
+    @include('partials.advertisement')
+
     <script>
         $(document).ready(function () {
             $("#datepicker").datepicker({

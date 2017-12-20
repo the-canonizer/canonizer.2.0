@@ -74,7 +74,12 @@
 
             <button type="submit" class="btn btn-login">Create Camp</button>
         </form>
+</div>
+<div class="col-sm-2">
+    @include('partials.advertisement')
+    </div>
     </div>  <!-- /.right-whitePnl-->
+    
 
     <script>
         $(document).ready(function () {

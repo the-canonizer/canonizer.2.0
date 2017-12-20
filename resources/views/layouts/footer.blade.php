@@ -5,6 +5,7 @@
             <div class="col-sm-12 text-center">
                 <small>Copyright owned by the volunteers contributing to the system and its contents (2006 - {{ date('Y')}})</small>
                 <small>Comments and Questions: support@canonizer.com</small>
+                <small>Version - Canonizer 2.0</small>
             </div>
         </div>
     </div>

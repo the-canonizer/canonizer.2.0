@@ -22,9 +22,12 @@
         <div class="Gcolor-Pnl">
             <h3>Canonizer Information</h3>
             <div class="content">
-                <p>Canonizer.com is a consensus building system enabling people to build consensus where none has been possible before. It is a wiki system that solves the critical problems suffered by Wikipedia. It solves edit wars by providing contributors the ability to create and join camps and it provides a measure of information reliability by providing relative measures of expert consensus. Unlike other information sources, such as peer reviewed documents, where there is far too much information for any individual to fully comprehend (We just blew past 20K documents in the field of consciousness) this open survey system provides real time concise and quantitative descriptions of the current and emerging leading theories. Theories that have been falsified by new scientific evidence are being instantly measured to the degree experts are abandoning those theories for newer better ones. The non repetitive, continually ratcheting up process significantly accelerates and amplifies the education and wisdom of the entire crowd.</p>
-
-                <p>Many people jump to the false conclusion that the Goal of Canonizer.com is to measure 'truth' via popular consensus. In fact, the goal is just the opposite. Crowds tend to behave in ignorant herding behavior, not unlike sheep. Various 'camps' and religions have a strong desire and interest in anything that promotes what they believe. They are highly motivated to dismiss or ignore anything that goes against their beliefs. The goal of Canonizer.com is to enable the crowd more rapidly recognize when this is happening, making it easier for them to measure for the quality of a good new theory they may want to pay attention to, even if it is counter to their currently preferred beliefs. The bottom line being our goal is not to measure truth via popularity, but to enable emerging minority theories to be more rapidly herd above any such biased bleating of any herd.</p>
+                <p>
+                Canonizer.com enables people to build consensus where none has been previously possible. However, Canonizer.com is not meant to measure 'truth' via popular consensus. The overall goal measures both popular and expert consensus, but also assesses new ideas. The reason for including both consensus and new ideas has to do with predictable patterns in the way science progresses. Crowds tend to engage in "herding behavior", looking for approval before expressing a possibly unpopular opinion. Even scientists are highly motivated to dismiss or ignore anything that goes against their beliefs, and the phenomenon of confirmation bias has been widely studied. Scientists may be strongly invested in the theories that they have built their careers upon, and may be loathed to give them up. Day-to-day, scientists work within established boundaries, within their own camps, comfortable with their theories, until those theories are proven wrong. The idea that science progresses under flashes of insight is entirely wrong. Science is a process of consensus building, with new ideas providing disruptions to the standard consensus. New ideas are typically considered to be false, wacky, and without merit. Many times they are, but over time, the best ideas among the radical fringe move their way into the center of what is accepted as truth. It takes time, and to paraphrase Max Plank, "science advances one funeral at a time". The goal of Canonizer.com is to accelerate this process.  It exposes biases, making it easier for the crowd to measure and consider the reliability of a new theory, even if it is counter to their currently preferred beliefs. Our goal is not to measure popularity, but to enable emerging minority theories to be more rapidly heard above any such biased bleating of any herd. 
+                </p>
+                <p>
+                Canonizer.com is a wiki system that solves the critical liabilities of Wikipedia. It solves petty "edit wars" by providing contributors the ability to create and join camps and present their views without having them immediately erased. It also provides ways to standardize definitions and vocabulary, especially important in new fields. It provides a measure of reliability by providing metrics on expert consensus. As the growth of human knowledge doubles every year, we will never see another Da Vinci. Even a narrow field like consciousness has over 20K documents. It is becoming impossible for experts to know their own field without narrowing it down. In this situation, it is inevitable to filter the deluge of information with our own prior biases. Unlike primary literature sources, with far too much information for any individual to fully comprehend, this open survey system provides real time concise and quantitative descriptions of current and emerging leading theories. Theories that have been falsified by new scientific evidence are constantly monitored, measuring the degree to which experts abandon old theories for better ones. The continuous non-repetitive ratchet of evidence significantly accelerates and amplifies the education and wisdom of the entire crowd.
+                </p>
             </div>
         </div>
         <div class="Lcolor-Pnl">
@@ -47,7 +50,7 @@
                           <li>
                               <span class="{{ (count($childs) > 0) ? 'parent' : '' }}"><i class="fa fa-arrow-right"></i> {{ $topic->title}} <div class="badge">48.25</div></span>
                               <ul>
-                                  <li><span><a href="{{ route('camp.create',['topicnum'=>$topic->topic_num,'campnum'=>$topic->camp_num])}}">Create A New Camp </a></span></li>
+                                  <li class="create-new-li"><span><a href="{{ route('camp.create',['topicnum'=>$topic->topic_num,'campnum'=>$topic->camp_num])}}">< Create A New Camp ></a></span></li>
                                   @if(count($childs) > 0)
                                     @include('partials.child_camps',['childs'=>$childs])
                                   @endif
@@ -56,9 +59,8 @@
                           </li>
                        @endforeach
                     </ul>
+                    @include('partials.advertisement')
                 </div>
-
-
             </div>
         </div>
     </div>
