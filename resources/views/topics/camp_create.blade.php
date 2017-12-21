@@ -25,6 +25,7 @@
 
 
 <div class="right-whitePnl">
+<div class="row col-sm-12 justify-content-between">
     <div class="col-sm-6 margin-btm-2">
         <form action="{{ route('camp.save')}}" method="post">
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
@@ -75,10 +76,11 @@
             <button type="submit" class="btn btn-login">Create Camp</button>
         </form>
 </div>
-<div class="col-sm-2">
+<div class="col-sm-2 text-right">
     @include('partials.advertisement')
-    </div>
-    </div>  <!-- /.right-whitePnl-->
+</div>
+</div>
+</div>  <!-- /.right-whitePnl-->
     
 
     <script>

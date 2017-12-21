@@ -14097,3 +14097,6 @@ Stack trace:
 #48 C:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(116): Illuminate\Foundation\Http\Kernel->sendRequestThroughRouter(Object(Illuminate\Http\Request))
 #49 C:\xampp\htdocs\canonizer.2.0\public\index.php(52): Illuminate\Foundation\Http\Kernel->handle(Object(Illuminate\Http\Request))
 #50 {main}  
+[2017-12-21 06:13:59] local.ERROR: Symfony\Component\Debug\Exception\FatalErrorException: Maximum execution time of 30 seconds exceeded in C:\xampp\htdocs\canonizer.2.0\vendor\doctrine\dbal\lib\Doctrine\DBAL\Driver\PDOStatement.php:105
+Stack trace:
+#0 {main}  

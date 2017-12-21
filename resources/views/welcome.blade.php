@@ -38,7 +38,8 @@
                 </select>
             </h3>
             <div class="content">
-                <div class="tree">
+            <div class="row">
+                <div class="tree col-sm-10">
                     <ul class="mainouter">
                         
                        @foreach($topics as $k=>$topic)
@@ -48,7 +49,7 @@
                          
                          ?>
                           <li>
-                              <span class="{{ (count($childs) > 0) ? 'parent' : '' }}"><i class="fa fa-arrow-right"></i> {{ $topic->title}} <div class="badge">48.25</div></span>
+                              <span class="{{ (count($childs) > 0) ? 'parent' : '' }}"><i class="fa fa-arrow-down"></i> {{ $topic->title}} <div class="badge">48.25</div></span>
                               <ul>
                                   <li class="create-new-li"><span><a href="{{ route('camp.create',['topicnum'=>$topic->topic_num,'campnum'=>$topic->camp_num])}}">< Create A New Camp ></a></span></li>
                                   @if(count($childs) > 0)
@@ -59,8 +60,12 @@
                           </li>
                        @endforeach
                     </ul>
-                    @include('partials.advertisement')
+                    
                 </div>
+                <div class="col-sm-2 text-right">
+                @include('partials.advertisement')
+                </div>
+            </div>    
             </div>
         </div>
     </div>
