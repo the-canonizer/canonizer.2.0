@@ -43,21 +43,18 @@
                     <ul class="mainouter">
                         
                        @foreach($topics as $k=>$topic)
+                       <li>
+                        
                          <?php
-                            $childs = [];
-                            $childs = $topic->childrens($topic->topic_num,$topic->camp_num);
-                         
-                         ?>
-                          <li>
-                              <span class="{{ (count($childs) > 0) ? 'parent' : '' }}"><i class="fa fa-arrow-down"></i> {{ $topic->title}} <div class="badge">48.25</div></span>
-                              <ul>
-                                  <li class="create-new-li"><span><a href="{{ route('camp.create',['topicnum'=>$topic->topic_num,'campnum'=>$topic->camp_num])}}">< Create A New Camp ></a></span></li>
-                                  @if(count($childs) > 0)
-                                    @include('partials.child_camps',['childs'=>$childs])
-                                  @endif
-                              </ul>
-                              
-                          </li>
+                         $childs = $topic->childrens($topic->topic_num,$topic->camp_num); ?>
+                         <span class="<?php if(count($childs) > 0) echo 'parent'; ?>"><i class="fa fa-arrow-right"></i> {{ $topic->title}} <div class="badge">48.25</div></span>
+                         <?php
+                        if(count($childs) > 0){
+                            echo $topic->champTree($topic->topic_num,$topic->camp_num);
+                        }else{
+                            echo '<li class="create-new-li"><span><a href="'.route('camp.create',['topicnum'=>$topic->topic_num,'campnum'=>$topic->camp_num]).'">< Create A New Camp ></a></span></li>';
+                        }?>
+                           </li>
                        @endforeach
                     </ul>
                     

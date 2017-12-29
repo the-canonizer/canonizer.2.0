@@ -27,7 +27,7 @@ class HomeController extends Controller {
         // Agreement is copy of topic
         $topics = Camp::where('camp_name', '=', 'Agreement')
                 ->groupBy('topic_num')
-                ->orderBy('submit_time', 'desc')
+                ->orderBy('id', 'desc')
                 ->get();
         
         

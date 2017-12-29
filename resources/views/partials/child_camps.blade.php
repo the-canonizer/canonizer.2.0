@@ -5,7 +5,7 @@
         <ul>
             <li class="create-new-li"><span><a href="{{ route('camp.create',['topicnum'=>$child->topic_num,'campnum'=>$child->camp_num])}}">< Create A New Camp ></a></span></li>
             @if(count($child->childrens($child->topic_num,$child->camp_num)) > 0)
-           
+                     @include('partials.child_camps',['childs'=>$child->childrens($child->topic_num,$child->camp_num)])
             @endif
         </ul>
        

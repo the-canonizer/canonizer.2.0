@@ -10,6 +10,8 @@ class Camp extends Model {
     protected $table = 'camp';
     public $timestamps = false;
 
+    protected static $tempArray = [];
+
     const AGREEMENT_CAMP = "Agreement";
 
     public static function boot() {
@@ -48,6 +50,32 @@ class Camp extends Model {
             return self::campNameWithAncestors($pcamp, $campname);
         }
         return $campname;
+    }
+
+    public function champTree($topicnum, $parentcamp,$lastparent=null){
+        
+        $key = $topicnum.'-'.$parentcamp.'-'.$lastparent;
+        if(in_array($key,Camp::$tempArray)){
+            return; /** Skip repeated recursions**/
+        }
+        Camp::$tempArray[]=$key;
+        $childs = $this->childrens($topicnum,$parentcamp);
+        $html= '<ul><li class="create-new-li"><span><a href="'.route('camp.create',['topicnum'=>$topicnum,'campnum'=>$parentcamp]).'">&lt;Create A New Camp &gt;</a></span></li>';
+        foreach($childs as $child){
+                $childCount  = count($child->childrens($child->topic_num,$child->camp_num));
+                $class= $childCount > 0  ? 'parent' : '';
+                $icon = '<i class="fa fa-arrow-right"></i>';
+                $html.='<li>';        
+                $html.='<span class="'.$class.'">'.$icon.$child->title.' &nbsp;<div class="badge">48.25</div></span>';
+                if($childCount > 0){
+                    $html.=$this->champTree($child->topic_num,$child->camp_num,$child->parent_camp_num);
+                }else{
+                    $html.='<ul><li class="create-new-li"><span><a href="'.route('camp.create',['topicnum'=>$child->topic_num,'campnum'=>$child->camp_num]).'">&lt; Create A New Camp &gt;</a></span></li></ul>';
+                }
+                $html.='</li>';
+        }
+        $html.= '</ul>';
+        return $html;
     }
 
 }
