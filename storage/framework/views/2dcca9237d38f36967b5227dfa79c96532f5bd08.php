@@ -37,29 +37,31 @@
                 </select>
             </h3>
             <div class="content">
-                <div class="tree">
+            <div class="row">
+                <div class="tree col-sm-10">
                     <ul class="mainouter">
                         
                        <?php $__currentLoopData = $topics; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $k=>$topic): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                       <li>
+                        
                          <?php
-                            $childs = [];
-                            $childs = $topic->childrens($topic->topic_num,$topic->camp_num);
-                         
-                         ?>
-                          <li>
-                              <span class="<?php echo e((count($childs) > 0) ? 'parent' : ''); ?>"><i class="fa fa-arrow-right"></i> <?php echo e($topic->title); ?> <div class="badge">48.25</div></span>
-                              <ul>
-                                  <li class="create-new-li"><span><a href="<?php echo e(route('camp.create',['topicnum'=>$topic->topic_num,'campnum'=>$topic->camp_num])); ?>">< Create A New Camp ></a></span></li>
-                                  <?php if(count($childs) > 0): ?>
-                                    <?php echo $__env->make('partials.child_camps',['childs'=>$childs], array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-                                  <?php endif; ?>
-                              </ul>
-                              
-                          </li>
+                         $childs = $topic->childrens($topic->topic_num,$topic->camp_num); ?>
+                         <span class="<?php if(count($childs) > 0) echo 'parent'; ?>"><i class="fa fa-arrow-right"></i> <?php echo e($topic->title); ?> <div class="badge">48.25</div></span>
+                         <?php
+                        if(count($childs) > 0){
+                            echo $topic->champTree($topic->topic_num,$topic->camp_num);
+                        }else{
+                            echo '<li class="create-new-li"><span><a href="'.route('camp.create',['topicnum'=>$topic->topic_num,'campnum'=>$topic->camp_num]).'">< Create A New Camp ></a></span></li>';
+                        }?>
+                           </li>
                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </ul>
-                    <?php echo $__env->make('partials.advertisement', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+                    
                 </div>
+                <div class="col-sm-2 text-right">
+                <?php echo $__env->make('partials.advertisement', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+                </div>
+            </div>    
             </div>
         </div>
     </div>

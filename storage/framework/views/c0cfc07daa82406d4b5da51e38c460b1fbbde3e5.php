@@ -66,7 +66,7 @@
                             <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-fw fa-user"></i> <?php echo e(Auth::user()->first_name . ' ' . Auth::user()->last_name); ?> </a>
                             <span class="caret"></span>
                             <ul class="dropdown-menu">
-                                <li><a href="javascript:void(0)">Account Settings</a></li>
+                                <li><a href="<?php echo e(route('settings')); ?>">Account Settings</a></li>
                                 <li><a href="<?php echo e(url('/logout')); ?>">Logout</a></li>
                             </ul>                        
 

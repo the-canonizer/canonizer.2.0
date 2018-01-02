@@ -13,9 +13,9 @@ class UpdateCampTableIdColumnSchema extends Migration
      */
     public function up()
     {
-        Schema::table('camp', function (Blueprint $table) {
+        /*Schema::table('camp', function (Blueprint $table) {
             $table->increments('id')->first();
-        });
+        });*/
     }
 
     /**

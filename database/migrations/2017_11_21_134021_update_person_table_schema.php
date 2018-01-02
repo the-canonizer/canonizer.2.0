@@ -13,14 +13,14 @@ class UpdatePersonTableSchema extends Migration
      */
     public function up()
     {
-        Schema::table('person', function (Blueprint $table) {
+        /*Schema::table('person', function (Blueprint $table) {
             $table->increments('id')->first();
             $table->string('address_1')->nullable()->change();
             $table->string('city')->nullable()->change();
             $table->string('state')->nullable()->change();
             $table->string('country')->nullable()->change();
             $table->string('postal_code')->nullable()->change();
-        });
+        });*/
     }
 
     /**

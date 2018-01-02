@@ -13,9 +13,9 @@ class UpdateTopicTableRenamePrimaryColumn extends Migration
      */
     public function up()
     {
-        Schema::table('topic', function (Blueprint $table) {
+        /*Schema::table('topic', function (Blueprint $table) {
              $table->dropColumn('record_id');
-        });
+        });*/
     }
 
     /**
