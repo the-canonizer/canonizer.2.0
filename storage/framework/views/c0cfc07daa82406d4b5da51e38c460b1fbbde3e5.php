@@ -169,6 +169,9 @@
 
         <div class="content-wrapper">
             <?php echo $__env->yieldContent('content'); ?>
+        <div class="homeADDright">
+			<?php echo $__env->make('partials.advertisement', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+		</div>    
             <!-- footer -->
             
 
@@ -178,7 +181,6 @@
             </a>
             <!-- Logout Modal-->
         </div>
-
     </div>
 </body>
 </html>

@@ -15454,6 +15454,7 @@ Stack trace:
 #49 /var/www/html/canonizer.2.0/public/index.php(53): Illuminate\Foundation\Http\Kernel->handle(Object(Illuminate\Http\Request))
 #50 /var/www/html/canonizer.2.0/server.php(21): require_once('/var/www/html/c...')
 #51 {main}  
+<<<<<<< HEAD
 [2017-12-29 06:18:03] local.ERROR: exception 'Exception' with message 'The bootstrap/cache directory must be present and writable.' in /var/www/html/canonizer/vendor/laravel/framework/src/Illuminate/Foundation/ProviderRepository.php:190
 Stack trace:
 #0 /var/www/html/canonizer/vendor/laravel/framework/src/Illuminate/Foundation/ProviderRepository.php(165): Illuminate\Foundation\ProviderRepository->writeManifest(Array)
@@ -16379,3 +16380,8 @@ Stack trace:
 #51 /var/www/html/canonizer/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(116): Illuminate\Foundation\Http\Kernel->sendRequestThroughRouter(Object(Illuminate\Http\Request))
 #52 /var/www/html/canonizer/public/index.php(53): Illuminate\Foundation\Http\Kernel->handle(Object(Illuminate\Http\Request))
 #53 {main}  
+=======
+[2018-01-02 08:14:08] local.ERROR: Symfony\Component\Debug\Exception\FatalErrorException: Maximum execution time of 30 seconds exceeded in C:\xampp\htdocs\canonizer.2.0\routes\web.php:14
+Stack trace:
+#0 {main}  
+>>>>>>> 5ebda6e33d7cb6e8813951dd5869d711dc188c24

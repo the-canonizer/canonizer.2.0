@@ -38,7 +38,7 @@
             </h3>
             <div class="content">
             <div class="row">
-                <div class="tree col-sm-10">
+                <div class="tree col-sm-12">
                     <ul class="mainouter">
                         
                        <?php $__currentLoopData = $topics; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $k=>$topic): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
@@ -58,9 +58,7 @@
                     </ul>
                     
                 </div>
-                <div class="col-sm-2 text-right">
-                <?php echo $__env->make('partials.advertisement', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-                </div>
+              
             </div>    
             </div>
         </div>

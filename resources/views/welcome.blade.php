@@ -39,7 +39,7 @@
             </h3>
             <div class="content">
             <div class="row">
-                <div class="tree col-sm-10">
+                <div class="tree col-sm-12">
                     <ul class="mainouter">
                         
                        @foreach($topics as $k=>$topic)
@@ -59,9 +59,7 @@
                     </ul>
                     
                 </div>
-                <div class="col-sm-2 text-right">
-                @include('partials.advertisement')
-                </div>
+              
             </div>    
             </div>
         </div>

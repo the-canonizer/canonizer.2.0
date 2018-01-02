@@ -4,7 +4,7 @@
             //120x600, right bar
             google_ad_slot = "5819006657";
             google_ad_width = 120;
-            google_ad_height = 500;
+            google_ad_height = 600;
             //-->
             </script>
             <script type="text/javascript"
