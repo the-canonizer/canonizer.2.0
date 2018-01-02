@@ -15454,3 +15454,6 @@ Stack trace:
 #49 /var/www/html/canonizer.2.0/public/index.php(53): Illuminate\Foundation\Http\Kernel->handle(Object(Illuminate\Http\Request))
 #50 /var/www/html/canonizer.2.0/server.php(21): require_once('/var/www/html/c...')
 #51 {main}  
+[2018-01-02 08:14:08] local.ERROR: Symfony\Component\Debug\Exception\FatalErrorException: Maximum execution time of 30 seconds exceeded in C:\xampp\htdocs\canonizer.2.0\routes\web.php:14
+Stack trace:
+#0 {main}  

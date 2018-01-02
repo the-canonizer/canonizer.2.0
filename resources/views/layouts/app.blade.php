@@ -169,6 +169,9 @@
 
         <div class="content-wrapper">
             @yield('content')
+        <div class="homeADDright">
+			@include('partials.advertisement')
+		</div>    
             <!-- footer -->
             @extends('layouts.footer')
 
@@ -178,7 +181,6 @@
             </a>
             <!-- Logout Modal-->
         </div>
-
     </div>
 </body>
 </html>
