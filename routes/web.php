@@ -37,5 +37,7 @@ Route::group([ 'middleware' => 'auth'], function()
    Route::get('camp/create/{topicnum}/{campnum}', [ 'as' => 'camp.create', 'uses' => 'TopicController@create_camp']);
    Route::post('camp/save', [ 'as' => 'camp.save', 'uses' => 'TopicController@store_camp']);
    Route::get('settings', [ 'as' => 'settings', 'uses' => 'SettingsController@index']);
-   Route::get('settings/profile/update', [ 'as' => 'settings.profile.update', 'uses' => 'SettingsController@profile_update']);
+   Route::post('settings/profile/update', [ 'as' => 'settings.profile.update', 'uses' => 'SettingsController@profile_update']);
+   Route::get('settings/nickname', [ 'as' => 'settings.nickname', 'uses' => 'SettingsController@nickname']);
+   Route::post('settings/nickname/add', [ 'as' => 'settings.nickname.add', 'uses' => 'SettingsController@add_nickname']);
 });
