@@ -886,7 +886,21 @@ ul.mainouter li .tp-title {
     border-radius: 15px;
     background: rgba(255, 255, 255, 0.8);
 }
-.Lcolor-Pnl .footer, .Gcolor-Pnl .footer {
+.Scolor-Pnl h3 {
+    padding: .75rem 1rem;
+    margin: 0px;
+    color: #000;
+    font-size: 20px;
+    font-weight: normal;
+    background: #d2d2e3;
+}
+.Scolor-Pnl .content {
+    background-color: #e5ebf0;
+    padding: .75rem 1rem;
+    font-size: 15px;
+    margin-bottom: 2rem;
+}
+.Scolor-Pnl .footer{
     width: 100%;
     margin-top: -2em;
     margin-bottom: 2em;
@@ -894,15 +908,26 @@ ul.mainouter li .tp-title {
     padding:0.5em;
     background-color: rgba(204, 204, 204, 0.5);
 }
-.Lcolor-Pnl .footer a.btn, .Lcolor-Pnl .footer a.btn:hover, .Gcolor-Pnl .footer a.btn, .Gcolor-Pnl .footer a.btn:hover {
+.Scolor-Pnl .footer a.btn, .Scolor-Pnl .footer a.btn:hover{
 	padding:4px 10px;
 	color:#fff;
+	font-size:13px;
 }
-.Lcolor-Pnl .footer .btn-warning, .Gcolor-Pnl .footer .btn-warning {
+.Scolor-Pnl .footer .btn-warning {
     background-color: #f68b00;
     border-color: #f68b00;
 }
-.Lcolor-Pnl .footer .btn-warning:hover, .Gcolor-Pnl .footer .btn-warning:hover{
+.Scolor-Pnl .footer .btn-warning:hover{
 	background-color:#f67d00;
 	border-color:#f67d00;
+}
+.Scolor-Pnl button.btn.btn-info {
+    padding: 2px 4px;
+    font-size: 10px;
+    line-height: 9px;
+    margin-top: -3px;
+    margin-left: 4px;
+    background-color: #3737f7;
+    border-color: #3737f7;
+    cursor: pointer;
 }
