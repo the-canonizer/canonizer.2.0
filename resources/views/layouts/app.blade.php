@@ -62,6 +62,7 @@
                     </li>
                     <li class="nav-item dropdown_li">
                         @if(Auth::check())
+						Browsing as:	
                         <div class="dropdown">
                             <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-fw fa-user"></i> {{ Auth::user()->first_name . ' ' . Auth::user()->last_name}} </a>
                             <span class="caret"></span>
@@ -72,6 +73,7 @@
 
                         </div>
                         @else
+						<a class="nav-link">Browsing as: Guest_31</a>	
                         <a class="nav-link" href="{{ url('/login')}}"><i class="fa fa-fw fa-user"></i> Log in</a>
                         <a class="nav-link" href="{{ url('/register')}}"><i class="fa fa-fw fa-user-plus"></i> Register </a>
                         @endif

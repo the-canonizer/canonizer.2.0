@@ -44,13 +44,24 @@
                         
                        @foreach($topics as $k=>$topic)
                        <li>
-                        
                          <?php
                          $childs = $topic->childrens($topic->topic_num,$topic->camp_num); ?>
-                         <span class="<?php if(count($childs) > 0) echo 'parent'; ?>"><i class="fa fa-arrow-right"></i> {{ $topic->title}} <div class="badge">48.25</div></span>
+                         <span class="<?php if(count($childs) > 0) echo 'parent'; ?>"><i class="fa fa-arrow-right"></i> 
+						 <?php 
+						  $title      = preg_replace('/[^A-Za-z0-9\-]/', '-', $topic->title);
+						  //$title     = preg_replace('/\s+/', '-', $topic->title); 
+						  $topic_id  = $topic->topic_num."-".$title;
+						 
+						 ?></span>
+                         <div class="tp-title">
+						 <a href="<?php echo url('topic/'.$topic_id.'/'.$topic->camp_num) ?>">
+						 {{ $topic->title}} 
+						 </a>
+						 <div class="badge">48.25</div></div>
+
                          <?php
                         if(count($childs) > 0){
-                            echo $topic->champTree($topic->topic_num,$topic->camp_num);
+                            echo $topic->campTree($topic->topic_num,$topic->camp_num);
                         }else{
                             echo '<li class="create-new-li"><span><a href="'.route('camp.create',['topicnum'=>$topic->topic_num,'campnum'=>$topic->camp_num]).'">< Create A New Camp ></a></span></li>';
                         }?>

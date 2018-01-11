@@ -11,38 +11,11 @@ class HomeController extends Controller {
 
     public function index() {
 
-        // $topics = Topic::all();
-//        $topics = Topic::with(['camps' => function($q){
-//                        // Query the name field in status table
-//                        $q->where('camp_num', '=', 1); // '=' is optional
-//                        $q->where(function($q1){
-//                             $q1->where('parent_camp_num' , '=','');
-//                             $q1->orWhere('parent_camp_num','=',0);
-//                             $q1->orWhere('parent_camp_num','=',null);
-//                         })->orderBy('submit_time', 'desc');
-//                    }])
-//                ->groupBy('topic_num')
-//                ->orderBy('submit_time', 'desc')
-//                ->get();
-        // Agreement is copy of topic
+      
         $topics = Camp::where('camp_name', '=', 'Agreement')
-                ->groupBy('topic_num')
-                ->orderBy('id', 'desc')
-                ->get();
+                ->orderBy('submit_time', 'desc')
+                ->get()->unique('topic_num');
         
-        
-//        foreach($topics as $k=>$topic){
-//            
-//            echo $topic->title . "<br/>";
-//            if(count($topic->childrens($topic->topic_num,$topic->camp_num))>0){
-//                $this->recusriveCampDisp($topic->childrens($topic->topic_num,$topic->camp_num));
-//            }
-//        }
-//        exit;
-        
-       
-       
-
         return view('welcome', ['topics' => $topics]);
     }
     

@@ -50,9 +50,6 @@
             <button type="submit" class="btn btn-login">Create Topic</button>
         </form>
     </div>
-    <div class="col-sm-2 text-right">
-    @include('partials.advertisement')
-    </div>
  </div>   
 </div>  <!-- /.right-whitePnl-->
 
