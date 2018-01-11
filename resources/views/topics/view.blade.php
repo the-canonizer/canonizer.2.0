@@ -19,7 +19,7 @@
 <div class="right-whitePnl">
     <div class="container-fluid">
         
-         <div class="Gcolor-Pnl">
+         <div class="Scolor-Pnl">
             <h3>Canonizer Sorted Camp Tree
             <a href="#" class="pull-right"><i class="fa fa-question"></i></a>
             </h3>
@@ -56,7 +56,7 @@
             </div>
         </div>
         
-        <div class="Lcolor-Pnl">
+        <div class="Scolor-Pnl">
             <h3><?php echo ($parentcamp=="Agreement") ? $parentcamp : "Camp"; ?> Statement
             </h3>
             <div class="content">
@@ -67,23 +67,30 @@
 					  echo (isset($statement->value)) ? $statement->value : "No statement available";
 					?>
 				</div>
-              
             </div>    
             </div>
             <div class="footer">
             	<a class="btn btn-success">Manage/Edit Camp Statement</a>
                 <a class="btn btn-warning">Topic Forum</a>
+                <a class="btn btn-danger">Camp Forum</a>
             </div>
         </div>
         
-        <div class="Gcolor-Pnl">
+        <div class="Scolor-Pnl">
             <h3>Support Tree for "<?php echo $topic->camp_name;?>" Camp
              <a href="#" class="pull-right"><i class="fa fa-question"></i></a>
             </h3>
             <div class="content">
             <div class="row">
                 <div class="tree col-sm-12">
-                    Total Support for This Camp (including sub-camps): 40.25
+                    Total Support for This Camp (including sub-camps): <div class="badge">40.25</div>
+                    <ul class="mainouter">
+                       <li>
+                       	<a href="#"><div class="badge">1</div> Apollo.is.dead </a> <button class="btn btn-info">Delegate Your Support</button>
+                       </li>
+                       <li>
+                       	<a href="#"><div class="badge">1</div> Damir</a> <button class="btn btn-info">Delegate Your Support</button>
+                       </li>
 				</div>
               
             </div>    
@@ -93,7 +100,7 @@
             </div>
         </div>
    
-        <div class="Lcolor-Pnl">
+        <div class="Scolor-Pnl">
             <h3>Current Topic Record:
             </h3>
             <div class="content">
@@ -110,7 +117,7 @@
             </div>
         </div>
    
-        <div class="Gcolor-Pnl">
+        <div class="Scolor-Pnl">
             <h3>Current Camp Record:
             </h3>
             <div class="content">

@@ -38,7 +38,7 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav search-box">
-                    <li class="nav-item">
+                    <li class="nav-item col-sm-7">
                         <form class="form-inline">
                             <div class="input-group search-panel">
                                 <div class="input-group-btn">
@@ -60,11 +60,10 @@
                             </div>
                         </form>
                     </li>
-                    <li class="nav-item dropdown_li">
+                    <li class="nav-item col-sm-5 text-right" style="padding-right:0px;">
                         @if(Auth::check())
-						Browsing as:	
-                        <div class="dropdown">
-                            <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-fw fa-user"></i> {{ Auth::user()->first_name . ' ' . Auth::user()->last_name}} </a>
+						<div class="dropdown">
+                            Browsing as: <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-fw fa-user"></i> {{ Auth::user()->first_name . ' ' . Auth::user()->last_name}} </a>
                             <span class="caret"></span>
                             <ul class="dropdown-menu">
                                 <li><a href="{{ route('settings')}}">Account Settings</a></li>
@@ -73,7 +72,13 @@
 
                         </div>
                         @else
-						<a class="nav-link">Browsing as: Guest_31</a>	
+						<a class="nav-link" style="background-color: #f68b00;
+    border-radius: 22px;
+    vertical-align: middle;
+    color: #fff;
+    margin-right: 10px;
+    padding: 5px 15px;
+    max-width: 170px;">Browsing as: Guest_31</a>	
                         <a class="nav-link" href="{{ url('/login')}}"><i class="fa fa-fw fa-user"></i> Log in</a>
                         <a class="nav-link" href="{{ url('/register')}}"><i class="fa fa-fw fa-user-plus"></i> Register </a>
                         @endif
