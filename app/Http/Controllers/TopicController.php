@@ -117,8 +117,8 @@ class TopicController extends Controller {
     }
     
     public function create_camp(Request $request, $topicnum,$campnum){
-        $topic = Camp::where('topic_num',$topicnum)->where('camp_name','=','Agreement')->groupBy('topic_num')->orderBy('submit_time', 'desc')->first();
-        $camp = Camp::where('topic_num',$topicnum)->where('camp_num','=', $campnum)->groupBy('camp_num')->orderBy('submit_time', 'desc')->first();
+        $topic = Camp::where('topic_num',$topicnum)->where('camp_name','=','Agreement')->latest('submit_time')->first();
+        $camp = Camp::where('topic_num',$topicnum)->where('camp_num','=', $campnum)->latest('submit_time')->first();
         $campWithParents = Camp::campNameWithAncestors($camp,'');
         $nickNames  = DB::table('nick_name')->select('nick_name_id','nick_name')->get();
         
