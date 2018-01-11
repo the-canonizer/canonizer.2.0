@@ -37,18 +37,15 @@ class Camp extends Model {
     public function scopeChildrens($query, $topicnum, $parentcamp) {
         $childs = $query->where('topic_num', '=', $topicnum)
                 ->where('parent_camp_num', '=', $parentcamp)
-                ->where('camp_name', '!=', 'Agreement')
-                ->groupBy('camp_num','topic_num')
+                ->where('camp_name', '!=', 'Agreement')                
                 ->orderBy('submit_time', 'desc')
-                ->get();
+                ->get()->unique('camp_num','topic_num');
+				
         return $childs;
     }
 	public function scopeStatement($query, $topicnum, $campnum) {
         $statement = Statement::where('topic_num', '=', $topicnum)
                 ->where('camp_num', '=', $campnum)
-               // ->where('camp_name', '!=', 'Agreement')
-                //->groupBy('camp_num')
-                
                 ->latest('submit_time')->first();
         return $statement;
     }
@@ -67,7 +64,7 @@ class Camp extends Model {
         return $campname;
     }
 
-    public function champTree($topicnum, $parentcamp,$lastparent=null){
+    public function campTree($topicnum, $parentcamp,$lastparent=null,$campnum=0){
         
         $key = $topicnum.'-'.$parentcamp.'-'.$lastparent;
         if(in_array($key,Camp::$tempArray)){
@@ -78,12 +75,18 @@ class Camp extends Model {
         $html= '<ul><li class="create-new-li"><span><a href="'.route('camp.create',['topicnum'=>$topicnum,'campnum'=>$parentcamp]).'">&lt;Create A New Camp &gt;</a></span></li>';
         foreach($childs as $child){
                 $childCount  = count($child->childrens($child->topic_num,$child->camp_num));
+										
+			    $title      = preg_replace('/[^A-Za-z0-9\-]/', '-', $child->title);
+			 
+			    $topic_id  = $child->topic_num."-".$title;
+						
                 $class= $childCount > 0  ? 'parent' : '';
                 $icon = '<i class="fa fa-arrow-right"></i>';
-                $html.='<li>';        
-                $html.='<span class="'.$class.'">'.$icon.'</span><div class="tp-title"><a href="#">'.$child->title.'</a> <div class="badge">48.25</div></div>';
+                $html.='<li>';
+                $selected =  ($campnum==$child->camp_num) ? "color:#08b608; font-weight:bold" : "";	
+                $html.='<span class="'.$class.'">'.$icon.'</span><div class="tp-title"><a style="'.$selected.'" href="'.url('topic/'.$topic_id.'/'.$child->camp_num).'">'.$child->camp_name.'</a> <div class="badge">48.25</div></div>';
                 if($childCount > 0){
-                    $html.=$this->champTree($child->topic_num,$child->camp_num,$child->parent_camp_num);
+                    $html.=$this->campTree($child->topic_num,$child->camp_num,$child->parent_camp_num);
                 }else{
                     $html.='<ul><li class="create-new-li"><span><a href="'.route('camp.create',['topicnum'=>$child->topic_num,'campnum'=>$child->camp_num]).'">&lt; Create A New Camp &gt;</a></span></li></ul>';
                 }

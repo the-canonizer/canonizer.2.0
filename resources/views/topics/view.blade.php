@@ -24,7 +24,7 @@
             </h3>
             <div class="content">
             <div class="row">
-                <div class="tree col-sm-12">
+                <div class="tree treeview col-sm-12">
                     <ul class="mainouter">
                         
                       
@@ -34,17 +34,17 @@
                          $childs = $topic->childrens($topic->topic_num,$topic->camp_num); ?>
                          <span class="<?php if(count($childs) > 0) echo 'parent'; ?>"><i class="fa fa-arrow-right"></i> 
 						 <?php 
-						  $title     = preg_replace('/\s+/', '-', $topic->title); 
+						  $title      = preg_replace('/[^A-Za-z0-9\-]/', '-', $topic->title);						  
 						  $topic_id  = $topic->topic_num."-".$title;
 						 
 						 ?>
-						 <a href="<?php echo url('topic/'.$topic_id) ?>">
+						 <a href="<?php echo url('topic/'.$topic_id.'/'.$topic->camp_num) ?>">
 						 {{ $topic->title}} 
 						 </a>
 						 <div class="badge">48.25</div></span>
                          <?php
                         if(count($childs) > 0){
-                            echo $topic->champTree($topic->topic_num,$topic->camp_num);
+                            echo $topic->campTree($topic->topic_num,$topic->camp_num,null,$camp->camp_num);
                         }else{
                             echo '<li class="create-new-li"><span><a href="'.route('camp.create',['topicnum'=>$topic->topic_num,'campnum'=>$topic->camp_num]).'">< Create A New Camp ></a></span></li>';
                         }?>
@@ -67,9 +67,9 @@
             <div class="content">
             <div class="row">
                 <div class="tree col-sm-12">
-                    <?php $statement = $topic->statement($topic->topic_num,$topic->camp_num);
+                    <?php $statement = $camp->statement($camp->topic_num,$camp->camp_num);
 					
-					  echo ($statement->value!="") ? $statement->value : "No statement available";
+					  echo (isset($statement->value)) ? $statement->value : "No statement available";
 					?>
 					
 				
@@ -83,7 +83,7 @@
 	<div class="container-fluid">
         
         <div class="Lcolor-Pnl">
-            <h3>Support Tree for "<?php echo $topic->camp_name;?>" Camp
+            <h3>Support Tree for "<?php echo $camp->camp_name;?>" Camp
             </h3>
             <div class="content">
             <div class="row">
@@ -121,13 +121,13 @@
             <div class="content">
             <div class="row">
                 <div class="tree col-sm-12">
-                    Camp Name : <?php echo $topic->camp_name;?> <br/>
-					Title : <?php echo $topic->title;?><br/>
-					Keywords : <?php echo $topic->key_words;?><br/>
-					Related URL : <?php echo $topic->url;?><br/>
+                    Camp Name : <?php echo $camp->camp_name;?> <br/>
+					Title : <?php echo $camp->title;?><br/>
+					Keywords : <?php echo $camp->key_words;?><br/>
+					Related URL : <?php echo $camp->url;?><br/>
 					
 					
-					Related Nicknames : <?php echo (isset($topic->nickname->nick_name)) ? $topic->nickname->nick_name : "No nickname associated";?> <br/>
+					Related Nicknames : <?php echo (isset($camp->nickname->nick_name)) ? $camp->nickname->nick_name : "No nickname associated";?> <br/>
                 </div>
               
             </div>    

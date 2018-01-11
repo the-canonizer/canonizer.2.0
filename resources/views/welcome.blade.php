@@ -60,7 +60,7 @@
 
                          <?php
                         if(count($childs) > 0){
-                            echo $topic->champTree($topic->topic_num,$topic->camp_num);
+                            echo $topic->campTree($topic->topic_num,$topic->camp_num);
                         }else{
                             echo '<li class="create-new-li"><span><a href="'.route('camp.create',['topicnum'=>$topic->topic_num,'campnum'=>$topic->camp_num]).'">< Create A New Camp ></a></span></li>';
                         }?>
