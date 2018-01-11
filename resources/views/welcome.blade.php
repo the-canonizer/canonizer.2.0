@@ -44,7 +44,6 @@
                         
                        @foreach($topics as $k=>$topic)
                        <li>
-                        
                          <?php
                          $childs = $topic->childrens($topic->topic_num,$topic->camp_num); ?>
                          <span class="<?php if(count($childs) > 0) echo 'parent'; ?>"><i class="fa fa-arrow-right"></i> 
@@ -58,6 +57,7 @@
 						 {{ $topic->title}} 
 						 </a>
 						 <div class="badge">48.25</div></span>
+
                          <?php
                         if(count($childs) > 0){
                             echo $topic->champTree($topic->topic_num,$topic->camp_num);
