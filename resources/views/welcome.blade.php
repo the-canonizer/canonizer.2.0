@@ -52,11 +52,12 @@
 						  //$title     = preg_replace('/\s+/', '-', $topic->title); 
 						  $topic_id  = $topic->topic_num."-".$title;
 						 
-						 ?>
+						 ?></span>
+                         <div class="tp-title">
 						 <a href="<?php echo url('topic/'.$topic_id.'/'.$topic->camp_num) ?>">
 						 {{ $topic->title}} 
 						 </a>
-						 <div class="badge">48.25</div></span>
+						 <div class="badge">48.25</div></div>
 
                          <?php
                         if(count($childs) > 0){
