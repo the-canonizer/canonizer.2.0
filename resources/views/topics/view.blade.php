@@ -19,18 +19,16 @@
 <div class="right-whitePnl">
     <div class="container-fluid">
         
-        <div class="Lcolor-Pnl">
+         <div class="Gcolor-Pnl">
             <h3>Canonizer Sorted Camp Tree
+            <a href="#" class="pull-right"><i class="fa fa-question"></i></a>
             </h3>
             <div class="content">
             <div class="row">
                 <div class="tree treeview col-sm-12">
                     <ul class="mainouter">
-                        
-                      
                        <li>
-                        
-                         <?php
+                        <?php
                          $childs = $topic->childrens($topic->topic_num,$topic->camp_num); ?>
                          <span class="<?php if(count($childs) > 0) echo 'parent'; ?>"><i class="fa fa-arrow-right"></i> 
 						 <?php 
@@ -57,9 +55,6 @@
             </div>    
             </div>
         </div>
-    </div>
-	 <!-- /.container-fluid-->
-	 <div class="container-fluid">
         
         <div class="Lcolor-Pnl">
             <h3><?php echo ($parentcamp=="Agreement") ? $parentcamp : "Camp"; ?> Statement
@@ -71,34 +66,33 @@
 					
 					  echo (isset($statement->value)) ? $statement->value : "No statement available";
 					?>
-					
-				
-                </div>
+				</div>
               
             </div>    
             </div>
+            <div class="footer">
+            	<a class="btn btn-success">Manage/Edit Camp Statement</a>
+                <a class="btn btn-warning">Topic Forum</a>
+            </div>
         </div>
-    </div>
-	
-	<div class="container-fluid">
         
-        <div class="Lcolor-Pnl">
-            <h3>Support Tree for "<?php echo $camp->camp_name;?>" Camp
+        <div class="Gcolor-Pnl">
+            <h3>Support Tree for "<?php echo $topic->camp_name;?>" Camp
+             <a href="#" class="pull-right"><i class="fa fa-question"></i></a>
             </h3>
             <div class="content">
             <div class="row">
                 <div class="tree col-sm-12">
                     Total Support for This Camp (including sub-camps): 40.25
-					
-				
-                </div>
+				</div>
               
             </div>    
             </div>
+            <div class="footer">
+                <a class="btn btn-warning">Join or Directly Support This Camp</a>
+            </div>
         </div>
-    </div>
-	<div class="container-fluid">
-        
+   
         <div class="Lcolor-Pnl">
             <h3>Current Topic Record:
             </h3>
@@ -111,11 +105,12 @@
               
             </div>    
             </div>
+            <div class="footer">
+            	<a class="btn btn-success">Manage/Edit Camp Statement</a>
+            </div>
         </div>
-    </div>
-	<div class="container-fluid">
-        
-        <div class="Lcolor-Pnl">
+   
+        <div class="Gcolor-Pnl">
             <h3>Current Camp Record:
             </h3>
             <div class="content">
@@ -131,6 +126,9 @@
                 </div>
               
             </div>    
+            </div>
+            <div class="footer">
+            	<a class="btn btn-success">Manage/Edit Camp Statement</a>
             </div>
         </div>
     </div>
