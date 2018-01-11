@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
 <div class="page-titlePnl">
-    <h1 class="page-title">Create Topic</h1>
+    <h1 class="page-title">Nicknames</h1>
 </div> 
 
 @if(Session::has('error'))
