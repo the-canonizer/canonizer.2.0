@@ -66,7 +66,7 @@
                             <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-fw fa-user"></i> <?php echo e(Auth::user()->first_name . ' ' . Auth::user()->last_name); ?> </a>
                             <span class="caret"></span>
                             <ul class="dropdown-menu">
-                                <li><a href="javascript:void(0)">Account Settings</a></li>
+                                <li><a href="<?php echo e(route('settings')); ?>">Account Settings</a></li>
                                 <li><a href="<?php echo e(url('/logout')); ?>">Logout</a></li>
                             </ul>                        
 
@@ -169,6 +169,9 @@
 
         <div class="content-wrapper">
             <?php echo $__env->yieldContent('content'); ?>
+        <div class="homeADDright">
+			<?php echo $__env->make('partials.advertisement', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+		</div>    
             <!-- footer -->
             
 
@@ -178,7 +181,6 @@
             </a>
             <!-- Logout Modal-->
         </div>
-
     </div>
 </body>
 </html>

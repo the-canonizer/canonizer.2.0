@@ -13,9 +13,9 @@ class UpdatePersonTableForCid extends Migration
      */
     public function up()
     {
-        Schema::table('person', function (Blueprint $table) {
+        /*Schema::table('person', function (Blueprint $table) {
             $table->dropColumn('cid');
-        });
+        });*/
     }
 
     /**

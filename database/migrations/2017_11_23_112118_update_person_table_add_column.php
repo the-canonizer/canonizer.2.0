@@ -12,9 +12,9 @@ class UpdatePersonTableAddColumn extends Migration {
      * @return void
      */
     public function up() {
-        Schema::table('person', function (Blueprint $table) {
+        /*Schema::table('person', function (Blueprint $table) {
             $table->string('remember_token', 550)->nullable();
-        });
+        });*/
     }
 
     /**

@@ -13,9 +13,9 @@ class UpdateCampRenamePrimaryColumn extends Migration
      */
     public function up()
     {
-       Schema::table('camp', function (Blueprint $table) {
+       /*Schema::table('camp', function (Blueprint $table) {
             $table->dropColumn('record_id');
-        });
+        });*/
     }
 
     /**

@@ -834,6 +834,9 @@ body.sidenav-toggled .right-whitePnl {
 .margin-btm-2{
 	margin-bottom:2rem;
 }
+.margin-btm-1{
+	margin-bottom:1rem;
+}
 .note-label{
     font-size: 13px;
     color: #112cea;
@@ -855,4 +858,24 @@ body.sidenav-toggled .right-whitePnl {
 	display:inline-block;
 	vertical-align:top;
 	max-width:11%;
+}
+.add-nickname-section{
+	margin-top: 30px;
+	background: #ececec;
+	padding: 30px;
+	font-size: 14px;
+}
+.add-nickname-section h5{
+	border-bottom: 1px dotted #ccc;
+    padding-bottom: 7px;
+    margin-bottom: 25px;
+}
+.prfl_ul li{
+	padding: 5px 15px;
+    line-height: 25px;
+}
+.prfl_ul li.active{
+    border-radius: 4px 4px 0px 0px;
+    border: 1px solid #0100ff;
+	border-bottom: none;
 }

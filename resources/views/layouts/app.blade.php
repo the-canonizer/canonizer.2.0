@@ -66,7 +66,7 @@
                             <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-fw fa-user"></i> {{ Auth::user()->first_name . ' ' . Auth::user()->last_name}} </a>
                             <span class="caret"></span>
                             <ul class="dropdown-menu">
-                                <li><a href="javascript:void(0)">Account Settings</a></li>
+                                <li><a href="{{ route('settings')}}">Account Settings</a></li>
                                 <li><a href="{{ url('/logout')}}">Logout</a></li>
                             </ul>                        
 
