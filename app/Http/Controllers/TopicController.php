@@ -73,8 +73,16 @@ class TopicController extends Controller {
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id) {
-        //
+    public function show($id,$campnum) {
+        //			
+		$topicnumArray  = explode("-",$id);
+		$topicnum       = $topicnumArray[0];
+		$topic = Camp::where('topic_num',$topicnum)->where('camp_name','=','Agreement')->groupBy('topic_num')->orderBy('submit_time', 'desc')->first();
+        $camp = Camp::where('topic_num',$topicnum)->where('camp_num','=', $campnum)->groupBy('camp_num')->orderBy('submit_time', 'desc')->first();
+        $campWithParents = Camp::campNameWithAncestors($camp,'');
+        //$nickNames  = DB::table('nick_name')->select('nick_name_id','nick_name')->get();
+		
+		return view('topics.view',  ['topic'=>$topic,'parentcampnum'=>$campnum,'parentcamp'=>$campWithParents]);
     }
 
     /**

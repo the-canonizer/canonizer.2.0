@@ -13,7 +13,12 @@ class Camp extends Model {
     protected static $tempArray = [];
 
     const AGREEMENT_CAMP = "Agreement";
-
+    public function topic() {
+        return $this->hasOne('App\Model\Topic', 'topic_num', 'topic_num');
+    }
+	public function nickname() {
+        return $this->hasOne('App\Model\Nickname', 'nick_name_id', 'nick_name_id');
+    }
     public static function boot() {
         static::created(function ($model) {
             if ($model->camp_num == '' || $model->camp_num == null) {
@@ -33,11 +38,21 @@ class Camp extends Model {
         $childs = $query->where('topic_num', '=', $topicnum)
                 ->where('parent_camp_num', '=', $parentcamp)
                 ->where('camp_name', '!=', 'Agreement')
-                ->groupBy('camp_num')
+                ->groupBy('camp_num','topic_num')
                 ->orderBy('submit_time', 'desc')
                 ->get();
         return $childs;
     }
+	public function scopeStatement($query, $topicnum, $campnum) {
+        $statement = Statement::where('topic_num', '=', $topicnum)
+                ->where('camp_num', '=', $campnum)
+               // ->where('camp_name', '!=', 'Agreement')
+                //->groupBy('camp_num')
+                
+                ->latest('submit_time')->first();
+        return $statement;
+    }
+	
 
     public function scopeCampNameWithAncestors($query, $camp, $campname = '') {
         if ($campname != '') {
