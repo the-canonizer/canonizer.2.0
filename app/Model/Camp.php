@@ -66,7 +66,7 @@ class Camp extends Model {
                 $class= $childCount > 0  ? 'parent' : '';
                 $icon = '<i class="fa fa-arrow-right"></i>';
                 $html.='<li>';        
-                $html.='<span class="'.$class.'">'.$icon.$child->title.' &nbsp;<div class="badge">48.25</div></span>';
+                $html.='<span class="'.$class.'">'.$icon.'</span><div class="tp-title"><a href="#">'.$child->title.'</a> <div class="badge">48.25</div></div>';
                 if($childCount > 0){
                     $html.=$this->champTree($child->topic_num,$child->camp_num,$child->parent_camp_num);
                 }else{

@@ -512,7 +512,6 @@ h1.page-title{
     width:50px
 }
 .tree li span {
-    display:inline-block;
 	color:#3737f7;
     text-decoration:none;
 	padding-left:20px;
@@ -526,7 +525,7 @@ h1.page-title{
 	font-size: 9px;
 	padding: 2px 2px 2px;
 	border-radius: 3px;
-	margin-top: 5px;
+	margin-top: 6px;
 	display: inline-block;
 	vertical-align: middle;
 	position: absolute;
@@ -547,16 +546,18 @@ h1.page-title{
 }
 .badge {
     display: inline-block;
-    padding: 2px 8px 4px;
+    padding: 2px 8px;
     font-size: 80%;
     font-weight: 700;
-    line-height: 14px;
+    line-height: 15px;
     color: #fff;
     text-align: center;
     white-space: nowrap;
     vertical-align: middle;
     border-radius: 10px;
     background-color: #f68b00;
+    margin-top: -3px;
+    margin-left: 5px;
 }
 .canoalgo{
 	background: -webkit-linear-gradient(left, #e4ecff , #eeeff3); /* For Safari 5.1 to 6.0 */
@@ -878,4 +879,7 @@ body.sidenav-toggled .right-whitePnl {
     border-radius: 4px 4px 0px 0px;
     border: 1px solid #0100ff;
 	border-bottom: none;
+}
+ul.mainouter li .tp-title {
+   display:inline-block;
 }
