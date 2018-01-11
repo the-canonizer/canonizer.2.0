@@ -30,7 +30,7 @@
                        <li>
                         <?php
                          $childs = $topic->childrens($topic->topic_num,$topic->camp_num); ?>
-                         <span class="<?php if(count($childs) > 0) echo 'parent'; ?>"><i class="fa fa-arrow-right"></i> 
+                         <span class="<?php if(count($childs) > 0) echo 'parent'; ?>"><i class="fa fa-arrow-down"></i> 
 						 <?php 
 						  $title      = preg_replace('/[^A-Za-z0-9\-]/', '-', $topic->title);						  
 						  $topic_id  = $topic->topic_num."-".$title;
