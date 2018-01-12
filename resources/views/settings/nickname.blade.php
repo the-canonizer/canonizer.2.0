@@ -29,18 +29,19 @@
 
          <!-- exsisting Nick Names -->
          <div class="">
-           <table class="table table-dark table-striped table-hover">
+           <table class="table">
+           <thead class="thead-default">
               <tr>
                 <th>S.No</th>
                 <th>Nick Name</th>
                 <th>Visibilty Status</th>
                 <!--th>Manage Actions</th-->
               </tr>
-
-              <tbody>
+		   </thead>
+           <tbody>
                  @foreach($nicknames as $k=>$nickname)
                    <tr>
-                       <td>{{ $k+1 }}</td>
+                       <th scope="row">{{ $k+1 }}</th>
                        <td>{{ $nickname->nick_name}}</td>
                        <td>{{ ($nickname->private == 1) ? 'Public' : 'Private'}}</td>
                        <!--td>
