@@ -28,12 +28,11 @@ Route::post('forgetpassword','Auth\ForgotPasswordController@sendResetLinkEmail')
 Route::get('resetlinksent','Auth\ForgotPasswordController@resetLinkSent');
 Route::get('resetpassword/{token}','Auth\ResetPasswordController@showResetForm');
 Route::post('reset','Auth\ResetPasswordController@reset');
-Route::get('topic/{id}/{campnum}', [ 'as' => 'topic', 'uses' => 'TopicController@show']);
 
-
-Route::group([ 'middleware' => 'auth'], function()
+Route::group(
+    [ 'middleware' => 'auth'], function ()
 {
-   Route::resource('topic','TopicController');	 
+   Route::resource('topic','TopicController');
    Route::get('camp/create/{topicnum}/{campnum}', [ 'as' => 'camp.create', 'uses' => 'TopicController@create_camp']);
    Route::post('camp/save', [ 'as' => 'camp.save', 'uses' => 'TopicController@store_camp']);
    Route::get('settings', [ 'as' => 'settings', 'uses' => 'SettingsController@index']);
@@ -41,3 +40,32 @@ Route::group([ 'middleware' => 'auth'], function()
    Route::get('settings/nickname', [ 'as' => 'settings.nickname', 'uses' => 'SettingsController@nickname']);
    Route::post('settings/nickname/add', [ 'as' => 'settings.nickname.add', 'uses' => 'SettingsController@add_nickname']);
 });
+
+/**
+ * Routes Related to Camp Forums and threads
+ */
+
+Route::get(
+    '/forum/{topicid}-{topicname}/{campnum}/threads', 
+    ['uses' => 'CThreadsController@index']
+);
+
+Route::get(
+    '/forum/{topicid}-{topicname}/{campnum}/threads/create', 
+    ['uses' => 'CThreadsController@create']
+);
+
+Route::get(
+    '/forum/{topicid}-{topicname}/{campnum}/threads/{thread}', 
+    [ 'uses' => 'CThreadsController@show']
+);
+
+Route::post(
+    '/forum/{topicid}-{topicname}/{campnum}/threads', 
+    'CThreadsController@store'
+);
+
+Route::post(
+    '/forum/{topicid}-{topicname}/{campnum}/threads/{thread}/replies', 
+    ['uses' => 'ReplyController@store']
+);
