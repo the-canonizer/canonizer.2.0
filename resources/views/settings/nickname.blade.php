@@ -42,7 +42,7 @@
                    <tr>
                        <td>{{ $k+1 }}</td>
                        <td>{{ $nickname->nick_name}}</td>
-                       <td>{{ ($nickname->private == 1) ? 'Public' : 'Private'}}</td>
+                       <td>{{ ($nickname->private == 1) ? 'Private' : 'Public'}}</td>
                        <!--td>
                           <a href="">Edit</a>
                           <a href=""><i class="fa fa-trash" aria-hidden="true"></i></a>
@@ -69,8 +69,8 @@
                         <div class="col-sm-6 margin-btm-1">
                             <label for="namespace">Visibility status</label>
                             <select class="form-control" name="private">
-                                <option value="1">Public</option>
-                                <option vlaue="0">Private</option>
+                                <option value="0">Public</option>
+                                <option vlaue="1">Private</option>
                             </select>
                             @if ($errors->has('private')) <p class="help-block">{{ $errors->first('private') }}</p> @endif
                         </div> 

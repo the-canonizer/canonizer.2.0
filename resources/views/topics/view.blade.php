@@ -83,7 +83,80 @@
             <div class="content">
             <div class="row">
                 <div class="tree col-sm-12">
-                    Total Support for This Camp (including sub-camps): <div class="badge">40.25</div>
+                    Total Support for This Camp (including sub-camps): 
+					
+					<div class="badge">40.25
+					
+					</div>
+					<?php
+					
+					$nicknames = $topic->GetSupportedNicknames($topic->topic_num);
+					
+					
+					$campSupport[$camp->camp_num] = 0;
+					foreach($nicknames as $key=>$nickname) {
+						
+						$support = $topic->GetSupportByNickname($topic->topic_num,$nickname->nick_name_id);
+						$supportCount = count($support);
+						
+						if($supportCount ==1 && $nickname->camp_num== $camp->camp_num) {
+							
+						 $campSupport[$camp->camp_num] = $campSupport[$camp->camp_num] + 1;
+						
+						} 
+                        else if($supportCount == 1) {
+						  $campSupport[$nickname->camp_num]	= 1;
+						  
+					    }
+					    else {
+						
+                          $assignment = 0;
+                           
+                          foreach($support as $skey=>$sdata) {
+							  
+							  $deduction = 0;
+							  
+							   if($skey==0 && $sdata->camp_num == $camp->camp_num && $supportCount > 1) {
+								   
+								
+								  $campSupport[$camp->camp_num] = $campSupport[$camp->camp_num] + 0.5;
+                                  $deduction = 1;  								  
+								   
+							   }
+							   else if($skey==0 && $sdata->camp_num == $camp->camp_num && $supportCount == 1) {
+								   
+								  
+								  $campSupport[$camp->camp_num] = $campSupport[$camp->camp_num] + 1;
+                                  							  
+								   
+							   }
+							   else if($skey==0 & $supportCount == 1) {
+								  
+                                   $campSupport[$sdata->camp_num]  = 1;
+                                   								   
+								   
+							   } else {  
+								   
+								   if(isset($campSupport[$sdata->camp_num])) 
+								    $campSupport[$sdata->camp_num] = $campSupport[$sdata->camp_num] + $assignment;
+								   else
+									$campSupport[$sdata->camp_num] = $assignment;   
+							   }
+							   
+							   $newCounter  =  $supportCount - $deduction;
+							   $assignment  =  round(0.5 / $newCounter,2);
+							  
+							  
+						  }  						  
+							
+							
+						}
+						
+						
+					}
+					//print_r($campSupport); echo "here"; die;
+					?>
+					
                     <ul class="mainouter">
                        <li>
                        	<a href="#"><div class="badge">1</div> Apollo.is.dead </a> <button class="btn btn-info">Delegate Your Support</button>
@@ -113,7 +186,7 @@
             </div>    
             </div>
             <div class="footer">
-            	<a class="btn btn-success">Manage/Edit Camp Statement</a>
+            	<a class="btn btn-success">Manage/Edit This Topic</a>
             </div>
         </div>
    
@@ -135,7 +208,7 @@
             </div>    
             </div>
             <div class="footer">
-            	<a class="btn btn-success">Manage/Edit Camp Statement</a>
+            	<a class="btn btn-success">Manage/Edit This Camp</a>
             </div>
         </div>
     </div>

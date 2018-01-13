@@ -6,6 +6,7 @@ use Illuminate\Foundation\Auth\RedirectsUsers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
+use App\Library\General;
 use App\Model\Topic;
 use App\Model\Camp;
 use DB;
@@ -120,7 +121,11 @@ class TopicController extends Controller {
         $topic = Camp::where('topic_num',$topicnum)->where('camp_name','=','Agreement')->latest('submit_time')->first();
         $camp = Camp::where('topic_num',$topicnum)->where('camp_num','=', $campnum)->latest('submit_time')->first();
         $campWithParents = Camp::campNameWithAncestors($camp,'');
-        $nickNames  = DB::table('nick_name')->select('nick_name_id','nick_name')->get();
+		
+		$id = Auth::user()->id; 
+        $encode = General::canon_encode($id);
+		
+        $nickNames  = DB::table('nick_name')->select('nick_name_id','nick_name')->where('owner_code',$encode)->get();
         
         return view('topics.camp_create',  ['topic'=>$topic,'parentcampnum'=>$campnum,'parentcamp'=>$campWithParents,'nickNames'=>$nickNames]);
     }

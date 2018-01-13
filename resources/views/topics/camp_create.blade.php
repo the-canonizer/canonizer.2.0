@@ -38,8 +38,10 @@
                     @foreach($nickNames as $nick)
                     <option value="{{ $nick->nick_name_id }}">{{ $nick->nick_name}}</option>
                     @endforeach
+					
                 </select>
                  @if ($errors->has('nick_name')) <p class="help-block">{{ $errors->first('nick_name') }}</p> @endif
+				 <a href="<?php echo url('settings/nickname');?>">Add new nickname </a>
              </div> 
             
              <div class="form-group">

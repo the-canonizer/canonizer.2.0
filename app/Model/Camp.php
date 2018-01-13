@@ -34,8 +34,12 @@ class Camp extends Model {
         return $this->hasMany('App\Model\Camp', 'parent_camp_num', 'camp_num');
     }
 
-    public function scopeChildrens($query, $topicnum, $parentcamp) {
-        $childs = $query->where('topic_num', '=', $topicnum)
+    public function scopeChildrens($query, $topicnum, $parentcamp,$campnum=null) {
+        
+		 if($campnum !=null)
+			$query->where('camp_num', '=', $campnum);
+		
+		$childs = $query->where('topic_num', '=', $topicnum)
                 ->where('parent_camp_num', '=', $parentcamp)
                 ->where('camp_name', '!=', 'Agreement')                
                 ->orderBy('submit_time', 'desc')
@@ -49,7 +53,19 @@ class Camp extends Model {
                 ->latest('submit_time')->first();
         return $statement;
     }
-	
+	public function scopeGetSupportedNicknames($query, $topicnum) {
+        $nicknames = Support::where('topic_num', '=', $topicnum)
+		             ->groupBy('nick_name_id')
+					 ->get();
+        return $nicknames;
+    }
+	public function scopeGetSupportByNickname($query, $topicnum,$nicknameId) {
+        $support = Support::where('topic_num', '=', $topicnum)
+		             ->where('nick_name_id', '=', $nicknameId)
+					 ->orderBy('support_order', 'asc')
+		             ->get();
+        return $support;
+    }
 
     public function scopeCampNameWithAncestors($query, $camp, $campname = '') {
         if ($campname != '') {
@@ -64,7 +80,7 @@ class Camp extends Model {
         return $campname;
     }
 
-    public function campTree($topicnum, $parentcamp,$lastparent=null,$campnum=0){
+    public function campTree($topicnum, $parentcamp,$lastparent=null,$campnum=null){
         
         $key = $topicnum.'-'.$parentcamp.'-'.$lastparent;
         if(in_array($key,Camp::$tempArray)){
@@ -84,7 +100,7 @@ class Camp extends Model {
                 $icon = '<i class="fa fa-arrow-right"></i>';
                 $html.='<li>';
                 $selected =  ($campnum==$child->camp_num) ? "color:#08b608; font-weight:bold" : "";	
-                $html.='<span class="'.$class.'">'.$icon.'</span><div class="tp-title"><a style="'.$selected.'" href="'.url('topic/'.$topic_id.'/'.$child->camp_num).'">'.$child->camp_name.'</a> <div class="badge">48.25</div></div>';
+                $html.='<span class="'.$class.'">'.$icon.'</span><div class="tp-title"><a style="'.$selected.'" href="'.url('topic/'.$topic_id.'/'.$child->camp_num).'">'.$child->title.'</a> <div class="badge">48.25</div></div>';
                 if($childCount > 0){
                     $html.=$this->campTree($child->topic_num,$child->camp_num,$child->parent_camp_num);
                 }else{
