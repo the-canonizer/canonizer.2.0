@@ -28,7 +28,7 @@ Route::post('forgetpassword','Auth\ForgotPasswordController@sendResetLinkEmail')
 Route::get('resetlinksent','Auth\ForgotPasswordController@resetLinkSent');
 Route::get('resetpassword/{token}','Auth\ResetPasswordController@showResetForm');
 Route::post('reset','Auth\ResetPasswordController@reset');
-
+Route::post('loadtopic','HomeController@loadtopic');
 
 Route::group([ 'middleware' => 'auth'], function()
 {
@@ -41,7 +41,7 @@ Route::group([ 'middleware' => 'auth'], function()
    Route::post('settings/nickname/add', [ 'as' => 'settings.nickname.add', 'uses' => 'SettingsController@add_nickname']);
    Route::get('manage/camp/{id}/{campnum}', 'TopicController@manage_camp');
    Route::get('manage/topic/{id}', 'TopicController@manage_topic');
-   Route::post('loadtopic','HomeController@loadtopic');
+   
 });
 
 /**
