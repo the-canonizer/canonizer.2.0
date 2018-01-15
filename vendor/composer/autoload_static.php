@@ -307,6 +307,7 @@ class ComposerStaticInit1b77c477e22c379d0a7eedb7e2efafec
     );
 
     public static $classMap = array (
+        'AddTopicIdToThreads' => __DIR__ . '/../..' . '/database/migrations/2018_01_11_132214_add_topic_id_to_threads.php',
         'App\\Console\\Kernel' => __DIR__ . '/../..' . '/app/Console/Kernel.php',
         'App\\Exceptions\\Handler' => __DIR__ . '/../..' . '/app/Exceptions/Handler.php',
         'App\\Http\\Controllers\\Auth\\ForgotPasswordController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/ForgotPasswordController.php',
@@ -326,6 +327,8 @@ class ComposerStaticInit1b77c477e22c379d0a7eedb7e2efafec
         'App\\Mail\\PasswordResetMail' => __DIR__ . '/../..' . '/app/Mail/PasswordResetMail.php',
         'App\\Model\\Camp' => __DIR__ . '/../..' . '/app/Model/Camp.php',
         'App\\Model\\Nickname' => __DIR__ . '/../..' . '/app/Model/Nickname.php',
+        'App\\Model\\Statement' => __DIR__ . '/../..' . '/app/Model/Statement.php',
+        'App\\Model\\Support' => __DIR__ . '/../..' . '/app/Model/Support.php',
         'App\\Model\\Topic' => __DIR__ . '/../..' . '/app/Model/Topic.php',
         'App\\Providers\\AppServiceProvider' => __DIR__ . '/../..' . '/app/Providers/AppServiceProvider.php',
         'App\\Providers\\AuthServiceProvider' => __DIR__ . '/../..' . '/app/Providers/AuthServiceProvider.php',
@@ -338,6 +341,9 @@ class ComposerStaticInit1b77c477e22c379d0a7eedb7e2efafec
         'Carbon\\Carbon' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/Carbon.php',
         'Carbon\\CarbonInterval' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/CarbonInterval.php',
         'Carbon\\Exceptions\\InvalidDateException' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/Exceptions/InvalidDateException.php',
+        'ChangeNickNameId' => __DIR__ . '/../..' . '/database/migrations/2018_01_15_131622_change_nick_name_id.php',
+        'CreateCanonizerThreadsRepliesTable' => __DIR__ . '/../..' . '/database/migrations/2018_01_09_131608_create_canonizer_threads_replies_table.php',
+        'CreateCanonizerThreadsTable' => __DIR__ . '/../..' . '/database/migrations/2018_01_09_130948_create_canonizer_threads_table.php',
         'Cron\\AbstractField' => __DIR__ . '/..' . '/mtdowling/cron-expression/src/Cron/AbstractField.php',
         'Cron\\CronExpression' => __DIR__ . '/..' . '/mtdowling/cron-expression/src/Cron/CronExpression.php',
         'Cron\\DayOfMonthField' => __DIR__ . '/..' . '/mtdowling/cron-expression/src/Cron/DayOfMonthField.php',

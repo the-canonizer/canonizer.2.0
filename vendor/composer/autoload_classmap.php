@@ -6,6 +6,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'AddTopicIdToThreads' => $baseDir . '/database/migrations/2018_01_11_132214_add_topic_id_to_threads.php',
     'App\\Console\\Kernel' => $baseDir . '/app/Console/Kernel.php',
     'App\\Exceptions\\Handler' => $baseDir . '/app/Exceptions/Handler.php',
     'App\\Http\\Controllers\\Auth\\ForgotPasswordController' => $baseDir . '/app/Http/Controllers/Auth/ForgotPasswordController.php',
@@ -25,6 +26,8 @@ return array(
     'App\\Mail\\PasswordResetMail' => $baseDir . '/app/Mail/PasswordResetMail.php',
     'App\\Model\\Camp' => $baseDir . '/app/Model/Camp.php',
     'App\\Model\\Nickname' => $baseDir . '/app/Model/Nickname.php',
+    'App\\Model\\Statement' => $baseDir . '/app/Model/Statement.php',
+    'App\\Model\\Support' => $baseDir . '/app/Model/Support.php',
     'App\\Model\\Topic' => $baseDir . '/app/Model/Topic.php',
     'App\\Providers\\AppServiceProvider' => $baseDir . '/app/Providers/AppServiceProvider.php',
     'App\\Providers\\AuthServiceProvider' => $baseDir . '/app/Providers/AuthServiceProvider.php',
@@ -37,6 +40,9 @@ return array(
     'Carbon\\Carbon' => $vendorDir . '/nesbot/carbon/src/Carbon/Carbon.php',
     'Carbon\\CarbonInterval' => $vendorDir . '/nesbot/carbon/src/Carbon/CarbonInterval.php',
     'Carbon\\Exceptions\\InvalidDateException' => $vendorDir . '/nesbot/carbon/src/Carbon/Exceptions/InvalidDateException.php',
+    'ChangeNickNameId' => $baseDir . '/database/migrations/2018_01_15_131622_change_nick_name_id.php',
+    'CreateCanonizerThreadsRepliesTable' => $baseDir . '/database/migrations/2018_01_09_131608_create_canonizer_threads_replies_table.php',
+    'CreateCanonizerThreadsTable' => $baseDir . '/database/migrations/2018_01_09_130948_create_canonizer_threads_table.php',
     'Cron\\AbstractField' => $vendorDir . '/mtdowling/cron-expression/src/Cron/AbstractField.php',
     'Cron\\CronExpression' => $vendorDir . '/mtdowling/cron-expression/src/Cron/CronExpression.php',
     'Cron\\DayOfMonthField' => $vendorDir . '/mtdowling/cron-expression/src/Cron/DayOfMonthField.php',
