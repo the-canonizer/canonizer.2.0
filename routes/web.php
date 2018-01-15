@@ -28,6 +28,7 @@ Route::post('forgetpassword','Auth\ForgotPasswordController@sendResetLinkEmail')
 Route::get('resetlinksent','Auth\ForgotPasswordController@resetLinkSent');
 Route::get('resetpassword/{token}','Auth\ResetPasswordController@showResetForm');
 Route::post('reset','Auth\ResetPasswordController@reset');
+Route::get('topic/{id}/{campnum}', [ 'as' => 'topic', 'uses' => 'TopicController@show']);
 Route::post('loadtopic','HomeController@loadtopic');
 
 Route::group([ 'middleware' => 'auth'], function()
