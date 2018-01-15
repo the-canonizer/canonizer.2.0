@@ -18,4 +18,4 @@
 <!-- Core plugin JavaScript-->
 <script src="{{ URL::asset('/js/jquery-easing/jquery.easing.min.js') }}"></script>
 <!-- Custom scripts for all pages-->
-<script src="{{ URL::asset('/js/canonizer.min.js') }}"></script>
+<script id="custom_script" src="{{ URL::asset('/js/canonizer.min.js') }}"></script>

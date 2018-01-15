@@ -55,8 +55,16 @@
                 <input type="text" name="title" class="form-control" id="" value="{{ old('title') }}">
                 @if ($errors->has('title')) <p class="help-block">{{ $errors->first('title') }}</p> @endif
             </div> 
-            
-            
+            <div class="form-group">
+                <label for="statement">Camp Statement</label>
+                <textarea class="form-control" rows="6" name="statement">{{ old('statement')}}</textarea>
+                @if ($errors->has('statement')) <p class="help-block">{{ $errors->first('statement') }}</p> @endif
+            </div> 
+            <div class="form-group">
+                <label for="keywords">Keywords </label>
+                <input type="text" name="keywords" class="form-control" id="" value="{{ old('keywords') }}">
+                @if ($errors->has('keywords')) <p class="help-block">{{ $errors->first('keywords') }}</p> @endif
+            </div> 
             <div class="form-group">
                 <label for="language">Language</label>
                 <select class="form-control" name="language">
@@ -65,7 +73,7 @@
                 </select>
             </div>
             <div class="form-group">
-                <label for="Topic Number">To Go Live Date</label>
+                <label for="Topic Number">To Go Live Date / Time</label>
                 <input type="text" name="go_live_time" value="{{ (old('go_live_time') != '') ?  date('m/d/Y',strtotime(old('go_live_time'))) : ''}}" id="datepicker" class="form-control"/>
                 @if ($errors->has('go_live_time')) <p class="help-block">{{ $errors->first('go_live_time') }}</p> @endif
             </div>
@@ -73,7 +81,12 @@
                 <label for="">Additional Note</label>
                 <textarea class="form-control" rows="4" name="note">{{ old('note')}}</textarea>
                 @if ($errors->has('note')) <p class="help-block">{{ $errors->first('note') }}</p> @endif
-            </div>    
+            </div>   
+            <div class="form-group">
+                <label for="url">URL </label>
+                <input type="text" name="url" class="form-control" id="" value="{{ old('url') }}">
+                @if ($errors->has('url')) <p class="help-block">{{ $errors->first('url') }}</p> @endif
+            </div> 			
 
             <button type="submit" class="btn btn-login">Create Camp</button>
         </form>

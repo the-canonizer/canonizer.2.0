@@ -25,12 +25,14 @@
             <div class="form-group">
                 <label for="topic name">Topic Name </label>
                 <input type="text" name="topic_name" class="form-control" id="" value="">
+				@if ($errors->has('topic_name')) <p class="help-block">{{ $errors->first('topic_name') }}</p> @endif
             </div>            
             <div class="form-group">
                 <label for="namespace">Name Space</label>
                 <input type="text" name="namespace" class="form-control" id="" value="">
                 <span class="note-label"><strong>Note</strong>: Name space is categorization of your topic, it can be something like: General,crypto_currency etc.</span>
-            </div>
+                @if ($errors->has('namespace')) <p class="help-block">{{ $errors->first('namespace') }}</p> @endif
+			</div>
             <div class="form-group">
                 <label for="language">Language</label>
                 <select class="form-control" name="language">
@@ -41,6 +43,7 @@
             <div class="form-group">
                 <label for="Topic Number">To Go Live Date</label>
                 <input type="text" name="go_live_time" value="" id="datepicker" class="form-control"/>
+				@if ($errors->has('go_live_time')) <p class="help-block">{{ $errors->first('go_live_time') }}</p> @endif
             </div>
             <div class="form-group">
                 <label for="">Additional Note</label>

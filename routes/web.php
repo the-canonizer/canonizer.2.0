@@ -31,6 +31,7 @@ Route::post('reset','Auth\ResetPasswordController@reset');
 Route::get('topic/{id}/{campnum}', [ 'as' => 'topic', 'uses' => 'TopicController@show']);
 
 
+
 Route::group([ 'middleware' => 'auth'], function()
 {
    Route::resource('topic','TopicController');	 
@@ -40,4 +41,7 @@ Route::group([ 'middleware' => 'auth'], function()
    Route::post('settings/profile/update', [ 'as' => 'settings.profile.update', 'uses' => 'SettingsController@profile_update']);
    Route::get('settings/nickname', [ 'as' => 'settings.nickname', 'uses' => 'SettingsController@nickname']);
    Route::post('settings/nickname/add', [ 'as' => 'settings.nickname.add', 'uses' => 'SettingsController@add_nickname']);
+   Route::get('manage/camp/{id}/{campnum}', 'TopicController@manage_camp');
+   Route::get('manage/topic/{id}', 'TopicController@manage_topic');
+   Route::post('loadtopic','HomeController@loadtopic');
 });

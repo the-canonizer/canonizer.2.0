@@ -39,8 +39,8 @@
             </h3>
             <div class="content">
             <div class="row">
-                <div class="tree col-sm-12">
-                    <ul class="mainouter">
+			    <div class="tree col-sm-12">
+                    <ul class="mainouter" id="load-data">
                         
                        @foreach($topics as $k=>$topic)
                        <li>
@@ -67,14 +67,53 @@
                         }?>
                            </li>
                        @endforeach
+					   <a id="btn-more" class="remove-row" data-id="{{ $topic->id }}"></a>
                     </ul>
                     
                 </div>
-              
+              </div>
             </div>    
-            </div>
+            
         </div>
     </div>
     <!-- /.container-fluid-->
 </div>  <!-- /.right-whitePnl-->
+
+<script>
+
+   $(document).scroll(function(e){
+       var id = $('#btn-more').data('id'); 
+      
+	   var scrollTop = $(window).scrollTop();
+	   scrollTop = scrollTop + 650;
+		  if ( scrollTop > $('.sticky-footer').offset().top ) { 
+				  
+			   $("#btn-more").html("Please wait loading tree ......");
+			   
+			   
+			   $.ajax({
+				   url : '{{ url("loadtopic") }}',
+				   method : "POST",
+				   data : {id:id, _token:"{{csrf_token()}}"},
+				   dataType : "text",
+				   success : function (data)
+				   {
+					  if(data != '') 
+					  {
+						  $('.remove-row').remove();
+						  $('#load-data').append(data);
+						  camptree();
+				   
+					  }
+					  else
+					  {
+						  $('#btn-more').html("No Data");
+					  }
+				   }
+			   });
+		  }  
+		  e.stopImmediatePropagation();
+}); 
+</script>
 @endsection
+ 
