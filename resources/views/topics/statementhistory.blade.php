@@ -8,7 +8,7 @@
 
 
 <div class="page-titlePnl">
-    <h1 class="page-title">Camp History</h1>
+    <h1 class="page-title">Camp Statement History</h1>
 </div> 
 
 @if(Session::has('error'))
@@ -25,39 +25,39 @@
 
 
 <div class="right-whitePnl">
-<div>
-    <div class="col-sm-12 margin-btm-2">
+<div class="row col-sm-12 justify-content-between">
+    <div class="col-sm-5 margin-btm-2">
         <form action="{{ route('camp.save')}}" method="post">
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
             <input type="hidden" name="topic_num" value="{{ $topic->topic_num }}">
             
                
-			   <?php foreach($camps as $key=>$data) { 
+			   <?php foreach($statement as $key=>$data) { 
 			   
 			   if($key==0 && $data->objector !== NULL)
-				   $bgcolor ="rgba(255, 0, 0, 0.5);";
+				   $bgcolor ="yellow";
 			   else if($key==1 && $data->objector == NULL ) {
-				   $bgcolor ="rgba(0, 128, 0, 0.5);";
-			   } else if($data->objector !== NULL || $data->objector !="") $bgcolor ="rgba(255, 255, 0, 0.5);";
+				   $bgcolor ="green";
+			   } else if($data->objector !== NULL || $data->objector !="") $bgcolor ="yellow";
 			   else 
-				   $bgcolor = "rgba(255, 0, 0, 0.5);";
+				   $bgcolor = "red";
 			   ?>
-			    <div class="form-group CmpHistoryPnl" style="background-color:{{ $bgcolor }}">
-                <div>
-                  <b>Camp Title :</b> {{ $data->title }} <br/>
-				  <b>Camp Name :</b> {{ $data->title }} <br/>
-				  <b>Keyword :</b> {{ $data->key_words }} <br/>
-				  <b>Note :</b> {{ $data->note }} <br/>
-				  <b>Language :</b> {{ $data->language }}<br/>
-				  <b>URL :</b> {{ $data->url }} <br/>
-				  <b>Nickname :</b> {{ $data->nickname->nick_name }} <br/>
-				  <b>Submitted on :</b> {{ $data->submit_time }} <br/>
-				  <b>Go live Time :</b> {{ $data->go_live_time}} <br/> 
-               </div>    
-               <div class="CmpHistoryPnl-footer">
-				  <a class="btn btn-historysmt" href="#">Object Or Submit New Update</a> 
+			    <div class="form-group" style="background-color:{{ $bgcolor }}">
+                  
+				 		  
+				  Statement : {{ $data->value }} <br/>
+				 
+				  Note : {{ $data->note }} <br/>
+				  Language : {{ $data->language }}<br/>
+				 
+				  Submitted on : {{ $data->submit_time }} <br/>
+				  
+				  Go live Time : {{ $data->go_live_time}} <br/>
+				  
+				  <a href="<?php echo url('manage/statement/'.$data->topic_num.'/'.$data->camp_num);?>">Object Or Submit Statement Update</a>
+			   <hr/>
 			    </div> 	
-			   </div>
+			   
 			   <?php } ?>
         </form>
 </div>
