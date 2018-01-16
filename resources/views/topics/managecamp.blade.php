@@ -70,11 +70,7 @@
                     <option <?php if($camp->language=="French") echo "selected=selected";?> value="French">French</option>
                 </select>
             </div>
-            <div class="form-group">
-                <label for="Topic Number">To Go Live Date / Time</label>
-                <input type="text" name="go_live_time" value="{{ ($camp->go_live_time != '') ?  date('m/d/Y H:i:s',$camp->go_live_time) : ''}}" id="datepicker" class="form-control"/>
-                @if ($errors->has('go_live_time')) <p class="help-block">{{ $errors->first('go_live_time') }}</p> @endif
-            </div>
+            
             <div class="form-group">
                 <label for="">Additional Note</label>
                 <textarea class="form-control" rows="4" name="note">{{ $camp->note}}</textarea>

@@ -32,16 +32,27 @@
             <input type="hidden" name="topic_num" value="{{ $topic->topic_num }}">
             
                
-			   <?php foreach($camps as $key=>$data) { 
-			   
-			   if($key==0 && $data->objector !== NULL)
-				   $bgcolor ="rgba(255, 0, 0, 0.5);";
-			   else if($key==1 && $data->objector == NULL ) {
-				   $bgcolor ="rgba(0, 128, 0, 0.5);";
-			   } else if($data->objector !== NULL || $data->objector !="") $bgcolor ="rgba(255, 255, 0, 0.5);";
-			   else 
-				   $bgcolor = "rgba(255, 0, 0, 0.5);";
-			   ?>
+			   <?php if(!empty($camps)) { 
+			            $currentLive = 0;
+			            foreach($camps as $key=>$data) { 
+			               
+						   $currentTime = time();
+						   
+						   
+						   if($data->objector !== NULL)
+							   $bgcolor ="rgba(255, 0, 0, 0.5);"; //red
+						   else if($currentTime < $data->go_live_time) {
+							   $bgcolor ="rgba(255, 255, 0, 0.5);"; //yellow
+						   }   
+						   else if($currentLive!=1) {
+							   $currentLive = 1;
+							   $bgcolor ="rgba(0, 128, 0, 0.5);"; // green
+						   } else {
+							   $bgcolor ="rgba(255, 255, 0, 0.5);"; //yellow
+						   }	   
+						
+			        	
+			    ?>
 			    <div class="form-group CmpHistoryPnl" style="background-color:{{ $bgcolor }}">
                 <div>
                   <b>Camp Title :</b> {{ $data->title }} <br/>
@@ -51,14 +62,19 @@
 				  <b>Language :</b> {{ $data->language }}<br/>
 				  <b>URL :</b> {{ $data->url }} <br/>
 				  <b>Nickname :</b> {{ $data->nickname->nick_name }} <br/>
-				  <b>Submitted on :</b> {{ $data->submit_time }} <br/>
-				  <b>Go live Time :</b> {{ $data->go_live_time}} <br/> 
+				  <b>Submitted on :</b> {{ date('m-d-Y H:i:s',$data->submit_time) }} <br/>
+				  <b>Go live Time :</b> {{ date('m-d-Y H:i:s',$data->go_live_time)}} <br/> 
                </div>    
                <div class="CmpHistoryPnl-footer">
-				  <a class="btn btn-historysmt" href="#">Object Or Submit New Update</a> 
+				  <a class="btn btn-historysmt" href="<?php echo url('manage/camp/'.$data->id);?>">Object Or Submit New Update</a> 
 			    </div> 	
 			   </div>
-			   <?php } ?>
+			   <?php } 
+			    } else {
+					
+					echo " No camp history available.";
+				}
+			   ?>
         </form>
 </div>
 </div>
