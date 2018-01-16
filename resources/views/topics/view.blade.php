@@ -147,7 +147,7 @@
             </div>    
             </div>
             <div class="footer">
-            	<a class="btn btn-success"href="<?php echo url('manage/camp/'.$camp->topic_num.'/'.$camp->camp_num);?>">Manage/Edit This Camp</a>
+            	<a class="btn btn-success"href="<?php echo url('camp/history/'.$camp->topic_num.'/'.$camp->camp_num);?>">Manage/Edit This Camp</a>
             </div>
         </div>
     </div>
