@@ -8,7 +8,7 @@
 
 
 <div class="page-titlePnl">
-    <h1 class="page-title">Camp History</h1>
+    <h1 class="page-title">Camp Statement History</h1>
 </div> 
 
 @if(Session::has('error'))
@@ -32,7 +32,7 @@
             <input type="hidden" name="topic_num" value="{{ $topic->topic_num }}">
             
                
-			   <?php foreach($camps as $key=>$data) { 
+			   <?php foreach($statement as $key=>$data) { 
 			   
 			   if($key==0 && $data->objector !== NULL)
 				   $bgcolor ="yellow";
@@ -43,26 +43,22 @@
 				   $bgcolor = "red";
 			   ?>
 			    <div class="form-group" style="background-color:{{ $bgcolor }}">
-                  Camp Title : {{ $data->title }} <br/>
-				  Camp Name : {{ $data->title }} <br/>
-				  Keyword : {{ $data->key_words }} <br/>
+                  
+				 		  
+				  Statement : {{ $data->value }} <br/>
+				 
 				  Note : {{ $data->note }} <br/>
 				  Language : {{ $data->language }}<br/>
-				  URL " {{ $data->url }} <br/>
-				  Nickname : {{ $data->nickname->nick_name }} <br/>
+				 
 				  Submitted on : {{ $data->submit_time }} <br/>
 				  
 				  Go live Time : {{ $data->go_live_time}} <br/>
 				  
-				  <button>Object Or Submit New Update</button>
+				  <a href="<?php echo url('manage/statement/'.$data->topic_num.'/'.$data->camp_num);?>">Object Or Submit Statement Update</a>
 			   <hr/>
 			    </div> 	
 			   
 			   <?php } ?>
-			   
-           			
-
-            <button type="submit" class="btn btn-login">Submit Update</button>
         </form>
 </div>
 </div>

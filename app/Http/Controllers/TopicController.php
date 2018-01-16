@@ -195,12 +195,30 @@ class TopicController extends Controller {
 		$topicnum       = $topicnumArray[0];
 		
         $topic = Camp::where('topic_num',$topicnum)->where('camp_name','=','Agreement')->latest('submit_time')->first();
-        $camp = Camp::where('topic_num',$topicnum)->where('camp_num','=', $campnum)->latest('submit_time','objector')->get();
+        $onecamp = Camp::where('topic_num',$topicnum)->where('camp_num','=', $campnum)->latest('submit_time')->first();
+        $campWithParents = Camp::campNameWithAncestors($onecamp,'');
+		
+		$camp = Camp::where('topic_num',$topicnum)->where('camp_num','=', $campnum)->latest('submit_time','objector')->get();
         
 	
 		//$statement = Statement::where('topic_num',$topicnum)->where('camp_num',$campnum)->latest('submit_time')->first();
         
-        return view('topics.camphistory',  ['topic'=>$topic,'camp'=>$camp]);
+        return view('topics.camphistory',  ['topic'=>$topic,'camps'=>$camp,'parentcampnum'=>$onecamp->parent_camp_num,'onecamp'=>$onecamp,'parentcamp'=>$campWithParents]);
+    }
+	public function statement_history($id,$campnum){
+		
+		$topicnumArray  = explode("-",$id);
+		$topicnum       = $topicnumArray[0];
+		
+        $topic = Camp::where('topic_num',$topicnum)->where('camp_name','=','Agreement')->latest('submit_time')->first();
+        //$camp = Camp::where('topic_num',$topicnum)->where('camp_num','=', $campnum)->latest('submit_time','objector')->get();
+        $onecamp = Camp::where('topic_num',$topicnum)->where('camp_num','=', $campnum)->latest('submit_time')->first();
+        $campWithParents = Camp::campNameWithAncestors($onecamp,'');
+		
+	
+		$statement = Statement::where('topic_num',$topicnum)->where('camp_num',$campnum)->latest('submit_time')->get();
+        
+        return view('topics.statementhistory',  ['topic'=>$topic,'statement'=>$statement,'parentcampnum'=>$onecamp->parent_camp_num,'onecamp'=>$onecamp,'parentcamp'=>$campWithParents]);
     }
     
     public function store_camp(Request $request){
@@ -211,7 +229,7 @@ class TopicController extends Controller {
             'title'=>'required',
             'go_live_time'=>'required',
             'note'=>'required',
-			'statement'=>'required',
+			//'statement'=>'required',
         ]);
         if ($validator->fails()) {
             return back()->withErrors($validator->errors())->withInput($request->all());
