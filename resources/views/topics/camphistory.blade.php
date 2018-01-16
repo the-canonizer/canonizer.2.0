@@ -25,6 +25,24 @@
 
 
 <div class="right-whitePnl">
+<div class="row">
+    <div class="col-sm-12">
+        <div class="notifySignPNL">
+            <div class="col-sm-2">
+                <div class="red-circle"></div>
+                <div class="circle-txt">Objected</div>
+            </div>
+            <div class="col-sm-2">
+                <div class="green-circle"></div>
+                <div class="circle-txt">Live</div>
+            </div>
+            <div class="col-sm-2">
+                <div class="yellow-circle"></div>
+                <div class="circle-txt">Not Live</div>
+            </div>
+        </div>
+    </div>
+</div>
 <div>
     <div class="col-sm-12 margin-btm-2">
         <form action="{{ route('camp.save')}}" method="post">
