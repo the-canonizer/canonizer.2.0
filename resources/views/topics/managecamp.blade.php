@@ -57,11 +57,11 @@
                 <input type="text" name="title" class="form-control" id="" value="{{ $camp->title }}">
                 @if ($errors->has('title')) <p class="help-block">{{ $errors->first('title') }}</p> @endif
             </div> 
-            <div class="form-group">
+            <!--<div class="form-group">
                 <label for="statement">Camp Statement</label>
                 <textarea class="form-control" rows="6" name="statement">{{ $statement->value}}</textarea>
                 @if ($errors->has('statement')) <p class="help-block">{{ $errors->first('statement') }}</p> @endif
-            </div> 
+            </div> -->
             <div class="form-group">
                 <label for="keywords">Keywords </label>
                 <input type="text" name="keywords" class="form-control" id="" value="{{ $camp->key_words }}">

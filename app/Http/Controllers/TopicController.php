@@ -184,9 +184,23 @@ class TopicController extends Controller {
         $encode = General::canon_encode($id);
 		
         $nickNames  = DB::table('nick_name')->select('nick_name_id','nick_name')->where('owner_code',$encode)->get();
-		$statement = Statement::where('topic_num',$topicnum)->where('camp_num',$campnum)->latest('submit_time')->first();
+		//$statement = Statement::where('topic_num',$topicnum)->where('camp_num',$campnum)->latest('submit_time')->first();
         
-        return view('topics.managecamp',  ['statement'=>$statement,'topic'=>$topic,'camp'=>$camp,'parentcampnum'=>$camp->parent_camp_num,'parentcamp'=>$campWithParents,'nickNames'=>$nickNames]);
+        return view('topics.managecamp',  ['topic'=>$topic,'camp'=>$camp,'parentcampnum'=>$camp->parent_camp_num,'parentcamp'=>$campWithParents,'nickNames'=>$nickNames]);
+    }
+	
+	public function camp_history($id,$campnum){
+		
+		$topicnumArray  = explode("-",$id);
+		$topicnum       = $topicnumArray[0];
+		
+        $topic = Camp::where('topic_num',$topicnum)->where('camp_name','=','Agreement')->latest('submit_time')->first();
+        $camp = Camp::where('topic_num',$topicnum)->where('camp_num','=', $campnum)->latest('submit_time','objector')->get();
+        
+	
+		//$statement = Statement::where('topic_num',$topicnum)->where('camp_num',$campnum)->latest('submit_time')->first();
+        
+        return view('topics.camphistory',  ['topic'=>$topic,'camp'=>$camp]);
     }
     
     public function store_camp(Request $request){
@@ -225,10 +239,13 @@ class TopicController extends Controller {
 		 $camp->submitter = $all['submitter'];
 		 $camp->object_reason = $all['object_reason'];
 		 $camp->object_time = time();
-		 
+		 $message = 'Camp update submitted Successfully.';
+		} else {
+			
+			$message = 'Camp Created Successfully.';
 		}		
-        
-        if($camp->save()) {
+        $camp->save();
+        /*if($camp->save()) {
 			
 		  $statement = new Statement();	
 		  
@@ -260,7 +277,7 @@ class TopicController extends Controller {
 		} else {
 			
 		  $message = 'Camp not added, please try again.';	
-		}
+		}*/
         
         return redirect()->route('home')->with(['success'=>$message]);
                 

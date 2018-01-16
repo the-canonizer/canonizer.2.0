@@ -30,6 +30,7 @@ Route::get('resetpassword/{token}','Auth\ResetPasswordController@showResetForm')
 Route::post('reset','Auth\ResetPasswordController@reset');
 Route::get('topic/{id}/{campnum}', [ 'as' => 'topic', 'uses' => 'TopicController@show']);
 Route::post('loadtopic','HomeController@loadtopic');
+Route::get('camp/history/{id}/{campnum}', 'TopicController@camp_history');
 
 Route::group([ 'middleware' => 'auth'], function()
 {
