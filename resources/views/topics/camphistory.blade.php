@@ -25,8 +25,8 @@
 
 
 <div class="right-whitePnl">
-<div class="row col-sm-12 justify-content-between">
-    <div class="col-sm-5 margin-btm-2">
+<div>
+    <div class="col-sm-12 margin-btm-2">
         <form action="{{ route('camp.save')}}" method="post">
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
             <input type="hidden" name="topic_num" value="{{ $topic->topic_num }}">
@@ -35,34 +35,30 @@
 			   <?php foreach($camp as $key=>$data) { 
 			   
 			   if($key==0 && $data->objector !== NULL)
-				   $bgcolor ="yellow";
+				   $bgcolor ="rgba(255, 0, 0, 0.5);";
 			   else if($key==1 && $data->objector == NULL ) {
-				   $bgcolor ="green";
-			   } else if($data->objector !== NULL || $data->objector !="") $bgcolor ="yellow";
+				   $bgcolor ="rgba(0, 128, 0, 0.5);";
+			   } else if($data->objector !== NULL || $data->objector !="") $bgcolor ="rgba(255, 255, 0, 0.5);";
 			   else 
-				   $bgcolor = "red";
+				   $bgcolor = "rgba(255, 0, 0, 0.5);";
 			   ?>
-			    <div class="form-group" style="background-color:{{ $bgcolor }}">
-                  Camp Title : {{ $data->title }} <br/>
-				  Camp Name : {{ $data->title }} <br/>
-				  Keyword : {{ $data->key_words }} <br/>
-				  Note : {{ $data->note }} <br/>
-				  Language : {{ $data->language }}<br/>
-				  URL " {{ $data->url }} <br/>
-				  Nickname : {{ $data->nickname->nick_name }} <br/>
-				  Submitted on : {{ $data->submit_time }} <br/>
-				  
-				  Go live Time : {{ $data->go_live_time}} <br/>
-				  
-				  <button>Object Or Submit New Update</button>
-			   <hr/>
+			    <div class="form-group CmpHistoryPnl" style="background-color:{{ $bgcolor }}">
+                <div>
+                  <b>Camp Title :</b> {{ $data->title }} <br/>
+				  <b>Camp Name :</b> {{ $data->title }} <br/>
+				  <b>Keyword :</b> {{ $data->key_words }} <br/>
+				  <b>Note :</b> {{ $data->note }} <br/>
+				  <b>Language :</b> {{ $data->language }}<br/>
+				  <b>URL :</b> {{ $data->url }} <br/>
+				  <b>Nickname :</b> {{ $data->nickname->nick_name }} <br/>
+				  <b>Submitted on :</b> {{ $data->submit_time }} <br/>
+				  <b>Go live Time :</b> {{ $data->go_live_time}} <br/> 
+               </div>    
+               <div class="CmpHistoryPnl-footer">
+				  <a class="btn btn-historysmt" href="#">Object Or Submit New Update</a> 
 			    </div> 	
-			   
+			   </div>
 			   <?php } ?>
-			   
-           			
-
-            <button type="submit" class="btn btn-login">Submit Update</button>
         </form>
 </div>
 </div>
