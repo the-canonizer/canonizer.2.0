@@ -966,3 +966,42 @@ ul.mainouter li .tp-title {
 	color:#fff;
 	background-color:#333;
 }
+.notifySignPNL{
+	margin-bottom:10px;
+	display:inline-block;
+	margin-bottom:5px;
+	width:100%;
+}
+.notifySignPNL .red-circle{
+	background-color: rgba(255, 0, 0, 0.5);
+    width: 10px;
+    border-radius: 100px;
+    height: 10px;
+    visibility: visible;
+    color: rgba(255, 0, 0, 0.5);
+	display:inline-block;
+	margin-right:5px;
+}
+.notifySignPNL .circle-txt{
+	display:inline-block;
+}
+.notifySignPNL .green-circle{
+	background-color:rgba(0, 128, 0, 0.5);
+    width: 10px;
+    border-radius: 100px;
+    height: 10px;
+    visibility: visible;
+    color:rgba(0, 128, 0, 0.5);
+	display:inline-block;
+	margin-right:5px;
+}
+.notifySignPNL .yellow-circle{
+	background-color: rgba(255, 255, 0, 1);
+    width: 10px;
+    border-radius: 100px;
+    height: 10px;
+    visibility: visible;
+    color: rgba(255, 255, 0, 1);
+	display:inline-block;
+	margin-right:5px;
+}
