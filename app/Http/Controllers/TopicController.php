@@ -187,6 +187,20 @@ class TopicController extends Controller {
         
         return view('topics.managecamp',  ['topic'=>$topic,'camp'=>$camp,'parentcampnum'=>$camp->parent_camp_num,'parentcamp'=>$campWithParents,'nickNames'=>$nickNames]);
     }
+	public function manage_statement($id){
+		
+		$statement = Statement::where('record_id',$id)->first();
+		if(!count($statement)) { return back(); }
+        $topic = Camp::where('topic_num',$statement->topic_num)->where('camp_name','=','Agreement')->latest('submit_time')->first();
+        $camp  = Camp::where('topic_num',$statement->topic_num)->where('camp_num','=', $statement->camp_num)->latest('submit_time')->first();
+        $campWithParents = Camp::campNameWithAncestors($camp,'');
+		
+		$userid = Auth::user()->id; 
+        $encode = General::canon_encode($userid);
+		
+       
+        return view('topics.managestatement',  ['topic'=>$topic,'statement'=>$statement,'parentcampnum'=>$camp->parent_camp_num,'parentcamp'=>$campWithParents]);
+    }
 	
 	public function camp_history($id,$campnum){
 		
@@ -261,14 +275,50 @@ class TopicController extends Controller {
 			
 			$message = 'Camp Created Successfully.';
 		}		
-        $camp->save();
-        /*if($camp->save()) {
+        
+        if($camp->save()) {
 			
+		  if(!isset($all['camp_num'])) {
+			  $statement = new Statement();	
+			  
+			  $statement->value = $all['statement'];
+			  $statement->topic_num = $all['topic_num'];
+			  $statement->camp_num = $camp->camp_num;
+			  $statement->note = $all['note'];
+			  $statement->submit_time = strtotime(date('Y-m-d H:i:s'));
+			  $statement->submitter = Auth::user()->id;
+			  $statement->go_live_time = strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
+			  $statement->language = $all['language'];
+					  
+			  $statement->save();
+		  }
+			
+		} else {
+			
+		  $message = 'Camp not added, please try again.';	
+		}
+        
+        return redirect()->route('home')->with(['success'=>$message]);
+                
+        
+    }
+	public function store_statement(Request $request){
+        $all = $request->all();
+        $validator = Validator::make($request->all(), [
+            'statement'=>'required',
+            'note' => 'required',
+           
+        ]);
+        if ($validator->fails()) {
+            return back()->withErrors($validator->errors())->withInput($request->all());
+        }
+        
+        	
 		  $statement = new Statement();	
 		  
 		  $statement->value = $all['statement'];
 		  $statement->topic_num = $all['topic_num'];
-		  $statement->camp_num = $camp->camp_num;
+		  $statement->camp_num = $all['camp_num'];
 		  $statement->note = $all['note'];
 		  $statement->submit_time = strtotime(date('Y-m-d H:i:s'));
 		  $statement->submitter = Auth::user()->id;
@@ -282,21 +332,17 @@ class TopicController extends Controller {
 			 $statement->object_reason = $all['object_reason'];
 			 $statement->object_time = time();
 			 
-			 $message = 'Camp update submitted Successfully.';
+			 $message = 'Camp statement update submitted successfully.';
 			 
 		  } else { 
-		    $message = 'Camp Created Successfully.';
+		    $message = 'Camp statement submitted successfully.';
 		  }	
 		  
 		  $statement->save();
-		  
-			
-		} else {
-			
-		  $message = 'Camp not added, please try again.';	
-		}*/
+		   
+		
         
-        return redirect()->route('home')->with(['success'=>$message]);
+        return redirect('statement/history/'.$statement->topic_num.'/'.$statement->camp_num)->with(['success'=>$message]);
                 
         
     }

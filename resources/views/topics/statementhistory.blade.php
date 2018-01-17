@@ -50,28 +50,43 @@
             <input type="hidden" name="topic_num" value="{{ $topic->topic_num }}">
             
                
-			   <?php foreach($statement as $key=>$data) { 
+			   <?php 
+			        if(!empty($statement)) { 
+			            $currentLive = 0; 
+			         foreach($statement as $key=>$data) { 
 			   
-			   if($key==0 && $data->objector !== NULL)
-				   $bgcolor ="rgba(255, 255, 0, 0.5);";
-			   else if($key==1 && $data->objector == NULL ) {
-				   $bgcolor ="rgba(0, 128, 0, 0.5);";
-			   } else if($data->objector !== NULL || $data->objector !="") $bgcolor ="rgba(255, 255, 0, 0.5)";
-			   else 
-				   $bgcolor = "rgba(255, 0, 0, 0.5);";
+			              $currentTime = time();
+						   
+						   
+						   if($data->objector !== NULL)
+							   $bgcolor ="rgba(255, 0, 0, 0.5);"; //red
+						   else if($currentTime < $data->go_live_time) {
+							   $bgcolor ="rgba(255, 255, 0, 0.5);"; //yellow
+						   }   
+						   else if($currentLive!=1) {
+							   $currentLive = 1;
+							   $bgcolor ="rgba(0, 128, 0, 0.5);"; // green
+						   } else {
+							   $bgcolor ="rgba(255, 255, 0, 0.5);"; //yellow
+						   }	
 			   ?>
 			    <div class="form-group CmpHistoryPnl" style="background-color:{{ $bgcolor }}">
                   <b>Statement :</b> {{ $data->value }} <br/>
 				  <b>Note :</b> {{ $data->note }} <br/>
 				  <b>Language :</b> {{ $data->language }}<br/>
-				  <b>Submitted on :</b> {{ $data->submit_time }} <br/>
-				  <b>Go live Time :</b> {{ $data->go_live_time}} <br/>
+				  <b>Submitted on :</b> {{ date('m-d-Y H:i:s',$data->submit_time) }} <br/>
+				  <b>Go live Time :</b> {{ date('m-d-Y H:i:s',$data->go_live_time)}} <br/> 
 				 <div class="CmpHistoryPnl-footer">
-				 	<a class="btn btn-historysmt" href="<?php echo url('manage/statement/'.$data->topic_num.'/'.$data->camp_num);?>">Object Or Submit Statement Update</a>
+				 	<a class="btn btn-historysmt" href="<?php echo url('manage/statement/'.$data->record_id);?>">Object Or Submit Statement Update</a>
                  </div>
 			    </div> 	
 			   
-			   <?php } ?>
+			   <?php } 
+				 } else {
+					 
+					 echo " No statement history available.";
+				 }
+			   ?>
         </form>
 </div>
 </div>

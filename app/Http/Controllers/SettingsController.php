@@ -9,6 +9,7 @@ use App\User;
 use Illuminate\Support\Facades\Session;
 use App\Library\General;
 use App\Model\Nickname;
+use App\Model\Support;
 use Illuminate\Support\Facades\Validator;
 
 class SettingsController extends Controller
@@ -86,6 +87,115 @@ class SettingsController extends Controller
 
             Session::flash('success', "Nick name created successfully.");
         return redirect()->back();
+        }else{
+            return redirect()->route('login');
+        }
+
+
+    }
+	
+	public function support($id=null,$campnums=null){
+        
+		
+		if(isset($id)) {
+			$topicnumArray  = explode("-",$id);
+			$topicnum       = $topicnumArray[0];
+			// get deligated nickname if exist
+			$campnumArray  = explode("-",$campnums);
+			$campnum       = $campnumArray[0];
+			$delegate_nick_name_id = (isset($campnumArray[1])) ? $campnumArray[1] : 0;
+			
+			$id = Auth::user()->id; 
+			$encode = General::canon_encode($id);
+
+			$topic = Camp::where('topic_num',$topicnum)->where('camp_name','=','Agreement')->latest('submit_time')->first();
+			//$camp = Camp::where('topic_num',$topicnum)->where('camp_num','=', $campnum)->latest('submit_time','objector')->get();
+			$onecamp = Camp::where('topic_num',$topicnum)->where('camp_num','=', $campnum)->latest('submit_time')->first();
+			$campWithParents = Camp::campNameWithAncestors($onecamp,'');
+			
+			if(!count($onecamp)) { return back();}
+
+			//get nicknames
+			$nicknames = Nickname::where('owner_code','=',$encode)->get();
+			$userNickname=array();
+			foreach($nicknames as $nickname) {
+				
+				$userNickname[] = $nickname->nick_name_id;
+			}
+		
+		 
+		    $supportedTopic = Support::whereIn('nick_name_id',$userNickname)->groupBy('topic_num')->orderBy('support_order','ASC')->get();
+		
+            return view('settings.support',['userNickname'=>$userNickname,'supportedTopic'=>$supportedTopic,'topic'=>$topic,'nicknames'=>$nicknames,'camp'=>$onecamp,'parentcamp'=>$campWithParents,'delegate_nick_name_id'=>$delegate_nick_name_id]);
+	  } else {
+		    $id = Auth::user()->id; 
+			$encode = General::canon_encode($id);
+			
+		    $nicknames = Nickname::where('owner_code','=',$encode)->get();
+			$userNickname=array();
+			foreach($nicknames as $nickname) {
+				
+				$userNickname[] = $nickname->nick_name_id;
+			}
+		
+		 
+		    $supportedTopic = Support::whereIn('nick_name_id',$userNickname)->groupBy('topic_num')->orderBy('support_order','ASC')->get();
+		
+		    return view('settings.support',['userNickname'=>$userNickname,'supportedTopic'=>$supportedTopic,'nicknames'=>$nicknames]);
+		  
+	  }
+	}
+	
+	public function add_support(Request $request){
+        $id = Auth::user()->id;
+        if($id){
+            $messages = [
+                'nick_name.required' => 'Nickname is required.',
+            ];
+            
+
+            $validator = Validator::make($request->all(), [
+                'nick_name' => 'required',
+                
+            ],$messages);
+    
+            if ($validator->fails()) {
+                return redirect()->back()
+                            ->withErrors($validator)
+                            ->withInput();
+            }
+
+            $input = $request->all();
+			// Check if camp supported already then remove duplicacy.
+			$userNicknames  = unserialize($input['userNicknames']);
+			$alreadySupport  = Support::where('camp_num',$input['camp_num'])->where('topic_num')->whereIn('nick_name_id',$userNicknames);
+			
+			if(count($alreadySupport)) {
+				
+				Session::flash('error', "You have already supported this camp, you cant submit your support again.");
+                return redirect()->back();
+			}
+			
+			
+            
+            $support = new Support();
+            $support->nick_name_id = $input['nick_name'];
+            $support->topic_num = $input['topic_num'];
+            $support->camp_num = $input['camp_num'];
+            $support->start = time();
+			$support->delegate_nick_name_id = $input['delegate_nick_name_id'];
+			
+			if(isset($input['firstchoice']))
+				$support->support_order = 0;
+			else
+				$support->support_order = $input['lastsupport_rder'] + 1;
+			
+			
+			
+            $support->save();
+
+            Session::flash('success', "Your support has been submitted successfully.");
+            return redirect()->back();
         }else{
             return redirect()->route('login');
         }

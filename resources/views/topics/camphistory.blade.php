@@ -79,7 +79,7 @@
 				  <b>Note :</b> {{ $data->note }} <br/>
 				  <b>Language :</b> {{ $data->language }}<br/>
 				  <b>URL :</b> {{ $data->url }} <br/>
-				  <b>Nickname :</b> {{ $data->nickname->nick_name }} <br/>
+				  <b>Nickname :</b> {{ isset($data->nickname->nick_name) ? $data->nickname->nick_name : 'N/A' }} <br/>
 				  <b>Submitted on :</b> {{ date('m-d-Y H:i:s',$data->submit_time) }} <br/>
 				  <b>Go live Time :</b> {{ date('m-d-Y H:i:s',$data->go_live_time)}} <br/> 
                </div>    
