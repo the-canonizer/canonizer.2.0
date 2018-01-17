@@ -168,8 +168,8 @@ class SettingsController extends Controller
             $input = $request->all();
 			// Check if camp supported already then remove duplicacy.
 			$userNicknames  = unserialize($input['userNicknames']);
-			$alreadySupport  = Support::where('camp_num',$input['camp_num'])->where('topic_num')->whereIn('nick_name_id',$userNicknames);
-			
+			$alreadySupport  = Support::where('camp_num',$input['camp_num'])->where('topic_num',$input['topic_num'])->whereIn('nick_name_id',$userNicknames)->get();
+
 			if(count($alreadySupport)) {
 				
 				Session::flash('error', "You have already supported this camp, you cant submit your support again.");
