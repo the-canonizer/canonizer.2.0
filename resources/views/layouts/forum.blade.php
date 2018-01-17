@@ -15,6 +15,7 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/trix/0.11.1/trix.css">
     <link href="{{ URL::asset('/css/canonizer.css') }}" rel="stylesheet">
+    
 
     <!-- Scripts -->
     <script>
@@ -39,43 +40,174 @@
 
     @yield('head')
 </head>
+
 <body>
-<div id="app">
+    @section('sidebar')
+        <div id="app">
+            
+            <nav class="navbar navbar-default">
 
-    <nav class="navbar navbar-expand-lg" id="mainNav">
-        <a class="navbar-brand" href="{{ url('/') }}">
-            <img src="{{ url('/img/logo.png')}}">
-        </a>
-        <div class="collapse navbar-collapse" id="navbarResponsive">
+                <div class="container-fluid">
+
+                    <div class="navbar-header">
+
+                        {{--  <a class="navbar-brand" href="{{ url('/') }}">
+                            {{--  <img src="{{ url('/img/logo.png')}}"
+                            height="100" width="100"
+                            > 
+                            Canonizer.com
+                        </a>  --}}
+                        <!-- Starts Here -->
+
+                        <ul class="nav navbar-nav navbar-left">
+                            
+                            <li class="dropdown">
+                                
+                                <a  href="{{ url('/') }}"
+                                    class="navbar-brand"
+                                    class="dropdown-toggle" 
+                                    data-toggle="dropdown" 
+                                    role="button" 
+                                    aria-haspopup="true" 
+                                    aria-expanded="false">Canonizer.com  
+                                    <span class="caret"></span>
+                                </a>
+
+                                <ul class="dropdown-menu">
+                                    
+                                    <li>
+                                        <a href="#">Help</a>
+                                    </li>
+                                    
+                                    <li>
+                                        <a href=" {{ url('/') }} ">Canonizer Main</a>
+                                    </li>
+
+                                    <li>
+                                        <a href="#">What is the Canonizer</a>
+                                    </li>
+                                    
+                                    <li>
+                                        <a href="#">Browse</a>
+                                    </li>
+
+                                    <li>
+                                        <a href="{{ url('/topic/create') }}">Create New Topic</a>
+                                    </li>
+
+                                    <li>
+                                        <a href="#">Upload File</a>
+                                    </li>
+
+                                </ul>
                 
-            <ul>
-                <li class="nav-item dropdown_li">
+                            </li>
+                                
+                        </ul>
+                      
+                        <!-- Ends Here -->
+
+                    </div>   
                     
-                    @if(Auth::check())
-                    <div class="dropdown">
-                        <a href="">Main Forum</a>
-                        <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-fw fa-user"></i> {{ Auth::user()->first_name . ' ' . Auth::user()->last_name}} </a>
-                        <span class="caret"></span>
-                        <ul class="dropdown-menu">
-                            <li><a href="{{ route('settings')}}">Account Settings</a></li>
-                            <li><a href="{{ url('/logout')}}">Logout</a></li>
-                        </ul>                        
+                    <div class="collapse navbar-collapse" id="navDetails">
 
+                        <ul class="nav navbar-nav">
+                            
+                            <li class="active">
+                                <a href="{{ request()->segment(count(request()->segments())) }}/../">Home 
+                                    <span class="sr-only">(current)</span>
+                                </a>
+                            </li>
+                        
+                            @if(Auth::check())
+                        
+                            <li>
+                                <a href="{{ basename(request()->path()) }}/../create">Create New Thread</a>
+                            </li>
+                        </ul>
+                        
+                        <form class="navbar-form navbar-left" role="search">
+                            <div class="input-group search-panel">
+                                <div class="input-group-btn">
+                                    <button type="button" 
+                                            class="btn btn-default dropdown-toggle btn-slct-dpdwn" 
+                                            data-toggle="dropdown">
+                                        
+                                        <span id="search_concept">Canonizer.com</span> 
+                                        <span class="caret"></span>
+
+                                    </button>
+
+                                    <ul class="dropdown-menu" role="menu">
+                                        <li><a href="#web">Web</a></li>
+                                        <li><a href="#canonizer.com">Canonizer.com</a></li>
+                                    </ul>
+
+                                </div>
+
+                                <input type="hidden" name="search_param" value="all" id="search_param">         
+                                <input type="text" class="form-control search" name="x" placeholder="Search">
+                                
+                                <span class="input-group-btn">
+
+                                    <button class="btn btn-default" type="button">Go For It
+                                        <span class="glyphicon"></span>
+                                    </button>
+
+                                </span>
+
+                            </div>
+
+                        </form>
+                    
+                        <ul class="nav navbar-nav navbar-right">
+                            
+                            <li class="dropdown">
+                                <a href="#" 
+                                    class="dropdown-toggle" 
+                                    data-toggle="dropdown" 
+                                    role="button" 
+                                    aria-haspopup="true" 
+                                    aria-expanded="false">{{ Auth::user()->first_name . ' ' . Auth::user()->last_name}} 
+                                    <span class="caret"></span>
+                                </a>
+
+                                <ul class="dropdown-menu">
+                                    
+                                    <li>
+                                        <a href="{{ route('settings')}}">Account Settings</a>
+                                    </li>
+                                    
+                                    <li>
+                                        <a href="{{ url('/logout')}}">Logout</a>
+                                    </li>
+                                    
+                                </ul>
+                                @else
+                                <li>
+                                    <a href="{{ url('/login')}}">Login</a>
+                                </li>
+
+                                <li>
+                                    <a href="{{ url('/register')}}">Register</a>
+                                </li>
+                
+                            </li>
+                            @endif
+                        </ul>
+                        
                     </div>
-                    @else
-                    <a href="/">Main Forum</a>
-                    <a class="nav-link" href="{{ url('/login')}}"><i class="fa fa-fw fa-user"></i> Log in</a>
-                    <a class="nav-link" href="{{ url('/register')}}"><i class="fa fa-fw fa-user-plus"></i> Register </a>
-                    @endif
-                </li>
-            </ul>
+                
+                </div>
+
+            </nav>
+
         </div>
-    
-    </nav> 
+        
 
-    @yield('content')
+        @yield('content')
 
-</div>
+
 
 <!-- Scripts -->
 <script src="{{ asset('js/app.js') }}"></script>
