@@ -42,7 +42,10 @@
 					     Support Order : {{ $k+1 }} Choice <br/>
 						 
 						 Nickname : {{ $support->nickname->nick_name }} <br/>
-					   <hr/>
+                        @if($support->delegate_nick_name_id != 0) 						 
+						 Support Delegated To: {{ $support->delegatednickname->nick_name}}
+					    @endif
+					  <hr/>
 					   
 					   <?php if(isset($topic->topic_num) && $topic->topic_num==$data->topic_num) $lastsupportOrder++;
 						   
