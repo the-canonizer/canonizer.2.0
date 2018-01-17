@@ -70,7 +70,7 @@
             </div>    
             </div>
             <div class="footer">
-            	<a class="btn btn-success" href="<?php echo url('manage/camp/'.$camp->topic_num.'/'.$camp->camp_num);?>">Manage/Edit Camp Statement</a>
+            	<a class="btn btn-success" href="<?php echo url('statement/history/'.$topic_id.'/'.$camp->camp_num);?>">Manage/Edit Camp Statement</a>
                 <a class="btn btn-warning">Topic Forum</a>
                 <a class="btn btn-danger">Camp Forum</a>
             </div>
@@ -99,7 +99,10 @@
 					  ?>
 					  
                        <li>
-                       	<a href="#"><div class="badge">{{ $supportData[$camp->camp_num]}}</div> {{ $support->nickname->nick_name}} </a> <button class="btn btn-info">Delegate Your Support</button>
+                       	<a href="#"><div class="badge">{{ $supportData[$camp->camp_num]}}</div> 
+						      {{ $support->nickname->nick_name}} 
+					     </a> 
+						 <a href="<?php echo url('support/'.$topic_id.'/'.$camp->camp_num.'-'.$support->nickname->nick_name_id);?>" class="btn btn-info">Delegate Your Support</a>
                        </li>
 					  <?php } ?>
 					 </ul>  
@@ -108,7 +111,7 @@
             </div>    
             </div>
             <div class="footer">
-                <a class="btn btn-warning">Join or Directly Support This Camp</a>
+                <a class="btn btn-warning" href="<?php echo url('support/'.$topic_id.'/'.$camp->camp_num);?>">Join or Directly Support This Camp</a>
             </div>
         </div>
    

@@ -52,5 +52,14 @@ class Topic extends Model {
 	public function topic() {
         return $this->hasOne('App\Model\Topic', 'topic_num', 'topic_num');
     }
+	public function supports() {
+        return $this->hasMany('App\Model\Support', 'topic_num', 'topic_num')->orderBy('support_order','ASC');
+    }
+	
+	public function scopeGetsupports($query,$topic_num,$userNickname) {
+		
+		return $supports = Support::where('topic_num',$topic_num)->whereIn('nick_name_id',$userNickname)->orderBy('support_order','ASC')->orderBy('start','DESC')->get();
+		
+	}
 
 }

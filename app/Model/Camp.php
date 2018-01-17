@@ -71,15 +71,18 @@ class Camp extends Model {
     }
 
     public function scopeCampNameWithAncestors($query, $camp, $campname = '') {
-        if ($campname != '') {
-            $campname = $camp->camp_name . ' / ' . $campname;
-        } else {
-            $campname = $camp->camp_name;
-        }
-        if ($camp->parent_camp_num) {
-            $pcamp = Camp::where('topic_num', $camp->topic_num)->where('camp_num', $camp->parent_camp_num)->groupBy('camp_num')->orderBy('submit_time', 'desc')->first();
-            return self::campNameWithAncestors($pcamp, $campname);
-        }
+        
+		if(!empty($camp)) {
+			if ($campname != '') {
+				$campname = $camp->camp_name . ' / ' . $campname;
+			} else {
+				$campname = $camp->camp_name;
+			}
+			if ($camp->parent_camp_num) {
+				$pcamp = Camp::where('topic_num', $camp->topic_num)->where('camp_num', $camp->parent_camp_num)->groupBy('camp_num')->orderBy('submit_time', 'desc')->first();
+				return self::campNameWithAncestors($pcamp, $campname);
+			}
+		}
         return $campname;
     }
 

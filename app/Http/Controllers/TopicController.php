@@ -66,7 +66,7 @@ class TopicController extends Controller {
             $topic->namespace = $all['namespace'];
             $topic->submit_time = time();
             $topic->submitter = Auth::user()->id;
-            $topic->go_live_time = strtotime($all['go_live_time']);
+            $topic->go_live_time = strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
             $topic->language = $all['language'];
             $topic->note = $all['note'];
 						
@@ -105,7 +105,7 @@ class TopicController extends Controller {
 		$topicnum       = $topicnumArray[0];
 		$topic = Topic::where('topic_num',$topicnum)->latest('submit_time')->first();
         
-		
+		if(!count($topic)) { return back();}
 		return view('topics.managetopic',  ['topic'=>$topic]);
 		
 	}
@@ -171,22 +171,35 @@ class TopicController extends Controller {
         
         return view('topics.camp_create',  ['topic'=>$topic,'parentcampnum'=>$campnum,'parentcamp'=>$campWithParents,'nickNames'=>$nickNames]);
     }
-	public function manage_camp($id,$campnum){
+	public function manage_camp($id){
 		
-		$topicnumArray  = explode("-",$id);
-		$topicnum       = $topicnumArray[0];
-		
-        $topic = Camp::where('topic_num',$topicnum)->where('camp_name','=','Agreement')->latest('submit_time')->first();
-        $camp = Camp::where('topic_num',$topicnum)->where('camp_num','=', $campnum)->latest('submit_time')->first();
+		$camp = Camp::where('id',$id)->first();
+		if(!count($camp)) { return back(); }
+        $topic = Camp::where('topic_num',$camp->topic_num)->where('camp_name','=','Agreement')->latest('submit_time')->first();
+
         $campWithParents = Camp::campNameWithAncestors($camp,'');
 		
-		$id = Auth::user()->id; 
-        $encode = General::canon_encode($id);
+		$userid = Auth::user()->id; 
+        $encode = General::canon_encode($userid);
 		
         $nickNames  = DB::table('nick_name')->select('nick_name_id','nick_name')->where('owner_code',$encode)->get();
 		//$statement = Statement::where('topic_num',$topicnum)->where('camp_num',$campnum)->latest('submit_time')->first();
         
         return view('topics.managecamp',  ['topic'=>$topic,'camp'=>$camp,'parentcampnum'=>$camp->parent_camp_num,'parentcamp'=>$campWithParents,'nickNames'=>$nickNames]);
+    }
+	public function manage_statement($id){
+		
+		$statement = Statement::where('record_id',$id)->first();
+		if(!count($statement)) { return back(); }
+        $topic = Camp::where('topic_num',$statement->topic_num)->where('camp_name','=','Agreement')->latest('submit_time')->first();
+        $camp  = Camp::where('topic_num',$statement->topic_num)->where('camp_num','=', $statement->camp_num)->latest('submit_time')->first();
+        $campWithParents = Camp::campNameWithAncestors($camp,'');
+		
+		$userid = Auth::user()->id; 
+        $encode = General::canon_encode($userid);
+		
+       
+        return view('topics.managestatement',  ['topic'=>$topic,'statement'=>$statement,'parentcampnum'=>$camp->parent_camp_num,'parentcamp'=>$campWithParents]);
     }
 	
 	public function camp_history($id,$campnum){
@@ -198,12 +211,11 @@ class TopicController extends Controller {
         $onecamp = Camp::where('topic_num',$topicnum)->where('camp_num','=', $campnum)->latest('submit_time')->first();
         $campWithParents = Camp::campNameWithAncestors($onecamp,'');
 		
-		$camp = Camp::where('topic_num',$topicnum)->where('camp_num','=', $campnum)->latest('submit_time','objector')->get();
+		$camp = Camp::where('topic_num',$topicnum)->where('camp_num','=', $campnum)->latest('submit_time')->get();
         
-	
-		//$statement = Statement::where('topic_num',$topicnum)->where('camp_num',$campnum)->latest('submit_time')->first();
-        
-        return view('topics.camphistory',  ['topic'=>$topic,'camps'=>$camp,'parentcampnum'=>$onecamp->parent_camp_num,'onecamp'=>$onecamp,'parentcamp'=>$campWithParents]);
+	    if(!count($camp)) { return back();}
+		
+        return view('topics.camphistory',  ['topic'=>$topic,'camps'=>$camp,'parentcampnum'=>(isset($onecamp->parent_camp_num)) ? $onecamp->parent_camp_num : '','onecamp'=>$onecamp,'parentcamp'=>$campWithParents]);
     }
 	public function statement_history($id,$campnum){
 		
@@ -215,7 +227,8 @@ class TopicController extends Controller {
         $onecamp = Camp::where('topic_num',$topicnum)->where('camp_num','=', $campnum)->latest('submit_time')->first();
         $campWithParents = Camp::campNameWithAncestors($onecamp,'');
 		
-	
+	    if(!count($onecamp)) { return back();}
+		
 		$statement = Statement::where('topic_num',$topicnum)->where('camp_num',$campnum)->latest('submit_time')->get();
         
         return view('topics.statementhistory',  ['topic'=>$topic,'statement'=>$statement,'parentcampnum'=>$onecamp->parent_camp_num,'onecamp'=>$onecamp,'parentcamp'=>$campWithParents]);
@@ -227,7 +240,7 @@ class TopicController extends Controller {
             'nick_name'=>'required',
             'camp_name' => 'required',
             'title'=>'required',
-            'go_live_time'=>'required',
+            //'go_live_time'=>'required',
             'note'=>'required',
 			//'statement'=>'required',
         ]);
@@ -243,7 +256,7 @@ class TopicController extends Controller {
         $camp->title = $all['title'];
         $camp->camp_name = $all['camp_name'];
 		$camp->submit_time = strtotime(date('Y-m-d H:i:s'));
-        $camp->go_live_time = strtotime($all['go_live_time']);
+        $camp->go_live_time = strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
         $camp->language = $all['language'];
         $camp->nick_name_id = $all['nick_name'];
         $camp->note = $all['note'];
@@ -262,18 +275,54 @@ class TopicController extends Controller {
 			
 			$message = 'Camp Created Successfully.';
 		}		
-        $camp->save();
-        /*if($camp->save()) {
+        
+        if($camp->save()) {
 			
+		  if(!isset($all['camp_num'])) {
+			  $statement = new Statement();	
+			  
+			  $statement->value = $all['statement'];
+			  $statement->topic_num = $all['topic_num'];
+			  $statement->camp_num = $camp->camp_num;
+			  $statement->note = $all['note'];
+			  $statement->submit_time = strtotime(date('Y-m-d H:i:s'));
+			  $statement->submitter = Auth::user()->id;
+			  $statement->go_live_time = strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
+			  $statement->language = $all['language'];
+					  
+			  $statement->save();
+		  }
+			
+		} else {
+			
+		  $message = 'Camp not added, please try again.';	
+		}
+        
+        return redirect()->route('home')->with(['success'=>$message]);
+                
+        
+    }
+	public function store_statement(Request $request){
+        $all = $request->all();
+        $validator = Validator::make($request->all(), [
+            'statement'=>'required',
+            'note' => 'required',
+           
+        ]);
+        if ($validator->fails()) {
+            return back()->withErrors($validator->errors())->withInput($request->all());
+        }
+        
+        	
 		  $statement = new Statement();	
 		  
 		  $statement->value = $all['statement'];
 		  $statement->topic_num = $all['topic_num'];
-		  $statement->camp_num = $camp->camp_num;
+		  $statement->camp_num = $all['camp_num'];
 		  $statement->note = $all['note'];
 		  $statement->submit_time = strtotime(date('Y-m-d H:i:s'));
 		  $statement->submitter = Auth::user()->id;
-		  $statement->go_live_time = strtotime($all['go_live_time']);
+		  $statement->go_live_time = strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
 		  $statement->language = $all['language'];
 		  
 		  if(isset($all['camp_num'])) {
@@ -283,21 +332,17 @@ class TopicController extends Controller {
 			 $statement->object_reason = $all['object_reason'];
 			 $statement->object_time = time();
 			 
-			 $message = 'Camp update submitted Successfully.';
+			 $message = 'Camp statement update submitted successfully.';
 			 
 		  } else { 
-		    $message = 'Camp Created Successfully.';
+		    $message = 'Camp statement submitted successfully.';
 		  }	
 		  
 		  $statement->save();
-		  
-			
-		} else {
-			
-		  $message = 'Camp not added, please try again.';	
-		}*/
+		   
+		
         
-        return redirect()->route('home')->with(['success'=>$message]);
+        return redirect('statement/history/'.$statement->topic_num.'/'.$statement->camp_num)->with(['success'=>$message]);
                 
         
     }

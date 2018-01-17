@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
 <div class="page-titlePnl">
-    <h1 class="page-title">Nicknames</h1>
+    <h1 class="page-title">Supported Camps</h1>
 </div> 
 
 @if(Session::has('error'))
@@ -24,62 +24,76 @@
         <div class="well">
             <ul class="nav prfl_ul">
                 <li><a class="" href="{{ route('settings')}}">Manage Profile info</a></li>
-                <li class="active"><a class="" href="{{ route('settings.nickname')}}" >Add & Manage Nick Names</a></li>
+                <li class=""><a class="" href="{{ route('settings.nickname')}}" >Add & Manage Nick Names</a></li>
+				<li class="active"><a class="" href="{{ route('settings.support')}}" >My Supports</a></li>
             </ul>
-
-         <!-- exsisting Nick Names -->
          <div class="">
-           <table class="table table-dark table-striped table-hover">
-              <tr>
-                <th>S.No</th>
-                <th>Nick Name</th>
-                <th>Visibilty Status</th>
-                <!--th>Manage Actions</th-->
-              </tr>
-
-              <tbody>
-                 @foreach($nicknames as $k=>$nickname)
-                   <tr>
-                       <td>{{ $k+1 }}</td>
-                       <td>{{ $nickname->nick_name}}</td>
-                       <td>{{ ($nickname->private == 1) ? 'Private' : 'Public'}}</td>
-                       <!--td>
-                          <a href="">Edit</a>
-                          <a href=""><i class="fa fa-trash" aria-hidden="true"></i></a>
-                       </td-->
-                   </tr>
+		        <?php $lastsupportOrder = -1;?>
+                @if(count($supportedTopic))
+                 @foreach($supportedTopic as $data)
+                   
+                       <div><b>For Topic : {{ $data->topic->topic_name}}</b></div><br/>
+               
+					   <?php $topicSupport = $data->topic->Getsupports($data->topic->topic_num,$userNickname);?>
+					   @foreach($topicSupport as $k=>$support)
+					   
+					     Camp : {{ $support->camp->camp_name }} <br/>
+					   
+					     Support Order : {{ $k+1 }} Choice <br/>
+						 
+						 Nickname : {{ $support->nickname->nick_name }} <br/>
+					   <hr/>
+					   
+					   <?php if(isset($topic->topic_num) && $topic->topic_num==$data->topic_num) $lastsupportOrder++;
+						   
+					   ?>
+					   
+					   @endforeach
+					   
+					   
                  @endforeach
-              </tbody>
-           </table>
+               @else
+				  <h6> You didn't supported any camp yet.</h6>
+               @endif			  
 
          </div>
-
-
-
-            <div id="myTabContent" class="add-nickname-section">  
-                 <h5>Add New Nick Name </h5>
-                <form action="{{ route('settings.nickname.add')}}" method="post">
+        @if(isset($topic))
+         <div id="myTabContent" class="add-nickname-section">  
+                 <h5>Select Nick Name To Support {{ $parentcamp }} Camp </h5>
+                <form action="{{ route('settings.support.add')}}" method="post">
                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
+					<input type="hidden" name="topic_num" value="{{ $topic->topic_num }}">
+					<input type="hidden" name="delegate_nick_name_id" value="{{ $delegate_nick_name_id }}">
+					<input type="hidden" name="camp_num" value="{{ $camp->camp_num }}">
+					<input type="hidden" name="lastsupport_rder" value="{{ $lastsupportOrder }}">
+					<input type="hidden" name="userNicknames" value="{{ serialize($userNickname) }}">
+					
+					
+					
                     <div class="row">
                         <div class="col-sm-6 margin-btm-1">
-                            <label for="nick_name">Add Nick Name</label>
-                            <input type="text" name="nick_name" class="form-control" id="" value="{{ old('nick_name')}}">
-                            @if ($errors->has('nick_name')) <p class="help-block">{{ $errors->first('nick_name') }}</p> @endif
-                        </div>
+						<label for="camp_name"></label>
+						<select name="nick_name" class="form-control">
+							@foreach($nicknames as $nick)
+							<option  value="{{ $nick->nick_name_id }}">{{ $nick->nick_name}}</option>
+							@endforeach
+							
+						</select>
+						 @if ($errors->has('nick_name')) <p class="help-block">{{ $errors->first('nick_name') }}</p> @endif
+						 <a href="<?php echo url('settings/nickname');?>">Add new nickname </a>
+						</div> 
                         <div class="col-sm-6 margin-btm-1">
-                            <label for="namespace">Visibility status</label>
-                            <select class="form-control" name="private">
-                                <option value="0">Public</option>
-                                <option vlaue="1">Private</option>
-                            </select>
+                            <input type="checkbox" name="firstchoice" value="1"> <label for="namespace">Make This First Choice</label>
+                            
                             @if ($errors->has('private')) <p class="help-block">{{ $errors->first('private') }}</p> @endif
                         </div> 
                     </div>
                     
-                    <button type="submit" class="btn btn-login">Create</button>
-                    <button type="submit" class="btn btn-default">Cancel</button>
+                    <button type="submit" class="btn btn-login">Confirm Support</button>
+                    
                 </form>  
         </div>
+	  @endif	           
     </div>   
  </div></div>
 </div>  <!-- /.right-whitePnl-->
