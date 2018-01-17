@@ -26,5 +26,9 @@ class Support extends Model {
 	public function topic() {
         return $this->hasOne('App\Model\Topic', 'topic_num', 'topic_num');
     }
+	
+	public function delegatednickname() {
+        return $this->hasOne('App\Model\Nickname', 'nick_name_id', 'delegate_nick_name_id');
+    }
 
 }
