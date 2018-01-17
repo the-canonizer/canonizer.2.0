@@ -99,7 +99,10 @@
 					  ?>
 					  
                        <li>
-                       	<a href="#"><div class="badge">{{ $supportData[$camp->camp_num]}}</div> {{ $support->nickname->nick_name}} </a> <button class="btn btn-info">Delegate Your Support</button>
+                       	<a href="#"><div class="badge">{{ $supportData[$camp->camp_num]}}</div> 
+						      {{ $support->nickname->nick_name}} 
+					     </a> 
+						 <a href="<?php echo url('support/'.$topic_id.'/'.$camp->camp_num.'-'.$support->nickname->nick_name_id);?>" class="btn btn-info">Delegate Your Support</a>
                        </li>
 					  <?php } ?>
 					 </ul>  
