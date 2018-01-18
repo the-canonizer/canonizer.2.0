@@ -45,6 +45,7 @@ Route::group(
  * Routes Related to Camp Forums and threads
  */
 
+
 Route::get(
     '/forum/{topicid}-{topicname}/{campnum}/threads', 
     ['uses' => 'CThreadsController@index']
