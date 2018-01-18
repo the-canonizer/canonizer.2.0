@@ -402,7 +402,7 @@ footer.sticky-footer {
 	color:#fff;
 	font-size:20px;
 	font-weight:normal;
-    background: #000; /* For browsers that do not support gradients */
+    background: red; /* For browsers that do not support gradients */
     background: -webkit-linear-gradient(left, #0100ff , #e1e1e1); /* For Safari 5.1 to 6.0 */
     background: -o-linear-gradient(right, #0100ff , #e1e1e1); /* For Opera 11.1 to 12.0 */
     background: -moz-linear-gradient(right, #0100ff , #e1e1e1); /* For Firefox 3.6 to 15 */
@@ -419,6 +419,8 @@ footer.sticky-footer {
 	padding: .75rem 1rem;
 	font-size:15px;
 	margin-bottom:2rem;
+	float:left;
+	width:100%;
 }
 .Lcolor-Pnl h3 {
     padding: .75rem 1rem;
@@ -426,11 +428,11 @@ footer.sticky-footer {
 	color:#333;
 	font-size:20px;
 	font-weight:normal;
-    background: #e3e3e3; /* For browsers that do not support gradients */
+    background: red; /* For browsers that do not support gradients */
     background: -webkit-linear-gradient(left, #f4f4f4 , #e3e3e3); /* For Safari 5.1 to 6.0 */
     background: -o-linear-gradient(right, #f4f4f4 , #e3e3e3); /* For Opera 11.1 to 12.0 */
     background: -moz-linear-gradient(right, #f4f4f4 , #e3e3e3); /* For Firefox 3.6 to 15 */
-    background: linear-gradient(to right, #e3e3e3 , #f4f4f4); /* Standard syntax */
+    background: linear-gradient(to right, #f4f4f4 , #e3e3e3); /* Standard syntax */
 }
 .Lcolor-Pnl h3 select {
     display: inline-block;
@@ -510,6 +512,7 @@ h1.page-title{
     width:50px
 }
 .tree li span {
+    display:inline-block;
 	color:#3737f7;
     text-decoration:none;
 	padding-left:20px;
@@ -544,18 +547,16 @@ h1.page-title{
 }
 .badge {
     display: inline-block;
-    padding: 2px 8px;
+    padding: 2px 8px 4px;
     font-size: 80%;
     font-weight: 700;
-    line-height: 15px;
+    line-height: 14px;
     color: #fff;
     text-align: center;
     white-space: nowrap;
     vertical-align: middle;
     border-radius: 10px;
     background-color: #f68b00;
-    margin-top: -3px;
-    margin-left: 5px;
 }
 .canoalgo{
 	background: -webkit-linear-gradient(left, #e4ecff , #eeeff3); /* For Safari 5.1 to 6.0 */
@@ -878,31 +879,18 @@ body.sidenav-toggled .right-whitePnl {
     border: 1px solid #0100ff;
 	border-bottom: none;
 }
-ul.mainouter li .tp-title {
-   display:inline-block;
+
+.pagination {
+	clear: both;
+	color: #60605F !important;
+	font-size: 14px !important;
+	margin-bottom: 10px;
+	margin-top: 15px;
 }
-.right-whitePnl i.fa.fa-question {
-    padding: 2px 7px 2px 6px;
-    border-radius: 15px;
-    background: rgba(255, 255, 255, 0.8);
+.pagination span {
+	margin-right: 3px;
 }
-.Lcolor-Pnl .footer, .Gcolor-Pnl .footer {
-    width: 100%;
-    margin-top: -2em;
-    margin-bottom: 2em;
-    text-align: right;
-    padding:0.5em;
-    background-color: rgba(204, 204, 204, 0.5);
-}
-.Lcolor-Pnl .footer a.btn, .Lcolor-Pnl .footer a.btn:hover, .Gcolor-Pnl .footer a.btn, .Gcolor-Pnl .footer a.btn:hover {
-	padding:4px 10px;
-	color:#fff;
-}
-.Lcolor-Pnl .footer .btn-warning, .Gcolor-Pnl .footer .btn-warning {
-    background-color: #f68b00;
-    border-color: #f68b00;
-}
-.Lcolor-Pnl .footer .btn-warning:hover, .Gcolor-Pnl .footer .btn-warning:hover{
-	background-color:#f67d00;
-	border-color:#f67d00;
+.pagination a {
+	color: #C63918;
+	text-decoration: none;
 }
