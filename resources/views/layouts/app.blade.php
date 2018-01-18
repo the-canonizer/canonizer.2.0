@@ -62,7 +62,6 @@
                     </li>
                     <li class="nav-item dropdown_li">
                         @if(Auth::check())
-						Browsing as:	
                         <div class="dropdown">
                             <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-fw fa-user"></i> {{ Auth::user()->first_name . ' ' . Auth::user()->last_name}} </a>
                             <span class="caret"></span>
@@ -73,7 +72,6 @@
 
                         </div>
                         @else
-						<a class="nav-link">Browsing as: Guest_31</a>	
                         <a class="nav-link" href="{{ url('/login')}}"><i class="fa fa-fw fa-user"></i> Log in</a>
                         <a class="nav-link" href="{{ url('/register')}}"><i class="fa fa-fw fa-user-plus"></i> Register </a>
                         @endif
@@ -96,11 +94,21 @@
                                 <span class="nav-link-text">Browse</span>
                             </a>
                         </li>
+                        
+                        @if(strpos(url()->current(), 'forum') == true )
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ URL::to('/')}}/forum/{{ $topicname }}/{{ $campnum }}/threads/create">
+                                <span class="nav-link-text">Create New Thread</span>
+                            </a>
+                        </li>
+                        @endif
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url('/topic/create')}}">
                                 <span class="nav-link-text">Create New Topic</span>
                             </a>
                         </li>
+                   
+
                         <li class="nav-item">
                             <a class="nav-link" href="#">
                                 <span class="nav-link-text">Upload File</span>
