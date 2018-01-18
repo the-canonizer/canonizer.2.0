@@ -928,7 +928,7 @@ ul.mainouter li .tp-title {
 	background-color:#f67d00;
 	border-color:#f67d00;
 }
-.Scolor-Pnl button.btn.btn-info {
+.Scolor-Pnl a.btn.btn-info {
     padding: 2px 4px;
     font-size: 10px;
     line-height: 9px;
@@ -1004,4 +1004,15 @@ ul.mainouter li .tp-title {
     color: rgba(255, 255, 0, 1);
 	display:inline-block;
 	margin-right:5px;
+}
+.SpCmpHd{
+	background-color:#e9ecef;
+	padding:10px 15px;
+}
+.SpCmpBDY {
+    border: 1px solid #ddd;
+    padding: 10px;
+	margin:20px 0px 0px;
+	font-size:15px;
+	border-radius:3px;
 }
