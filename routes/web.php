@@ -56,6 +56,7 @@ Route::group([ 'middleware' => 'auth'], function()
  * Routes Related to Camp Forums and threads
  */
 
+
 Route::get(
     '/forum/{topicid}-{topicname}/{campnum}/threads', 
     ['uses' => 'CThreadsController@index']

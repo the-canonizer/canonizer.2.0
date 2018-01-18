@@ -66,9 +66,9 @@ class CThreadsController extends Controller
                 'threads'          => $threads,
                 // Return the name of the camp to index View
                 //'campname'         => Camp::find($campnum)->camp_name,
-                'campname'         => DB::table('camp')->where('camp_num', $campnum)
-                                                        ->where('topic_num', $topicid)
-                                                        ->value('camp_name'),
+                'campname'         => camp::where('camp_num', $campnum)
+                                                    ->where('topic_num', $topicid)
+                                                    ->value('camp_name'),
                 // Return the name of the Topic to index View
                 'topicGeneralName' => Topic::find($topicid)->topic_name
             ],
@@ -94,7 +94,9 @@ class CThreadsController extends Controller
             );
         }
 
-        $topic = getArray($topicid, $topicname, 'This is a topic forum');
+        $campnum = 1;
+
+        $topic = getArray($topicid, $topicname, 1);
 
         return view(
             'threads.index',
@@ -103,7 +105,9 @@ class CThreadsController extends Controller
                 'threads'          => $threads,
                 // Return the name of the camp to index View
                 //'campname'         => Camp::find($campnum)->camp_name,
-                'campname'         => 'This is a Topic Forum',
+                'campname'         => camp::where('camp_num', $campnum)
+                                            ->where('topic_num', $topicid)
+                                            ->value('camp_name'),
                 // Return the name of the Topic to index View
                 'topicGeneralName' => Topic::find($topicid)->topic_name
             ],
@@ -135,15 +139,14 @@ class CThreadsController extends Controller
      */
     public function store(Request $request, $topicid, $topicname, $campnum)
     {
-        //  dd($request->all());
+        //dd($request->all());
+        //dd($campnum, $topicid);
         //Validate the request for Error Handling
 
         $this->validate(
             $request, [
                 'title'    => 'required',
                 'body'     => 'required',
-                'camp_id'  => 'required|exists:camp,camp_num',
-                'topic_id' => 'required|exists:topic,topic_num'
             ]
         );
 
@@ -156,6 +159,7 @@ class CThreadsController extends Controller
             'topic_id' => $topicid
             ]
         ); 
+        return back();
     }
 
     /**
@@ -211,8 +215,6 @@ class CThreadsController extends Controller
     {
         //
     }
-
-
 }
 
 /**
