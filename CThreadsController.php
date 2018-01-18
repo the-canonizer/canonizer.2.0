@@ -36,9 +36,20 @@ class CThreadsController extends Controller
      */
     public function index($topicid, $topicname, $campnum)
     {
-        
-        if ((camp::where('camp_num', $campnum)->where('topic_num', $topicid)->value('camp_name')) 
-           // and ($topicname === Topic::find($topicid)->topic_name)
+        /* if (($topicid == Camp::find($campnum)->topic_num) 
+           and  ($topicname === Topic::find($topicid)->topic_name)
+        ) {
+            $threads = CThread::where('camp_id', $campnum)->latest()->get();
+        }
+        else { 
+            /* return Redirect::back()->withErrors(
+                'Validation Error!!!!'. 
+                'Either Topic ID is not related to Camp or Invalid Topic Name.'
+            ); 
+        } */
+
+        if ((DB::table('camp')->where('camp_num', $campnum)->where('topic_num', $topicid)->value('camp_name')) 
+            and ($topicname === Topic::find($topicid)->topic_name)
         )
         {
             $threads = CThread::where('camp_id', $campnum)->latest()->get();
@@ -84,7 +95,7 @@ class CThreadsController extends Controller
 
     public function topicindex($topicid, $topicname) {
         
-        if (Topic::find($topicid)->topic_name){
+        if ($topicname === Topic::find($topicid)->topic_name){
             $threads = CThread::where('topic_id', $topicid)->latest()->get();
         }
         else {

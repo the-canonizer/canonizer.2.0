@@ -62,6 +62,11 @@ Route::get(
 );
 
 Route::get(
+    '/forum/{topicid}-{topicname}/threads',
+    ['uses' => 'CThreadsController@topicindex']
+);
+
+Route::get(
     '/forum/{topicid}-{topicname}/{campnum}/threads/create', 
     ['uses' => 'CThreadsController@create']
 );
