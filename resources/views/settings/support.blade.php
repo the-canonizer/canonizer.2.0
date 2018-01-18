@@ -27,32 +27,31 @@
                 <li class=""><a class="" href="{{ route('settings.nickname')}}" >Add & Manage Nick Names</a></li>
 				<li class="active"><a class="" href="{{ route('settings.support')}}" >My Supports</a></li>
             </ul>
-         <div class="">
+         <div class="SupportCmp">
 		        <?php $lastsupportOrder = -1;?>
                 @if(count($supportedTopic))
                  @foreach($supportedTopic as $data)
                    
-                       <div><b>For Topic : {{ $data->topic->topic_name}}</b></div><br/>
-               
+                       <div class="SpCmpHd"><b>For Topic : {{ $data->topic->topic_name}}</b></div>
+               		<div class="row">
 					   <?php $topicSupport = $data->topic->Getsupports($data->topic->topic_num,$userNickname);?>
 					   @foreach($topicSupport as $k=>$support)
-					   
-					     Camp : {{ $support->camp->camp_name }} <br/>
-					   
-					     Support Order : {{ $k+1 }} Choice <br/>
-						 
-						 Nickname : {{ $support->nickname->nick_name }} <br/>
+					   <div class="col-sm-4">
+                       <div class="SpCmpBDY">
+					     <b>Camp :</b> {{ $support->camp->camp_name }} <br/>
+					   	 <b>Support Order :</b> {{ $k+1 }} Choice <br/>
+						 <b>Nickname :</b> {{ $support->nickname->nick_name }} <br/>
                         @if($support->delegate_nick_name_id != 0) 						 
-						 Support Delegated To: {{ $support->delegatednickname->nick_name}}
+						 <b>Support Delegated To:</b> {{ $support->delegatednickname->nick_name}}
 					    @endif
-					  <hr/>
 					   
 					   <?php if(isset($topic->topic_num) && $topic->topic_num==$data->topic_num) $lastsupportOrder++;
 						   
 					   ?>
-					   
+                       </div>
+					   </div>
 					   @endforeach
-					   
+					</div>   
 					   
                  @endforeach
                @else
@@ -75,17 +74,15 @@
 					
                     <div class="row">
                         <div class="col-sm-6 margin-btm-1">
-						<label for="camp_name"></label>
 						<select name="nick_name" class="form-control">
 							@foreach($nicknames as $nick)
 							<option  value="{{ $nick->nick_name_id }}">{{ $nick->nick_name}}</option>
 							@endforeach
-							
 						</select>
 						 @if ($errors->has('nick_name')) <p class="help-block">{{ $errors->first('nick_name') }}</p> @endif
 						 <a href="<?php echo url('settings/nickname');?>">Add new nickname </a>
 						</div> 
-                        <div class="col-sm-6 margin-btm-1">
+                        <div class="col-sm-6 margin-btm-1" style="padding-top:6px;">
                             <input type="checkbox" name="firstchoice" value="1"> <label for="namespace">Make This First Choice</label>
                             
                             @if ($errors->has('private')) <p class="help-block">{{ $errors->first('private') }}</p> @endif

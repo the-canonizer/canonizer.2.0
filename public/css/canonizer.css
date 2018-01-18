@@ -1007,4 +1007,12 @@ ul.mainouter li .tp-title {
 }
 .SpCmpHd{
 	background-color:#e9ecef;
+	padding:10px 15px;
+}
+.SpCmpBDY {
+    border: 1px solid #ddd;
+    padding: 10px;
+	margin:20px 0px 0px;
+	font-size:15px;
+	border-radius:3px;
 }
