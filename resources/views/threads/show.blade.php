@@ -1,24 +1,28 @@
 @extends('layouts.forum')
 
 @section('content')
+	
+    <div class="camp top-head">
+    <h3><b><a href="#">{{ $threads->creator->first_name }}  </a> started this thread : 
+                            "{{ $threads->title }}"</b></h3>
+	</div>
+    <div class="right-whitePnl">
+   
 
-    <div class="container">
-
-        <div class="row">
-
-            <div class="col-md-8 col-md-offset-1">
+            <div style="margin-bottom:20px;">
 
                 <div class="panel panel-default">
-                                          
-                    <div class="panel-heading">
-                        <h3 class="panel-title">
-                            <a href="#">{{ $threads->creator->first_name }}  </a> started this thread : 
-                            "{{ $threads->title }}"
-                        </h3>
-                        
+                   <div class="panel-body">
+                        <p> Thread Post at {{ $threads->created_at->diffForHumans() }} 
+                            by <a href="#"> {{ $threads->creator->first_name }} </a> 
+                        </p>
+
+                        <p> 
+                            Number of Post in this thread : {{ $threads->replies()->count() }}                            
+                        </p>
+
                     </div>
-                    
-                    {{--  <div class="panel-body">
+                   {{--  <div class="panel-body">
                         {{ $threads->body}}
                     </div>  --}}
                   
@@ -62,26 +66,8 @@
 
             </div>
             
-            <div class="col-md-3">
+            
 
-                <div class="panel panel-default">
-                                        
-                    <div class="panel-body">
-                        <p> Thread Post at {{ $threads->created_at->diffForHumans() }} 
-                            by <a href="#"> {{ $threads->creator->first_name }} </a> 
-                        </p>
-
-                        <p> 
-                            Number of Post in this thread : {{ $threads->replies()->count() }}                            
-                        </p>
-
-                    </div>
-                    
-                </div>
-
-            </div>
-
-        </div>
-
+        
     </div>
 @endsection

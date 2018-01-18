@@ -535,12 +535,13 @@ h1.page-title{
     font-size: 8px;
     padding: 1px 2px 2px;
     border-radius: 3px;
-    margin-top: 7px;
+    margin-top:8px;
     display: inline-block;
     vertical-align: middle;
     position: absolute;
     left: 5px;
     z-index: 1;
+	top:0px;
 }
 .tree li.parent_li>span {
     cursor:pointer
@@ -556,15 +557,9 @@ h1.page-title{
 }
 .badge {
     display: inline-block;
-<<<<<<< HEAD
     padding: 1px 5px 1px;
     font-size: 85%;
     font-weight: normal;
-=======
-    padding: 2px 8px 4px;
-    font-size: 80%;
-    font-weight: 700;
->>>>>>> ash-dev
     line-height: 14px;
     color: #fff;
     text-align: center;
@@ -572,6 +567,7 @@ h1.page-title{
     vertical-align: middle;
     border-radius: 10px;
     background-color: #f68b00;
+	margin:-3px 0px 0px 3px;
 }
 .canoalgo{
 	background: -webkit-linear-gradient(left, #e4ecff , #eeeff3); /* For Safari 5.1 to 6.0 */
@@ -1015,11 +1011,12 @@ ul.mainouter li .tp-title {
 .SpCmpHd{
 	background-color:#e9ecef;
 	padding:10px 15px;
+	margin-bottom:10px;
 }
 .SpCmpBDY {
     border: 1px solid #ddd;
     padding: 10px;
-	margin:20px 0px 0px;
+	margin:10px 0px;
 	font-size:15px;
 	border-radius:3px;
 }
@@ -1036,4 +1033,7 @@ ul.mainouter li .tp-title {
 .pagination a {
 	color: #C63918;
 	text-decoration: none;
+}
+.panel-body h5{
+	font-size:15px;
 }

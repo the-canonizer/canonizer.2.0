@@ -1,27 +1,14 @@
 @extends('layouts.app')
 
 @section('content')
-
-    <!-- Start From Here -->
-        
-    <!-- Ends Here -->
-
-    <div class="container">
-        <div class="row">
-            
-            <div class="col-md-8 col-md-offset-2"> 
+	<div class="camp top-head">
+    <h3><b>Canonizer Forum Details:</b></h3>
+    <h3><b>Topic Name  : {{ $topicGeneralName }}</b></h3> 
+    <h3><b>Camp Name  : {{ $campname }}</b></h3> 
+	</div>
+    <div class="right-whitePnl">
+      
                 <div class="panel panel-group">
-                    <table class = "table">
-                        <ul class = "list-group">
-                            <li class = "list-group-item">
-                                <div class="panel-heading"><h3>Canonizer Forum Details: </h3>
-                                    <h4> Topic Name  : {{ $topicGeneralName }} </h4>
-                                    <h4> Camp Name  : {{ $campname }}</h4>
-                                </div>
-                            </li>
-                        </ul>
-                    </table>              
-                    
                     <div class="panel panel-title">
                         <h5>List of all the Threads</h5>
                     </div>
@@ -48,9 +35,5 @@
                     </div>
 
                 </div>
-
-            </div>
-            
-        </div>
     </div>
 @endsection
