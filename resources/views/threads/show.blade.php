@@ -13,13 +13,13 @@
 
                 <div class="panel panel-default">
                    <div class="panel-body">
-                        <p> Thread Post at {{ $threads->created_at->diffForHumans() }} 
+                        <span> Thread Post at {{ $threads->created_at->diffForHumans() }} 
                             by <a href="#"> {{ $threads->creator->first_name }} </a> 
-                        </p>
+                        </span><br />
 
-                        <p> 
+                        <span> 
                             Number of Post in this thread : {{ $threads->replies()->count() }}                            
-                        </p>
+                        </span>
 
                     </div>
                    {{--  <div class="panel-body">
