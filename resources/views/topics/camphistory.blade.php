@@ -40,6 +40,10 @@
                 <div class="yellow-circle"></div>
                 <div class="circle-txt">Not Live</div>
             </div>
+			<div class="col-sm-2">
+                <div class="yellow-circle" style="background-color:#1514ed"></div>
+                <div class="circle-txt">Old</div>
+            </div>
         </div>
     </div>
 </div>
@@ -59,14 +63,14 @@
 						   
 						   if($data->objector !== NULL)
 							   $bgcolor ="rgba(255, 0, 0, 0.5);"; //red
-						   else if($currentTime < $data->go_live_time) {
+						   else if($currentTime < $data->go_live_time && $currentTime >= $data->submit_time) {
 							   $bgcolor ="rgba(255, 255, 0, 0.5);"; //yellow
 						   }   
-						   else if($currentLive!=1) {
+						   else if($currentLive!=1 && $currentTime >= $data->go_live_time) {
 							   $currentLive = 1;
 							   $bgcolor ="rgba(0, 128, 0, 0.5);"; // green
 						   } else {
-							   $bgcolor ="rgba(255, 255, 0, 0.5);"; //yellow
+							   $bgcolor ="#4e4ef3;"; //blue
 						   }	   
 						
 			        	
@@ -79,12 +83,17 @@
 				  <b>Note :</b> {{ $data->note }} <br/>
 				  <b>Language :</b> {{ $data->language }}<br/>
 				  <b>URL :</b> {{ $data->url }} <br/>
-				  <b>Nickname :</b> {{ isset($data->nickname->nick_name) ? $data->nickname->nick_name : 'N/A' }} <br/>
+				  <b>Submitter Nickname :</b> {{ isset($data->submitternickname->nick_name) ? $data->submitternickname->nick_name : 'N/A' }} <br/>
 				  <b>Submitted on :</b> {{ date('m-d-Y H:i:s',$data->submit_time) }} <br/>
-				  <b>Go live Time :</b> {{ date('m-d-Y H:i:s',$data->go_live_time)}} <br/> 
+				  <b>Go live Time :</b> {{ date('m-d-Y H:i:s',$data->go_live_time)}} <br/>
+                 @if($data->objector !=null)
+				  <b>Object Reason :</b> {{ $data->object_reason}} <br/>	
+                  <b>Objector Nickname :</b> {{ $data->objectornickname->nick_name }} <br/> 			  
+                 @endif 	 				 
                </div>    
                <div class="CmpHistoryPnl-footer">
-				  <a class="btn btn-historysmt" href="<?php echo url('manage/camp/'.$data->id);?>">Object Or Submit New Update</a> 
+				  <a class="btn btn-historysmt" href="<?php echo url('manage/camp/'.$data->id.'-objection');?>">Object</a>
+                  <a class="btn btn-historysmt" href="<?php echo url('manage/camp/'.$data->id);?>">Submit New Update</a>				  
 			    </div> 	
 			   </div>
 			   <?php } 

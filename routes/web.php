@@ -32,6 +32,7 @@ Route::get('topic/{id}/{campnum}', [ 'as' => 'topic', 'uses' => 'TopicController
 Route::post('loadtopic','HomeController@loadtopic');
 Route::get('camp/history/{id}/{campnum}', 'TopicController@camp_history');
 Route::get('statement/history/{id}/{campnum}', 'TopicController@statement_history');
+Route::get('topic/{id}', 'TopicController@topic_history');
 
 Route::group([ 'middleware' => 'auth'], function()
 {

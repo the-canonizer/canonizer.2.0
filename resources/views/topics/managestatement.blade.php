@@ -33,8 +33,21 @@
             <input type="hidden" name="parent_camp_num" value="{{ $parentcampnum }}">
 			<input type="hidden" name="camp_num" value="{{ $statement->camp_num }}">
 			<input type="hidden" name="submitter" value="{{ $statement->submitter }}">
-           
-                        
+            <?php if($objection=="objection") { ?>
+			<input type="hidden" name="objection" value="1">
+			<?php } ?>
+               
+             <div class="form-group">
+                <label for="camp_name">Nick Name</label>
+                <select name="nick_name" class="form-control">
+                    @foreach($nickNames as $nick)
+                    <option value="{{ $nick->nick_name_id }}">{{ $nick->nick_name}}</option>
+                    @endforeach
+					
+                </select>
+                 @if ($errors->has('nick_name')) <p class="help-block">{{ $errors->first('nick_name') }}</p> @endif
+				 <a href="<?php echo url('settings/nickname');?>">Add new nickname </a>
+             </div> 			   
              <div class="form-group">
                 <label for="">Statement Value</label>
                 <textarea class="form-control" rows="6" name="statement">{{ $statement->value}}</textarea>
@@ -54,13 +67,13 @@
                     <option <?php if($statement->language=="French") echo "selected=selected";?> value="French">French</option>
                 </select>
             </div>
-            
+            <?php if($objection=="objection") { ?> 
             <div class="form-group">
                 <label for="topic name">Your Objection Reason </label>
                 <input type="text" name="object_reason" class="form-control" id="" value="">
 				@if ($errors->has('object_reason')) <p class="help-block">{{ $errors->first('object_reason') }}</p> @endif
             </div> 				
-
+            <?php } ?>  
             <button type="submit" class="btn btn-login">Submit Update</button>
         </form>
 </div>

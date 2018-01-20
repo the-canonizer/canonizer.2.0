@@ -40,16 +40,16 @@
                 <div class="yellow-circle"></div>
                 <div class="circle-txt">Not Live</div>
             </div>
+			<div class="col-sm-2">
+                <div class="yellow-circle" style="background-color:#1514ed"></div>
+                <div class="circle-txt">Old</div>
+            </div>
         </div>
     </div>
 </div>
 <div>
     <div class="col-sm-12 margin-btm-2">
-        <form action="{{ route('camp.save')}}" method="post">
-            <input type="hidden" name="_token" value="{{ csrf_token() }}">
-            <input type="hidden" name="topic_num" value="{{ $topic->topic_num }}">
-            
-               
+              
 			   <?php 
 			        if(!empty($statement)) { 
 			            $currentLive = 0; 
@@ -60,14 +60,14 @@
 						   
 						   if($data->objector !== NULL)
 							   $bgcolor ="rgba(255, 0, 0, 0.5);"; //red
-						   else if($currentTime < $data->go_live_time) {
+						   else if($currentTime < $data->go_live_time && $currentTime >= $data->submit_time) {
 							   $bgcolor ="rgba(255, 255, 0, 0.5);"; //yellow
 						   }   
-						   else if($currentLive!=1) {
+						   else if($currentLive!=1 && $currentTime >= $data->go_live_time) {
 							   $currentLive = 1;
 							   $bgcolor ="rgba(0, 128, 0, 0.5);"; // green
 						   } else {
-							   $bgcolor ="rgba(255, 255, 0, 0.5);"; //yellow
+							   $bgcolor ="#4e4ef3;"; //blue
 						   }	
 			   ?>
 			    <div class="form-group CmpHistoryPnl" style="background-color:{{ $bgcolor }}">
@@ -75,9 +75,17 @@
 				  <b>Note :</b> {{ $data->note }} <br/>
 				  <b>Language :</b> {{ $data->language }}<br/>
 				  <b>Submitted on :</b> {{ date('m-d-Y H:i:s',$data->submit_time) }} <br/>
+				  <b>Submitter Nickname :</b> {{ isset($data->submitternickname->nick_name) ? $data->submitternickname->nick_name : 'N/A' }} <br/>
 				  <b>Go live Time :</b> {{ date('m-d-Y H:i:s',$data->go_live_time)}} <br/> 
+				  
+				   @if($data->objector !=null)
+				  <b>Object Reason :</b> {{ $data->object_reason}} <br/>	
+                  <b>Objector Nickname :</b> {{ $data->objectornickname->nick_name }} <br/> 			  
+                  @endif 
+				  
 				 <div class="CmpHistoryPnl-footer">
-				 	<a class="btn btn-historysmt" href="<?php echo url('manage/statement/'.$data->record_id);?>">Object Or Submit Statement Update</a>
+				    <a class="btn btn-historysmt" href="<?php echo url('manage/statement/'.$data->record_id.'-objection');?>">Object</a>
+				 	<a class="btn btn-historysmt" href="<?php echo url('manage/statement/'.$data->record_id);?>">Submit Statement Update</a>
                  </div>
 			    </div> 	
 			   
@@ -87,7 +95,7 @@
 					 echo " No statement history available.";
 				 }
 			   ?>
-        </form>
+        
 </div>
 </div>
 </div>  <!-- /.right-whitePnl-->

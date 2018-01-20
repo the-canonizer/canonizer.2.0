@@ -24,6 +24,21 @@
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
 			<input type="hidden" name="topic_num" value="{{ $topic->topic_num }}">
 			<input type="hidden" name="submitter" value="{{ $topic->submitter }}">
+			<?php if($objection=="objection") { ?>
+			 <input type="hidden" name="objection" value="1">
+			<?php } ?>
+			
+			<div class="form-group">
+                <label for="camp_name">Nick Name</label>
+                <select name="nick_name" class="form-control">
+                    @foreach($nickNames as $nick)
+                    <option value="{{ $nick->nick_name_id }}">{{ $nick->nick_name}}</option>
+                    @endforeach
+					
+                </select>
+                 @if ($errors->has('nick_name')) <p class="help-block">{{ $errors->first('nick_name') }}</p> @endif
+				 <a href="<?php echo url('settings/nickname');?>">Add new nickname </a>
+             </div> 
 			
             <div class="form-group">
                 <label for="topic name">Topic Name </label>
@@ -51,13 +66,14 @@
             <div class="form-group">
                 <label for="">Additional Note</label>
                 <textarea class="form-control" rows="4" name="note">{{ $topic->note}}</textarea>
-            </div>   
+            </div>
+            <?php if($objection=="objection") { ?>			
             <div class="form-group">
                 <label for="topic name">Your Objection Reason </label>
                 <input type="text" name="object_reason" class="form-control" id="" value="">
 				@if ($errors->has('object_reason')) <p class="help-block">{{ $errors->first('object_reason') }}</p> @endif
             </div> 			
-
+            <?php } ?>
             <button type="submit" class="btn btn-login">Submit Update</button>
         </form>
     </div>
