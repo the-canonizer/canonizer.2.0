@@ -3,16 +3,13 @@
 @extends('layouts.app')
 
 @section('content')
-
-    <div class="container">
-        <div class="row">
-            <div class="col-md-8 col-md-offset-2">
-                
-                <div class="panel panel-default">
-                
-                    <div class="panel-heading">Create a new thread for {{ $topicname }}</div>
-                   
-                    
+			
+            <div class="camp top-head">
+    			<h3>Create a new thread for {{ $topicname }}</h3>
+			</div>
+            <div class="right-whitePnl">
+            	 <div class="panel panel-group">
+                            
                     <div class="panel-body">
                         <form method="POST" action="{{ URL::to('/')}}/forum/{{ $topicname }}/{{ $campnum }}/threads">
                             {{ csrf_field() }}
@@ -52,7 +49,5 @@
             
             </div>
         
-        </div>
-    
-    </div>
+     
 @endsection
