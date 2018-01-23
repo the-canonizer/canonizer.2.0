@@ -33,6 +33,9 @@
             <input type="hidden" name="parent_camp_num" value="{{ $parentcampnum }}">
 			<input type="hidden" name="camp_num" value="{{ $camp->camp_num }}">
 			<input type="hidden" name="submitter" value="{{ $camp->submitter }}">
+			<?php if($objection=="objection") { ?>
+			 <input type="hidden" name="objection" value="1">
+			<?php } ?>
            
             <div class="form-group">
                 <label for="camp_name">Nick Name</label>
@@ -81,13 +84,13 @@
                 <input type="text" name="url" class="form-control" id="" value="{{ $camp->url }}">
                 @if ($errors->has('url')) <p class="help-block">{{ $errors->first('url') }}</p> @endif
             </div> 
-            
+            <?php if($objection=="objection") { ?>
             <div class="form-group">
                 <label for="topic name">Your Objection Reason </label>
                 <input type="text" name="object_reason" class="form-control" id="" value="">
 				@if ($errors->has('object_reason')) <p class="help-block">{{ $errors->first('object_reason') }}</p> @endif
             </div> 				
-
+            <?php } ?>
             <button type="submit" class="btn btn-login">Submit Update</button>
         </form>
 </div>

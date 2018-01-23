@@ -10,9 +10,18 @@ use App\Library\General;
 use App\Model\Topic;
 use App\Model\Camp;
 use App\Model\Statement;
+use App\Model\Nickname;
 use DB;
 use Validator;
-
+/**
+ * TopicController Class Doc Comment
+ *
+ * @category Class
+ * @package  MyPackage
+ * @author   Varun Gautam <gautamv16@gmail.com>
+ * @license  GNU General Public License     
+ * @link     http://varungautam.com
+ */
 class TopicController extends Controller {
     
     public function __construct()
@@ -20,17 +29,9 @@ class TopicController extends Controller {
         //$this->middleware('auth'); //->except('logout');
     }
 
+    
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index() {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
+     * Show the form for creating a new topic.
      *
      * @return \Illuminate\Http\Response
      */
@@ -39,7 +40,7 @@ class TopicController extends Controller {
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created topic,objected topic in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -65,7 +66,7 @@ class TopicController extends Controller {
 			
             $topic->namespace = $all['namespace'];
             $topic->submit_time = time();
-            $topic->submitter = Auth::user()->id;
+            $topic->submitter = $all['nick_name'];
             $topic->go_live_time = strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
             $topic->language = $all['language'];
             $topic->note = $all['note'];
@@ -73,16 +74,19 @@ class TopicController extends Controller {
 			if(isset($all['topic_num'])) {
 				
 			 $topic->topic_num = $all['topic_num'];	
-			 $topic->objector = Auth::user()->id;
-			 $topic->submitter = $all['submitter'];
-			 $topic->object_reason = $all['object_reason'];
-			 $topic->object_time = time();
+			 if(isset($all['objection']) && $all['objection']==1) {
+				 $topic->objector = $all['nick_name'];
+				 $topic->submitter = $all['submitter'];
+				 $topic->object_reason = $all['object_reason'];
+				 $topic->object_time = time();
+			 }
 			 
-			 $message = "Topic update submitted successfully. Its under review, once approved it will be visible to all.";
+			 
+			 $message = "Topic update submitted successfully. Its under review, once approved it will be live.";
 			}
 			else {
 				
-			 $message = "Topic created successfully. Its under review, once approved it will be visible to all.";	
+			 $message = "Topic created successfully. Its under review, once approved it will be live.";	
 			}
 					
 			
@@ -95,40 +99,341 @@ class TopicController extends Controller {
             Session::flash('error', "Fail to create topic, please try later.");
         }
 
-        return redirect()->back();
+        return redirect('topic/'.$topic->topic_num)->with(['success'=>$message]);
     }
+	
+	 /**
+     * Show form to submit / object a topic.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
 	
 	public function manage_topic($id){
 		
-		 //			
-		$topicnumArray  = explode("-",$id);
-		$topicnum       = $topicnumArray[0];
-		$topic = Topic::where('topic_num',$topicnum)->latest('submit_time')->first();
+		$paramArray  = explode("-",$id);
+		$id          = $paramArray[0];
+		$objection   = isset($paramArray[1]) ? $paramArray[1] : null;
+		
+		$topic       = Topic::where('id',$id)->first();
         
-		if(!count($topic)) { return back();}
-		return view('topics.managetopic',  ['topic'=>$topic]);
+        $nickNames   = Nickname::personNickname();
+		
+		if(!count($topic)) return back();
+		
+		return view('topics.managetopic', compact('topic','objection','nickNames'));
 		
 	}
 
     /**
-     * Display the specified resource.
+     * Display the specified topic data with camps/statement.
+     *
+     * @param  int  $id = topic_num, $parentcampnum
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id,$parentcampnum) {
+        			
+		$topicnumArray  = explode("-",$id);
+		$topicnum       = $topicnumArray[0];
+		
+		$topic      = Camp::getAgreementTopic($topicnum);
+        $camp       = Camp::getLiveCamp($topicnum,$parentcampnum);
+        $parentcamp = Camp::campNameWithAncestors($camp,'');
+        
+		return view('topics.view',  compact('topic','parentcampnum','parentcamp','camp'));
+    }
+
+    
+    /**
+     * Create new camp, object a camp, submit update to camp.
+     *
+     * @param  int  $topic_num,$camp_num
+     * @return \Illuminate\Http\Response
+     */
+    public function create_camp(Request $request, $topicnum,$parentcampnum){
+        
+		$topic      = Camp::getAgreementTopic($topicnum);
+        
+		$camp       = Camp::getLiveCamp($topicnum,$parentcampnum);
+        
+		$parentcamp = Camp::campNameWithAncestors($camp,'');
+		
+		
+        $nickNames  = Nickname::personNickname();
+        
+        return view('topics.camp_create',  compact('topic','parentcampnum','parentcamp','nickNames'));
+    }
+	
+	/**
+     * Show the form for submiting update to camp,object a camp.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id,$campnum) {
-        //			
+	
+	public function manage_camp($id){
+		
+		$paramArray  = explode("-",$id);
+		$id       = $paramArray[0];
+		$objection = isset($paramArray[1]) ? $paramArray[1] : null;
+		
+		$camp = Camp::where('id',$id)->first();
+		
+		if(!count($camp)) return back();
+        $parentcampnum = $camp->parent_camp_num;
+		
+		$topic      = Camp::getAgreementTopic($camp->topic_num);
+
+        $parentcamp = Camp::campNameWithAncestors($camp,'');
+				
+        $nickNames  = Nickname::personNickname();
+		
+        return view('topics.managecamp',  compact('objection','topic','camp','parentcampnum','parentcamp','nickNames'));
+    }
+	
+	/**
+     * Show the form for submiting update to camp statement,object a camp statement.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+	 
+	public function manage_statement($id){
+		
+		$paramArray  = explode("-",$id);
+		$id          = $paramArray[0];
+		$objection   = isset($paramArray[1]) ? $paramArray[1] : null;
+			
+		$statement   = Statement::where('record_id',$id)->first();
+		
+		if(!count($statement)) return back();
+		
+        $topic         = Camp::getAgreementTopic($statement->topic_num);
+        
+		$camp          = Camp::getLiveCamp($statement->topic_num,$statement->camp_num);
+        
+		$parentcampnum = isset($camp->parent_camp_num) ? $camp->parent_camp_num : 0;
+		
+		$parentcamp    = Camp::campNameWithAncestors($camp,'');
+	
+		$nickNames     = Nickname::personNickname();
+       
+        return view('topics.managestatement',  compact('objection','nickNames','topic','statement','parentcampnum','parentcamp'));
+    }
+	
+	/**
+     * Show camp history.
+     *
+     * @param  varchar  $id = topic_num,int $campnum
+     * @return \Illuminate\Http\Response
+     */
+	
+	public function camp_history($id,$campnum){
+		
 		$topicnumArray  = explode("-",$id);
 		$topicnum       = $topicnumArray[0];
-		$topic = Camp::where('topic_num',$topicnum)->where('camp_name','=','Agreement')->latest('submit_time')->first();
-        $camp = Camp::where('topic_num',$topicnum)->where('camp_num','=', $campnum)->latest('submit_time')->first();
-        $campWithParents = Camp::campNameWithAncestors($camp,'');
-        //$nickNames  = DB::table('nick_name')->select('nick_name_id','nick_name')->get();
 		
-		return view('topics.view',  ['topic'=>$topic,'parentcampnum'=>$campnum,'parentcamp'=>$campWithParents,'camp'=>$camp]);
+        $topic          = Camp::getAgreementTopic($topicnum);
+        $onecamp        = Camp::getLiveCamp($topicnum,$campnum);
+        $parentcamp     = Camp::campNameWithAncestors($onecamp,'');
+		
+		$camps          = Camp::getCampHistory($topicnum,$campnum);
+       
+		$parentcampnum  = (isset($onecamp->parent_camp_num)) ? $onecamp->parent_camp_num : 0;
+		
+	    if(!count($onecamp)) return back();
+		
+        return view('topics.camphistory',  compact('topic','camps','parentcampnum','onecamp','parentcamp'));
     }
+	/**
+     * Show camp statement history.
+     *
+     * @param  varchar  $id = topic_num,int $campnum
+     * @return \Illuminate\Http\Response
+     */
+	public function statement_history($id,$campnum){
+		
+		$topicnumArray  = explode("-",$id);
+		$topicnum       = $topicnumArray[0];
+		
+        $topic          = Camp::getAgreementTopic($topicnum);
+        $onecamp        = Camp::getLiveCamp($topicnum,$campnum);
+        $parentcamp     = Camp::campNameWithAncestors($onecamp,'');
+		
+	    if(!count($onecamp)) return back();
+		
+		$parentcampnum  = isset($onecamp->parent_camp_num) ? $onecamp->parent_camp_num : 0;
+		
+		$statement      = Statement::getHistory($topicnum,$campnum);
+        
+        return view('topics.statementhistory',  compact('topic','statement','parentcampnum','onecamp','parentcamp'));
+    }
+	
+	/**
+     * Show Topic history.
+     *
+     * @param  varchar  $id = topic_num
+     * @return \Illuminate\Http\Response
+     */
+	
+	public function topic_history($id){
+		
+		$topicnumArray  = explode("-",$id);
+		$topicnum       = $topicnumArray[0];
+		
+        $topics = Topic::getHistory($topicnum);
+        
+		 
+	    if(!count($topics)) { return back();}
+		
+        return view('topics.topichistory',  compact('topics'));
+    }
+	
+	/**
+     * Store submitted camp,objected camp data
+     *
+     * @param  varchar  $request
+     * @return \Illuminate\Http\Response
+     */
+    
+    public function store_camp(Request $request){
+        $all = $request->all();
+        $validator = Validator::make($request->all(), [
+            'nick_name'=>'required',
+            'camp_name' => 'required',
+            'title'=>'required',
+            'note'=>'required',
+			
+        ]);
+        if ($validator->fails()) {
+            return back()->withErrors($validator->errors())->withInput($request->all());
+        }
+        
+        
+        $camp = new Camp();
+        $camp->topic_num = $all['topic_num'];
+		
+        $camp->parent_camp_num = $all['parent_camp_num'];
+        $camp->title = $all['title'];
+        $camp->camp_name = $all['camp_name'];
+		$camp->submit_time = strtotime(date('Y-m-d H:i:s'));
+        $camp->go_live_time = strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
+        $camp->language = $all['language'];
+        $camp->nick_name_id = $all['nick_name'];
+        $camp->note = $all['note'];
+		$camp->key_words = $all['keywords'];
+		$camp->submitter = $all['nick_name'];
+        $camp->url = $all['url'];	
 
-    /**
+        if(isset($all['camp_num'])) {
+		 $camp->camp_num = $all['camp_num'];
+		 $camp->submitter = $all['nick_name'];
+		 if(isset($all['objection']) && $all['objection']==1) {
+		 
+			 $camp->objector = $all['nick_name'];
+			  $camp->submitter = $all['submitter'];
+			 $camp->object_reason = $all['object_reason'];
+			 $camp->object_time = time();
+		 }	 
+		 $message = 'Camp update submitted Successfully.';
+		} else {
+			
+			$message = 'Camp Created Successfully.';
+		}		
+        
+        if($camp->save()) {
+			
+		  if(!isset($all['camp_num'])) {
+			  $statement = new Statement();	
+			  
+			  $statement->value = $all['statement'];
+			  $statement->topic_num = $all['topic_num'];
+			  $statement->camp_num = $camp->camp_num;
+			  $statement->note = $all['note'];
+			  $statement->submit_time = strtotime(date('Y-m-d H:i:s'));
+			  $statement->submitter = $all['nick_name'];
+			  $statement->go_live_time = strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
+			  $statement->language = $all['language'];
+					  
+			  $statement->save();
+		  }
+			
+		} else {
+			
+		  $message = 'Camp not added, please try again.';	
+		}
+        
+       
+		return redirect('camp/history/'.$camp->topic_num.'/'.$camp->camp_num)->with(['success'=>$message]);
+                
+        
+    }
+	
+	/**
+     * Store submitted camp statement,objected camp statement data
+     *
+     * @param  varchar  $request
+     * @return \Illuminate\Http\Response
+     */
+	 
+	public function store_statement(Request $request){
+        $all = $request->all();
+        $validator = Validator::make($request->all(), [
+            'statement'=>'required',
+            'note' => 'required',
+           
+        ]);
+        if ($validator->fails()) {
+            return back()->withErrors($validator->errors())->withInput($request->all());
+        }
+        
+        	
+		  $statement = new Statement();	
+		  
+		  $statement->value = $all['statement'];
+		  $statement->topic_num = $all['topic_num'];
+		  $statement->camp_num = $all['camp_num'];
+		  $statement->note = $all['note'];
+		  $statement->submit_time = strtotime(date('Y-m-d H:i:s'));
+		  $statement->submitter = $all['nick_name'];
+		  $statement->go_live_time = strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
+		  $statement->language = $all['language'];
+		  
+		  if(isset($all['camp_num'])) {
+			 $statement->camp_num = $all['camp_num'];
+			 $statement->submitter = $all['nick_name'];
+			 if(isset($all['objection']) && $all['objection']==1) {
+		 
+				 $statement->objector = $all['nick_name'];
+				 $statement->submitter = $all['submitter'];
+				 $statement->object_reason = $all['object_reason'];
+				 $statement->object_time = time();
+			 }	
+			 
+			 $message = 'Camp statement update submitted successfully.';
+			 
+		  } else { 
+		    $message = 'Camp statement submitted successfully.';
+		  }	
+		  
+		  $statement->save();
+		   
+		
+        
+        return redirect('statement/history/'.$statement->topic_num.'/'.$statement->camp_num)->with(['success'=>$message]);
+                
+        
+    }
+	
+	/**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index() {
+        //
+    }
+	/**
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
@@ -157,194 +462,6 @@ class TopicController extends Controller {
      */
     public function destroy($id) {
         //
-    }
-    
-    public function create_camp(Request $request, $topicnum,$campnum){
-        $topic = Camp::where('topic_num',$topicnum)->where('camp_name','=','Agreement')->latest('submit_time')->first();
-        $camp = Camp::where('topic_num',$topicnum)->where('camp_num','=', $campnum)->latest('submit_time')->first();
-        $campWithParents = Camp::campNameWithAncestors($camp,'');
-		
-		$id = Auth::user()->id; 
-        $encode = General::canon_encode($id);
-		
-        $nickNames  = DB::table('nick_name')->select('nick_name_id','nick_name')->where('owner_code',$encode)->get();
-        
-        return view('topics.camp_create',  ['topic'=>$topic,'parentcampnum'=>$campnum,'parentcamp'=>$campWithParents,'nickNames'=>$nickNames]);
-    }
-	public function manage_camp($id){
-		
-		$camp = Camp::where('id',$id)->first();
-		if(!count($camp)) { return back(); }
-        $topic = Camp::where('topic_num',$camp->topic_num)->where('camp_name','=','Agreement')->latest('submit_time')->first();
-
-        $campWithParents = Camp::campNameWithAncestors($camp,'');
-		
-		$userid = Auth::user()->id; 
-        $encode = General::canon_encode($userid);
-		
-        $nickNames  = DB::table('nick_name')->select('nick_name_id','nick_name')->where('owner_code',$encode)->get();
-		//$statement = Statement::where('topic_num',$topicnum)->where('camp_num',$campnum)->latest('submit_time')->first();
-        
-        return view('topics.managecamp',  ['topic'=>$topic,'camp'=>$camp,'parentcampnum'=>$camp->parent_camp_num,'parentcamp'=>$campWithParents,'nickNames'=>$nickNames]);
-    }
-	public function manage_statement($id){
-		
-		$statement = Statement::where('record_id',$id)->first();
-		if(!count($statement)) { return back(); }
-        $topic = Camp::where('topic_num',$statement->topic_num)->where('camp_name','=','Agreement')->latest('submit_time')->first();
-        $camp  = Camp::where('topic_num',$statement->topic_num)->where('camp_num','=', $statement->camp_num)->latest('submit_time')->first();
-        $campWithParents = Camp::campNameWithAncestors($camp,'');
-		
-		$userid = Auth::user()->id; 
-        $encode = General::canon_encode($userid);
-		
-       
-        return view('topics.managestatement',  ['topic'=>$topic,'statement'=>$statement,'parentcampnum'=>$camp->parent_camp_num,'parentcamp'=>$campWithParents]);
-    }
-	
-	public function camp_history($id,$campnum){
-		
-		$topicnumArray  = explode("-",$id);
-		$topicnum       = $topicnumArray[0];
-		
-        $topic = Camp::where('topic_num',$topicnum)->where('camp_name','=','Agreement')->latest('submit_time')->first();
-        $onecamp = Camp::where('topic_num',$topicnum)->where('camp_num','=', $campnum)->latest('submit_time')->first();
-        $campWithParents = Camp::campNameWithAncestors($onecamp,'');
-		
-		$camp = Camp::where('topic_num',$topicnum)->where('camp_num','=', $campnum)->latest('submit_time')->get();
-        
-	    if(!count($camp)) { return back();}
-		
-        return view('topics.camphistory',  ['topic'=>$topic,'camps'=>$camp,'parentcampnum'=>(isset($onecamp->parent_camp_num)) ? $onecamp->parent_camp_num : '','onecamp'=>$onecamp,'parentcamp'=>$campWithParents]);
-    }
-	public function statement_history($id,$campnum){
-		
-		$topicnumArray  = explode("-",$id);
-		$topicnum       = $topicnumArray[0];
-		
-        $topic = Camp::where('topic_num',$topicnum)->where('camp_name','=','Agreement')->latest('submit_time')->first();
-        //$camp = Camp::where('topic_num',$topicnum)->where('camp_num','=', $campnum)->latest('submit_time','objector')->get();
-        $onecamp = Camp::where('topic_num',$topicnum)->where('camp_num','=', $campnum)->latest('submit_time')->first();
-        $campWithParents = Camp::campNameWithAncestors($onecamp,'');
-		
-	    if(!count($onecamp)) { return back();}
-		
-		$statement = Statement::where('topic_num',$topicnum)->where('camp_num',$campnum)->latest('submit_time')->get();
-        
-        return view('topics.statementhistory',  ['topic'=>$topic,'statement'=>$statement,'parentcampnum'=>$onecamp->parent_camp_num,'onecamp'=>$onecamp,'parentcamp'=>$campWithParents]);
-    }
-    
-    public function store_camp(Request $request){
-        $all = $request->all();
-        $validator = Validator::make($request->all(), [
-            'nick_name'=>'required',
-            'camp_name' => 'required',
-            'title'=>'required',
-            //'go_live_time'=>'required',
-            'note'=>'required',
-			//'statement'=>'required',
-        ]);
-        if ($validator->fails()) {
-            return back()->withErrors($validator->errors())->withInput($request->all());
-        }
-        
-        
-        $camp = new Camp();
-        $camp->topic_num = $all['topic_num'];
-		
-        $camp->parent_camp_num = $all['parent_camp_num'];
-        $camp->title = $all['title'];
-        $camp->camp_name = $all['camp_name'];
-		$camp->submit_time = strtotime(date('Y-m-d H:i:s'));
-        $camp->go_live_time = strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
-        $camp->language = $all['language'];
-        $camp->nick_name_id = $all['nick_name'];
-        $camp->note = $all['note'];
-		$camp->key_words = $all['keywords'];
-		$camp->submitter = Auth::user()->id;
-        $camp->url = $all['url'];	
-
-        if(isset($all['camp_num'])) {
-		 $camp->camp_num = $all['camp_num'];
-		 $camp->objector = Auth::user()->id;
-		 $camp->submitter = $all['submitter'];
-		 $camp->object_reason = $all['object_reason'];
-		 $camp->object_time = time();
-		 $message = 'Camp update submitted Successfully.';
-		} else {
-			
-			$message = 'Camp Created Successfully.';
-		}		
-        
-        if($camp->save()) {
-			
-		  if(!isset($all['camp_num'])) {
-			  $statement = new Statement();	
-			  
-			  $statement->value = $all['statement'];
-			  $statement->topic_num = $all['topic_num'];
-			  $statement->camp_num = $camp->camp_num;
-			  $statement->note = $all['note'];
-			  $statement->submit_time = strtotime(date('Y-m-d H:i:s'));
-			  $statement->submitter = Auth::user()->id;
-			  $statement->go_live_time = strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
-			  $statement->language = $all['language'];
-					  
-			  $statement->save();
-		  }
-			
-		} else {
-			
-		  $message = 'Camp not added, please try again.';	
-		}
-        
-        return redirect()->route('home')->with(['success'=>$message]);
-                
-        
-    }
-	public function store_statement(Request $request){
-        $all = $request->all();
-        $validator = Validator::make($request->all(), [
-            'statement'=>'required',
-            'note' => 'required',
-           
-        ]);
-        if ($validator->fails()) {
-            return back()->withErrors($validator->errors())->withInput($request->all());
-        }
-        
-        	
-		  $statement = new Statement();	
-		  
-		  $statement->value = $all['statement'];
-		  $statement->topic_num = $all['topic_num'];
-		  $statement->camp_num = $all['camp_num'];
-		  $statement->note = $all['note'];
-		  $statement->submit_time = strtotime(date('Y-m-d H:i:s'));
-		  $statement->submitter = Auth::user()->id;
-		  $statement->go_live_time = strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
-		  $statement->language = $all['language'];
-		  
-		  if(isset($all['camp_num'])) {
-			 $statement->camp_num = $all['camp_num'];
-			 $statement->objector = Auth::user()->id;
-			 $statement->submitter = $all['submitter'];
-			 $statement->object_reason = $all['object_reason'];
-			 $statement->object_time = time();
-			 
-			 $message = 'Camp statement update submitted successfully.';
-			 
-		  } else { 
-		    $message = 'Camp statement submitted successfully.';
-		  }	
-		  
-		  $statement->save();
-		   
-		
-        
-        return redirect('statement/history/'.$statement->topic_num.'/'.$statement->camp_num)->with(['success'=>$message]);
-                
-        
     }
 
 }

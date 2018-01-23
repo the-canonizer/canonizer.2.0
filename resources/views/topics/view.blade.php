@@ -129,7 +129,7 @@
             </div>    
             </div>
             <div class="footer">
-            	<a class="btn btn-success" href="<?php echo url('manage/topic/'.$topic_id);?>">Manage/Edit This Topic</a>
+            	<a class="btn btn-success" href="<?php echo url('topic/'.$topic_id);?>">Manage/Edit This Topic</a>
             </div>
         </div>
    
