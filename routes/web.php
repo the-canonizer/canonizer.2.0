@@ -12,7 +12,7 @@
 */
 
 Route::get('/', 'HomeController@index');
-Route::get('/', ['as'=>'home','uses'=>'HomeController@index']);
+Route::get('home', ['as'=>'home','uses'=>'HomeController@index']);
 
 Route::get('register','Auth\RegisterController@showRegistrationForm');
 Route::post('register','Auth\RegisterController@register');
@@ -30,18 +30,26 @@ Route::get('resetpassword/{token}','Auth\ResetPasswordController@showResetForm')
 Route::post('reset','Auth\ResetPasswordController@reset');
 Route::get('topic/{id}/{campnum}', [ 'as' => 'topic', 'uses' => 'TopicController@show']);
 Route::post('loadtopic','HomeController@loadtopic');
+Route::get('camp/history/{id}/{campnum}', 'TopicController@camp_history');
+Route::get('statement/history/{id}/{campnum}', 'TopicController@statement_history');
+Route::get('topic/{id}', 'TopicController@topic_history');
 
 Route::group([ 'middleware' => 'auth'], function()
 {
    Route::resource('topic','TopicController');
    Route::get('camp/create/{topicnum}/{campnum}', [ 'as' => 'camp.create', 'uses' => 'TopicController@create_camp']);
    Route::post('camp/save', [ 'as' => 'camp.save', 'uses' => 'TopicController@store_camp']);
+   Route::post('statement/save', [ 'as' => 'statement.save', 'uses' => 'TopicController@store_statement']);
    Route::get('settings', [ 'as' => 'settings', 'uses' => 'SettingsController@index']);
    Route::post('settings/profile/update', [ 'as' => 'settings.profile.update', 'uses' => 'SettingsController@profile_update']);
    Route::get('settings/nickname', [ 'as' => 'settings.nickname', 'uses' => 'SettingsController@nickname']);
    Route::post('settings/nickname/add', [ 'as' => 'settings.nickname.add', 'uses' => 'SettingsController@add_nickname']);
-   Route::get('manage/camp/{id}/{campnum}', 'TopicController@manage_camp');
+   Route::post('settings/support/add', [ 'as' => 'settings.support.add', 'uses' => 'SettingsController@add_support']);
+   Route::get('manage/camp/{id}', 'TopicController@manage_camp');
+   Route::get('manage/statement/{id}', 'TopicController@manage_statement');
    Route::get('manage/topic/{id}', 'TopicController@manage_topic');
+   Route::get('support/{id}/{campnum}', 'SettingsController@support');
+   Route::get('support', [ 'as' => 'settings.support', 'uses' =>'SettingsController@support']);
    
 });
 
@@ -49,9 +57,15 @@ Route::group([ 'middleware' => 'auth'], function()
  * Routes Related to Camp Forums and threads
  */
 
+
 Route::get(
     '/forum/{topicid}-{topicname}/{campnum}/threads', 
     ['uses' => 'CThreadsController@index']
+);
+
+Route::get(
+    '/forum/{topicid}-{topicname}/threads',
+    ['uses' => 'CThreadsController@topicindex']
 );
 
 Route::get(

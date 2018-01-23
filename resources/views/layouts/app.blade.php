@@ -72,13 +72,7 @@
 
                         </div>
                         @else
-						<a class="nav-link" style="background-color: #f68b00;
-    border-radius: 22px;
-    vertical-align: middle;
-    color: #fff;
-    margin-right: 10px;
-    padding: 5px 15px;
-    max-width: 170px;">Browsing as: Guest_31</a>	
+						<a class="nav-link" style="background-color: #f68b00; border-radius: 22px; vertical-align: middle;color: #fff; margin-right: 10px;padding: 5px 15px;max-width: 170px;">Browsing as: Guest_31</a>	
                         <a class="nav-link" href="{{ url('/login')}}"><i class="fa fa-fw fa-user"></i> Log in</a>
                         <a class="nav-link" href="{{ url('/register')}}"><i class="fa fa-fw fa-user-plus"></i> Register </a>
                         @endif
@@ -101,11 +95,21 @@
                                 <span class="nav-link-text">Browse</span>
                             </a>
                         </li>
+                        
+                        @if(strpos(url()->current(), 'forum') == true )
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ URL::to('/')}}/forum/{{ $topicname }}/{{ $campnum }}/threads/create">
+                                <span class="nav-link-text">Create New Thread</span>
+                            </a>
+                        </li>
+                        @endif
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url('/topic/create')}}">
                                 <span class="nav-link-text">Create New Topic</span>
                             </a>
                         </li>
+                   
+
                         <li class="nav-item">
                             <a class="nav-link" href="#">
                                 <span class="nav-link-text">Upload File</span>

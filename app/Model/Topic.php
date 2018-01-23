@@ -52,5 +52,25 @@ class Topic extends Model {
 	public function topic() {
         return $this->hasOne('App\Model\Topic', 'topic_num', 'topic_num');
     }
+	public function supports() {
+        return $this->hasMany('App\Model\Support', 'topic_num', 'topic_num')->orderBy('support_order','ASC');
+    }
+	public function objectornickname() {
+        return $this->hasOne('App\Model\Nickname', 'nick_name_id', 'objector');
+    }
+	public function submitternickname() {
+        return $this->hasOne('App\Model\Nickname', 'nick_name_id', 'submitter');
+    }
+	
+	public function scopeGetsupports($query,$topic_num,$userNickname) {
+		
+		return $supports = Support::where('topic_num',$topic_num)->whereIn('nick_name_id',$userNickname)->orderBy('support_order','ASC')->orderBy('start','DESC')->get();
+		
+	}
+	
+	public static function getHistory($topicnum,$filter=array()) {
+		
+		return self::where('topic_num',$topicnum)->latest('submit_time')->get();
+	}
 
 }
