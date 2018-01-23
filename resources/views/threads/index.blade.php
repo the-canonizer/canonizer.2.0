@@ -7,8 +7,7 @@
     <h3><b>Camp Name  : {{ $campname }}</b></h3> 
 	</div>
     <div class="right-whitePnl">
-      
-                <div class="panel panel-group">
+      			<div class="panel panel-group">
                     <div class="panel panel-title">
                         <h5>List of all the Threads</h5>
                     </div>
