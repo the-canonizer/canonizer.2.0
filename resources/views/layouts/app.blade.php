@@ -72,7 +72,7 @@
 
                         </div>
                         @else
-						<a class="nav-link" style="background-color: #f68b00; border-radius: 22px; vertical-align: middle;color: #fff; margin-right: 10px;padding: 5px 15px;max-width: 170px;">Browsing as: Guest_31</a>	
+						<a class="nav-link guestLogin">Browsing as: Guest_31</a>	
                         <a class="nav-link" href="{{ url('/login')}}"><i class="fa fa-fw fa-user"></i> Log in</a>
                         <a class="nav-link" href="{{ url('/register')}}"><i class="fa fa-fw fa-user-plus"></i> Register </a>
                         @endif

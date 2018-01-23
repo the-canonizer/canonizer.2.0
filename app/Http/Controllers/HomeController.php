@@ -38,9 +38,9 @@ class HomeController extends Controller {
                       $output .='<li><span class="';
 				
 				     
-					   $output .='"><i class="fa fa-arrow-right"></i></span><div class="tp-title"><a href="'.$url.'">'.$topic->title.'</a><div class="badge">48.25</div></div>';
+					   $output .='"><i class="fa fa-arrow-right"></i></span> <div class="tp-title"><a href="'.$url.'">'.$topic->title.'</a><div class="badge">48.25</div></div>';
 						 
-                        if(count($childs) > 0){
+                        if(count($childs) > 0){ 
                             $output .= $topic->campTree($topic->topic_num,$topic->camp_num);
 						   	
                         }else{
