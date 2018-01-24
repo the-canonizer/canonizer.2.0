@@ -32,7 +32,7 @@
                 <!-- ?php $replies = $threads->replies()->paginate('10'); ?-->
                 <div class="pagination">
                     <a class="active item">
-                        <ul class = "list-group">
+                        <ul class ="list-group">
                             @foreach ($replies as $reply)
                             <li class = "list-group-item">
                                 @include('threads.replies')

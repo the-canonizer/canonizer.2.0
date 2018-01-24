@@ -1048,3 +1048,20 @@ ul.mainouter li .tp-title {
 	max-width: 170px;
 	margin-top:-2px;
 }
+ul.pagination li a{
+	background-color: #f5f5f5;
+    color: #000;
+    padding: 2px 8px;
+    line-height: 10px;
+    margin: 0px 1px;
+    border-radius: 3px;
+}
+ul.pagination li.active span{
+	background-color: #f5f5f5;
+    color: #0056b3;
+    padding: 2px 8px;
+    line-height: 10px;
+    margin: 0px 1px;
+    border-radius: 3px;
+	font-weight:600;
+}
