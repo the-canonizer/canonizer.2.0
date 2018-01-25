@@ -40,11 +40,7 @@
                     <option value="French">French</option>
                 </select>
             </div>
-            <div class="form-group">
-                <label for="Topic Number">To Go Live Date</label>
-                <input type="text" name="go_live_time" value="" id="datepicker" class="form-control"/>
-				@if ($errors->has('go_live_time')) <p class="help-block">{{ $errors->first('go_live_time') }}</p> @endif
-            </div>
+            
             <div class="form-group">
                 <label for="">Additional Note</label>
                 <textarea class="form-control" rows="4" name="note"></textarea>

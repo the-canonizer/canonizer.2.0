@@ -3,6 +3,7 @@
 namespace App\Model;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Model\Nickname;
 use DB;
 
 class Camp extends Model {
@@ -82,7 +83,8 @@ class Camp extends Model {
         
 		if(!empty($camp)) {
 			if ($campname != '') {
-				$campname = $camp->camp_name . ' / ' . $campname;
+				$url = url('topic/'.$camp->topic_num.'/'.$camp->camp_num);
+				$campname = "<a href='".$url."'>".$camp->camp_name . '</a> / ' . $campname;
 			} else {
 				$campname = $camp->camp_name;
 			}
@@ -284,6 +286,32 @@ class Camp extends Model {
 	public static function getCampHistory($topicnum,$campnum,$filter=array()){
 		
 		return self::where('topic_num',$topicnum)->where('camp_num','=', $campnum)->latest('submit_time')->get();
+	}
+	public static function getAllParent($camp, $camparray = array()) {
+        
+		if(!empty($camp)) {
+			if ($camp->parent_camp_num) {
+				$camparray[] = $camp->parent_camp_num;
+			
+				$pcamp = Camp::where('topic_num', $camp->topic_num)->where('camp_num', $camp->parent_camp_num)->groupBy('camp_num')->orderBy('submit_time', 'desc')->first();
+				return self::getAllParent($pcamp, $camparray);
+			}
+		}
+        return $camparray;
+    }
+	
+	public static function validateParentsupport($topic_num,$camp_num,$userNicknames){
+		
+		$onecamp        = self::getLiveCamp($topic_num,$camp_num);
+	    $parentcamps    = self::getAllParent($onecamp);
+		
+		$mysupports     = Support::where('topic_num',$topic_num)->whereIn('camp_num',$parentcamps)->whereIn('nick_name_id',$userNicknames)->groupBy('topic_num')->orderBy('support_order','ASC')->first();
+		
+		if(count($mysupports))
+			return true;
+		else
+			return false;
+		
 	}
 
 }
