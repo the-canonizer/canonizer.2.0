@@ -42,7 +42,7 @@
 							
 							<input type="hidden" name="support_id" value="{{ $support->support_id }}">
 							<input type="hidden" name="userNicknames" value="{{ serialize($userNickname) }}">
-						  <button type="submit"><i class="fa fa-close" style="font-size:30px;color:red; float:right"></i></button>
+						  <button type="submit" class="btn-sptclose"><i class="fa fa-close"></i></button>
 						 </form> 
 					     <b>Camp :</b> {{ $support->camp->title }} <br/>
 					   	 <b>Support Order :</b> {{ $k+1 }} Choice <br/>

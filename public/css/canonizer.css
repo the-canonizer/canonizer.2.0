@@ -1020,6 +1020,28 @@ ul.mainouter li .tp-title {
 	margin:10px 0px;
 	font-size:15px;
 	border-radius:3px;
+	position:relative;
+}
+.btn-sptclose{
+    position: absolute;
+	right: -9px;
+	top: -12px;
+	cursor: pointer;
+	background: none;
+	border: none;
+	padding: 0px;
+}
+.btn-sptclose i.fa-close{
+	background-color: #fff;
+	border: 1px solid #ddd;
+	border-radius: 30px;
+	width: 28px;
+	height: 28px;
+	line-height: 25px;
+	font-size: 15px;
+	font-weight: normal;
+	cursor: pointer;
+	color: red;
 }
 .pagination {
 	clear: both;
