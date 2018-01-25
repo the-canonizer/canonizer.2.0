@@ -32,7 +32,7 @@ Route::get('topic/{id}/{campnum}', [ 'as' => 'topic', 'uses' => 'TopicController
 Route::post('loadtopic','HomeController@loadtopic');
 Route::get('camp/history/{id}/{campnum}', 'TopicController@camp_history');
 Route::get('statement/history/{id}/{campnum}', 'TopicController@statement_history');
-Route::get('topic/{id}', 'TopicController@topic_history');
+Route::get('topic-history/{id}', 'TopicController@topic_history');
 
 Route::group([ 'middleware' => 'auth'], function()
 {
@@ -45,6 +45,7 @@ Route::group([ 'middleware' => 'auth'], function()
    Route::get('settings/nickname', [ 'as' => 'settings.nickname', 'uses' => 'SettingsController@nickname']);
    Route::post('settings/nickname/add', [ 'as' => 'settings.nickname.add', 'uses' => 'SettingsController@add_nickname']);
    Route::post('settings/support/add', [ 'as' => 'settings.support.add', 'uses' => 'SettingsController@add_support']);
+   Route::post('settings/support/delete', [ 'as' => 'settings.support.delete', 'uses' => 'SettingsController@delete_support']);
    Route::get('manage/camp/{id}', 'TopicController@manage_camp');
    Route::get('manage/statement/{id}', 'TopicController@manage_statement');
    Route::get('manage/topic/{id}', 'TopicController@manage_topic');

@@ -30,38 +30,46 @@
          <div class="SupportCmp">
 		        <?php $lastsupportOrder = -1;?>
                 @if(count($supportedTopic))
-                 @foreach($supportedTopic as $data)
                    
-                       <div class="SpCmpHd"><b>For Topic : {{ $data->topic->topic_name}}</b></div>
+                       <div class="SpCmpHd"><b>Your supported camps for topic "{{ $supportedTopic->topic->topic_name}}"</b></div>
                		<div class="row">
-					   <?php $topicSupport = $data->topic->Getsupports($data->topic->topic_num,$userNickname);?>
+					   <?php $topicSupport = $supportedTopic->topic->Getsupports($supportedTopic->topic->topic_num,$userNickname);?>
 					   @foreach($topicSupport as $k=>$support)
 					   <div class="col-sm-4">
                        <div class="SpCmpBDY">
-					     <b>Camp :</b> {{ $support->camp->camp_name }} <br/>
+					     <form action="{{ route('settings.support.delete')}}" id="support-{{$support->support_id}}" method="post">
+						    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+							
+							<input type="hidden" name="support_id" value="{{ $support->support_id }}">
+							<input type="hidden" name="userNicknames" value="{{ serialize($userNickname) }}">
+						  <button type="submit"><i class="fa fa-close" style="font-size:30px;color:red; float:right"></i></button>
+						 </form> 
+					     <b>Camp :</b> {{ $support->camp->title }} <br/>
 					   	 <b>Support Order :</b> {{ $k+1 }} Choice <br/>
 						 <b>Nickname :</b> {{ $support->nickname->nick_name }} <br/>
                         @if($support->delegate_nick_name_id != 0) 						 
 						 <b>Support Delegated To:</b> {{ $support->delegatednickname->nick_name}}
 					    @endif
 					   
-					   <?php if(isset($topic->topic_num) && $topic->topic_num==$data->topic_num) $lastsupportOrder++;
+					   <?php if(isset($topic->topic_num) && $topic->topic_num==$supportedTopic->topic_num) $lastsupportOrder++;
 						   
 					   ?>
+					  
                        </div>
+					   
 					   </div>
 					   @endforeach
 					</div>   
 					   
-                 @endforeach
+                
                @else
-				  <h6> You didn't supported any camp yet.</h6>
+				  <h6 style="margin-top:30px;margin-left:20px;"> You didn't supported any camp yet for this topic.</h6>
                @endif			  
 
          </div>
         @if(isset($topic))
          <div id="myTabContent" class="add-nickname-section">  
-                 <h5>Select Nick Name To Support {{ $parentcamp }} Camp </h5>
+                 <h5>Select Nick Name To Support {!! $parentcamp !!} Camp </h5>
                 <form action="{{ route('settings.support.add')}}" method="post">
                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
 					<input type="hidden" name="topic_num" value="{{ $topic->topic_num }}">

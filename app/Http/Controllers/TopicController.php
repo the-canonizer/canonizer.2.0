@@ -235,13 +235,13 @@ class TopicController extends Controller {
 		
         $topic          = Camp::getAgreementTopic($topicnum);
         $onecamp        = Camp::getLiveCamp($topicnum,$campnum);
-        $parentcamp     = Camp::campNameWithAncestors($onecamp,'');
+        $parentcamp     = (count($onecamp)) ? Camp::campNameWithAncestors($onecamp,'') : "n/a";
 		
 		$camps          = Camp::getCampHistory($topicnum,$campnum);
        
 		$parentcampnum  = (isset($onecamp->parent_camp_num)) ? $onecamp->parent_camp_num : 0;
 		
-	    if(!count($onecamp)) return back();
+	    //if(!count($onecamp)) return back();
 		
         return view('topics.camphistory',  compact('topic','camps','parentcampnum','onecamp','parentcamp'));
     }
@@ -305,7 +305,8 @@ class TopicController extends Controller {
             'note'=>'required',
 			
         ]);
-        if ($validator->fails()) {
+		
+        if ($validator->fails()) { print_r($validator->errors());
             return back()->withErrors($validator->errors())->withInput($request->all());
         }
         
