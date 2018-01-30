@@ -207,7 +207,12 @@
 			
 			$(".asofdate, #asofdate").change(function(){
 				// Do something interesting here
-				
+				 var value = $('#asofdate').val();
+				 
+				 if(value=="") {
+					 $('#asofdate').focus();
+				  return false;
+				 }	 
 				 $('#as_of').submit();
 			});
 			
