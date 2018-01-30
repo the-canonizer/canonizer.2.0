@@ -209,7 +209,9 @@
 				// Do something interesting here
 				 var value = $('#asofdate').val();
 				 
-				 if(value=="") {
+				 var bydate = $("input[name='asof']:checked"). val();
+				
+				 if(value=="" && bydate == 'bydate') {
 					 $('#asofdate').focus();
 				  return false;
 				 }	 
