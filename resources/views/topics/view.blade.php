@@ -14,7 +14,7 @@
 
 <div class="camp top-head">
     <h3><b>Topic:</b>  {{ $topic->title}}</h3>
-    <h3><b>Camp:</b> {{ $parentcamp }}</h3>  
+    <h3><b>Camp:</b> {!! $parentcamp !!}</h3>  
 </div>      	
 <div class="right-whitePnl">
     <div class="container-fluid">
@@ -129,7 +129,7 @@
             </div>    
             </div>
             <div class="footer">
-            	<a class="btn btn-success" href="<?php echo url('topic/'.$topic_id);?>">Manage/Edit This Topic</a>
+            	<a class="btn btn-success" href="<?php echo url('topic-history/'.$topic_id);?>">Manage/Edit This Topic</a>
             </div>
         </div>
    

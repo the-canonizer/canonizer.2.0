@@ -48,16 +48,15 @@
                          $childs = $topic->childrens($topic->topic_num,$topic->camp_num); ?>
                          <span class="<?php if(count($childs) > 0) echo 'parent'; ?>"><i class="fa fa-arrow-right"></i> 
 						 <?php 
-						  $title      = preg_replace('/[^A-Za-z0-9\-]/', '-', $topic->title);
+						  $title = preg_replace('/[^A-Za-z0-9\-]/', '-', $topic->title);
 						  //$title     = preg_replace('/\s+/', '-', $topic->title); 
-						  $topic_id  = $topic->topic_num."-".$title;
+						  $topic_id = $topic->topic_num."-".$title;
 						 
 						 ?></span>
                          <div class="tp-title">
-						 <a href="<?php echo url('topic/'.$topic_id.'/'.$topic->camp_num)?>">
-						 {{ $topic->title}} 
-						 </a>
-						 <div class="badge">48.25</div></div>
+
+						 <a href="<?php echo url('topic/'.$topic_id.'/'.$topic->camp_num) ?>">{{ $topic->title }}</a> <div class="badge">48.25</div>
+                         </div>
 
                          <?php
                         if(count($childs) > 0){
@@ -88,7 +87,7 @@
 	   scrollTop = scrollTop + 650;
 		  if ( scrollTop > $('.sticky-footer').offset().top ) { 
 				  
-			   $("#btn-more").html("Please wait loading tree ......");
+			   $("#btn-more").html("Please wait loading tree......");
 			   
 			   
 			   $.ajax({

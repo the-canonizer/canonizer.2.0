@@ -32,7 +32,7 @@
                 <!-- ?php $replies = $threads->replies()->paginate('10'); ?-->
                 <div class="pagination">
                     <a class="active item">
-                        <ul class = "list-group">
+                        <ul class ="list-group">
                             @foreach ($replies as $reply)
                             <li class = "list-group-item">
                                 @include('threads.replies')
@@ -48,13 +48,12 @@
 
                 @if(auth()->check())
 
-                    <form method="POST" 
-                        action="{{ URL::to('/')}}/forum/{{ $topicname }}/{{ $campnum }}/threads/{{ $threads->id }}/replies">
+                    <form method="POST" action="{{ URL::to('/')}}/forum/{{ $topicname }}/{{ $campnum }}/threads/{{ $threads->id }}/replies">
                         {{ csrf_field() }}
 
                         <div class="form-group">
                             <br>
-                            <textarea name="body" id="body" class="form-control" placeholder="Reply to thread Here" rows="5"></textarea></textarea>
+                            <textarea name="body" id="body" class="form-control" placeholder="Reply to thread Here" rows="5"></textarea>
                         </div>
 
                         <button type="submit" class="btn btn-primary">Submit</button>

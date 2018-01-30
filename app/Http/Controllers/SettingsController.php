@@ -124,7 +124,7 @@ class SettingsController extends Controller
 			}
 		
 		 
-		    $supportedTopic = Support::whereIn('nick_name_id',$userNickname)->groupBy('topic_num')->orderBy('support_order','ASC')->get();
+		    $supportedTopic = Support::where('topic_num',$topicnum)->whereIn('nick_name_id',$userNickname)->groupBy('topic_num')->orderBy('support_order','ASC')->first();
 		
             return view('settings.support',['userNickname'=>$userNickname,'supportedTopic'=>$supportedTopic,'topic'=>$topic,'nicknames'=>$nicknames,'camp'=>$onecamp,'parentcamp'=>$campWithParents,'delegate_nick_name_id'=>$delegate_nick_name_id]);
 	  } else {
@@ -141,7 +141,7 @@ class SettingsController extends Controller
 		 
 		    $supportedTopic = Support::whereIn('nick_name_id',$userNickname)->groupBy('topic_num')->orderBy('support_order','ASC')->get();
 		
-		    return view('settings.support',['userNickname'=>$userNickname,'supportedTopic'=>$supportedTopic,'nicknames'=>$nicknames]);
+		    return view('settings.mysupport',['userNickname'=>$userNickname,'supportedTopic'=>$supportedTopic,'nicknames'=>$nicknames]);
 		  
 	  }
 	}
@@ -170,6 +170,13 @@ class SettingsController extends Controller
 			$userNicknames  = unserialize($input['userNicknames']);
 			$alreadySupport  = Support::where('camp_num',$input['camp_num'])->where('topic_num',$input['topic_num'])->whereIn('nick_name_id',$userNicknames)->get();
 
+			if(Camp::validateParentsupport($input['topic_num'],$input['camp_num'],$userNicknames)) {
+				
+				Session::flash('error', "You cant support child camps when you have supported a parent camp.");
+                return redirect()->back();
+				
+			}
+			
 			if(count($alreadySupport)) {
 				
 				Session::flash('error', "You have already supported this camp, you cant submit your support again.");
@@ -202,4 +209,29 @@ class SettingsController extends Controller
 
 
     }
+	public function delete_support(Request $request){
+        
+		$id = Auth::user()->id;
+		$input = $request->all();
+		
+		$support_id = (isset($input['support_id'])) ? $input['support_id'] : 0;
+		
+		if($id && $support_id) {
+			
+			if(Support::where('support_id',$support_id)->delete()) {
+				
+				Session::flash('success', "Your support has been removed successfully.");
+                return redirect()->back();
+				
+			} else {
+				
+				Session::flash('error', "Your support has not been removed.");
+                return redirect()->back();
+				
+			}
+		}
+		Session::flash('error', "Invalid access.");
+        return redirect()->back();
+		
+	}	
 }
