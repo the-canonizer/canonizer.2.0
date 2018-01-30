@@ -156,19 +156,22 @@
                             </a>
                             <ul class="sidenav-second-level collapse show" id="asof">
                                 <li>
-                                    <div class="radio radio-primary">
-                                        <input type="radio" name="radio1" id="radio1" value="option1">
-                                        <label for="radio1">include review</label>
-                                    </div>
-                                    <div class="radio radio-primary">
-                                        <input type="radio" name="radio2" id="radio2" value="option2">
-                                        <label for="radio2">default</label>
-                                    </div>
-                                    <div class="radio radio-primary">
-                                        <input type="radio" name="radio3" id="radio3" value="option3">
-                                        <label for="radio3">as of (yy/mm/dd)</label>
-                                    </div>
-                                    <div><input type="text"/></div>
+								 <form name="as_of" id="as_of" method="GET">
+								   <input type="hidden" name="_token" value="{{ csrf_token() }}">
+									<div class="radio radio-primary">
+										<input type="radio" <?php echo (isset($_REQUEST['asof']) && $_REQUEST['asof']=="review") ? "checked='checked'" : '';?> class="asofdate" name="asof" id="radio1" value="review">
+										<label for="radio1">include review</label>
+									</div>
+									<div class="radio radio-primary">
+										<input type="radio" <?php echo ((isset($_REQUEST['asof']) && $_REQUEST['asof']!="review") || !isset($_REQUEST['asof'])) ? "checked='checked'" : '';?> class="asofdate" name="asof" id="radio2" value="default">
+										<label for="radio2">default</label>
+									</div>
+									<div class="radio radio-primary">
+										<input type="radio" <?php echo (isset($_REQUEST['asof']) && $_REQUEST['asof']=="bydate") ? "checked='checked'" : '';?> class="asofdate" name="asof"id="radio3" value="bydate">
+										<label for="radio3">as of (yy/mm/dd)</label>
+									</div>
+									<div><input type="text" id="asofdate" name="asofdate" value="<?php echo isset($_REQUEST['asofdate']) ? $_REQUEST['asofdate']: '';?>"/></div>
+								</form>	
                                 </li>
                             </ul>
                         </li>
@@ -193,5 +196,22 @@
             <!-- Logout Modal-->
         </div>
     </div>
+    <script>
+        $(document).ready(function () {
+            $("#asofdate").datepicker({
+                changeMonth: true,
+                changeYear: true,
+				dateFormat: 'yy/mm/dd'
+            });
+			
+			
+			$(".asofdate, #asofdate").change(function(){
+				// Do something interesting here
+				
+				 $('#as_of').submit();
+			});
+			
+        })
+    </script>	
 </body>
 </html>

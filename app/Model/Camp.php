@@ -47,13 +47,38 @@ class Camp extends Model {
 		 if($campnum !=null)
 			$query->where('camp_num', '=', $campnum);
 				
-		$childs = $query->where('topic_num', '=', $topicnum)
+		if(!isset($_REQUEST['asof']) || (isset($_REQUEST['asof']) && $_REQUEST['asof']=="default")) {
+		
+		 $childs = $query->where('topic_num', '=', $topicnum)
                 ->where('parent_camp_num', '=', $parentcamp)
                 ->where('camp_name', '!=', 'Agreement')  
                 ->where('objector', '=', NULL)
                 ->where('go_live_time','<=',time()) 				
                 ->orderBy('submit_time', 'desc')
                 ->get()->unique('camp_num','topic_num');
+		} else {
+			
+			if(isset($_REQUEST['asof']) && $_REQUEST['asof']=="review") {
+			
+			 $childs = $query->where('topic_num', '=', $topicnum)
+                ->where('parent_camp_num', '=', $parentcamp)
+                ->where('camp_name', '!=', 'Agreement')  
+                ->orderBy('submit_time', 'desc')
+                ->get();	
+				
+			} else if(isset($_REQUEST['asof']) && $_REQUEST['asof']=="bydate") {
+				
+				$asofdate =  strtotime(date('Y-m-d H:i:s', strtotime($_REQUEST['asofdate'])));
+			
+			  $childs = $query->where('topic_num', '=', $topicnum)
+                ->where('parent_camp_num', '=', $parentcamp)
+                ->where('camp_name', '!=', 'Agreement')  
+                ->where('objector', '=', NULL)
+                ->where('go_live_time','<=',$asofdate) 				
+                ->orderBy('submit_time', 'desc')
+                ->get()->unique('camp_num','topic_num');
+			} 
+		}		
 				
         return $childs;
     }
@@ -273,7 +298,33 @@ class Camp extends Model {
 	
 	public static function getAgreementTopic($topicnum,$filter=array()){
 		
-		return self::where('topic_num',$topicnum)->where('camp_name','=','Agreement')->latest('submit_time')->first();
+		return self::where('topic_num',$topicnum)->where('camp_name','=','Agreement')
+		             ->where('objector', '=', NULL)
+                     ->where('go_live_time','<=',time())
+					 ->latest('submit_time')->first();
+	}
+	public static function getAllAgreementTopic($limit=10,$filter=array()){
+		
+		if(!isset($filter['asof']) || (isset($filter['asof']) && $filter['asof']=="default")) {
+		
+		 return self::where('camp_name','=','Agreement')
+		             ->where('objector', '=', NULL)
+                     ->where('go_live_time','<=',time())
+					 ->latest('submit_time')->get()->unique('topic_num')->take($limit);
+		} else {
+			
+			if(isset($filter['asof']) && $filter['asof']=="review") {
+			
+			  return self::where('camp_name','=','Agreement')->latest('submit_time')->get()->take($limit);	
+				
+			} else if(isset($filter['asof']) && $filter['asof']=="bydate") {
+				
+				$asofdate =  strtotime(date('Y-m-d H:i:s', strtotime($filter['asofdate'])));
+			
+			  return self::where('camp_name','=','Agreement')->where('go_live_time','<=',$asofdate)->latest('submit_time')->get()->take($limit);	
+				
+			} 
+		}			 
 	}
 	public static function getLiveCamp($topicnum,$campnum,$filter=array()){
 		

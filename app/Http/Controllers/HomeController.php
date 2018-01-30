@@ -12,9 +12,7 @@ class HomeController extends Controller {
     public function index() {
 
       
-        $topics = Camp::where('camp_name', '=', 'Agreement')
-                ->orderBy('submit_time', 'desc')
-                ->get()->unique('topic_num')->take(10);
+        $topics = Camp::getAllAgreementTopic(10,$_REQUEST);
         
         return view('welcome', ['topics' => $topics]);
     }
