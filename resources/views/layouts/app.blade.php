@@ -202,8 +202,7 @@
                 changeMonth: true,
                 changeYear: true,
 				dateFormat: 'yy/mm/dd'
-            });
-			
+            });			
 			
 			$(".asofdate, #asofdate").change(function(){
 				// Do something interesting here
