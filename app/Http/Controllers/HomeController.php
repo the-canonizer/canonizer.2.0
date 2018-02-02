@@ -21,10 +21,8 @@ class HomeController extends Controller {
 		
 		$output = '';
         $id = $request->id;
+		$topics = Camp::getAllLoadMoreTopic(10,$_REQUEST,$id);
 		
-		$topics = Camp::where('camp_name', '=', 'Agreement')->where('id','<',$id)
-                  ->orderBy('submit_time', 'desc')
-                  ->get()->unique('topic_num')->take(10);
 		
 		  foreach($topics as $k=>$topic) {
 			   $childs = $topic->childrens($topic->topic_num,$topic->camp_num);

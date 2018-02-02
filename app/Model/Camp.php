@@ -326,6 +326,30 @@ class Camp extends Model {
 			} 
 		}			 
 	}
+	public static function getAllLoadMoreTopic($limit=10,$filter=array(),$id){
+		
+		if(!isset($filter['asof']) || (isset($filter['asof']) && $filter['asof']=="default")) {
+		
+		 return self::where('camp_name','=','Agreement')
+		             ->where('id','<',$id)
+		             ->where('objector', '=', NULL)
+                     ->where('go_live_time','<=',time())
+					 ->latest('submit_time')->get()->unique('topic_num')->take($limit);
+		} else {
+			
+			if(isset($filter['asof']) && $filter['asof']=="review") {
+			
+			  return self::where('camp_name','=','Agreement')->where('id','<',$id)->latest('submit_time')->get()->take($limit);	
+				
+			} else if(isset($filter['asof']) && $filter['asof']=="bydate") {
+				
+				$asofdate =  strtotime(date('Y-m-d H:i:s', strtotime($filter['asofdate'])));
+			
+			  return self::where('camp_name','=','Agreement')->where('id','<',$id)->where('go_live_time','<=',$asofdate)->latest('submit_time')->get()->take($limit);	
+				
+			} 
+		}			 
+	}
 	public static function getLiveCamp($topicnum,$campnum,$filter=array()){
 		
 		return self::where('topic_num',$topicnum)

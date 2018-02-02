@@ -39,6 +39,7 @@
             </h3>
             <div class="content">
             <div class="row">
+			   @if(count($topics))
 			    <div class="tree col-sm-12">
                     <ul class="mainouter" id="load-data">
                         
@@ -70,6 +71,9 @@
                     </ul>
                     
                 </div>
+				@else
+				 <h6 style="margin-left:30px;"> No topic available.</h6>
+                @endif			 
               </div>
             </div>    
             
@@ -79,19 +83,20 @@
 </div>  <!-- /.right-whitePnl-->
 
 <script>
-
+var request = false;
    $(document).scroll(function(e){
        var id = $('#btn-more').data('id'); 
-      
+       var queryString = "{{Request::getQueryString()}}";
 	   var scrollTop = $(window).scrollTop();
+	   
 	   scrollTop = scrollTop + 650;
-		  if ( scrollTop > $('.sticky-footer').offset().top ) { 
+		  if ( scrollTop > $('.sticky-footer').offset().top && request==false) { 
 				  
 			   $("#btn-more").html("Please wait loading tree......");
-			   
+			   request = true;
 			   
 			   $.ajax({
-				   url : '{{ url("loadtopic") }}',
+				   url : '{{ url("loadtopic") }}?'+queryString,
 				   method : "POST",
 				   data : {id:id, _token:"{{csrf_token()}}"},
 				   dataType : "text",
@@ -102,6 +107,7 @@
 						  $('.remove-row').remove();
 						  $('#load-data').append(data);
 						  camptree();
+						  request = false;
 				   
 					  }
 					  else
