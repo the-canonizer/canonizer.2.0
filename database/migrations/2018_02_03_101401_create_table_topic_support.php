@@ -21,7 +21,7 @@ class CreateTableTopicSupport extends Migration
                 $table->integer('nick_name_id');
                 $table->integer('delegate_nick_id');
                 $table->string('submit_time');
-				$table->string('go_live_time');
+				
             }
         );
     }
