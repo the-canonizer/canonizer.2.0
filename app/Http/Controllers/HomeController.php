@@ -30,14 +30,14 @@ class HomeController extends Controller {
 		  foreach($topics as $k=>$topic) {
 			   $childs = $topic->childrens($topic->topic_num,$topic->camp_num);
 			   $title      = preg_replace('/[^A-Za-z0-9\-]/', '-', $topic->title);
-						  
+			   $supportCount = $topic->getCampSupportWithChild($topic->topic_num,$topic->camp_num);			  
 			   $topic_id  = $topic->topic_num."-".$title;
 			   $url       = url("topic/".$topic_id."/".$topic->camp_num);
 			   $camproute = route('camp.create',['topicnum'=>$topic->topic_num,'campnum'=>$topic->camp_num]);			 
                       $output .='<li><span class="';
 				
 				     
-					   $output .='"><i class="fa fa-arrow-right"></i></span> <div class="tp-title"><a href="'.$url.'">'.$topic->title.'</a><div class="badge">48.25</div></div>';
+					   $output .='"><i class="fa fa-arrow-right"></i></span> <div class="tp-title"><a href="'.$url.'">'.$topic->title.'</a><div class="badge">'.$supportCount.'</div></div>';
 						 
                         if(count($childs) > 0){ 
                             $output .= $topic->campTree($topic->topic_num,$topic->camp_num);
@@ -66,9 +66,10 @@ class HomeController extends Controller {
      if(!isset($_REQUEST['instance'])) {        
 		$counter = 0;
 		 $stored = array();
-        $topics = Support::where('delegate_nick_name_id','!=',0)->groupBy('topic_num')->orderBy('start','DESC')->get();
+        $topics = Support::where('delegate_nick_name_id','!=',0)->groupBy('topic_num','nick_name_id')->orderBy('start','DESC')->get();
 		
-		$topics1 = Support::groupBy('topic_num')->orderBy('start','DESC')->get();
+		$topics1 = Support::groupBy('topic_num','nick_name_id')->orderBy('start','DESC')->get();
+		
         $alreadyMigrated = TopicSupport::get();
 	     //echo "total topic migrating is :".count($topics)." </br>";
 		 
@@ -84,7 +85,7 @@ class HomeController extends Controller {
 			
 			$topicSupport->save();
 			
-			$stored[] = $topic->topic_num;
+			$stored[] = $topic->topic_num.'-'.$topic->nick_name_id;
 			
 			$counter++;
 			
@@ -93,7 +94,7 @@ class HomeController extends Controller {
 		foreach($topics1 as $key=>$topic) {
 			
 			
-			if(!in_array($topic->topic_num,$stored)) {
+			if(!in_array($topic->topic_num.'-'.$topic->nick_name_id,$stored)) {
 			$topicSupport = new TopicSupport();
 			
 			$topicSupport->topic_num = $topic->topic_num;
@@ -103,7 +104,6 @@ class HomeController extends Controller {
 			
 			$topicSupport->save();
 			
-			$stored[] = $topic->topic_num;
 			
 			 $counter++;
 			}	
@@ -121,7 +121,7 @@ class HomeController extends Controller {
 		
         foreach($topic as $data) {
 			
-			$supportCamp = Support::where('topic_num',$data->topic_num)->orderBy('support_order','ASC')->get();
+			$supportCamp = Support::where('topic_num',$data->topic_num)->where('nick_name_id',$data->nick_name_id)->orderBy('support_order','ASC')->get();
 			
 			foreach($supportCamp as $d) {
 				
@@ -129,7 +129,7 @@ class HomeController extends Controller {
 				
 				$sinstance->topic_support_id = $data->id;
 				$sinstance->camp_num = $d->camp_num;
-				$sinstance->support_order = $d->support_order+1;
+				$sinstance->support_order = $d->support_order + 1;
 				$sinstance->submit_time  = $d->start;
 				$sinstance->status = 0;
 				

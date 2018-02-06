@@ -52,11 +52,13 @@
 						  $title = preg_replace('/[^A-Za-z0-9\-]/', '-', $topic->title);
 						  //$title     = preg_replace('/\s+/', '-', $topic->title); 
 						  $topic_id = $topic->topic_num."-".$title;
-						 
+						  
 						 ?></span>
                          <div class="tp-title">
 
-						 <a href="<?php echo url('topic/'.$topic_id.'/'.$topic->camp_num) ?>">{{ $topic->title }}</a> <div class="badge">48.25</div>
+						 <a href="<?php echo url('topic/'.$topic_id.'/'.$topic->camp_num) ?>">{{ $topic->title }}</a> <div class="badge">
+						 {{ $topic->getCampSupportWithChild($topic->topic_num,$topic->camp_num) }}
+						 </div>
                          </div>
 
                          <?php

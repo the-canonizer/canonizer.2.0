@@ -62,9 +62,9 @@ class Topic extends Model {
         return $this->hasOne('App\Model\Nickname', 'nick_name_id', 'submitter');
     }
 	
-	public function scopeGetsupports($query,$topic_num,$userNickname) {
+	public function scopeGetsupports($query,$topic_support_id,$userNickname=null) {
 		
-		return $supports = Support::where('topic_num',$topic_num)->whereIn('nick_name_id',$userNickname)->orderBy('support_order','ASC')->orderBy('start','DESC')->get();
+		return $supports = SupportInstance::where('topic_support_id',$topic_support_id)->groupBy('camp_num')->orderBy('support_order','ASC')->get();
 		
 	}
 	
