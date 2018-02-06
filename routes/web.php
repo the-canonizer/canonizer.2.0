@@ -13,6 +13,8 @@
 
 Route::get('/', 'HomeController@index');
 Route::get('home', ['as'=>'home','uses'=>'HomeController@index']);
+Route::get('supportmigration', ['as'=>'supportmigration','uses'=>'HomeController@supportmigration']);
+
 
 Route::get('register','Auth\RegisterController@showRegistrationForm');
 Route::post('register','Auth\RegisterController@register');

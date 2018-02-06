@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Session;
 use App\Library\General;
 use App\Model\Nickname;
 use App\Model\Support;
+use App\Model\TopicSupport;
+use App\Model\SupportInstance;
 use Illuminate\Support\Facades\Validator;
 
 class SettingsController extends Controller
@@ -124,7 +126,7 @@ class SettingsController extends Controller
 			}
 		
 		 
-		    $supportedTopic = Support::where('topic_num',$topicnum)->whereIn('nick_name_id',$userNickname)->groupBy('topic_num')->orderBy('support_order','ASC')->first();
+		    $supportedTopic = TopicSupport::where('topic_num',$topicnum)->whereIn('nick_name_id',$userNickname)->groupBy('topic_num')->orderBy('submit_time','DESC')->first();
 		
             return view('settings.support',['userNickname'=>$userNickname,'supportedTopic'=>$supportedTopic,'topic'=>$topic,'nicknames'=>$nicknames,'camp'=>$onecamp,'parentcamp'=>$campWithParents,'delegate_nick_name_id'=>$delegate_nick_name_id]);
 	  } else {
@@ -139,7 +141,7 @@ class SettingsController extends Controller
 			}
 		
 		 
-		    $supportedTopic = Support::whereIn('nick_name_id',$userNickname)->groupBy('topic_num')->orderBy('support_order','ASC')->get();
+		    $supportedTopic = TopicSupport::whereIn('nick_name_id',$userNickname)->groupBy('topic_num')->orderBy('submit_time','DESC')->get();
 		
 		    return view('settings.mysupport',['userNickname'=>$userNickname,'supportedTopic'=>$supportedTopic,'nicknames'=>$nicknames]);
 		  
@@ -168,8 +170,12 @@ class SettingsController extends Controller
             $input = $request->all();
 			// Check if camp supported already then remove duplicacy.
 			$userNicknames  = unserialize($input['userNicknames']);
-			$alreadySupport  = Support::where('camp_num',$input['camp_num'])->where('topic_num',$input['topic_num'])->whereIn('nick_name_id',$userNicknames)->get();
-
+			
+			$alreadySupport = array();
+			
+			if(isset($input['topic_support_id']) && $input['topic_support_id'] != 0) {
+			  $alreadySupport  = SupportInstance::where('camp_num',$input['camp_num'])->where('topic_support_id',$input['topic_support_id'])->get();
+            }
 			if(Camp::validateParentsupport($input['topic_num'],$input['camp_num'],$userNicknames)) {
 				
 				Session::flash('error', "You cant support child camps when you have supported a parent camp.");
@@ -183,26 +189,53 @@ class SettingsController extends Controller
                 return redirect()->back();
 			}
 			
-			
+			if(isset($input['topic_support_id']) && $input['topic_support_id'] != 0) {
             
-            $support = new Support();
-            $support->nick_name_id = $input['nick_name'];
-            $support->topic_num = $input['topic_num'];
-            $support->camp_num = $input['camp_num'];
-            $support->start = time();
-			$support->delegate_nick_name_id = $input['delegate_nick_name_id'];
-			
-			if(isset($input['firstchoice']))
-				$support->support_order = 0;
-			else
-				$support->support_order = $input['lastsupport_rder'] + 1;
-			
-			
-			
-            $support->save();
+				$support = new SupportInstance();
+				$support->topic_support_id = $input['topic_support_id'];
+				$support->camp_num = $input['camp_num'];
+				$support->submit_time = time();
+				
+				if(isset($input['firstchoice']))
+					$support->support_order = 1;
+				else
+					$support->support_order = $input['lastsupport_rder'] + 1;
+				
+				$support->save();
 
-            Session::flash('success', "Your support has been submitted successfully.");
-            return redirect()->back();
+				Session::flash('success', "Your support has been submitted successfully.");
+				return redirect()->back();
+		  } else {
+			  
+			  $supportTopic  = new TopicSupport();
+			  $supportTopic->topic_num = $input['topic_num'];
+			  $supportTopic->nick_name_id = $input['nick_name'];
+			  $supportTopic->delegate_nick_id = $input['delegate_nick_name_id'];
+			  $supportTopic->submit_time = time();
+			  
+			  if($supportTopic->save()) {
+				  
+				$support = new SupportInstance();
+				$support->topic_support_id = $supportTopic->id;
+				$support->camp_num = $input['camp_num'];
+				$support->submit_time = time();
+				
+				if(isset($input['firstchoice']))
+					$support->support_order = 1;
+				else
+					$support->support_order = $input['lastsupport_rder'] + 1;
+				
+				$support->save();
+
+				Session::flash('success', "Your support has been submitted successfully.");
+				return redirect()->back();
+				  
+			  } else {
+				  
+				  Session::flash('error', "Your support has not been submitted successfully.");
+				  return redirect()->back();
+			  }
+		  }	
         }else{
             return redirect()->route('login');
         }
@@ -215,12 +248,22 @@ class SettingsController extends Controller
 		$input = $request->all();
 		
 		$support_id = (isset($input['support_id'])) ? $input['support_id'] : 0;
-		
+		$topic_support_id = (isset($input['topic_support_id'])) ? $input['topic_support_id'] : 0;
 		if($id && $support_id) {
 			
-			if(Support::where('support_id',$support_id)->delete()) {
+			if(SupportInstance::where('id',$support_id)->delete()) {
 				
 				Session::flash('success', "Your support has been removed successfully.");
+				
+				$remainingSupport = SupportInstance::where('topic_support_id',$topic_support_id)->get();
+				
+				if(count($remainingSupport)==0) {
+					
+					TopicSupport::where('id',$topic_support_id)->delete();					
+					
+				}
+				
+				
                 return redirect()->back();
 				
 			} else {

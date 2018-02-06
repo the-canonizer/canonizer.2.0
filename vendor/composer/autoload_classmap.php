@@ -6,7 +6,6 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'AddSupportsToCampTable' => $baseDir . '/database/migrations/2018_01_29_054016_add_supports_to_camp_table.php',
     'AddTopicIdToThreads' => $baseDir . '/database/migrations/2018_01_11_132214_add_topic_id_to_threads.php',
     'App\\CThread' => $baseDir . '/app/CThread.php',
     'App\\Console\\Kernel' => $baseDir . '/app/Console/Kernel.php',
@@ -48,6 +47,8 @@ return array(
     'ChangeNickNameId' => $baseDir . '/database/migrations/2018_01_15_131622_change_nick_name_id.php',
     'CreateCanonizerThreadsRepliesTable' => $baseDir . '/database/migrations/2018_01_09_131608_create_canonizer_threads_replies_table.php',
     'CreateCanonizerThreadsTable' => $baseDir . '/database/migrations/2018_01_09_130948_create_canonizer_threads_table.php',
+    'CreateTableSupportInstance' => $baseDir . '/database/migrations/2018_02_03_101503_create_table_support_instance.php',
+    'CreateTableTopicSupport' => $baseDir . '/database/migrations/2018_02_03_101401_create_table_topic_support.php',
     'Cron\\AbstractField' => $vendorDir . '/mtdowling/cron-expression/src/Cron/AbstractField.php',
     'Cron\\CronExpression' => $vendorDir . '/mtdowling/cron-expression/src/Cron/CronExpression.php',
     'Cron\\DayOfMonthField' => $vendorDir . '/mtdowling/cron-expression/src/Cron/DayOfMonthField.php',

@@ -39,7 +39,7 @@
 						 <a href="<?php echo url('topic/'.$topic_id.'/'.$topic->camp_num) ?>">
 						 {{ $topic->title}} 
 						 </a>
-						 <div class="badge">48.25</div></span>
+						 <div class="badge">{{ $topic->getCampSupportWithChild($topic->topic_num,$topic->camp_num) }}</div></span>
                          <?php
                         if(count($childs) > 0){
                             echo $topic->campTree($topic->topic_num,$topic->camp_num,null,$camp->camp_num);
