@@ -43,33 +43,73 @@
 			    <div class="tree col-sm-12">
                     <ul class="mainouter" id="load-data">
                         
-                       @foreach($topics as $k=>$topic)
+					   <?php
+					   function sortByOrder($a, $b)
+						{
+							$a = $a['support_order'];
+							$b = $b['support_order'];
+
+							if ($a == $b) return 0;
+							return ($a > $b) ? -1 : 1;
+						}
+                        $sortedTopic = array();
+						foreach($topics as $key=>$topicdata) {
+							
+						 $nicknames = $topicdata->GetSupportedNicknames($topicdata->topic_num);
+						 
+						 $supportDataset = $topicdata->getCampSupport($topicdata->topic_num,$topicdata->camp_num,$nicknames);
+		                 
+						 $count = 0;
+						 foreach($supportDataset as  $s) {
+							  
+							 $count = $count + $s;
+						 }
+						 
+						 $sortedTopic[$key]['topic'] = $topicdata;
+						 
+						 $supportDataset[1] = isset($supportDataset[1]) ? $supportDataset[1] + $count : $count; 
+						 
+                           $sortedTopic[$key]['support_order'] =	isset($supportDataset[$topicdata->camp_num]	)	? $supportDataset[$topicdata->camp_num] : 0;			 
+							
+						}
+						usort($sortedTopic,'sortByOrder');
+						
+                        
+                       ?>					   
+						
+                       @foreach($sortedTopic as $k=>$topic)
                        <li>
                          <?php
-                         $childs = $topic->childrens($topic->topic_num,$topic->camp_num); ?>
+                         $childs = $topic['topic']->childrens($topic['topic']->topic_num,$topic['topic']->camp_num); 
+						 
+						 
+						 ?>
                          <span class="<?php if(count($childs) > 0) echo 'parent'; ?>"><i class="fa fa-arrow-right"></i> 
 						 <?php 
-						  $title = preg_replace('/[^A-Za-z0-9\-]/', '-', $topic->title);
+						  $title = preg_replace('/[^A-Za-z0-9\-]/', '-', $topic['topic']->title);
 						  //$title     = preg_replace('/\s+/', '-', $topic->title); 
-						  $topic_id = $topic->topic_num."-".$title;
+						  $topic_id = $topic['topic']->topic_num."-".$title;
 						  
 						 ?></span>
                          <div class="tp-title">
 
-						 <a href="<?php echo url('topic/'.$topic_id.'/'.$topic->camp_num) ?>">{{ $topic->title }}</a> <div class="badge">
-						 {{ $topic->getCampSupportWithChild($topic->topic_num,$topic->camp_num) }}
+						 <a href="<?php echo url('topic/'.$topic_id.'/'.$topic['topic']->camp_num) ?>">{{ $topic['topic']->title }}</a> <div class="badge">
+						 {{ $topic['support_order'] }}
 						 </div>
                          </div>
 
                          <?php
+						 $nicknames = $topic['topic']->GetSupportedNicknames($topic['topic']->topic_num);
+						 
+						 $supportDataset = $topic['topic']->getCampSupport($topic['topic']->topic_num,$topic['topic']->camp_num,$nicknames);
                         if(count($childs) > 0){
-                            echo $topic->campTree($topic->topic_num,$topic->camp_num);
+                            echo $topic['topic']->campTree($topic['topic']->topic_num,$topic['topic']->camp_num,null,null,$supportDataset);
                         }else{
-                            echo '<li class="create-new-li"><span><a href="'.route('camp.create',['topicnum'=>$topic->topic_num,'campnum'=>$topic->camp_num]).'">< Create A New Camp ></a></span></li>';
+                            echo '<li class="create-new-li"><span><a href="'.route('camp.create',['topicnum'=>$topic['topic']->topic_num,'campnum'=>$topic['topic']->camp_num]).'">< Create A New Camp ></a></span></li>';
                         }?>
                            </li>
                        @endforeach
-					   <a id="btn-more" class="remove-row" data-id="{{ $topic->id }}"></a>
+					   <a id="btn-more" class="remove-row" data-id="{{ $topicdata->id }}"></a>
                     </ul>
                     
                 </div>
@@ -114,7 +154,7 @@ var request = false;
 					  }
 					  else
 					  {
-						  $('#btn-more').html("No Data");
+						  $('#btn-more').html("No more topic available.");
 					  }
 				   }
 			   });
