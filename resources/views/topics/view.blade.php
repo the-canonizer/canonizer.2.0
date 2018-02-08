@@ -29,7 +29,22 @@
                     <ul class="mainouter">
                        <li>
                         <?php
-                         $childs = $topic->childrens($topic->topic_num,$topic->camp_num); ?>
+                         $childs = $topic->childrens($topic->topic_num,$topic->camp_num); 
+						 
+						 $nicknames = $topic->GetSupportedNicknames($topic->topic_num);
+						 
+						 $supportDataset = $topic->getCampSupport($topic->topic_num,$topic->camp_num,$nicknames);
+		                 
+						 $count = 0;
+						 foreach($supportDataset as  $s) {
+							  
+							 $count = $count + $s;
+						 }
+						 $supportDataset[1] = $count; 
+						 
+						// echo "<pre>"; print_r($supportDataset); die;
+						 
+						 ?>
                          <span class="<?php if(count($childs) > 0) echo 'parent'; ?>"><i class="fa fa-arrow-down"></i> 
 						 <?php 
 						  $title      = preg_replace('/[^A-Za-z0-9\-]/', '-', $topic->title);						  
@@ -39,13 +54,13 @@
 						 <a href="<?php echo url('topic/'.$topic_id.'/'.$topic->camp_num) ?>">
 						 {{ $topic->title}} 
 						 </a>
-						 <div class="badge">{{ $topic->getCampSupportWithChild($topic->topic_num,$topic->camp_num) }}</div></span>
+						 <div class="badge">{{ $supportDataset[1] }}</div></span>
                          <?php
                         if(count($childs) > 0){
-                            echo $topic->campTree($topic->topic_num,$topic->camp_num,null,$camp->camp_num);
+                            echo $topic->campTree($topic->topic_num,$topic->camp_num,null,$camp->camp_num,$supportDataset);
                         }else{
                             echo '<li class="create-new-li"><span><a href="'.route('camp.create',['topicnum'=>$topic->topic_num,'campnum'=>$topic->camp_num]).'">< Create A New Camp ></a></span></li>';
-                        }?>
+                        } ?>
                            </li>
                        
                     </ul>
@@ -57,7 +72,7 @@
         </div>
         
         <div class="Scolor-Pnl">
-            <h3><?php echo ($parentcamp=="Agreement") ? $parentcamp : "Camp"; ?> Statement
+            <h3><?php echo ($parentcamp=="Agreement") ? $parentcamp : "Camp";?> Statement
             </h3>
             <div class="content">
             <div class="row">
@@ -86,21 +101,21 @@
                 <div class="tree col-sm-12">
                     Total Support for This Camp (including sub-camps): 
 					
-					<div class="badge">{{ $camp->getCampSupport($camp->topic_num,$camp->camp_num) }}
-					
+					<div class="badge">
+					 {{ isset($supportDataset[$camp->cam_num]) ? $supportDataset[$camp->cam_num] : 0 }}
 					</div>
 					
                     <ul class="mainouter">
-					  <?php $nicknames = $topic->GetSupportedNicknames($topic->topic_num,$camp->camp_num);
+					  <?php
 					 
-					  foreach($nicknames as $support) { 
+					  foreach($nicknames as $support) {  
 					  
-					    $supportData = $topic->getNicknameSupport($support,$camp->camp_num);
+					    //$supportData = $topic->getNicknameSupport($support,$camp->camp_num);
 						
 					  ?>
 					  
                        <li>
-                       	<a href="#"><div class="badge">{{ $supportData[$camp->camp_num]}}</div> 
+                       	<a href="#"><div class="badge">0</div> 
 						      {{ $support->nickname->nick_name}} 
 					     </a> 
 						 <a href="<?php echo url('support/'.$topic_id.'/'.$camp->camp_num.'-'.$support->nickname->nick_name_id);?>" class="btn btn-info">Delegate Your Support</a>

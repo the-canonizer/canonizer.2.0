@@ -15,7 +15,7 @@ class HomeController extends Controller {
     public function index() {
 
       
-        $topics = Camp::getAllAgreementTopic(10,$_REQUEST);
+        $topics = Camp::getAllAgreementTopic(150,$_REQUEST);
         
         return view('welcome', ['topics' => $topics]);
     }
@@ -27,20 +27,33 @@ class HomeController extends Controller {
 		$topics = Camp::getAllLoadMoreTopic(10,$_REQUEST,$id);
 		
 		
-		  foreach($topics as $k=>$topic) {
-			   $childs = $topic->childrens($topic->topic_num,$topic->camp_num);
-			   $title      = preg_replace('/[^A-Za-z0-9\-]/', '-', $topic->title);
-			   $supportCount = $topic->getCampSupportWithChild($topic->topic_num,$topic->camp_num);			  
-			   $topic_id  = $topic->topic_num."-".$title;
-			   $url       = url("topic/".$topic_id."/".$topic->camp_num);
-			   $camproute = route('camp.create',['topicnum'=>$topic->topic_num,'campnum'=>$topic->camp_num]);			 
+		
+		  foreach($topics as $k=>$topicdata) {
+			  
+			  $nicknames = $topicdata->GetSupportedNicknames($topicdata->topic_num);
+						 
+			 $supportDataset = $topicdata->getCampSupport($topicdata->topic_num,$topicdata->camp_num,$nicknames);
+			 
+			 $count = 0;
+			 foreach($supportDataset as  $s) {
+				  
+				 $count = $count + $s;
+			 }
+			 $supportDataset[1] = $supportDataset[1] + $count; 
+			   
+			   $childs = $topicdata->childrens($topicdata->topic_num,$topicdata->camp_num);
+			   $title      = preg_replace('/[^A-Za-z0-9\-]/', '-', $topicdata->title);
+			   $supportCount = $supportDataset[1];			  
+			   $topic_id  = $topicdata->topic_num."-".$title;
+			   $url       = url("topic/".$topic_id."/".$topicdata->camp_num);
+			   $camproute = route('camp.create',['topicnum'=>$topicdata->topic_num,'campnum'=>$topicdata->camp_num]);			 
                       $output .='<li><span class="';
 				
 				     
-					   $output .='"><i class="fa fa-arrow-right"></i></span> <div class="tp-title"><a href="'.$url.'">'.$topic->title.'</a><div class="badge">'.$supportCount.'</div></div>';
+					   $output .='"><i class="fa fa-arrow-right"></i></span> <div class="tp-title"><a href="'.$url.'">'.$topicdata->title.'</a><div class="badge">'.$supportCount.'</div></div>';
 						 
                         if(count($childs) > 0){ 
-                            $output .= $topic->campTree($topic->topic_num,$topic->camp_num);
+                            $output .= $topicdata->campTree($topicdata->topic_num,$topicdata->camp_num,null,null,$supportDataset);
 						   	
                         }else{
                             $output .= '<li class="create-new-li"><span><a href="'.$camproute.'">< Create A New Camp ></a></span></li>';
@@ -48,7 +61,7 @@ class HomeController extends Controller {
 						$output .='</li>';
 						
 		  }
-		  $output .='<a id="btn-more" class="remove-row" data-id="'.$topic->id.'"></a>';
+		  isset($topicdata) ? $output .='<a id="btn-more" class="remove-row" data-id="'.$topicdata->id.'"></a>' : '';
       echo $output;		  
 		
 	}
