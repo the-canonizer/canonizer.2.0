@@ -110,12 +110,13 @@
 					 
 					  foreach($nicknames as $support) {  
 					  
-					    //$supportData = $topic->getNicknameSupport($support,$camp->camp_num);
+					    $supportData = $topic->getNicknameSupport($support,$camp->camp_num);
 						
 					  ?>
 					  
                        <li>
-                       	<a href="#"><div class="badge">0</div> 
+                       	<a href="#"><div class="badge">{{ $supportData[$camp->camp_num]}}</div> 
+						
 						      {{ $support->nickname->nick_name}} 
 					     </a> 
 						 <a href="<?php echo url('support/'.$topic_id.'/'.$camp->camp_num.'-'.$support->nickname->nick_name_id);?>" class="btn btn-info">Delegate Your Support</a>

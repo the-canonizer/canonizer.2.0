@@ -224,7 +224,7 @@ class Camp extends Model {
 						  }  						  
 						
 					}		
-		}
+		
       return $campSupport;		
 		
 	}
