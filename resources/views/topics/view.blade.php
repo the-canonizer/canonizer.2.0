@@ -83,8 +83,7 @@
                             echo $wiky->parse($input);       
                         } else {
                             echo "No statement available";
-                        }
-                        
+                        }                        
                 ?>
             </div>
             <div class="footer">

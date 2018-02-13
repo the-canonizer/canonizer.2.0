@@ -1,6 +1,6 @@
 <?php
 /* Wiky.php - A tiny PHP "library" to convert Wiki Markup language to HTML
- * Author: Toni Lähdekorpi <toni@lygon.net>
+ * Author: Karun Gautam
  *
  * Code usage under any of these licenses:
  * Apache License 2.0, http://www.apache.org/licenses/LICENSE-2.0
