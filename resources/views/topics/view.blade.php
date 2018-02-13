@@ -76,6 +76,8 @@
             </h3>
             <div class="content">
                     <?php 
+                    $statement = $camp->statement($camp->topic_num,$camp->camp_num);
+
                     if(isset($statement->value)) {
                         $input=htmlspecialchars($statement->value);
                             echo $wiky->parse($input);       
