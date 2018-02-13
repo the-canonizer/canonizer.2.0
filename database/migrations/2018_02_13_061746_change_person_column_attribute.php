@@ -17,8 +17,7 @@ class ChangePersonColumnAttribute extends Migration
             //
 			 $table->integer('update_time')->change();
 			 $table->integer('join_time')->change();
-			 $table->integer('gender')->change();
-			 
+			 $table->integer('gender')->change();			 
 			 $table->dropColumn('created_at');
         });
     }
