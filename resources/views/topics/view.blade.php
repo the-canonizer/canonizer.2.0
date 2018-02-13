@@ -78,8 +78,14 @@
             <div class="row">
                 <div class="tree col-sm-12">
                     <?php $statement = $camp->statement($camp->topic_num,$camp->camp_num);
-					
-					  echo (isset($statement->value)) ? $statement->value : "No statement available";
+
+						
+					  if(isset($statement->value)) {
+						 
+						$input=htmlspecialchars($statement->value);
+						echo $wiky->parse($input);						 
+						  
+					  } else echo "No statement available";
 					?>
 				</div>
             </div>    

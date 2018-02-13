@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
 use App\Library\General;
+use App\Library\Wiky;
 use App\Model\Topic;
 use App\Model\Camp;
 use App\Model\Statement;
@@ -140,7 +141,11 @@ class TopicController extends Controller {
         $camp       = Camp::getLiveCamp($topicnum,$parentcampnum);
         $parentcamp = Camp::campNameWithAncestors($camp,'');
         
-		return view('topics.view',  compact('topic','parentcampnum','parentcamp','camp'));
+		$wiky=new Wiky;
+
+
+		
+		return view('topics.view',  compact('topic','parentcampnum','parentcamp','camp','wiky'));
     }
 
     
