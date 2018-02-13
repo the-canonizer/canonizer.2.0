@@ -78,14 +78,14 @@
 				  <b>Submitter Nickname :</b> {{ isset($data->submitternickname->nick_name) ? $data->submitternickname->nick_name : 'N/A' }} <br/>
 				  <b>Go live Time :</b> {{ date('m-d-Y H:i:s',$data->go_live_time)}} <br/> 
 				  
-				   @if($data->objector !=null)
+				   @if($data->objector_nick_id !=null)
 				  <b>Object Reason :</b> {{ $data->object_reason}} <br/>	
                   <b>Objector Nickname :</b> {{ $data->objectornickname->nick_name }} <br/> 			  
                   @endif 
 				  
 				 <div class="CmpHistoryPnl-footer">
-				    <a class="btn btn-historysmt" href="<?php echo url('manage/statement/'.$data->record_id.'-objection');?>">Object</a>
-				 	<a class="btn btn-historysmt" href="<?php echo url('manage/statement/'.$data->record_id);?>">Submit Statement Update</a>
+				    <a class="btn btn-historysmt" href="<?php echo url('manage/statement/'.$data->id.'-objection');?>">Object</a>
+				 	<a class="btn btn-historysmt" href="<?php echo url('manage/statement/'.$data->id);?>">Submit Statement Update</a>
                  </div>
 			    </div> 	
 			   

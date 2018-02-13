@@ -67,7 +67,7 @@ class TopicController extends Controller {
 			
             $topic->namespace = $all['namespace'];
             $topic->submit_time = time();
-            $topic->submitter = $all['nick_name'];
+            $topic->submitter_nick_id = $all['nick_name'];
             $topic->go_live_time = strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
             $topic->language = $all['language'];
             $topic->note = $all['note'];
@@ -76,8 +76,8 @@ class TopicController extends Controller {
 				
 			 $topic->topic_num = $all['topic_num'];	
 			 if(isset($all['objection']) && $all['objection']==1) {
-				 $topic->objector = $all['nick_name'];
-				 $topic->submitter = $all['submitter'];
+				 $topic->objector_nick_id = $all['nick_name'];
+				 $topic->submitter_nick_id = $all['submitter'];
 				 $topic->object_reason = $all['object_reason'];
 				 $topic->object_time = time();
 			 }
@@ -209,7 +209,7 @@ class TopicController extends Controller {
 		$id          = $paramArray[0];
 		$objection   = isset($paramArray[1]) ? $paramArray[1] : null;
 			
-		$statement   = Statement::where('record_id',$id)->first();
+		$statement   = Statement::where('id',$id)->first();
 		
 		if(!count($statement)) return back();
 		
@@ -325,19 +325,19 @@ class TopicController extends Controller {
 		$camp->submit_time = strtotime(date('Y-m-d H:i:s'));
         $camp->go_live_time = strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
         $camp->language = $all['language'];
-        $camp->nick_name_id = $all['nick_name'];
+        $camp->camp_about_nick_id = $all['nick_name'];
         $camp->note = $all['note'];
 		$camp->key_words = $all['keywords'];
-		$camp->submitter = $all['nick_name'];
-        $camp->url = $all['url'];	
+		$camp->submitter_nick_id = $all['nick_name'];
+        $camp->camp_about_url = $all['url'];	
 
         if(isset($all['camp_num'])) {
 		 $camp->camp_num = $all['camp_num'];
-		 $camp->submitter = $all['nick_name'];
+		 $camp->submitter_nick_id = $all['nick_name'];
 		 if(isset($all['objection']) && $all['objection']==1) {
 		 
-			 $camp->objector = $all['nick_name'];
-			  $camp->submitter = $all['submitter'];
+			 $camp->objector_nick_id = $all['nick_name'];
+			  $camp->submitter_nick_id = $all['submitter'];
 			 $camp->object_reason = $all['object_reason'];
 			 $camp->object_time = time();
 		 }	 
@@ -357,7 +357,7 @@ class TopicController extends Controller {
 			  $statement->camp_num = $camp->camp_num;
 			  $statement->note = $all['note'];
 			  $statement->submit_time = strtotime(date('Y-m-d H:i:s'));
-			  $statement->submitter = $all['nick_name'];
+			  $statement->submitter_nick_id = $all['nick_name'];
 			  $statement->go_live_time = strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
 			  $statement->language = $all['language'];
 					  
@@ -401,17 +401,17 @@ class TopicController extends Controller {
 		  $statement->camp_num = $all['camp_num'];
 		  $statement->note = $all['note'];
 		  $statement->submit_time = strtotime(date('Y-m-d H:i:s'));
-		  $statement->submitter = $all['nick_name'];
+		  $statement->submitter_nick_id = $all['nick_name'];
 		  $statement->go_live_time = strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
 		  $statement->language = $all['language'];
 		  
 		  if(isset($all['camp_num'])) {
 			 $statement->camp_num = $all['camp_num'];
-			 $statement->submitter = $all['nick_name'];
+			 $statement->submitter_nick_id = $all['nick_name'];
 			 if(isset($all['objection']) && $all['objection']==1) {
 		 
-				 $statement->objector = $all['nick_name'];
-				 $statement->submitter = $all['submitter'];
+				 $statement->objector_nick_id = $all['nick_name'];
+				 $statement->submitter_nick_id = $all['submitter'];
 				 $statement->object_reason = $all['object_reason'];
 				 $statement->object_time = time();
 			 }	

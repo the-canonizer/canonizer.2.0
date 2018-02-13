@@ -19,13 +19,13 @@ class Camp extends Model {
         return $this->hasOne('App\Model\Topic', 'topic_num', 'topic_num');
     }
 	public function nickname() {
-        return $this->hasOne('App\Model\Nickname', 'nick_name_id', 'nick_name_id');
+        return $this->hasOne('App\Model\Nickname', 'id', 'camp_about_nick_id');
     }
 	public function objectornickname() {
-        return $this->hasOne('App\Model\Nickname', 'nick_name_id', 'objector');
+        return $this->hasOne('App\Model\Nickname', 'id', 'objector_nick_id');
     }
 	public function submitternickname() {
-        return $this->hasOne('App\Model\Nickname', 'nick_name_id', 'submitter');
+        return $this->hasOne('App\Model\Nickname', 'id', 'submitter_nick_id');
     }
     public static function boot() {
         static::created(function ($model) {
@@ -52,7 +52,7 @@ class Camp extends Model {
 		 $childs = $query->where('topic_num', '=', $topicnum)
                 ->where('parent_camp_num', '=', $parentcamp)
                 ->where('camp_name', '!=', 'Agreement')  
-                ->where('objector', '=', NULL)
+                ->where('objector_nick_id', '=', NULL)
                 ->where('go_live_time','<=',time()) 				
                 ->orderBy('submit_time', 'desc')
                 ->get()->unique('camp_num','topic_num');
@@ -73,7 +73,7 @@ class Camp extends Model {
 			  $childs = $query->where('topic_num', '=', $topicnum)
                 ->where('parent_camp_num', '=', $parentcamp)
                 ->where('camp_name', '!=', 'Agreement')  
-                ->where('objector', '=', NULL)
+                ->where('objector_nick_id', '=', NULL)
                 ->where('go_live_time','<=',$asofdate) 				
                 ->orderBy('submit_time', 'desc')
                 ->get()->unique('camp_num','topic_num');
@@ -304,7 +304,7 @@ class Camp extends Model {
 	public static function getAgreementTopic($topicnum,$filter=array()){
 		
 		return self::where('topic_num',$topicnum)->where('camp_name','=','Agreement')
-		             ->where('objector', '=', NULL)
+		             ->where('objector_nick_id', '=', NULL)
                      ->where('go_live_time','<=',time())
 					 ->latest('submit_time')->first();
 	}
@@ -313,7 +313,7 @@ class Camp extends Model {
 		if(!isset($filter['asof']) || (isset($filter['asof']) && $filter['asof']=="default")) {
 		
 		 return self::where('camp_name','=','Agreement')
-		             ->where('objector', '=', NULL)
+		             ->where('objector_nick_id', '=', NULL)
                      ->where('go_live_time','<=',time())
 					 ->latest('submit_time')->get()->unique('topic_num')->take($limit);
 		} else {
@@ -337,7 +337,7 @@ class Camp extends Model {
 		
 		 return self::where('camp_name','=','Agreement')
 		             ->where('id','<',$id)
-		             ->where('objector', '=', NULL)
+		             ->where('objector_nick_id', '=', NULL)
                      ->where('go_live_time','<=',time())
 					 ->latest('submit_time')->get()->unique('topic_num')->take($limit);
 		} else {
@@ -359,7 +359,7 @@ class Camp extends Model {
 		
 		return self::where('topic_num',$topicnum)
 		            ->where('camp_num','=', $campnum)
-					->where('objector', '=', NULL)
+					->where('objector_nick_id', '=', NULL)
                     ->where('go_live_time','<=',time())
 					->latest('submit_time')->first();
 	}
