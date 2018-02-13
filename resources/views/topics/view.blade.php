@@ -75,7 +75,15 @@
             <h3><?php echo ($parentcamp=="Agreement") ? $parentcamp : "Camp";?> Statement
             </h3>
             <div class="content">
-             
+                    <?php 
+                    if(isset($statement->value)) {
+                        $input=htmlspecialchars($statement->value);
+                            echo $wiky->parse($input);       
+                        } else {
+                            echo "No statement available";
+                        }
+                        
+                ?>
             </div>
             <div class="footer">
             	<a class="btn btn-success" href="<?php echo url('statement/history/'.$topic_id.'/'.$camp->camp_num);?>">Manage/Edit Camp Statement</a>
