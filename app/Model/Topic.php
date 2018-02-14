@@ -72,5 +72,6 @@ class Topic extends Model {
 		
 		return self::where('topic_num',$topicnum)->latest('submit_time')->get();
 	}
+	
 
 }

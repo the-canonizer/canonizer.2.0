@@ -44,40 +44,12 @@
                     <ul class="mainouter" id="load-data">
                         
 					   <?php
-					   function sortByOrder($a, $b)
-						{
-							$a = $a['support_order'];
-							$b = $b['support_order'];
-
-							if ($a == $b) return 0;
-							return ($a > $b) ? -1 : 1;
-						}
-                        $sortedTopic = array();
-						foreach($topics as $key=>$topicdata) {
-							
-						 $nicknames = $topicdata->GetSupportedNicknames($topicdata->topic_num);
-						 
-						 $supportDataset = $topicdata->getCampSupport($topicdata->topic_num,$topicdata->camp_num,$nicknames);
-		                 
-						 $count = 0;
-						 foreach($supportDataset as  $s) {
-							  
-							 $count = $count + $s;
-						 }
-						 
-						 $sortedTopic[$key]['topic'] = $topicdata;
-						 
-						 $supportDataset[1] = isset($supportDataset[1]) ? $supportDataset[1] + $count : $count; 
-						 
-                           $sortedTopic[$key]['support_order'] =	isset($supportDataset[$topicdata->camp_num]	)	? $supportDataset[$topicdata->camp_num] : 0;			 
-							
-						}
-						usort($sortedTopic,'sortByOrder');
-						
-                        
+					   
+						$sortedTopic = $topics[0]->getSortedTree($topics);
+                        $sortedTree  = $sortedTopic['sortedTree'];
                        ?>					   
 						
-                       @foreach($sortedTopic as $k=>$topic)
+                       @foreach($sortedTree as $k=>$topic)
                        <li>
                          <?php
                          $childs = $topic['topic']->childrens($topic['topic']->topic_num,$topic['topic']->camp_num); 
@@ -109,7 +81,7 @@
                         }?>
                            </li>
                        @endforeach
-					   <a id="btn-more" class="remove-row" data-id="{{ $topicdata->id }}"></a>
+					   <a id="btn-more" class="remove-row" data-id="{{ $sortedTopic['key'] }}"></a>
                     </ul>
                     
                 </div>

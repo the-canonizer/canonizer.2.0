@@ -312,10 +312,13 @@ class Camp extends Model {
 		
 		if(!isset($filter['asof']) || (isset($filter['asof']) && $filter['asof']=="default")) {
 		
-		 return self::where('camp_name','=','Agreement')
+		 return self::select(DB::raw('(select count(support_instance.id) from topic_support join support_instance on topic_support.id =support_instance.topic_support_id where topic_support.topic_num=camp.topic_num) as support, camp.*'))
+		             //->leftJoin('topic_support','camp.topic_num','=','topic_support.topic_num')
+					 //->leftJoin('support_instance','support_instance.topic_support_id','=','topic_support.id')
+		             ->where('camp_name','=','Agreement')
 		             ->where('objector_nick_id', '=', NULL)
-                     ->where('go_live_time','<=',time())
-					 ->latest('submit_time')->get()->unique('topic_num')->take($limit);
+                     ->where('camp.go_live_time','<=',time())					 
+					 ->latest('support')->get()->unique('topic_num')->take($limit);
 		} else {
 			
 			if(isset($filter['asof']) && $filter['asof']=="review") {
@@ -391,6 +394,43 @@ class Camp extends Model {
 			return true;
 		else
 			return false;
+		
+	}
+	public function sortByOrder($a, $b)
+	{
+							$a = $a['support_order'];
+							$b = $b['support_order'];
+
+							if ($a == $b) return 0;
+							return ($a > $b) ? -1 : 1;
+	}
+	public function getSortedTree($topics) {
+		
+		
+		$sortedTopic = array();
+		foreach($topics as $key=>$topicdata) {
+			
+		 $nicknames = $topicdata->GetSupportedNicknames($topicdata->topic_num);
+		 
+		 $supportDataset = $topicdata->getCampSupport($topicdata->topic_num,$topicdata->camp_num,$nicknames);
+		 
+		 $count = 0;
+		 foreach($supportDataset as  $s) {
+			  
+			 $count = $count + $s;
+		 }
+		 
+		 $sortedTopic[$key]['topic'] = $topicdata;
+		 
+		 $supportDataset[1] = isset($supportDataset[1]) ? $supportDataset[1] + $count : $count; 
+		 
+		   $sortedTopic[$key]['support_order'] =	isset($supportDataset[$topicdata->camp_num]	)	? $supportDataset[$topicdata->camp_num] : 0;			 
+			
+		}
+		
+		usort($sortedTopic,array($this, "sortByOrder"));
+		
+		return array('key'=>$topicdata->id,'sortedTree'=>$sortedTopic);
 		
 	}
 

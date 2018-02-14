@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
 use App\Library\General;
 use App\Library\Wiky;
+use App\Library\wikiparser\wikiParser;
 use App\Model\Topic;
 use App\Model\Camp;
 use App\Model\Statement;
@@ -142,10 +143,12 @@ class TopicController extends Controller {
         $parentcamp = Camp::campNameWithAncestors($camp,'');
         
 		$wiky=new Wiky;
-
+		
+		$WikiParser  = new wikiParser;
+     
 
 		
-		return view('topics.view',  compact('topic','parentcampnum','parentcamp','camp','wiky'));
+		return view('topics.view',  compact('topic','parentcampnum','parentcamp','camp','wiky','WikiParser'));
     }
 
     
@@ -247,8 +250,9 @@ class TopicController extends Controller {
 		$parentcampnum  = (isset($onecamp->parent_camp_num)) ? $onecamp->parent_camp_num : 0;
 		
 	    //if(!count($onecamp)) return back();
+		$wiky=new Wiky;
 		
-        return view('topics.camphistory',  compact('topic','camps','parentcampnum','onecamp','parentcamp'));
+        return view('topics.camphistory',  compact('topic','camps','parentcampnum','onecamp','parentcamp','wiky'));
     }
 	/**
      * Show camp statement history.
@@ -270,8 +274,9 @@ class TopicController extends Controller {
 		$parentcampnum  = isset($onecamp->parent_camp_num) ? $onecamp->parent_camp_num : 0;
 		
 		$statement      = Statement::getHistory($topicnum,$campnum);
-        
-        return view('topics.statementhistory',  compact('topic','statement','parentcampnum','onecamp','parentcamp'));
+        $wiky           = new Wiky;
+		
+        return view('topics.statementhistory',  compact('topic','statement','parentcampnum','onecamp','parentcamp','wiky'));
     }
 	
 	/**
@@ -291,7 +296,9 @@ class TopicController extends Controller {
 		 
 	    if(!count($topics)) { return back();}
 		
-        return view('topics.topichistory',  compact('topics'));
+		$wiky  =  new Wiky;
+		
+        return view('topics.topichistory',  compact('topics','wiky'));
     }
 	
 	/**

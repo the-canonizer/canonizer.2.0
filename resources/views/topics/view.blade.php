@@ -79,8 +79,10 @@
                     $statement = $camp->statement($camp->topic_num,$camp->camp_num);
 
                     if(isset($statement->value)) {
-                        $input=htmlspecialchars($statement->value);
-                            echo $wiky->parse($input);       
+                              $input=htmlspecialchars($statement->value);
+                              echo $wiky->parse($input); 
+							 //echo $WikiParser->parse($statement->value);
+							
                         } else {
                             echo "No statement available";
                         }

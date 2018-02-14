@@ -18,9 +18,10 @@ class Wiky {
 			"/\r\n/",
 			
 			// Headings
-			"/^==== (.+?) ====$/m",						// Subsubheading
-			"/^=== (.+?) ===$/m",						// Subheading
-			"/^== (.+?) ==$/m",						// Heading
+			"/^==== (.+?) ====$/m",						// Subsubheading H5
+			"/^=== (.+?) ===$/m",						// Subheading H4
+			"/^== (.+?) ==$/m",						// Heading H3
+			"/^= (.+?) =$/m",	                    // Heading H2
 	
 			// Formatting
 			"/\'\'\'\'\'(.+?)\'\'\'\'\'/s",					// Bold-italic
@@ -62,9 +63,10 @@ class Wiky {
 			"\n",
 			
 			// Headings
+			"<h5>$1</h5>",
+			"<h4>$1</h4>",
 			"<h3>$1</h3>",
 			"<h2>$1</h2>",
-			"<h1>$1</h1>",
 	
 			//Formatting
 			"<strong><em>$1</em></strong>",
@@ -99,8 +101,8 @@ class Wiky {
 			"<li>$1</li>",
 	
 			// Newlines
-			"$0<br/>",
-			"$0<br/>",
+			"$0<br/><br/>",
+			"$0<br/><br/>",
 		);
 		if($analyze) {
 			foreach($this->patterns as $k=>$v) {

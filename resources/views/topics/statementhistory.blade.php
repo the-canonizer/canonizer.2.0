@@ -68,10 +68,11 @@
 							   $bgcolor ="rgba(0, 128, 0, 0.5);"; // green
 						   } else {
 							   $bgcolor ="#4e4ef3;"; //blue
-						   }	
+						   }
+                   $input=htmlspecialchars($data->value);						   
 			   ?>
 			    <div class="form-group CmpHistoryPnl" style="background-color:{{ $bgcolor }}">
-                  <b>Statement :</b> {{ $data->value }} <br/>
+                  <b>Statement :</b> <?php echo  $wiky->parse($input); ?><br/>
 				  <b>Note :</b> {{ $data->note }} <br/>
 				  <b>Language :</b> {{ $data->language }}<br/>
 				  <b>Submitted on :</b> {{ date('m-d-Y H:i:s',$data->submit_time) }} <br/>
