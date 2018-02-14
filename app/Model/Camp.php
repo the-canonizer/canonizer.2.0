@@ -19,13 +19,13 @@ class Camp extends Model {
         return $this->hasOne('App\Model\Topic', 'topic_num', 'topic_num');
     }
 	public function nickname() {
-        return $this->hasOne('App\Model\Nickname', 'nick_name_id', 'nick_name_id');
+        return $this->hasOne('App\Model\Nickname', 'id', 'camp_about_nick_id');
     }
 	public function objectornickname() {
-        return $this->hasOne('App\Model\Nickname', 'nick_name_id', 'objector');
+        return $this->hasOne('App\Model\Nickname', 'id', 'objector_nick_id');
     }
 	public function submitternickname() {
-        return $this->hasOne('App\Model\Nickname', 'nick_name_id', 'submitter');
+        return $this->hasOne('App\Model\Nickname', 'id', 'submitter_nick_id');
     }
     public static function boot() {
         static::created(function ($model) {
@@ -52,7 +52,7 @@ class Camp extends Model {
 		 $childs = $query->where('topic_num', '=', $topicnum)
                 ->where('parent_camp_num', '=', $parentcamp)
                 ->where('camp_name', '!=', 'Agreement')  
-                ->where('objector', '=', NULL)
+                ->where('objector_nick_id', '=', NULL)
                 ->where('go_live_time','<=',time()) 				
                 ->orderBy('submit_time', 'desc')
                 ->get()->unique('camp_num','topic_num');
@@ -73,7 +73,7 @@ class Camp extends Model {
 			  $childs = $query->where('topic_num', '=', $topicnum)
                 ->where('parent_camp_num', '=', $parentcamp)
                 ->where('camp_name', '!=', 'Agreement')  
-                ->where('objector', '=', NULL)
+                ->where('objector_nick_id', '=', NULL)
                 ->where('go_live_time','<=',$asofdate) 				
                 ->orderBy('submit_time', 'desc')
                 ->get()->unique('camp_num','topic_num');
@@ -304,7 +304,7 @@ class Camp extends Model {
 	public static function getAgreementTopic($topicnum,$filter=array()){
 		
 		return self::where('topic_num',$topicnum)->where('camp_name','=','Agreement')
-		             ->where('objector', '=', NULL)
+		             ->where('objector_nick_id', '=', NULL)
                      ->where('go_live_time','<=',time())
 					 ->latest('submit_time')->first();
 	}
@@ -312,10 +312,13 @@ class Camp extends Model {
 		
 		if(!isset($filter['asof']) || (isset($filter['asof']) && $filter['asof']=="default")) {
 		
-		 return self::where('camp_name','=','Agreement')
-		             ->where('objector', '=', NULL)
-                     ->where('go_live_time','<=',time())
-					 ->latest('submit_time')->get()->unique('topic_num')->take($limit);
+		 return self::select(DB::raw('(select count(support_instance.id) from topic_support join support_instance on topic_support.id =support_instance.topic_support_id where topic_support.topic_num=camp.topic_num) as support, camp.*'))
+		             //->leftJoin('topic_support','camp.topic_num','=','topic_support.topic_num')
+					 //->leftJoin('support_instance','support_instance.topic_support_id','=','topic_support.id')
+		             ->where('camp_name','=','Agreement')
+		             ->where('objector_nick_id', '=', NULL)
+                     ->where('camp.go_live_time','<=',time())					 
+					 ->latest('support')->get()->unique('topic_num')->take($limit);
 		} else {
 			
 			if(isset($filter['asof']) && $filter['asof']=="review") {
@@ -337,7 +340,7 @@ class Camp extends Model {
 		
 		 return self::where('camp_name','=','Agreement')
 		             ->where('id','<',$id)
-		             ->where('objector', '=', NULL)
+		             ->where('objector_nick_id', '=', NULL)
                      ->where('go_live_time','<=',time())
 					 ->latest('submit_time')->get()->unique('topic_num')->take($limit);
 		} else {
@@ -359,7 +362,7 @@ class Camp extends Model {
 		
 		return self::where('topic_num',$topicnum)
 		            ->where('camp_num','=', $campnum)
-					->where('objector', '=', NULL)
+					->where('objector_nick_id', '=', NULL)
                     ->where('go_live_time','<=',time())
 					->latest('submit_time')->first();
 	}
@@ -391,6 +394,43 @@ class Camp extends Model {
 			return true;
 		else
 			return false;
+		
+	}
+	public function sortByOrder($a, $b)
+	{
+							$a = $a['support_order'];
+							$b = $b['support_order'];
+
+							if ($a == $b) return 0;
+							return ($a > $b) ? -1 : 1;
+	}
+	public function getSortedTree($topics) {
+		
+		
+		$sortedTopic = array();
+		foreach($topics as $key=>$topicdata) {
+			
+		 $nicknames = $topicdata->GetSupportedNicknames($topicdata->topic_num);
+		 
+		 $supportDataset = $topicdata->getCampSupport($topicdata->topic_num,$topicdata->camp_num,$nicknames);
+		 
+		 $count = 0;
+		 foreach($supportDataset as  $s) {
+			  
+			 $count = $count + $s;
+		 }
+		 
+		 $sortedTopic[$key]['topic'] = $topicdata;
+		 
+		 $supportDataset[1] = isset($supportDataset[1]) ? $supportDataset[1] + $count : $count; 
+		 
+		   $sortedTopic[$key]['support_order'] =	isset($supportDataset[$topicdata->camp_num]	)	? $supportDataset[$topicdata->camp_num] : 0;			 
+			
+		}
+		
+		usort($sortedTopic,array($this, "sortByOrder"));
+		
+		return array('key'=>$topicdata->id,'sortedTree'=>$sortedTopic);
 		
 	}
 

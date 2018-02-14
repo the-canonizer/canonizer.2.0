@@ -18,7 +18,7 @@ class TopicSupport extends Model {
     }   
 	
 	public function nickname() {
-        return $this->hasOne('App\Model\Nickname', 'nick_name_id', 'nick_name_id');
+        return $this->hasOne('App\Model\Nickname', 'id', 'nick_name_id');
     }
 	public function camp() {
         return $this->hasOne('App\Model\Camp', 'camp_num', 'camp_num');
@@ -28,7 +28,7 @@ class TopicSupport extends Model {
     }
 	
 	public function delegatednickname() {
-        return $this->hasOne('App\Model\Nickname', 'nick_name_id', 'delegate_nick_id');
+        return $this->hasOne('App\Model\Nickname', 'id', 'delegate_nick_id');
     }
 	public function campsupport() {
         return $this->hasMany('App\Model\SupportInstance', 'topic_support_id', 'id')->groupBy('camp_num')->orderBy('support_order','ASC')->orderBy('submit_time','DESC');

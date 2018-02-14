@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
 use App\Library\General;
+use App\Library\Wiky;
+use App\Library\wikiparser\wikiParser;
 use App\Model\Topic;
 use App\Model\Camp;
 use App\Model\Statement;
@@ -66,7 +68,7 @@ class TopicController extends Controller {
 			
             $topic->namespace = $all['namespace'];
             $topic->submit_time = time();
-            $topic->submitter = $all['nick_name'];
+            $topic->submitter_nick_id = $all['nick_name'];
             $topic->go_live_time = strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
             $topic->language = $all['language'];
             $topic->note = $all['note'];
@@ -75,8 +77,8 @@ class TopicController extends Controller {
 				
 			 $topic->topic_num = $all['topic_num'];	
 			 if(isset($all['objection']) && $all['objection']==1) {
-				 $topic->objector = $all['nick_name'];
-				 $topic->submitter = $all['submitter'];
+				 $topic->objector_nick_id = $all['nick_name'];
+				 $topic->submitter_nick_id = $all['submitter'];
 				 $topic->object_reason = $all['object_reason'];
 				 $topic->object_time = time();
 			 }
@@ -140,7 +142,13 @@ class TopicController extends Controller {
         $camp       = Camp::getLiveCamp($topicnum,$parentcampnum);
         $parentcamp = Camp::campNameWithAncestors($camp,'');
         
-		return view('topics.view',  compact('topic','parentcampnum','parentcamp','camp'));
+		$wiky=new Wiky;
+		
+		$WikiParser  = new wikiParser;
+     
+
+		
+		return view('topics.view',  compact('topic','parentcampnum','parentcamp','camp','wiky','WikiParser'));
     }
 
     
@@ -204,7 +212,7 @@ class TopicController extends Controller {
 		$id          = $paramArray[0];
 		$objection   = isset($paramArray[1]) ? $paramArray[1] : null;
 			
-		$statement   = Statement::where('record_id',$id)->first();
+		$statement   = Statement::where('id',$id)->first();
 		
 		if(!count($statement)) return back();
 		
@@ -242,8 +250,9 @@ class TopicController extends Controller {
 		$parentcampnum  = (isset($onecamp->parent_camp_num)) ? $onecamp->parent_camp_num : 0;
 		
 	    //if(!count($onecamp)) return back();
+		$wiky=new Wiky;
 		
-        return view('topics.camphistory',  compact('topic','camps','parentcampnum','onecamp','parentcamp'));
+        return view('topics.camphistory',  compact('topic','camps','parentcampnum','onecamp','parentcamp','wiky'));
     }
 	/**
      * Show camp statement history.
@@ -265,8 +274,9 @@ class TopicController extends Controller {
 		$parentcampnum  = isset($onecamp->parent_camp_num) ? $onecamp->parent_camp_num : 0;
 		
 		$statement      = Statement::getHistory($topicnum,$campnum);
-        
-        return view('topics.statementhistory',  compact('topic','statement','parentcampnum','onecamp','parentcamp'));
+        $wiky           = new Wiky;
+		
+        return view('topics.statementhistory',  compact('topic','statement','parentcampnum','onecamp','parentcamp','wiky'));
     }
 	
 	/**
@@ -286,7 +296,9 @@ class TopicController extends Controller {
 		 
 	    if(!count($topics)) { return back();}
 		
-        return view('topics.topichistory',  compact('topics'));
+		$wiky  =  new Wiky;
+		
+        return view('topics.topichistory',  compact('topics','wiky'));
     }
 	
 	/**
@@ -320,19 +332,19 @@ class TopicController extends Controller {
 		$camp->submit_time = strtotime(date('Y-m-d H:i:s'));
         $camp->go_live_time = strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
         $camp->language = $all['language'];
-        $camp->nick_name_id = $all['nick_name'];
+        $camp->camp_about_nick_id = $all['nick_name'];
         $camp->note = $all['note'];
 		$camp->key_words = $all['keywords'];
-		$camp->submitter = $all['nick_name'];
-        $camp->url = $all['url'];	
+		$camp->submitter_nick_id = $all['nick_name'];
+        $camp->camp_about_url = $all['url'];	
 
         if(isset($all['camp_num'])) {
 		 $camp->camp_num = $all['camp_num'];
-		 $camp->submitter = $all['nick_name'];
+		 $camp->submitter_nick_id = $all['nick_name'];
 		 if(isset($all['objection']) && $all['objection']==1) {
 		 
-			 $camp->objector = $all['nick_name'];
-			  $camp->submitter = $all['submitter'];
+			 $camp->objector_nick_id = $all['nick_name'];
+			  $camp->submitter_nick_id = $all['submitter'];
 			 $camp->object_reason = $all['object_reason'];
 			 $camp->object_time = time();
 		 }	 
@@ -352,7 +364,7 @@ class TopicController extends Controller {
 			  $statement->camp_num = $camp->camp_num;
 			  $statement->note = $all['note'];
 			  $statement->submit_time = strtotime(date('Y-m-d H:i:s'));
-			  $statement->submitter = $all['nick_name'];
+			  $statement->submitter_nick_id = $all['nick_name'];
 			  $statement->go_live_time = strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
 			  $statement->language = $all['language'];
 					  
@@ -396,17 +408,17 @@ class TopicController extends Controller {
 		  $statement->camp_num = $all['camp_num'];
 		  $statement->note = $all['note'];
 		  $statement->submit_time = strtotime(date('Y-m-d H:i:s'));
-		  $statement->submitter = $all['nick_name'];
+		  $statement->submitter_nick_id = $all['nick_name'];
 		  $statement->go_live_time = strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
 		  $statement->language = $all['language'];
 		  
 		  if(isset($all['camp_num'])) {
 			 $statement->camp_num = $all['camp_num'];
-			 $statement->submitter = $all['nick_name'];
+			 $statement->submitter_nick_id = $all['nick_name'];
 			 if(isset($all['objection']) && $all['objection']==1) {
 		 
-				 $statement->objector = $all['nick_name'];
-				 $statement->submitter = $all['submitter'];
+				 $statement->objector_nick_id = $all['nick_name'];
+				 $statement->submitter_nick_id = $all['submitter'];
 				 $statement->object_reason = $all['object_reason'];
 				 $statement->object_time = time();
 			 }	

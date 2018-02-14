@@ -32,7 +32,7 @@
             <input type="hidden" name="topic_num" value="{{ $topic->topic_num }}">
             <input type="hidden" name="parent_camp_num" value="{{ $parentcampnum }}">
 			<input type="hidden" name="camp_num" value="{{ $camp->camp_num }}">
-			<input type="hidden" name="submitter" value="{{ $camp->submitter }}">
+			<input type="hidden" name="submitter" value="{{ $camp->submitter_nick_id }}">
 			<?php if($objection=="objection") { ?>
 			 <input type="hidden" name="objection" value="1">
 			<?php } ?>
@@ -41,7 +41,7 @@
                 <label for="camp_name">Nick Name</label>
                 <select name="nick_name" class="form-control">
                     @foreach($nickNames as $nick)
-                    <option <?php if($camp->nick_name_id==$nick->nick_name_id) echo "selected=selected";?> value="{{ $nick->nick_name_id }}">{{ $nick->nick_name}}</option>
+                    <option <?php if($camp->submitter_nick_id==$nick->id) echo "selected=selected";?> value="{{ $nick->id }}">{{ $nick->nick_name}}</option>
                     @endforeach
 					
                 </select>
@@ -81,7 +81,7 @@
             </div>   
             <div class="form-group">
                 <label for="url">URL </label>
-                <input type="text" name="url" class="form-control" id="" value="{{ $camp->url }}">
+                <input type="text" name="url" class="form-control" id="" value="{{ $camp->camp_about_url }}">
                 @if ($errors->has('url')) <p class="help-block">{{ $errors->first('url') }}</p> @endif
             </div> 
             <?php if($objection=="objection") { ?>

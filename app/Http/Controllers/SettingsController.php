@@ -122,7 +122,7 @@ class SettingsController extends Controller
 			$userNickname=array();
 			foreach($nicknames as $nickname) {
 				
-				$userNickname[] = $nickname->nick_name_id;
+				$userNickname[] = $nickname->id;
 			}
 		
 		 
@@ -137,7 +137,7 @@ class SettingsController extends Controller
 			$userNickname=array();
 			foreach($nicknames as $nickname) {
 				
-				$userNickname[] = $nickname->nick_name_id;
+				$userNickname[] = $nickname->id;
 			}
 		
 		 
