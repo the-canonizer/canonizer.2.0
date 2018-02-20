@@ -24,7 +24,7 @@ class HomeController extends Controller {
 		
 		$output = '';
         $id = $request->id;
-		$topics = Camp::getAllLoadMoreTopic(10,$_REQUEST,$id);
+		$topics = Camp::getAllLoadMoreTopic($request->offset,$_REQUEST,$id);
 		
 		
 		
@@ -65,6 +65,13 @@ class HomeController extends Controller {
       echo $output;		  
 		
 	}
+	public function browse() {
+
+      
+        $topics = Camp::getBrowseTopic();
+        
+        return view('browse', ['topics' => $topics]);
+    }
     
     public function recusriveCampDisp($childs){ 
         foreach($childs as $child){

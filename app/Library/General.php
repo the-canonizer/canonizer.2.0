@@ -10,5 +10,6 @@
         public static function canon_decode($code = ''){
           return;
         }
+		
     }
 }
