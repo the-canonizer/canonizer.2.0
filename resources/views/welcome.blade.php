@@ -47,6 +47,7 @@
 					   
 						$sortedTopic = $topics[0]->getSortedTree($topics);
                         $sortedTree  = $sortedTopic['sortedTree'];
+						$createcampKey = 0;
                        ?>					   
 						
                        @foreach($sortedTree as $k=>$topic)
@@ -74,10 +75,12 @@
 						 $nicknames = $topic['topic']->GetSupportedNicknames($topic['topic']->topic_num);
 						 
 						 $supportDataset = $topic['topic']->getCampSupport($topic['topic']->topic_num,$topic['topic']->camp_num,$nicknames);
-                        if(count($childs) > 0){
+                        if($createcampKey==0){
+							$createcampKey = 1;
+                            //echo '<li class="create-new-li"><span><a href="'.route('camp.create',['topicnum'=>$topic['topic']->topic_num,'campnum'=>$topic['topic']->camp_num]).'">< Create A New Camp ></a></span></li>';
+                        }
+						if(count($childs) > 0){
                             echo $topic['topic']->campTree($topic['topic']->topic_num,$topic['topic']->camp_num,null,null,$supportDataset);
-                        }else{
-                            echo '<li class="create-new-li"><span><a href="'.route('camp.create',['topicnum'=>$topic['topic']->topic_num,'campnum'=>$topic['topic']->camp_num]).'">< Create A New Camp ></a></span></li>';
                         }?>
                            </li>
                        @endforeach
@@ -98,6 +101,7 @@
 
 <script>
 var request = false;
+var offset = 10;
    $(document).scroll(function(e){
        var id = $('#btn-more').data('id'); 
        var queryString = "{{Request::getQueryString()}}";
@@ -112,7 +116,7 @@ var request = false;
 			   $.ajax({
 				   url : '{{ url("loadtopic") }}?'+queryString,
 				   method : "POST",
-				   data : {id:id, _token:"{{csrf_token()}}"},
+				   data : {id:id,offset:offset, _token:"{{csrf_token()}}"},
 				   dataType : "text",
 				   success : function (data)
 				   {
@@ -122,6 +126,7 @@ var request = false;
 						  $('#load-data').append(data);
 						  camptree();
 						  request = false;
+						  offset = offset + 10;
 				   
 					  }
 					  else

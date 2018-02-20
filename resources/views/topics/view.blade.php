@@ -13,7 +13,7 @@
 @endif
 
 <div class="camp top-head">
-    <h3><b>Topic:</b>  {{ $topic->title}}</h3>
+    <h3><b>Topic:</b>  {{ $topic->topic_name}}</h3>
     <h3><b>Camp:</b> {!! $parentcamp !!}</h3>  
 </div>      	
 <div class="right-whitePnl">
@@ -57,9 +57,7 @@
 						 <div class="badge">{{ $supportDataset[1] }}</div></span>
                          <?php
                         if(count($childs) > 0){
-                            echo $topic->campTree($topic->topic_num,$topic->camp_num,null,$camp->camp_num,$supportDataset);
-                        }else{
-                            echo '<li class="create-new-li"><span><a href="'.route('camp.create',['topicnum'=>$topic->topic_num,'campnum'=>$topic->camp_num]).'">< Create A New Camp ></a></span></li>';
+                            echo $topic->campTree($topic->topic_num,$topic->camp_num,null,$camp->camp_num,$supportDataset,1);
                         } ?>
                            </li>
                        
@@ -107,13 +105,13 @@
                     Total Support for This Camp (including sub-camps): 
 					
 					<div class="badge">
-					 {{ isset($supportDataset[$camp->cam_num]) ? $supportDataset[$camp->cam_num] : 0 }}
+					 {{ isset($supportDataset[$camp->camp_num]) ? $supportDataset[$camp->camp_num] : 0 }}
 					</div>
 					
                     <ul class="mainouter">
 					  <?php
-					 
-					  foreach($nicknames as $support) {  
+					 $campnicknames = $topic->GetSupportedNicknames($camp->topic_num,$camp->camp_num);
+					  foreach($campnicknames as $support) {  
 					  
 					    $supportData = $topic->getNicknameSupport($support,$camp->camp_num);
 						
@@ -122,7 +120,7 @@
                        <li>
                        	<a href="#"><div class="badge">{{ $supportData[$camp->camp_num]}}</div> 
 						
-						      {{ $support->nickname->nick_name}} 
+						      {{ $support->nickname->nick_name}}
 					     </a> 
 						 <a href="<?php echo url('support/'.$topic_id.'/'.$camp->camp_num.'-'.$support->nickname->nick_name_id);?>" class="btn btn-info">Delegate Your Support</a>
                        </li>
@@ -143,8 +141,8 @@
             <div class="content">
             <div class="row">
                 <div class="tree col-sm-12">
-                    Topic Name : <?php echo $topic->topic->topic_name;?> <br/>
-					Name Space : <?php echo $topic->topic->namespace;?>
+                    Topic Name : <?php echo $topic->topic_name;?> <br/>
+					Name Space : <?php echo $topic->namespace;?>
                 </div>
               
             </div>    

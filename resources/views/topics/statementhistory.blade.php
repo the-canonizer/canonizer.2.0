@@ -75,9 +75,9 @@
                   <b>Statement :</b> <?php echo  $wiky->parse($input); ?><br/>
 				  <b>Note :</b> {{ $data->note }} <br/>
 				  <b>Language :</b> {{ $data->language }}<br/>
-				  <b>Submitted on :</b> {{ date('m-d-Y H:i:s',$data->submit_time) }} <br/>
+				  <b>Submitted on :</b> {{ to_local_time($data->submit_time) }} <br/>
 				  <b>Submitter Nickname :</b> {{ isset($data->submitternickname->nick_name) ? $data->submitternickname->nick_name : 'N/A' }} <br/>
-				  <b>Go live Time :</b> {{ date('m-d-Y H:i:s',$data->go_live_time)}} <br/> 
+				  <b>Go live Time :</b> {{ to_local_time($data->go_live_time) }}; </script><br/> 
 				  
 				   @if($data->objector_nick_id !=null)
 				  <b>Object Reason :</b> {{ $data->object_reason}} <br/>	

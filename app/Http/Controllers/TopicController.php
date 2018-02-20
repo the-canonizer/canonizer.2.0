@@ -63,6 +63,7 @@ class TopicController extends Controller {
         DB::beginTransaction();
         
         try {
+			
             $topic = new Topic();
             $topic->topic_name = $all['topic_name'];		
 			
@@ -75,20 +76,20 @@ class TopicController extends Controller {
 						
 			if(isset($all['topic_num'])) {
 				
-			 $topic->topic_num = $all['topic_num'];	
+			 $topic->topic_num = $all['topic_num'];
+			 
 			 if(isset($all['objection']) && $all['objection']==1) {
 				 $topic->objector_nick_id = $all['nick_name'];
 				 $topic->submitter_nick_id = $all['submitter'];
 				 $topic->object_reason = $all['object_reason'];
 				 $topic->object_time = time();
-			 }
+			 }			 
 			 
-			 
-			 $message = "Topic update submitted successfully. Its under review, once approved it will be live.";
+			 $message ="Topic update submitted successfully. Its under review, once approved it will be live.";
 			}
 			else {
 				
-			 $message = "Topic created successfully. Its under review, once approved it will be live.";	
+			 $message ="Topic created successfully. Its under review, once approved it will be live.";	
 			}
 					
 			

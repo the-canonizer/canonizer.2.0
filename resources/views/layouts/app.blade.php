@@ -39,25 +39,29 @@
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav search-box">
                     <li class="nav-item col-sm-7">
-                        <form class="form-inline">
+                       <form method="get" action="http://www.google.com/custom" target="_top">
                             <div class="input-group search-panel">
-                                <div class="input-group-btn">
-                                    <button type="button" class="btn btn-default dropdown-toggle btn-slct-dpdwn" data-toggle="dropdown">
-                                        <span id="search_concept">Canonizer.com</span> <span class="caret"></span>
-                                    </button>
-                                    <ul class="dropdown-menu" role="menu">
-                                        <li><a href="#web">Web</a></li>
-                                        <li><a href="#canonizer.com">Canonizer.com</a></li>
-                                    </ul>
-                                </div>
+                               <table>
+									<tr>
+										<td>
+										<input type="radio" name="sitesearch" value="" checked id="ss0"></input>
+										<label for="ss0" title="Search the Web"><font size="-1" color="black">Web</font></label></td>
+										<td>
+										<input type="radio" name="sitesearch" value="canonizer.com" id="ss1" checked></input>
+										<label for="ss1" title="Search canonizer.com"><font size="-1" color="black">canonizer.com</font></label></td>
+									</tr>
+								</table>
                                 <input type="hidden" name="search_param" value="all" id="search_param">         
-                                <input type="text" class="form-control search" name="x" placeholder="Search for...">
-                                <span class="input-group-btn">
-                                    <button class="btn btn-primary btn-search" type="button">
-                                        <i class="fa fa-search"></i>
-                                    </button>
-                                </span>
-                            </div>
+                                <input type="text" class="form-control search" name="q" id="sbi" placeholder="Search for...">
+                               
+									<input type="submit" name="sa" value="Google Search" id="sbb"></input>
+									<input type="hidden" name="client" value="pub-6646446076038181"></input>
+									<input type="hidden" name="forid" value="1"></input>
+									<input type="hidden" name="ie" value="ISO-8859-1"></input>
+									<input type="hidden" name="oe" value="ISO-8859-1"></input>
+									<input type="hidden" name="cof" value="GALT:#0066CC;GL:1;DIV:#999999;VLC:336633;AH:center;BGC:FFFFFF;LBGC:FF9900;ALC:0066CC;LC:0066CC;T:000000;GFNT:666666;GIMP:666666;LH:43;LW:220;L:http://canonizer.com/images/CANONIZER.PNG;S:http://;FORID:1"></input>
+									<input type="hidden" name="hl" value="en"></input>
+                              </div>
                         </form>
                     </li>
                     <li class="nav-item col-sm-5 text-right" style="padding-right:0px;">
@@ -86,12 +90,12 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">
+                            <a class="nav-link" href="{{ url('topic/10-Canonizer-organization-home-page-/1')}}">
                                 <span class="nav-link-text">What is Canonizer.com</span>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">
+                            <a class="nav-link" href="{{ url('/browse')}}">
                                 <span class="nav-link-text">Browse</span>
                             </a>
                         </li>
@@ -128,7 +132,8 @@
                             </a>
                             <ul class="sidenav-second-level collapse show" id="canoalgo">
                                 <li>
-                                    <span>Algorithm Information:</span>
+                                    
+									<span>Canonizer Algorithm:</span>
                                     <select>
                                         <option>One Person One Vote</option>
                                         <option>Mind Experts</option>
@@ -141,9 +146,11 @@
                                         <option>Atheist</option>
                                         <option>Transhumanist</option>
                                     </select>
+									<a href="<?php echo url('topic/53-Canonized-Canonizer-Algorithms/2') ?>"><span>Algorithm Information</span></a>
                                 </li>
+								
                                 <li>
-                                    <span>Canonizer Algorithm:</span>
+                                    
                                     <div class="filter">Filter < <input type="number" value="0.001"/></div>
                                 </li>
                             </ul>

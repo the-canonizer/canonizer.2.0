@@ -13,6 +13,7 @@
 
 Route::get('/', 'HomeController@index');
 Route::get('home', ['as'=>'home','uses'=>'HomeController@index']);
+Route::get('browse', ['as'=>'browse','uses'=>'HomeController@browse']);
 Route::get('supportmigration', ['as'=>'supportmigration','uses'=>'HomeController@supportmigration']);
 
 
