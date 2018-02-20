@@ -19,10 +19,10 @@ class Statement extends Model {
     }   
 	
 	public function objectornickname() {
-        return $this->hasOne('App\Model\Nickname', 'nick_name_id', 'objector');
+        return $this->hasOne('App\Model\Nickname', 'id', 'objector_nick_id');
     }
 	public function submitternickname() {
-        return $this->hasOne('App\Model\Nickname', 'nick_name_id', 'submitter');
+        return $this->hasOne('App\Model\Nickname', 'id', 'submitter_nick_id');
     }
    
     public static function getHistory($topicnum,$campnum,$filter=array()) {
@@ -33,7 +33,7 @@ class Statement extends Model {
 		
 		return self::where('topic_num',$topicnum)
 		             ->where('camp_num',$campnum)
-					 ->where('objector', '=', NULL)
+					 ->where('objector_nick_id', '=', NULL)
                      ->where('go_live_time','<=',time())
 					 ->latest('submit_time')->first();
 	}

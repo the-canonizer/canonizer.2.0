@@ -36,7 +36,7 @@
                 <label for="camp_name">Nick Name</label>
                 <select name="nick_name" class="form-control">
                     @foreach($nickNames as $nick)
-                    <option value="{{ $nick->nick_name_id }}">{{ $nick->nick_name}}</option>
+                    <option value="{{ $nick->id }}">{{ $nick->nick_name}}</option>
                     @endforeach
 					
                 </select>

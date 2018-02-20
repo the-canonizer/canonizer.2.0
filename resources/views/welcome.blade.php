@@ -44,40 +44,13 @@
                     <ul class="mainouter" id="load-data">
                         
 					   <?php
-					   function sortByOrder($a, $b)
-						{
-							$a = $a['support_order'];
-							$b = $b['support_order'];
-
-							if ($a == $b) return 0;
-							return ($a > $b) ? -1 : 1;
-						}
-                        $sortedTopic = array();
-						foreach($topics as $key=>$topicdata) {
-							
-						 $nicknames = $topicdata->GetSupportedNicknames($topicdata->topic_num);
-						 
-						 $supportDataset = $topicdata->getCampSupport($topicdata->topic_num,$topicdata->camp_num,$nicknames);
-		                 
-						 $count = 0;
-						 foreach($supportDataset as  $s) {
-							  
-							 $count = $count + $s;
-						 }
-						 
-						 $sortedTopic[$key]['topic'] = $topicdata;
-						 
-						 $supportDataset[1] = isset($supportDataset[1]) ? $supportDataset[1] + $count : $count; 
-						 
-                           $sortedTopic[$key]['support_order'] =	isset($supportDataset[$topicdata->camp_num]	)	? $supportDataset[$topicdata->camp_num] : 0;			 
-							
-						}
-						usort($sortedTopic,'sortByOrder');
-						
-                        
+					   
+						$sortedTopic = $topics[0]->getSortedTree($topics);
+                        $sortedTree  = $sortedTopic['sortedTree'];
+						$createcampKey = 0;
                        ?>					   
 						
-                       @foreach($sortedTopic as $k=>$topic)
+                       @foreach($sortedTree as $k=>$topic)
                        <li>
                          <?php
                          $childs = $topic['topic']->childrens($topic['topic']->topic_num,$topic['topic']->camp_num); 
@@ -102,14 +75,16 @@
 						 $nicknames = $topic['topic']->GetSupportedNicknames($topic['topic']->topic_num);
 						 
 						 $supportDataset = $topic['topic']->getCampSupport($topic['topic']->topic_num,$topic['topic']->camp_num,$nicknames);
-                        if(count($childs) > 0){
+                        if($createcampKey==0){
+							$createcampKey = 1;
+                            //echo '<li class="create-new-li"><span><a href="'.route('camp.create',['topicnum'=>$topic['topic']->topic_num,'campnum'=>$topic['topic']->camp_num]).'">< Create A New Camp ></a></span></li>';
+                        }
+						if(count($childs) > 0){
                             echo $topic['topic']->campTree($topic['topic']->topic_num,$topic['topic']->camp_num,null,null,$supportDataset);
-                        }else{
-                            echo '<li class="create-new-li"><span><a href="'.route('camp.create',['topicnum'=>$topic['topic']->topic_num,'campnum'=>$topic['topic']->camp_num]).'">< Create A New Camp ></a></span></li>';
                         }?>
                            </li>
                        @endforeach
-					   <a id="btn-more" class="remove-row" data-id="{{ $topicdata->id }}"></a>
+					   <a id="btn-more" class="remove-row" data-id="{{ $sortedTopic['key'] }}"></a>
                     </ul>
                     
                 </div>
@@ -126,6 +101,7 @@
 
 <script>
 var request = false;
+var offset = 10;
    $(document).scroll(function(e){
        var id = $('#btn-more').data('id'); 
        var queryString = "{{Request::getQueryString()}}";
@@ -140,7 +116,7 @@ var request = false;
 			   $.ajax({
 				   url : '{{ url("loadtopic") }}?'+queryString,
 				   method : "POST",
-				   data : {id:id, _token:"{{csrf_token()}}"},
+				   data : {id:id,offset:offset, _token:"{{csrf_token()}}"},
 				   dataType : "text",
 				   success : function (data)
 				   {
@@ -150,6 +126,7 @@ var request = false;
 						  $('#load-data').append(data);
 						  camptree();
 						  request = false;
+						  offset = offset + 10;
 				   
 					  }
 					  else

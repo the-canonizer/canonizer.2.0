@@ -18,7 +18,7 @@ class SupportInstance extends Model {
     }   
 	
 	public function nickname() {
-        return $this->hasOne('App\Model\Nickname', 'nick_name_id', 'nick_name_id');
+        return $this->hasOne('App\Model\Nickname', 'id', 'nick_name_id');
     }
 	public function camp() {
         return $this->hasOne('App\Model\Camp', 'camp_num', 'camp_num');
@@ -28,7 +28,7 @@ class SupportInstance extends Model {
     }
 	
 	public function delegatednickname() {
-        return $this->hasOne('App\Model\Nickname', 'nick_name_id', 'delegate_nick_name_id');
+        return $this->hasOne('App\Model\Nickname', 'id', 'delegate_nick_name_id');
     }
 
 }

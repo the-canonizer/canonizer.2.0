@@ -27,6 +27,6 @@ class Nickname extends Model
 		$userid = Auth::user()->id; 
         $encode = General::canon_encode($userid);
 		
-        return  DB::table('nick_name')->select('nick_name_id','nick_name')->where('owner_code',$encode)->get();
+        return  DB::table('nick_name')->select('id','nick_name')->where('owner_code',$encode)->get();
 	}
 }

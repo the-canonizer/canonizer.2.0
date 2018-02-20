@@ -19,13 +19,13 @@ class Camp extends Model {
         return $this->hasOne('App\Model\Topic', 'topic_num', 'topic_num');
     }
 	public function nickname() {
-        return $this->hasOne('App\Model\Nickname', 'nick_name_id', 'nick_name_id');
+        return $this->hasOne('App\Model\Nickname', 'id', 'camp_about_nick_id');
     }
 	public function objectornickname() {
-        return $this->hasOne('App\Model\Nickname', 'nick_name_id', 'objector');
+        return $this->hasOne('App\Model\Nickname', 'id', 'objector_nick_id');
     }
 	public function submitternickname() {
-        return $this->hasOne('App\Model\Nickname', 'nick_name_id', 'submitter');
+        return $this->hasOne('App\Model\Nickname', 'id', 'submitter_nick_id');
     }
     public static function boot() {
         static::created(function ($model) {
@@ -52,7 +52,7 @@ class Camp extends Model {
 		 $childs = $query->where('topic_num', '=', $topicnum)
                 ->where('parent_camp_num', '=', $parentcamp)
                 ->where('camp_name', '!=', 'Agreement')  
-                ->where('objector', '=', NULL)
+                ->where('objector_nick_id', '=', NULL)
                 ->where('go_live_time','<=',time()) 				
                 ->orderBy('submit_time', 'desc')
                 ->get()->unique('camp_num','topic_num');
@@ -73,7 +73,7 @@ class Camp extends Model {
 			  $childs = $query->where('topic_num', '=', $topicnum)
                 ->where('parent_camp_num', '=', $parentcamp)
                 ->where('camp_name', '!=', 'Agreement')  
-                ->where('objector', '=', NULL)
+                ->where('objector_nick_id', '=', NULL)
                 ->where('go_live_time','<=',$asofdate) 				
                 ->orderBy('submit_time', 'desc')
                 ->get()->unique('camp_num','topic_num');
@@ -82,7 +82,7 @@ class Camp extends Model {
 				
         return $childs;
     }
-	public function scopeStatement($query, $topicnum, $campnum) {
+	public function scopeStatement($query, $topicnum, $campnum) { 
 		
         $statement = Statement::getLiveStatement($topicnum,$campnum);
 								
@@ -91,6 +91,15 @@ class Camp extends Model {
 	public function scopeGetSupportedNicknames($query, $topicnum,$campnum=null) {
         $query = TopicSupport::where('topic_num', '=', $topicnum)
 		             ->groupBy('nick_name_id');
+					 
+	    if($campnum!=null) {
+		
+        $query = TopicSupport::join('support_instance','support_instance.topic_support_id','=','topic_support.id')
+		                       ->where('support_instance.camp_num','=',$campnum)
+							   ->where('topic_num', '=', $topicnum)
+		                       ->groupBy('nick_name_id');		
+			
+		}				 
 					 
         return $nicknames = $query->get();
     }
@@ -120,7 +129,7 @@ class Camp extends Model {
         return $campname;
     }
 
-    public function campTree($topicnum, $parentcamp,$lastparent=null,$campnum=null,$supportDataset=null){
+    public function campTree($topicnum, $parentcamp,$lastparent=null,$campnum=null,$supportDataset=null,$createcampKey=0){
         
         $key = $topicnum.'-'.$parentcamp.'-'.$lastparent;
         if(in_array($key,Camp::$tempArray)){
@@ -130,8 +139,12 @@ class Camp extends Model {
         $childs = $this->childrens($topicnum,$parentcamp);
 		
 		$camp_support_count = 0;
-        $html= '<ul><li class="create-new-li"><span><a href="'.route('camp.create',['topicnum'=>$topicnum,'campnum'=>$parentcamp]).'">&lt;Create A New Camp &gt;</a></span></li>';
-        foreach($childs as $child){
+		if($createcampKey == 0 || $createcampKey == $campnum) {
+         $html= '<ul><li class="create-new-li"><span><a href="'.route('camp.create',['topicnum'=>$topicnum,'campnum'=>$parentcamp]).'">&lt;Create A New Camp &gt;</a></span></li>';
+        }else{
+		 $html ='<ul>';
+		}
+		foreach($childs as $key=> $child){
                 $childCount  = count($child->childrens($child->topic_num,$child->camp_num));
 				$thisCampCount = isset($supportDataset[$child->camp_num]) ? $supportDataset[$child->camp_num] : 0;
 				$camp_support_count = $thisCampCount;						
@@ -142,13 +155,20 @@ class Camp extends Model {
                 $class= $childCount > 0  ? 'parent' : '';
                 $icon = '<i class="fa fa-arrow-right"></i>';
                 $html.='<li>';
-                $selected =  ($campnum==$child->camp_num) ? "color:#08b608; font-weight:bold" : "";	
+                $selected =  ($campnum==$child->camp_num) ? "color:#08b608; font-weight:bold" : "";
+                				
                 $html.='<span class="'.$class.'">'.$icon.'</span><div class="tp-title"><a style="'.$selected.'" href="'.url('topic/'.$topic_id.'/'.$child->camp_num).'">'.$child->title.'</a> <div class="badge">'.$camp_support_count.'</div></div>';
-                if($childCount > 0){
-                    $html.=$this->campTree($child->topic_num,$child->camp_num,$child->parent_camp_num,null,$supportDataset);
-                }else{
+               
+				$createcampKey = ($campnum==$child->camp_num) ? 0 : 1; 
+				
+				if($childCount > 0){
+                    
+					$html.=$this->campTree($child->topic_num,$child->camp_num,$child->parent_camp_num,$campnum,$supportDataset,$createcampKey);
+					
+                }else if($createcampKey==0){
                     $html.='<ul><li class="create-new-li"><span><a href="'.route('camp.create',['topicnum'=>$child->topic_num,'campnum'=>$child->camp_num]).'">&lt; Create A New Camp &gt;</a></span></li></ul>';
                 }
+				
                 $html.='</li>';
         }
         $html.= '</ul>';
@@ -301,21 +321,32 @@ class Camp extends Model {
 		
 	}
 	
+	public static function getBrowseTopic(){
+		
+		return Topic::select('topic.topic_name','topic.namespace','topic.topic_num','camp.title','camp.camp_num')->join('camp','topic.topic_num','=','camp.topic_num')->where('camp_name','=','Agreement')
+		             ->where('camp.objector_nick_id', '=', NULL)
+                     ->where('camp.go_live_time','<=',time())
+					 ->where('topic.topic_name','<>',"")
+					 ->orderBy('topic.topic_name','ASC')->groupBy('topic_num')->get();
+	}
 	public static function getAgreementTopic($topicnum,$filter=array()){
 		
-		return self::where('topic_num',$topicnum)->where('camp_name','=','Agreement')
-		             ->where('objector', '=', NULL)
-                     ->where('go_live_time','<=',time())
-					 ->latest('submit_time')->first();
+		return self::select('topic.topic_name','camp.*')->join('topic','topic.topic_num','=','camp.topic_num')->where('camp.topic_num',$topicnum)->where('camp_name','=','Agreement')
+		             ->where('camp.objector_nick_id', '=', NULL)
+                     ->where('camp.go_live_time','<=',time())
+					 ->latest('topic.submit_time')->first();
 	}
 	public static function getAllAgreementTopic($limit=10,$filter=array()){
 		
 		if(!isset($filter['asof']) || (isset($filter['asof']) && $filter['asof']=="default")) {
 		
-		 return self::where('camp_name','=','Agreement')
-		             ->where('objector', '=', NULL)
-                     ->where('go_live_time','<=',time())
-					 ->latest('submit_time')->get()->unique('topic_num')->take($limit);
+		 return self::select(DB::raw('(select count(topic_support.id) from topic_support where topic_support.topic_num=camp.topic_num) as support, camp.*'))
+		             //->leftJoin('topic_support','camp.topic_num','=','topic_support.topic_num')
+					 //->leftJoin('support_instance','support_instance.topic_support_id','=','topic_support.id')
+		             ->where('camp_name','=','Agreement')
+		             ->where('objector_nick_id', '=', NULL)
+                     ->where('camp.go_live_time','<=',time())					 
+					 ->latest('support')->get()->unique('topic_num')->take($limit);
 		} else {
 			
 			if(isset($filter['asof']) && $filter['asof']=="review") {
@@ -331,15 +362,16 @@ class Camp extends Model {
 			} 
 		}			 
 	}
-	public static function getAllLoadMoreTopic($limit=10,$filter=array(),$id){
+	public static function getAllLoadMoreTopic($offset=10,$filter=array(),$id){
 		
 		if(!isset($filter['asof']) || (isset($filter['asof']) && $filter['asof']=="default")) {
 		
-		 return self::where('camp_name','=','Agreement')
-		             ->where('id','<',$id)
-		             ->where('objector', '=', NULL)
+		 return self::select(DB::raw('(select count(topic_support.id) from topic_support where topic_support.topic_num=camp.topic_num) as support, camp.*'))
+		             ->where('camp_name','=','Agreement')
+		             //->where('id','<',$id)
+		             ->where('objector_nick_id', '=', NULL)
                      ->where('go_live_time','<=',time())
-					 ->latest('submit_time')->get()->unique('topic_num')->take($limit);
+					 ->latest('support')->take(10)->offset($offset)->get()->unique('topic_num');
 		} else {
 			
 			if(isset($filter['asof']) && $filter['asof']=="review") {
@@ -359,7 +391,7 @@ class Camp extends Model {
 		
 		return self::where('topic_num',$topicnum)
 		            ->where('camp_num','=', $campnum)
-					->where('objector', '=', NULL)
+					->where('objector_nick_id', '=', NULL)
                     ->where('go_live_time','<=',time())
 					->latest('submit_time')->first();
 	}
@@ -391,6 +423,43 @@ class Camp extends Model {
 			return true;
 		else
 			return false;
+		
+	}
+	public function sortByOrder($a, $b)
+	{
+							$a = $a['support_order'];
+							$b = $b['support_order'];
+
+							if ($a == $b) return 0;
+							return ($a > $b) ? -1 : 1;
+	}
+	public function getSortedTree($topics) {
+		
+		
+		$sortedTopic = array();
+		foreach($topics as $key=>$topicdata) {
+			
+		 $nicknames = $topicdata->GetSupportedNicknames($topicdata->topic_num);
+		 
+		 $supportDataset = $topicdata->getCampSupport($topicdata->topic_num,$topicdata->camp_num,$nicknames);
+		 
+		 $count = 0;
+		 foreach($supportDataset as  $s) {
+			  
+			 $count = $count + $s;
+		 }
+		 
+		 $sortedTopic[$key]['topic'] = $topicdata;
+		 
+		 $supportDataset[1] = isset($supportDataset[1]) ? $supportDataset[1] + $count : $count; 
+		 
+		   $sortedTopic[$key]['support_order'] =	isset($supportDataset[$topicdata->camp_num]	)	? $supportDataset[$topicdata->camp_num] : 0;			 
+			
+		}
+		
+		usort($sortedTopic,array($this, "sortByOrder"));
+		
+		return array('key'=>$topicdata->id,'sortedTree'=>$sortedTopic);
 		
 	}
 

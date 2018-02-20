@@ -82,11 +82,11 @@
 				  <b>Keyword :</b> {{ $data->key_words }} <br/>
 				  <b>Note :</b> {{ $data->note }} <br/>
 				  <b>Language :</b> {{ $data->language }}<br/>
-				  <b>URL :</b> {{ $data->url }} <br/>
+				  <b>URL :</b> {{ $data->camp_about_url }} <br/>
 				  <b>Submitter Nickname :</b> {{ isset($data->submitternickname->nick_name) ? $data->submitternickname->nick_name : 'N/A' }} <br/>
-				  <b>Submitted on :</b> {{ date('m-d-Y H:i:s',$data->submit_time) }} <br/>
-				  <b>Go live Time :</b> {{ date('m-d-Y H:i:s',$data->go_live_time)}} <br/>
-                 @if($data->objector !=null)
+				  <b>Submitted on :</b> {{ to_local_time($data->submit_time) }} <br/>
+				  <b>Go live Time :</b> {{ to_local_time($data->go_live_time)}} <br/>
+                 @if($data->objector_nick_id !=null)
 				  <b>Object Reason :</b> {{ $data->object_reason}} <br/>	
                   <b>Objector Nickname :</b> {{ $data->objectornickname->nick_name }} <br/> 			  
                  @endif 	 				 
