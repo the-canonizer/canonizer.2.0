@@ -1,0 +1,36 @@
+
+
+/* Article Template 2*/
+
+.article_2 {
+    border-top: 3px solid #17E6C3;
+    border-top-right-radius: 3px;
+    border-top-left-radius: 3px;
+    position: relative;
+    margin-top: 40px;
+    border-bottom: none;
+}
+.article_2 .entry-title {
+    margin-top: 0;
+    margin-left: 20px;
+    margin-bottom: 15px;
+}
+
+.article_2 .post-author-thumb {
+    position: absolute;
+    margin: 0 auto;
+    left: -30px;
+    top: -32px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    overflow: hidden;
+    box-shadow: 0 0 9px 5px rgba(147, 147, 147, 0.3);
+}
+
+
+.article_2 .entry-meta-top {
+    display: block;
+    margin-top: 15px;
+    margin-left: 20px;
+}

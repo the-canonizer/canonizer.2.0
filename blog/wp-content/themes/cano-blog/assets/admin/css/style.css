@@ -1,0 +1,94 @@
+/*
+    Mobile Menu Core Style
+*/
+
+
+
+.widget-social-input{}
+.widget-social-input .item {
+    margin: 6px 0;
+    background: #ddd6;
+    padding: 5px;
+    position: relative;
+}
+
+.widget-social-input .item .bug_blog_color{
+    width:80px
+}
+
+
+.widget-social-input .item input{
+    margin: 6px 0;
+
+}
+
+.widget-social-input .item .remove {
+    padding: 2px 7px;
+    background: #f66;
+    color: #fff;
+    font-size: 16px;
+    line-height: normal;
+    margin: 0 2px;
+    cursor: pointer;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.widget-social-input .item .sort {
+    padding: 2px 7px;
+    background: #5bdcff;
+    color: #fff;
+    font-size: 16px;
+    line-height: normal;
+    margin: 0 2px;
+    cursor: move;
+    position: absolute;
+    top: 0;
+    right: 32px;
+}
+
+
+.widget-advertisement{}
+.widget-advertisement .item {
+    margin: 6px 0;
+    background: #ddd6;
+    padding: 5px;
+    position: relative;
+}
+
+.widget-advertisement .item .bug_blog_color{
+    width:80px
+}
+
+
+.widget-advertisement .item input{
+    margin: 6px 0;
+
+}
+
+.widget-advertisement .item .remove {
+    padding: 2px 7px;
+    background: #f66;
+    color: #fff;
+    font-size: 16px;
+    line-height: normal;
+    margin: 0 2px;
+    cursor: pointer;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.widget-advertisement .item .sort {
+    padding: 2px 7px;
+    background: #5bdcff;
+    color: #fff;
+    font-size: 16px;
+    line-height: normal;
+    margin: 0 2px;
+    cursor: move;
+    position: absolute;
+    top: 0;
+    right: 32px;
+}
