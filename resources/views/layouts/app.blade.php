@@ -43,12 +43,12 @@
                             <div class="input-group search-panel">
                                <table>
 									<tr>
-										<td>
+										<td class="radio radio-primary">
 										<input type="radio" name="sitesearch" value="" checked id="ss0"></input>
 										<label for="ss0" title="Search the Web"><font size="-1" color="black">Web</font></label></td>
-										<td>
+										<td class="radio radio-primary">
 										<input type="radio" name="sitesearch" value="canonizer.com" id="ss1" checked></input>
-										<label for="ss1" title="Search canonizer.com"><font size="-1" color="black">canonizer.com</font></label></td>
+										<label for="ss1" title="Search canonizer.com"><font size="-1" color="black">Canonizer.com</font></label></td>
 									</tr>
 								</table>
                                 <input type="hidden" name="search_param" value="all" id="search_param">         
