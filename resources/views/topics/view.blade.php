@@ -36,13 +36,17 @@
 						 $supportDataset = $topic->getCampSupport($topic->topic_num,$topic->camp_num,$nicknames);
 		                 
 						 $count = 0;
-						 foreach($supportDataset as  $s) {
-							  
-							 $count = $count + $s;
-						 }
-						 $supportDataset[1] = $count; 
 						 
-						// echo "<pre>"; print_r($supportDataset); die;
+						 $allchild =  $topic->getAllChild($topic->topic_num,$topic->camp_num,$topic->camp_num);
+						// print_r($allchild); die;
+						 foreach($allchild as $key=>$data) {
+							 foreach($supportDataset as $key => $s) {
+								 
+								 if($data==$key)
+								  $supportDataset[$topic->camp_num] = $supportDataset[$topic->camp_num] + $s;
+							 }
+						 }
+						 
 						 
 						 ?>
                          <span class="<?php if(count($childs) > 0) echo 'parent'; ?>"><i class="fa fa-arrow-down"></i> 
@@ -101,16 +105,19 @@
             </h3>
             <div class="content">
             <div class="row">
-                <div class="tree col-sm-12">
+                <div class="col-sm-12">
                     Total Support for This Camp (including sub-camps): 
 					
 					<div class="badge">
 					 {{ isset($supportDataset[$camp->camp_num]) ? $supportDataset[$camp->camp_num] : 0 }}
 					</div>
 					
-                    <ul class="mainouter">
+                    <ul class="support-tree">
 					  <?php
-					 $campnicknames = $topic->GetSupportedNicknames($camp->topic_num,$camp->camp_num);
+
+                    $tree = \App\Model\TopicSupport::topicSupportTree($camp->topic_num,$camp->camp_num); ?>
+                    {!! $tree !!}
+					 <?php /*$campnicknames = $topic->GetSupportedNicknames($camp->topic_num,$camp->camp_num);
 					  foreach($campnicknames as $support) {  
 					  
 					    $supportData = $topic->getNicknameSupport($support,$camp->camp_num);
@@ -124,7 +131,7 @@
 					     </a> 
 						 <a href="<?php echo url('support/'.$topic_id.'/'.$camp->camp_num.'-'.$support->nickname->nick_name_id);?>" class="btn btn-info">Delegate Your Support</a>
                        </li>
-					  <?php } ?>
+					  <?php /*}*/ ?>
 					 </ul>  
 				</div>
               
