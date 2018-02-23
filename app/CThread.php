@@ -16,7 +16,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class CThread extends Model
 {
-
+    protected $table = 'thread';
     protected $guarded = [];
     /**
      * The Below functions is for defining 

@@ -23,7 +23,7 @@
         <form action="{{ url('/topic')}}" method="post">
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
 			<input type="hidden" name="topic_num" value="{{ $topic->topic_num }}">
-			<input type="hidden" name="submitter" value="{{ $topic->submitter }}">
+			<input type="hidden" name="submitter" value="{{ $topic->submitter_nick_id }}">
 			<?php if($objection=="objection") { ?>
 			 <input type="hidden" name="objection" value="1">
 			<?php } ?>
@@ -32,7 +32,7 @@
                 <label for="camp_name">Nick Name</label>
                 <select name="nick_name" class="form-control">
                     @foreach($nickNames as $nick)
-                    <option value="{{ $nick->nick_name_id }}">{{ $nick->nick_name}}</option>
+                    <option value="{{ $nick->id }}">{{ $nick->nick_name}}</option>
                     @endforeach
 					
                 </select>

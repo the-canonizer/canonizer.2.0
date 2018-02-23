@@ -39,37 +39,58 @@
             </h3>
             <div class="content">
             <div class="row">
+			   @if(count($topics))
 			    <div class="tree col-sm-12">
                     <ul class="mainouter" id="load-data">
                         
-                       @foreach($topics as $k=>$topic)
+					   <?php
+					   
+						$sortedTopic = $topics[0]->getSortedTree($topics);
+                        $sortedTree  = $sortedTopic['sortedTree'];
+						$createcampKey = 0;
+                       ?>					   
+						
+                       @foreach($sortedTree as $k=>$topic)
                        <li>
                          <?php
-                         $childs = $topic->childrens($topic->topic_num,$topic->camp_num); ?>
+                         $childs = $topic['topic']->childrens($topic['topic']->topic_num,$topic['topic']->camp_num); 
+						 
+						 
+						 ?>
                          <span class="<?php if(count($childs) > 0) echo 'parent'; ?>"><i class="fa fa-arrow-right"></i> 
 						 <?php 
-						  $title = preg_replace('/[^A-Za-z0-9\-]/', '-', $topic->title);
+						  $title = preg_replace('/[^A-Za-z0-9\-]/', '-', $topic['topic']->title);
 						  //$title     = preg_replace('/\s+/', '-', $topic->title); 
-						  $topic_id = $topic->topic_num."-".$title;
-						 
+						  $topic_id = $topic['topic']->topic_num."-".$title;
+						  
 						 ?></span>
                          <div class="tp-title">
 
-						 <a href="<?php echo url('topic/'.$topic_id.'/'.$topic->camp_num) ?>">{{ $topic->title }}</a> <div class="badge">48.25</div>
+						 <a href="<?php echo url('topic/'.$topic_id.'/'.$topic['topic']->camp_num) ?>">{{ $topic['topic']->title }}</a> <div class="badge">
+						 {{ $topic['support_order'] }}
+						 </div>
                          </div>
 
                          <?php
-                        if(count($childs) > 0){
-                            echo $topic->campTree($topic->topic_num,$topic->camp_num);
-                        }else{
-                            echo '<li class="create-new-li"><span><a href="'.route('camp.create',['topicnum'=>$topic->topic_num,'campnum'=>$topic->camp_num]).'">< Create A New Camp ></a></span></li>';
+						 $nicknames = $topic['topic']->GetSupportedNicknames($topic['topic']->topic_num);
+						 
+						 $supportDataset = $topic['topic']->getCampSupport($topic['topic']->topic_num,$topic['topic']->camp_num,$nicknames);
+                        if($createcampKey==0){
+							$createcampKey = 1;
+                            //echo '<li class="create-new-li"><span><a href="'.route('camp.create',['topicnum'=>$topic['topic']->topic_num,'campnum'=>$topic['topic']->camp_num]).'">< Create A New Camp ></a></span></li>';
+                        }
+						if(count($childs) > 0){
+                            echo $topic['topic']->campTree($topic['topic']->topic_num,$topic['topic']->camp_num,null,null,$supportDataset);
                         }?>
                            </li>
                        @endforeach
-					   <a id="btn-more" class="remove-row" data-id="{{ $topic->id }}"></a>
+					   <a id="btn-more" class="remove-row" data-id="{{ $sortedTopic['key'] }}"></a>
                     </ul>
                     
                 </div>
+				@else
+				 <h6 style="margin-left:30px;"> No topic available.</h6>
+                @endif			 
               </div>
             </div>    
             
@@ -79,21 +100,23 @@
 </div>  <!-- /.right-whitePnl-->
 
 <script>
-
+var request = false;
+var offset = 10;
    $(document).scroll(function(e){
        var id = $('#btn-more').data('id'); 
-      
+       var queryString = "{{Request::getQueryString()}}";
 	   var scrollTop = $(window).scrollTop();
+	   
 	   scrollTop = scrollTop + 650;
-		  if ( scrollTop > $('.sticky-footer').offset().top ) { 
+		  if ( scrollTop > $('.sticky-footer').offset().top && request==false) { 
 				  
 			   $("#btn-more").html("Please wait loading tree......");
-			   
+			   request = true;
 			   
 			   $.ajax({
-				   url : '{{ url("loadtopic") }}',
+				   url : '{{ url("loadtopic") }}?'+queryString,
 				   method : "POST",
-				   data : {id:id, _token:"{{csrf_token()}}"},
+				   data : {id:id,offset:offset, _token:"{{csrf_token()}}"},
 				   dataType : "text",
 				   success : function (data)
 				   {
@@ -102,11 +125,13 @@
 						  $('.remove-row').remove();
 						  $('#load-data').append(data);
 						  camptree();
+						  request = false;
+						  offset = offset + 10;
 				   
 					  }
 					  else
 					  {
-						  $('#btn-more').html("No Data");
+						  $('#btn-more').html("No more topic available.");
 					  }
 				   }
 			   });

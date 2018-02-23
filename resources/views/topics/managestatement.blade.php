@@ -32,7 +32,7 @@
             <input type="hidden" name="topic_num" value="{{ $topic->topic_num }}">
             <input type="hidden" name="parent_camp_num" value="{{ $parentcampnum }}">
 			<input type="hidden" name="camp_num" value="{{ $statement->camp_num }}">
-			<input type="hidden" name="submitter" value="{{ $statement->submitter }}">
+			<input type="hidden" name="submitter" value="{{ $statement->submitter_nick_id }}">
             <?php if($objection=="objection") { ?>
 			<input type="hidden" name="objection" value="1">
 			<?php } ?>
@@ -41,7 +41,7 @@
                 <label for="camp_name">Nick Name</label>
                 <select name="nick_name" class="form-control">
                     @foreach($nickNames as $nick)
-                    <option value="{{ $nick->nick_name_id }}">{{ $nick->nick_name}}</option>
+                    <option value="{{ $nick->id }}">{{ $nick->nick_name}}</option>
                     @endforeach
 					
                 </select>

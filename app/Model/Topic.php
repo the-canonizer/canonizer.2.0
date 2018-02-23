@@ -30,7 +30,7 @@ class Topic extends Model {
                 $camp->language= $model->language;
                 $camp->note = $model->note;
                 $camp->submit_time = time();
-                $camp->submitter = Auth::user()->id;
+                $camp->submitter_nick_id = Auth::user()->id;
                 $camp->go_live_time = $model->go_live_time;
                 $camp->title = $model->topic_name;
                 $camp->camp_name = Camp::AGREEMENT_CAMP;
@@ -56,15 +56,15 @@ class Topic extends Model {
         return $this->hasMany('App\Model\Support', 'topic_num', 'topic_num')->orderBy('support_order','ASC');
     }
 	public function objectornickname() {
-        return $this->hasOne('App\Model\Nickname', 'nick_name_id', 'objector');
+        return $this->hasOne('App\Model\Nickname', 'id', 'objector_nick_id');
     }
 	public function submitternickname() {
-        return $this->hasOne('App\Model\Nickname', 'nick_name_id', 'submitter');
+        return $this->hasOne('App\Model\Nickname', 'id', 'submitter_nick_id');
     }
 	
-	public function scopeGetsupports($query,$topic_num,$userNickname) {
+	public function scopeGetsupports($query,$topic_support_id,$userNickname=null) {
 		
-		return $supports = Support::where('topic_num',$topic_num)->whereIn('nick_name_id',$userNickname)->orderBy('support_order','ASC')->orderBy('start','DESC')->get();
+		return $supports = SupportInstance::where('topic_support_id',$topic_support_id)->groupBy('camp_num')->orderBy('support_order','ASC')->get();
 		
 	}
 	
@@ -72,5 +72,6 @@ class Topic extends Model {
 		
 		return self::where('topic_num',$topicnum)->latest('submit_time')->get();
 	}
+	
 
 }
