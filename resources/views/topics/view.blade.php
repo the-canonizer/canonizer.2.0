@@ -36,13 +36,17 @@
 						 $supportDataset = $topic->getCampSupport($topic->topic_num,$topic->camp_num,$nicknames);
 		                 
 						 $count = 0;
-						 foreach($supportDataset as  $s) {
-							  
-							 $count = $count + $s;
-						 }
-						 $supportDataset[1] = $count; 
 						 
-						// echo "<pre>"; print_r($supportDataset); die;
+						 $allchild =  $topic->getAllChild($topic->topic_num,$topic->camp_num,$topic->camp_num);
+						// print_r($allchild); die;
+						 foreach($allchild as $key=>$data) {
+							 foreach($supportDataset as $key => $s) {
+								 
+								 if($data==$key)
+								  $supportDataset[$topic->camp_num] = $supportDataset[$topic->camp_num] + $s;
+							 }
+						 }
+						 
 						 
 						 ?>
                          <span class="<?php if(count($childs) > 0) echo 'parent'; ?>"><i class="fa fa-arrow-down"></i> 
