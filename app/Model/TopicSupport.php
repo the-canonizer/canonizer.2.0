@@ -36,8 +36,12 @@ class TopicSupport extends Model {
 
     public static function reducedSum($array){
         $sum = $array['point'];
+        try{
         foreach($array['childrens'] as $arr){
                 $sum=$sum + self::reducedSum($arr);
+        }
+        }catch(\Exception $e){
+            dd($array);
         }
         return $sum;
     }

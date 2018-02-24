@@ -61,6 +61,12 @@
 						 <div class="badge">{{ $supportDataset[1] }}</div></span>
                          <?php
                         if(count($childs) > 0){
+                            /*$tree = [];
+                            $tree[$topic->camp_num] ['point'] = $topic->getCamptSupportCount($topic->topic_num,$topic->camp_num);
+                            $tree[$topic->camp_num]['childrens'] = $topic->traverseCampTree($topic->topic_num,$topic->camp_num);
+                            
+                            $reducedTree = \App\Model\TopicSupport::sumTranversedArraySupportCount($tree);
+                            dd($reducedTree);*/
                             echo $topic->campTree($topic->topic_num,$topic->camp_num,null,$camp->camp_num,$supportDataset,1);
                         } ?>
                            </li>

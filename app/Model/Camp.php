@@ -570,4 +570,46 @@ class Camp extends Model {
 		
 	}
 
+	public function getCamptSupportCount($topicnum,$campnum){
+		$supports = TopicSupport::join('support_instance','support_instance.topic_support_id','=','topic_support.id')
+        ->where('topic_num', '=', $topicnum)
+        ->where('support_instance.camp_num',$campnum)
+        //->where('delegate_nick_id',$delegateNickId)
+        ->orderBy('topic_support.submit_time','DESC')
+        ->select('topic_support.*')
+        ->get();
+		
+        $supportCountTotal = 0;
+        foreach($supports as $support){
+            $campsupports = $support->campsupport;
+            $supportCount  =  $campsupports->count(); 
+            $supportPoint = $support->delegate_nick_id ? .5 : 1;
+            if($supportCount > 1 ){
+                $campSupport =  $campsupports->where('camp_num',$campnum)->first();
+               	$supportCountTotal+=round($supportPoint / (2 ** ($campSupport->support_order)),2);
+            }else if($supportCount == 1){
+                $supportCountTotal+=$supportPoint;
+			}
+        }
+		
+		return $supportCountTotal;
+	}
+
+	public  function traverseCampTree($topicnum,$parentcamp,$lastparent=null){
+		$key = $topicnum.'-'.$parentcamp.'-'.$lastparent;
+        if(in_array($key,Camp::$tempArray)){
+            return; /** Skip repeated recursions**/
+        }
+        Camp::$tempArray[]=$key;
+        $childs = $this->childrens($topicnum,$parentcamp);
+		$array=[];
+		foreach($childs as $key=> $child){ 
+			$childCount  = count($child->childrens($child->topic_num,$child->camp_num));
+			$array[$child->camp_num]['point'] = $this->getCamptSupportCount($child->topic_num,$child->camp_num);
+			$children =$this->traverseCampTree($child->topic_num,$child->camp_num,$child->parent_camp_num);
+			$array[$child->camp_num]['childrens'] = is_array($children) ? $children : [];
+        }
+		return $array;
+	}
+
 }
