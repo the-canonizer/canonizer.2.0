@@ -57,7 +57,8 @@ class Camp extends Model {
                 ->where('objector_nick_id', '=', NULL)
                 ->where('go_live_time','<=',time()) 				
                 ->orderBy('submit_time', 'desc')
-                ->get()->unique('camp_num','topic_num');
+				->groupBy('camp_num')
+                ->get();//->unique('camp_num','topic_num');
 		} else {
 			
 			if(isset($_REQUEST['asof']) && $_REQUEST['asof']=="review") {
@@ -66,6 +67,7 @@ class Camp extends Model {
                 ->where('parent_camp_num', '=', $parentcamp)
                 ->where('camp_name', '!=', 'Agreement')  
                 ->orderBy('submit_time', 'desc')
+				->groupBy('camp_num')
                 ->get();	
 				
 			} else if(isset($_REQUEST['asof']) && $_REQUEST['asof']=="bydate") {
@@ -78,7 +80,8 @@ class Camp extends Model {
                 ->where('objector_nick_id', '=', NULL)
                 ->where('go_live_time','<=',$asofdate) 				
                 ->orderBy('submit_time', 'desc')
-                ->get()->unique('camp_num','topic_num');
+				->groupBy('camp_num')
+                ->get();//->unique('camp_num','topic_num');
 			} 
 		}		
 				
