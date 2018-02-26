@@ -30,20 +30,15 @@ class HomeController extends Controller {
 		
 		  foreach($topics as $k=>$topicdata) {
 			  
-			  $nicknames = $topicdata->GetSupportedNicknames($topicdata->topic_num);
-						 
-			 $supportDataset = $topicdata->getCampSupport($topicdata->topic_num,$topicdata->camp_num,$nicknames);
-			 
-			 $count = 0;
-			 foreach($supportDataset as  $s) {
-				  
-				 $count = $count + $s;
-			 }
-			 $supportDataset[1] = $supportDataset[1] + $count; 
+			   $tree = [];
+               $tree[$topicdata->camp_num]['point'] = $topicdata->getCamptSupportCount($topicdata->topic_num,$topicdata->camp_num);
+               $tree[$topicdata->camp_num]['childrens'] = $topicdata->traverseCampTree($topicdata->topic_num,$topicdata->camp_num);
+                            
+               $reducedTree = \App\Model\TopicSupport::sumTranversedArraySupportCount($tree);  
 			   
 			   $childs = $topicdata->childrens($topicdata->topic_num,$topicdata->camp_num);
 			   $title      = preg_replace('/[^A-Za-z0-9\-]/', '-', $topicdata->title);
-			   $supportCount = $supportDataset[1];			  
+			   $supportCount = $reducedTree[$topicdata->camp_num]['point'];			  
 			   $topic_id  = $topicdata->topic_num."-".$title;
 			   $url       = url("topic/".$topic_id."/".$topicdata->camp_num);
 			   $camproute = route('camp.create',['topicnum'=>$topicdata->topic_num,'campnum'=>$topicdata->camp_num]);			 
@@ -53,7 +48,7 @@ class HomeController extends Controller {
 					   $output .='"><i class="fa fa-arrow-right"></i></span> <div class="tp-title"><a href="'.$url.'">'.$topicdata->title.'</a><div class="badge">'.$supportCount.'</div></div>';
 						 
                         if(count($childs) > 0){ 
-                            $output .= $topicdata->campTree($topicdata->topic_num,$topicdata->camp_num,null,null,$supportDataset);
+                            $output .= $topicdata->campTree($topicdata->topic_num,$topicdata->camp_num,null,null,$reducedTree[$topicdata->camp_num]['childrens']);
 						   	
                         }else{
                             $output .= '<li class="create-new-li"><span><a href="'.$camproute.'">< Create A New Camp ></a></span></li>';

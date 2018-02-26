@@ -14,6 +14,7 @@ class Camp extends Model {
     protected static $tempArray = [];
 	protected static $childtempArray = [];
 	protected static $chilcampArray = [];
+	protected static $traversetempArray = [];
 	
     const AGREEMENT_CAMP = "Agreement";
 	
@@ -48,17 +49,18 @@ class Camp extends Model {
         
 		 if($campnum !=null)
 			$query->where('camp_num', '=', $campnum);
-				
+			
 		if(!isset($_REQUEST['asof']) || (isset($_REQUEST['asof']) && $_REQUEST['asof']=="default")) {
 		
 		 $childs = $query->where('topic_num', '=', $topicnum)
                 ->where('parent_camp_num', '=', $parentcamp)
                 ->where('camp_name', '!=', 'Agreement')  
                 ->where('objector_nick_id', '=', NULL)
-                ->where('go_live_time','<=',time()) 				
-                ->orderBy('submit_time', 'desc')
-				->groupBy('camp_num')
-                ->get();//->unique('camp_num','topic_num');
+                ->whereRaw('go_live_time in (select max(go_live_time) from camp where topic_num='.$topicnum.' and objector_nick_id is null and go_live_time < "'.time().'" group by camp_num)')				
+                ->where('go_live_time','<',time())
+                ->groupBy('camp_num')				
+				->orderBy('submit_time', 'desc')
+                ->get();
 		} else {
 			
 			if(isset($_REQUEST['asof']) && $_REQUEST['asof']=="review") {
@@ -66,6 +68,8 @@ class Camp extends Model {
 			 $childs = $query->where('topic_num', '=', $topicnum)
                 ->where('parent_camp_num', '=', $parentcamp)
                 ->where('camp_name', '!=', 'Agreement')  
+				->whereRaw('go_live_time in (select max(go_live_time) from camp where topic_num='.$topicnum.' and objector_nick_id is null group by camp_num)')				
+                
                 ->orderBy('submit_time', 'desc')
 				->groupBy('camp_num')
                 ->get();	
@@ -78,7 +82,8 @@ class Camp extends Model {
                 ->where('parent_camp_num', '=', $parentcamp)
                 ->where('camp_name', '!=', 'Agreement')  
                 ->where('objector_nick_id', '=', NULL)
-                ->where('go_live_time','<=',$asofdate) 				
+				->whereRaw('go_live_time in (select max(go_live_time) from camp where topic_num='.$topicnum.' and objector_nick_id is null group by camp_num)')				
+                ->where('go_live_time','<',$asofdate) 				
                 ->orderBy('submit_time', 'desc')
 				->groupBy('camp_num')
                 ->get();//->unique('camp_num','topic_num');
@@ -134,7 +139,7 @@ class Camp extends Model {
         return $campname;
     }
 
-    public function campTree($topicnum, $parentcamp,$lastparent=null,$campnum=null,$supportDataset=null,$createcampKey=0){
+    public function campTree($topicnum, $parentcamp,$lastparent=null,$campnum=null,$reducedTree=null,$createcampKey=0,$root_selected=0){
         
         $key = $topicnum.'-'.$parentcamp.'-'.$lastparent;
         if(in_array($key,Camp::$tempArray)){
@@ -144,29 +149,21 @@ class Camp extends Model {
         $childs = $this->childrens($topicnum,$parentcamp);
 		
 		$camp_support_count = 0;
-		if($createcampKey == 0 || $createcampKey == $campnum) {
-         $html= '<ul><li class="create-new-li"><span><a href="'.route('camp.create',['topicnum'=>$topicnum,'campnum'=>$parentcamp]).'">&lt;Create A New Camp &gt;</a></span></li>';
-        }else{
+       		
+		if($createcampKey == $parentcamp) {
+		  //$root_selected = 1; 	 
+         $html= '<ul><li class="create-new-li"><span><a href="'.route('camp.create',['topicnum'=>$topicnum,'campnum'=>$parentcamp]).'">&lt;Start new supporting camp here&gt;</a></span></li>';
+        }
+	    //else if($root_selected ==0 && ($createcampKey == 0 || $createcampKey == $campnum)) {
+         //$html= '<ul><li class="create-new-li"><span><a href="'.route('camp.create',['topicnum'=>$topicnum,'campnum'=>$parentcamp]).'">&lt;Create A New Camp &gt;</a></span></li>';
+        else{
 		 $html ='<ul>';
 		}
 		foreach($childs as $key=> $child){ 
                 $childCount  = count($child->childrens($child->topic_num,$child->camp_num));
-				Camp::$chilcampArray = [];
 				
-			    //$_SESSION['childs'] = array();
-				$allchild = $child->getAllChild($child->topic_num,$child->camp_num,$child->camp_num);
-						//echo "<pre>"; print_r($allchild); die;
-					 if(count($allchild)) {	
-						 foreach($allchild as $key=>$data) {
-							 foreach($supportDataset as $key => $s) {
-								 
-								 if($data==$key)
-								  $supportDataset[$child->camp_num] = isset($supportDataset[$child->camp_num]) ?  $supportDataset[$child->camp_num] + $s : $s;
-							 }
-						 }
-					 } 
-				$thisCampCount = isset($supportDataset[$child->camp_num]) ? $supportDataset[$child->camp_num] : 0;
-				$camp_support_count = $thisCampCount;						
+				$thisCampCount = isset($reducedTree[$child->camp_num]['point']) ? $reducedTree[$child->camp_num]['point'] : 0;
+									
 			    $title      = preg_replace('/[^A-Za-z0-9\-]/', '-', $child->title);
 			 
 			    $topic_id  = $child->topic_num."-".$title;
@@ -176,16 +173,16 @@ class Camp extends Model {
                 $html.='<li>';
                 $selected =  ($campnum==$child->camp_num) ? "color:#08b608; font-weight:bold" : "";
                 				
-                $html.='<span class="'.$class.'">'.$icon.'</span><div class="tp-title"><a style="'.$selected.'" href="'.url('topic/'.$topic_id.'/'.$child->camp_num).'">'.$child->camp_num."-".$child->title.'</a> <div class="badge">'.$camp_support_count.'</div></div>';
+                $html.='<span class="'.$class.'">'.$icon.'</span><div class="tp-title"><a style="'.$selected.'" href="'.url('topic/'.$topic_id.'/'.$child->camp_num).'">'.$child->camp_num."-".$child->title.'</a> <div class="badge">'.$thisCampCount.'</div></div>';
                
-				$createcampKey = ($campnum==$child->camp_num) ? 0 : 1; 
+				//$createcampKey = ($campnum==$child->camp_num) ? 0 : 1; 
 				
 				if($childCount > 0){
                     
-					$html.=$this->campTree($child->topic_num,$child->camp_num,$child->parent_camp_num,$campnum,$supportDataset,$createcampKey);
+					$html.=$this->campTree($child->topic_num,$child->camp_num,$child->parent_camp_num,$campnum,$reducedTree[$child->camp_num]['childrens'],$createcampKey,$root_selected);
 					
-                }else if($createcampKey==0){
-                    $html.='<ul><li class="create-new-li"><span><a href="'.route('camp.create',['topicnum'=>$child->topic_num,'campnum'=>$child->camp_num]).'">&lt; Create A New Camp &gt;</a></span></li></ul>';
+                }else if($campnum==$child->camp_num){ 
+                    $html.='<ul><li class="create-new-li"><span><a href="'.route('camp.create',['topicnum'=>$child->topic_num,'campnum'=>$child->camp_num]).'">&lt;Start new supporting camp here&gt;</a></span></li></ul>';
                 }
 				
                 $html.='</li>';
@@ -377,7 +374,7 @@ class Camp extends Model {
 					 //->leftJoin('support_instance','support_instance.topic_support_id','=','topic_support.id')
 		             ->where('camp_name','=','Agreement')
 		             ->where('objector_nick_id', '=', NULL)
-                     ->where('camp.go_live_time','<=',time())					 
+                     ->where('camp.go_live_time','<',time())					 
 					 ->latest('support')->get()->unique('topic_num')->take($limit);
 		} else {
 			
@@ -402,7 +399,7 @@ class Camp extends Model {
 		             ->where('camp_name','=','Agreement')
 		             //->where('id','<',$id)
 		             ->where('objector_nick_id', '=', NULL)
-                     ->where('go_live_time','<=',time())
+                     ->where('go_live_time','<',time())
 					 ->latest('support')->take(10)->offset($offset)->get()->unique('topic_num');
 		} else {
 			
@@ -424,7 +421,7 @@ class Camp extends Model {
 		return self::where('topic_num',$topicnum)
 		            ->where('camp_num','=', $campnum)
 					->where('objector_nick_id', '=', NULL)
-                    ->where('go_live_time','<=',time())
+                    ->where('go_live_time','<',time())
 					->latest('submit_time')->first();
 	}
 	public static function getCampHistory($topicnum,$campnum,$filter=array()){
@@ -477,38 +474,7 @@ class Camp extends Model {
 		
         return $result;
     }
-	public function fetch_recursive($src_arr, $currentid, $parentfound = false, $cats = array())
-{
-    if(count($src_arr)==1 ) {
-		
-		if((!$parentfound && $src_arr->camp_num == $currentid))
-        {
-            
-            $cats[] = $src_arr->camp_num;
-            if($src_arr->camp_num == $currentid) {
-				$childs = $this->campChild($src_arr->topic_num,$src_arr->camp_num);
-                $cats = array_merge($cats, $this->fetch_recursive($childs, $src_arr->camp_num, true));
-			}	
-        }
-		
-		
-	} else {
-	foreach($src_arr as $row)
-    {
-        if((!$parentfound && $row->camp_num == $currentid))
-        {
-            
-            $cats[] = $row->camp_num;
-            if($row->camp_num == $currentid) {
-				$childs = $this->campChild($row->topic_num,$row->camp_num);
-                $cats = array_merge($cats, $this->fetch_recursive($src_arr, $row->camp_num, true));
-			}	
-        }
-    }
-	}
 	
-    return $cats;
-}
 	
 	public function campChild($topicnum,$parentcamp){
 		
@@ -577,6 +543,7 @@ class Camp extends Model {
 		$supports = TopicSupport::join('support_instance','support_instance.topic_support_id','=','topic_support.id')
         ->where('topic_num', '=', $topicnum)
         ->where('support_instance.camp_num',$campnum)
+		->where('topic_support.submit_time','<',time())
         //->where('delegate_nick_id',$delegateNickId)
         ->orderBy('topic_support.submit_time','DESC')
         ->select('topic_support.*')
@@ -586,7 +553,7 @@ class Camp extends Model {
         foreach($supports as $support){
             $campsupports = $support->campsupport;
             $supportCount  =  $campsupports->count(); 
-            $supportPoint = $support->delegate_nick_id ? .5 : 1;
+            $supportPoint = $support->delegate_nick_id ? 0.5 : 1;
             if($supportCount > 1 ){
                 $campSupport =  $campsupports->where('camp_num',$campnum)->first();
                	$supportCountTotal+=round($supportPoint / (2 ** ($campSupport->support_order)),2);
@@ -600,10 +567,10 @@ class Camp extends Model {
 
 	public  function traverseCampTree($topicnum,$parentcamp,$lastparent=null){
 		$key = $topicnum.'-'.$parentcamp.'-'.$lastparent;
-        if(in_array($key,Camp::$tempArray)){
+        if(in_array($key,Camp::$traversetempArray)){
             return; /** Skip repeated recursions**/
         }
-        Camp::$tempArray[]=$key;
+        Camp::$traversetempArray[]=$key;
         $childs = $this->childrens($topicnum,$parentcamp);
 		$array=[];
 		foreach($childs as $key=> $child){ 
