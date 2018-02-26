@@ -59,7 +59,9 @@
                          $tree[$topic->camp_num]['childrens'] = $topic->traverseCampTree($topic->topic_num,$topic->camp_num);
                             
                          $reducedTree = \App\Model\TopicSupport::sumTranversedArraySupportCount($tree);
-						 
+						 if(isset($_REQUEST['filter']) && $reducedTree[$topic->camp_num]['point'] < $_REQUEST['filter']){
+                             continue;
+                         }
 						 ?>
                          <span class="<?php if(count($childs) > 0) echo 'parent'; ?>"><i class="fa fa-arrow-right"></i> 
 						 <?php 

@@ -164,7 +164,9 @@ class Camp extends Model {
                 $childCount  = count($child->childrens($child->topic_num,$child->camp_num));
 				
 				$thisCampCount = isset($reducedTree[$child->camp_num]['point']) ? $reducedTree[$child->camp_num]['point'] : 0;
-									
+				if(isset($_REQUEST['filter']) && $thisCampCount < $_REQUEST['filter']){
+					continue;
+				}				
 			    $title      = preg_replace('/[^A-Za-z0-9\-]/', '-', $child->title);
 			 
 			    $topic_id  = $child->topic_num."-".$title;

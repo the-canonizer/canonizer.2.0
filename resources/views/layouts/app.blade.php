@@ -156,6 +156,7 @@
                             <ul class="sidenav-second-level collapse show" id="asof">
                                 <li>
 								 <form name="as_of" id="as_of" method="GET">
+                                 <input type="hidden" name="filter" value="0.001"/>
 								   <input type="hidden" name="_token" value="{{ csrf_token() }}">
 									<div class="radio radio-primary">
 										<input type="radio" <?php echo (isset($_REQUEST['asof']) && $_REQUEST['asof']=="review") ? "checked='checked'" : '';?> class="asofdate" name="asof" id="radio1" value="review">

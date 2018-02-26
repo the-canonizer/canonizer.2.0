@@ -28,12 +28,22 @@ class Algorithm{
         @nick_name_id , $condition
     */
     public static function camp_count($nick_name_id,$condition){
+    
+        $as_of_time = time();
+        if(isset($_REQUEST['asof']) && $_REQUEST['asof'] == 'bydate'){
+            if(isset($_REQUEST['asofdate']) && !empty($_REQUEST['asofdate'])){
+                $as_of_time = strtotime($_REQUEST['asofdate']);
+            }
+        }
+
         $sql = "select count(*) as countTotal from support_instance
          inner join topic_support on topic_support.id = support_instance.topic_support_id 
-         where nick_name_id = $nick_name_id and (" .$condition.")";
+         where nick_name_id = $nick_name_id and (" .$condition.")
+         and ((topic_support.submit_time < $as_of_time) and ((topic_support.submit_time = 0) or (topic_support.submit_time > $as_of_time)))
+         ";
         $result = DB::select("$sql");
         return isset($result[0]->countTotal) ? $result[0]->countTotal : 0;
-        //and ((start < $as_of_time) and ((end = 0) or (end > $as_of_time)))";
+        //";
     }
 
     public static function blind_popularity($nick_name_id = null){
