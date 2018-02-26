@@ -5,6 +5,7 @@ namespace App\Model;
 use Illuminate\Database\Eloquent\Model;
 use App\Model\Nickname;
 use DB;
+use App\Model\Algorithm;		
 
 class Camp extends Model {
 
@@ -553,7 +554,8 @@ class Camp extends Model {
         foreach($supports as $support){
             $campsupports = $support->campsupport;
             $supportCount  =  $campsupports->count(); 
-            $supportPoint = $support->delegate_nick_id ? 0.5 : 1;
+			$supportPoint = Algorithm::{session('defaultAlgo')}($support->nick_name_id);
+            //$supportPoint = $support->delegate_nick_id ? 0.5 : 1;
             if($supportCount > 1 ){
                 $campSupport =  $campsupports->where('camp_num',$campnum)->first();
                	$supportCountTotal+=round($supportPoint / (2 ** ($campSupport->support_order)),2);

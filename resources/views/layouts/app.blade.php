@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-
+        <meta name="csrf-token" content="{{ csrf_token() }}">
         <title>Canonizer</title>
 
         <!-- Fonts -->
@@ -132,19 +132,11 @@
                             </a>
                             <ul class="sidenav-second-level collapse show" id="canoalgo">
                                 <li>
-                                    
 									<span>Canonizer Algorithm:</span>
-                                    <select>
-                                        <option>One Person One Vote</option>
-                                        <option>Mind Experts</option>
-                                        <option>Computer Science Experts</option>
-                                        <option>Ph.D.</option>
-                                        <option>Christian</option>
-                                        <option>Secular / Non Religious</option>
-                                        <option>Mormon</option>
-                                        <option>Universal Unitarian</option>
-                                        <option>Atheist</option>
-                                        <option>Transhumanist</option>
+                                    <select name="algorithm" onchange="changeAlgorithmChoice(this)">
+                                    @foreach(\App\Model\Algorithm::getList() as $key=>$value)
+                                        <option value="{{ $key }}" {{ session('defaultAlgo') == $key ? 'selected' : ''}}>{{$value}}</option>
+                                    @endforeach
                                     </select>
 									<a href="<?php echo url('topic/53-Canonized-Canonizer-Algorithms/2') ?>"><span>Algorithm Information</span></a>
                                 </li>
@@ -205,12 +197,19 @@
     </div>
     <script>
         $(document).ready(function () {
+
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
             $("#asofdate").datepicker({
                 changeMonth: true,
                 changeYear: true,
 				dateFormat: 'yy/mm/dd'
-            });			
-			
+            });	
+
 			$(".asofdate, #asofdate").change(function(){
 				// Do something interesting here
 				 var value = $('#asofdate').val();
@@ -224,7 +223,18 @@
 				 $('#as_of').submit();
 			});
 			
-        })
+        });
+
+        function changeAlgorithmChoice(element){
+            $.ajax({
+                url:"{{ route('change-algorithm') }}",
+                type:"POST",
+                data:{algo:$(element).val()},
+                success:function(){
+                    window.location.reload();
+                }
+            });
+        }
     </script>	
 </body>
 </html>

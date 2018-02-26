@@ -16,8 +16,10 @@ use Illuminate\Support\Facades\Validator;
 
 class SettingsController extends Controller
 {
-    
-
+    public function __construct(){
+		 parent::__construct();
+	}
+	
     public function index(){
          $user = User::find(Auth::user()->id);
         return view('settings.index',['user'=>$user]);
