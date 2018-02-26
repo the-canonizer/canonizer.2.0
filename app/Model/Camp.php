@@ -5,6 +5,7 @@ namespace App\Model;
 use Illuminate\Database\Eloquent\Model;
 use App\Model\Nickname;
 use DB;
+use App\Model\Algorithm;		
 
 class Camp extends Model {
 
@@ -71,6 +72,7 @@ class Camp extends Model {
 				->whereRaw('go_live_time in (select max(go_live_time) from camp where topic_num='.$topicnum.' and objector_nick_id is null group by camp_num)')				
                 
                 ->orderBy('submit_time', 'desc')
+				->groupBy('camp_num')
                 ->get();	
 				
 			} else if(isset($_REQUEST['asof']) && $_REQUEST['asof']=="bydate") {
@@ -84,7 +86,8 @@ class Camp extends Model {
 				->whereRaw('go_live_time in (select max(go_live_time) from camp where topic_num='.$topicnum.' and objector_nick_id is null group by camp_num)')				
                 ->where('go_live_time','<',$asofdate) 				
                 ->orderBy('submit_time', 'desc')
-                ->get()->unique('camp_num','topic_num');
+				->groupBy('camp_num')
+                ->get();//->unique('camp_num','topic_num');
 			} 
 		}		
 				
@@ -551,7 +554,8 @@ class Camp extends Model {
         foreach($supports as $support){
             $campsupports = $support->campsupport;
             $supportCount  =  $campsupports->count(); 
-            $supportPoint = $support->delegate_nick_id ? 0.5 : 1;
+			$supportPoint = Algorithm::{session('defaultAlgo')}($support->nick_name_id);
+            //$supportPoint = $support->delegate_nick_id ? 0.5 : 1;
             if($supportCount > 1 ){
                 $campSupport =  $campsupports->where('camp_num',$campnum)->first();
                	$supportCountTotal+=round($supportPoint / (2 ** ($campSupport->support_order)),2);

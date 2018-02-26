@@ -12,6 +12,10 @@ use DB;
 
 class HomeController extends Controller {
 
+	public function __construct(){
+		 parent::__construct();
+	}
+
     public function index() {
 
       
@@ -164,5 +168,10 @@ class HomeController extends Controller {
 		
         
     }
+
+	public function changeAlgorithm(Request $request){
+		session(['defaultAlgo'=>$request->input('algo')]);
+		
+	}
 
 }
