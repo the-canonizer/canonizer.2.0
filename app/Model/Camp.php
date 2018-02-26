@@ -150,7 +150,7 @@ class Camp extends Model {
        		
 		if($createcampKey == $parentcamp) {
 		  //$root_selected = 1; 	 
-         $html= '<ul><li class="create-new-li"><span><a href="'.route('camp.create',['topicnum'=>$topicnum,'campnum'=>$parentcamp]).'">&lt;Create A New Camp &gt;</a></span></li>';
+         $html= '<ul><li class="create-new-li"><span><a href="'.route('camp.create',['topicnum'=>$topicnum,'campnum'=>$parentcamp]).'">&lt;Start new supporting camp here&gt;</a></span></li>';
         }
 	    //else if($root_selected ==0 && ($createcampKey == 0 || $createcampKey == $campnum)) {
          //$html= '<ul><li class="create-new-li"><span><a href="'.route('camp.create',['topicnum'=>$topicnum,'campnum'=>$parentcamp]).'">&lt;Create A New Camp &gt;</a></span></li>';
@@ -179,8 +179,8 @@ class Camp extends Model {
                     
 					$html.=$this->campTree($child->topic_num,$child->camp_num,$child->parent_camp_num,$campnum,$reducedTree[$child->camp_num]['childrens'],$createcampKey,$root_selected);
 					
-                }else if($createcampKey==0){
-                    $html.='<ul><li class="create-new-li"><span><a href="'.route('camp.create',['topicnum'=>$child->topic_num,'campnum'=>$child->camp_num]).'">&lt; Create A New Camp &gt;</a></span></li></ul>';
+                }else if($campnum==$child->camp_num){ 
+                    $html.='<ul><li class="create-new-li"><span><a href="'.route('camp.create',['topicnum'=>$child->topic_num,'campnum'=>$child->camp_num]).'">&lt;Start new supporting camp here&gt;</a></span></li></ul>';
                 }
 				
                 $html.='</li>';
