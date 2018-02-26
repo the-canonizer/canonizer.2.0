@@ -71,7 +71,7 @@
                          <div class="tp-title">
 
 						 <a href="<?php echo url('topic/'.$topic_id.'/'.$topic->camp_num) ?>">{{ $topic->title }}</a> <div class="badge">
-						 {{ $reducedTree[1]['point'] }}
+						 {{ $reducedTree[$topic->camp_num]['point'] }}
 						 </div>
                          </div>
 

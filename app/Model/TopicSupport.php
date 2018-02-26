@@ -37,11 +37,13 @@ class TopicSupport extends Model {
     public static function reducedSum($array){
         $sum = $array['point'];
         try{
-        foreach($array['childrens'] as $arr){
-                $sum=$sum + self::reducedSum($arr);
-        }
+		  if(isset($array['childrens']) && is_array($array['childrens'])) {	
+			foreach($array['childrens'] as $arr){
+					$sum=$sum + self::reducedSum($arr);
+			}
+		  }
         }catch(\Exception $e){
-            dd($array);
+            return $sum;
         }
         return $sum;
     }
@@ -96,12 +98,14 @@ class TopicSupport extends Model {
         return $html;
     }
 
-    public static function sumTranversedArraySupportCount($traversedTreeArray){
-        
+    public static function sumTranversedArraySupportCount($traversedTreeArray=array()){
+       if(isset($traversedTreeArray) && is_array($traversedTreeArray)) {
         foreach($traversedTreeArray as $key => $array){
            $traversedTreeArray[$key]['point']=self::reducedSum($array);
            $traversedTreeArray[$key]['childrens']=self::sumTranversedArraySupportCount($array['childrens']);
         }
+	   }	
+	   
         return $traversedTreeArray;
 
     }
