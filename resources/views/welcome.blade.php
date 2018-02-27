@@ -64,10 +64,10 @@
 
 <script>
 var request = false;
-var offset = 10;
+var offset = 50;
    $(document).scroll(function(e){
        var id = $('#btn-more').data('id'); 
-       var queryString = "{{Request::getQueryString()}}";
+       var queryString = "{!!Request::getQueryString()!!}";
 	   var scrollTop = $(window).scrollTop();
 	   
 	   scrollTop = scrollTop + 650;
@@ -89,7 +89,7 @@ var offset = 10;
 						  $('#load-data').append(data);
 						  camptree();
 						  request = false;
-						  offset = offset + 10;
+						  offset = offset + 50;
 				   
 					  }
 					  else
