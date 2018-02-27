@@ -124,6 +124,11 @@
                                 <span class="nav-link-text">Help</span>
                             </a>
                         </li>
+						<li class="nav-item">
+                            <a class="nav-link" href="https://canonizer.com/canonizer2.0/blog/">
+                                <span class="nav-link-text">Blog</span>
+                            </a>
+                        </li>
                     </ul>
                     <ul class="lowermneu canoalgo">
                         <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Components">
