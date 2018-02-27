@@ -5,7 +5,8 @@ namespace App\Model;
 use Illuminate\Database\Eloquent\Model;
 use App\Model\Nickname;
 use DB;
-use App\Model\Algorithm;		
+use App\Model\Algorithm;
+use App\Model\TopicSupport;		
 
 class Camp extends Model {
 
@@ -139,61 +140,6 @@ class Camp extends Model {
 		}
         return $campname;
     }
-
-    public function campTree($topicnum, $parentcamp,$lastparent=null,$campnum=null,$reducedTree=null,$createcampKey=0,$root_selected=0){
-        
-        $key = $topicnum.'-'.$parentcamp.'-'.$lastparent;
-        if(in_array($key,Camp::$tempArray)){
-            return; /** Skip repeated recursions**/
-        }
-        Camp::$tempArray[]=$key;
-        $childs = $this->childrens($topicnum,$parentcamp);
-		
-		$camp_support_count = 0;
-       		
-		if($createcampKey == $parentcamp) {
-		  //$root_selected = 1; 	 
-         $html= '<ul><li class="create-new-li"><span><a href="'.route('camp.create',['topicnum'=>$topicnum,'campnum'=>$parentcamp]).'">&lt;Start new supporting camp here&gt;</a></span></li>';
-        }
-	    //else if($root_selected ==0 && ($createcampKey == 0 || $createcampKey == $campnum)) {
-         //$html= '<ul><li class="create-new-li"><span><a href="'.route('camp.create',['topicnum'=>$topicnum,'campnum'=>$parentcamp]).'">&lt;Create A New Camp &gt;</a></span></li>';
-        else{
-		 $html ='<ul>';
-		}
-		foreach($childs as $key=> $child){ 
-                $childCount  = count($child->childrens($child->topic_num,$child->camp_num));
-				
-				$thisCampCount = isset($reducedTree[$child->camp_num]['point']) ? $reducedTree[$child->camp_num]['point'] : 0;
-				if(isset($_REQUEST['filter']) && $thisCampCount < $_REQUEST['filter']){
-					continue;
-				}				
-			    $title      = preg_replace('/[^A-Za-z0-9\-]/', '-', $child->title);
-			 
-			    $topic_id  = $child->topic_num."-".$title;
-						
-                $class= $childCount > 0  ? 'parent' : '';
-                $icon = '<i class="fa fa-arrow-right"></i>';
-                $html.='<li>';
-                $selected =  ($campnum==$child->camp_num) ? "color:#08b608; font-weight:bold" : "";
-                				
-                $html.='<span class="'.$class.'">'.$icon.'</span><div class="tp-title"><a style="'.$selected.'" href="'.url('topic/'.$topic_id.'/'.$child->camp_num).'">'.$child->camp_num."-".$child->title.'</a> <div class="badge">'.$thisCampCount.'</div></div>';
-               
-				//$createcampKey = ($campnum==$child->camp_num) ? 0 : 1; 
-				
-				if($childCount > 0){
-                    
-					$html.=$this->campTree($child->topic_num,$child->camp_num,$child->parent_camp_num,$campnum,$reducedTree[$child->camp_num]['childrens'],$createcampKey,$root_selected);
-					
-                }else if($campnum==$child->camp_num){ 
-                    $html.='<ul><li class="create-new-li"><span><a href="'.route('camp.create',['topicnum'=>$child->topic_num,'campnum'=>$child->camp_num]).'">&lt;Start new supporting camp here&gt;</a></span></li></ul>';
-                }
-				
-                $html.='</li>';
-        }
-        $html.= '</ul>';
-        return $html;
-    }
-	
 		
 	// function to get camps support count
 	
@@ -569,21 +515,79 @@ class Camp extends Model {
 		return $supportCountTotal;
 	}
 
+	public function buildCampTree($traversedTreeArray,$currentCamp =null, $activeCamp = null){
+		$html ='<ul>';
+		if($currentCamp == $activeCamp) {
+			$html = '<ul><li class="create-new-li"><span><a href="'.route('camp.create',[$this->topic_num,$currentCamp]).'">&lt;Start new supporting camp here&gt;</a></span></li>';
+        }
+		
+		if(is_array($traversedTreeArray)){
+			foreach($traversedTreeArray as $campnum => $array){
+				$filter = isset($_REQUEST['filter']) && is_numeric($_REQUEST['filter']) ? $_REQUEST['filter'] : 0.001;
+				if($array['score'] < $filter){
+						continue;
+				}
+				$childCount = is_array($array['children']) ? count($array['children']) : 0;
+				$class= is_array($array['children']) && count($array['children']) > 0  ? 'parent' : '';
+				$icon = '<i class="fa fa-arrow-right"></i>';
+				$html.='<li>';
+				//$selected = '';
+				$selected =  ($campnum == $activeCamp) ? "color:#08b608; font-weight:bold" : "";
+				$html.='<span class="'.$class.'">'.$icon.'</span><div class="tp-title"><a style="'.$selected.'" href="'.$array['link'].'">'.$array['title'].'</a> <div class="badge">'.$array['score'].'</div></div>';
+				$html.=$this->buildCampTree($array['children'],$campnum,$activeCamp);
+				$html.='</li>';
+			}
+		}
+		$html .='</ul>';
+        return $html;
+	}
+
 	public  function traverseCampTree($topicnum,$parentcamp,$lastparent=null){
 		$key = $topicnum.'-'.$parentcamp.'-'.$lastparent;
         if(in_array($key,Camp::$traversetempArray)){
             return; /** Skip repeated recursions**/
         }
         Camp::$traversetempArray[]=$key;
-        $childs = $this->childrens($topicnum,$parentcamp);
+        $childs = $this->Childrens($topicnum,$parentcamp);
 		$array=[];
 		foreach($childs as $key=> $child){ 
-			$childCount  = count($child->childrens($child->topic_num,$child->camp_num));
-			$array[$child->camp_num]['point'] = $this->getCamptSupportCount($child->topic_num,$child->camp_num);
+			//$childCount  = count($child->children($child->topic_num,$child->camp_num));
+			$title = preg_replace('/[^A-Za-z0-9\-]/', '-', $child->title);
+			$topic_id  = $child->topic_num."-".$title;
+			$array[$child->camp_num]['title'] = $title;
+			$array[$child->camp_num]['link'] = url('topic/'.$topic_id.'/'.$child->camp_num);
+			$array[$child->camp_num]['score'] = $this->getCamptSupportCount($child->topic_num,$child->camp_num);
 			$children =$this->traverseCampTree($child->topic_num,$child->camp_num,$child->parent_camp_num);
-			$array[$child->camp_num]['childrens'] = is_array($children) ? $children : [];
+			$array[$child->camp_num]['children'] = is_array($children) ? $children : [];
         }
 		return $array;
+	}
+
+
+	public function campTree($activeAcamp = null){
+
+		$title = preg_replace('/[^A-Za-z0-9\-]/', '-', $this->title); 
+		$topic_id = $this->topic_num."-".$title;
+		$tree = [];
+		$tree[$this->camp_num]['title'] = $this->title;
+		$tree[$this->camp_num]['link'] = url('topic/'.$topic_id.'/'.$this->camp_num);
+		$tree[$this->camp_num]['score'] = $this->getCamptSupportCount($this->topic_num,$this->camp_num);
+		$tree[$this->camp_num]['children'] = $this->traverseCampTree($this->topic_num,$this->camp_num);
+		$reducedTree = TopicSupport::sumTranversedArraySupportCount($tree);
+		$filter = isset($_REQUEST['filter']) && is_numeric($_REQUEST['filter']) ? $_REQUEST['filter'] : 0.001;
+		if($reducedTree[$this->camp_num]['score'] < $filter){
+				return;
+		}
+		$selected =  ($this->camp_num == $activeAcamp) ? "color:#08b608; font-weight:bold" : "";
+		//dd($reducedTree,$reducedTree[$this->camp_num]['score'], $reducedTree[$this->camp_num]['score'] == $_REQUEST['filter'] );
+		$html = "<li>";
+		$parentClass = is_array($reducedTree[$this->camp_num]['children']) && count($reducedTree[$this->camp_num]['children']) > 0 ? 'parent' : '';
+		$html.='<span class="'.$parentClass.'"><i class="fa fa-arrow-right"></i> </span>';
+		$html.= '<div class="tp-title"><a style="'.$selected.'" href="'.$reducedTree[$this->camp_num]['link'].'">'.$reducedTree[$this->camp_num]['title'].'</a><div class="badge">'.$reducedTree[$this->camp_num]['score'].'</div></div>';
+		$html.=$this->buildCampTree($reducedTree[$this->camp_num]['children'],$this->camp_num,$activeAcamp);
+		$html.= "</li>";
+		return $html;
+
 	}
 
 }

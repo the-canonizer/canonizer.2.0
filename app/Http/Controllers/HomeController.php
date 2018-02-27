@@ -19,7 +19,7 @@ class HomeController extends Controller {
     public function index() {
 
       
-        $topics = Camp::getAllAgreementTopic(10,$_REQUEST);
+        $topics = Camp::getAllAgreementTopic(50,$_REQUEST);
         
         return view('welcome', ['topics' => $topics]);
     }
@@ -34,7 +34,8 @@ class HomeController extends Controller {
 		
 		  foreach($topics as $k=>$topicdata) {
 			  
-			   $tree = [];
+			   $output = $topicdata->campTree();
+			   /*$tree = [];
                $tree[$topicdata->camp_num]['point'] = $topicdata->getCamptSupportCount($topicdata->topic_num,$topicdata->camp_num);
                $tree[$topicdata->camp_num]['childrens'] = $topicdata->traverseCampTree($topicdata->topic_num,$topicdata->camp_num);
                             
@@ -57,7 +58,7 @@ class HomeController extends Controller {
                         }else{
                             $output .= '<li class="create-new-li"><span><a href="'.$camproute.'">< Create A New Camp ></a></span></li>';
                         }
-						$output .='</li>';
+						$output .='</li>';*/
 						
 		  }
 		  isset($topicdata) ? $output .='<a id="btn-more" class="remove-row" data-id="'.$topicdata->id.'"></a>' : '';

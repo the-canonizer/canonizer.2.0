@@ -27,39 +27,11 @@
             <div class="row">
                 <div class="tree treeview col-sm-12">
                     <ul class="mainouter">
-                       <li>
-                        <?php
-                         $childs = $topic->childrens($topic->topic_num,$topic->camp_num); 
-						 
-						 /*$nicknames = $topic->GetSupportedNicknames($topic->topic_num);
-						 
-						 $supportDataset = $topic->getCampSupport($topic->topic_num,$topic->camp_num,$nicknames);
-		                 */
-						    $tree = [];
-                            $tree[$topic->camp_num]['point'] = $topic->getCamptSupportCount($topic->topic_num,$topic->camp_num);
-                            $tree[$topic->camp_num]['childrens'] = $topic->traverseCampTree($topic->topic_num,$topic->camp_num);
-                            
-                            $reducedTree = \App\Model\TopicSupport::sumTranversedArraySupportCount($tree);
-						 $selected =  ($parentcampnum==1) ? "color:#08b608; font-weight:bold" : "";
+                    <?php 
+                        $title      = preg_replace('/[^A-Za-z0-9\-]/', '-', $topic->title);						  
+                        $topic_id  = $topic->topic_num."-".$title;
 						 ?>
-                         <span class="<?php if(count($childs) > 0) echo 'parent'; ?>"><i class="fa fa-arrow-down"></i> 
-						 <?php 
-						  $title      = preg_replace('/[^A-Za-z0-9\-]/', '-', $topic->title);						  
-						  $topic_id  = $topic->topic_num."-".$title;
-						 
-						 ?>
-						 <a style="{{ $selected }}" href="<?php echo url('topic/'.$topic_id.'/'.$topic->camp_num) ?>">
-						 {{ $topic->title}} 
-						 </a>
-						 <div class="badge">{{ $reducedTree[1]['point']}}</div></span>
-                         <?php
-                        if(count($childs) > 0){
-                            
-                            //dd($reducedTree);
-                            echo $topic->campTree($topic->topic_num,$topic->camp_num,'root',$camp->camp_num,$reducedTree[1]['childrens'],$parentcampnum);
-                        } ?>
-                           </li>
-                       
+                     {!! $topic->campTree($parentcampnum) !!} 
                     </ul>
                     
                 </div>
@@ -104,29 +76,14 @@
                     Total Support for This Camp (including sub-camps): 
 					
 					<div class="badge">
-					 {{ isset($reducedTree[$camp->camp_num]['point']) ? $reducedTree[$camp->camp_num]['point'] : 0 }}
+					 {{ isset($reducedTree[$camp->camp_num]['score']) ? $reducedTree[$camp->camp_num]['score'] : 0 }}
 					</div>
 					
                     <ul class="support-tree">
 					  <?php
 
-                    $tree = \App\Model\TopicSupport::topicSupportTree($camp->topic_num,$camp->camp_num); ?>
-                    {!! $tree !!}
-					 <?php /*$campnicknames = $topic->GetSupportedNicknames($camp->topic_num,$camp->camp_num);
-					  foreach($campnicknames as $support) {  
-					  
-					    $supportData = $topic->getNicknameSupport($support,$camp->camp_num);
-						
-					  ?>
-					  
-                       <li>
-                       	<a href="#"><div class="badge">{{ $supportData[$camp->camp_num]}}</div> 
-						
-						      {{ $support->nickname->nick_name}}
-					     </a> 
-						 <a href="<?php echo url('support/'.$topic_id.'/'.$camp->camp_num.'-'.$support->nickname->nick_name_id);?>" class="btn btn-info">Delegate Your Support</a>
-                       </li>
-					  <?php /*}*/ ?>
+                    $support_tree = \App\Model\TopicSupport::topicSupportTree($camp->topic_num,$camp->camp_num); ?>
+                    {!! $support_tree !!}
 					 </ul>  
 				</div>
               

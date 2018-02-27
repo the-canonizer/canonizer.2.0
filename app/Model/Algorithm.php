@@ -39,7 +39,7 @@ class Algorithm{
         $sql = "select count(*) as countTotal from support_instance
          inner join topic_support on topic_support.id = support_instance.topic_support_id 
          where nick_name_id = $nick_name_id and (" .$condition.")
-         and ((topic_support.submit_time < $as_of_time) and ((topic_support.submit_time = 0) or (topic_support.submit_time > $as_of_time)))
+         and (topic_support.submit_time < $as_of_time)
          ";
         $result = DB::select("$sql");
         return isset($result[0]->countTotal) ? $result[0]->countTotal : 0;

@@ -35,10 +35,10 @@ class TopicSupport extends Model {
     }
 
     public static function reducedSum($array){
-        $sum = $array['point'];
+        $sum = $array['score'];
         try{
-		  if(isset($array['childrens']) && is_array($array['childrens'])) {	
-			foreach($array['childrens'] as $arr){
+		  if(isset($array['children']) && is_array($array['children'])) {	
+			foreach($array['children'] as $arr){
 					$sum=$sum + self::reducedSum($arr);
 			}
 		  }
@@ -66,12 +66,12 @@ class TopicSupport extends Model {
             $supportPoint = $delegateNickId ? .5 : 1;
             if($supportCount > 1 ){
                 $campSupport =  $campsupports->where('camp_num',$campnum)->first();
-                $array[$support->nick_name_id]['point']=round($supportPoint / (2 ** ($campSupport->support_order)),2);
+                $array[$support->nick_name_id]['score']=round($supportPoint / (2 ** ($campSupport->support_order)),2);
             }else if($supportCount == 1){
-                $array[$support->nick_name_id]['point']=$supportPoint;
+                $array[$support->nick_name_id]['score']=$supportPoint;
             }
             $array[$support->nick_name_id]['index']=$support->nick_name_id;
-            $array[$support->nick_name_id]['childrens'] = self::traverseTree($topicnum,$campnum,$support->nick_name_id);
+            $array[$support->nick_name_id]['children'] = self::traverseTree($topicnum,$campnum,$support->nick_name_id);
         }
         return $array;
     }
@@ -82,15 +82,15 @@ class TopicSupport extends Model {
         foreach($traversedTreeArray as $array){
             $nickName = Nickname::where('id',$array['index'])->first();
             if($parentNode){
-                $html.= "<li class='main-parent'><a href='#'>{$nickName->nick_name}</a><div class='badge'>".$array['point']."</div>";
+                $html.= "<li class='main-parent'><a href='#'>{$nickName->nick_name}</a><div class='badge'>".$array['score']."</div>";
                 $html.='<a href="'.url('support/'.$topicnum.'/'.$campnum.'-'.$array['index']).'" class="btn btn-info">Delegate Your Support</a>';
             
             }else{
-                $html.= "<li><a href='#'>{$nickName->nick_name}</a><div class='badge'>".$array['point']."</div> ";
+                $html.= "<li><a href='#'>{$nickName->nick_name}</a><div class='badge'>".$array['score']."</div> ";
                 $html.='<a href="'.url('support/'.$topicnum.'/'.$campnum.'-'.$array['index']).'" class="btn btn-info">Delegate Your Support</a>';
             }
             $html.="<ul>";
-            $html.=self::buildTree($topicnum,$campnum,$array['childrens'],false);
+            $html.=self::buildTree($topicnum,$campnum,$array['children'],false);
             $html.="</ul></li>";
             
         
@@ -101,8 +101,8 @@ class TopicSupport extends Model {
     public static function sumTranversedArraySupportCount($traversedTreeArray=array()){
        if(isset($traversedTreeArray) && is_array($traversedTreeArray)) {
         foreach($traversedTreeArray as $key => $array){
-           $traversedTreeArray[$key]['point']=self::reducedSum($array);
-           $traversedTreeArray[$key]['childrens']=self::sumTranversedArraySupportCount($array['childrens']);
+           $traversedTreeArray[$key]['score']=self::reducedSum($array);
+           $traversedTreeArray[$key]['children']=self::sumTranversedArraySupportCount($array['children']);
         }
 	   }	
 	   
@@ -118,8 +118,8 @@ class TopicSupport extends Model {
 
     public static function sortByOrder($a, $b)
 	{
-        $a = $a['point'];
-        $b = $b['point'];
+        $a = $a['score'];
+        $b = $b['score'];
 
         if ($a == $b) return 0;
         return ($a > $b) ? -1 : 1;

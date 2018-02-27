@@ -143,7 +143,7 @@
 								
                                 <li>
                                     
-                                    <div class="filter">Filter < <input type="number" value="0.001"/></div>
+                                    <div class="filter">Filter < <input onblur="changeFilter(this)" type="number" value="{{ isset($_REQUEST['filter']) && !empty($_REQUEST['filter']) ? $_REQUEST['filter'] : '0.001' }}"/></div>
                                 </li>
                             </ul>
                         </li>
@@ -156,7 +156,7 @@
                             <ul class="sidenav-second-level collapse show" id="asof">
                                 <li>
 								 <form name="as_of" id="as_of" method="GET">
-                                 <input type="hidden" name="filter" value="0.001"/>
+                                 <input type="hidden" id="filter" name="filter" value="{{ isset($_REQUEST['filter']) && !empty($_REQUEST['filter']) ? $_REQUEST['filter'] : '0.001' }}"/>
 								   <input type="hidden" name="_token" value="{{ csrf_token() }}">
 									<div class="radio radio-primary">
 										<input type="radio" <?php echo (isset($_REQUEST['asof']) && $_REQUEST['asof']=="review") ? "checked='checked'" : '';?> class="asofdate" name="asof" id="radio1" value="review">
@@ -235,6 +235,11 @@
                     window.location.reload();
                 }
             });
+        }
+
+        function changeFilter(element){
+            $('#filter').val($(element).val());
+            $('#as_of').submit();
         }
     </script>	
 </body>

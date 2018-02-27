@@ -42,51 +42,10 @@
 			   @if(count($topics))
 			    <div class="tree col-sm-12">
                     <ul class="mainouter" id="load-data">
-                        
-					   <?php
-					   
-						//$sortedTopic = $topics[0]->getSortedTree($topics);
-                        //$sortedTree  = $sortedTopic['sortedTree'];
-						$createcampKey = 0;
-                       ?>					   
-						
+                      <?php $createCamp = 1; ?> 
                        @foreach($topics as $k=>$topic)
-                       <li>
-                         <?php
-                         $childs = $topic->childrens($topic->topic_num,$topic->camp_num); 
-						 $tree = [];
-                         $tree[$topic->camp_num]['point'] = $topic->getCamptSupportCount($topic->topic_num,$topic->camp_num);
-                         $tree[$topic->camp_num]['childrens'] = $topic->traverseCampTree($topic->topic_num,$topic->camp_num);
-                            
-                         $reducedTree = \App\Model\TopicSupport::sumTranversedArraySupportCount($tree);
-						 if(isset($_REQUEST['filter']) && $reducedTree[$topic->camp_num]['point'] < $_REQUEST['filter']){
-                             continue;
-                         }
-						 ?>
-                         <span class="<?php if(count($childs) > 0) echo 'parent'; ?>"><i class="fa fa-arrow-right"></i> 
-						 <?php 
-						  $title = preg_replace('/[^A-Za-z0-9\-]/', '-', $topic->title);
-						  //$title     = preg_replace('/\s+/', '-', $topic->title); 
-						  $topic_id = $topic->topic_num."-".$title;
-						  
-						 ?></span>
-                         <div class="tp-title">
-
-						 <a href="<?php echo url('topic/'.$topic_id.'/'.$topic->camp_num) ?>">{{ $topic->title }}</a> <div class="badge">
-						 {{ $reducedTree[$topic->camp_num]['point'] }}
-						 </div>
-                         </div>
-
-                         <?php
-						 
-                        if($createcampKey==0){
-							$createcampKey = 1;
-                            //echo '<li class="create-new-li"><span><a href="'.route('camp.create',['topicnum'=>$topic['topic']->topic_num,'campnum'=>$topic['topic']->camp_num]).'">< Create A New Camp ></a></span></li>';
-                        }
-						if(count($childs) > 0){
-                            echo $topic->campTree($topic->topic_num,$topic->camp_num,null,null,$reducedTree[$topic->camp_num]['childrens']);
-                        }?>
-                           </li>
+                         {!! $topic->campTree($createCamp) !!}
+                         <?php $createCamp = 0;?>
                        @endforeach
 					   <a id="btn-more" class="remove-row" data-id="{{ $topic->id }}"></a>
                     </ul>
