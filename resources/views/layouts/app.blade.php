@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-
+        <meta name="csrf-token" content="{{ csrf_token() }}">
         <title>Canonizer</title>
 
         <!-- Fonts -->
@@ -43,12 +43,12 @@
                             <div class="input-group search-panel">
                                <table>
 									<tr>
-										<td>
+										<td class="radio radio-primary">
 										<input type="radio" name="sitesearch" value="" checked id="ss0"></input>
 										<label for="ss0" title="Search the Web"><font size="-1" color="black">Web</font></label></td>
-										<td>
+										<td class="radio radio-primary">
 										<input type="radio" name="sitesearch" value="canonizer.com" id="ss1" checked></input>
-										<label for="ss1" title="Search canonizer.com"><font size="-1" color="black">canonizer.com</font></label></td>
+										<label for="ss1" title="Search canonizer.com"><font size="-1" color="black">Canonizer.com</font></label></td>
 									</tr>
 								</table>
                                 <input type="hidden" name="search_param" value="all" id="search_param">         
@@ -132,26 +132,18 @@
                             </a>
                             <ul class="sidenav-second-level collapse show" id="canoalgo">
                                 <li>
-                                    
 									<span>Canonizer Algorithm:</span>
-                                    <select>
-                                        <option>One Person One Vote</option>
-                                        <option>Mind Experts</option>
-                                        <option>Computer Science Experts</option>
-                                        <option>Ph.D.</option>
-                                        <option>Christian</option>
-                                        <option>Secular / Non Religious</option>
-                                        <option>Mormon</option>
-                                        <option>Universal Unitarian</option>
-                                        <option>Atheist</option>
-                                        <option>Transhumanist</option>
+                                    <select name="algorithm" onchange="changeAlgorithmChoice(this)">
+                                    @foreach(\App\Model\Algorithm::getList() as $key=>$value)
+                                        <option value="{{ $key }}" {{ session('defaultAlgo') == $key ? 'selected' : ''}}>{{$value}}</option>
+                                    @endforeach
                                     </select>
 									<a href="<?php echo url('topic/53-Canonized-Canonizer-Algorithms/2') ?>"><span>Algorithm Information</span></a>
                                 </li>
 								
                                 <li>
                                     
-                                    <div class="filter">Filter < <input type="number" value="0.001"/></div>
+                                    <div class="filter">Filter < <input onblur="changeFilter(this)" type="number" value="{{ isset($_REQUEST['filter']) && !empty($_REQUEST['filter']) ? $_REQUEST['filter'] : '0.001' }}"/></div>
                                 </li>
                             </ul>
                         </li>
@@ -164,6 +156,7 @@
                             <ul class="sidenav-second-level collapse show" id="asof">
                                 <li>
 								 <form name="as_of" id="as_of" method="GET">
+                                 <input type="hidden" id="filter" name="filter" value="{{ isset($_REQUEST['filter']) && !empty($_REQUEST['filter']) ? $_REQUEST['filter'] : '0.001' }}"/>
 								   <input type="hidden" name="_token" value="{{ csrf_token() }}">
 									<div class="radio radio-primary">
 										<input type="radio" <?php echo (isset($_REQUEST['asof']) && $_REQUEST['asof']=="review") ? "checked='checked'" : '';?> class="asofdate" name="asof" id="radio1" value="review">
@@ -195,7 +188,7 @@
 		</div>    
             <!-- footer -->
             @extends('layouts.footer')
-
+            
             <!-- Scroll to Top Button-->
             <a class="scroll-to-top rounded" href="#page-top">
                 <i class="fa fa-angle-up"></i>
@@ -205,12 +198,19 @@
     </div>
     <script>
         $(document).ready(function () {
+
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
             $("#asofdate").datepicker({
                 changeMonth: true,
                 changeYear: true,
 				dateFormat: 'yy/mm/dd'
-            });			
-			
+            });	
+
 			$(".asofdate, #asofdate").change(function(){
 				// Do something interesting here
 				 var value = $('#asofdate').val();
@@ -224,7 +224,23 @@
 				 $('#as_of').submit();
 			});
 			
-        })
+        });
+
+        function changeAlgorithmChoice(element){
+            $.ajax({
+                url:"{{ route('change-algorithm') }}",
+                type:"POST",
+                data:{algo:$(element).val()},
+                success:function(){
+                    window.location.reload();
+                }
+            });
+        }
+
+        function changeFilter(element){
+            $('#filter').val($(element).val());
+            $('#as_of').submit();
+        }
     </script>	
 </body>
 </html>

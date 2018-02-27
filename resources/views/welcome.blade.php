@@ -42,49 +42,12 @@
 			   @if(count($topics))
 			    <div class="tree col-sm-12">
                     <ul class="mainouter" id="load-data">
-                        
-					   <?php
-					   
-						$sortedTopic = $topics[0]->getSortedTree($topics);
-                        $sortedTree  = $sortedTopic['sortedTree'];
-						$createcampKey = 0;
-                       ?>					   
-						
-                       @foreach($sortedTree as $k=>$topic)
-                       <li>
-                         <?php
-                         $childs = $topic['topic']->childrens($topic['topic']->topic_num,$topic['topic']->camp_num); 
-						 
-						 
-						 ?>
-                         <span class="<?php if(count($childs) > 0) echo 'parent'; ?>"><i class="fa fa-arrow-right"></i> 
-						 <?php 
-						  $title = preg_replace('/[^A-Za-z0-9\-]/', '-', $topic['topic']->title);
-						  //$title     = preg_replace('/\s+/', '-', $topic->title); 
-						  $topic_id = $topic['topic']->topic_num."-".$title;
-						  
-						 ?></span>
-                         <div class="tp-title">
-
-						 <a href="<?php echo url('topic/'.$topic_id.'/'.$topic['topic']->camp_num) ?>">{{ $topic['topic']->title }}</a> <div class="badge">
-						 {{ $topic['support_order'] }}
-						 </div>
-                         </div>
-
-                         <?php
-						 $nicknames = $topic['topic']->GetSupportedNicknames($topic['topic']->topic_num);
-						 
-						 $supportDataset = $topic['topic']->getCampSupport($topic['topic']->topic_num,$topic['topic']->camp_num,$nicknames);
-                        if($createcampKey==0){
-							$createcampKey = 1;
-                            //echo '<li class="create-new-li"><span><a href="'.route('camp.create',['topicnum'=>$topic['topic']->topic_num,'campnum'=>$topic['topic']->camp_num]).'">< Create A New Camp ></a></span></li>';
-                        }
-						if(count($childs) > 0){
-                            echo $topic['topic']->campTree($topic['topic']->topic_num,$topic['topic']->camp_num,null,null,$supportDataset);
-                        }?>
-                           </li>
+                      <?php $createCamp = 1; ?> 
+                       @foreach($topics as $k=>$topic)
+                         {!! $topic->campTree($createCamp) !!}
+                         <?php $createCamp = 0;?>
                        @endforeach
-					   <a id="btn-more" class="remove-row" data-id="{{ $sortedTopic['key'] }}"></a>
+					   <a id="btn-more" class="remove-row" data-id="{{ $topic->id }}"></a>
                     </ul>
                     
                 </div>
@@ -101,10 +64,10 @@
 
 <script>
 var request = false;
-var offset = 10;
+var offset = 50;
    $(document).scroll(function(e){
        var id = $('#btn-more').data('id'); 
-       var queryString = "{{Request::getQueryString()}}";
+       var queryString = "{!!Request::getQueryString()!!}";
 	   var scrollTop = $(window).scrollTop();
 	   
 	   scrollTop = scrollTop + 650;
@@ -126,7 +89,7 @@ var offset = 10;
 						  $('#load-data').append(data);
 						  camptree();
 						  request = false;
-						  offset = offset + 10;
+						  offset = offset + 50;
 				   
 					  }
 					  else
