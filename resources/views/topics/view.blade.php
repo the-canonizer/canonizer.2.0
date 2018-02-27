@@ -31,7 +31,7 @@
                         $title      = preg_replace('/[^A-Za-z0-9\-]/', '-', $topic->title);						  
                         $topic_id  = $topic->topic_num."-".$title;
 						 ?>
-                     {!! $topic->campTree($parentcampnum) !!} 
+                     {!! $topic->campTree($parentcampnum,1,true) !!} 
                     </ul>
                     
                 </div>
@@ -76,7 +76,7 @@
                     Total Support for This Camp (including sub-camps): 
 					
 					<div class="badge">
-					 {{ isset($reducedTree[$camp->camp_num]['score']) ? $reducedTree[$camp->camp_num]['score'] : 0 }}
+					 {{ session('supportCountTotal',0) }}
 					</div>
 					
                     <ul class="support-tree">
