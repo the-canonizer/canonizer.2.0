@@ -1619,7 +1619,7 @@ object {
     margin-left: -15px;
 }
 .site-header .main-logo img{
-height: 100px;
+height: 50px;
     width: auto;
 }
 .site-header .navigation {
@@ -1658,7 +1658,7 @@ height: 100px;
 
 .site-header.header_1{}
 .site-header.header_1 #searchform {
-    margin-top: 16px;
+    margin-top: 18px;
 }
 
 .site-header.header_1 #searchform #s {
