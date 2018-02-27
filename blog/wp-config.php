@@ -26,7 +26,7 @@ define('DB_NAME', 'canonizer');
 define('DB_USER', 'root');
 
 /** MySQL database password */
-define('DB_PASSWORD', '');
+define('DB_PASSWORD', 'cAn_!0n^iz3r');
 
 /** MySQL hostname */
 define('DB_HOST', 'localhost');
