@@ -575,6 +575,7 @@ class Camp extends Model {
 		$tree[$this->camp_num]['children'] = $this->traverseCampTree($this->topic_num,$this->camp_num);
 		$reducedTree = TopicSupport::sumTranversedArraySupportCount($tree);
 		$filter = isset($_REQUEST['filter']) && is_numeric($_REQUEST['filter']) ? $_REQUEST['filter'] : 0.001;
+		
 		if($reducedTree[$this->camp_num]['score'] < $filter){
 				return;
 		}
