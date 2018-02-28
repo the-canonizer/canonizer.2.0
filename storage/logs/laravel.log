@@ -6796,3 +6796,221 @@ Stack trace:
 #59 /var/www/html/canonizer.2.0/server.php(21): require_once('/var/www/html/c...')
 #60 {main}  
 >>>>>>> 558ebddbfec4076e292a20bcad91fa299209c7ac
+[2018-02-28 11:36:41] local.ERROR: Symfony\Component\Debug\Exception\FatalThrowableError: Class 'Barryvdh\Debugbar\ServiceProvider' not found in E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\ProviderRepository.php:208
+Stack trace:
+#0 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\ProviderRepository.php(144): Illuminate\Foundation\ProviderRepository->createProvider('Barryvdh\\Debugb...')
+#1 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\ProviderRepository.php(61): Illuminate\Foundation\ProviderRepository->compileManifest(Array)
+#2 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Application.php(549): Illuminate\Foundation\ProviderRepository->load(Array)
+#3 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Bootstrap\RegisterProviders.php(17): Illuminate\Foundation\Application->registerConfiguredProviders()
+#4 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Application.php(208): Illuminate\Foundation\Bootstrap\RegisterProviders->bootstrap(Object(Illuminate\Foundation\Application))
+#5 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Console\Kernel.php(267): Illuminate\Foundation\Application->bootstrapWith(Array)
+#6 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Console\Kernel.php(114): Illuminate\Foundation\Console\Kernel->bootstrap()
+#7 E:\xampp\htdocs\canonizer.2.0\artisan(35): Illuminate\Foundation\Console\Kernel->handle(Object(Symfony\Component\Console\Input\ArgvInput), Object(Symfony\Component\Console\Output\ConsoleOutput))
+#8 {main}  
+[2018-02-28 11:37:18] local.ERROR: Symfony\Component\Debug\Exception\FatalThrowableError: Class 'Barryvdh\Debugbar\ServiceProvider' not found in E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\ProviderRepository.php:208
+Stack trace:
+#0 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\ProviderRepository.php(144): Illuminate\Foundation\ProviderRepository->createProvider('Barryvdh\\Debugb...')
+#1 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\ProviderRepository.php(61): Illuminate\Foundation\ProviderRepository->compileManifest(Array)
+#2 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Application.php(549): Illuminate\Foundation\ProviderRepository->load(Array)
+#3 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Bootstrap\RegisterProviders.php(17): Illuminate\Foundation\Application->registerConfiguredProviders()
+#4 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Application.php(208): Illuminate\Foundation\Bootstrap\RegisterProviders->bootstrap(Object(Illuminate\Foundation\Application))
+#5 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(162): Illuminate\Foundation\Application->bootstrapWith(Array)
+#6 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(146): Illuminate\Foundation\Http\Kernel->bootstrap()
+#7 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(116): Illuminate\Foundation\Http\Kernel->sendRequestThroughRouter(Object(Illuminate\Http\Request))
+#8 E:\xampp\htdocs\canonizer.2.0\public\index.php(52): Illuminate\Foundation\Http\Kernel->handle(Object(Illuminate\Http\Request))
+#9 {main}  
+[2018-02-28 11:37:18] local.ERROR: ReflectionException: Class session does not exist in E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Container\Container.php:729
+Stack trace:
+#0 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Container\Container.php(729): ReflectionClass->__construct('session')
+#1 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Container\Container.php(608): Illuminate\Container\Container->build('session')
+#2 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Container\Container.php(575): Illuminate\Container\Container->resolve('session')
+#3 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Application.php(728): Illuminate\Container\Container->make('session')
+#4 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Container\Container.php(862): Illuminate\Foundation\Application->make('session')
+#5 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Container\Container.php(790): Illuminate\Container\Container->resolveClass(Object(ReflectionParameter))
+#6 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Container\Container.php(757): Illuminate\Container\Container->resolveDependencies(Array)
+#7 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Container\Container.php(608): Illuminate\Container\Container->build('Illuminate\\Sess...')
+#8 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Container\Container.php(575): Illuminate\Container\Container->resolve('Illuminate\\Sess...')
+#9 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Application.php(728): Illuminate\Container\Container->make('Illuminate\\Sess...')
+#10 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(215): Illuminate\Foundation\Application->make('Illuminate\\Sess...')
+#11 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(189): Illuminate\Foundation\Http\Kernel->terminateMiddleware(Object(Illuminate\Http\Request), Object(Illuminate\Http\Response))
+#12 E:\xampp\htdocs\canonizer.2.0\public\index.php(57): Illuminate\Foundation\Http\Kernel->terminate(Object(Illuminate\Http\Request), Object(Illuminate\Http\Response))
+#13 {main}  
+[2018-02-28 11:40:36] local.ERROR: Symfony\Component\Debug\Exception\FatalThrowableError: Class 'Barryvdh\Debugbar\ServiceProvider' not found in E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\ProviderRepository.php:208
+Stack trace:
+#0 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\ProviderRepository.php(144): Illuminate\Foundation\ProviderRepository->createProvider('Barryvdh\\Debugb...')
+#1 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\ProviderRepository.php(61): Illuminate\Foundation\ProviderRepository->compileManifest(Array)
+#2 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Application.php(549): Illuminate\Foundation\ProviderRepository->load(Array)
+#3 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Bootstrap\RegisterProviders.php(17): Illuminate\Foundation\Application->registerConfiguredProviders()
+#4 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Application.php(208): Illuminate\Foundation\Bootstrap\RegisterProviders->bootstrap(Object(Illuminate\Foundation\Application))
+#5 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(162): Illuminate\Foundation\Application->bootstrapWith(Array)
+#6 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(146): Illuminate\Foundation\Http\Kernel->bootstrap()
+#7 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(116): Illuminate\Foundation\Http\Kernel->sendRequestThroughRouter(Object(Illuminate\Http\Request))
+#8 E:\xampp\htdocs\canonizer.2.0\public\index.php(52): Illuminate\Foundation\Http\Kernel->handle(Object(Illuminate\Http\Request))
+#9 {main}  
+[2018-02-28 11:40:36] local.ERROR: ReflectionException: Class session does not exist in E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Container\Container.php:729
+Stack trace:
+#0 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Container\Container.php(729): ReflectionClass->__construct('session')
+#1 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Container\Container.php(608): Illuminate\Container\Container->build('session')
+#2 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Container\Container.php(575): Illuminate\Container\Container->resolve('session')
+#3 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Application.php(728): Illuminate\Container\Container->make('session')
+#4 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Container\Container.php(862): Illuminate\Foundation\Application->make('session')
+#5 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Container\Container.php(790): Illuminate\Container\Container->resolveClass(Object(ReflectionParameter))
+#6 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Container\Container.php(757): Illuminate\Container\Container->resolveDependencies(Array)
+#7 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Container\Container.php(608): Illuminate\Container\Container->build('Illuminate\\Sess...')
+#8 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Container\Container.php(575): Illuminate\Container\Container->resolve('Illuminate\\Sess...')
+#9 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Application.php(728): Illuminate\Container\Container->make('Illuminate\\Sess...')
+#10 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(215): Illuminate\Foundation\Application->make('Illuminate\\Sess...')
+#11 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(189): Illuminate\Foundation\Http\Kernel->terminateMiddleware(Object(Illuminate\Http\Request), Object(Illuminate\Http\Response))
+#12 E:\xampp\htdocs\canonizer.2.0\public\index.php(57): Illuminate\Foundation\Http\Kernel->terminate(Object(Illuminate\Http\Request), Object(Illuminate\Http\Response))
+#13 {main}  
+[2018-02-28 11:40:39] local.ERROR: Symfony\Component\Debug\Exception\FatalThrowableError: Class 'Barryvdh\Debugbar\ServiceProvider' not found in E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\ProviderRepository.php:208
+Stack trace:
+#0 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\ProviderRepository.php(144): Illuminate\Foundation\ProviderRepository->createProvider('Barryvdh\\Debugb...')
+#1 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\ProviderRepository.php(61): Illuminate\Foundation\ProviderRepository->compileManifest(Array)
+#2 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Application.php(549): Illuminate\Foundation\ProviderRepository->load(Array)
+#3 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Bootstrap\RegisterProviders.php(17): Illuminate\Foundation\Application->registerConfiguredProviders()
+#4 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Application.php(208): Illuminate\Foundation\Bootstrap\RegisterProviders->bootstrap(Object(Illuminate\Foundation\Application))
+#5 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(162): Illuminate\Foundation\Application->bootstrapWith(Array)
+#6 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(146): Illuminate\Foundation\Http\Kernel->bootstrap()
+#7 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(116): Illuminate\Foundation\Http\Kernel->sendRequestThroughRouter(Object(Illuminate\Http\Request))
+#8 E:\xampp\htdocs\canonizer.2.0\public\index.php(52): Illuminate\Foundation\Http\Kernel->handle(Object(Illuminate\Http\Request))
+#9 {main}  
+[2018-02-28 11:40:39] local.ERROR: ReflectionException: Class session does not exist in E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Container\Container.php:729
+Stack trace:
+#0 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Container\Container.php(729): ReflectionClass->__construct('session')
+#1 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Container\Container.php(608): Illuminate\Container\Container->build('session')
+#2 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Container\Container.php(575): Illuminate\Container\Container->resolve('session')
+#3 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Application.php(728): Illuminate\Container\Container->make('session')
+#4 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Container\Container.php(862): Illuminate\Foundation\Application->make('session')
+#5 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Container\Container.php(790): Illuminate\Container\Container->resolveClass(Object(ReflectionParameter))
+#6 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Container\Container.php(757): Illuminate\Container\Container->resolveDependencies(Array)
+#7 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Container\Container.php(608): Illuminate\Container\Container->build('Illuminate\\Sess...')
+#8 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Container\Container.php(575): Illuminate\Container\Container->resolve('Illuminate\\Sess...')
+#9 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Application.php(728): Illuminate\Container\Container->make('Illuminate\\Sess...')
+#10 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(215): Illuminate\Foundation\Application->make('Illuminate\\Sess...')
+#11 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(189): Illuminate\Foundation\Http\Kernel->terminateMiddleware(Object(Illuminate\Http\Request), Object(Illuminate\Http\Response))
+#12 E:\xampp\htdocs\canonizer.2.0\public\index.php(57): Illuminate\Foundation\Http\Kernel->terminate(Object(Illuminate\Http\Request), Object(Illuminate\Http\Response))
+#13 {main}  
+[2018-02-28 11:40:41] local.ERROR: Symfony\Component\Debug\Exception\FatalThrowableError: Class 'Barryvdh\Debugbar\ServiceProvider' not found in E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\ProviderRepository.php:208
+Stack trace:
+#0 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\ProviderRepository.php(144): Illuminate\Foundation\ProviderRepository->createProvider('Barryvdh\\Debugb...')
+#1 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\ProviderRepository.php(61): Illuminate\Foundation\ProviderRepository->compileManifest(Array)
+#2 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Application.php(549): Illuminate\Foundation\ProviderRepository->load(Array)
+#3 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Bootstrap\RegisterProviders.php(17): Illuminate\Foundation\Application->registerConfiguredProviders()
+#4 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Application.php(208): Illuminate\Foundation\Bootstrap\RegisterProviders->bootstrap(Object(Illuminate\Foundation\Application))
+#5 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(162): Illuminate\Foundation\Application->bootstrapWith(Array)
+#6 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(146): Illuminate\Foundation\Http\Kernel->bootstrap()
+#7 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(116): Illuminate\Foundation\Http\Kernel->sendRequestThroughRouter(Object(Illuminate\Http\Request))
+#8 E:\xampp\htdocs\canonizer.2.0\public\index.php(52): Illuminate\Foundation\Http\Kernel->handle(Object(Illuminate\Http\Request))
+#9 {main}  
+[2018-02-28 11:40:41] local.ERROR: ReflectionException: Class session does not exist in E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Container\Container.php:729
+Stack trace:
+#0 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Container\Container.php(729): ReflectionClass->__construct('session')
+#1 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Container\Container.php(608): Illuminate\Container\Container->build('session')
+#2 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Container\Container.php(575): Illuminate\Container\Container->resolve('session')
+#3 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Application.php(728): Illuminate\Container\Container->make('session')
+#4 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Container\Container.php(862): Illuminate\Foundation\Application->make('session')
+#5 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Container\Container.php(790): Illuminate\Container\Container->resolveClass(Object(ReflectionParameter))
+#6 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Container\Container.php(757): Illuminate\Container\Container->resolveDependencies(Array)
+#7 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Container\Container.php(608): Illuminate\Container\Container->build('Illuminate\\Sess...')
+#8 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Container\Container.php(575): Illuminate\Container\Container->resolve('Illuminate\\Sess...')
+#9 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Application.php(728): Illuminate\Container\Container->make('Illuminate\\Sess...')
+#10 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(215): Illuminate\Foundation\Application->make('Illuminate\\Sess...')
+#11 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(189): Illuminate\Foundation\Http\Kernel->terminateMiddleware(Object(Illuminate\Http\Request), Object(Illuminate\Http\Response))
+#12 E:\xampp\htdocs\canonizer.2.0\public\index.php(57): Illuminate\Foundation\Http\Kernel->terminate(Object(Illuminate\Http\Request), Object(Illuminate\Http\Response))
+#13 {main}  
+[2018-02-28 11:40:42] local.ERROR: Symfony\Component\Debug\Exception\FatalThrowableError: Class 'Barryvdh\Debugbar\ServiceProvider' not found in E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\ProviderRepository.php:208
+Stack trace:
+#0 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\ProviderRepository.php(144): Illuminate\Foundation\ProviderRepository->createProvider('Barryvdh\\Debugb...')
+#1 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\ProviderRepository.php(61): Illuminate\Foundation\ProviderRepository->compileManifest(Array)
+#2 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Application.php(549): Illuminate\Foundation\ProviderRepository->load(Array)
+#3 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Bootstrap\RegisterProviders.php(17): Illuminate\Foundation\Application->registerConfiguredProviders()
+#4 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Application.php(208): Illuminate\Foundation\Bootstrap\RegisterProviders->bootstrap(Object(Illuminate\Foundation\Application))
+#5 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(162): Illuminate\Foundation\Application->bootstrapWith(Array)
+#6 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(146): Illuminate\Foundation\Http\Kernel->bootstrap()
+#7 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(116): Illuminate\Foundation\Http\Kernel->sendRequestThroughRouter(Object(Illuminate\Http\Request))
+#8 E:\xampp\htdocs\canonizer.2.0\public\index.php(52): Illuminate\Foundation\Http\Kernel->handle(Object(Illuminate\Http\Request))
+#9 {main}  
+[2018-02-28 11:40:42] local.ERROR: ReflectionException: Class session does not exist in E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Container\Container.php:729
+Stack trace:
+#0 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Container\Container.php(729): ReflectionClass->__construct('session')
+#1 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Container\Container.php(608): Illuminate\Container\Container->build('session')
+#2 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Container\Container.php(575): Illuminate\Container\Container->resolve('session')
+#3 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Application.php(728): Illuminate\Container\Container->make('session')
+#4 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Container\Container.php(862): Illuminate\Foundation\Application->make('session')
+#5 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Container\Container.php(790): Illuminate\Container\Container->resolveClass(Object(ReflectionParameter))
+#6 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Container\Container.php(757): Illuminate\Container\Container->resolveDependencies(Array)
+#7 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Container\Container.php(608): Illuminate\Container\Container->build('Illuminate\\Sess...')
+#8 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Container\Container.php(575): Illuminate\Container\Container->resolve('Illuminate\\Sess...')
+#9 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Application.php(728): Illuminate\Container\Container->make('Illuminate\\Sess...')
+#10 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(215): Illuminate\Foundation\Application->make('Illuminate\\Sess...')
+#11 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(189): Illuminate\Foundation\Http\Kernel->terminateMiddleware(Object(Illuminate\Http\Request), Object(Illuminate\Http\Response))
+#12 E:\xampp\htdocs\canonizer.2.0\public\index.php(57): Illuminate\Foundation\Http\Kernel->terminate(Object(Illuminate\Http\Request), Object(Illuminate\Http\Response))
+#13 {main}  
+[2018-02-28 11:41:34] local.ERROR: Symfony\Component\Debug\Exception\FatalThrowableError: Class 'Barryvdh\Debugbar\ServiceProvider' not found in E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\ProviderRepository.php:208
+Stack trace:
+#0 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\ProviderRepository.php(144): Illuminate\Foundation\ProviderRepository->createProvider('Barryvdh\\Debugb...')
+#1 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\ProviderRepository.php(61): Illuminate\Foundation\ProviderRepository->compileManifest(Array)
+#2 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Application.php(549): Illuminate\Foundation\ProviderRepository->load(Array)
+#3 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Bootstrap\RegisterProviders.php(17): Illuminate\Foundation\Application->registerConfiguredProviders()
+#4 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Application.php(208): Illuminate\Foundation\Bootstrap\RegisterProviders->bootstrap(Object(Illuminate\Foundation\Application))
+#5 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Console\Kernel.php(267): Illuminate\Foundation\Application->bootstrapWith(Array)
+#6 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Console\Kernel.php(114): Illuminate\Foundation\Console\Kernel->bootstrap()
+#7 E:\xampp\htdocs\canonizer.2.0\artisan(35): Illuminate\Foundation\Console\Kernel->handle(Object(Symfony\Component\Console\Input\ArgvInput), Object(Symfony\Component\Console\Output\ConsoleOutput))
+#8 {main}  
+[2018-02-28 11:42:46] local.ERROR: Symfony\Component\Debug\Exception\FatalThrowableError: Class 'Barryvdh\Debugbar\ServiceProvider' not found in E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\ProviderRepository.php:208
+Stack trace:
+#0 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\ProviderRepository.php(144): Illuminate\Foundation\ProviderRepository->createProvider('Barryvdh\\Debugb...')
+#1 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\ProviderRepository.php(61): Illuminate\Foundation\ProviderRepository->compileManifest(Array)
+#2 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Application.php(549): Illuminate\Foundation\ProviderRepository->load(Array)
+#3 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Bootstrap\RegisterProviders.php(17): Illuminate\Foundation\Application->registerConfiguredProviders()
+#4 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Application.php(208): Illuminate\Foundation\Bootstrap\RegisterProviders->bootstrap(Object(Illuminate\Foundation\Application))
+#5 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(162): Illuminate\Foundation\Application->bootstrapWith(Array)
+#6 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(146): Illuminate\Foundation\Http\Kernel->bootstrap()
+#7 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(116): Illuminate\Foundation\Http\Kernel->sendRequestThroughRouter(Object(Illuminate\Http\Request))
+#8 E:\xampp\htdocs\canonizer.2.0\public\index.php(52): Illuminate\Foundation\Http\Kernel->handle(Object(Illuminate\Http\Request))
+#9 {main}  
+[2018-02-28 11:42:46] local.ERROR: ReflectionException: Class session does not exist in E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Container\Container.php:729
+Stack trace:
+#0 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Container\Container.php(729): ReflectionClass->__construct('session')
+#1 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Container\Container.php(608): Illuminate\Container\Container->build('session')
+#2 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Container\Container.php(575): Illuminate\Container\Container->resolve('session')
+#3 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Application.php(728): Illuminate\Container\Container->make('session')
+#4 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Container\Container.php(862): Illuminate\Foundation\Application->make('session')
+#5 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Container\Container.php(790): Illuminate\Container\Container->resolveClass(Object(ReflectionParameter))
+#6 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Container\Container.php(757): Illuminate\Container\Container->resolveDependencies(Array)
+#7 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Container\Container.php(608): Illuminate\Container\Container->build('Illuminate\\Sess...')
+#8 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Container\Container.php(575): Illuminate\Container\Container->resolve('Illuminate\\Sess...')
+#9 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Application.php(728): Illuminate\Container\Container->make('Illuminate\\Sess...')
+#10 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(215): Illuminate\Foundation\Application->make('Illuminate\\Sess...')
+#11 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(189): Illuminate\Foundation\Http\Kernel->terminateMiddleware(Object(Illuminate\Http\Request), Object(Illuminate\Http\Response))
+#12 E:\xampp\htdocs\canonizer.2.0\public\index.php(57): Illuminate\Foundation\Http\Kernel->terminate(Object(Illuminate\Http\Request), Object(Illuminate\Http\Response))
+#13 {main}  
+[2018-02-28 11:42:47] local.ERROR: Symfony\Component\Debug\Exception\FatalThrowableError: Class 'Barryvdh\Debugbar\ServiceProvider' not found in E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\ProviderRepository.php:208
+Stack trace:
+#0 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\ProviderRepository.php(144): Illuminate\Foundation\ProviderRepository->createProvider('Barryvdh\\Debugb...')
+#1 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\ProviderRepository.php(61): Illuminate\Foundation\ProviderRepository->compileManifest(Array)
+#2 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Application.php(549): Illuminate\Foundation\ProviderRepository->load(Array)
+#3 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Bootstrap\RegisterProviders.php(17): Illuminate\Foundation\Application->registerConfiguredProviders()
+#4 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Application.php(208): Illuminate\Foundation\Bootstrap\RegisterProviders->bootstrap(Object(Illuminate\Foundation\Application))
+#5 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(162): Illuminate\Foundation\Application->bootstrapWith(Array)
+#6 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(146): Illuminate\Foundation\Http\Kernel->bootstrap()
+#7 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(116): Illuminate\Foundation\Http\Kernel->sendRequestThroughRouter(Object(Illuminate\Http\Request))
+#8 E:\xampp\htdocs\canonizer.2.0\public\index.php(52): Illuminate\Foundation\Http\Kernel->handle(Object(Illuminate\Http\Request))
+#9 {main}  
+[2018-02-28 11:42:47] local.ERROR: ReflectionException: Class session does not exist in E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Container\Container.php:729
+Stack trace:
+#0 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Container\Container.php(729): ReflectionClass->__construct('session')
+#1 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Container\Container.php(608): Illuminate\Container\Container->build('session')
+#2 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Container\Container.php(575): Illuminate\Container\Container->resolve('session')
+#3 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Application.php(728): Illuminate\Container\Container->make('session')
+#4 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Container\Container.php(862): Illuminate\Foundation\Application->make('session')
+#5 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Container\Container.php(790): Illuminate\Container\Container->resolveClass(Object(ReflectionParameter))
+#6 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Container\Container.php(757): Illuminate\Container\Container->resolveDependencies(Array)
+#7 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Container\Container.php(608): Illuminate\Container\Container->build('Illuminate\\Sess...')
+#8 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Container\Container.php(575): Illuminate\Container\Container->resolve('Illuminate\\Sess...')
+#9 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Application.php(728): Illuminate\Container\Container->make('Illuminate\\Sess...')
+#10 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(215): Illuminate\Foundation\Application->make('Illuminate\\Sess...')
+#11 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(189): Illuminate\Foundation\Http\Kernel->terminateMiddleware(Object(Illuminate\Http\Request), Object(Illuminate\Http\Response))
+#12 E:\xampp\htdocs\canonizer.2.0\public\index.php(57): Illuminate\Foundation\Http\Kernel->terminate(Object(Illuminate\Http\Request), Object(Illuminate\Http\Response))
+#13 {main}  
