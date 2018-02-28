@@ -6,7 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 use App\Model\Nickname;
 use DB;
 use App\Model\Algorithm;
-use App\Model\TopicSupport;		
+use App\Model\TopicSupport;	
+use Illuminate\Database\Eloquent\Collection;	
 
 class Camp extends Model {
 
@@ -19,6 +20,7 @@ class Camp extends Model {
 	protected static $traversetempArray = [];
 
 	protected  static $totalSupports = [];
+	protected  static $totalNickNameSupports = [];
 	
     const AGREEMENT_CAMP = "Agreement";
 	
@@ -341,22 +343,20 @@ class Camp extends Model {
 		}
 		
 		$supportCountTotal = 0;
-		$totalSupports = Support::where('topic_num','=',$topicnum)
-                        //->where('camp_num',$campnum)
-                        ->whereRaw("(start < $as_of_time) and ((end = 0) or (end > $as_of_time))")
-                        ->orderBy('start','DESC')
-                        ->groupBy('nick_name_id')
-                        ->select(['nick_name_id','delegate_nick_name_id'])
-                        ->get();
-		foreach($totalSupports as $supported){
+		
+		foreach(self::$totalSupports as $supported){
+			
+			$nickNameSupports = self::$totalNickNameSupports->filter(function ($item) use($supported)
+			{
+				 return $item->nick_name_id == $supported->nick_name_id; /* Current camp support */
+			});
 
-
-			$nickNameSupports = Support::where('topic_num','=',$topicnum)
+			/*$nickNameSupports = Support::where('topic_num','=',$topicnum)
 				->where('nick_name_id',$supported->nick_name_id)
 				->whereRaw("(start < $as_of_time) and ((end = 0) or (end > $as_of_time))")
 				->orderBy('start','DESC')
 				->select(['support_order','camp_num'])
-				->get();
+				->get();*/
 
 			$supportPoint = Algorithm::{session('defaultAlgo')}($supported->nick_name_id);
 			$currentCampSupport =  $nickNameSupports->filter(function ($item) use($campnum)
@@ -432,13 +432,28 @@ class Camp extends Model {
 			$as_of_time = strtotime($_REQUEST['asofdate']);
 		}
 		
-		/*self::$totalSupports = Support::where('topic_num','=',$this->topic_num)
+		self::$totalSupports = Support::where('topic_num','=',$this->topic_num)
                         //->where('camp_num',$campnum)
                         ->whereRaw("(start < $as_of_time) and ((end = 0) or (end > $as_of_time))")
                         ->orderBy('start','DESC')
                         ->groupBy('nick_name_id')
-                        ->select(['nick_name_id','delegate_nick_name_id'])
-                        ->get();*/
+                        ->select(['nick_name_id','delegate_nick_name_id','support_order','topic_num','camp_num'])
+                        ->get();
+
+		if(!self::$totalSupports){
+			self::$totalSupports = new Collection;/*to avoid collection null error*/
+		}
+
+		self::$totalNickNameSupports = Support::where('topic_num','=',$this->topic_num)
+				//->where('nick_name_id',$supported->nick_name_id)
+				->whereRaw("(start < $as_of_time) and ((end = 0) or (end > $as_of_time))")
+				->orderBy('start','DESC')
+				->select(['support_order','camp_num','nick_name_id','delegate_nick_name_id','topic_num'])
+				->get();
+		if(!self::$totalNickNameSupports){
+			self::$totalNickNameSupports = new Collection; /*to avoid collection null error*/
+		}
+		
 
 		$title = preg_replace('/[^A-Za-z0-9\-]/', '-', $this->title); 
 		$topic_id = $this->topic_num."-".$title;

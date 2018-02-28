@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 [2018-02-27 05:09:20] local.ERROR: ErrorException: Undefined index: childrens in /var/www/html/canonizer.2.0/storage/framework/views/75e5a638724b8ab9a4955aa017d6df12330b3062.php:87
 Stack trace:
 #0 /var/www/html/canonizer.2.0/storage/framework/views/75e5a638724b8ab9a4955aa017d6df12330b3062.php(87): Illuminate\Foundation\Bootstrap\HandleExceptions->handleError(8, 'Undefined index...', '/var/www/html/c...', 87, Array)
@@ -7014,3 +7015,5 @@ Stack trace:
 #11 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(189): Illuminate\Foundation\Http\Kernel->terminateMiddleware(Object(Illuminate\Http\Request), Object(Illuminate\Http\Response))
 #12 E:\xampp\htdocs\canonizer.2.0\public\index.php(57): Illuminate\Foundation\Http\Kernel->terminate(Object(Illuminate\Http\Request), Object(Illuminate\Http\Response))
 #13 {main}  
+=======
+>>>>>>> 90d753f8e34167a1dfa8ae896f880cbda016de45
