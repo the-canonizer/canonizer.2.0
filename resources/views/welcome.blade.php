@@ -43,7 +43,15 @@
 			    <div class="tree col-sm-12">
                     <ul class="mainouter" id="load-data">
                       <?php $createCamp = 1; ?> 
+                      
                        @foreach($topics as $k=>$topic)
+                       <?php 
+                       $as_of_time = time();
+                        if(isset($_REQUEST['asof']) && $_REQUEST['asof']=='date'){
+                            $as_of_time = strtotime($_REQUEST['asofdate']);
+                        }
+                        
+                       ?>
                          {!! $topic->campTree($createCamp) !!}
                          <?php $createCamp = 0;?>
                        @endforeach
@@ -64,10 +72,10 @@
 
 <script>
 var request = false;
-var offset = 50;
+var offset = 10;
    $(document).scroll(function(e){
        var id = $('#btn-more').data('id'); 
-       var queryString = "{!!Request::getQueryString()!!}";
+       var queryString = "{{ Request::getQueryString() }}";
 	   var scrollTop = $(window).scrollTop();
 	   
 	   scrollTop = scrollTop + 650;
@@ -89,7 +97,7 @@ var offset = 50;
 						  $('#load-data').append(data);
 						  camptree();
 						  request = false;
-						  offset = offset + 50;
+						  offset = offset + 10;
 				   
 					  }
 					  else

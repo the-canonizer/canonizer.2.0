@@ -17,6 +17,8 @@ class Camp extends Model {
 	protected static $childtempArray = [];
 	protected static $chilcampArray = [];
 	protected static $traversetempArray = [];
+
+	protected  static $totalSupports = [];
 	
     const AGREEMENT_CAMP = "Agreement";
 	
@@ -140,164 +142,7 @@ class Camp extends Model {
 		}
         return $campname;
     }
-		
-	// function to get camps support count
 	
-    public function getNicknameSupport($nickname,$campnum) {
-		
-		 $campSupport[$campnum] = 0;
-						
-		 if(!empty($nickname)) {
-			 
-						$result = $this->GetSupportByNickname($nickname->topic_num,$nickname->nick_name_id);
-						
-						$support = $result->campsupport;
-						
-						$supportCount = count($support);
-					
-						
-                          $assignment = 0;
-                          $deduction = 0;
-						  $remainder = 1;	  
-                          foreach($support as $skey=>$sdata) {
-							  
-							  if($supportCount ==1) {
-							
-								 $campSupport[$sdata->camp_num] = isset($campSupport[$sdata->camp_num]) ? $campSupport[$sdata->camp_num] + 1 : 1;
-								 $remainder = 0;
-								
-							  } 
-							  /*else if($supportCount ==1){
-								  
-								  $campSupport[$sdata->camp_num] = isset($campSupport[$sdata->camp_num]) ? $campSupport[$sdata->camp_num] + 1 : 1;
-							  } */
-							  else {
-							  
-							   if($skey==0 && $supportCount > 1) {
-								   
-								
-								  $campSupport[$sdata->camp_num] = isset($campSupport[$sdata->camp_num]) ? $campSupport[$sdata->camp_num] + 0.5 : 0.5;
-                                  $deduction = 1;  	
-								  $remainder = $remainder - 0.5;
-								   
-							   }
-							   else if($skey==0 && $supportCount == 1) {
-								   
-								  $campSupport[$sdata->camp_num] = isset($campSupport[$sdata->camp_num]) ? $campSupport[$sdata->camp_num] + 1 : 1;
-								  $remainder = 0;
-								  $deduction = 1;			  
-								   
-							   }
-							   else {  
-								   
-								  $campSupport[$sdata->camp_num] = isset($campSupport[$sdata->camp_num]) ? $campSupport[$sdata->camp_num] + $assignment : $assignment;
-								   
-							   }
-							   
-							   $newCounter  =  $supportCount - $deduction;
-							    
-                                if($newCounter == 1 )								
-								  $assignment  =  $remainder;
-							    else if($newCounter > 1 ) {
-									
-								   $assignment  = round($remainder / 2 , 2);
-                                   $newCounter  = $newCounter - 1;
-                                   $remainder   = $remainder - $assignment;								   
-								}
-							 }  
-							  
-						  }  						  
-						
-					}		
-		
-      return $campSupport;		
-		
-	}
-	
-	public function getCampSupport($topicnum,$campnum,$nicknames=array()) {
-			
-		
-					$campSupport[$campnum] = 0;
-					//echo count($nicknames); die;
-					if(count($nicknames) > 0 ) {
-					foreach($nicknames as $key=>$nickname) {
-						
-						$result = $this->GetSupportByNickname($topicnum,$nickname->nick_name_id);
-						//echo $topicnum."</br>";
-						//echo $nickname->nick_name_id."<br/>";
-						$support = $result->campsupport;
-						//echo count($support); die;
-						$supportCount = count($support);
-					 
-						
-                          $assignment = 0;
-                          $deduction = 0;
-						  $remainder = 1;	  
-                          foreach($support as $skey=>$sdata) {
-							  
-							 // $sdata->parent_camp_num = ($sdata->parent_camp_num==NULL) ? 1 : 0;
-							 // echo $sdata->camp->parent_camp_num; die;
-							  if($supportCount ==1) {
-							
-								//$campSupport[$sdata->camp_num] = isset($campSupport[$sdata->camp_num]) ? $campSupport[$sdata->camp_num] + 1 : 1;
-							    
-								 //$remainder = 0;
-								
-								$campSupport[$sdata->camp_num] = isset($campSupport[$sdata->camp_num]) ? $campSupport[$sdata->camp_num] + 1 : 1;	
-								//$campSupport[$sdata->camp->parent_camp_num] = isset($campSupport[$sdata->camp->parent_camp_num]) ? $campSupport[$sdata->camp->parent_camp_num] + 1 : 1;
-							  } 
-							 
-							  else {
-								  
-								  
-							    $campSupport[$sdata->camp_num] = round(1 / (2 ** ($sdata->support_order)),2); 
-							   
-							  
-							  //$campSupport[$sdata->camp->parent_camp_num] = isset($campSupport[$sdata->camp->parent_camp_num]) ? $campSupport[$sdata->camp->parent_camp_num] + round(1 / (2*($sdata->support_order)),2) : round(1 / (2*($sdata->support_order)),2);
-							   /*if($skey==0 && $supportCount > 1) {
-								   
-								
-								  $campSupport[$sdata->camp_num] = isset($campSupport[$sdata->camp_num]) ? $campSupport[$sdata->camp_num] + 0.5 : 0.5;
-                                 // $campSupport[$sdata->parent_camp_num] = isset($campSupport[$sdata->parent_camp_num]) ? $campSupport[$sdata->parent_camp_num] + 0.5 : 0.5;
-								  $deduction = 1;  	
-								  $remainder = $remainder - 0.5;
-								   
-							   }
-							   else if($skey==0 && $supportCount == 1) {
-								   
-								  $campSupport[$sdata->camp_num] = isset($campSupport[$sdata->camp_num]) ? $campSupport[$sdata->camp_num] + 1 : 1;
-								// $campSupport[$sdata->parent_camp_num] = isset($campSupport[$sdata->parent_camp_num]) ? $campSupport[$sdata->parent_camp_num] + 1 : 1;
-								  $remainder = 0;
-								  $deduction = 1;			  
-								   
-							   }
-							   else {  
-								   
-								  $campSupport[$sdata->camp_num] = isset($campSupport[$sdata->camp_num]) ? $campSupport[$sdata->camp_num] + $assignment : $assignment;
-                                 //$campSupport[$sdata->parent_camp_num] = isset($campSupport[$sdata->parent_camp_num]) ? $campSupport[$sdata->parent_camp_num] + $assignment : $assignment;
- 
-                                 								  
-							   }
-							   
-							   $newCounter  =  $supportCount - $deduction;
-							    
-                                if($newCounter == 1 )								
-								  $assignment  =  $remainder;
-							    else if($newCounter > 1 ) {
-									
-								   $assignment  = round($remainder / 2 , 2);
-                                   $newCounter  = $newCounter - 1;
-                                   $remainder   = $remainder - $assignment;								   
-								} */
-							 }  
-							  
-						  } //print_r($campSupport); echo "<br/>";  						  
-						
-					}
-				} 
-		return $campSupport;
-		
-	}
 	
 	public static function getBrowseTopic(){
 		
@@ -315,7 +160,7 @@ class Camp extends Model {
 					 ->latest('topic.submit_time')->first();
 	}
 	public static function getAllAgreementTopic($limit=10,$filter=array()){
-		
+
 		if(!isset($filter['asof']) || (isset($filter['asof']) && $filter['asof']=="default")) {
 		
 		 return self::select(DB::raw('(select count(topic_support.id) from topic_support where topic_support.topic_num=camp.topic_num) as support, camp.*'))
@@ -489,29 +334,45 @@ class Camp extends Model {
 	}
 
 	public function getCamptSupportCount($topicnum,$campnum){
-		$supports = TopicSupport::join('support_instance','support_instance.topic_support_id','=','topic_support.id')
-        ->where('topic_num', '=', $topicnum)
-        ->where('support_instance.camp_num',$campnum)
-		->where('topic_support.submit_time','<',time())
-        //->where('delegate_nick_id',$delegateNickId)
-        ->orderBy('topic_support.submit_time','DESC')
-        ->select('topic_support.*')
-        ->get();
+
+		$as_of_time = time();
+		if(isset($_REQUEST['asof']) && $_REQUEST['asof']=='date'){
+			$as_of_time = strtotime($_REQUEST['asofdate']);
+		}
 		
-        $supportCountTotal = 0;
-        foreach($supports as $support){
-            $campsupports = $support->campsupport;
-            $supportCount  =  $campsupports->count(); 
-			$supportPoint = Algorithm::{session('defaultAlgo')}($support->nick_name_id);
-            //$supportPoint = $support->delegate_nick_id ? 0.5 : 1;
-            if($supportCount > 1 ){
-                $campSupport =  $campsupports->where('camp_num',$campnum)->first();
-               	$supportCountTotal+=round($supportPoint / (2 ** ($campSupport->support_order)),2);
-            }else if($supportCount == 1){
-                $supportCountTotal+=$supportPoint;
+		$supportCountTotal = 0;
+		$totalSupports = Support::where('topic_num','=',$topicnum)
+                        //->where('camp_num',$campnum)
+                        ->whereRaw("(start < $as_of_time) and ((end = 0) or (end > $as_of_time))")
+                        ->orderBy('start','DESC')
+                        ->groupBy('nick_name_id')
+                        ->select(['nick_name_id','delegate_nick_name_id'])
+                        ->get();
+		foreach($totalSupports as $supported){
+
+
+			$nickNameSupports = Support::where('topic_num','=',$topicnum)
+				->where('nick_name_id',$supported->nick_name_id)
+				->whereRaw("(start < $as_of_time) and ((end = 0) or (end > $as_of_time))")
+				->orderBy('start','DESC')
+				->select(['support_order','camp_num'])
+				->get();
+
+			$supportPoint = Algorithm::{session('defaultAlgo')}($supported->nick_name_id);
+			$currentCampSupport =  $nickNameSupports->filter(function ($item) use($campnum)
+			{
+				return $item->camp_num == $campnum; /* Current camp support */
+			})->first();
+
+			if($currentCampSupport){
+				if($nickNameSupports->count() > 1){
+					$supportCountTotal+=round($supportPoint / (2 ** ($currentCampSupport->support_order+1)),2);
+				}else if($nickNameSupports->count() == 1){
+					$supportCountTotal+=$supportPoint;
+				}
 			}
-        }
-		
+		}
+
 		return $supportCountTotal;
 	}
 
@@ -565,6 +426,19 @@ class Camp extends Model {
 
 
 	public function campTree($activeAcamp = null,$supportCampCount=0,$needSelected=0){
+		//return '';
+		$as_of_time = time();
+		if(isset($_REQUEST['asof']) && $_REQUEST['asof']=='date'){
+			$as_of_time = strtotime($_REQUEST['asofdate']);
+		}
+		
+		/*self::$totalSupports = Support::where('topic_num','=',$this->topic_num)
+                        //->where('camp_num',$campnum)
+                        ->whereRaw("(start < $as_of_time) and ((end = 0) or (end > $as_of_time))")
+                        ->orderBy('start','DESC')
+                        ->groupBy('nick_name_id')
+                        ->select(['nick_name_id','delegate_nick_name_id'])
+                        ->get();*/
 
 		$title = preg_replace('/[^A-Za-z0-9\-]/', '-', $this->title); 
 		$topic_id = $this->topic_num."-".$title;
