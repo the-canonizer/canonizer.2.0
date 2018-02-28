@@ -5,6 +5,7 @@ namespace App\Model;
 use Illuminate\Database\Eloquent\Model;
 use DB;
 use App\Model\Nickname;
+use App\Model\Algorithm;
 
 class TopicSupport extends Model {
 
@@ -50,6 +51,50 @@ class TopicSupport extends Model {
 
     /*1 Person :: 1 Vote Nicknames*/
     public static function traverseTree($topicnum,$campnum,$delegateNickId=0){
+        
+        $as_of_time = time();
+		if(isset($_REQUEST['asof']) && $_REQUEST['asof']=='date'){
+			$as_of_time = strtotime($_REQUEST['asofdate']);
+		}
+
+        $supports = Support::where('topic_num','=',$topicnum)
+            ->where('delegate_nick_name_id',$delegateNickId)
+            ->whereRaw("(start < $as_of_time) and ((end = 0) or (end > $as_of_time))")
+            ->where('camp_num',$campnum)
+            ->orderBy('start','DESC')
+            //->select(['support_order','camp_num'])
+            ->get();
+        
+        $array = [];
+        foreach($supports as $support){
+            $nickNameSupports = Support::where('topic_num','=',$topicnum)
+				->where('nick_name_id',$support->nick_name_id)
+				->whereRaw("(start < $as_of_time) and ((end = 0) or (end > $as_of_time))")
+				->orderBy('start','DESC')
+				->select(['support_order','camp_num'])
+				->get();
+
+            $supportPoint = Algorithm::{session('defaultAlgo')}($support->nick_name_id);
+			$currentCampSupport =  $nickNameSupports->filter(function ($item) use($campnum)
+			{
+				return $item->camp_num == $campnum; /* Current camp support */
+			})->first();
+            $array[$support->nick_name_id]['score'] = 0;
+			if($currentCampSupport){
+				if($nickNameSupports->count() > 1){
+					$array[$support->nick_name_id]['score']=round($supportPoint / (2 ** ($currentCampSupport->support_order+1)),2);
+				}else if($nickNameSupports->count() == 1){
+					$array[$support->nick_name_id]['score']=$supportPoint;
+				}
+			}
+
+            $array[$support->nick_name_id]['index']=$support->nick_name_id;
+            $array[$support->nick_name_id]['children'] = self::traverseTree($topicnum,$campnum,$support->nick_name_id);
+        }
+
+        return $array;
+        /*
+        
         $supports = TopicSupport::join('support_instance','support_instance.topic_support_id','=','topic_support.id')
         ->where('topic_num', '=', $topicnum)
         ->where('support_instance.camp_num',$campnum)
@@ -73,7 +118,7 @@ class TopicSupport extends Model {
             $array[$support->nick_name_id]['index']=$support->nick_name_id;
             $array[$support->nick_name_id]['children'] = self::traverseTree($topicnum,$campnum,$support->nick_name_id);
         }
-        return $array;
+        return $array;*/
     }
 
     public static function buildTree($topicnum,$campnum,$traversedTreeArray,$parentNode=false){
@@ -105,7 +150,11 @@ class TopicSupport extends Model {
            $traversedTreeArray[$key]['children']=self::sumTranversedArraySupportCount($array['children']);
         }
 	   }	
-	   
+
+       uasort($traversedTreeArray, function($a, $b) {
+            return $a['score'] < $b['score'];
+       });
+	  
         return $traversedTreeArray;
 
     }
@@ -128,6 +177,7 @@ class TopicSupport extends Model {
    
 
     public static function topicSupportTree($topicnum,$campnum){
+        //return 11;
         $traversedSupportCountTreeArray = self::sortTraversedSupportCountTreeArray(self::sumTranversedArraySupportCount(self::traverseTree($topicnum,$campnum)));
         return self::buildTree($topicnum,$campnum,$traversedSupportCountTreeArray,true);
     }

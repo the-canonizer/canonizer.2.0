@@ -19,7 +19,7 @@ class HomeController extends Controller {
     public function index() {
 
       
-        $topics = Camp::getAllAgreementTopic(50,$_REQUEST);
+        $topics = Camp::getAllAgreementTopic(10,$_REQUEST);
         
         return view('welcome', ['topics' => $topics]);
     }
