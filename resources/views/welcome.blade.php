@@ -32,9 +32,12 @@
         </div>
         <div class="Lcolor-Pnl">
             <h3>Canonized list for  
-                <select>
-                    <option>General</option>
-                    <option>Corporations</option>
+                <select onchange="changeNamespace(this)">
+                    @foreach($namespaces as $namespace)
+                        <option data-namespace="{{ $namespace->label }}" value="{{ $namespace->id }}" {{ $namespace->id == session('defaultNamespaceId') ? 'selected' : ''}}>{{$namespace->label}}</option>
+                    @endforeach
+                 
+                    
                 </select>
             </h3>
             <div class="content">
@@ -109,6 +112,25 @@ var offset = 10;
 		  }  
 		  e.stopImmediatePropagation();
 }); 
+
+function changeNamespace(element){
+    $.ajax({
+        url:"{{ url('/change-namespace') }}",
+        type:"POST",
+        data:{namespace:$(element).val()},
+        success:function(response){
+            @if(env('APP_DEBUG'))
+                window.location.reload();
+            @else
+            try{
+                window.location.href="{{ url('/') }}"+$(element).find('option:selected').attr('data-namespace');
+            }catch(err){
+                window.location.href="{{ url('/') }}";
+            }  
+            @endif
+        }
+    });
+}
 </script>
 @endsection
  

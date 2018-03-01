@@ -11,12 +11,13 @@
 |
 */
 
-Route::get('/', 'HomeController@index');
+
 Route::get('home', ['as'=>'home','uses'=>'HomeController@index']);
 Route::get('browse', ['as'=>'browse','uses'=>'HomeController@browse']);
 Route::get('supportmigration', ['as'=>'supportmigration','uses'=>'HomeController@supportmigration']);
 
 Route::post('/change-algorithm','HomeController@changeAlgorithm')->name('change-algorithm');
+Route::post('/change-namespace','HomeController@changeNamespace')->name('change-namespace');
 
 
 Route::get('register','Auth\RegisterController@showRegistrationForm');
@@ -93,3 +94,9 @@ Route::post(
     '/forum/{topicid}-{topicname}/{campnum}/threads/{thread}/replies', 
     ['uses' => 'ReplyController@store']
 );
+
+if(env('APP_DEBUG')){
+    Route::get('/', 'HomeController@index'); /*Allow /_debuggerBar url*/
+}else{
+    Route::get('/{params?}', 'HomeController@index')->where('params', '(.*)');
+}
