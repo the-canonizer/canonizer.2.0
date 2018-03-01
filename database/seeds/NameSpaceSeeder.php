@@ -12,7 +12,12 @@ class NameSpaceSeeder extends Seeder
      */
     public function run()
     {
-		$namespaceArray = array([
+		$namespaceArray = array(
+            [
+            'parent_id' => 0,
+            'name' => 'Genaral',
+            'label' => 'Genaral',
+        ],[
             'parent_id' => 0,
             'name' => 'corporations',
             'label' => '/corporations/',
@@ -96,11 +101,7 @@ class NameSpaceSeeder extends Seeder
             'name' => 'www',
             'label' => '/www/',
         ],
-		[
-            'parent_id' => 0,
-            'name' => 'Genaral',
-            'label' => 'Genaral',
-        ]);
+		);
 		foreach($namespaceArray as $data) {
           DB::table('namespace')->insert($data);
 		}

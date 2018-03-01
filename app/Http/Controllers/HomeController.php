@@ -9,6 +9,7 @@ use App\Model\Support;
 use App\Model\TopicSupport;
 use App\Model\SupportInstance;
 use DB;
+use App\Model\Namespaces;
 
 class HomeController extends Controller {
 
@@ -16,12 +17,11 @@ class HomeController extends Controller {
 		 parent::__construct();
 	}
 
-    public function index() {
-
-      
-        $topics = Camp::getAllAgreementTopic(10,$_REQUEST);
+    public function index(Request $request,$params = null) {
+		$namespaces= Namespaces::all();
+		$topics = Camp::getAllAgreementTopic(10,$_REQUEST);
         
-        return view('welcome', ['topics' => $topics]);
+        return view('welcome', ['topics' => $topics,'namespaces'=>$namespaces]);
     }
 	
 	public function loadtopic(Request $request){
@@ -149,6 +149,13 @@ class HomeController extends Controller {
 
 	public function changeAlgorithm(Request $request){
 		session(['defaultAlgo'=>$request->input('algo')]);
+		
+	}
+
+	public function changeNamespace(Request $request){
+		$namespace = Namespaces::find($request->input('namespace'));
+
+		session(['defaultNamespaceId'=>$namespace->id]);
 		
 	}
 

@@ -17,6 +17,10 @@ class Controller extends BaseController
         if(!session('defaultAlgo')){
              session(['defaultAlgo' => 'blind_popularity']);
         }
+
+        if(!session('defaultNamespaceId')){
+             session(['defaultNamespaceId' => '1']);
+        }
        
     }
 }

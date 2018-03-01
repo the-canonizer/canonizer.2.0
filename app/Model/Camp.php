@@ -175,23 +175,25 @@ class Camp extends Model {
 		if(!isset($filter['asof']) || (isset($filter['asof']) && $filter['asof']=="default")) {
 		
 		 return self::select(DB::raw('(select count(topic_support.id) from topic_support where topic_support.topic_num=camp.topic_num) as support, camp.*'))
-		             //->leftJoin('topic_support','camp.topic_num','=','topic_support.topic_num')
+		             ->join('topic','topic.id','=','camp.topic_num')
+					 //->leftJoin('topic_support','camp.topic_num','=','topic_support.topic_num')
 					 //->leftJoin('support_instance','support_instance.topic_support_id','=','topic_support.id')
 		             ->where('camp_name','=','Agreement')
-		             ->where('objector_nick_id', '=', NULL)
+		             ->where('camp.objector_nick_id', '=', NULL)
+					 ->whereIn('namespace_id',explode(',',session('defaultNamespaceId')))
                      ->where('camp.go_live_time','<',time())					 
 					 ->latest('support')->get()->unique('topic_num')->take($limit);
 		} else {
 			
 			if(isset($filter['asof']) && $filter['asof']=="review") {
 			
-			  return self::where('camp_name','=','Agreement')->latest('submit_time')->get()->take($limit);	
+			  return self::where('camp_name','=','Agreement')->join('topic','topic.id','=','camp.topic_num')->whereIn('namespace_id',explode(',',session('defaultNamespaceId')))->latest('camp.submit_time')->get()->take($limit);	
 				
 			} else if(isset($filter['asof']) && $filter['asof']=="bydate") {
 				
 				$asofdate =  strtotime(date('Y-m-d H:i:s', strtotime($filter['asofdate'])));
 			
-			  return self::where('camp_name','=','Agreement')->where('go_live_time','<=',$asofdate)->latest('submit_time')->get()->take($limit);	
+			  return self::where('camp_name','=','Agreement')->join('topic','topic.id','=','camp.topic_num')->whereIn('namespace_id',explode(',',session('defaultNamespaceId')))->where('camp.go_live_time','<=',$asofdate)->latest('camp.submit_time')->get()->take($limit);	
 				
 			} 
 		}			 
@@ -202,21 +204,23 @@ class Camp extends Model {
 		
 		 return self::select(DB::raw('(select count(topic_support.id) from topic_support where topic_support.topic_num=camp.topic_num) as support, camp.*'))
 		             ->where('camp_name','=','Agreement')
+					 ->join('topic','topic.id','=','camp.topic_num')
 		             //->where('id','<',$id)
-		             ->where('objector_nick_id', '=', NULL)
-                     ->where('go_live_time','<',time())
+		             ->where('camp.objector_nick_id', '=', NULL)
+					 ->whereIn('namespace_id',explode(',',session('defaultNamespaceId')))
+                     ->where('camp.go_live_time','<',time())
 					 ->latest('support')->take(10)->offset($offset)->get()->unique('topic_num');
 		} else {
 			
 			if(isset($filter['asof']) && $filter['asof']=="review") {
 			
-			  return self::where('camp_name','=','Agreement')->where('id','<',$id)->latest('submit_time')->get()->take($limit);	
+			  return self::where('camp_name','=','Agreement')->join('topic','topic.id','=','camp.topic_num')->whereIn('namespace_id',explode(',',session('defaultNamespaceId')))->where('id','<',$id)->latest('camp.submit_time')->get()->take($limit);	
 				
 			} else if(isset($filter['asof']) && $filter['asof']=="bydate") {
 				
 				$asofdate =  strtotime(date('Y-m-d H:i:s', strtotime($filter['asofdate'])));
 			
-			  return self::where('camp_name','=','Agreement')->where('id','<',$id)->where('go_live_time','<=',$asofdate)->latest('submit_time')->get()->take($limit);	
+			  return self::where('camp_name','=','Agreement')->join('topic','topic.id','=','camp.topic_num')->whereIn('namespace_id',explode(',',session('defaultNamespaceId')))->where('id','<',$id)->where('camp.go_live_time','<=',$asofdate)->latest('camp.submit_time')->get()->take($limit);	
 				
 			} 
 		}			 
@@ -314,35 +318,6 @@ class Camp extends Model {
 							if ($a == $b) return 0;
 							return ($a > $b) ? -1 : 1;
 	}
-	public function getSortedTree($topics) {
-		
-		
-		$sortedTopic = array();
-		foreach($topics as $key=>$topicdata) {
-			
-		 $nicknames = $topicdata->GetSupportedNicknames($topicdata->topic_num);
-		 
-		 $supportDataset = $topicdata->getCampSupport($topicdata->topic_num,$topicdata->camp_num,$nicknames);
-		 
-		 $count = 0;
-		 foreach($supportDataset as  $s) {
-			  
-			 $count = $count + $s;
-		 }
-		 
-		 $sortedTopic[$key]['topic'] = $topicdata;
-		 
-		 $supportDataset[1] = isset($supportDataset[1]) ? $supportDataset[1] + $count : $count; 
-		 
-		   $sortedTopic[$key]['support_order'] =	isset($supportDataset[$topicdata->camp_num]	)	? $supportDataset[$topicdata->camp_num] : 0;			 
-			
-		}
-		
-		usort($sortedTopic,array($this, "sortByOrder"));
-		
-		return array('key'=>$topicdata->id,'sortedTree'=>$sortedTopic);
-		
-	}
 
 	public function getCamptSupportCount($topicnum,$campnum){
 
@@ -382,6 +357,7 @@ class Camp extends Model {
 		$html ='<ul>';
 		if($currentCamp == $activeCamp) {
 			$html = '<ul><li class="create-new-li"><span><a href="'.route('camp.create',[$this->topic_num,$currentCamp]).'">&lt;Start new supporting camp here&gt;</a></span></li>';
+			
         }
 		
 		if(is_array($traversedTreeArray)){
@@ -396,6 +372,10 @@ class Camp extends Model {
 				$html.='<li>';
 				//$selected = '';
 				$selected =  ($campnum == $activeCamp) && $needSelected ? "color:#08b608; font-weight:bold" : "";
+				if(($campnum == $activeCamp) && $needSelected){
+					session(['supportCountTotal'=>$array['score']]);
+				}
+
 				$html.='<span class="'.$class.'">'.$icon.'</span><div class="tp-title"><a style="'.$selected.'" href="'.$array['link'].'">'.$array['title'].'</a> <div class="badge">'.$array['score'].'</div></div>';
 				$html.=$this->buildCampTree($array['children'],$campnum,$activeCamp,$needSelected);
 				$html.='</li>';
@@ -515,10 +495,11 @@ class Camp extends Model {
 		if($reducedTree[$this->camp_num]['score'] < $filter){
 				return;
 		}
-		if($supportCampCount){
-			session(['supportCountTotal'=>$reducedTree[$this->camp_num]['score']]);
-		}
+		
 		$selected =  ($this->camp_num == $activeAcamp) && $needSelected ? "color:#08b608; font-weight:bold" : "";
+		if(($this->camp_num == $activeAcamp) && $needSelected){
+					session(['supportCountTotal'=>$reducedTree[$this->camp_num]['score']]);
+		}
 		//dd($reducedTree,$reducedTree[$this->camp_num]['score'], $reducedTree[$this->camp_num]['score'] == $_REQUEST['filter'] );
 		$html = "<li>";
 		$parentClass = is_array($reducedTree[$this->camp_num]['children']) && count($reducedTree[$this->camp_num]['children']) > 0 ? 'parent' : '';
