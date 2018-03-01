@@ -19,6 +19,7 @@ class Camp extends Model {
 	protected static $chilcampArray = [];
 	protected static $traversetempArray = [];
 
+	protected static $campChildren = [] ;
 	protected  static $totalSupports = [];
 	protected  static $totalNickNameSupports = [];
 	
@@ -53,7 +54,15 @@ class Camp extends Model {
 
     public function scopeChildrens($query, $topicnum, $parentcamp,$campnum=null,$filter=array()) {
         
-		 if($campnum !=null)
+		$childs = self::$campChildren->filter(function($item) use($parentcamp,$campnum){
+			if($campnum){
+				return $item->parent_camp_num == $parentcamp && $item->camp_num == $campnum;
+			}else{
+				return $item->parent_camp_num == $parentcamp;
+			}
+		});
+		
+		 /*if($campnum !=null)
 			$query->where('camp_num', '=', $campnum);
 			
 		if(!isset($_REQUEST['asof']) || (isset($_REQUEST['asof']) && $_REQUEST['asof']=="default")) {
@@ -94,7 +103,7 @@ class Camp extends Model {
 				->groupBy('camp_num')
                 ->get();//->unique('camp_num','topic_num');
 			} 
-		}		
+		}		*/
 				
         return $childs;
     }
@@ -351,13 +360,6 @@ class Camp extends Model {
 				 return $item->nick_name_id == $supported->nick_name_id; /* Current camp support */
 			});
 
-			/*$nickNameSupports = Support::where('topic_num','=',$topicnum)
-				->where('nick_name_id',$supported->nick_name_id)
-				->whereRaw("(start < $as_of_time) and ((end = 0) or (end > $as_of_time))")
-				->orderBy('start','DESC')
-				->select(['support_order','camp_num'])
-				->get();*/
-
 			$supportPoint = Algorithm::{session('defaultAlgo')}($supported->nick_name_id);
 			$currentCampSupport =  $nickNameSupports->filter(function ($item) use($campnum)
 			{
@@ -453,6 +455,51 @@ class Camp extends Model {
 		if(!self::$totalNickNameSupports){
 			self::$totalNickNameSupports = new Collection; /*to avoid collection null error*/
 		}
+
+
+		if(!isset($_REQUEST['asof']) || (isset($_REQUEST['asof']) && $_REQUEST['asof']=="default")) {
+		
+		 self::$campChildren = self::where('topic_num', '=', $this->topic_num)
+                //->where('parent_camp_num', '=', $parentcamp)
+                ->where('camp_name', '!=', 'Agreement')  
+                ->where('objector_nick_id', '=', NULL)
+                ->whereRaw('go_live_time in (select max(go_live_time) from camp where topic_num='.$this->topic_num.' and objector_nick_id is null and go_live_time < "'.time().'" group by camp_num)')				
+                ->where('go_live_time','<',time())
+                ->groupBy('camp_num')				
+				->orderBy('submit_time', 'desc')
+                ->get();
+		} else {
+			
+			if(isset($_REQUEST['asof']) && $_REQUEST['asof']=="review") {
+			
+			 self::$campChildren = self::where('topic_num', '=', $this->topic_num)
+                //->where('parent_camp_num', '=', $parentcamp)
+                ->where('camp_name', '!=', 'Agreement')  
+				->whereRaw('go_live_time in (select max(go_live_time) from camp where topic_num='.$this->topic_num.' and objector_nick_id is null group by camp_num)')				
+                ->orderBy('submit_time', 'desc')
+				->groupBy('camp_num')
+                ->get();	
+				
+			} else if(isset($_REQUEST['asof']) && $_REQUEST['asof']=="bydate") {
+				
+				$asofdate =  strtotime(date('Y-m-d H:i:s', strtotime($_REQUEST['asofdate'])));
+			
+			  self::$campChildren = self::where('topic_num', '=',$this->topic_num)
+                //->where('parent_camp_num', '=', $parentcamp)
+                ->where('camp_name', '!=', 'Agreement')  
+                ->where('objector_nick_id', '=', NULL)
+				->whereRaw('go_live_time in (select max(go_live_time) from camp where topic_num='.$this->topic_num.' and objector_nick_id is null group by camp_num)')				
+                ->where('go_live_time','<',$asofdate) 				
+                ->orderBy('submit_time', 'desc')
+				->groupBy('camp_num')
+                ->get();//->unique('camp_num','topic_num');
+			} 
+		}	
+
+		if(!self::$campChildren){
+			self::$campChildren =  new Collection;
+		}	
+		
 		
 
 		$title = preg_replace('/[^A-Za-z0-9\-]/', '-', $this->title); 
