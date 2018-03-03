@@ -30,7 +30,8 @@ class Wiky {
 	
 			// Special
 			"/^----+(\s*)$/m",						// Horizontal line
-			"/\[\[(file|img):((ht|f)tp(s?):\/\/(.+?))( (.+))*\]\]/i",	// (File|img):(http|https|ftp) aka image
+			"/\[\[(img):((ht|f)tp(s?):\/\/(.+?))( (.+))*\]\]/i",
+			"/\[\[(file):((ht|f)tp(s?):\/\/(.+?))( (.+))*\]\]/i",	// (File|img):(http|https|ftp) aka image
 			"/\[((news|(ht|f)tp(s?)|irc):\/\/(.+?))( (.+))\]/i",		// Other urls with text
 			"/\[((news|(ht|f)tp(s?)|irc):\/\/(.+?))\]/i",			// Other urls without text
 	
@@ -76,6 +77,7 @@ class Wiky {
 			// Special
 			"<hr/>",
 			"<img src=\"$2\" alt=\"$6\"/>",
+			"<a target='_blank' href=\"$2\">$2</a>",
 			"<a href=\"$1\">$7</a>",
 			"<a href=\"$1\">$1</a>",
 	

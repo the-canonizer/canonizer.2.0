@@ -1098,3 +1098,7 @@ ul.pagination li.active span{
 	margin-right:5px;
 	display:inline-block;
 }
+
+.Scolor-Pnl .content img{
+	max-width: 100%;
+}

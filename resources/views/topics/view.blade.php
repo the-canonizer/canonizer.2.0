@@ -43,10 +43,9 @@
         <div class="Scolor-Pnl">
             <h3><?php echo ($parentcamp=="Agreement") ? $parentcamp : "Camp";?> Statement
             </h3>
-            <div class="content">
+            <div class="content" style="width:100%;">
                     <?php 
                     $statement = $camp->statement($camp->topic_num,$camp->camp_num);
-
                     if(isset($statement->value)) {
                               $input=htmlspecialchars($statement->value);
                               echo $wiky->parse($input); 

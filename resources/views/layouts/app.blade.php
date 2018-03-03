@@ -115,7 +115,7 @@
                    
 
                         <li class="nav-item">
-                            <a class="nav-link" href="#">
+                            <a class="nav-link" href="{{ url('/upload') }}">
                                 <span class="nav-link-text">Upload File</span>
                             </a>
                         </li>

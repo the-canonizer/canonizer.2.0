@@ -57,6 +57,8 @@ Route::group([ 'middleware' => 'auth'], function()
    Route::get('manage/topic/{id}', 'TopicController@manage_topic');
    Route::get('support/{id}/{campnum}', 'SettingsController@support');
    Route::get('support', [ 'as' => 'settings.support', 'uses' =>'SettingsController@support']);
+   Route::get('upload', [ 'as' => 'upload.files', 'uses' =>'UploadController@getUpload']);
+   Route::post('upload', [ 'as' => 'upload.files.save', 'uses' =>'UploadController@postUpload']);
    
 });
 
