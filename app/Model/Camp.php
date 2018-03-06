@@ -319,6 +319,29 @@ class Camp extends Model {
 							return ($a > $b) ? -1 : 1;
 	}
 
+	public function getDeletegatedSupportCount($campnum,$delegateNickId,$parent_support_order,$multiSupport){
+
+		/*Delegated Support */
+
+        $delegatedSupports =  self::$totalNickNameSupports->filter(function($item) use ($delegateNickId){
+                return $item->delegate_nick_name_id == $delegateNickId;
+        });
+        
+		$score = 0;
+        foreach($delegatedSupports as $support){           
+            $supportPoint = Algorithm::{session('defaultAlgo')}($support->nick_name_id); 
+			
+            if($multiSupport){
+               $score  = round($supportPoint / (2 ** ($parent_support_order+1)),3);
+            }else{
+               $score = $supportPoint;
+            }
+            $score+= $this->getDeletegatedSupportCount($campnum,$support->nick_name_id,$parent_support_order,$multiSupport);
+        }
+		return $score;
+
+	}
+
 	public function getCamptSupportCount($topicnum,$campnum){
 
 		$as_of_time = time();
@@ -334,7 +357,7 @@ class Camp extends Model {
 			{
 				 return $item->nick_name_id == $supported->nick_name_id; /* Current camp support */
 			});
-
+			
 			$supportPoint = Algorithm::{session('defaultAlgo')}($supported->nick_name_id);
 			$currentCampSupport =  $nickNameSupports->filter(function ($item) use($campnum)
 			{
@@ -342,11 +365,14 @@ class Camp extends Model {
 			})->first();
 
 			if($currentCampSupport){
+				$multiSupport = false;
 				if($nickNameSupports->count() > 1){
-					$supportCountTotal+=round($supportPoint / (2 ** ($currentCampSupport->support_order+1)),2);
+					$multiSupport = true;
+					$supportCountTotal+=round($supportPoint / (2 ** ($currentCampSupport->support_order+1)),3);
 				}else if($nickNameSupports->count() == 1){
 					$supportCountTotal+=$supportPoint;
 				}
+				$supportCountTotal+=$this->getDeletegatedSupportCount($campnum,$supported->nick_name_id,$currentCampSupport->support_order,$multiSupport);
 			}
 		}
 
@@ -416,9 +442,11 @@ class Camp extends Model {
 		
 		self::$totalSupports = Support::where('topic_num','=',$this->topic_num)
                         //->where('camp_num',$campnum)
+						->where('delegate_nick_name_id',0)
                         ->whereRaw("(start < $as_of_time) and ((end = 0) or (end > $as_of_time))")
                         ->orderBy('start','DESC')
                         ->groupBy('nick_name_id')
+						
                         ->select(['nick_name_id','delegate_nick_name_id','support_order','topic_num','camp_num'])
                         ->get();
 
@@ -500,11 +528,11 @@ class Camp extends Model {
 		if(($this->camp_num == $activeAcamp) && $needSelected){
 					session(['supportCountTotal'=>$reducedTree[$this->camp_num]['score']]);
 		}
-		//dd($reducedTree,$reducedTree[$this->camp_num]['score'], $reducedTree[$this->camp_num]['score'] == $_REQUEST['filter'] );
+		
 		$html = "<li>";
 		$parentClass = is_array($reducedTree[$this->camp_num]['children']) && count($reducedTree[$this->camp_num]['children']) > 0 ? 'parent' : '';
 		$html.='<span class="'.$parentClass.'"><i class="fa fa-arrow-right"></i> </span>';
-		$html.= '<div class="tp-title"><a style="'.$selected.'" href="'.$reducedTree[$this->camp_num]['link'].'">'.$reducedTree[$this->camp_num]['title'].'</a><div class="badge">'.$reducedTree[$this->camp_num]['score'].'</div></div>';
+		$html.= '<div class="tp-title"><a style="'.$selected.'" href="'.$reducedTree[$this->camp_num]['link'].'">'.$reducedTree[$this->camp_num]['title'].'</a><div class="badge">'.round($reducedTree[$this->camp_num]['score'],2).'</div></div>';
 		$html.=$this->buildCampTree($reducedTree[$this->camp_num]['children'],$this->camp_num,$activeAcamp,$needSelected);
 		$html.= "</li>";
 		return $html;
