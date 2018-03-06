@@ -202,7 +202,7 @@ class Camp extends Model {
 		
 		if(!isset($filter['asof']) || (isset($filter['asof']) && $filter['asof']=="default")) {
 		
-		 return self::select(DB::raw('(select count(topic_support.id) from topic_support where topic_support.topic_num=camp.topic_num) as support, camp.*,namespace.id as namespaceid'))
+		 return self::select(DB::raw('(select count(topic_support.id) from topic_support where topic_support.topic_num=camp.topic_num) as support, camp.*, topic.id as topicid'))
 		             ->where('camp_name','=','Agreement')
 					 ->join('topic','topic.id','=','camp.topic_num')
 		             //->where('id','<',$id)
