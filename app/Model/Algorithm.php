@@ -2,6 +2,7 @@
 
 namespace App\Model;
 use DB;
+use Illuminate\Support\Facades\Cache;
 
 class Algorithm{
 
@@ -30,20 +31,29 @@ class Algorithm{
     public static function camp_count($nick_name_id,$condition){
     
         $as_of_time = time();
+        $cacheWithTime = false; 
         if(isset($_REQUEST['asof']) && $_REQUEST['asof'] == 'bydate'){
             if(isset($_REQUEST['asofdate']) && !empty($_REQUEST['asofdate'])){
                 $as_of_time = strtotime($_REQUEST['asofdate']);
+                $cacheWithTime = true;
             }
         }
 
-        $sql = "select count(*) as countTotal from support_instance
-         inner join topic_support on topic_support.id = support_instance.topic_support_id 
-         where nick_name_id = $nick_name_id and (" .$condition.")
-         and (topic_support.submit_time < $as_of_time)
+        $sql = "select count(*) as countTotal from support where nick_name_id = $nick_name_id and (" .$condition.")";
+        $sql2 ="and ((start < $as_of_time) and ((end = 0) or (end > $as_of_time)))
          ";
-        $result = DB::select("$sql");
-        return isset($result[0]->countTotal) ? $result[0]->countTotal : 0;
-        //";
+        /* Cache applied to avoid repeated queries in recursion */
+        if($cacheWithTime){
+            $result = Cache::remember("$sql $sql2", 2, function () use($sql,$sql2) {
+                return DB::select("$sql $sql2");
+            });
+            return isset($result[0]->countTotal) ? $result[0]->countTotal : 0;
+        }else{
+            $result = Cache::remember("$sql", 1, function () use($sql,$sql2) {
+                return DB::select("$sql $sql2");
+            });
+            return isset($result[0]->countTotal) ? $result[0]->countTotal : 0;
+        }
     }
 
     public static function blind_popularity($nick_name_id = null){
@@ -51,6 +61,7 @@ class Algorithm{
     }
 
     public static function mind_experts(){
+        
         return 1;
     }
 
@@ -65,8 +76,6 @@ class Algorithm{
     /**
         Transhumanist - Algorithm
     */
-
-    
 
     public static function transhumanist($nick_name_id){
          $condition = '(topic_num = 40 and camp_num = 2) or ' .
