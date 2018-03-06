@@ -202,7 +202,7 @@ class Camp extends Model {
 		
 		if(!isset($filter['asof']) || (isset($filter['asof']) && $filter['asof']=="default")) {
 		
-		 return self::select(DB::raw('(select count(topic_support.id) from topic_support where topic_support.topic_num=camp.topic_num) as support, camp.*, topic.id as topicid'))
+		 return self::select(DB::raw('(select count(topic_support.id) from topic_support where topic_support.topic_num=camp.topic_num) as support, camp.*'))
 		             ->where('camp_name','=','Agreement')
 					 ->join('topic','topic.id','=','camp.topic_num')
 		             //->where('id','<',$id)
@@ -214,13 +214,13 @@ class Camp extends Model {
 			
 			if(isset($filter['asof']) && $filter['asof']=="review") {
 			
-			  return self::where('camp_name','=','Agreement')->join('topic','topic.id','=','camp.topic_num')->whereIn('namespace_id',explode(',',session('defaultNamespaceId')))->where('id','<',$id)->latest('camp.submit_time')->get()->take($limit);	
+			  return self::where('camp_name','=','Agreement')->join('topic','topic.id','=','camp.topic_num')->whereIn('namespace_id',explode(',',session('defaultNamespaceId')))->latest('camp.submit_time')->take(10)->offset($offset)->get();	
 				
 			} else if(isset($filter['asof']) && $filter['asof']=="bydate") {
 				
 				$asofdate =  strtotime(date('Y-m-d H:i:s', strtotime($filter['asofdate'])));
 			
-			  return self::where('camp_name','=','Agreement')->join('topic','topic.id','=','camp.topic_num')->whereIn('namespace_id',explode(',',session('defaultNamespaceId')))->where('id','<',$id)->where('camp.go_live_time','<=',$asofdate)->latest('camp.submit_time')->get()->take($limit);	
+			  return self::where('camp_name','=','Agreement')->join('topic','topic.id','=','camp.topic_num')->whereIn('namespace_id',explode(',',session('defaultNamespaceId')))->where('camp.go_live_time','<=',$asofdate)->latest('camp.submit_time')->take(10)->offset($offset)->get();	
 				
 			} 
 		}			 
