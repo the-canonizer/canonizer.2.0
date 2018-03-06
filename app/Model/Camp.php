@@ -202,7 +202,7 @@ class Camp extends Model {
 		
 		if(!isset($filter['asof']) || (isset($filter['asof']) && $filter['asof']=="default")) {
 		
-		 return self::select(DB::raw('(select count(topic_support.id) from topic_support where topic_support.topic_num=camp.topic_num) as support, camp.*'))
+		 return self::select(DB::raw('(select count(topic_support.id) from topic_support where topic_support.topic_num=camp.topic_num) as support, camp.*, topic.id as topicid'))
 		             ->where('camp_name','=','Agreement')
 					 ->join('topic','topic.id','=','camp.topic_num')
 		             //->where('id','<',$id)
@@ -345,7 +345,7 @@ class Camp extends Model {
 	public function getCamptSupportCount($topicnum,$campnum){
 
 		$as_of_time = time();
-		if(isset($_REQUEST['asof']) && $_REQUEST['asof']=='date'){
+		if(isset($_REQUEST['asof']) && $_REQUEST['asof']=='bydate'){
 			$as_of_time = strtotime($_REQUEST['asofdate']);
 		}
 		
@@ -436,7 +436,7 @@ class Camp extends Model {
 	public function campTree($activeAcamp = null,$supportCampCount=0,$needSelected=0){
 		//return '';
 		$as_of_time = time();
-		if(isset($_REQUEST['asof']) && $_REQUEST['asof']=='date'){
+		if(isset($_REQUEST['asof']) && $_REQUEST['asof']=='bydate'){
 			$as_of_time = strtotime($_REQUEST['asofdate']);
 		}
 		
