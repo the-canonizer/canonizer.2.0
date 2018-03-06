@@ -56,7 +56,7 @@ class TopicSupport extends Model {
     public static function traverseTree($topicnum,$campnum,$delegateNickId=0){
         
         $as_of_time = time();
-		if(isset($_REQUEST['asof']) && $_REQUEST['asof']=='date'){
+		if(isset($_REQUEST['asof']) && $_REQUEST['asof']=='bydate'){
 			$as_of_time = strtotime($_REQUEST['asofdate']);
 		}
 
@@ -130,10 +130,11 @@ class TopicSupport extends Model {
            $traversedTreeArray[$key]['children']=self::sumTranversedArraySupportCount($array['children']);
         }
 	   }	
-
+      if(is_array($traversedTreeArray)) {
        uasort($traversedTreeArray, function($a, $b) {
             return $a['score'] < $b['score'];
        });
+	  }
 	  
         return $traversedTreeArray;
 
@@ -159,7 +160,7 @@ class TopicSupport extends Model {
     public static function topicSupportTree($topicnum,$campnum){
         
         $as_of_time = time();
-		if(isset($_REQUEST['asof']) && $_REQUEST['asof']=='date'){
+		if(isset($_REQUEST['asof']) && $_REQUEST['asof']=='bydate'){
 			$as_of_time = strtotime($_REQUEST['asofdate']);
 		}
         self::$supports = Support::where('topic_num','=',$topicnum)
