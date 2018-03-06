@@ -44,7 +44,7 @@ if ( ! defined('ABSPATH')) exit;  // if direct access
 
 
 				<?php if(empty($bug_blog_copyright_text)):?>
-                    <span class="footer-copyright"><?php echo sprintf(__('Copyright %s %s','bug-blog'), date('Y'), esc_url( home_url() )); ?></span>
+                    <span class="footer-copyright">Copyright 2018 Canonizer.2.0<?php //echo sprintf(__('Copyright %s %s','bug-blog'), date('Y'), esc_url( home_url() )); ?></span>
 					<?php
 				else:
 					?>
