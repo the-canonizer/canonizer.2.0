@@ -28,8 +28,8 @@
                <table class="table table-striped">
                 <tr><th>File Name</th><th>Short Code</th><th style="width:20%">Uploaded Date </th></tr>
                 @foreach($uploaded as $upload)
-                    <tr><td>{{ $upload->file_name }} &nbsp;&nbsp;&nbsp;<a target="_blank" href="{{ url('storage/uploads/'.$upload->file_id) }}"><i class="fa fa-external-link"></i></a></td>
-                    <td>{{ $upload->getShortCode() }}</td>
+                    <tr><td style="word-break:break-all">{{ $upload->file_name }} &nbsp;&nbsp;&nbsp;<a target="_blank" href="{{ url('storage/uploads/'.$upload->file_id) }}"><i class="fa fa-external-link"></i></a></td>
+                    <td style="word-break:break-all">{{ $upload->getShortCode() }}</td>
                     <td>{{ $upload->created_at }}</td></tr>
                 @endforeach
                </table>
