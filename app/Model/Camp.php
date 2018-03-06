@@ -322,7 +322,7 @@ class Camp extends Model {
 	public function getCamptSupportCount($topicnum,$campnum){
 
 		$as_of_time = time();
-		if(isset($_REQUEST['asof']) && $_REQUEST['asof']=='date'){
+		if(isset($_REQUEST['asof']) && $_REQUEST['asof']=='bydate'){
 			$as_of_time = strtotime($_REQUEST['asofdate']);
 		}
 		
@@ -410,7 +410,7 @@ class Camp extends Model {
 	public function campTree($activeAcamp = null,$supportCampCount=0,$needSelected=0){
 		//return '';
 		$as_of_time = time();
-		if(isset($_REQUEST['asof']) && $_REQUEST['asof']=='date'){
+		if(isset($_REQUEST['asof']) && $_REQUEST['asof']=='bydate'){
 			$as_of_time = strtotime($_REQUEST['asofdate']);
 		}
 		
