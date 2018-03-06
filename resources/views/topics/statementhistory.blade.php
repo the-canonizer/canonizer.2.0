@@ -71,8 +71,8 @@
 						   }
                    $input=htmlspecialchars($data->value);						   
 			   ?>
-			    <div class="form-group CmpHistoryPnl" style="background-color:{{ $bgcolor }}">
-                  <b>Statement :</b> <?php echo  $wiky->parse($input); ?><br/>
+			    <div class="form-group CmpHistoryPnl" style="background-color:{{ $bgcolor }}; width:100%;">
+                  <div class="statement"><b>Statement :</b> <?php echo  $wiky->parse($input); ?></div><br/>
 				  <b>Note :</b> {{ $data->note }} <br/>
 				  <b>Language :</b> {{ $data->language }}<br/>
 				  <b>Submitted on :</b> {{ to_local_time($data->submit_time) }} <br/>

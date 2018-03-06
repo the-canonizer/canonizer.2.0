@@ -39,6 +39,10 @@ localhost/project_directory/public it should lead you to home page now.
 
 You can set virtual host if you want to avoid "public" in url.
 
+##File upload
+To enable file upload feature need to activate storage as documented by laravel using command 
+php artisan storage:link. For more info visit - https://laravel.com/docs/5.6/filesystem
+
 ## Coding Standards To Follow
 
 1. For DB changes: create migration for any db change. Do not forget to add migration file in your commit.
