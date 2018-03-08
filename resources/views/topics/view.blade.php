@@ -31,7 +31,7 @@
                         $title      = preg_replace('/[^A-Za-z0-9\-]/', '-', $topic->title);						  
                         $topic_id  = $topic->topic_num."-".$title;
 						 ?>
-                     {!! $topic->campTree($parentcampnum,1,true) !!} 
+                     {!! $topic->campTreeHtml($parentcampnum,1,true) !!} 
                     </ul>
                     
                 </div>
@@ -81,7 +81,7 @@
                     <ul class="support-tree">
 					  <?php
 
-                    $support_tree = \App\Model\TopicSupport::topicSupportTree($camp->topic_num,$camp->camp_num); ?>
+                    $support_tree = \App\Model\TopicSupport::topicSupportTree(session('defaultAlgo'),$camp->topic_num,$camp->camp_num); ?>
                     {!! $support_tree !!}
 					 </ul>  
 				</div>

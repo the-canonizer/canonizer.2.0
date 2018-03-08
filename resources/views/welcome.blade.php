@@ -55,7 +55,7 @@
                         }
                         
                        ?>
-                         {!! $topic->campTree($createCamp) !!}
+                         {!! $topic->campTreeHtml($createCamp) !!}
                          <?php $createCamp = 0;?>
                        @endforeach
 					   <a id="btn-more" class="remove-row" data-id="{{ $topic->id }}"></a>
