@@ -52,18 +52,18 @@ class TopicSupport extends Model {
         return $sum;
     }
 
-    public static function traverseChildTree($topicnum,$campnum,$delegateNickId,$parent_support_order,$multiSupport){
+    public static function traverseChildTree($algorithm,$topicnum,$campnum,$delegateNickId,$parent_support_order,$multiSupport){
 
         /*Delegated Support */
 
-        $delegatedSupports =  self::$supports->filter(function($item) use ($delegateNickId){
+        $delegatedSupports =  session("topic-support-tree-$topicnum")->filter(function($item) use ($delegateNickId){
                 return $item->delegate_nick_name_id == $delegateNickId;
         });
         
         $array = [];
         foreach($delegatedSupports as $support){
             
-            $supportPoint = Algorithm::{session('defaultAlgo')}($support->nick_name_id); 
+            $supportPoint = Algorithm::{$algorithm}($support->nick_name_id); 
             $array[$support->nick_name_id]['index']=$support->nick_name_id;
              //dd($array);
             if($multiSupport){
@@ -71,13 +71,13 @@ class TopicSupport extends Model {
             }else{
                 $array[$support->nick_name_id]['score'] = $supportPoint;
             }
-            $array[$support->nick_name_id]['children'] = self::traverseChildTree($topicnum,$campnum,$support->nick_name_id,$parent_support_order,$multiSupport);
+            $array[$support->nick_name_id]['children'] = self::traverseChildTree($algorithm,$topicnum,$campnum,$support->nick_name_id,$parent_support_order,$multiSupport);
         }
 
         return $array;
     }
     /*1 Person :: 1 Vote Nicknames*/
-    public static function traverseTree($topicnum,$campnum,$delegateNickId=0){
+    public static function traverseTree($algorithm,$topicnum,$campnum,$delegateNickId=0){
         
         $as_of_time = time();
 		if(isset($_REQUEST['asof']) && $_REQUEST['asof']=='bydate'){
@@ -86,17 +86,18 @@ class TopicSupport extends Model {
 
         /*Fetching direct support to camp*/
 
-        $supports = self::$supports->filter(function($item) use ($campnum,$delegateNickId){
+        $supports = session("topic-support-tree-$topicnum")->filter(function($item) use ($campnum,$delegateNickId){
                 return $item->delegate_nick_name_id == 0 && $item->camp_num == $campnum;
         });
         
+        
         $array = [];
         foreach($supports as $support){
-            $nickNameSupports =  self::$supports->filter(function($item) use($support) {
+            $nickNameSupports =  session("topic-support-tree-$topicnum")->filter(function($item) use($support) {
                 return $item->nick_name_id == $support->nick_name_id;
             });
 
-            $supportPoint = Algorithm::{session('defaultAlgo')}($support->nick_name_id);
+            $supportPoint = Algorithm::{$algorithm}($support->nick_name_id);
 			$currentCampSupport =  $nickNameSupports->filter(function ($item) use($campnum)
 			{
 				return $item->camp_num == $campnum; /* Current camp support */
@@ -117,7 +118,7 @@ class TopicSupport extends Model {
 			
             
             $array[$support->nick_name_id]['index']=$support->nick_name_id;
-            $array[$support->nick_name_id]['children'] = self::traverseChildTree($topicnum,$campnum,$support->nick_name_id,$currentCampSupport->support_order,$multiSupport);
+            $array[$support->nick_name_id]['children'] = self::traverseChildTree($algorithm,$topicnum,$campnum,$support->nick_name_id,$currentCampSupport->support_order,$multiSupport);
             }
         }
 
@@ -131,11 +132,11 @@ class TopicSupport extends Model {
         foreach($traversedTreeArray as $array){
             $nickName = Nickname::where('id',$array['index'])->first();
             if($parentNode){
-                $html.= "<li class='main-parent'><a href='#'>{$nickName->nick_name}</a><div class='badge'>".round($array['score'],2)."</div>";
+                $html.= "<li class='main-parent'><a href='#'>{$nickName->id} - {$nickName->nick_name}</a><div class='badge'>".round($array['score'],2)."</div>";
                 $html.='<a href="'.url('support/'.$topicnum.'/'.$campnum.'-'.$array['index']).'" class="btn btn-info">Delegate Your Support</a>';
             
             }else{
-                $html.= "<li><a href='#'>{$nickName->nick_name}</a><div class='badge'>".round($array['score'],2)."</div> ";
+                $html.= "<li><a href='#'>{$nickName->id}-{$nickName->nick_name}</a><div class='badge'>".round($array['score'],2)."</div> ";
                 $html.='<a href="'.url('support/'.$topicnum.'/'.$campnum.'-'.$array['index']).'" class="btn btn-info">Delegate Your Support</a>';
             }
             $html.="<ul>";
@@ -181,25 +182,24 @@ class TopicSupport extends Model {
 
    
 
-    public static function topicSupportTree($topicnum,$campnum){
+    public static function topicSupportTree($algorithm,$topicnum,$campnum){
         
         $as_of_time = time();
 		if(isset($_REQUEST['asof']) && $_REQUEST['asof']=='bydate'){
 			$as_of_time = strtotime($_REQUEST['asofdate']);
 		}
-        self::$supports = Support::where('topic_num','=',$topicnum)
+        if(!session("topic-support-tree-$topicnum")){
+            session(["topic-support-tree-$topicnum"=>Support::where('topic_num','=',$topicnum)
             //->where('delegate_nick_name_id',$delegateNickId)
             ->whereRaw("(start < $as_of_time) and ((end = 0) or (end > $as_of_time))")
             //->where('camp_num',$campnum)
             ->orderBy('start','DESC')
             ->select(['support_order','camp_num','topic_num','nick_name_id','delegate_nick_name_id'])
             //->select(['support_order','camp_num'])
-            ->get();
-        if(!self::$supports){
-            self::$supports = new Collection; /*to avoid collection null error*/
+            ->get()]);
         }
-        
-        $traversedSupportCountTreeArray = self::sortTraversedSupportCountTreeArray(self::sumTranversedArraySupportCount(self::traverseTree($topicnum,$campnum)));
+       
+        $traversedSupportCountTreeArray = self::sortTraversedSupportCountTreeArray(self::sumTranversedArraySupportCount(self::traverseTree($algorithm,$topicnum,$campnum)));
         return self::buildTree($topicnum,$campnum,$traversedSupportCountTreeArray,true);
     }
 
