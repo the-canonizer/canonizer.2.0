@@ -77,7 +77,7 @@ class Wiky {
 			// Special
 			"<hr/>",
 			"<img src=\"$2\" alt=\"$6\"/>",
-			"<a target='_blank' href=\"$2\">$2</a>",
+			"<img src=\"$2\" alt=\"$6\"/>",
 			"<a href=\"$1\">$7</a>",
 			"<a href=\"$1\">$1</a>",
 	
