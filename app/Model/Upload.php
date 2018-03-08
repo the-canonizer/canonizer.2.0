@@ -20,7 +20,7 @@ class Upload extends Model
         $imgExts = array(".gif", ".jpg", ".jpeg", ".png", ".tiff", ".tif"); // this is far from complete but that's always going to be the case...
         if ( in_array($ext, $imgExts) )
         {
-            return '[[img:'.url('/storage/uploads/'.$this->file_id).']]';
+            return '[[file:'.url('/storage/uploads/'.$this->file_id).']]';
         }else{
             return '[[file:'.url('/storage/uploads/'.$this->file_id).']]';
         }

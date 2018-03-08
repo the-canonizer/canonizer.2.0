@@ -21,7 +21,13 @@
                 <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
                     <div class="form-group">
                         <input class="form-control" name="file" type="file"/>
+                        
                     </div>
+                    <div class="form-group">
+                        <input class="form-control" name="file_name" placeholder="File Name" type="text"/>
+                       
+                    </div>
+               
                     <button class="btn btn-sm btn-primary">Upload</button>
                </form>
                <div  style="margin-top:10px;background:#fff;">

@@ -34,7 +34,7 @@ class HomeController extends Controller {
 		
 		  foreach($topics as $k=>$topicdata) {
 			  
-			   $output .= $topicdata->campTree();
+			   $output .= $topicdata->campTreeHtml();
 			   						
 		  }
 		  ($output != '') ? $output .='<a id="btn-more" class="remove-row" data-id="'.$topicdata->id.'"></a>' : '';
