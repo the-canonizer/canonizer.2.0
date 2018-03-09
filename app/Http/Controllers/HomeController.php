@@ -46,8 +46,9 @@ class HomeController extends Controller {
 
       
         $topics = Camp::getBrowseTopic();
+		$namespaces= Namespaces::all();
         
-        return view('browse', ['topics' => $topics]);
+        return view('browse', ['topics' => $topics,'namespaces'=>$namespaces]);
     }
     
     public function recusriveCampDisp($childs){ 

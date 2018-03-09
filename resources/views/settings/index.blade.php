@@ -25,6 +25,7 @@
                 <li class="active"><a class="" href="{{ route('settings')}}">Manage Profile info</a></li>
                 <li><a class="" href="{{ route('settings.nickname')}}" >Add & Manage Nick Names</a></li>
 				<li class=""><a class="" href="{{ route('settings.support')}}" >My Supports</a></li>
+                <li><a class="" href="{{ route('settings.algo-preferences')}}">Default Algorithm</a></li>
 				
             </ul>
 
