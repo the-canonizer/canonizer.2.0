@@ -59,6 +59,8 @@ Route::group([ 'middleware' => 'auth'], function()
    Route::get('support', [ 'as' => 'settings.support', 'uses' =>'SettingsController@support']);
    Route::get('upload', [ 'as' => 'upload.files', 'uses' =>'UploadController@getUpload']);
    Route::post('upload', [ 'as' => 'upload.files.save', 'uses' =>'UploadController@postUpload']);
+   Route::get('settings/algo-preferences', [ 'as' => 'settings.algo-preferences', 'uses' => 'SettingsController@algo']);
+   Route::post('settings/algo-preferences', [ 'as' => 'settings.algo-preferences-save', 'uses' => 'SettingsController@postAlgo']);
    
 });
 
@@ -102,3 +104,5 @@ if(env('APP_DEBUG')){
 }else{
     Route::get('/{params?}', 'HomeController@index')->where('params', '(.*)');
 }
+
+Route::get('/user/supports/{user_id}','TopicController@usersupports')->name('user_supports');

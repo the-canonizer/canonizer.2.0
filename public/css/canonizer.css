@@ -1103,3 +1103,13 @@ ul.pagination li.active span{
 	max-width: 100%;
 	
 }
+
+address p{
+	margin-bottom:0px;
+}
+
+.namespace-select{
+	width: 100%;
+	background: #fff;
+	font-size:14px;
+}

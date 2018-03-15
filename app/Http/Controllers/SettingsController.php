@@ -279,4 +279,18 @@ class SettingsController extends Controller
         return redirect()->back();
 		
 	}	
+
+	public function algo(Request $request){
+		$user = User::find(Auth::user()->id);
+		return view('settings.preferences',compact('user'));
+	}
+
+	public function postAlgo(Request $request){
+		$user = User::find(Auth::user()->id);
+		$user->default_algo = $request->input('default_algo');
+		$user->save();
+		session()->forget('defaultUserAlgo');
+		Session::flash('success', "Your default algorithm preference updated successfully.");
+		return redirect()->back();
+	}
 }

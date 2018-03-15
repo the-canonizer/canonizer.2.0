@@ -15,6 +15,7 @@ use App\Model\Statement;
 use App\Model\Nickname;
 use DB;
 use Validator;
+use App\Model\Namespaces;
 /**
  * TopicController Class Doc Comment
  *
@@ -477,6 +478,14 @@ class TopicController extends Controller {
      */
     public function destroy($id) {
         //
+    }
+
+
+    public function usersupports(Request $request,$id){
+    
+        $nickName = Nickname::find($id);
+        $namespaces= Namespaces::all();
+        return view('user-supports',compact('nickName','namespaces'));
     }
 
 }

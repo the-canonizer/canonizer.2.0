@@ -157,11 +157,16 @@ class Camp extends Model {
 	
 	public static function getBrowseTopic(){
 		
-		return Topic::select('topic.topic_name','topic.namespace','topic.topic_num','camp.title','camp.camp_num')->join('camp','topic.topic_num','=','camp.topic_num')->where('camp_name','=','Agreement')
+		$query = Topic::select('topic.topic_name','topic.namespace','topic.topic_num','camp.title','camp.camp_num')->join('camp','topic.topic_num','=','camp.topic_num')->where('camp_name','=','Agreement')
 		             ->where('camp.objector_nick_id', '=', NULL)
                      ->where('camp.go_live_time','<=',time())
-					 ->where('topic.topic_name','<>',"")
-					 ->orderBy('topic.topic_name','ASC')->groupBy('topic_num')->get();
+					 ->where('topic.topic_name','<>',"");
+		
+		if(isset($_REQUEST['namespace']) && (!empty($_REQUEST['namespace']) || $_REQUEST['namespace'] != 0)){
+			$query->where('namespace_id',$_REQUEST['namespace']);
+		}
+
+		return $query->orderBy('topic.namespace','ASC')->orderBy('topic.topic_name','ASC')->groupBy('topic_num')->get();
 	}
 	public static function getAgreementTopic($topicnum,$filter=array()){
 		

@@ -8,7 +8,8 @@
         }
     
         public static function canon_decode($code = ''){
-          return;
+            $code = base64_decode($code);
+            return $code=substr($code, 5, 1);
         }
 		
     }
