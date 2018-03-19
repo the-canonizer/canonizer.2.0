@@ -15,7 +15,7 @@
 <div class="right-whitePnl">
     <div class="container-fluid">
         <div class="Gcolor-Pnl">
-            <h3>Browse
+            <h3>Browse Topic
             <div class="pull-right col-md-4">
             <form>
                 <select onchange="submitForm(this)" name="namespace" class="namespace-select">

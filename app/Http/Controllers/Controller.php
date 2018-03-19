@@ -23,7 +23,6 @@ class Controller extends BaseController
             if(!session('defaultAlgo')){
                 session(['defaultAlgo' => 'blind_popularity']);
             }
-
             if(session('defaultUserAlgo') != session('defaultAlgo')){
                 session(['defaultAlgo' => session('defaultUserAlgo')]);
             }

@@ -163,7 +163,6 @@ class Algorithm{
                 return Camp::where('topic_num', '=', $topicnum)
                             ->where('objector_nick_id', '=', NULL)
                             ->whereRaw('go_live_time in (select max(go_live_time) from camp where topic_num='.$topicnum.' and objector_nick_id is null group by camp_num)')				
-                            
                             ->orderBy('submit_time', 'desc')
                             ->groupBy('camp_num')
                             ->get();	
@@ -188,7 +187,7 @@ class Algorithm{
             return  $item->camp_about_nick_id == $nick_name_id;
         })->last();
         
-        if(!$expertCamp){
+        if(!$expertCamp){ # not an expert canonized nick.
             return 0;
         }
 
@@ -199,8 +198,9 @@ class Algorithm{
             $key = $as_of_time;
 		}
 
+		# Implemented cache for existing data. 
         $supports = Cache::remember("$topicnum-supports-$key", 2, function () use($topicnum,$as_of_time) {
-                return Support::where('topic_num','=',$topicnum)
+                 return Support::where('topic_num','=',$topicnum)
                     ->whereRaw("(start < $as_of_time) and ((end = 0) or (end > $as_of_time))")
                     ->orderBy('start','DESC')
                     ->select(['support_order','camp_num','topic_num','nick_name_id','delegate_nick_name_id'])
@@ -212,15 +212,17 @@ class Algorithm{
         });
         
         $delegatedSupports = $supports->filter(function($item) use($nick_name_id){
-             $item->nick_name_id == $nick_name_id && $item->delegate_nick_name_id != 0;
+             return $item->nick_name_id == $nick_name_id && $item->delegate_nick_name_id != 0;
         });
         
-        $expertCampReducedTree = $expertCamp->campTree('blind_popularity');
+		# start with one person one vote canonize.
+		
+        $expertCampReducedTree = $expertCamp->campTree('blind_popularity'); # only need to canonize this branch
         
-        if($directSupports->count() == 0 || $delegatedSupports->count() > 0){
-            return $expertCampReducedTree[$expertCamp->camp_num]['score']*5;
+        if($directSupports->count() > 0 || $delegatedSupports->count() > 0){
+             return $expertCampReducedTree[$expertCamp->camp_num]['score'] * 5;
         }else{
-             return $expertCampReducedTree[$expertCamp->camp_num]['score']*1;
+             return $expertCampReducedTree[$expertCamp->camp_num]['score'] * 1;
         }
     }
 

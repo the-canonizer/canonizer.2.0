@@ -34,15 +34,15 @@
                    
                        <div class="SpCmpHd"><b>Your supported camps for topic "{{ $supportedTopic->topic->topic_name}}"</b></div>
                		<div class="row">
-					   <?php $topicSupport = $supportedTopic->topic->Getsupports($supportedTopic->id);?>
+					   <?php $topicSupport = $supportedTopic->topic->Getsupports($supportedTopic->topic_num,$userNickname);?>
 					   @foreach($topicSupport as $k=>$support)
 					   <div class="col-sm-4">
                        <div class="SpCmpBDY">
-					     <form action="{{ route('settings.support.delete')}}" id="support-{{$support->id}}" method="post">
+					     <form action="{{ route('settings.support.delete')}}" id="support-{{$support->support_id}}" method="post">
 						    <input type="hidden" name="_token" value="{{ csrf_token() }}">
 							
-							<input type="hidden" name="support_id" value="{{ $support->id }}">
-							<input type="hidden" name="topic_support_id" value="{{ $support->topic_support_id }}">
+							<input type="hidden" name="support_id" value="{{ $support->support_id }}">
+							
 							<input type="hidden" name="userNicknames" value="{{ serialize($userNickname) }}">
 						  <button type="submit" class="btn-sptclose"><i class="fa fa-close"></i></button>
 						 </form> 
@@ -77,9 +77,9 @@
 					<input type="hidden" name="topic_num" value="{{ $topic->topic_num }}">
 					<input type="hidden" name="delegate_nick_name_id" value="{{ $delegate_nick_name_id }}">
 					<input type="hidden" name="camp_num" value="{{ $camp->camp_num }}">
-					<input type="hidden" name="lastsupport_rder" value="{{ $lastsupportOrder }}">
+					<input type="hidden" name="lastsupport_order" value="{{ $lastsupportOrder }}">
 					<input type="hidden" name="userNicknames" value="{{ serialize($userNickname) }}">
-					<input type="hidden" name="topic_support_id" value="{{ isset($supportedTopic->id) ? $supportedTopic->id : '0'}}">
+					<input type="hidden" name="support_id" value="{{ isset($supportedTopic->support_id) ? $supportedTopic->support_id : '0'}}">
 					
 					
 					
@@ -87,13 +87,13 @@
                         <div class="col-sm-6 margin-btm-1">
 						<select name="nick_name" class="form-control">
 							
-							@if(isset($supportedTopic->nickname->nick_name_id))
+							@if(isset($supportedTopic->nickname->id))
 								
-							<option  value="{{ $supportedTopic->nickname->nick_name_id }}">{{ $supportedTopic->nickname->nick_name}}</option>
+							<option  value="{{ $supportedTopic->nickname->id }}">{{ $supportedTopic->nickname->nick_name}}</option>
 							@else
 							
 							@foreach($nicknames as $nick)
-							<option  value="{{ $nick->nick_name_id }}">{{ $nick->nick_name}}</option>
+							<option  value="{{ $nick->id }}">{{ $nick->nick_name}}</option>
 							@endforeach
 							
 							@endif

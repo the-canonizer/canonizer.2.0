@@ -9,7 +9,7 @@
     
         public static function canon_decode($code = ''){
             $code = base64_decode($code);
-            return $code=substr($code, 5, 1);
+			return (int) $code=str_replace("Malia","",$code);
         }
 		
     }

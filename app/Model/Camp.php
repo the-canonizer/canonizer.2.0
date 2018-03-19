@@ -176,11 +176,13 @@ class Camp extends Model {
 					 ->latest('topic.submit_time')->first();
 	}
 	public static function getAllAgreementTopic($limit=10,$filter=array()){
+		
+		
 
 		if(!isset($filter['asof']) || (isset($filter['asof']) && $filter['asof']=="default")) {
 		
 		 return self::select(DB::raw('(select count(topic_support.id) from topic_support where topic_support.topic_num=camp.topic_num) as support, camp.*'))
-		             ->join('topic','topic.id','=','camp.topic_num')
+		             ->join('topic','topic.topic_num','=','camp.topic_num')
 					 //->leftJoin('topic_support','camp.topic_num','=','topic_support.topic_num')
 					 //->leftJoin('support_instance','support_instance.topic_support_id','=','topic_support.id')
 		             ->where('camp_name','=','Agreement')
@@ -188,17 +190,18 @@ class Camp extends Model {
 					 ->whereIn('namespace_id',explode(',',session('defaultNamespaceId')))
                      ->where('camp.go_live_time','<',time())					 
 					 ->latest('support')->get()->unique('topic_num')->take($limit);
+					 
 		} else {
 			
 			if(isset($filter['asof']) && $filter['asof']=="review") {
 			
-			  return self::where('camp_name','=','Agreement')->join('topic','topic.id','=','camp.topic_num')->whereIn('namespace_id',explode(',',session('defaultNamespaceId')))->latest('camp.submit_time')->get()->take($limit);	
+			  return self::where('camp_name','=','Agreement')->join('topic','topic.topic_num','=','camp.topic_num')->whereIn('namespace_id',explode(',',session('defaultNamespaceId')))->latest('camp.submit_time')->get()->take($limit);	
 				
 			} else if(isset($filter['asof']) && $filter['asof']=="bydate") {
-				
 				$asofdate =  strtotime(date('Y-m-d H:i:s', strtotime($filter['asofdate'])));
+				
 			
-			  return self::where('camp_name','=','Agreement')->join('topic','topic.id','=','camp.topic_num')->whereIn('namespace_id',explode(',',session('defaultNamespaceId')))->where('camp.go_live_time','<=',$asofdate)->latest('camp.submit_time')->get()->take($limit);	
+			  return self::where('camp_name','=','Agreement')->join('topic','topic.topic_num','=','camp.topic_num')->whereIn('namespace_id',explode(',',session('defaultNamespaceId')))->where('camp.go_live_time','<=',$asofdate)->latest('camp.submit_time')->get()->take($limit);	
 				
 			} 
 		}			 
@@ -209,7 +212,7 @@ class Camp extends Model {
 		
 		 return self::select(DB::raw('(select count(topic_support.id) from topic_support where topic_support.topic_num=camp.topic_num) as support, camp.*'))
 		             ->where('camp_name','=','Agreement')
-					 ->join('topic','topic.id','=','camp.topic_num')
+					 ->join('topic','topic.topic_num','=','camp.topic_num')
 		             //->where('id','<',$id)
 		             ->where('camp.objector_nick_id', '=', NULL)
 					 ->whereIn('namespace_id',explode(',',session('defaultNamespaceId')))
@@ -219,13 +222,13 @@ class Camp extends Model {
 			
 			if(isset($filter['asof']) && $filter['asof']=="review") {
 			
-			  return self::where('camp_name','=','Agreement')->join('topic','topic.id','=','camp.topic_num')->whereIn('namespace_id',explode(',',session('defaultNamespaceId')))->latest('camp.submit_time')->take(10)->offset($offset)->get();	
+			  return self::where('camp_name','=','Agreement')->join('topic','topic.topic_num','=','camp.topic_num')->whereIn('namespace_id',explode(',',session('defaultNamespaceId')))->latest('camp.submit_time')->take(10)->offset($offset)->get();	
 				
 			} else if(isset($filter['asof']) && $filter['asof']=="bydate") {
 				
 				$asofdate =  strtotime(date('Y-m-d H:i:s', strtotime($filter['asofdate'])));
 			
-			  return self::where('camp_name','=','Agreement')->join('topic','topic.id','=','camp.topic_num')->whereIn('namespace_id',explode(',',session('defaultNamespaceId')))->where('camp.go_live_time','<=',$asofdate)->latest('camp.submit_time')->take(10)->offset($offset)->get();	
+			  return self::where('camp_name','=','Agreement')->join('topic','topic.topic_num','=','camp.topic_num')->whereIn('namespace_id',explode(',',session('defaultNamespaceId')))->where('camp.go_live_time','<=',$asofdate)->latest('camp.submit_time')->take(10)->offset($offset)->get();	
 				
 			} 
 		}			 
@@ -333,7 +336,7 @@ class Camp extends Model {
             $supportPoint = Algorithm::{$algorithm}($support->nick_name_id); 
 			
             if($multiSupport){
-               $score  = round($supportPoint / (2 ** ($parent_support_order+1)),3);
+               $score  = round($supportPoint / (2 ** ($parent_support_order)),3);
             }else{
                $score = $supportPoint;
             }
@@ -369,7 +372,7 @@ class Camp extends Model {
 				$multiSupport = false;
 				if($nickNameSupports->count() > 1){
 					$multiSupport = true;
-					$supportCountTotal+=round($supportPoint / (2 ** ($currentCampSupport->support_order+1)),3);
+					$supportCountTotal+=round($supportPoint / (2 ** ($currentCampSupport->support_order)),3);
 				}else if($nickNameSupports->count() == 1){
 					$supportCountTotal+=$supportPoint;
 				}

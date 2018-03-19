@@ -100,7 +100,7 @@ class SettingsController extends Controller
 	
 	public function support($id=null,$campnums=null){
         
-		
+		$as_of_time = time();
 		if(isset($id)) {
 			$topicnumArray  = explode("-",$id);
 			$topicnum       = $topicnumArray[0];
@@ -128,7 +128,10 @@ class SettingsController extends Controller
 			}
 		
 		 
-		    $supportedTopic = TopicSupport::where('topic_num',$topicnum)->whereIn('nick_name_id',$userNickname)->groupBy('topic_num')->orderBy('submit_time','DESC')->first();
+		    $supportedTopic = Support::where('topic_num',$topicnum)
+									  ->whereIn('nick_name_id',$userNickname)
+									  ->whereRaw("(start < $as_of_time) and ((end = 0) or (end > $as_of_time))")
+									  ->groupBy('topic_num')->orderBy('start','DESC')->first();
 		
             return view('settings.support',['userNickname'=>$userNickname,'supportedTopic'=>$supportedTopic,'topic'=>$topic,'nicknames'=>$nicknames,'camp'=>$onecamp,'parentcamp'=>$campWithParents,'delegate_nick_name_id'=>$delegate_nick_name_id]);
 	  } else {
@@ -143,7 +146,9 @@ class SettingsController extends Controller
 			}
 		
 		 
-		    $supportedTopic = TopicSupport::whereIn('nick_name_id',$userNickname)->groupBy('topic_num')->orderBy('submit_time','DESC')->get();
+		    $supportedTopic = Support::whereIn('nick_name_id',$userNickname)
+			                           ->whereRaw("(start < $as_of_time) and ((end = 0) or (end > $as_of_time))")
+			                           ->groupBy('topic_num')->orderBy('start','DESC')->get();
 		
 		    return view('settings.mysupport',['userNickname'=>$userNickname,'supportedTopic'=>$supportedTopic,'nicknames'=>$nicknames]);
 		  
@@ -163,7 +168,7 @@ class SettingsController extends Controller
                 
             ],$messages);
     
-            if ($validator->fails()) {
+            if ($validator->fails()) { dd($validator);
                 return redirect()->back()
                             ->withErrors($validator)
                             ->withInput();
@@ -175,12 +180,12 @@ class SettingsController extends Controller
 			
 			$alreadySupport = array();
 			
-			if(isset($input['topic_support_id']) && $input['topic_support_id'] != 0) {
-			  $alreadySupport  = SupportInstance::where('camp_num',$input['camp_num'])->where('topic_support_id',$input['topic_support_id'])->get();
+			if(isset($input['support_id']) && $input['support_id'] != 0) {
+			  $alreadySupport  = Support::where('topic_num',$input['topic_num'])->where('camp_num',$input['camp_num'])->where('nick_name_id',$input['nick_name'])->get();
             }
 			if(Camp::validateParentsupport($input['topic_num'],$input['camp_num'],$userNicknames)) {
 				
-				Session::flash('error', "You cant support child camps when you have supported a parent camp.");
+				//Session::flash('error', "You cant support child camps when you have supported a parent camp.");
                 return redirect()->back();
 				
 			}
@@ -188,56 +193,30 @@ class SettingsController extends Controller
 			if(count($alreadySupport)) {
 				
 				Session::flash('error', "You have already supported this camp, you cant submit your support again.");
+				
                 return redirect()->back();
 			}
 			
-			if(isset($input['topic_support_id']) && $input['topic_support_id'] != 0) {
-            
-				$support = new SupportInstance();
-				$support->topic_support_id = $input['topic_support_id'];
-				$support->camp_num = $input['camp_num'];
-				$support->submit_time = time();
-				
-				if(isset($input['firstchoice']))
-					$support->support_order = 1;
-				else
-					$support->support_order = $input['lastsupport_rder'] + 1;
-				
-				$support->save();
-
-				Session::flash('success', "Your support has been submitted successfully.");
-				return redirect()->back();
-		  } else {
-			  
-			  $supportTopic  = new TopicSupport();
+			
+			  $supportTopic  = new Support();
 			  $supportTopic->topic_num = $input['topic_num'];
 			  $supportTopic->nick_name_id = $input['nick_name'];
-			  $supportTopic->delegate_nick_id = $input['delegate_nick_name_id'];
-			  $supportTopic->submit_time = time();
-			  
-			  if($supportTopic->save()) {
-				  
-				$support = new SupportInstance();
-				$support->topic_support_id = $supportTopic->id;
-				$support->camp_num = $input['camp_num'];
-				$support->submit_time = time();
+			  $supportTopic->delegate_nick_name_id = $input['delegate_nick_name_id'];
+			  $supportTopic->start = time();
+		      $supportTopic->camp_num = $input['camp_num'];
 				
 				if(isset($input['firstchoice']))
-					$support->support_order = 1;
+					$supportTopic->support_order = 1;
 				else
-					$support->support_order = $input['lastsupport_rder'] + 1;
+					$supportTopic->support_order = $input['lastsupport_order'] + 1;
 				
-				$support->save();
+				$supportTopic->save();
 
 				Session::flash('success', "Your support has been submitted successfully.");
 				return redirect()->back();
 				  
-			  } else {
-				  
-				  Session::flash('error', "Your support has not been submitted successfully.");
-				  return redirect()->back();
-			  }
-		  }	
+			 
+		 	
         }else{
             return redirect()->route('login');
         }
@@ -250,30 +229,21 @@ class SettingsController extends Controller
 		$input = $request->all();
 		
 		$support_id = (isset($input['support_id'])) ? $input['support_id'] : 0;
-		$topic_support_id = (isset($input['topic_support_id'])) ? $input['topic_support_id'] : 0;
+		
 		if($id && $support_id) {
 			
-			if(SupportInstance::where('id',$support_id)->delete()) {
+			    
 				
-				Session::flash('success', "Your support has been removed successfully.");
+				if(Support::where('support_id',$support_id)->update(array('end'=>time()))) {
 				
-				$remainingSupport = SupportInstance::where('topic_support_id',$topic_support_id)->get();
+				 Session::flash('success', "Your support has been removed successfully.");
 				
-				if(count($remainingSupport)==0) {
-					
-					TopicSupport::where('id',$topic_support_id)->delete();					
-					
+				} else {
+				 Session::flash('error', "Your support has not been removed.");	
 				}
-				
-				
                 return redirect()->back();
 				
-			} else {
-				
-				Session::flash('error', "Your support has not been removed.");
-                return redirect()->back();
-				
-			}
+			
 		}
 		Session::flash('error', "Invalid access.");
         return redirect()->back();
