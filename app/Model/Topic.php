@@ -62,9 +62,15 @@ class Topic extends Model {
         return $this->hasOne('App\Model\Nickname', 'id', 'submitter_nick_id');
     }
 	
-	public function scopeGetsupports($query,$topic_support_id,$userNickname=null) {
-		
-		return $supports = SupportInstance::where('topic_support_id',$topic_support_id)->groupBy('camp_num')->orderBy('support_order','ASC')->get();
+	public function scopeGetsupports($query,$topic_num,$userNickname=null) {
+		$as_of_time=time();
+		return $supports = Support::where('topic_num',$topic_num)		                    
+							->where('delegate_nick_name_id',0)
+							->whereIn('nick_name_id',$userNickname)
+							->whereRaw("(start < $as_of_time) and ((end = 0) or (end > $as_of_time))")
+							->orderBy('start','DESC')
+							->groupBy('nick_name_id')
+							->get();
 		
 	}
 	

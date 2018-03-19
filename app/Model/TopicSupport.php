@@ -132,11 +132,11 @@ class TopicSupport extends Model {
         foreach($traversedTreeArray as $array){
             $nickName = Nickname::where('id',$array['index'])->first();
             if($parentNode){
-                $html.= "<li class='main-parent'><a href='".route('user_supports',$nickName->id)."'>{$nickName->id} - {$nickName->nick_name}</a><div class='badge'>".round($array['score'],2)."</div>";
+                $html.= "<li class='main-parent'><a href='".route('user_supports',$nickName->id)."'>{$nickName->nick_name}</a><div class='badge'>".round($array['score'],2)."</div>";
                 $html.='<a href="'.url('support/'.$topicnum.'/'.$campnum.'-'.$array['index']).'" class="btn btn-info">Delegate Your Support</a>';
             
             }else{
-                $html.= "<li><a href='".route('user_supports',$nickName->id)."'>{$nickName->id}-{$nickName->nick_name}</a><div class='badge'>".round($array['score'],2)."</div> ";
+                $html.= "<li><a href='".route('user_supports',$nickName->id)."'>{$nickName->nick_name}</a><div class='badge'>".round($array['score'],2)."</div> ";
                 $html.='<a href="'.url('support/'.$topicnum.'/'.$campnum.'-'.$array['index']).'" class="btn btn-info">Delegate Your Support</a>';
             }
             $html.="<ul>";

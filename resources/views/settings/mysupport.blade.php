@@ -35,15 +35,15 @@
                    
                        <div class="SpCmpHd"><b>For Topic : {{ $data->topic->topic_name}}</b></div>
                		<div class="row">
-					   <?php $topicSupport = $data->topic->Getsupports($data->id);?>
+					   <?php $topicSupport = $data->topic->Getsupports($data->topic_num,$userNickname);?>
 					   @foreach($topicSupport as $k=>$support)
 					   <div class="col-sm-4">
                        <div class="SpCmpBDY">
-					     <form action="{{ route('settings.support.delete')}}" id="support-{{$support->id}}" method="post">
+					     <form action="{{ route('settings.support.delete')}}" id="support-{{$support->support_id}}" method="post">
 						    <input type="hidden" name="_token" value="{{ csrf_token() }}">
 							
-							<input type="hidden" name="support_id" value="{{ $support->id }}">
-							<input type="hidden" name="topic_support_id" value="{{ $support->topic_support_id }}">
+							<input type="hidden" name="support_id" value="{{ $support->support_id }}">
+							
 							<input type="hidden" name="userNicknames" value="{{ serialize($userNickname) }}">
 						  <button type="submit" class="btn-sptclose"><i class="fa fa-close"></i></button>
 						 </form> 
