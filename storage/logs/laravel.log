@@ -19744,3 +19744,25 @@ Stack trace:
 #56 E:\xampp\htdocs\canonizer.2.0\public\index.php(52): Illuminate\Foundation\Http\Kernel->handle(Object(Illuminate\Http\Request))
 >>>>>>> 6e38f86544ea5b7348bea3aed17874c183194f05
 #57 {main}  
+[2018-03-20 05:00:02] local.ERROR: ErrorException: file_put_contents(/var/www/html/canonizer2.0/storage/framework/sessions/ezj04K9duQJGckGcTSDjdXL4kbamclnnRbjXHcs9): failed to open stream: No such file or directory in /var/www/html/canonizer2.0/vendor/laravel/framework/src/Illuminate/Filesystem/Filesystem.php:122
+Stack trace:
+#0 [internal function]: Illuminate\Foundation\Bootstrap\HandleExceptions->handleError(2, 'file_put_conten...', '/var/www/html/c...', 122, Array)
+#1 /var/www/html/canonizer2.0/vendor/laravel/framework/src/Illuminate/Filesystem/Filesystem.php(122): file_put_contents('/var/www/html/c...', 'a:10:{s:6:"_tok...', 2)
+#2 /var/www/html/canonizer2.0/vendor/laravel/framework/src/Illuminate/Session/FileSessionHandler.php(83): Illuminate\Filesystem\Filesystem->put('/var/www/html/c...', 'a:10:{s:6:"_tok...', true)
+#3 /var/www/html/canonizer2.0/vendor/laravel/framework/src/Illuminate/Session/Store.php(128): Illuminate\Session\FileSessionHandler->write('ezj04K9duQJGckG...', 'a:10:{s:6:"_tok...')
+#4 /var/www/html/canonizer2.0/vendor/laravel/framework/src/Illuminate/Session/Middleware/StartSession.php(88): Illuminate\Session\Store->save()
+#5 /var/www/html/canonizer2.0/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(218): Illuminate\Session\Middleware\StartSession->terminate(Object(Illuminate\Http\Request), Object(Illuminate\Http\Response))
+#6 /var/www/html/canonizer2.0/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(189): Illuminate\Foundation\Http\Kernel->terminateMiddleware(Object(Illuminate\Http\Request), Object(Illuminate\Http\Response))
+#7 /var/www/html/canonizer2.0/public/index.php(57): Illuminate\Foundation\Http\Kernel->terminate(Object(Illuminate\Http\Request), Object(Illuminate\Http\Response))
+#8 {main}  
+[2018-03-20 08:17:10] local.ERROR: ErrorException: file_put_contents(/var/www/html/canonizer2.0/storage/framework/sessions/BpAaYkRvzYWTTsyCN5q9rC2xtTD1LIBnGoW1wlpX): failed to open stream: No such file or directory in /var/www/html/canonizer2.0/vendor/laravel/framework/src/Illuminate/Filesystem/Filesystem.php:122
+Stack trace:
+#0 [internal function]: Illuminate\Foundation\Bootstrap\HandleExceptions->handleError(2, 'file_put_conten...', '/var/www/html/c...', 122, Array)
+#1 /var/www/html/canonizer2.0/vendor/laravel/framework/src/Illuminate/Filesystem/Filesystem.php(122): file_put_contents('/var/www/html/c...', 'a:10:{s:6:"_tok...', 2)
+#2 /var/www/html/canonizer2.0/vendor/laravel/framework/src/Illuminate/Session/FileSessionHandler.php(83): Illuminate\Filesystem\Filesystem->put('/var/www/html/c...', 'a:10:{s:6:"_tok...', true)
+#3 /var/www/html/canonizer2.0/vendor/laravel/framework/src/Illuminate/Session/Store.php(128): Illuminate\Session\FileSessionHandler->write('BpAaYkRvzYWTTsy...', 'a:10:{s:6:"_tok...')
+#4 /var/www/html/canonizer2.0/vendor/laravel/framework/src/Illuminate/Session/Middleware/StartSession.php(88): Illuminate\Session\Store->save()
+#5 /var/www/html/canonizer2.0/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(218): Illuminate\Session\Middleware\StartSession->terminate(Object(Illuminate\Http\Request), Object(Illuminate\Http\Response))
+#6 /var/www/html/canonizer2.0/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(189): Illuminate\Foundation\Http\Kernel->terminateMiddleware(Object(Illuminate\Http\Request), Object(Illuminate\Http\Response))
+#7 /var/www/html/canonizer2.0/public/index.php(57): Illuminate\Foundation\Http\Kernel->terminate(Object(Illuminate\Http\Request), Object(Illuminate\Http\Response))
+#8 {main}  
