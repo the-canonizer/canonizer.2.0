@@ -8,6 +8,7 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Session;
 use Auth;
+use Cookie;
 
 class Controller extends BaseController
 {
@@ -15,27 +16,34 @@ class Controller extends BaseController
 
     public function __construct()
     {   
+        //dd(Auth::user());
+        /*@session_start();
+        $_SESSION['defaultAlgo'] = 'blind_popularity';
+        dd($_SESSION['defaultAlgo']);*/
+
+        /*Cookie::queue('defaultAlgo','blind_popularity', 2);
+        dd(Cookie::get('defaultAlgo'));
         if(Auth::check()){
+           dd(session('defaultUserAlgo'));
             if(!session('defaultUserAlgo')){
                 session(['defaultUserAlgo'=>Auth::user()->default_algo]);
+                session(['defaultAlgo' => session('defaultUserAlgo')]);
             }
 
             if(!session('defaultAlgo')){
                 session(['defaultAlgo' => 'blind_popularity']);
             }
-            if(session('defaultUserAlgo') != session('defaultAlgo')){
-                session(['defaultAlgo' => session('defaultUserAlgo')]);
-            }
+            
         }else{
             if(!session('defaultAlgo')){
                 session(['defaultAlgo' => 'blind_popularity']);
             }
         }
         
-
+        
         if(!session('defaultNamespaceId')){
              session(['defaultNamespaceId' => '1']);
-        }
+        }*/
        
     }
 }

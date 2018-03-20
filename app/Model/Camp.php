@@ -187,7 +187,7 @@ class Camp extends Model {
 					 //->leftJoin('support_instance','support_instance.topic_support_id','=','topic_support.id')
 		             ->where('camp_name','=','Agreement')
 		             ->where('camp.objector_nick_id', '=', NULL)
-					 ->whereIn('namespace_id',explode(',',session('defaultNamespaceId')))
+					 ->whereIn('namespace_id',explode(',',session('defaultNamespaceId',1)))
                      ->where('camp.go_live_time','<',time())					 
 					 ->latest('support')->get()->unique('topic_num')->take($limit);
 					 
@@ -215,7 +215,7 @@ class Camp extends Model {
 					 ->join('topic','topic.topic_num','=','camp.topic_num')
 		             //->where('id','<',$id)
 		             ->where('camp.objector_nick_id', '=', NULL)
-					 ->whereIn('namespace_id',explode(',',session('defaultNamespaceId')))
+					 ->whereIn('namespace_id',explode(',',session('defaultNamespaceId',1)))
                      ->where('camp.go_live_time','<',time())
 					 ->latest('support')->take(10)->offset($offset)->get()->unique('topic_num');
 		} else {
@@ -332,16 +332,19 @@ class Camp extends Model {
         });
         
 		$score = 0;
+		
         foreach($delegatedSupports as $support){           
             $supportPoint = Algorithm::{$algorithm}($support->nick_name_id); 
 			
             if($multiSupport){
-               $score  = round($supportPoint / (2 ** ($parent_support_order)),3);
+               $score+= round($supportPoint / (2 ** ($parent_support_order)),3);
             }else{
-               $score = $supportPoint;
+               $score+= $supportPoint;
             }
+			
             $score+= $this->getDeletegatedSupportCount($algorithm,$topicnum,$campnum,$support->nick_name_id,$parent_support_order,$multiSupport);
         }
+		
 		return $score;
 
 	}
@@ -381,6 +384,7 @@ class Camp extends Model {
 		}}catch(\Exception $e){
 			echo "topic-support-nickname-$topicnum".$e->getMessage();
 		}
+		
 		return $supportCountTotal;
 	}
 
@@ -529,7 +533,7 @@ class Camp extends Model {
 
 	public function campTreeHtml($activeCamp = null,$activeCampDefault=false){
 		
-		$reducedTree= $this->campTree(session('defaultAlgo'),$activeAcamp = null,$supportCampCount=0,$needSelected=0);
+		$reducedTree= $this->campTree(session('defaultAlgo','blind_popularity'),$activeAcamp = null,$supportCampCount=0,$needSelected=0);
 
 		$filter = isset($_REQUEST['filter']) && is_numeric($_REQUEST['filter']) ? $_REQUEST['filter'] : 0.001;
 		
