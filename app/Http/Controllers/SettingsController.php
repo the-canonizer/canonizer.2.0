@@ -211,7 +211,10 @@ class SettingsController extends Controller
 					$supportTopic->support_order = $input['lastsupport_order'] + 1;
 				
 				$supportTopic->save();
-
+                 
+				session()->forget("topic-support-{$input['topic_num']}");
+				session()->forget("topic-support-nickname-{$input['topic_num']}");
+				
 				Session::flash('success', "Your support has been submitted successfully.");
 				return redirect()->back();
 				  

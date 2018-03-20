@@ -16620,3 +16620,65 @@ Stack trace:
 #55 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(116): Illuminate\Foundation\Http\Kernel->sendRequestThroughRouter(Object(Illuminate\Http\Request))
 #56 E:\xampp\htdocs\canonizer.2.0\public\index.php(52): Illuminate\Foundation\Http\Kernel->handle(Object(Illuminate\Http\Request))
 #57 {main}  
+[2018-03-19 18:04:10] local.ERROR: Symfony\Component\Debug\Exception\FatalThrowableError: Class 'Laracasts\Flash\FlashServiceProvider' not found in E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\ProviderRepository.php:208
+Stack trace:
+#0 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\ProviderRepository.php(144): Illuminate\Foundation\ProviderRepository->createProvider('Laracasts\\Flash...')
+#1 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\ProviderRepository.php(61): Illuminate\Foundation\ProviderRepository->compileManifest(Array)
+#2 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Application.php(549): Illuminate\Foundation\ProviderRepository->load(Array)
+#3 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Bootstrap\RegisterProviders.php(17): Illuminate\Foundation\Application->registerConfiguredProviders()
+#4 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Application.php(208): Illuminate\Foundation\Bootstrap\RegisterProviders->bootstrap(Object(Illuminate\Foundation\Application))
+#5 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(162): Illuminate\Foundation\Application->bootstrapWith(Array)
+#6 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(146): Illuminate\Foundation\Http\Kernel->bootstrap()
+#7 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(116): Illuminate\Foundation\Http\Kernel->sendRequestThroughRouter(Object(Illuminate\Http\Request))
+#8 E:\xampp\htdocs\canonizer.2.0\public\index.php(52): Illuminate\Foundation\Http\Kernel->handle(Object(Illuminate\Http\Request))
+#9 {main}  
+[2018-03-19 18:04:10] local.ERROR: ReflectionException: Class session does not exist in E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Container\Container.php:729
+Stack trace:
+#0 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Container\Container.php(729): ReflectionClass->__construct('session')
+#1 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Container\Container.php(608): Illuminate\Container\Container->build('session')
+#2 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Container\Container.php(575): Illuminate\Container\Container->resolve('session')
+#3 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Application.php(728): Illuminate\Container\Container->make('session')
+#4 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Container\Container.php(862): Illuminate\Foundation\Application->make('session')
+#5 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Container\Container.php(790): Illuminate\Container\Container->resolveClass(Object(ReflectionParameter))
+#6 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Container\Container.php(757): Illuminate\Container\Container->resolveDependencies(Array)
+#7 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Container\Container.php(608): Illuminate\Container\Container->build('Illuminate\\Sess...')
+#8 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Container\Container.php(575): Illuminate\Container\Container->resolve('Illuminate\\Sess...')
+#9 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Application.php(728): Illuminate\Container\Container->make('Illuminate\\Sess...')
+#10 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(215): Illuminate\Foundation\Application->make('Illuminate\\Sess...')
+#11 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(189): Illuminate\Foundation\Http\Kernel->terminateMiddleware(Object(Illuminate\Http\Request), Object(Illuminate\Http\Response))
+#12 E:\xampp\htdocs\canonizer.2.0\public\index.php(57): Illuminate\Foundation\Http\Kernel->terminate(Object(Illuminate\Http\Request), Object(Illuminate\Http\Response))
+#13 {main}  
+[2018-03-19 18:04:39] local.ERROR: Symfony\Component\Debug\Exception\FatalThrowableError: Class 'Laravel\Flash\FlashServiceProvider' not found in E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\ProviderRepository.php:208
+Stack trace:
+#0 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\ProviderRepository.php(144): Illuminate\Foundation\ProviderRepository->createProvider('Laravel\\Flash\\F...')
+#1 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\ProviderRepository.php(61): Illuminate\Foundation\ProviderRepository->compileManifest(Array)
+#2 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Application.php(549): Illuminate\Foundation\ProviderRepository->load(Array)
+#3 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Bootstrap\RegisterProviders.php(17): Illuminate\Foundation\Application->registerConfiguredProviders()
+#4 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Application.php(208): Illuminate\Foundation\Bootstrap\RegisterProviders->bootstrap(Object(Illuminate\Foundation\Application))
+#5 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(162): Illuminate\Foundation\Application->bootstrapWith(Array)
+#6 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(146): Illuminate\Foundation\Http\Kernel->bootstrap()
+#7 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(116): Illuminate\Foundation\Http\Kernel->sendRequestThroughRouter(Object(Illuminate\Http\Request))
+#8 E:\xampp\htdocs\canonizer.2.0\public\index.php(52): Illuminate\Foundation\Http\Kernel->handle(Object(Illuminate\Http\Request))
+#9 {main}  
+[2018-03-19 18:04:39] local.ERROR: ReflectionException: Class session does not exist in E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Container\Container.php:729
+Stack trace:
+#0 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Container\Container.php(729): ReflectionClass->__construct('session')
+#1 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Container\Container.php(608): Illuminate\Container\Container->build('session')
+#2 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Container\Container.php(575): Illuminate\Container\Container->resolve('session')
+#3 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Application.php(728): Illuminate\Container\Container->make('session')
+#4 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Container\Container.php(862): Illuminate\Foundation\Application->make('session')
+#5 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Container\Container.php(790): Illuminate\Container\Container->resolveClass(Object(ReflectionParameter))
+#6 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Container\Container.php(757): Illuminate\Container\Container->resolveDependencies(Array)
+#7 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Container\Container.php(608): Illuminate\Container\Container->build('Illuminate\\Sess...')
+#8 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Container\Container.php(575): Illuminate\Container\Container->resolve('Illuminate\\Sess...')
+#9 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Application.php(728): Illuminate\Container\Container->make('Illuminate\\Sess...')
+#10 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(215): Illuminate\Foundation\Application->make('Illuminate\\Sess...')
+#11 E:\xampp\htdocs\canonizer.2.0\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(189): Illuminate\Foundation\Http\Kernel->terminateMiddleware(Object(Illuminate\Http\Request), Object(Illuminate\Http\Response))
+#12 E:\xampp\htdocs\canonizer.2.0\public\index.php(57): Illuminate\Foundation\Http\Kernel->terminate(Object(Illuminate\Http\Request), Object(Illuminate\Http\Response))
+#13 {main}  
+[2018-03-20 05:51:33] local.ERROR: Symfony\Component\Debug\Exception\FatalErrorException: Allowed memory size of 314572800 bytes exhausted (tried to allocate 1515520 bytes) in E:\xampp\htdocs\canonizer.2.0\app\Model\Camp.php:337
+Stack trace:
+#0 {main}  
+[2018-03-20 05:57:00] local.ERROR: Symfony\Component\Debug\Exception\FatalErrorException: Allowed memory size of 314572800 bytes exhausted (tried to allocate 2031616 bytes) in E:\xampp\htdocs\canonizer.2.0\app\Model\Camp.php:337
+Stack trace:
+#0 {main}  

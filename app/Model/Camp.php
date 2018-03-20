@@ -332,16 +332,19 @@ class Camp extends Model {
         });
         
 		$score = 0;
+		
         foreach($delegatedSupports as $support){           
             $supportPoint = Algorithm::{$algorithm}($support->nick_name_id); 
 			
             if($multiSupport){
-               $score  = round($supportPoint / (2 ** ($parent_support_order)),3);
+               $score+= round($supportPoint / (2 ** ($parent_support_order)),3);
             }else{
-               $score = $supportPoint;
+               $score+= $supportPoint;
             }
+			
             $score+= $this->getDeletegatedSupportCount($algorithm,$topicnum,$campnum,$support->nick_name_id,$parent_support_order,$multiSupport);
         }
+		
 		return $score;
 
 	}
@@ -381,6 +384,7 @@ class Camp extends Model {
 		}}catch(\Exception $e){
 			echo "topic-support-nickname-$topicnum".$e->getMessage();
 		}
+		
 		return $supportCountTotal;
 	}
 
