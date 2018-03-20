@@ -142,7 +142,6 @@ class HomeController extends Controller {
 				$sinstance->status = 0;
 				
 				$sinstance->save();
-				
 			}
 			
 		}	
