@@ -337,7 +337,7 @@ class Camp extends Model {
             $supportPoint = Algorithm::{$algorithm}($support->nick_name_id); 
 			
             if($multiSupport){
-               $score+= round($supportPoint / (2 ** ($parent_support_order)),3);
+               $score+= round($supportPoint / (2 ** ($parent_support_order)),2);
             }else{
                $score+= $supportPoint;
             }
@@ -375,7 +375,7 @@ class Camp extends Model {
 				$multiSupport = false;
 				if($nickNameSupports->count() > 1){
 					$multiSupport = true;
-					$supportCountTotal+=round($supportPoint / (2 ** ($currentCampSupport->support_order)),3);
+					$supportCountTotal+=round($supportPoint / (2 ** ($currentCampSupport->support_order)),2);
 				}else if($nickNameSupports->count() == 1){
 					$supportCountTotal+=$supportPoint;
 				}
