@@ -81,7 +81,7 @@
                     <ul class="support-tree">
 					  <?php
 
-                    $support_tree = \App\Model\TopicSupport::topicSupportTree(session('defaultAlgo'),$camp->topic_num,$camp->camp_num); ?>
+                    $support_tree = \App\Model\TopicSupport::topicSupportTree(session('defaultAlgo','blind_popularity'),$camp->topic_num,$camp->camp_num); ?>
                     {!! $support_tree !!}
 					 </ul>  
 				</div>

@@ -10,14 +10,24 @@ use App\Model\TopicSupport;
 use App\Model\SupportInstance;
 use DB;
 use App\Model\Namespaces;
+use Auth;
 
 class HomeController extends Controller {
 
 	public function __construct(){
 		 parent::__construct();
+
+		 
 	}
 
     public function index(Request $request,$params = null) {
+		if(Auth::check()){
+			if(!session('defaultUserAlgo')){
+				$defaultAlgo = Auth::user()->default_algo;
+				session(['defaultAlgo'=>$defaultAlgo]);
+				session(['defaultUserAlgo'=>$defaultAlgo]);
+			}
+		}
 		$namespaces= Namespaces::all();
 		$topics = Camp::getAllAgreementTopic(10,$_REQUEST);
         

@@ -13,6 +13,7 @@ use App\Model\Support;
 use App\Model\TopicSupport;
 use App\Model\SupportInstance;
 use Illuminate\Support\Facades\Validator;
+use Cookie;
 
 class SettingsController extends Controller
 {
@@ -259,7 +260,10 @@ class SettingsController extends Controller
 		$user = User::find(Auth::user()->id);
 		$user->default_algo = $request->input('default_algo');
 		$user->save();
-		session()->forget('defaultUserAlgo');
+		
+		session(['defaultAlgo'=>$user->default_algo]);
+		
+
 		Session::flash('success', "Your default algorithm preference updated successfully.");
 		return redirect()->back();
 	}
