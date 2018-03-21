@@ -202,7 +202,7 @@ class SettingsController extends Controller
             }
 			if(Camp::validateParentsupport($input['topic_num'],$input['camp_num'],$userNicknames)) {
 				
-				//Session::flash('error', "You cant support child camps when you have supported a parent camp.");
+				Session::flash('error', "You cant support child camps when you have supported a parent camp.");
                 return redirect()->back();
 				
 			}

@@ -68,8 +68,7 @@ class Topic extends Model {
 							->where('delegate_nick_name_id',0)
 							->whereIn('nick_name_id',$userNickname)
 							->whereRaw("(start < $as_of_time) and ((end = 0) or (end > $as_of_time))")
-							->orderBy('start','DESC')
-							->groupBy('nick_name_id')
+							->orderBy('start','DESC')							
 							->get();
 		
 	}
