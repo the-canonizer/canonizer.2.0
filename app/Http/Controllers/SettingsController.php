@@ -286,4 +286,14 @@ class SettingsController extends Controller
 		Session::flash('success', "Your default algorithm preference updated successfully.");
 		return redirect()->back();
 	}
+
+	public function supportReorder(Request $request){
+
+		$data = $request->only(['positions']);
+		if(isset($data['positions']) && !empty($data['positions'])){
+			foreach($data['positions'] as $position=>$support_id){
+				Support::where('support_id',$support_id)->update(array('support_order'=>$position+1));
+			}
+		}
+	}
 }

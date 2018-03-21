@@ -33,40 +33,60 @@
                 @if(count($supportedTopic))
                    
                        <div class="SpCmpHd"><b>Your supported camps for topic "{{ $supportedTopic->topic->topic_name}}"</b></div>
-               		<div class="row">
+               		<div class="row column">
+                       
 					   <?php $topicSupport = $supportedTopic->topic->Getsupports($supportedTopic->topic_num,$userNickname);?>
 					   @foreach($topicSupport as $k=>$support)
-					   <div class="col-sm-4">
-                       <div class="SpCmpBDY">
-					     <form action="{{ route('settings.support.delete')}}" id="support-{{$support->support_id}}" method="post">
-						    <input type="hidden" name="_token" value="{{ csrf_token() }}">
-							
-							<input type="hidden" name="support_id" value="{{ $support->support_id }}">
-							
-							<input type="hidden" name="userNicknames" value="{{ serialize($userNickname) }}">
-						  <button type="submit" class="btn-sptclose"><i class="fa fa-close"></i></button>
-						 </form> 
-					     <b>Camp :</b> {{ $support->camp->title }} <br/>
-					   	 <b>Support Order :</b> {{ $k+1 }} Choice <br/>
-						 <b>Nickname :</b> {{ $supportedTopic->nickname->nick_name }} <br/>
-                        @if($supportedTopic->delegate_nick_id != 0) 						 
-						 <b>Support Delegated To:</b> {{ $supportedTopic->delegatednickname->nick_name}}
-					    @endif
+                    
+                            <div id="positions_{{ $support->support_id }}" class="SpCmpBDY support-sorter-element ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
+                            <form action="{{ route('settings.support.delete')}}" id="support-{{$support->support_id}}" method="post">
+                                <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                
+                                <input type="hidden" name="support_id" value="{{ $support->support_id }}">
+                                <input type="hidden" name="topic_num" value="{{ $supportedTopic->topic_num }}">
+                                
+                                <input type="hidden" name="userNicknames" value="{{ serialize($userNickname) }}">
+                            <button type="submit" class="btn-sptclose"><i class="fa fa-close"></i></button>
+                            </form> 
+                            <b>Camp :</b> {{ $support->camp->title }} <br/>
+                            <!--<b>Support Order :</b> {{ $k+1 }} Choice <br/>-->
+                            <b>Nickname :</b> {{ $supportedTopic->nickname->nick_name }} <br/>
+                            @if($supportedTopic->delegate_nick_id != 0) 						 
+                            <b>Support Delegated To:</b> {{ $supportedTopic->delegatednickname->nick_name}}
+                            @endif
+                        
+                        <?php if(isset($topic->topic_num) && $topic->topic_num==$supportedTopic->topic_num) $lastsupportOrder++;
+                            
+                        ?>
+                        
+                        </div>
+                      
 					   
-					   <?php if(isset($topic->topic_num) && $topic->topic_num==$supportedTopic->topic_num) $lastsupportOrder++;
-						   
-					   ?>
-					  
-                       </div>
-					   
-					   </div>
 					   @endforeach
+                       
 					</div>   
 					   
-                
+                <script>
+                $( function() {
+                    $( ".column" ).sortable({
+                        connectWith: ".column",
+                        cursor: 'move',
+                        opacity: 0.6,
+                        update: function(event, ui) {
+                            $.post('{{ route("settings.support-reorder") }}', $(this).sortable('serialize')+"&_token={{ csrf_token() }}&topicnum={{ $supportedTopic->topic_num }}", function(data) {
+                                if(!data.success) {
+                                    alert('Whoops, something went wrong :/');
+                                }
+                        }, 'json');
+                        } 
+                    });
+                    
+                });
+                </script>
                @else
 				  <h6 style="margin-top:30px;margin-left:20px;"> You didn't supported any camp yet for this topic.</h6>
                @endif			  
+
 
          </div>
         @if(isset($topic))

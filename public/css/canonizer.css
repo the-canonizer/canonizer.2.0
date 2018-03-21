@@ -1113,3 +1113,11 @@ address p{
 	background: #fff;
 	font-size:14px;
 }
+
+
+
+.support-sorter-element {
+    max-width: 300px;
+	margin: 7px;
+	cursor:move;
+}
