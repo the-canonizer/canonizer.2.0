@@ -21,23 +21,44 @@ class UploadController extends Controller
        
        
         $validator = Validator::make($request->all(), [
-            'file' => 'required|mimes:jpeg,bmp,png',
-            'file_name' => 'required',
+            'file' => 'required|mimes:jpeg,bmp,png,jpg,gif',
+            //'file_name' => 'required',
         ]);
 
         if($validator->fails()) {
-             session(['error'=> "Select a image file and fill file name"]);
+             //session(['error'=> "Select a image file and fill file name"]);
+			 $request->session()->flash('error', 'Please select a image file.');
              return redirect()->back()->withErrors($validator);
         }
 
         $file = $request->file('file'); 
+		
+		
+		if($request->input('file_name')=="") {
+			
+		  $uniquename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);	
+		} else {
+			
+		  $uniquename = trim($request->input('file_name'));	
+		}
+		
+		 $existingFile = Upload::where('file_id',$uniquename)->get();
+		 
+		 if(count($existingFile) > 0 ) {
+			
+             $request->session()->flash('error', 'There is already a file with name '.$uniquename.', Please use different name.');
+             return redirect()->back();			
+			 
+		 }
+		
         if($file){
-        $fileId = uniqid() . '.' . $file->getClientOriginalExtension();
-        try{
-            $file->storeAs('uploads',$fileId,'public');
+         $fullname = $uniquename . '.' . $file->getClientOriginalExtension();
+         try{
+            $path = $file->storeAs('files',$fullname,'public_files');
+			
             $upload = new Upload;
-            $upload->file_id = $fileId;
-            $upload->file_name = $request->input('file_name');
+            $upload->file_id = $uniquename;
+            $upload->file_name = $fullname;
             $upload->file_type = $file->getMimeType();
             $upload->user_id = $request->user()->id;
             $upload->save();

@@ -29,21 +29,37 @@ class SettingsController extends Controller
     public function profile_update(Request $request){
         $input = $request->all();
         $id = (isset($_GET['id'])) ? $_GET['id'] : '';
+		$private_flags = array();
         if($id){
             $user = User::find($id);
-            $user->first_name = $input['first_name'];
+            $user->first_name = $input['first_name']; 
+			if($input['first_name_bit']!='0') $private_flags[] = $input['first_name_bit'];
             $user->last_name = $input['last_name'];
+			if($input['last_name_bit']!='0')  $private_flags[] = $input['last_name_bit'];
             $user->middle_name = $input['middle_name'];
+			if($input['middle_name_bit']!='0') $private_flags[] = $input['middle_name_bit'];
             $user->gender = $input['gender'];
+			//if($input['gender_bit']!='0') $private_flags[]=$input['gender_bit'];
             $user->birthday = date('Y-m-d',strtotime($input['birthday']));
+			if($input['birthday_bit']!='0') $private_flags[]=$input['birthday_bit'];
             $user->language = $input['language'];
             $user->address_1 = $input['address_1'];
+			if($input['address_1_bit']!='0')  $private_flags[]=$input['address_1_bit'];
             $user->address_2 = $input['address_2'];
+			if($input['address_2_bit']!='0')  $private_flags[]=$input['address_2_bit'];
             $user->city = $input['city'];
+			if($input['city_bit']!='0')  $private_flags[]=$input['city_bit'];
             $user->state = $input['state'];
+			if($input['state_bit']!='0')  $private_flags[]=$input['state_bit'];
             $user->country = $input['country'];
+			if($input['country_bit']!='0')  $private_flags[]=$input['country_bit'];
             $user->postal_code = $input['postal_code'];
+			if($input['postal_code_bit']!='0')  $private_flags[]=$input['postal_code_bit'];
 
+			$flags = implode(",",$private_flags); 
+			
+			$user->private_flags = $flags;
+			 
             $user->update();
             Session::flash('success', "Profile updated successfully.");
             return redirect()->back();
