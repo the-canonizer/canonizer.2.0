@@ -222,10 +222,8 @@ class SettingsController extends Controller
 			  $supportTopic->start = time();
 		      $supportTopic->camp_num = $input['camp_num'];
 				
-				if(isset($input['firstchoice']))
-					$supportTopic->support_order = 1;
-				else
-					$supportTopic->support_order = $input['lastsupport_order'] + 1;
+				
+				$supportTopic->support_order = $input['lastsupport_order'] + 1;
 				
 				$supportTopic->save();
                  

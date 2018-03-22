@@ -29,7 +29,7 @@
                 <li><a class="" href="{{ route('settings.algo-preferences')}}">Default Algorithm</a></li>
             </ul>
          <div class="SupportCmp">
-		        
+		        <p style="margin-left: 15px;color:red">Note : To change support order of camp, drag & drop the camp box on your choice position. </p>
                 @if(count($supportedTopic))
                  @foreach($supportedTopic as $data)
                    
@@ -37,6 +37,7 @@
                		<div class="row column{{ $data->topic_num }}">
 					   <?php $topicSupport = $data->topic->Getsupports($data->topic_num,$userNickname);?>
 					   @foreach($topicSupport as $k=>$support)
+					    
 					   <div id="positions_{{ $support->support_id }}" class="SpCmpBDY support-sorter-element ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
 					     <form action="{{ route('settings.support.delete')}}" id="support-{{$support->support_id}}" method="post">
 						    <input type="hidden" name="_token" value="{{ csrf_token() }}">

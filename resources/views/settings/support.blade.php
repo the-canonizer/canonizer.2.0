@@ -29,6 +29,7 @@
                 <li><a class="" href="{{ route('settings.algo-preferences')}}">Default Algorithm</a></li>
             </ul>
          <div class="SupportCmp">
+		        <p style="margin-left: 15px;color:red">Note : To change support order of camp, drag & drop the camp box on your choice position. </p>
 		        <?php $lastsupportOrder = 0;?>
                 @if(count($supportedTopic))
                    
@@ -120,11 +121,7 @@
 						 @if ($errors->has('nick_name')) <p class="help-block">{{ $errors->first('nick_name') }}</p> @endif
 						 <a href="<?php echo url('settings/nickname');?>">Add new nickname </a>
 						</div> 
-                        <div class="col-sm-6 margin-btm-1" style="padding-top:6px;">
-                            <input type="checkbox" name="firstchoice" value="1"> <label for="namespace">Make This First Choice</label>
-                            
-                            @if ($errors->has('firstchoice')) <p class="help-block">{{ $errors->first('firstchoice') }}</p> @endif
-                        </div> 
+                       
                     </div>
                     
                     <button type="submit" class="btn btn-login">Confirm Support</button>
