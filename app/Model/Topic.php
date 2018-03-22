@@ -65,7 +65,7 @@ class Topic extends Model {
 	public function scopeGetsupports($query,$topic_num,$userNickname=null) {
 		$as_of_time=time();
 		return $supports = Support::where('topic_num',$topic_num)		                    
-							->where('delegate_nick_name_id',0)
+							//->where('delegate_nick_name_id',0)
 							->whereIn('nick_name_id',$userNickname)
 							->whereRaw("(start < $as_of_time) and ((end = 0) or (end > $as_of_time))")
 							->orderBy('support_order','ASC')							

@@ -231,6 +231,8 @@ class SettingsController extends Controller
                  
 				session()->forget("topic-support-{$input['topic_num']}");
 				session()->forget("topic-support-nickname-{$input['topic_num']}");
+				session()->forget("topic-support-tree-{$input['topic_num']}");
+				
 				
 				Session::flash('success', "Your support has been submitted successfully.");
 				return redirect()->back();
@@ -249,13 +251,33 @@ class SettingsController extends Controller
 		$input = $request->all();
 		
 		$support_id = (isset($input['support_id'])) ? $input['support_id'] : 0;
+		$topic_num = (isset($input['topic_num'])) ? $input['topic_num'] : 0;
+		$nick_name_id = (isset($input['topic_num'])) ? $input['topic_num'] : 0;
 		
-		if($id && $support_id) {
-			
-			    
+		if($id && $support_id && $topic_num) {
+				$as_of_time=time();
+				$currentSupport = Support::where('support_id',$support_id);
+				$currentSupportRec = $currentSupport->first();
+				$currentSupportOrder = $currentSupportRec->support_order;
+			    $remaingSupportWithHighOrder = Support::where('topic_num',$topic_num)		                    
+							//->where('delegate_nick_name_id',0)
+							->whereIn('nick_name_id',[$currentSupportRec->nick_name_id])
+							->whereRaw("(start < $as_of_time) and ((end = 0) or (end > $as_of_time))")
+							->where('support_order','>',$currentSupportRec->support_order)
+							->orderBy('support_order','ASC')							
+							->get();
 				
-				if(Support::where('support_id',$support_id)->update(array('end'=>time()))) {
-				
+				if($currentSupport->update(array('end'=>time()))) {
+				 foreach($remaingSupportWithHighOrder as $support){
+						$support->support_order = $currentSupportOrder;
+						$support->save();
+						$currentSupportOrder++;
+				 }
+
+				session()->forget("topic-support-$topic_num");
+				session()->forget("topic-support-nickname-$topic_num");
+				session()->forget("topic-support-tree-$topic_num");
+
 				 Session::flash('success', "Your support has been removed successfully.");
 				
 				} else {
@@ -289,11 +311,15 @@ class SettingsController extends Controller
 
 	public function supportReorder(Request $request){
 
-		$data = $request->only(['positions']);
+		$data = $request->only(['positions','topicnum']);
 		if(isset($data['positions']) && !empty($data['positions'])){
 			foreach($data['positions'] as $position=>$support_id){
 				Support::where('support_id',$support_id)->update(array('support_order'=>$position+1));
 			}
+			$topic_num = $data['topicnum'];
+			session()->forget("topic-support-$topic_num");
+			session()->forget("topic-support-nickname-$topic_num");
+			session()->forget("topic-support-tree-$topic_num");
 		}
 	}
 }

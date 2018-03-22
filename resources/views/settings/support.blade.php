@@ -34,10 +34,9 @@
                    
                        <div class="SpCmpHd"><b>Your supported camps for topic "{{ $supportedTopic->topic->topic_name}}"</b></div>
                		<div class="row column">
-                       
-					   <?php $topicSupport = $supportedTopic->topic->Getsupports($supportedTopic->topic_num,$userNickname);?>
+                       <?php  $topicSupport = $supportedTopic->topic->Getsupports($supportedTopic->topic_num,[$supportedTopic->nick_name_id]);?>
 					   @foreach($topicSupport as $k=>$support)
-                    
+                      
                             <div id="positions_{{ $support->support_id }}" class="SpCmpBDY support-sorter-element ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
                             <form action="{{ route('settings.support.delete')}}" id="support-{{$support->support_id}}" method="post">
                                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
@@ -45,14 +44,14 @@
                                 <input type="hidden" name="support_id" value="{{ $support->support_id }}">
                                 <input type="hidden" name="topic_num" value="{{ $supportedTopic->topic_num }}">
                                 
-                                <input type="hidden" name="userNicknames" value="{{ serialize($userNickname) }}">
+                                <input type="hidden" name="nick_name_id" value="{{ $support->nick_name_id }}">
                             <button type="submit" class="btn-sptclose"><i class="fa fa-close"></i></button>
                             </form> 
                             <b>Camp :</b> {{ $support->camp->title }} <br/>
                             <!--<b>Support Order :</b> {{ $k+1 }} Choice <br/>-->
                             <b>Nickname :</b> {{ $supportedTopic->nickname->nick_name }} <br/>
-                            @if($supportedTopic->delegate_nick_id != 0) 						 
-                            <b>Support Delegated To:</b> {{ $supportedTopic->delegatednickname->nick_name}}
+                            @if($support->delegate_nick_name_id != 0) 						 
+                            <b>Support Delegated To:</b> {{ $support->delegatednickname->nick_name}}
                             @endif
                         
                         <?php if(isset($topic->topic_num) && $topic->topic_num==$supportedTopic->topic_num) $lastsupportOrder++;
