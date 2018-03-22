@@ -48,7 +48,7 @@
                     $statement = $camp->statement($camp->topic_num,$camp->camp_num);
                     if(isset($statement->value)) {
                               $input=htmlentities($statement->value);
-                              echo $wiky->parse(html_entity_decode($input,ENT_QUOTES, "UTF-8")); 
+                              echo $wiky->parse($input); //html_entity_decode($input,ENT_QUOTES, "UTF-8")
 							 //echo $WikiParser->parse($statement->value);
 							
                         } else {
