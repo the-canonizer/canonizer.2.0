@@ -13,16 +13,16 @@ class Upload extends Model
     protected $table = 'uploads';
     
     public function getShortCode(){
-        $pos = strrpos( $this->file_id, ".");
+        $pos = strrpos( $this->file_name, ".");
         if ($pos === false)
         return false;
-        $ext = strtolower(trim(substr( $this->file_id, $pos)));
-        $imgExts = array(".gif", ".jpg", ".jpeg", ".png", ".tiff", ".tif"); // this is far from complete but that's always going to be the case...
+        $ext = strtolower(trim(substr( $this->file_name, $pos)));
+        $imgExts = array(".gif", ".jpg", ".jpeg", ".png",".PNG", ".tiff", ".tif"); // this is far from complete but that's always going to be the case...
         if ( in_array($ext, $imgExts) )
         {
-            return '[[file:'.url('/storage/uploads/'.$this->file_id).']]';
+            return '[[file:'.url('/files/'.$this->file_name).']]';
         }else{
-            return '[[file:'.url('/storage/uploads/'.$this->file_id).']]';
+            return '[[file:'.url('/files/'.$this->file_name).']]';
         }
         
     }

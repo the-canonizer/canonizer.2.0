@@ -29,44 +29,64 @@
                 <li><a class="" href="{{ route('settings.algo-preferences')}}">Default Algorithm</a></li>
             </ul>
          <div class="SupportCmp">
+		        <p style="margin-left: 15px;color:red">Note : To change support order of camp, drag & drop the camp box on your choice position. </p>
 		        <?php $lastsupportOrder = 0;?>
                 @if(count($supportedTopic))
                    
                        <div class="SpCmpHd"><b>Your supported camps for topic "{{ $supportedTopic->topic->topic_name}}"</b></div>
-               		<div class="row">
-					   <?php $topicSupport = $supportedTopic->topic->Getsupports($supportedTopic->topic_num,$userNickname);?>
+               		<div class="row column">
+                       <?php  $topicSupport = $supportedTopic->topic->Getsupports($supportedTopic->topic_num,[$supportedTopic->nick_name_id]);?>
 					   @foreach($topicSupport as $k=>$support)
-					   <div class="col-sm-4">
-                       <div class="SpCmpBDY">
-					     <form action="{{ route('settings.support.delete')}}" id="support-{{$support->support_id}}" method="post">
-						    <input type="hidden" name="_token" value="{{ csrf_token() }}">
-							
-							<input type="hidden" name="support_id" value="{{ $support->support_id }}">
-							
-							<input type="hidden" name="userNicknames" value="{{ serialize($userNickname) }}">
-						  <button type="submit" class="btn-sptclose"><i class="fa fa-close"></i></button>
-						 </form> 
-					     <b>Camp :</b> {{ $support->camp->title }} <br/>
-					   	 <b>Support Order :</b> {{ $k+1 }} Choice <br/>
-						 <b>Nickname :</b> {{ $supportedTopic->nickname->nick_name }} <br/>
-                        @if($supportedTopic->delegate_nick_id != 0) 						 
-						 <b>Support Delegated To:</b> {{ $supportedTopic->delegatednickname->nick_name}}
-					    @endif
+                      
+                            <div id="positions_{{ $support->support_id }}" class="SpCmpBDY support-sorter-element ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
+                            <form action="{{ route('settings.support.delete')}}" id="support-{{$support->support_id}}" method="post">
+                                <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                
+                                <input type="hidden" name="support_id" value="{{ $support->support_id }}">
+                                <input type="hidden" name="topic_num" value="{{ $supportedTopic->topic_num }}">
+                                
+                                <input type="hidden" name="nick_name_id" value="{{ $support->nick_name_id }}">
+                            <button type="submit" class="btn-sptclose"><i class="fa fa-close"></i></button>
+                            </form> 
+                            <b>Camp :</b> {{ $support->camp->title }} <br/>
+                            <!--<b>Support Order :</b> {{ $k+1 }} Choice <br/>-->
+                            <b>Nickname :</b> {{ $supportedTopic->nickname->nick_name }} <br/>
+                            @if($support->delegate_nick_name_id != 0) 						 
+                            <b>Support Delegated To:</b> {{ $support->delegatednickname->nick_name}}
+                            @endif
+                        
+                        <?php if(isset($topic->topic_num) && $topic->topic_num==$supportedTopic->topic_num) $lastsupportOrder++;
+                            
+                        ?>
+                        
+                        </div>
+                      
 					   
-					   <?php if(isset($topic->topic_num) && $topic->topic_num==$supportedTopic->topic_num) $lastsupportOrder++;
-						   
-					   ?>
-					  
-                       </div>
-					   
-					   </div>
 					   @endforeach
+                       
 					</div>   
 					   
-                
+                <script>
+                $( function() {
+                    $( ".column" ).sortable({
+                        connectWith: ".column",
+                        cursor: 'move',
+                        opacity: 0.6,
+                        update: function(event, ui) {
+                            $.post('{{ route("settings.support-reorder") }}', $(this).sortable('serialize')+"&_token={{ csrf_token() }}&topicnum={{ $supportedTopic->topic_num }}", function(data) {
+                                if(!data.success) {
+                                    alert('Whoops, something went wrong :/');
+                                }
+                        }, 'json');
+                        } 
+                    });
+                    
+                });
+                </script>
                @else
 				  <h6 style="margin-top:30px;margin-left:20px;"> You didn't supported any camp yet for this topic.</h6>
                @endif			  
+
 
          </div>
         @if(isset($topic))
@@ -101,11 +121,7 @@
 						 @if ($errors->has('nick_name')) <p class="help-block">{{ $errors->first('nick_name') }}</p> @endif
 						 <a href="<?php echo url('settings/nickname');?>">Add new nickname </a>
 						</div> 
-                        <div class="col-sm-6 margin-btm-1" style="padding-top:6px;">
-                            <input type="checkbox" name="firstchoice" value="1"> <label for="namespace">Make This First Choice</label>
-                            
-                            @if ($errors->has('firstchoice')) <p class="help-block">{{ $errors->first('firstchoice') }}</p> @endif
-                        </div> 
+                       
                     </div>
                     
                     <button type="submit" class="btn btn-login">Confirm Support</button>

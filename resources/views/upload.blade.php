@@ -2,13 +2,13 @@
 @section('content')
 @if(Session::has('error'))
 <div class="alert alert-danger">
-    <strong>Error!</strong>{{ Session::get('error')}}    
+    <strong>Error! </strong>{{ Session::get('error')}}    
 </div>
 @endif
 
 @if(Session::has('success'))
 <div class="alert alert-success">
-    <strong>Success!</strong>{{ Session::get('success')}}    
+    <strong>Success! </strong>{{ Session::get('success')}}    
 </div>
 @endif
       	
@@ -34,7 +34,7 @@
                <table class="table table-striped">
                 <tr><th>File Name</th><th>Short Code</th><th style="width:20%">Uploaded Date </th></tr>
                 @foreach($uploaded as $upload)
-                    <tr><td style="word-break:break-all">{{ $upload->file_name }} &nbsp;&nbsp;&nbsp;<a target="_blank" href="{{ url('storage/uploads/'.$upload->file_id) }}"><i class="fa fa-external-link"></i></a></td>
+                    <tr><td style="word-break:break-all">{{ $upload->file_name }} &nbsp;&nbsp;&nbsp;<a target="_blank" href="{{ url('files/'.$upload->file_name) }}"><i class="fa fa-external-link"></i></a></td>
                     <td style="word-break:break-all">{{ $upload->getShortCode() }}</td>
                     <td>{{ $upload->created_at }}</td></tr>
                 @endforeach

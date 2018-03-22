@@ -29,36 +29,50 @@
                 <li><a class="" href="{{ route('settings.algo-preferences')}}">Default Algorithm</a></li>
             </ul>
          <div class="SupportCmp">
-		        
+		        <p style="margin-left: 15px;color:red">Note : To change support order of camp, drag & drop the camp box on your choice position. </p>
                 @if(count($supportedTopic))
                  @foreach($supportedTopic as $data)
                    
                        <div class="SpCmpHd"><b>For Topic : {{ $data->topic->topic_name}}</b></div>
-               		<div class="row">
+               		<div class="row column{{ $data->topic_num }}">
 					   <?php $topicSupport = $data->topic->Getsupports($data->topic_num,$userNickname);?>
 					   @foreach($topicSupport as $k=>$support)
-					   <div class="col-sm-4">
-                       <div class="SpCmpBDY">
+					    
+					   <div id="positions_{{ $support->support_id }}" class="SpCmpBDY support-sorter-element ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
 					     <form action="{{ route('settings.support.delete')}}" id="support-{{$support->support_id}}" method="post">
 						    <input type="hidden" name="_token" value="{{ csrf_token() }}">
 							
 							<input type="hidden" name="support_id" value="{{ $support->support_id }}">
-							
-							<input type="hidden" name="userNicknames" value="{{ serialize($userNickname) }}">
+							<input type="hidden" name="topic_num" value="{{ $data->topic_num }}">
+							<input type="hidden" name="nick_name_id" value="{{ $support->nick_name_id }}">
 						  <button type="submit" class="btn-sptclose"><i class="fa fa-close"></i></button>
 						 </form> 
 					     <b>Camp :</b> {{ $support->camp->title }} <br/>
-					   	 <b>Support Order :</b> {{ $k+1 }} Choice <br/>
-						 <b>Nickname :</b> {{ $data->nickname->nick_name }} <br/>
-                        @if($data->delegate_nick_id != 0) 						 
-						 <b>Support Delegated To:</b> {{ $data->delegatednickname->nick_name}}
-					    @endif
-					   
-					  
+					   	 <!--<b>Support Order :</b> {{ $k+1 }} Choice <br/>-->
+						 <b>Nickname :</b> {{ $support->nickname->nick_name }} <br/>
+                         @if($support->delegate_nick_name_id != 0) 						 
+                            <b>Support Delegated To:</b> {{ $support->delegatednickname->nick_name}}
+                        @endif
                        </div>
-					   </div>
 					   @endforeach
-					</div>   
+                    </div>   
+                    <script>
+                    $( function() {
+                        $( ".column{{ $data->topic_num }}" ).sortable({
+                            connectWith: ".column",
+                            cursor: 'move',
+                            opacity: 0.6,
+                            update: function(event, ui) {
+                                $.post('{{ route("settings.support-reorder") }}', $(this).sortable('serialize')+"&_token={{ csrf_token() }}&topicnum={{ $data->topic_num }}", function(data) {
+                                    if(!data.success) {
+                                        alert('Whoops, something went wrong :/');
+                                    }
+                            }, 'json');
+                            } 
+                        });
+                        
+                    });
+                    </script>
 					   
                  @endforeach
                @else
