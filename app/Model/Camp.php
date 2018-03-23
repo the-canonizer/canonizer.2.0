@@ -16,6 +16,7 @@ class Camp extends Model {
     public $support_order = 0;
     protected static $tempArray = [];
 	protected static $childtempArray = [];
+	
 	protected static $chilcampArray = [];
 	protected static $traversetempArray = [];
 
@@ -257,6 +258,27 @@ class Camp extends Model {
 		}
         return $camparray;
     }
+	public static function getAllChildCamps($camp) {
+        
+		
+		$camparray = [];
+		if($camp){
+			$key = $camp->topic_num.'-'.$camp->camp_num.'-'.$camp->parent_camp_num;
+			
+			if(in_array($key,Camp::$chilcampArray)){
+				return []; /** Skip repeated recursions**/
+			}
+			Camp::$chilcampArray[]=$key; 
+			$camparray[] = $camp->camp_num;
+
+			$childCamps = Camp::where('topic_num', $camp->topic_num)->where('parent_camp_num', $camp->camp_num)->groupBy('camp_num')->orderBy('submit_time', 'desc')->get();
+			
+			foreach($childCamps as $child){
+				$camparray=array_merge($camparray,self::getAllChildCamps($child));	
+			}	
+		}
+        return $camparray;
+    }
 	
 	public function getAllChild($topicnum, $parentcamp,$lastparent=null,$campArray=array()){
         
@@ -306,7 +328,22 @@ class Camp extends Model {
 		$onecamp        = self::getLiveCamp($topic_num,$camp_num);
 	    $parentcamps    = self::getAllParent($onecamp);
 		
-		$mysupports     = Support::where('topic_num',$topic_num)->whereIn('camp_num',$parentcamps)->whereIn('nick_name_id',$userNicknames)->groupBy('topic_num')->orderBy('support_order','ASC')->first();
+		$mysupports     = Support::where('topic_num',$topic_num)->whereIn('camp_num',$parentcamps)->whereIn('nick_name_id',$userNicknames)->where('end','=',0)->groupBy('topic_num')->orderBy('support_order','ASC')->first();
+		
+		if(count($mysupports))
+			return true;
+		else
+			return false;
+		
+	}
+
+	public static function validateChildsupport($topic_num,$camp_num,$userNicknames){
+		
+		$onecamp        = self::getLiveCamp($topic_num,$camp_num);
+	    $childCamps    = array_unique(self::getAllChildCamps($onecamp));
+		
+		$mysupports     = Support::where('topic_num',$topic_num)->whereIn('camp_num',$childCamps)->whereIn('nick_name_id',$userNicknames)->where('end','=',0)->groupBy('topic_num')->orderBy('support_order','ASC')->get();
+		
 		
 		if(count($mysupports))
 			return true;

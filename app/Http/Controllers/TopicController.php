@@ -16,6 +16,8 @@ use App\Model\Nickname;
 use DB;
 use Validator;
 use App\Model\Namespaces;
+use App\Model\NamespaceRequest;
+
 /**
  * TopicController Class Doc Comment
  *
@@ -40,7 +42,9 @@ class TopicController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function create() {
-        return view('topics.create');
+        $namespaces= Namespaces::all();
+        $nickNames   = Nickname::personNickname();
+        return view('topics.create',compact('namespaces','nickNames'));
     }
 
     /**
@@ -55,9 +59,10 @@ class TopicController extends Controller {
         $validator = Validator::make($request->all(), [
             'topic_name'=>'required',
             'namespace' => 'required',
-            'go_live_time'=>'required',
+            'create_namespace'=>'required_if:namespace,other',
             
         ]);
+        
         if ($validator->fails()) {
             return back()->withErrors($validator->errors())->withInput($request->all());
         }
@@ -69,7 +74,7 @@ class TopicController extends Controller {
             $topic = new Topic();
             $topic->topic_name = $all['topic_name'];		
 			
-            $topic->namespace = $all['namespace'];
+            $topic->namespace_id = $all['namespace'];
             $topic->submit_time = time();
             $topic->submitter_nick_id = $all['nick_name'];
             $topic->go_live_time = strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
@@ -90,21 +95,29 @@ class TopicController extends Controller {
 			 $message ="Topic update submitted successfully. Its under review, once approved it will be live.";
 			}
 			else {
-				
 			 $message ="Topic created successfully. Its under review, once approved it will be live.";	
 			}
-					
-			
-            $topic->save();
-            DB::commit();
 
+            $topic->save();
+            if($all['namespace'] == 'other'){ /*Create new namespace request */
+                $namespace_request = new NamespaceRequest;
+                $namespace_request->user_id = Auth::user()->id;
+                $namespace_request->name = $all['create_namespace'];
+                $namespace_request->topic_num = $topic->topic_num;
+                $namespace_request->save();
+                $topic->namespace_id  = 1;
+                $topic->save();
+             }
+            DB::commit();
+            
             Session::flash('success', $message);
         } catch (Exception $e) {
+            
             DB::rollback();
             Session::flash('error', "Fail to create topic, please try later.");
         }
 
-        return redirect('topic/'.$topic->topic_num)->with(['success'=>$message]);
+        return redirect('topic-history/'.$topic->topic_num)->with(['success'=>$message]);
     }
 	
 	 /**
@@ -114,7 +127,7 @@ class TopicController extends Controller {
      * @return \Illuminate\Http\Response
      */
 	
-	public function manage_topic($id){
+	public function manage_topic(Request $request,$id){
 		
 		$paramArray  = explode("-",$id);
 		$id          = $paramArray[0];
@@ -123,10 +136,11 @@ class TopicController extends Controller {
 		$topic       = Topic::where('id',$id)->first();
         
         $nickNames   = Nickname::personNickname();
-		
+		$request->merge(['namespace'=>$topic->namespace_id]);
 		if(!count($topic)) return back();
+        $namespaces= Namespaces::all();
 		
-		return view('topics.managetopic', compact('topic','objection','nickNames'));
+		return view('topics.managetopic', compact('topic','objection','nickNames','namespaces'));
 		
 	}
 
@@ -148,7 +162,6 @@ class TopicController extends Controller {
 		$wiky=new Wiky;
 		
 		$WikiParser  = new wikiParser;
-     
 
 		
 		return view('topics.view',  compact('topic','parentcampnum','parentcamp','camp','wiky','WikiParser'));

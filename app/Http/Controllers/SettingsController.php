@@ -195,47 +195,42 @@ class SettingsController extends Controller
 			// Check if camp supported already then remove duplicacy.
 			$userNicknames  = unserialize($input['userNicknames']);
 			
-			$alreadySupport = array();
+			$alreadySupport  = Support::where('topic_num',$input['topic_num'])->where('camp_num',$input['camp_num'])->where('end','=',0)->where('nick_name_id',$input['nick_name'])->get();
+			if($alreadySupport->count() > 0 ) {
+				Session::flash('error', "You have already supported this camp, you cant submit your support again.");
+                return redirect()->back();
+			}
 			
-			if(isset($input['support_id']) && $input['support_id'] != 0) {
-			  $alreadySupport  = Support::where('topic_num',$input['topic_num'])->where('camp_num',$input['camp_num'])->where('nick_name_id',$input['nick_name'])->get();
-            }
 			if(Camp::validateParentsupport($input['topic_num'],$input['camp_num'],$userNicknames)) {
 				
 				Session::flash('error', "You cant support child camps when you have supported a parent camp.");
                 return redirect()->back();
 				
 			}
-			
-			if(count($alreadySupport)) {
-				
-				Session::flash('error', "You have already supported this camp, you cant submit your support again.");
-				
+
+			if(Camp::validateChildsupport($input['topic_num'],$input['camp_num'],$userNicknames)){
+				Session::flash('error', "You cant support parent camps when you have supported a child camp camp.");
                 return redirect()->back();
 			}
+
 			
 			
-			  $supportTopic  = new Support();
-			  $supportTopic->topic_num = $input['topic_num'];
-			  $supportTopic->nick_name_id = $input['nick_name'];
-			  $supportTopic->delegate_nick_name_id = $input['delegate_nick_name_id'];
-			  $supportTopic->start = time();
-		      $supportTopic->camp_num = $input['camp_num'];
+			$supportTopic  = new Support();
+			$supportTopic->topic_num = $input['topic_num'];
+			$supportTopic->nick_name_id = $input['nick_name'];
+			$supportTopic->delegate_nick_name_id = $input['delegate_nick_name_id'];
+			$supportTopic->start = time();
+		    $supportTopic->camp_num = $input['camp_num'];
 				
-				
-				$supportTopic->support_order = $input['lastsupport_order'] + 1;
-				
-				$supportTopic->save();
+			$supportTopic->support_order = $input['lastsupport_order'] + 1;
+			$supportTopic->save();
                  
-				session()->forget("topic-support-{$input['topic_num']}");
-				session()->forget("topic-support-nickname-{$input['topic_num']}");
-				session()->forget("topic-support-tree-{$input['topic_num']}");
+			session()->forget("topic-support-{$input['topic_num']}");
+			session()->forget("topic-support-nickname-{$input['topic_num']}");
+			session()->forget("topic-support-tree-{$input['topic_num']}");
 				
-				
-				Session::flash('success', "Your support has been submitted successfully.");
-				return redirect()->back();
-				  
-			 
+			Session::flash('success', "Your support has been submitted successfully.");
+			return redirect()->back();
 		 	
         }else{
             return redirect()->route('login');

@@ -32,7 +32,8 @@ class Wiky {
 			"/^----+(\s*)$/m",						// Horizontal line
 			"/\[\[(img):((ht|f)tp(s?):\/\/(.+?))( (.+))*\]\]/i",
 			"/\[\[(file):((ht|f)tp(s?):\/\/(.+?))( (.+))*\]\]/i",	// (File|img):(http|https|ftp) aka image
-			"/\[((news|(ht|f)tp(s?)|irc):\/\/(.+?))( (.+))\]/i",		// Other urls with text
+			//"/\[((news|(ht|f)tp(s?)|irc):\/\/(.+?))( (.+))\]/i",	
+			"/\[((news|(ht|f)tp(s?)|irc):\/\/(.+?)) ([a-z0-9A-z\s]+)\]/i",
 			"/\[((news|(ht|f)tp(s?)|irc):\/\/(.+?))\]/i",			// Other urls without text
 	
 			// Indentations
@@ -78,7 +79,7 @@ class Wiky {
 			"<hr/>",
 			"<img src=\"$2\" alt=\"$6\"/>",
 			"<img src=\"$2\" alt=\"$6\"/>",
-			"<a href=\"$1\">$7</a>",
+			"<a href=\"$1\">$6</a>",
 			"<a href=\"$1\">$1</a>",
 	
 			// Indentations

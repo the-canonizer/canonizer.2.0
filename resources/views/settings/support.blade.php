@@ -49,7 +49,7 @@
                             <button type="submit" class="btn-sptclose"><i class="fa fa-close"></i></button>
                             </form> 
                             <b>Camp :</b> {{ $support->camp->title }} <br/>
-                            <!--<b>Support Order :</b> {{ $k+1 }} Choice <br/>-->
+                             <b>Support Order :</b> <span class="support_order">{{ $support->support_order }}</span> Choice <br/>
                             <b>Nickname :</b> {{ $supportedTopic->nickname->nick_name }} <br/>
                             @if($support->delegate_nick_name_id != 0) 						 
                             <b>Support Delegated To:</b> {{ $support->delegatednickname->nick_name}}
@@ -74,10 +74,17 @@
                         opacity: 0.6,
                         update: function(event, ui) {
                             $.post('{{ route("settings.support-reorder") }}', $(this).sortable('serialize')+"&_token={{ csrf_token() }}&topicnum={{ $supportedTopic->topic_num }}", function(data) {
+                                
                                 if(!data.success) {
                                     alert('Whoops, something went wrong :/');
                                 }
+                                
                         }, 'json');
+
+                        $( ".column" ).find('.support-sorter-element').each(function(i,v){
+                                $(v).find('.support_order').text(i+1);
+                            });
+
                         } 
                     });
                     

@@ -48,7 +48,7 @@
 						  <button type="submit" class="btn-sptclose"><i class="fa fa-close"></i></button>
 						 </form> 
 					     <b>Camp :</b> {{ $support->camp->title }} <br/>
-					   	 <!--<b>Support Order :</b> {{ $k+1 }} Choice <br/>-->
+					   	 <b>Support Order :</b> <span class="support_order">{{ $support->support_order }}</span> Choice <br/>
 						 <b>Nickname :</b> {{ $support->nickname->nick_name }} <br/>
                          @if($support->delegate_nick_name_id != 0) 						 
                             <b>Support Delegated To:</b> {{ $support->delegatednickname->nick_name}}
@@ -67,9 +67,14 @@
                                     if(!data.success) {
                                         alert('Whoops, something went wrong :/');
                                     }
+                                    
                             }, 'json');
+                            $( ".column{{ $data->topic_num }}" ).find('.support-sorter-element').each(function(i,v){
+                                $(v).find('.support_order').text(i+1);
+                            });
                             } 
                         });
+
                         
                     });
                     </script>

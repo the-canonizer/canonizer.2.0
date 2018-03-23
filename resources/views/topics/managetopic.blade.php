@@ -45,11 +45,25 @@
                 <input type="text" name="topic_name" class="form-control" id="" value="{{ $topic->topic_name}}">
 				@if ($errors->has('topic_name')) <p class="help-block">{{ $errors->first('topic_name') }}</p> @endif
             </div>            
-            <div class="form-group">
+            <div  class="form-group">
                 <label for="namespace">Name Space</label>
-                <input type="text" name="namespace" class="form-control" id="" value="{{ $topic->namespace}}">
-                <span class="note-label"><strong>Note</strong>: Name space is categorization of your topic, it can be something like: General,crypto_currency etc.</span>
+                <select  onchange="selectNamespace(this)" name="namespace" id="namespace" class="form-control">
+                    <option value="">Select Namespace</option>
+                    @foreach($namespaces as $namespace)
+                    <option value="{{ $namespace->id }}" @if($topic->namespace_id == $namespace->id) selected @endif>{{$namespace->label}}</option>
+                    @endforeach
+                    <option value="other" @if(old('namespace') == 'other') selected @endif>Other</option>
+                </select>
+                <!--
+                <input type="text" name="namespace" class="form-control" id="" value="">-->
                 @if ($errors->has('namespace')) <p class="help-block">{{ $errors->first('namespace') }}</p> @endif
+			</div>
+            <div id="other-namespace" class="form-group" >
+                <label for="namespace">Other Namespace Name</label>
+                
+                <input type="text" name="create_namespace" class="form-control" id="" value="">
+                <span class="note-label"><strong>Note</strong>: Name space is categorization of your topic, it can be something like: General,crypto_currency etc.</span>
+                @if ($errors->has('create_namespace')) <p class="help-block">{{ $errors->first('create_namespace') }}</p> @endif
 			</div>
             <div class="form-group">
                 <label for="language">Language</label>
