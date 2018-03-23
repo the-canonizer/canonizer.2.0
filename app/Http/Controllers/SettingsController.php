@@ -38,7 +38,7 @@ class SettingsController extends Controller
 			if($input['last_name_bit']!='0')  $private_flags[] = $input['last_name_bit'];
             $user->middle_name = $input['middle_name'];
 			if($input['middle_name_bit']!='0') $private_flags[] = $input['middle_name_bit'];
-            $user->gender = $input['gender'];
+            $user->gender = isset($input['gender']) ? $input['gender'] : '';
 			//if($input['gender_bit']!='0') $private_flags[]=$input['gender_bit'];
             $user->birthday = date('Y-m-d',strtotime($input['birthday']));
 			if($input['birthday_bit']!='0') $private_flags[]=$input['birthday_bit'];
