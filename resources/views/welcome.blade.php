@@ -32,45 +32,39 @@
         </div>
         <div class="Lcolor-Pnl">
             <h3>Canonized list for  
-                <select>
-                    <option>General</option>
-                    <option>Corporations</option>
+                <select onchange="changeNamespace(this)">
+                    @foreach($namespaces as $namespace)
+                        <option data-namespace="{{ $namespace->label }}" value="{{ $namespace->id }}" {{ $namespace->id == session('defaultNamespaceId') ? 'selected' : ''}}>{{$namespace->label}}</option>
+                    @endforeach
+                 
+                    
                 </select>
             </h3>
             <div class="content">
             <div class="row">
+			   @if(count($topics))
 			    <div class="tree col-sm-12">
                     <ul class="mainouter" id="load-data">
-                        
+                      <?php $createCamp = 1; ?> 
+                      
                        @foreach($topics as $k=>$topic)
-                       <li>
-                         <?php
-                         $childs = $topic->childrens($topic->topic_num,$topic->camp_num); ?>
-                         <span class="<?php if(count($childs) > 0) echo 'parent'; ?>"><i class="fa fa-arrow-right"></i> 
-						 <?php 
-						  $title      = preg_replace('/[^A-Za-z0-9\-]/', '-', $topic->title);
-						  //$title     = preg_replace('/\s+/', '-', $topic->title); 
-						  $topic_id  = $topic->topic_num."-".$title;
-						 
-						 ?></span>
-                         <div class="tp-title">
-						 <a href="<?php echo url('topic/'.$topic_id.'/'.$topic->camp_num) ?>">
-						 {{ $topic->title}} 
-						 </a>
-						 <div class="badge">48.25</div></div>
-
-                         <?php
-                        if(count($childs) > 0){
-                            echo $topic->campTree($topic->topic_num,$topic->camp_num);
-                        }else{
-                            echo '<li class="create-new-li"><span><a href="'.route('camp.create',['topicnum'=>$topic->topic_num,'campnum'=>$topic->camp_num]).'">< Create A New Camp ></a></span></li>';
-                        }?>
-                           </li>
+                       <?php 
+                       $as_of_time = time();
+                        if(isset($_REQUEST['asof']) && $_REQUEST['asof']=='date'){
+                            $as_of_time = strtotime($_REQUEST['asofdate']);
+                        }
+                        
+                       ?>
+                         {!! $topic->campTreeHtml($createCamp) !!}
+                         <?php $createCamp = 0;?>
                        @endforeach
 					   <a id="btn-more" class="remove-row" data-id="{{ $topic->id }}"></a>
                     </ul>
                     
                 </div>
+				@else
+				 <h6 style="margin-left:30px;"> No topic available.</h6>
+                @endif			 
               </div>
             </div>    
             
@@ -80,21 +74,23 @@
 </div>  <!-- /.right-whitePnl-->
 
 <script>
-
+var request = false;
+var offset = 10;
    $(document).scroll(function(e){
        var id = $('#btn-more').data('id'); 
-      
+       var queryString = "{!! Request::getQueryString() !!}";
 	   var scrollTop = $(window).scrollTop();
+	   
 	   scrollTop = scrollTop + 650;
-		  if ( scrollTop > $('.sticky-footer').offset().top ) { 
+		  if ( scrollTop > $('.sticky-footer').offset().top && request==false) { 
 				  
-			   $("#btn-more").html("Please wait loading tree ......");
-			   
+			   $("#btn-more").html("Please wait loading tree......");
+			   request = true;
 			   
 			   $.ajax({
-				   url : '{{ url("loadtopic") }}',
+				   url : '{{ url("loadtopic") }}?'+queryString,
 				   method : "POST",
-				   data : {id:id, _token:"{{csrf_token()}}"},
+				   data : {id:id,offset:offset, _token:"{{csrf_token()}}"},
 				   dataType : "text",
 				   success : function (data)
 				   {
@@ -103,17 +99,38 @@
 						  $('.remove-row').remove();
 						  $('#load-data').append(data);
 						  camptree();
+						  request = false;
+						  offset = offset + 10;
 				   
 					  }
 					  else
 					  {
-						  $('#btn-more').html("No Data");
+						  $('#btn-more').html("No more topic available.");
 					  }
 				   }
 			   });
 		  }  
 		  e.stopImmediatePropagation();
 }); 
+
+function changeNamespace(element){
+    $.ajax({
+        url:"{{ url('/change-namespace') }}",
+        type:"POST",
+        data:{namespace:$(element).val()},
+        success:function(response){
+            @if(env('APP_DEBUG'))
+                window.location.reload();
+            @else
+            try{
+                window.location.href="{{ url('/') }}"+$(element).find('option:selected').attr('data-namespace');
+            }catch(err){
+                window.location.href="{{ url('/') }}";
+            }  
+            @endif
+        }
+    });
+}
 </script>
 @endsection
  

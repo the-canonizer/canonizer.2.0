@@ -3,7 +3,7 @@
 
 <div class="camp top-head">
     <h3><b>Topic:</b>  {{ $topic->title}}</h3>
-    <h3><b>Camp:</b> {{ $parentcamp }}</h3>  
+    <h3><b>Camp:</b> {!! $parentcamp !!}</h3>  
 </div>
 
 
@@ -36,7 +36,7 @@
                 <label for="camp_name">Nick Name</label>
                 <select name="nick_name" class="form-control">
                     @foreach($nickNames as $nick)
-                    <option value="{{ $nick->nick_name_id }}">{{ $nick->nick_name}}</option>
+                    <option value="{{ $nick->id }}">{{ $nick->nick_name}}</option>
                     @endforeach
 					
                 </select>
@@ -72,11 +72,7 @@
                     <option value="French">French</option>
                 </select>
             </div>
-            <div class="form-group">
-                <label for="Topic Number">To Go Live Date / Time</label>
-                <input type="text" name="go_live_time" value="{{ (old('go_live_time') != '') ?  date('m/d/Y',strtotime(old('go_live_time'))) : ''}}" id="datepicker" class="form-control"/>
-                @if ($errors->has('go_live_time')) <p class="help-block">{{ $errors->first('go_live_time') }}</p> @endif
-            </div>
+           
             <div class="form-group">
                 <label for="">Additional Note</label>
                 <textarea class="form-control" rows="4" name="note">{{ old('note')}}</textarea>

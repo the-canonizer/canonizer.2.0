@@ -127,6 +127,7 @@ body.fixed-nav {
 }
 .search-panel{
 	width:100% !important;
+	position:relative;
 }
 .search-panel ul.dropdown-menu li a{
 	display: block;
@@ -403,7 +404,7 @@ footer.sticky-footer {
 	color:#fff;
 	font-size:20px;
 	font-weight:normal;
-    background: #000; /* For browsers that do not support gradients */
+    background: red; /* For browsers that do not support gradients */
     background: -webkit-linear-gradient(left, #0100ff , #e1e1e1); /* For Safari 5.1 to 6.0 */
     background: -o-linear-gradient(right, #0100ff , #e1e1e1); /* For Opera 11.1 to 12.0 */
     background: -moz-linear-gradient(right, #0100ff , #e1e1e1); /* For Firefox 3.6 to 15 */
@@ -420,6 +421,8 @@ footer.sticky-footer {
 	padding: .75rem 1rem;
 	font-size:15px;
 	margin-bottom:2rem;
+	float:left;
+	width:100%;
 }
 .Lcolor-Pnl h3 {
     padding: .75rem 1rem;
@@ -427,11 +430,11 @@ footer.sticky-footer {
 	color:#333;
 	font-size:20px;
 	font-weight:normal;
-    background: #e3e3e3; /* For browsers that do not support gradients */
+    background: red; /* For browsers that do not support gradients */
     background: -webkit-linear-gradient(left, #f4f4f4 , #e3e3e3); /* For Safari 5.1 to 6.0 */
     background: -o-linear-gradient(right, #f4f4f4 , #e3e3e3); /* For Opera 11.1 to 12.0 */
     background: -moz-linear-gradient(right, #f4f4f4 , #e3e3e3); /* For Firefox 3.6 to 15 */
-    background: linear-gradient(to right, #e3e3e3 , #f4f4f4); /* Standard syntax */
+    background: linear-gradient(to right, #f4f4f4 , #e3e3e3); /* Standard syntax */
 }
 .Lcolor-Pnl h3 select {
     display: inline-block;
@@ -466,10 +469,13 @@ h1.page-title{
 .tree ul.mainouter{
 	padding:0px;
 }
+.tree ul.mainouter ul{
+	padding-left:20px;
+}
 .tree li {
     list-style-type:none;
     margin:0;
-    padding:10px 5px 0 5px;
+    padding:1px 0px 0 3px;
     position:relative
 }
 /*.tree li::before, .tree li::after {
@@ -501,35 +507,42 @@ h1.page-title{
     border-left:1px solid #3737f7;
     bottom:50px;
     height:100%;
-    top:-8px;
-    width:1px
+    top:-15px;
+    width:1px;
+	left:-13px;
 }
 .tree li::after {
     border-top:1px solid #3737f7;
     height:20px;
-    top:22px;
-    width:50px
+    top:14px;
+    width:28px;
+	left:-13px;
 }
 .tree li span {
+    display:inline-block;
 	color:#3737f7;
     text-decoration:none;
-	padding-left:20px;
+	padding-left:15px;
+}
+.tree li ul li span {
+	padding-left:18px;
 }
 .mainouter li span.parent{
-	font-weight:700;
+	/*font-weight:700;*/
 }
 .tree li span .fa {
     background-color: #3737f7;
-	color: #fff;
-	font-size: 9px;
-	padding: 2px 2px 2px;
-	border-radius: 3px;
-	margin-top: 5px;
-	display: inline-block;
-	vertical-align: middle;
-	position: absolute;
-	left: 5px;
-	z-index:1;
+    color: #fff;
+    font-size: 8px;
+    padding: 1px 2px 2px;
+    border-radius: 3px;
+    margin-top:8px;
+    display: inline-block;
+    vertical-align: middle;
+    position: absolute;
+    left: 5px;
+    z-index: 1;
+	top:0px;
 }
 .tree li.parent_li>span {
     cursor:pointer
@@ -545,18 +558,17 @@ h1.page-title{
 }
 .badge {
     display: inline-block;
-    padding: 2px 8px;
-    font-size: 80%;
-    font-weight: 700;
-    line-height: 15px;
+    padding: 1px 5px 1px;
+    font-size: 85%;
+    font-weight: normal;
+    line-height: 14px;
     color: #fff;
     text-align: center;
     white-space: nowrap;
     vertical-align: middle;
     border-radius: 10px;
     background-color: #f68b00;
-    margin-top: -3px;
-    margin-left: 5px;
+	margin:-3px 0px 0px 3px;
 }
 .canoalgo{
 	background: -webkit-linear-gradient(left, #e4ecff , #eeeff3); /* For Safari 5.1 to 6.0 */
@@ -846,8 +858,8 @@ body.sidenav-toggled .right-whitePnl {
     color: #555;
 }
 .tree li.create-new-li{
-	font-size: 20px;
-	padding:5px 0px;
+	font-size:17px;
+	padding-left:10px;
 }
 .col, .col-1, .col-10, .col-11, .col-12, .col-2, .col-3, .col-4, .col-5, .col-6, .col-7, .col-8, .col-9, .col-auto, .col-lg, .col-lg-1, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-lg-auto, .col-md, .col-md-1, .col-md-10, .col-md-11, .col-md-12, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-md-auto, .col-sm, .col-sm-1, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-sm-auto, .col-xl, .col-xl-1, .col-xl-10, .col-xl-11, .col-xl-12, .col-xl-2, .col-xl-3, .col-xl-4, .col-xl-5, .col-xl-6, .col-xl-7, .col-xl-8, .col-xl-9, .col-xl-auto{
 	float: left;
@@ -879,6 +891,7 @@ body.sidenav-toggled .right-whitePnl {
 }
 ul.mainouter li .tp-title {
    display:inline-block;
+   font-size:13px;
 }
 .right-whitePnl i.fa.fa-question {
     padding: 2px 7px 2px 6px;
@@ -920,7 +933,7 @@ ul.mainouter li .tp-title {
 	background-color:#f67d00;
 	border-color:#f67d00;
 }
-.Scolor-Pnl button.btn.btn-info {
+.Scolor-Pnl a.btn.btn-info {
     padding: 2px 4px;
     font-size: 10px;
     line-height: 9px;
@@ -929,4 +942,182 @@ ul.mainouter li .tp-title {
     background-color: #3737f7;
     border-color: #3737f7;
     cursor: pointer;
+}
+#btn-more{
+	margin-top:10px;
+	margin-left:23px;
+	font-size:14px;
+	font-weight:bold;
+}
+.form-group.CmpHistoryPnl{
+	padding:20px;
+	font-size:14px;
+}
+.CmpHistoryPnl-footer{
+    display: inline-block;
+    width: 104.6%;
+    padding: 10px 20px;
+    margin: 15px 0px -20px -20px;
+    background-color: rgba(204, 204, 204, 0.51);
+}
+.btn-historysmt{
+	background-color:#000;
+	padding:4px 10px;
+	color:#fff;
+	font-size:13px;
+	line-height:20px;
+}
+.btn-historysmt:hover{
+	color:#fff;
+	background-color:#333;
+}
+.notifySignPNL{
+	margin-bottom:10px;
+	display:inline-block;
+	margin-bottom:5px;
+	width:100%;
+}
+.notifySignPNL .red-circle{
+	background-color: rgba(255, 0, 0, 0.5);
+    width: 10px;
+    border-radius: 100px;
+    height: 10px;
+    visibility: visible;
+    color: rgba(255, 0, 0, 0.5);
+	display:inline-block;
+	margin-right:5px;
+}
+.notifySignPNL .circle-txt{
+	display:inline-block;
+}
+.notifySignPNL .green-circle{
+	background-color:rgba(0, 128, 0, 0.5);
+    width: 10px;
+    border-radius: 100px;
+    height: 10px;
+    visibility: visible;
+    color:rgba(0, 128, 0, 0.5);
+	display:inline-block;
+	margin-right:5px;
+}
+.notifySignPNL .yellow-circle{
+	background-color: rgba(255, 255, 0, 1);
+    width: 10px;
+    border-radius: 100px;
+    height: 10px;
+    visibility: visible;
+    color: rgba(255, 255, 0, 1);
+	display:inline-block;
+	margin-right:5px;
+}
+.SpCmpHd{
+	background-color:#e9ecef;
+	padding:10px 15px;
+	margin-bottom:10px;
+}
+.SpCmpBDY {
+    border: 1px solid #ddd;
+    padding: 10px;
+	margin:10px 0px;
+	font-size:15px;
+	border-radius:3px;
+	position:relative;
+}
+.btn-sptclose{
+    position: absolute;
+	right: -9px;
+	top: -12px;
+	cursor: pointer;
+	background: none;
+	border: none;
+	padding: 0px;
+}
+.btn-sptclose i.fa-close{
+	background-color: #fff;
+	border: 1px solid #ddd;
+	border-radius: 30px;
+	width: 28px;
+	height: 28px;
+	line-height: 25px;
+	font-size: 15px;
+	font-weight: normal;
+	cursor: pointer;
+	color: red;
+}
+.pagination {
+	clear: both;
+	color: #60605F !important;
+	font-size: 14px !important;
+	margin-bottom: 10px;
+	margin-top: 15px;
+}
+.pagination span {
+	margin-right: 3px;
+}
+.pagination a {
+	color: #C63918;
+	text-decoration: none;
+}
+.panel-body h5{
+	font-size:15px;
+}
+.guestLogin{
+	background-color: #f68b00; 
+	border-radius: 22px; 
+	vertical-align: middle;
+	color: #fff !important; 
+	margin-right: 10px;
+	padding: 5px 10px 7px!important;
+	max-width: 170px;
+	margin-top:-2px;
+}
+ul.pagination li a{
+	background-color: #f5f5f5;
+    color: #000;
+    padding: 2px 8px;
+    line-height: 10px;
+    margin: 0px 1px;
+    border-radius: 3px;
+}
+ul.pagination li.active span{
+	background-color: #f5f5f5;
+    color: #0056b3;
+    padding: 2px 8px;
+    line-height: 10px;
+    margin: 0px 1px;
+    border-radius: 3px;
+	font-weight:600;
+}
+.search-panel table{
+	position: absolute;
+	top: 40px;
+	left: 0px;
+	z-index: 10;
+}
+.search-panel table tr td{
+	margin-right:5px;
+	display:inline-block;
+}
+
+.Scolor-Pnl .content img,.statement img{
+	max-width: 100%;
+	
+}
+
+address p{
+	margin-bottom:0px;
+}
+
+.namespace-select{
+	width: 100%;
+	background: #fff;
+	font-size:14px;
+}
+
+
+
+.support-sorter-element {
+    max-width: 300px;
+	margin: 7px;
+	cursor:move;
 }
