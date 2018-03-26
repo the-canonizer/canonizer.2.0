@@ -87,7 +87,7 @@ class TopicController extends Controller {
 			 
 			 if(isset($all['objection']) && $all['objection']==1) {
 				 $topic->objector_nick_id = $all['nick_name'];
-				 $topic->submitter_nick_id = $all['submitter'];
+				 //$topic->submitter_nick_id = $all['submitter'];
 				 $topic->object_reason = $all['object_reason'];
 				 $topic->object_time = time();
 			 }			 
@@ -212,7 +212,9 @@ class TopicController extends Controller {
 				
         $nickNames  = Nickname::personNickname();
 		
-        return view('topics.managecamp',  compact('objection','topic','camp','parentcampnum','parentcamp','nickNames'));
+		$allNicknames = Nickname::orderBy('nick_name','ASC')->get();
+		
+        return view('topics.managecamp',  compact('objection','topic','camp','parentcampnum','parentcamp','nickNames','allNicknames'));
     }
 	
 	/**
@@ -353,14 +355,14 @@ class TopicController extends Controller {
 		$camp->key_words = $all['keywords'];
 		$camp->submitter_nick_id = $all['nick_name'];
         $camp->camp_about_url = $all['url'];	
+		$camp->camp_about_nick_id = $all['camp_about_nick_id'];
 
         if(isset($all['camp_num'])) {
 		 $camp->camp_num = $all['camp_num'];
 		 $camp->submitter_nick_id = $all['nick_name'];
 		 if(isset($all['objection']) && $all['objection']==1) {
 		 
-			 $camp->objector_nick_id = $all['nick_name'];
-			  $camp->submitter_nick_id = $all['submitter'];
+			 $camp->objector_nick_id = $all['nick_name'];			 
 			 $camp->object_reason = $all['object_reason'];
 			 $camp->object_time = time();
 		 }	 
@@ -434,7 +436,6 @@ class TopicController extends Controller {
 			 if(isset($all['objection']) && $all['objection']==1) {
 		 
 				 $statement->objector_nick_id = $all['nick_name'];
-				 $statement->submitter_nick_id = $all['submitter'];
 				 $statement->object_reason = $all['object_reason'];
 				 $statement->object_time = time();
 			 }	
