@@ -49,7 +49,7 @@ class ManageController extends Controller {
 
 		$oldNamespace = Namespaces::find($id);
 		$oldNamespace->name = $data['name'];
-		$oldNamespace->parent_id = $data['parent_id'];
+		$oldNamespace->parent_id = isset($data['parent_id']) ? $data['parent_id'] : 0;
 		$oldNamespace->label = $data['label'];
 		$oldNamespace->save();
 
