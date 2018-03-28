@@ -12,10 +12,15 @@
 			  				<div class="panel-body">
 			  					<form method="POST">
                                   <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
+								  @if($namespaceRequest)
+								  <input type="hidden" name="requestId" value="{{$namespaceRequest->id}}"/>
+								  @endif
+								  
 									<fieldset>
 										<div class="form-group">
 											<label>Namespace Name</label>
-											<input name="name" class="form-control" placeholder="Namespace name" type="text">
+											
+											<input name="name" value="{{ $namespaceRequest ? $namespaceRequest->name : '' }}" class="form-control" placeholder="Namespace name" type="text">
 										</div>
 										<div class="form-group">
 											<label>Parent Namespace</label>

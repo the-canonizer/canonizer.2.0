@@ -65,12 +65,15 @@ Route::group([ 'middleware' => 'auth'], function()
    
 });
 
-Route::prefix('admin')->group(function () {
+Route::group(['prefix' => 'admin',  'middleware' => 'adminauth'],function () {
     Route::get('/','Admin\ManageController@getIndex' );
     Route::get('/namespace/create','Admin\ManageController@getCreateNamespace' );
     Route::post('/namespace/create','Admin\ManageController@postCreateNamespace' );
     Route::get('/namespace/edit/{id}','Admin\ManageController@getUpdateNamespace' );
     Route::post('/namespace/edit/{id}','Admin\ManageController@postUpdateNamespace' );
+    
+    Route::get('/namespace-requests','Admin\ManageController@getNamespaceRequests' );
+
 
     
 });

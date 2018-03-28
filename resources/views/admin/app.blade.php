@@ -38,7 +38,7 @@
                 <ul class="nav">
                     <!-- Main menu -->
                     <li class="current"><a href="{{ url('/admin') }}"><i class="glyphicon glyphicon-home"></i> Dashboard</a></li>
-                    <li><a href="Namespace Requests"><i class="glyphicon glyphicon-calendar"></i> Namespace Requests</a></li>
+                    <li><a href="{{ url('/admin/namespace-requests') }}"><i class="glyphicon glyphicon-calendar"></i> Namespace Requests</a></li>
                     <!--<li><a href="stats.html"><i class="glyphicon glyphicon-stats"></i> Statistics (Charts)</a></li>
                     <li><a href="tables.html"><i class="glyphicon glyphicon-list"></i> Tables</a></li>
                     <li><a href="buttons.html"><i class="glyphicon glyphicon-record"></i> Buttons</a></li>

@@ -282,7 +282,6 @@ class SettingsController extends Controller
 		}
 		Session::flash('error', "Invalid access.");
         return redirect()->back();
-		
 	}	
 
 	public function algo(Request $request){
@@ -296,8 +295,6 @@ class SettingsController extends Controller
 		$user->save();
 		
 		session(['defaultAlgo'=>$user->default_algo]);
-		
-
 		Session::flash('success', "Your default algorithm preference updated successfully.");
 		return redirect()->back();
 	}
