@@ -6,6 +6,7 @@ use App\Model\Namespaces;
 use Illuminate\Http\Request;
 use App\Model\NamespaceRequest;
 use DB;
+use App\Model\Topic;
 
 class ManageController extends Controller {
 
@@ -34,10 +35,11 @@ class ManageController extends Controller {
 			}
 		}
 		$data['label'] = $slug;
-		Namespaces::create($data);
+		$namespace = Namespaces::create($data);
 		if($namespaceRequest){
 			$namespaceRequest->status=1;
 			$namespaceRequest->save();
+			Topic::where('topic_num',$namespaceRequest->topic_num)->update(array('namespace_id'=>$namespace->id));
 		}
 		return redirect('/admin');
 	}
