@@ -47,7 +47,7 @@ class AdminUser extends Command
         if($user){
             $this->error("User Already exists");
         }else{
-            User::create(['first_name'=>$firstname,'last_name'=>$lastname,'email'=>$email,'password'=>Hash::make($passsword)]);
+            User::create(['type'=>'admin','first_name'=>$firstname,'last_name'=>$lastname,'email'=>$email,'password'=>Hash::make($passsword)]);
             $this->info("User Created");
         }
     }
