@@ -20,7 +20,7 @@ class AdminUser
         $user = Auth::user();
        
         if(!$user || ($user &&  Auth::user()->type != 'admin')){
-            return redirect('/home');
+            return redirect('/admin/login');
         }
         
         return $next($request);

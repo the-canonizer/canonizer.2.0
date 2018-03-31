@@ -37,4 +37,8 @@ class User extends Authenticatable implements CanResetPasswordContract
         $user = User::where('email', $email)->first();
        return !empty($user) ? $user : false;
     }
+
+    public function getNameAttribute(){
+       return ucwords ($this->first_name.' '.$this->last_name);
+    }
 }
