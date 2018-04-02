@@ -23,6 +23,7 @@ Route::group(['prefix' => 'admin',  'middleware' => 'adminauth'],function () {
     Route::get('/users','Admin\UserController@getIndex' );
     Route::get('/users/edit/{id}','Admin\UserController@getEdit' );
     Route::post('/users/edit/{id}','Admin\UserController@postUpdate' );
+	Route::get('/namespace','Admin\ManageController@namespace');
     
 });
 

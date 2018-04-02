@@ -1,24 +1,37 @@
 @extends('admin.app')
 @section('content')
     <div class="row">
-        <div class="col-md-12 panel-warning">
+        <div class="col-md-4 panel-warning">
             <div class="content-box-header panel-heading">
-                <div class="panel-title ">Namespaces</div>
+                <div class="panel-title ">Total Live Topics</div>
                 
                 <div class="panel-options">
-                    <a href="{{ url('/admin/namespace/create') }}" data-rel="collapse"><i class="fa fa-plus"></i> Add Namespace</a>
+                    <i class="fa fa-hand-o-right"></i> 12
                 </div>
             </div>
-            <div class="content-box-large box-with-header">
-                <table class="table table-row">
-                <tr><th>Namespace Name</th><th>Parent Namespace</th><th>Label</th><th>Action</th></tr>
-                @foreach($namespaces as $namespace)
-                <tr><td>{{ $namespace->name }}</td><td>{{ $namespace->parentNamespace ? $namespace->parentNamespace->name :'' }}</td><td>{{ $namespace->label }}</td><td><a href="{{ url('/admin/namespace/edit/'.$namespace->id) }}">Edit</a></td></tr>
-                @endforeach
-                </table>
-                {{ $namespaces->links() }}
-
-            </div>
+			<br/><br/>
+			
+			
+          
         </div>
+		<div class="col-md-4 panel-warning">
+		    <div class="content-box-header panel-heading">
+                <div class="panel-title ">Total Live Camps</div>
+                
+                <div class="panel-options">
+                    <i class="fa fa-hand-o-right"></i> 12
+                </div>
+            </div>
+		</div>
+		
+		<div class="col-md-4 panel-warning">
+		    <div class="content-box-header panel-heading">
+                <div class="panel-title ">Total Active Persons</div>
+                
+                <div class="panel-options">
+                    <i class="fa fa-hand-o-right"></i> 12
+                </div>
+            </div>
+		</div>
     </div>
 @endsection

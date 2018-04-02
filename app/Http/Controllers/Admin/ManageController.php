@@ -14,6 +14,10 @@ class ManageController extends Controller {
 		$namespaces = Namespaces::paginate(10);
 		return view('admin.index',compact('namespaces'));
 	}
+	public function namespace(){
+		$namespaces = Namespaces::paginate(10);
+		return view('admin.namespace',compact('namespaces'));
+	}
 
 	public function getCreateNamespace(Request $request){
 		$requestId = $request->input('request_id');

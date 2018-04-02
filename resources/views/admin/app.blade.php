@@ -24,7 +24,7 @@
 	           <div class="col-md-5">
 	              <!-- Logo -->
 	              <div class="logo">
-	                 <h1><a href="index.html">Canonizer Admin</a></h1>
+	                 <h1><a href="#">Canonizer Admin</a></h1>
 	              </div>
 	           </div>
 	        </div>
@@ -37,7 +37,8 @@
 		  	<div class="sidebar content-box" style="display: block;">
                 <ul class="nav">
                     <!-- Main menu -->
-                    <li class="current"><a href="{{ url('/admin') }}"><i class="glyphicon glyphicon-home"></i> Dashboard</a></li>
+					<li class="current"><a href="{{ url('/admin') }}"><i class="glyphicon glyphicon-home"></i> Dashboard</a></li>
+                    <li class="current"><a href="{{ url('/admin/namespace') }}"><i class="glyphicon glyphicon-home"></i> Namespace</a></li>
                     <li><a href="{{ url('/admin/namespace-requests') }}"><i class="glyphicon glyphicon-calendar"></i> Namespace Requests</a></li>
                     <li><a href="{{ url('/admin/users') }}"><i class="glyphicon glyphicon-calendar"></i> Users</a></li>
                     <!--<li><a href="stats.html"><i class="glyphicon glyphicon-stats"></i> Statistics (Charts)</a></li>
@@ -59,7 +60,7 @@
          <div class="container">
          
             <div class="copy text-center">
-               Copyright &copy;<?=date('Y')?>
+               Canonizer 2.0 Copyright &copy;<?=date('Y')?>
             </div>
             
          </div>
