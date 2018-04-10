@@ -10,6 +10,7 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+
 Route::get('/admin/login','Admin\LoginController@getLogin');
 Route::post('/admin/login','Admin\LoginController@postLogin');
 Route::group(['prefix' => 'admin',  'middleware' => 'adminauth'],function () {
@@ -27,7 +28,7 @@ Route::group(['prefix' => 'admin',  'middleware' => 'adminauth'],function () {
     
 });
 
-Route::get('home', ['as'=>'home','uses'=>'HomeController@index']);
+Route::get('/home', ['as'=>'home','uses'=>'HomeController@index']);
 Route::get('browse', ['as'=>'browse','uses'=>'HomeController@browse']);
 Route::get('supportmigration', ['as'=>'supportmigration','uses'=>'HomeController@supportmigration']);
 
@@ -82,11 +83,6 @@ Route::group([ 'middleware' => 'auth'], function()
 
 
 
-/**
- * Routes Related to Camp Forums and threads
- */
-
-
 Route::get(
     '/forum/{topicid}-{topicname}/{campnum}/threads', 
     ['uses' => 'CThreadsController@index']
@@ -118,7 +114,7 @@ Route::post(
 );
 
 if(env('APP_DEBUG')){
-    Route::get('/', 'HomeController@index'); /*Allow /_debuggerBar url*/
+    Route::get('/', 'HomeController@index'); 
 }else{
     Route::get('/{params?}', 'HomeController@index')->where('params', '(.*)');
 }
