@@ -22,7 +22,7 @@ class NickNameTest extends TestCase
     }
 
     public function testAddNickNameRequestNotOk(){
-        print sprintf("Authenticated can add Nick name - To be %d %s",200,PHP_EOL);
+        print sprintf("Authenticated can add Nick name - To be %d %s",302,PHP_EOL);
         $user = factory(\App\User::class)->create(['type'=>'user']);
 
         $response = $this->actingAs($user)->post('/settings/nickname/add');
