@@ -48,9 +48,10 @@ class TopicTest extends TestCase
             'namespace'=>1,
             'nick_name'=>$nickname->id,
             'language'=>'English',
-            'note'=>'Test Note'
+            'note'=>'Test Note',
+            
             ]);
-          $response->assertSessionHas('success');
+            $response->assertSessionHas('success');
         }
         else{
             $this->assertTrue(false);

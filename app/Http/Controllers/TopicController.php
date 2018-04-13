@@ -336,10 +336,10 @@ class TopicController extends Controller {
 			
         ]);
 		
-        if ($validator->fails()) { print_r($validator->errors());
+        if ($validator->fails()) {
             return back()->withErrors($validator->errors())->withInput($request->all());
         }
-        
+        $message = null;
         
         $camp = new Camp();
         $camp->topic_num = $all['topic_num'];
@@ -388,13 +388,13 @@ class TopicController extends Controller {
 					  
 			  $statement->save();
 		  }
+          Session::flash('success', $message);
 			
 		} else {
 			
 		  $message = 'Camp not added, please try again.';	
 		}
         
-       
 		return redirect('camp/history/'.$camp->topic_num.'/'.$camp->camp_num)->with(['success'=>$message]);
                 
         
