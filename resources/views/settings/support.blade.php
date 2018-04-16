@@ -42,11 +42,11 @@
                             <form action="{{ route('settings.support.delete')}}" id="support-{{$support->support_id}}" method="post">
                                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                 
-                                <input type="hidden" name="support_id" value="{{ $support->support_id }}">
-                                <input type="hidden" name="topic_num" value="{{ $supportedTopic->topic_num }}">
+                                <input type="hidden" id="support_id_{{ $support->support_id }}" name="support_id" value="{{ $support->support_id }}">
+                                <input type="hidden" id="topic_num_{{ $support->support_id }}" name="topic_num" value="{{ $supportedTopic->topic_num }}">
                                 
-                                <input type="hidden" name="nick_name_id" value="{{ $support->nick_name_id }}">
-                            <button type="submit" class="btn-sptclose"><i class="fa fa-close"></i></button>
+                                <input type="hidden" id="nick_name_id_{{ $support->support_id }}" name="nick_name_id" value="{{ $support->nick_name_id }}">
+                            <button type="submit" id="submit_{{ $support->support_id }}" class="btn-sptclose"><i class="fa fa-close"></i></button>
                             </form> 
                             <b>Camp :</b> {{ $support->camp->title }} <br/>
                              <b>Support Order :</b> <span class="support_order">{{ $support->support_order }}</span> Choice <br/>
@@ -101,18 +101,18 @@
                  <h5>Nick Name To Support {!! $parentcamp !!} Camp </h5>
                 <form action="{{ route('settings.support.add')}}" method="post">
                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
-					<input type="hidden" name="topic_num" value="{{ $topic->topic_num }}">
-					<input type="hidden" name="delegate_nick_name_id" value="{{ $delegate_nick_name_id }}">
-					<input type="hidden" name="camp_num" value="{{ $camp->camp_num }}">
-					<input type="hidden" name="lastsupport_order" value="{{ $lastsupportOrder }}">
-					<input type="hidden" name="userNicknames" value="{{ serialize($userNickname) }}">
-					<input type="hidden" name="support_id" value="{{ isset($supportedTopic->support_id) ? $supportedTopic->support_id : '0'}}">
+					<input type="hidden" id="topic_num" name="topic_num" value="{{ $topic->topic_num }}">
+					<input type="hidden" id="delegate_nick_name_id" name="delegate_nick_name_id" value="{{ $delegate_nick_name_id }}">
+					<input type="hidden" id="camp_num" name="camp_num" value="{{ $camp->camp_num }}">
+					<input type="hidden" id="lastsupport_order" name="lastsupport_order" value="{{ $lastsupportOrder }}">
+					<input type="hidden" id="userNicknames" name="userNicknames" value="{{ serialize($userNickname) }}">
+					<input type="hidden" id="support_id" name="support_id" value="{{ isset($supportedTopic->support_id) ? $supportedTopic->support_id : '0'}}">
 					
 					
 					
                     <div class="row">
                         <div class="col-sm-6 margin-btm-1">
-						<select name="nick_name" class="form-control">
+						<select name="nick_name" id="select_nick_name" class="form-control">
 							
 							@if(isset($supportedTopic->nickname->id))
 								
@@ -126,12 +126,12 @@
 							@endif
 						</select>
 						 @if ($errors->has('nick_name')) <p class="help-block">{{ $errors->first('nick_name') }}</p> @endif
-						 <a href="<?php echo url('settings/nickname');?>">Add new nickname </a>
+						 <a id="add_new_nickname" href="<?php echo url('settings/nickname');?>">Add new nickname </a>
 						</div> 
                        
                     </div>
                     
-                    <button type="submit" class="btn btn-login">Confirm Support</button>
+                    <button type="submit" id="submit" class="btn btn-login">Confirm Support</button>
                     
                 </form>  
         </div>

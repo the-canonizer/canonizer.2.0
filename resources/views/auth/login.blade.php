@@ -22,9 +22,9 @@
 
         <div class="form-group">            
             <input type="checkbox" name="remember" class="form-control remember-me" id="remember"> Remember Me
-            <a href='{{ url('/forgetpassword') }}' class="pull-right">Forget Password </a>
+            <a href="{{ url('/forgetpassword') }}" class="pull-right">Forget Password </a>
         </div>
-        <button type="submit" class="btn btn-login">Log in</button>
+        <button type="submit" id="submit" class="btn btn-login">Log in</button>
     </form>
  </div>   
 </div>  <!-- /.right-whitePnl-->

@@ -48,7 +48,7 @@
             <h3>Nick Name : {{ $nickName->nick_name}} 
             <div class="pull-right col-md-4">
             <form>
-                <select onchange="submitForm(this)" name="namespace" class="namespace-select">
+                <select onchange="submitForm(this)" name="namespace" id="namespace" class="namespace-select">
                     @foreach($namespaces as $namespace)
                         <option data-namespace="{{ $namespace->label }}" value="{{ $namespace->id }}" {{ isset($_REQUEST['namespace']) && $namespace->id == $_REQUEST['namespace'] ? 'selected' : ''}}>{{$namespace->label}}</option>
                     @endforeach

@@ -32,7 +32,7 @@
         </div>
         <div class="Lcolor-Pnl">
             <h3>Canonized list for  
-                <select onchange="changeNamespace(this)">
+                <select onchange="changeNamespace(this)" id="namespace">
                     @foreach($namespaces as $namespace)
                         <option data-namespace="{{ $namespace->label }}" value="{{ $namespace->id }}" {{ $namespace->id == session('defaultNamespaceId') ? 'selected' : ''}}>{{$namespace->label}}</option>
                     @endforeach

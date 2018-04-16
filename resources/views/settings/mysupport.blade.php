@@ -42,10 +42,10 @@
 					     <form action="{{ route('settings.support.delete')}}" id="support-{{$support->support_id}}" method="post">
 						    <input type="hidden" name="_token" value="{{ csrf_token() }}">
 							
-							<input type="hidden" name="support_id" value="{{ $support->support_id }}">
-							<input type="hidden" name="topic_num" value="{{ $data->topic_num }}">
-							<input type="hidden" name="nick_name_id" value="{{ $support->nick_name_id }}">
-						  <button type="submit" class="btn-sptclose"><i class="fa fa-close"></i></button>
+							<input type="hidden" id="support_id_{{ $support->support_id }}" name="support_id" value="{{ $support->support_id }}">
+							<input type="hidden" id= "topic_num_{{ $support->support_id }}" name="topic_num" value="{{ $data->topic_num }}">
+							<input type="hidden" id= "nick_name_id_{{ $support->support_id }}" name="nick_name_id" value="{{ $support->nick_name_id }}">
+						  <button type="submit" id="submit_{{ $support->support_id }}" class="btn-sptclose"><i class="fa fa-close"></i></button>
 						 </form> 
 					     <b>Camp :</b> {{ $support->camp->title }} <br/>
 					   	 <b>Support Order :</b> <span class="support_order">{{ $support->support_order }}</span> Choice <br/>

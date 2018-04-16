@@ -85,8 +85,8 @@
                   @endif 
 				  
 				 <div class="CmpHistoryPnl-footer">
-				    <a class="btn btn-historysmt" href="<?php echo url('manage/statement/'.$data->id.'-objection');?>">Object</a>
-				 	<a class="btn btn-historysmt" href="<?php echo url('manage/statement/'.$data->id);?>">Submit Statement Update</a>
+				    <a id="object" class="btn btn-historysmt" href="<?php echo url('manage/statement/'.$data->id.'-objection');?>">Object</a>
+				 	<a id="update" class="btn btn-historysmt" href="<?php echo url('manage/statement/'.$data->id);?>">Submit Statement Update</a>
                  </div>
 			    </div> 	
 			   

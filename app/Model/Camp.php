@@ -449,7 +449,7 @@ class Camp extends Model {
 				$childCount = is_array($array['children']) ? count($array['children']) : 0;
 				$class= is_array($array['children']) && count($array['children']) > 0  ? 'parent' : '';
 				$icon = '<i class="fa fa-arrow-right"></i>';
-				$html.='<li>';
+				$html.="<li id='tree_".$this->topic_num."_".$currentCamp."_".$campnum."'>";
 				//$selected = '';
 				$selected =  ($campnum == $activeCamp) && $activeCampDefault ? "color:#08b608; font-weight:bold" : "";
 				if(($campnum == $activeCamp) && $activeCampDefault){
@@ -591,7 +591,7 @@ class Camp extends Model {
 					session(['supportCountTotal'=>$reducedTree[$this->camp_num]['score']]);
 		}
 		
-		$html = "<li>";
+		$html = "<li id='tree_".$this->topic_num."_".$activeCamp."_".$this->camp_num."'>";
 		$parentClass = is_array($reducedTree[$this->camp_num]['children']) && count($reducedTree[$this->camp_num]['children']) > 0 ? 'parent' : '';
 		$html.='<span class="'.$parentClass.'"><i class="fa fa-arrow-right"></i> </span>';
 		$html.= '<div class="tp-title"><a style="'.$selected.'" href="'.$reducedTree[$this->camp_num]['link'].'">'.$reducedTree[$this->camp_num]['title'].'</a><div class="badge">'.round($reducedTree[$this->camp_num]['score'],2).'</div></div>';

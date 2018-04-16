@@ -66,12 +66,12 @@
                     <div class="row">
                         <div class="col-sm-6 margin-btm-1">
                             <label for="nick_name">Add Nick Name</label>
-                            <input type="text" name="nick_name" class="form-control" id="" value="{{ old('nick_name')}}">
+                            <input type="text" name="nick_name" class="form-control" id="nick_name" value="{{ old('nick_name')}}">
                             @if ($errors->has('nick_name')) <p class="help-block">{{ $errors->first('nick_name') }}</p> @endif
                         </div>
                         <div class="col-sm-6 margin-btm-1">
                             <label for="namespace">Visibility status</label>
-                            <select class="form-control" name="private">
+                            <select class="form-control" id="visibility_status" name="private">
                                 <option value="0">Public</option>
                                 <option vlaue="1">Private</option>
                             </select>
@@ -79,8 +79,8 @@
                         </div> 
                     </div>
                     
-                    <button type="submit" class="btn btn-login">Create</button>
-                    <button type="submit" class="btn btn-default">Cancel</button>
+                    <button type="submit" id="submit_create" class="btn btn-login">Create</button>
+                    <button type="submit" id="submit_cancel" class="btn btn-default">Cancel</button>
                 </form>  
         </div>
     </div>   

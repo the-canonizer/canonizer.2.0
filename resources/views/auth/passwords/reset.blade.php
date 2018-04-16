@@ -24,7 +24,7 @@
             <input type="password_confirmation" name="password_confirmation" class="form-control" id="password_confirmation">
             @if ($errors->has('password_confirmation')) <p class="help-block">{{ $errors->first('password_confirmation') }}</p> @endif
         </div>
-        <button type="submit" class="btn btn-login">Reset</button>
+        <button type="submit" id="submit" class="btn btn-login">Reset</button>
     </form>
 </div>    
 </div>
