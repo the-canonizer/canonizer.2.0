@@ -43,7 +43,7 @@
         <div class="Scolor-Pnl">
             <h3><?php echo ($parentcamp=="Agreement") ? $parentcamp : "Camp";?> Statement
             </h3>
-            <div class="content" style="width:100%;">
+            <div class="content" style="width:100%;" id="camp_statement">
                     <?php 
                     $statement = $camp->statement($camp->topic_num,$camp->camp_num);
                     if(isset($statement->value)) {
@@ -58,9 +58,9 @@
                 ?>
             </div>
             <div class="footer">
-            	<a class="btn btn-success" href="<?php echo url('statement/history/'.$topic_id.'/'.$camp->camp_num);?>">Manage/Edit Camp Statement</a>
-                <a href="<?php echo url('forum/'.$topic_id.'/'.$camp->camp_num.'/threads');?>" class="btn btn-warning">Topic Forum</a>
-                <a href="<?php echo url('forum/'.$topic_id.'/'.$camp->camp_num.'/threads');?>" class="btn btn-danger">Camp Forum</a>
+            	<a id="edit_camp_statement" class="btn btn-success" href="<?php echo url('statement/history/'.$topic_id.'/'.$camp->camp_num);?>">Manage/Edit Camp Statement</a>
+                <a id="topic_forum" href="<?php echo url('forum/'.$topic_id.'/'.$camp->camp_num.'/threads');?>" class="btn btn-warning">Topic Forum</a>
+                <a id="camp_forum" href="<?php echo url('forum/'.$topic_id.'/'.$camp->camp_num.'/threads');?>" class="btn btn-danger">Camp Forum</a>
             </div>
 			
         </div>
@@ -74,11 +74,11 @@
                 <div class="col-sm-12">
                     Total Support for This Camp (including sub-camps): 
 					
-					<div class="badge">
+					<div class="badge" id="selected_camp_support">
 					 {{ session('supportCountTotal',0) }}
 					</div>
 					
-                    <ul class="support-tree">
+                    <ul class="support-tree" id="support-tree">
 					  <?php
 
                     $support_tree = \App\Model\TopicSupport::topicSupportTree(session('defaultAlgo','blind_popularity'),$camp->topic_num,$camp->camp_num); ?>
@@ -89,7 +89,7 @@
             </div>    
             </div>
             <div class="footer">
-                <a class="btn btn-warning" href="<?php echo url('support/'.$topic_id.'/'.$camp->camp_num);?>">Join or Directly Support This Camp</a>
+                <a id="join_support_camp" class="btn btn-warning" href="<?php echo url('support/'.$topic_id.'/'.$camp->camp_num);?>">Join or Directly Support This Camp</a>
             </div>
         </div>
    
@@ -106,7 +106,7 @@
             </div>    
             </div>
             <div class="footer">
-            	<a class="btn btn-success" href="<?php echo url('topic-history/'.$topic_id);?>">Manage/Edit This Topic</a>
+            	<a id="edit_topic" class="btn btn-success" href="<?php echo url('topic-history/'.$topic_id);?>">Manage/Edit This Topic</a>
             </div>
         </div>
    
@@ -128,7 +128,7 @@
             </div>    
             </div>
             <div class="footer">
-            	<a class="btn btn-success"href="<?php echo url('camp/history/'.$camp->topic_num.'/'.$camp->camp_num);?>">Manage/Edit This Camp</a>
+            	<a id="edit_camp" class="btn btn-success"href="<?php echo url('camp/history/'.$camp->topic_num.'/'.$camp->camp_num);?>">Manage/Edit This Camp</a>
             </div>
         </div>
     </div>

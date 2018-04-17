@@ -35,13 +35,13 @@
                 <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
                     <div class="form-group">
                         <label>Choose default algorithm preferences</label>
-                        <select name="default_algo" class="form-control">
+                        <select name="default_algo" id="default_algo" class="form-control">
                         @foreach(\App\Model\Algorithm::getList() as $key=>$algo)
                             <option value="{{$key}}" {{ $user->default_algo == $key ? 'selected' : ''}}>{{$algo}}</option>
                         @endforeach
                         </select>
                     </div>
-                    <button type="submit" class="btn btn-login">Confirm Support</button>
+                    <button type="submit" id="submit" class="btn btn-login">Confirm Support</button>
                     
                 </form>  
         </div>

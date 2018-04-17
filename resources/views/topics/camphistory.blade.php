@@ -51,7 +51,7 @@
     <div class="col-sm-12 margin-btm-2">
         <form action="{{ route('camp.save')}}" method="post">
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
-            <input type="hidden" name="topic_num" value="{{ $topic->topic_num }}">
+            <input type="hidden" id="topic_num" name="topic_num" value="{{ $topic->topic_num }}">
             
                
 			   <?php if(!empty($camps)) { 
@@ -92,8 +92,8 @@
                  @endif 	 				 
                </div>    
                <div class="CmpHistoryPnl-footer">
-				  <a class="btn btn-historysmt" href="<?php echo url('manage/camp/'.$data->id.'-objection');?>">Object</a>
-                  <a class="btn btn-historysmt" href="<?php echo url('manage/camp/'.$data->id);?>">Submit New Update</a>				  
+				  <a id="object" class="btn btn-historysmt" href="<?php echo url('manage/camp/'.$data->id.'-objection');?>">Object</a>
+                  <a id="update" class="btn btn-historysmt" href="<?php echo url('manage/camp/'.$data->id);?>">Submit New Update</a>				  
 			    </div> 	
 			   </div>
 			   <?php } 

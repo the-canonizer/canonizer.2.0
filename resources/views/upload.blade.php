@@ -24,11 +24,11 @@
                         
                     </div>
                     <div class="form-group">
-                        <input class="form-control" name="file_name" placeholder="File Name" type="text"/>
+                        <input class="form-control" id="file_name" name="file_name" placeholder="File Name" type="text"/>
                        
                     </div>
                
-                    <button class="btn btn-sm btn-primary">Upload</button>
+                    <button id="upload_file" class="btn btn-sm btn-primary">Upload</button>
                </form>
                <div  style="margin-top:10px;background:#fff;">
                <table class="table table-striped">

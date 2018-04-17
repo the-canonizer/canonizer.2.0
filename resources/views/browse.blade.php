@@ -18,7 +18,7 @@
             <h3>Browse Topic
             <div class="pull-right col-md-4">
             <form>
-                <select onchange="submitForm(this)" name="namespace" class="namespace-select">
+                <select onchange="submitForm(this)" name="namespace" id="namespace" class="namespace-select">
                     <option value="">All</option>
                     @foreach($namespaces as $namespace)
                         <option data-namespace="{{ $namespace->label }}" value="{{ $namespace->id }}" {{ isset($_REQUEST['namespace']) && $namespace->id == $_REQUEST['namespace'] ? 'selected' : ''}}>{{$namespace->label}}</option>
@@ -44,7 +44,7 @@
 						  
 						 ?>
 					 
-					 <li style="line-height: 2"> <a href="<?php echo url('topic/'.$topic_id.'/'.$topic->camp_num) ?>"> {{ $topic->namespace }}{{ $topic->topic_name }} </a> {{ $topic->title }}</li>
+					 <li id="outline_{{ $topic->topic_num }}" style="line-height: 2"> <a href="<?php echo url('topic/'.$topic_id.'/'.$topic->camp_num) ?>"> {{ $topic->namespace }}{{ $topic->topic_name }} </a> {{ $topic->title }}</li>
 					 @endforeach
 					</ul>
 			    </div>
