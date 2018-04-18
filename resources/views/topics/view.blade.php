@@ -52,9 +52,14 @@
                     $statement = $camp->statement($camp->topic_num,$camp->camp_num);
                     if(isset($statement->value)) {
                               $input=htmlentities($statement->value);
-							  $input = str_replace("http://canonizer.com",$rootUrl,$input);
-							  $input = str_replace("http://www.canonizer.com",$rootUrl,$input);
-                              echo $wiky->parse($input); //html_entity_decode($input,ENT_QUOTES, "UTF-8")
+							  
+							  $finalStatement  = $wiky->parse($input); 
+							  
+							  $finalStatement = str_replace("http://canonizer.com",$rootUrl,$finalStatement);
+							  $finalStatement = str_replace("http://www.canonizer.com",$rootUrl,$finalStatement);
+							  
+							  echo $finalStatement;
+                              //html_entity_decode($input,ENT_QUOTES, "UTF-8")
 							 //echo $WikiParser->parse($statement->value);
 							
                         } else {
