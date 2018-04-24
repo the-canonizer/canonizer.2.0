@@ -143,8 +143,14 @@
             </div>
         </div>
     </div>
-	
+	<div class="post"> </div>
 </div>  <!-- /.right-whitePnl-->
-	
+<script src="http://localhost/canonizer.2.0/public/js/campoutline.js"></script>
+
+<script>
+
+ outlinecall(88,1);
+
+</script>	
 
 @endsection

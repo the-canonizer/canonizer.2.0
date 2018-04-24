@@ -600,5 +600,31 @@ class Camp extends Model {
 		return $html;
 	}
 	
+	/* Following methods are for Web Service for camp outline */
+	
+	public function campTreeHtmlApi($activeCamp = null,$activeCampDefault=false){
+		
+		$reducedTree= $this->campTree(session('defaultAlgo','blind_popularity'),$activeAcamp = null,$supportCampCount=0,$needSelected=0);
+
+		$filter = isset($_REQUEST['filter']) && is_numeric($_REQUEST['filter']) ? $_REQUEST['filter'] : 0.001;
+		
+		if($reducedTree[$this->camp_num]['score'] < $filter){
+				return;
+		}
+		
+		$selected =  ($this->camp_num == $activeCamp) && $activeCampDefault ? "color:#08b608; font-weight:bold" : "";
+		if(($this->camp_num == $activeCamp)){
+					session(['supportCountTotal'=>$reducedTree[$this->camp_num]['score']]);
+		}
+		
+		$html = "<li id='tree_".$this->topic_num."_".$activeCamp."_".$this->camp_num."'>";
+		$parentClass = is_array($reducedTree[$this->camp_num]['children']) && count($reducedTree[$this->camp_num]['children']) > 0 ? 'parent' : '';
+		$html.='<span class="'.$parentClass.'"><i class="fa fa-arrow-right"></i> </span>';
+		$html.= '<div class="tp-title"><a style="'.$selected.'" href="'.$reducedTree[$this->camp_num]['link'].'">'.$reducedTree[$this->camp_num]['title'].'</a><div class="badge">'.round($reducedTree[$this->camp_num]['score'],2).'</div></div>';
+		$html.=$this->buildCampTree($reducedTree[$this->camp_num]['children'],$this->camp_num,$activeCamp,$activeCampDefault);
+		$html.= "</li>";
+		return $html;
+	}
+	
 
 }
