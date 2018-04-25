@@ -72,7 +72,18 @@
                    $input=htmlspecialchars($data->value);						   
 			   ?>
 			    <div class="form-group CmpHistoryPnl" style="background-color:{{ $bgcolor }}; width:100%;">
-                  <div class="statement"><b>Statement :</b> <?php echo  $wiky->parse($input); ?></div><br/>
+                  <div class="statement"><b>Statement :</b> 
+				  <?php 
+				              
+							  $finalStatement  = $wiky->parse($input); 
+							  $rootUrl = str_replace("/public","",Request::root());
+							  $finalStatement = str_replace("http://canonizer.com",$rootUrl,$finalStatement);
+							  $finalStatement = str_replace("http://www.canonizer.com",$rootUrl,$finalStatement);
+							  
+							  echo $finalStatement;
+				   ?>
+				  
+				  </div><br/>
 				  <b>Note :</b> {{ $data->note }} <br/>
 				  <b>Language :</b> {{ $data->language }}<br/>
 				  <b>Submitted on :</b> {{ to_local_time($data->submit_time) }} <br/>
