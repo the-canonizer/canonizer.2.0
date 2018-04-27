@@ -61,9 +61,12 @@ class Topic extends Model {
 	public function submitternickname() {
         return $this->hasOne('App\Model\Nickname', 'id', 'submitter_nick_id');
     }
+	public function topicnamespace() {
+        return $this->hasOne('App\Model\Namespaces', 'id', 'namespace_id');
+    }
 	
 	public function scopeGetsupports($query,$topic_num,$userNickname=null) {
-		$as_of_time=time();
+		$as_of_time=time()+100;
 		return $supports = Support::where('topic_num',$topic_num)		                    
 							//->where('delegate_nick_name_id',0)
 							->whereIn('nick_name_id',$userNickname)

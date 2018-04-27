@@ -10,6 +10,17 @@
 </div>
 @endif
 
+@if(Session::has('confirm'))
+
+<div class="alert alert-success">
+   <div style="text-align:center">
+     <a href="{{$_SERVER['REQUEST_URI']}}"><input type="button" name="cancel" class="btn btn-login" value="Cancel"></a>
+     <input type="button" id="confirm_submit" name="submit" class="btn btn-login" value="Submit">
+   </div>    
+</div>	
+
+@endif
+
 @if(Session::has('success'))
 <div class="alert alert-success">
     <strong>Success! </strong>{{ Session::get('success')}}    
@@ -48,7 +59,7 @@
                                 <input type="hidden" id="nick_name_id_{{ $support->support_id }}" name="nick_name_id" value="{{ $support->nick_name_id }}">
                             <button type="submit" id="submit_{{ $support->support_id }}" class="btn-sptclose"><i class="fa fa-close"></i></button>
                             </form> 
-                            <b>Camp :</b> {{ $support->camp->title }} <br/>
+                            <b>Camp :</b> {{ $support->camp->camp_name }} <br/>
                              <b>Support Order :</b> <span class="support_order">{{ $support->support_order }}</span> Choice <br/>
                             <b>Nickname :</b> {{ $supportedTopic->nickname->nick_name }} <br/>
                             @if($support->delegate_nick_name_id != 0) 						 
@@ -99,7 +110,7 @@
         @if(isset($topic))
          <div id="myTabContent" class="add-nickname-section">  
                  <h5>Nick Name To Support {!! $parentcamp !!} Camp </h5>
-                <form action="{{ route('settings.support.add')}}" method="post">
+                <form id="support_form" action="{{ route('settings.support.add')}}" method="post">
                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
 					<input type="hidden" id="topic_num" name="topic_num" value="{{ $topic->topic_num }}">
 					<input type="hidden" id="delegate_nick_name_id" name="delegate_nick_name_id" value="{{ $delegate_nick_name_id }}">
@@ -107,7 +118,7 @@
 					<input type="hidden" id="lastsupport_order" name="lastsupport_order" value="{{ $lastsupportOrder }}">
 					<input type="hidden" id="userNicknames" name="userNicknames" value="{{ serialize($userNickname) }}">
 					<input type="hidden" id="support_id" name="support_id" value="{{ isset($supportedTopic->support_id) ? $supportedTopic->support_id : '0'}}">
-					
+					<input type="hidden" id="confirm_support" name="confirm_support" value="0">
 					
 					
                     <div class="row">
@@ -146,6 +157,14 @@
                 changeMonth: true,
                 changeYear: true
             });
+			
+			$('#confirm_submit').click(function() {
+				
+				$('#confirm_support').val('1');
+				
+				$( "#submit" ).trigger( "click" );
+				
+			})	
         })
     </script>
 

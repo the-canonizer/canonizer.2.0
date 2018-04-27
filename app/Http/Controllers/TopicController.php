@@ -13,6 +13,7 @@ use App\Model\Topic;
 use App\Model\Camp;
 use App\Model\Statement;
 use App\Model\Nickname;
+use App\Model\Support;
 use DB;
 use Validator;
 use App\Model\Namespaces;
@@ -70,15 +71,15 @@ class TopicController extends Controller {
         DB::beginTransaction();
         
         try {
-			
+			$current_time = time();
             $topic = new Topic();
             $topic->topic_name = $all['topic_name'];		
 			
             $topic->namespace_id = $all['namespace'];
-            $topic->submit_time = time();
+            $topic->submit_time = $current_time;
             $topic->submitter_nick_id = $all['nick_name'];
-            $topic->go_live_time = strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
-            $topic->language = $all['language'];
+            $topic->go_live_time = $current_time;//strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
+            $topic->language = 'English';
             $topic->note = $all['note'];
 						
 			if(isset($all['topic_num'])) {
@@ -89,16 +90,31 @@ class TopicController extends Controller {
 				 $topic->objector_nick_id = $all['nick_name'];
 				 //$topic->submitter_nick_id = $all['submitter'];
 				 $topic->object_reason = $all['object_reason'];
-				 $topic->object_time = time();
+				 $topic->object_time = $current_time;
 			 }			 
 			 
 			 $message ="Topic update submitted successfully. Its under review, once approved it will be live.";
 			}
 			else {
-			 $message ="Topic created successfully. Its under review, once approved it will be live.";	
+			 $message ="Topic created successfully. It's live now.";	
 			}
 
-            $topic->save();
+			/* If topic is created then add default support to that topic */ 
+            if($topic->save()) {
+				
+				$supportTopic  = new Support();
+				$supportTopic->topic_num    = $topic->topic_num;
+				$supportTopic->nick_name_id = $all['nick_name'];
+				$supportTopic->delegate_nick_name_id = 0;
+				$supportTopic->start = $current_time;
+				$supportTopic->camp_num = 1;
+					
+				$supportTopic->support_order = 1;
+				$supportTopic->save();
+				
+			}
+			
+			
             if($all['namespace'] == 'other'){ /*Create new namespace request */
                 $namespace_request = new NamespaceRequest;
                 $namespace_request->user_id = Auth::user()->id;
@@ -156,13 +172,25 @@ class TopicController extends Controller {
 		$topicnum       = $topicnumArray[0];
 		
 		$topic      = Camp::getAgreementTopic($topicnum);
+		
         $camp       = Camp::getLiveCamp($topicnum,$parentcampnum);
+		
+		
         $parentcamp = Camp::campNameWithAncestors($camp,'');
         
 		$wiky=new Wiky;
 		
 		$WikiParser  = new wikiParser;
-
+        if(count($topic) <= 0) {
+			
+			Session::flash('error', "This topic is not live yet, you dont have access to view the detail. Please try after sometime.");
+			return back();
+		}
+		if(count($camp) <= 0) {
+			
+			Session::flash('error', "Selected camp is not available in the selected parameters, Please check the filters for more accurate results.");
+			return back();
+		}
 		
 		return view('topics.view',  compact('topic','parentcampnum','parentcamp','camp','wiky','WikiParser'));
     }
@@ -184,8 +212,8 @@ class TopicController extends Controller {
 		
 		
         $nickNames  = Nickname::personNickname();
-        
-        return view('topics.camp_create',  compact('topic','parentcampnum','parentcamp','nickNames'));
+        $allNicknames = Nickname::orderBy('nick_name','ASC')->get();
+        return view('topics.camp_create',  compact('topic','parentcampnum','parentcamp','nickNames','allNicknames'));
     }
 	
 	/**
@@ -331,7 +359,7 @@ class TopicController extends Controller {
         $validator = Validator::make($request->all(), [
             'nick_name'=>'required',
             'camp_name' => 'required',
-            'title'=>'required',
+            
             'note'=>'required',
 			
         ]);
@@ -345,16 +373,16 @@ class TopicController extends Controller {
         $camp->topic_num = $all['topic_num'];
 		
         $camp->parent_camp_num = $all['parent_camp_num'];
-        $camp->title = $all['title'];
+        //$camp->title = $all['title'];
         $camp->camp_name = $all['camp_name'];
 		$camp->submit_time = strtotime(date('Y-m-d H:i:s'));
         $camp->go_live_time = strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
-        $camp->language = $all['language'];
-        $camp->camp_about_nick_id = $all['nick_name'];
+        $camp->language = 'English';
+       
         $camp->note = $all['note'];
 		$camp->key_words = $all['keywords'];
 		$camp->submitter_nick_id = $all['nick_name'];
-        $camp->camp_about_url = $all['url'];	
+        $camp->camp_about_url = $all['camp_about_url'];	
 		$camp->camp_about_nick_id = $all['camp_about_nick_id'];
 
         if(isset($all['camp_num'])) {
@@ -384,7 +412,7 @@ class TopicController extends Controller {
 			  $statement->submit_time = strtotime(date('Y-m-d H:i:s'));
 			  $statement->submitter_nick_id = $all['nick_name'];
 			  $statement->go_live_time = strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
-			  $statement->language = $all['language'];
+			  $statement->language = 'English';
 					  
 			  $statement->save();
 		  }
@@ -428,7 +456,7 @@ class TopicController extends Controller {
 		  $statement->submit_time = strtotime(date('Y-m-d H:i:s'));
 		  $statement->submitter_nick_id = $all['nick_name'];
 		  $statement->go_live_time = strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
-		  $statement->language = $all['language'];
+		  $statement->language = 'English';
 		  
 		  if(isset($all['camp_num'])) {
 			 $statement->camp_num = $all['camp_num'];

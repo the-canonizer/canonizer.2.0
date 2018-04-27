@@ -58,13 +58,13 @@
                 <span class="note-label"><strong>Note</strong>: Name space is categorization of your topic, it can be something like: General,crypto_currency etc.</span>
                 @if ($errors->has('create_namespace')) <p class="help-block">{{ $errors->first('create_namespace') }}</p> @endif
 			</div>
-            <div class="form-group">
+           <!-- <div class="form-group">
                 <label for="language">Language</label>
                 <select class="form-control" name="language" id="language">
                     <option value="English">English</option>
                     <option value="French">French</option>
                 </select>
-            </div>
+            </div>-->
             
             <div class="form-group">
                 <label for="">Additional Note</label>

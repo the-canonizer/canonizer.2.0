@@ -80,19 +80,20 @@
                 @if ($errors->has('note')) <p class="help-block">{{ $errors->first('note') }}</p> @endif
             </div>   
             <div class="form-group">
-                <label for="url">Camp About URL </label>
-                <input type="text" name="url" class="form-control" id="url" value="{{ $camp->camp_about_url }}">
+                <label for="camp_about_url">Camp About URL </label>
+                <input type="text" name="camp_about_url" class="form-control" id="camp_about_url" value="{{ $camp->camp_about_url }}">
                 @if ($errors->has('camp_about_url')) <p class="help-block">{{ $errors->first('camp_about_url') }}</p> @endif
             </div>
             <div class="form-group">
-                <label for="url">Camp About Nick Name </label>
+                <label for="camp_about_nick_id">Camp About Nick Name </label>
                 <select name="camp_about_nick_id" id="camp_about_nick_id" class="form-control">
                     <option value="0">--Select Camp About Nick Name--</option>
 					@foreach($allNicknames as $aboutnick)
                     <option <?php if($camp->camp_about_nick_id==$aboutnick->id) echo "selected=selected";?> value="{{ $aboutnick->id }}">{{ $aboutnick->nick_name}}</option>
                     @endforeach
 					
-                </select>            </div> 			
+                </select>            
+			</div> 			
             <?php if($objection=="objection") { ?>
             <div class="form-group">
                 <label for="topic name">Your Objection Reason </label>

@@ -12,6 +12,8 @@
 </div>
 @endif
 
+<?php if(count($topic) > 0 ) { ?>
+
 <div class="camp top-head">
     <h3><b>Topic:</b>  {{ $topic->topic_name}}</h3>
     <h3><b>Camp:</b> {!! $parentcamp !!}</h3>  
@@ -111,7 +113,7 @@
             <div class="row">
                 <div class="tree col-sm-12">
                     Topic Name : <?php echo $topic->topic_name;?> <br/>
-					Name Space : <?php echo $topic->namespace;?>
+					Name Space : <?php echo (isset($topic->topic->topicnamespace->name)) ? $topic->topic->topicnamespace->name : 'N/A';?>
                 </div>
               
             </div>    
@@ -147,3 +149,5 @@
 </div>  <!-- /.right-whitePnl-->
 
 @endsection
+
+<?php } ?>

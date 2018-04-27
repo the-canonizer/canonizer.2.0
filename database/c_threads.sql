@@ -1,24 +1,3 @@
--- phpMyAdmin SQL Dump
--- version 4.6.6deb4
--- https://www.phpmyadmin.net/
---
--- Host: localhost:3306
--- Generation Time: Jan 17, 2018 at 06:19 PM
--- Server version: 5.7.20-0ubuntu0.17.04.1
--- PHP Version: 7.0.22-0ubuntu0.17.04.1
-
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET time_zone = "+00:00";
-
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
-
---
--- Database: `canonizer`
---
 
 -- --------------------------------------------------------
 
@@ -26,7 +5,7 @@ SET time_zone = "+00:00";
 -- Table structure for table `c_threads`
 --
 
-CREATE TABLE `c_threads` (
+CREATE TABLE `thread` (
   `id` int(10) UNSIGNED NOT NULL,
   `user_id` int(11) NOT NULL,
   `camp_id` int(11) NOT NULL,
@@ -41,7 +20,7 @@ CREATE TABLE `c_threads` (
 -- Dumping data for table `c_threads`
 --
 
-INSERT INTO `c_threads` (`id`, `user_id`, `camp_id`, `title`, `body`, `created_at`, `updated_at`, `topic_id`) VALUES
+INSERT INTO `thread` (`id`, `user_id`, `camp_id`, `title`, `body`, `created_at`, `updated_at`, `topic_id`) VALUES
 (1, 1, 1, 'Thanks, Curt, for the contribution.', 'Thanks, Curt, for the contribution.', '2018-01-08 08:07:42', '2018-01-11 08:07:42', 23),
 (2, 328, 1, 'Second Thread', 'Related To some Camp Forums', '2018-01-11 08:07:42', '2018-01-11 08:07:42', 0),
 (3, 0, 1, 'jkhsdf', 'jkha jahsdjh asjdh jkhasd jh', '2018-01-11 08:07:42', '2018-01-11 08:07:42', 88),
@@ -158,7 +137,7 @@ INSERT INTO `c_threads` (`id`, `user_id`, `camp_id`, `title`, `body`, `created_a
 --
 -- Indexes for table `c_threads`
 --
-ALTER TABLE `c_threads`
+ALTER TABLE `thread`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -168,7 +147,7 @@ ALTER TABLE `c_threads`
 --
 -- AUTO_INCREMENT for table `c_threads`
 --
-ALTER TABLE `c_threads`
+ALTER TABLE `thread`
   MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=109;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

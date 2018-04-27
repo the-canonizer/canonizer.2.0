@@ -143,9 +143,9 @@ class Camp extends Model {
 		if(!empty($camp)) {
 			if ($campname != '') {
 				$url = url('topic/'.$camp->topic_num.'/'.$camp->camp_num);
-				$campname = "<a href='".$url."'>".$camp->title . '</a> / ' . $campname;
+				$campname = "<a href='".$url."'>".$camp->camp_name . '</a> / ' . $campname;
 			} else {
-				$campname = $camp->title;
+				$campname = $camp->camp_name;
 			}
 			if ($camp->parent_camp_num) {
 				
@@ -154,8 +154,8 @@ class Camp extends Model {
 				          ->where('camp_num', $camp->parent_camp_num)
 						  //->where('camp_name', '!=', 'Agreement')  
 						  ->where('objector_nick_id', '=', NULL)
-						  ->whereRaw('go_live_time in (select max(go_live_time) from camp where topic_num='.$camp->topic_num.' and objector_nick_id is null group by camp_num)')				
-						  ->where('go_live_time','<',$asofdate)
+						  //->whereRaw('go_live_time in (select max(go_live_time) from camp where topic_num='.$camp->topic_num.' and objector_nick_id is null group by camp_num)')				
+						  //->where('go_live_time','<',$asofdate)
 						  ->groupBy('camp_num')->orderBy('submit_time', 'desc')->first();
 				return self::campNameWithAncestors($pcamp, $campname);
 			}
@@ -243,12 +243,32 @@ class Camp extends Model {
 		}			 
 	}
 	public static function getLiveCamp($topicnum,$campnum,$filter=array()){
-		
-		return self::where('topic_num',$topicnum)
-		            ->where('camp_num','=', $campnum)
-					->where('objector_nick_id', '=', NULL)
-                    ->where('go_live_time','<',time())
-					->latest('submit_time')->first();
+	    if(!isset($_REQUEST['asof']) || (isset($_REQUEST['asof']) && $_REQUEST['asof']=="default")) {
+			
+			return self::where('topic_num',$topicnum)
+						->where('camp_num','=', $campnum)
+						->where('objector_nick_id', '=', NULL)
+						->where('go_live_time','<',time())
+						->latest('submit_time')->first();
+		} else {
+			
+			if(isset($_REQUEST['asof']) && $_REQUEST['asof']=="review") {
+				
+				return self::where('topic_num',$topicnum)
+						->where('camp_num','=', $campnum)
+						->where('objector_nick_id', '=', NULL)						
+						->latest('submit_time')->first();
+
+            }else if(isset($_REQUEST['asof']) && $_REQUEST['asof']=="bydate") {
+				
+				$asofdate =  strtotime(date('Y-m-d H:i:s', strtotime($_REQUEST['asofdate'])));
+                return self::where('topic_num',$topicnum)
+						->where('camp_num','=', $campnum)
+						->where('objector_nick_id', '=', NULL)
+						->where('go_live_time','<',$asofdate)
+						->latest('submit_time')->first();
+            }
+		}			
 	}
 	public static function getCampHistory($topicnum,$campnum,$filter=array()){
 		
@@ -331,12 +351,27 @@ class Camp extends Model {
 		return $childsData;
 	}
 	
-	public static function validateParentsupport($topic_num,$camp_num,$userNicknames){
+	public static function validateParentsupport($topic_num,$camp_num,$userNicknames,$confirm_support){
 		
 		$onecamp        = self::getLiveCamp($topic_num,$camp_num);
-	    $parentcamps    = self::getAllParent($onecamp);
+		
+		if(count($onecamp) <=0 ) { 
+		  return 'notlive';
+		} 
+	    
+		$parentcamps    = self::getAllParent($onecamp);
 		
 		$mysupports     = Support::where('topic_num',$topic_num)->whereIn('camp_num',$parentcamps)->whereIn('nick_name_id',$userNicknames)->where('end','=',0)->groupBy('topic_num')->orderBy('support_order','ASC')->first();
+		
+		if($confirm_support && count($mysupports)) {
+		  
+		 $mysupports->end = time();
+		 $mysupports->update();
+	
+         $mysupports     = Support::where('topic_num',$topic_num)->whereIn('camp_num',$parentcamps)->whereIn('nick_name_id',$userNicknames)->where('end','=',0)->groupBy('topic_num')->orderBy('support_order','ASC')->first();
+				  
+		}
+		
 		
 		if(count($mysupports))
 			return true;
@@ -345,13 +380,22 @@ class Camp extends Model {
 		
 	}
 
-	public static function validateChildsupport($topic_num,$camp_num,$userNicknames){
+	public static function validateChildsupport($topic_num,$camp_num,$userNicknames,$confirm_support){
 		
 		$onecamp        = self::getLiveCamp($topic_num,$camp_num);
+		
 	    $childCamps    = array_unique(self::getAllChildCamps($onecamp));
 		
-		$mysupports     = Support::where('topic_num',$topic_num)->whereIn('camp_num',$childCamps)->whereIn('nick_name_id',$userNicknames)->where('end','=',0)->groupBy('topic_num')->orderBy('support_order','ASC')->get();
+		$mysupports     = Support::where('topic_num',$topic_num)->whereIn('camp_num',$childCamps)->whereIn('nick_name_id',$userNicknames)->where('end','=',0)->groupBy('topic_num')->orderBy('support_order','ASC')->first();
 		
+		if($confirm_support && count($mysupports)) {
+		  
+		 $mysupports->end = time();
+		 $mysupports->update();
+	
+         $mysupports     = Support::where('topic_num',$topic_num)->whereIn('camp_num',$childCamps)->whereIn('nick_name_id',$userNicknames)->where('end','=',0)->groupBy('topic_num')->orderBy('support_order','ASC')->first();
+				  
+		}
 		
 		if(count($mysupports))
 			return true;
@@ -475,10 +519,10 @@ class Camp extends Model {
 		$array=[];
 		foreach($childs as $key=> $child){ 
 			//$childCount  = count($child->children($child->topic_num,$child->camp_num));
-			$title = preg_replace('/[^A-Za-z0-9\-]/', '-', $child->title);
+			$title = preg_replace('/[^A-Za-z0-9\-]/', '-', $child->camp_name);
 			$topic_id  = $child->topic_num."-".$title;
-			$array[$child->camp_num]['title'] = $title;
-			$array[$child->camp_num]['link'] = url('topic/'.$topic_id.'/'.$child->camp_num);
+			$array[$child->camp_num]['title'] = $child->camp_name;
+			$array[$child->camp_num]['link'] = url('topic/'.$topic_id.'/'.$child->camp_num.'?'.app('request')->getQueryString());
 			$array[$child->camp_num]['score'] = $this->getCamptSupportCount($algorithm,$child->topic_num,$child->camp_num);
 			$children =$this->traverseCampTree($algorithm,$child->topic_num,$child->camp_num,$child->parent_camp_num);
 			
@@ -520,7 +564,7 @@ class Camp extends Model {
 	
 
 		if(!isset($_REQUEST['asof']) || (isset($_REQUEST['asof']) && $_REQUEST['asof']=="default")) {
-			if(!session("topic-child-{$this->topic_num}")){
+			
 				session(["topic-child-{$this->topic_num}" => self::where('topic_num', '=', $this->topic_num)
 						//->where('parent_camp_num', '=', $parentcamp)
 						->where('camp_name', '!=', 'Agreement')  
@@ -530,12 +574,12 @@ class Camp extends Model {
 						->groupBy('camp_num')				
 						->orderBy('submit_time', 'desc')
 						->get()]);
-			}
+			
 		} else {
 			
 			if(isset($_REQUEST['asof']) && $_REQUEST['asof']=="review") {
 			
-			if(!session("topic-child-{$this->topic_num}")){
+			
 				session(["topic-child-{$this->topic_num}" => self::where('topic_num', '=', $this->topic_num)
                 //->where('parent_camp_num', '=', $parentcamp)
                 ->where('camp_name', '!=', 'Agreement')  
@@ -543,13 +587,13 @@ class Camp extends Model {
                 ->orderBy('submit_time', 'desc')
 				->groupBy('camp_num')
                 ->get()]);
-			}
+			
 				
 			} else if(isset($_REQUEST['asof']) && $_REQUEST['asof']=="bydate") {
 				
 				$asofdate =  strtotime(date('Y-m-d H:i:s', strtotime($_REQUEST['asofdate'])));
 			
-			  	if(!session("topic-child-{$this->topic_num}")){
+			  	
 				session(["topic-child-{$this->topic_num}" => self::where('topic_num', '=',$this->topic_num)
                 ->where('camp_name', '!=', 'Agreement')  
                 ->where('objector_nick_id', '=', NULL)
@@ -558,15 +602,15 @@ class Camp extends Model {
                 ->orderBy('submit_time', 'desc')
 				->groupBy('camp_num')
                 ->get()]);
-			} 
+			
 			}	
 		}
 		
 
-		$title = preg_replace('/[^A-Za-z0-9\-]/', '-', $this->title); 
+		$title = preg_replace('/[^A-Za-z0-9\-]/', '-', $this->topic->topic_name); 
 		$topic_id = $this->topic_num."-".$title;
 		$tree = [];
-		$tree[$this->camp_num]['title'] = $this->title;
+		$tree[$this->camp_num]['title'] = $this->topic->topic_name;
 		$tree[$this->camp_num]['link'] = url('topic/'.$topic_id.'/'.$this->camp_num);
 		$tree[$this->camp_num]['score'] = $this->getCamptSupportCount($algorithm,$this->topic_num,$this->camp_num);
 		$tree[$this->camp_num]['children'] = $this->traverseCampTree($algorithm,$this->topic_num,$this->camp_num);
