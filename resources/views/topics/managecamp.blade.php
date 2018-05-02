@@ -50,7 +50,7 @@
              </div> 
             
              <div class="form-group">
-                <label for="camp_name">Camp Name </label>
+                <label for="camp_name">Camp Name ( Limit 30 Char )</label>
                 <input type="text" name="camp_name" class="form-control" id="camp_name" value="{{ $camp->camp_name}}">
                  @if ($errors->has('camp_name')) <p class="help-block">{{ $errors->first('camp_name') }}</p> @endif
              </div> 

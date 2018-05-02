@@ -358,7 +358,7 @@ class TopicController extends Controller {
         $all = $request->all();
         $validator = Validator::make($request->all(), [
             'nick_name'=>'required',
-            'camp_name' => 'required',
+            'camp_name' => 'required|max:30',
             
             'note'=>'required',
 			

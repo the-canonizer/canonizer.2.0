@@ -60,13 +60,7 @@
                 @if ($errors->has('note')) <p class="help-block">{{ $errors->first('note') }}</p> @endif
             </div> 
            
-		   <div class="form-group">
-                <label for="language">Language</label>
-                <select class="form-control" name="language" id="language">
-                    <option <?php if($statement->language=="English") echo "selected=selected";?> value="English">English</option>
-                    <option <?php if($statement->language=="French") echo "selected=selected";?> value="French">French</option>
-                </select>
-            </div>
+		   
             <?php if($objection=="objection") { ?> 
             <div class="form-group">
                 <label for="topic name">Your Objection Reason </label>
