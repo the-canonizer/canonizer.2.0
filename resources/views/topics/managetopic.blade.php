@@ -41,7 +41,7 @@
              </div> 
 			
             <div class="form-group">
-                <label for="topic name">Topic Name </label>
+                <label for="topic name">Topic Name ( Limit 30 char )</label>
                 <input type="text" name="topic_name" class="form-control" id="topic_name" value="{{ $topic->topic_name}}">
 				@if ($errors->has('topic_name')) <p class="help-block">{{ $errors->first('topic_name') }}</p> @endif
             </div>            

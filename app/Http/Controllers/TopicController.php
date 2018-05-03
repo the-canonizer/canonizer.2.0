@@ -58,7 +58,7 @@ class TopicController extends Controller {
         $all = $request->all();
 		
         $validator = Validator::make($request->all(), [
-            'topic_name'=>'required',
+            'topic_name'=>'required|max:30',
             'namespace' => 'required',
             'create_namespace'=>'required_if:namespace,other',
             
@@ -166,7 +166,7 @@ class TopicController extends Controller {
      * @param  int  $id = topic_num, $parentcampnum
      * @return \Illuminate\Http\Response
      */
-    public function show($id,$parentcampnum) {
+    public function show($id,$parentcampnum=1) {
         			
 		$topicnumArray  = explode("-",$id);
 		$topicnum       = $topicnumArray[0];

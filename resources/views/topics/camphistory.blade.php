@@ -93,7 +93,7 @@
                </div>    
                <div class="CmpHistoryPnl-footer">
 				  <a id="object" class="btn btn-historysmt" href="<?php echo url('manage/camp/'.$data->id.'-objection');?>">Object</a>
-                  <a id="update" class="btn btn-historysmt" href="<?php echo url('manage/camp/'.$data->id);?>">Submit New Update</a>				  
+                  <a id="update" class="btn btn-historysmt" href="<?php echo url('manage/camp/'.$data->id);?>">Submit Camp Update Based On This</a>				  
 			    </div> 	
 			   </div>
 			   <?php } 
