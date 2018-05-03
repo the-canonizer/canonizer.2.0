@@ -125,7 +125,7 @@
                             </a>
                         </li>
 						<li class="nav-item">
-                            <a class="nav-link" href="https://canonizer.com/canonizer2.0/blog/">
+                            <a class="nav-link" href="{{ url('/blog')}}">
                                 <span class="nav-link-text">Blog</span>
                             </a>
                         </li>
