@@ -21,7 +21,15 @@
         
          <div class="Scolor-Pnl">
             <h3>Canonizer Sorted Camp Tree
-            <a href="#" class="pull-right"><i class="fa fa-question"></i></a>
+            <a href="#" class="pull-right" data-toggle="tooltip" data-placement="left" title="This section is a table of contents for this topic. It is in outline or tree form, with supporting sub camps indented from the
+            parent camp.  If you are in a sub camp, you are also counted in all
+            parent camps including the agreement camp at the top.  The numbers are
+            canonized scores derived from the people in the camps based on your
+            currently selected canonizer on the side bar.  The camps are sorted
+            according to these canonized scores.  Each entry is a link to the camp
+            page which can contain a statement of belief.  The green line
+            indicates the camp page you are currently on and the statement below
+            is for that camp."><i class="fa fa-question"></i></a>
             </h3>
             <div class="content">
             <div class="row">
@@ -96,7 +104,12 @@
         
         <div class="Scolor-Pnl">
             <h3>Support Tree for "<?php echo $camp->camp_name;?>" Camp
-             <a href="#" class="pull-right"><i class="fa fa-question"></i></a>
+             <a href="#" class="pull-right" data-toggle="tooltip" data-placement="left" title="Supporters can delegate their support to others.  Direct supporters
+receive email notifications of proposed camp changes, while delegated
+supporters don’t.  People delegating their support to others are shown
+below and indented from their delegates in an outline form.  If a
+delegate changes camp, everyone delegating their support to them will
+change camps with them."><i class="fa fa-question"></i></a>
             </h3>
             <div class="content">
             <div class="row">
