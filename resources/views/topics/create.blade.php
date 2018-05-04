@@ -41,7 +41,7 @@
             <div  class="form-group">
                 <label for="namespace">Name Space</label>
                 <select  onchange="selectNamespace(this)" name="namespace" id="namespace" class="form-control">
-                    <option value="">Select Namespace</option>
+                    
                     @foreach($namespaces as $namespace)
                     <option value="{{ $namespace->id }}" >{{$namespace->label}}</option>
                     @endforeach

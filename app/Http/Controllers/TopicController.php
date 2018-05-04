@@ -86,6 +86,16 @@ class TopicController extends Controller {
 				
 			 $topic->topic_num = $all['topic_num'];
 			 
+			 $message ="Topic update submitted successfully. It's live now.";
+			 $nickNames   = Nickname::personNicknameArray();
+			 
+			 $ifIamSingleSupporter = Support::ifIamSingleSupporter($all['topic_num'],0,$nickNames);
+			 
+			 if(!$ifIamSingleSupporter) {
+			   $topic->go_live_time = strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
+			   $message ="Topic update submitted successfully. Its under review, once approved it will be live.";
+			 } 
+			 
 			 if(isset($all['objection']) && $all['objection']==1) {
 				 $topic->objector_nick_id = $all['nick_name'];
 				 //$topic->submitter_nick_id = $all['submitter'];
@@ -93,7 +103,7 @@ class TopicController extends Controller {
 				 $topic->object_time = $current_time;
 			 }			 
 			 
-			 $message ="Topic update submitted successfully. Its under review, once approved it will be live.";
+			 
 			}
 			else {
 			 $message ="Topic created successfully. It's live now.";	
@@ -276,6 +286,30 @@ class TopicController extends Controller {
     }
 	
 	/**
+     * Create new camp statement.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+	 
+	public function create_statement($topic_num,$camp_num){
+		
+			
+
+        $topic         = Camp::getAgreementTopic($topic_num);
+        
+		$camp          = Camp::getLiveCamp($topic_num,$camp_num);
+        
+		$parentcampnum = isset($camp->parent_camp_num) ? $camp->parent_camp_num : 0;
+		
+		$parentcamp    = Camp::campNameWithAncestors($camp,'');
+	
+		$nickNames     = Nickname::personNickname();
+       
+        return view('topics.createstatement',  compact('objection','camp','nickNames','topic','parentcampnum','parentcamp'));
+    }
+	
+	/**
      * Show camp history.
      *
      * @param  varchar  $id = topic_num,int $campnum
@@ -356,6 +390,7 @@ class TopicController extends Controller {
     
     public function store_camp(Request $request){
         $all = $request->all();
+		$currentTime  = time();
         $validator = Validator::make($request->all(), [
             'nick_name'=>'required',
             'camp_name' => 'required|max:30',
@@ -376,7 +411,7 @@ class TopicController extends Controller {
         //$camp->title = $all['title'];
         $camp->camp_name = $all['camp_name'];
 		$camp->submit_time = strtotime(date('Y-m-d H:i:s'));
-        $camp->go_live_time = strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
+        $camp->go_live_time = $currentTime; //strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
         $camp->language = 'English';
        
         $camp->note = $all['note'];
@@ -388,13 +423,24 @@ class TopicController extends Controller {
         if(isset($all['camp_num'])) {
 		 $camp->camp_num = $all['camp_num'];
 		 $camp->submitter_nick_id = $all['nick_name'];
+		 
+		     $message ="Camp update submitted Successfully. It's live now.";
+			 $nickNames   = Nickname::personNicknameArray();
+			 
+			 $ifIamSingleSupporter = Support::ifIamSingleSupporter($all['topic_num'],$all['camp_num'],$nickNames);
+			 
+			 if(!$ifIamSingleSupporter) {
+			   $camp->go_live_time = strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
+			   $message ="Camp update submitted Successfully. Its under review, once approved it will be live.";
+			 }
+		 
 		 if(isset($all['objection']) && $all['objection']==1) {
 		 
 			 $camp->objector_nick_id = $all['nick_name'];			 
 			 $camp->object_reason = $all['object_reason'];
 			 $camp->object_time = time();
 		 }	 
-		 $message = 'Camp update submitted Successfully.';
+		 
 		} else {
 			
 			$message = 'Camp Created Successfully.';
@@ -437,6 +483,7 @@ class TopicController extends Controller {
 	 
 	public function store_statement(Request $request){
         $all = $request->all();
+		$currentTime  = time();
         $validator = Validator::make($request->all(), [
             'statement'=>'required',
             'note' => 'required',
@@ -455,12 +502,23 @@ class TopicController extends Controller {
 		  $statement->note = $all['note'];
 		  $statement->submit_time = strtotime(date('Y-m-d H:i:s'));
 		  $statement->submitter_nick_id = $all['nick_name'];
-		  $statement->go_live_time = strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
+		  $statement->go_live_time = $currentTime;//strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
 		  $statement->language = 'English';
 		  
 		  if(isset($all['camp_num'])) {
 			 $statement->camp_num = $all['camp_num'];
 			 $statement->submitter_nick_id = $all['nick_name'];
+			 
+			 $message ="Statement update submitted Successfully. It's live now.";
+			 $nickNames   = Nickname::personNicknameArray();
+			 
+			 $ifIamSingleSupporter = Support::ifIamSingleSupporter($all['topic_num'],$all['camp_num'],$nickNames);
+			 
+			 if(!$ifIamSingleSupporter) {
+			   $statement->go_live_time = strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
+			   $message ="Statement update submitted Successfully. Its under review, once approved it will be live.";
+			 }
+			 
 			 if(isset($all['objection']) && $all['objection']==1) {
 		 
 				 $statement->objector_nick_id = $all['nick_name'];
@@ -468,7 +526,6 @@ class TopicController extends Controller {
 				 $statement->object_time = time();
 			 }	
 			 
-			 $message = 'Camp statement update submitted successfully.';
 			 
 		  } else { 
 		    $message = 'Camp statement submitted successfully.';

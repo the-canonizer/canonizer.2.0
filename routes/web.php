@@ -72,6 +72,7 @@ Route::group([ 'middleware' => 'auth'], function()
    Route::post('settings/support/delete', [ 'as' => 'settings.support.delete', 'uses' => 'SettingsController@delete_support']);
    Route::get('manage/camp/{id}', 'TopicController@manage_camp');
    Route::get('manage/statement/{id}', 'TopicController@manage_statement');
+   Route::get('create/statement/{topic_num}/{camp_num}', 'TopicController@create_statement');
    Route::get('manage/topic/{id}', 'TopicController@manage_topic');
    Route::get('support/{id}/{campnum}', 'SettingsController@support');
    Route::get('support', [ 'as' => 'settings.support', 'uses' =>'SettingsController@support']);

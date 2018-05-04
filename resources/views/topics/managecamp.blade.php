@@ -13,13 +13,13 @@
 
 @if(Session::has('error'))
 <div class="alert alert-danger">
-    <strong>Error!</strong>{{ Session::get('error')}}    
+    <strong>Error! </strong>{{ Session::get('error')}}    
 </div>
 @endif
 
 @if(Session::has('success'))
 <div class="alert alert-success">
-    <strong>Success!</strong>{{ Session::get('success')}}    
+    <strong>Success! </strong>{{ Session::get('success')}}    
 </div>
 @endif
 
@@ -54,25 +54,14 @@
                 <input type="text" name="camp_name" class="form-control" id="camp_name" value="{{ $camp->camp_name}}">
                  @if ($errors->has('camp_name')) <p class="help-block">{{ $errors->first('camp_name') }}</p> @endif
              </div> 
-            
-            <div class="form-group">
-                <label for="title">Title </label>
-                <input type="text" name="title" class="form-control" id="title" value="{{ $camp->title }}">
-                @if ($errors->has('title')) <p class="help-block">{{ $errors->first('title') }}</p> @endif
-            </div> 
+           
            
             <div class="form-group">
                 <label for="keywords">Keywords </label>
                 <input type="text" name="keywords" class="form-control" id="keywords" value="{{ $camp->key_words }}">
                 @if ($errors->has('keywords')) <p class="help-block">{{ $errors->first('keywords') }}</p> @endif
             </div> 
-            <div class="form-group">
-                <label for="language">Language</label>
-                <select class="form-control" name="language" id="language">
-                    <option <?php if($camp->language=="English") echo "selected=selected";?> value="English">English</option>
-                    <option <?php if($camp->language=="French") echo "selected=selected";?> value="French">French</option>
-                </select>
-            </div>
+           
             
             <div class="form-group">
                 <label for="">Additional Note</label>

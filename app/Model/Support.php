@@ -31,5 +31,18 @@ class Support extends Model {
 	public function delegatednickname() {
         return $this->hasOne('App\Model\Nickname', 'id', 'delegate_nick_name_id');
     }
-
+    
+	public static function ifIamSingleSupporter($topic_num,$camp_num=0,$userNicknames) {
+	 
+	   $othersupports = self::where('topic_num',$topic_num)->whereNotIn('nick_name_id',$userNicknames)->where('end','=',0)->orderBy('support_order','ASC')->get();
+	   
+	   $othersupports->filter(function($item) use($camp_num){
+			if($camp_num){
+				return $item->camp_num == $camp_num;
+			}
+		});
+		
+		return count($othersupports) ? 0 : 1 ;
+	   
+	}	
 }

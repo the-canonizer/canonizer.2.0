@@ -145,7 +145,8 @@ class Camp extends Model {
 				$url = url('topic/'.$camp->topic_num.'/'.$camp->camp_num);
 				$campname = "<a href='".$url."'>".$camp->camp_name . '</a> / ' . $campname;
 			} else {
-				$campname = $camp->camp_name;
+				$url = url('topic/'.$camp->topic_num.'/'.$camp->camp_num);
+				$campname = "<a href='".$url."'>".$camp->camp_name. '</a>';
 			}
 			if ($camp->parent_camp_num) {
 				
@@ -154,7 +155,7 @@ class Camp extends Model {
 				          ->where('camp_num', $camp->parent_camp_num)
 						  //->where('camp_name', '!=', 'Agreement')  
 						  ->where('objector_nick_id', '=', NULL)
-						  //->whereRaw('go_live_time in (select max(go_live_time) from camp where topic_num='.$camp->topic_num.' and objector_nick_id is null group by camp_num)')				
+						  ->whereRaw('go_live_time in (select max(go_live_time) from camp where topic_num='.$camp->topic_num.' and objector_nick_id is null group by camp_num)')				
 						  //->where('go_live_time','<',$asofdate)
 						  ->groupBy('camp_num')->orderBy('submit_time', 'desc')->first();
 				return self::campNameWithAncestors($pcamp, $campname);
