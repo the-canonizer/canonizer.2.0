@@ -109,7 +109,7 @@
          </div>
         @if(isset($topic))
          <div id="myTabContent" class="add-nickname-section">  
-                 <h5>Nick Name To Support {!! $parentcamp !!} Camp </h5>
+                 <h5>Nick Name To Support {!! $parentcamp !!} </h5>
                 <form id="support_form" action="{{ route('settings.support.add')}}" method="post">
                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
 					<input type="hidden" id="topic_num" name="topic_num" value="{{ $topic->topic_num }}">

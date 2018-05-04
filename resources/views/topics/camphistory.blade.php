@@ -13,13 +13,13 @@
 
 @if(Session::has('error'))
 <div class="alert alert-danger">
-    <strong>Error!</strong>{{ Session::get('error')}}    
+    <strong>Error! </strong>{{ Session::get('error')}}    
 </div>
 @endif
 
 @if(Session::has('success'))
 <div class="alert alert-success">
-    <strong>Success!</strong>{{ Session::get('success')}}    
+    <strong>Success! </strong>{{ Session::get('success')}}    
 </div>
 @endif
 
@@ -77,8 +77,8 @@
 			    ?>
 			    <div class="form-group CmpHistoryPnl" style="background-color:{{ $bgcolor }}">
                 <div>
-                  <b>Camp Title :</b> {{ $data->title }} <br/>
-				  <b>Camp Name :</b> {{ $data->title }} <br/>
+                  
+				  <b>Camp Name :</b> {{ $data->camp_name }} <br/>
 				  <b>Keyword :</b> {{ $data->key_words }} <br/>
 				  <b>Note :</b> {{ $data->note }} <br/>
 				  <b>Language :</b> {{ $data->language }}<br/>

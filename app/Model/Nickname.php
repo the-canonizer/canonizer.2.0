@@ -31,7 +31,18 @@ class Nickname extends Model
 		
         return  DB::table('nick_name')->select('id','nick_name')->where('owner_code',$encode)->get();
 	}
-
+    
+    public static function personNicknameArray() {
+		
+		$userNickname=array();
+		$nicknames = self::personNickname();
+			
+			foreach($nicknames as $nickname) {
+				
+				$userNickname[] = $nickname->id;
+			}
+		return $userNickname;	
+	}	
     public function getSupportCampList(){
 
         $as_of_time = time();

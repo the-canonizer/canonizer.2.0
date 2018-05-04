@@ -89,11 +89,11 @@
                                 <span class="nav-link-text">Canonizer Main</span>
                             </a>
                         </li>
-                        <li class="nav-item">
+                       <!-- <li class="nav-item">
                             <a class="nav-link" href="{{ url('topic/10-Canonizer-organization-home-page-/1')}}">
                                 <span class="nav-link-text">What is Canonizer.com</span>
                             </a>
-                        </li>
+                        </li>-->
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url('/browse')}}">
                                 <span class="nav-link-text">Browse</span>
@@ -148,7 +148,7 @@
 								
                                 <li>
                                     
-                                    <div class="filter">Filter < <input onblur="changeFilter(this)" type="number" value="{{ isset($_REQUEST['filter']) && !empty($_REQUEST['filter']) ? $_REQUEST['filter'] : '0.001' }}"/></div>
+                                    <div class="filter">Filter < <input onkeypress="changeFilterOnEnter(this,event)" onblur="changeFilter(this)" type="number" value="{{ isset($_REQUEST['filter']) && !empty($_REQUEST['filter']) ? $_REQUEST['filter'] : '0.001' }}"/></div>
                                 </li>
                             </ul>
                         </li>
@@ -244,7 +244,17 @@
 
         function changeFilter(element){
             $('#filter').val($(element).val());
+			
             $('#as_of').submit();
+        }
+		function changeFilterOnEnter(element,e){
+			
+		  if(e.keyCode === 13){
+            e.preventDefault();
+            $('#filter').val($(element).val());
+			
+            $('#as_of').submit();
+		  }	
         }
     </script>	
 </body>

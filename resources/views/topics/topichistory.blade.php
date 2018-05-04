@@ -8,13 +8,13 @@
 
 @if(Session::has('error'))
 <div class="alert alert-danger">
-    <strong>Error!</strong>{{ Session::get('error')}}    
+    <strong>Error! </strong>{{ Session::get('error')}}    
 </div>
 @endif
 
 @if(Session::has('success'))
 <div class="alert alert-success">
-    <strong>Success!</strong>{{ Session::get('success')}}    
+    <strong>Success! </strong>{{ Session::get('success')}}    
 </div>
 @endif
 
@@ -72,7 +72,7 @@
                   <b>Topic Name :</b> {{ $data->topic_name }} <br/>
 				  <b>Note :</b> {{ $data->note }} <br/>
 				  <b>Language :</b> {{ $data->language }}<br/>
-				  <b>Namespace :</b> {{ $data->namespace }} <br/>
+				  <b>Namespace :</b> {{ $data->topicnamespace->label }} <br/>
 				  <b>Submitter Nickname :</b> {{ isset($data->submitternickname->nick_name) ? $data->submitternickname->nick_name : 'N/A' }} <br/>
 				  <b>Submitted on :</b> {{ to_local_time($data->submit_time) }} <br/>
 				  <b>Go live Time :</b> {{ to_local_time($data->go_live_time)}} <br/>
