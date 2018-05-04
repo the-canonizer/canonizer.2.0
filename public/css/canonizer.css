@@ -1098,3 +1098,26 @@ ul.pagination li.active span{
 	margin-right:5px;
 	display:inline-block;
 }
+
+.Scolor-Pnl .content img,.statement img{
+	max-width: 100%;
+	
+}
+
+address p{
+	margin-bottom:0px;
+}
+
+.namespace-select{
+	width: 100%;
+	background: #fff;
+	font-size:14px;
+}
+
+
+
+.support-sorter-element {
+    max-width: 300px;
+	margin: 7px;
+	cursor:move;
+}

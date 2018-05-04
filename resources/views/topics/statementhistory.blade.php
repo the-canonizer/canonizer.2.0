@@ -71,8 +71,19 @@
 						   }
                    $input=htmlspecialchars($data->value);						   
 			   ?>
-			    <div class="form-group CmpHistoryPnl" style="background-color:{{ $bgcolor }}">
-                  <b>Statement :</b> <?php echo  $wiky->parse($input); ?><br/>
+			    <div class="form-group CmpHistoryPnl" style="background-color:{{ $bgcolor }}; width:100%;">
+                  <div class="statement"><b>Statement :</b> 
+				  <?php 
+				              
+							  $finalStatement  = $wiky->parse($input); 
+							  $rootUrl = str_replace("/public","",Request::root());
+							  $finalStatement = str_replace("http://canonizer.com",$rootUrl,$finalStatement);
+							  $finalStatement = str_replace("http://www.canonizer.com",$rootUrl,$finalStatement);
+							  
+							  echo $finalStatement;
+				   ?>
+				  
+				  </div><br/>
 				  <b>Note :</b> {{ $data->note }} <br/>
 				  <b>Language :</b> {{ $data->language }}<br/>
 				  <b>Submitted on :</b> {{ to_local_time($data->submit_time) }} <br/>
@@ -85,8 +96,8 @@
                   @endif 
 				  
 				 <div class="CmpHistoryPnl-footer">
-				    <a class="btn btn-historysmt" href="<?php echo url('manage/statement/'.$data->id.'-objection');?>">Object</a>
-				 	<a class="btn btn-historysmt" href="<?php echo url('manage/statement/'.$data->id);?>">Submit Statement Update</a>
+				    <a id="object" class="btn btn-historysmt" href="<?php echo url('manage/statement/'.$data->id.'-objection');?>">Object</a>
+				 	<a id="update" class="btn btn-historysmt" href="<?php echo url('manage/statement/'.$data->id);?>">Submit Statement Update Based On This</a>
                  </div>
 			    </div> 	
 			   

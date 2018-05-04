@@ -32,7 +32,7 @@
         </div>
         <div class="form-group">
             <label for="pwd">Password</label>
-            <input type="password" name="password" class="form-control" id="pwd">
+            <input type="password" name="password" class="form-control" id="password">
             @if ($errors->has('password')) <p class="help-block">{{ $errors->first('password') }}</p> @endif
         </div>
         
@@ -41,7 +41,7 @@
             <input type="password" name="password_confirmation" class="form-control" id="pwd_confirm">
             
         </div>
-        <button type="submit" class="btn btn-login">Create your account</button>
+        <button type="submit" id="submit" class="btn btn-login">Create your account</button>
     </form>
 </div>    
 </div>  <!-- /.right-whitePnl-->

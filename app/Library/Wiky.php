@@ -30,8 +30,10 @@ class Wiky {
 	
 			// Special
 			"/^----+(\s*)$/m",						// Horizontal line
-			"/\[\[(file|img):((ht|f)tp(s?):\/\/(.+?))( (.+))*\]\]/i",	// (File|img):(http|https|ftp) aka image
-			"/\[((news|(ht|f)tp(s?)|irc):\/\/(.+?))( (.+))\]/i",		// Other urls with text
+			"/\[\[(img):((ht|f)tp(s?):\/\/(.+?))( (.+))*\]\]/i",
+			"/\[\[(file):((ht|f)tp(s?):\/\/(.+?))( (.+))*\]\]/i",	// (File|img):(http|https|ftp) aka image
+			//"/\[((news|(ht|f)tp(s?)|irc):\/\/(.+?))( (.+))\]/i",	
+			"/\[((news|(ht|f)tp(s?)|irc):\/\/(.+?)) ([a-z0-9A-z\s]+)\]/i",
 			"/\[((news|(ht|f)tp(s?)|irc):\/\/(.+?))\]/i",			// Other urls without text
 	
 			// Indentations
@@ -76,7 +78,9 @@ class Wiky {
 			// Special
 			"<hr/>",
 			"<img src=\"$2\" alt=\"$6\"/>",
-			"<a href=\"$1\">$7</a>",
+			"<a href=\"$2\">$2</a>",
+			//"<img src=\"$2\" alt=\"$6\"/>",
+			"<a href=\"$1\">$6</a>",
 			"<a href=\"$1\">$1</a>",
 	
 			// Indentations
@@ -111,10 +115,32 @@ class Wiky {
 		}
 	}
 	public function parse($input) {
-		if(!empty($input))
-			$output=preg_replace($this->patterns,$this->replacements,$input);
+		$output = $input;
+
+			$m = preg_match_all( "/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/", $output, $match);
+				
+			if ($m) {
+				$links = $match[0];
+				foreach($links as $link) {
+					$link = trim(strip_tags($link));
+					$extension = strtolower(trim(@end(explode(".",$link))));
+					switch($extension) {
+						case 'gif':
+						case 'png':
+						case 'jpg':
+						case 'jpeg':
+							$output = str_replace($link, '<img src="'.$link.'">', $output);       
+							break;
+						break;
+					}
+				}
+			}
+
+		if(!empty($output))
+			$output=preg_replace($this->patterns,$this->replacements,$output);
 		else
 			$output=false;
+
 		return $output;
 	}
 }

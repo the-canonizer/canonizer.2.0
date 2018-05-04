@@ -13,8 +13,12 @@ use App\Model\Topic;
 use App\Model\Camp;
 use App\Model\Statement;
 use App\Model\Nickname;
+use App\Model\Support;
 use DB;
 use Validator;
+use App\Model\Namespaces;
+use App\Model\NamespaceRequest;
+
 /**
  * TopicController Class Doc Comment
  *
@@ -39,7 +43,9 @@ class TopicController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function create() {
-        return view('topics.create');
+        $namespaces= Namespaces::all();
+        $nickNames   = Nickname::personNickname();
+        return view('topics.create',compact('namespaces','nickNames'));
     }
 
     /**
@@ -52,11 +58,12 @@ class TopicController extends Controller {
         $all = $request->all();
 		
         $validator = Validator::make($request->all(), [
-            'topic_name'=>'required',
+            'topic_name'=>'required|max:30',
             'namespace' => 'required',
-            'go_live_time'=>'required',
+            'create_namespace'=>'required_if:namespace,other',
             
         ]);
+        
         if ($validator->fails()) {
             return back()->withErrors($validator->errors())->withInput($request->all());
         }
@@ -64,15 +71,15 @@ class TopicController extends Controller {
         DB::beginTransaction();
         
         try {
-			
+			$current_time = time();
             $topic = new Topic();
             $topic->topic_name = $all['topic_name'];		
 			
-            $topic->namespace = $all['namespace'];
-            $topic->submit_time = time();
+            $topic->namespace_id = $all['namespace'];
+            $topic->submit_time = $current_time;
             $topic->submitter_nick_id = $all['nick_name'];
-            $topic->go_live_time = strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
-            $topic->language = $all['language'];
+            $topic->go_live_time = $current_time;//strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
+            $topic->language = 'English';
             $topic->note = $all['note'];
 						
 			if(isset($all['topic_num'])) {
@@ -81,29 +88,52 @@ class TopicController extends Controller {
 			 
 			 if(isset($all['objection']) && $all['objection']==1) {
 				 $topic->objector_nick_id = $all['nick_name'];
-				 $topic->submitter_nick_id = $all['submitter'];
+				 //$topic->submitter_nick_id = $all['submitter'];
 				 $topic->object_reason = $all['object_reason'];
-				 $topic->object_time = time();
+				 $topic->object_time = $current_time;
 			 }			 
 			 
 			 $message ="Topic update submitted successfully. Its under review, once approved it will be live.";
 			}
 			else {
-				
-			 $message ="Topic created successfully. Its under review, once approved it will be live.";	
+			 $message ="Topic created successfully. It's live now.";	
 			}
-					
-			
-            $topic->save();
-            DB::commit();
 
+			/* If topic is created then add default support to that topic */ 
+            if($topic->save()) {
+				
+				$supportTopic  = new Support();
+				$supportTopic->topic_num    = $topic->topic_num;
+				$supportTopic->nick_name_id = $all['nick_name'];
+				$supportTopic->delegate_nick_name_id = 0;
+				$supportTopic->start = $current_time;
+				$supportTopic->camp_num = 1;
+					
+				$supportTopic->support_order = 1;
+				$supportTopic->save();
+				
+			}
+			
+			
+            if($all['namespace'] == 'other'){ /*Create new namespace request */
+                $namespace_request = new NamespaceRequest;
+                $namespace_request->user_id = Auth::user()->id;
+                $namespace_request->name = $all['create_namespace'];
+                $namespace_request->topic_num = $topic->topic_num;
+                $namespace_request->save();
+                $topic->namespace_id  = 1;
+                $topic->save();
+             }
+            DB::commit();
+            
             Session::flash('success', $message);
         } catch (Exception $e) {
+            
             DB::rollback();
             Session::flash('error', "Fail to create topic, please try later.");
         }
 
-        return redirect('topic/'.$topic->topic_num)->with(['success'=>$message]);
+        return redirect('topic-history/'.$topic->topic_num)->with(['success'=>$message]);
     }
 	
 	 /**
@@ -113,7 +143,7 @@ class TopicController extends Controller {
      * @return \Illuminate\Http\Response
      */
 	
-	public function manage_topic($id){
+	public function manage_topic(Request $request,$id){
 		
 		$paramArray  = explode("-",$id);
 		$id          = $paramArray[0];
@@ -122,10 +152,11 @@ class TopicController extends Controller {
 		$topic       = Topic::where('id',$id)->first();
         
         $nickNames   = Nickname::personNickname();
-		
+		$request->merge(['namespace'=>$topic->namespace_id]);
 		if(!count($topic)) return back();
+        $namespaces= Namespaces::all();
 		
-		return view('topics.managetopic', compact('topic','objection','nickNames'));
+		return view('topics.managetopic', compact('topic','objection','nickNames','namespaces'));
 		
 	}
 
@@ -135,20 +166,31 @@ class TopicController extends Controller {
      * @param  int  $id = topic_num, $parentcampnum
      * @return \Illuminate\Http\Response
      */
-    public function show($id,$parentcampnum) {
+    public function show($id,$parentcampnum=1) {
         			
 		$topicnumArray  = explode("-",$id);
 		$topicnum       = $topicnumArray[0];
 		
 		$topic      = Camp::getAgreementTopic($topicnum);
+		
         $camp       = Camp::getLiveCamp($topicnum,$parentcampnum);
+		
+		
         $parentcamp = Camp::campNameWithAncestors($camp,'');
         
 		$wiky=new Wiky;
 		
 		$WikiParser  = new wikiParser;
-     
-
+        if(count($topic) <= 0) {
+			
+			Session::flash('error', "This topic is not live yet, you dont have access to view the detail. Please try after sometime.");
+			return back();
+		}
+		if(count($camp) <= 0) {
+			
+			Session::flash('error', "Selected camp is not available in the selected parameters, Please check the filters for more accurate results.");
+			return back();
+		}
 		
 		return view('topics.view',  compact('topic','parentcampnum','parentcamp','camp','wiky','WikiParser'));
     }
@@ -170,8 +212,8 @@ class TopicController extends Controller {
 		
 		
         $nickNames  = Nickname::personNickname();
-        
-        return view('topics.camp_create',  compact('topic','parentcampnum','parentcamp','nickNames'));
+        $allNicknames = Nickname::orderBy('nick_name','ASC')->get();
+        return view('topics.camp_create',  compact('topic','parentcampnum','parentcamp','nickNames','allNicknames'));
     }
 	
 	/**
@@ -198,7 +240,9 @@ class TopicController extends Controller {
 				
         $nickNames  = Nickname::personNickname();
 		
-        return view('topics.managecamp',  compact('objection','topic','camp','parentcampnum','parentcamp','nickNames'));
+		$allNicknames = Nickname::orderBy('nick_name','ASC')->get();
+		
+        return view('topics.managecamp',  compact('objection','topic','camp','parentcampnum','parentcamp','nickNames','allNicknames'));
     }
 	
 	/**
@@ -314,39 +358,39 @@ class TopicController extends Controller {
         $all = $request->all();
         $validator = Validator::make($request->all(), [
             'nick_name'=>'required',
-            'camp_name' => 'required',
-            'title'=>'required',
+            'camp_name' => 'required|max:30',
+            
             'note'=>'required',
 			
         ]);
 		
-        if ($validator->fails()) { print_r($validator->errors());
+        if ($validator->fails()) {
             return back()->withErrors($validator->errors())->withInput($request->all());
         }
-        
+        $message = null;
         
         $camp = new Camp();
         $camp->topic_num = $all['topic_num'];
 		
         $camp->parent_camp_num = $all['parent_camp_num'];
-        $camp->title = $all['title'];
+        //$camp->title = $all['title'];
         $camp->camp_name = $all['camp_name'];
 		$camp->submit_time = strtotime(date('Y-m-d H:i:s'));
         $camp->go_live_time = strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
-        $camp->language = $all['language'];
-        $camp->camp_about_nick_id = $all['nick_name'];
+        $camp->language = 'English';
+       
         $camp->note = $all['note'];
 		$camp->key_words = $all['keywords'];
 		$camp->submitter_nick_id = $all['nick_name'];
-        $camp->camp_about_url = $all['url'];	
+        $camp->camp_about_url = $all['camp_about_url'];	
+		$camp->camp_about_nick_id = $all['camp_about_nick_id'];
 
         if(isset($all['camp_num'])) {
 		 $camp->camp_num = $all['camp_num'];
 		 $camp->submitter_nick_id = $all['nick_name'];
 		 if(isset($all['objection']) && $all['objection']==1) {
 		 
-			 $camp->objector_nick_id = $all['nick_name'];
-			  $camp->submitter_nick_id = $all['submitter'];
+			 $camp->objector_nick_id = $all['nick_name'];			 
 			 $camp->object_reason = $all['object_reason'];
 			 $camp->object_time = time();
 		 }	 
@@ -368,17 +412,17 @@ class TopicController extends Controller {
 			  $statement->submit_time = strtotime(date('Y-m-d H:i:s'));
 			  $statement->submitter_nick_id = $all['nick_name'];
 			  $statement->go_live_time = strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
-			  $statement->language = $all['language'];
+			  $statement->language = 'English';
 					  
 			  $statement->save();
 		  }
+          Session::flash('success', $message);
 			
 		} else {
 			
 		  $message = 'Camp not added, please try again.';	
 		}
         
-       
 		return redirect('camp/history/'.$camp->topic_num.'/'.$camp->camp_num)->with(['success'=>$message]);
                 
         
@@ -412,7 +456,7 @@ class TopicController extends Controller {
 		  $statement->submit_time = strtotime(date('Y-m-d H:i:s'));
 		  $statement->submitter_nick_id = $all['nick_name'];
 		  $statement->go_live_time = strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
-		  $statement->language = $all['language'];
+		  $statement->language = 'English';
 		  
 		  if(isset($all['camp_num'])) {
 			 $statement->camp_num = $all['camp_num'];
@@ -420,7 +464,6 @@ class TopicController extends Controller {
 			 if(isset($all['objection']) && $all['objection']==1) {
 		 
 				 $statement->objector_nick_id = $all['nick_name'];
-				 $statement->submitter_nick_id = $all['submitter'];
 				 $statement->object_reason = $all['object_reason'];
 				 $statement->object_time = time();
 			 }	
@@ -477,6 +520,14 @@ class TopicController extends Controller {
      */
     public function destroy($id) {
         //
+    }
+
+
+    public function usersupports(Request $request,$id){
+    
+        $nickName = Nickname::find($id);
+        $namespaces= Namespaces::all();
+        return view('user-supports',compact('nickName','namespaces'));
     }
 
 }

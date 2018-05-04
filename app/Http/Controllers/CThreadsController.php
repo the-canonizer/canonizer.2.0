@@ -38,11 +38,10 @@ class CThreadsController extends Controller
     public function index($topicid, $topicname, $campnum)
     {
         
-        if ((camp::where('camp_num', $campnum)->where('topic_num', $topicid)->value('camp_name')) 
-           // and ($topicname === Topic::find($topicid)->topic_name)
-        )
+        if ((camp::where('camp_num', $campnum)->where('topic_num', $topicid)->value('camp_name')))
         {
-            $threads = CThread::where('camp_id', $campnum)->latest()->get();
+            $threads = CThread::where('camp_id', $campnum)->
+                                where('topic_id', $topicid)->latest()->get();
         }
         else { 
             return (

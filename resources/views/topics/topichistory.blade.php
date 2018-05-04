@@ -82,8 +82,8 @@
                  @endif 	 				 
                </div>    
                <div class="CmpHistoryPnl-footer">
-				  <a class="btn btn-historysmt" href="<?php echo url('manage/topic/'.$data->id.'-objection');?>">Object</a>
-                  <a class="btn btn-historysmt" href="<?php echo url('manage/topic/'.$data->id);?>">Submit New Update</a>				  
+				  <a id="object" class="btn btn-historysmt" href="<?php echo url('manage/topic/'.$data->id.'-objection');?>">Object</a>
+                  <a id="update" class="btn btn-historysmt" href="<?php echo url('manage/topic/'.$data->id);?>">Submit Topic Update Based On This</a>				  
 			    </div> 	
 			   </div>
 			   <?php } 

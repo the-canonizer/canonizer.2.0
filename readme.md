@@ -10,7 +10,7 @@ These instructions will get you a copy of the project up and running on your loc
 ## Prerequisites
 Things you need on your machine to install this project
 
-1. Git: You should have git installed on your machine, If you do not have git installed on your system please visit https://www.atlassian.com/git/tutorials/install-git follow instructions and installe it.
+1. Git: You should have git installed on your machine, If you do not have git installed on your system please visit https://www.atlassian.com/git/tutorials/install-git follow instructions and install it.
 
 2. Composer: Composer is an application-level package manager for the PHP programming language that provides a standard format for managing dependencies of PHP software and required libraries. 
 
@@ -25,19 +25,48 @@ Command: git clone https://github.com/the-canonizer/canonizer.2.0.git
 2. Run composer 
 php composer update
 
-composer will install all dependecies and all laravel packages.
+composer will install all dependencies and all laravel packages.
 
-3. Database & its Cnfiguration
+3. Database & its Configuration
  path to DB - database/canonizer2.sql
 
- Composer should have created .env file for you where you have to set the DB credentials once you upload dastabase to your phpmyadmin.
+ Composer should have created .env file for you where you have to set the DB credentials once you upload database to your phpmyadmin.
 
- Note: If .env file is no beuign generated automatically, you can create it by copying .env.example
+ Note: If .env file is not being generated automatically, you can create it by copying .env.example
 
  Now you are ready to go
 localhost/project_directory/public it should lead you to home page now.
 
 You can set virtual host if you want to avoid "public" in url.
+
+## Installing on Mac OS:
+
+1. Apache comes installed with the Mac OS, but not MySQL. An easy installation package is available online here: https://dev.mysql.com/doc/refman/5.6/en/osx-installation-pkg.html 
+
+2. You can use MySQL Workbench as a GUI interface to set up your database. Workbench us available here: https://dev.mysql.com/downloads/workbench/
+
+3. Sourcetree is the best GUI interface for Git on Mac. You can download it here: https://downloads.atlassian.com/software/sourcetree/Sourcetree_2.7.1d.zip?_ga=2.264683343.1572218970.1521135631-982429275.1520535016
+
+4. When setting up your local version of canonizer, you'll first need to create the canonizer.2.0 directory as a subdirectory of /Library/WebServer/Documents/ and then place the .env file in the canonizer.2.0 directory. 
+
+5. Open Sourcetree. Under the "File" menu option, select "New." Select "Clone from URL."
+
+Source URL: https://github.com/the-canonizer/canonizer.2.0.git
+Destination Path: /Library/WebServer/Documents/canonizer.2.0
+Name: canonizer.2.0
+
+Click "Advanced Options" and select the branch you want to clone. 
+
+6. Open Terminal. You'll need to change permissions on all files in the canonizer.2.0 directory and subdirectory. The following two commands will allow you to do that:
+cd /Library/WebServer/Documents/canonizer.2.0
+sudo chmod -R 777
+
+7. Install and update composer using the method described above. 
+
+
+##File upload
+To enable file upload feature need to activate storage as documented by laravel using command 
+php artisan storage:link. For more info visit - https://laravel.com/docs/5.6/filesystem
 
 ## Coding Standards To Follow
 
@@ -45,7 +74,7 @@ You can set virtual host if you want to avoid "public" in url.
 
 2. All dependencies should be added through composer only.
 
-## Deployement
+## Deployment
 1. create  your own branch for task you have done with "your name or username" (developer name or username)
 example:  git checkout -b dev-jackson
 

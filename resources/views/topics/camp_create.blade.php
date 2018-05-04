@@ -29,12 +29,12 @@
     <div class="col-sm-5 margin-btm-2">
         <form action="{{ route('camp.save')}}" method="post">
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
-            <input type="hidden" name="topic_num" value="{{ $topic->topic_num }}">
-            <input type="hidden" name="parent_camp_num" value="{{ $parentcampnum }}">
+            <input type="hidden" id="topic_num" name="topic_num" value="{{ $topic->topic_num }}">
+            <input type="hidden" id="parent_camp_num" name="parent_camp_num" value="{{ $parentcampnum }}">
             
             <div class="form-group">
                 <label for="camp_name">Nick Name</label>
-                <select name="nick_name" class="form-control">
+                <select name="nick_name" id="nick_name" class="form-control">
                     @foreach($nickNames as $nick)
                     <option value="{{ $nick->id }}">{{ $nick->nick_name}}</option>
                     @endforeach
@@ -45,46 +45,53 @@
              </div> 
             
              <div class="form-group">
-                <label for="camp_name">Camp Name </label>
-                <input type="text" name="camp_name" class="form-control" id="" value="{{ old('camp_name')}}">
+                <label for="camp_name">Camp Name ( Limit 30 Char )</label>
+                <input type="text" name="camp_name" class="form-control" id="camp_name" value="{{ old('camp_name')}}">
                  @if ($errors->has('camp_name')) <p class="help-block">{{ $errors->first('camp_name') }}</p> @endif
              </div> 
             
-            <div class="form-group">
-                <label for="title">Title </label>
-                <input type="text" name="title" class="form-control" id="" value="{{ old('title') }}">
-                @if ($errors->has('title')) <p class="help-block">{{ $errors->first('title') }}</p> @endif
-            </div> 
+           
             <div class="form-group">
                 <label for="statement">Camp Statement</label>
-                <textarea class="form-control" rows="6" name="statement">{{ old('statement')}}</textarea>
+                <textarea class="form-control" rows="6" name="statement" id="statement">{{ old('statement')}}</textarea>
                 @if ($errors->has('statement')) <p class="help-block">{{ $errors->first('statement') }}</p> @endif
             </div> 
             <div class="form-group">
                 <label for="keywords">Keywords </label>
-                <input type="text" name="keywords" class="form-control" id="" value="{{ old('keywords') }}">
+                <input type="text" name="keywords" class="form-control" id="keywords" value="{{ old('keywords') }}">
                 @if ($errors->has('keywords')) <p class="help-block">{{ $errors->first('keywords') }}</p> @endif
             </div> 
-            <div class="form-group">
+            <!--<div class="form-group">
                 <label for="language">Language</label>
-                <select class="form-control" name="language">
+                <select class="form-control" name="language" id="language">
                     <option value="English">English</option>
                     <option value="French">French</option>
                 </select>
-            </div>
+            </div>-->
            
             <div class="form-group">
                 <label for="">Additional Note</label>
-                <textarea class="form-control" rows="4" name="note">{{ old('note')}}</textarea>
+                <textarea class="form-control" rows="4" name="note" id="note">{{ old('note')}}</textarea>
                 @if ($errors->has('note')) <p class="help-block">{{ $errors->first('note') }}</p> @endif
             </div>   
             <div class="form-group">
-                <label for="url">URL </label>
-                <input type="text" name="url" class="form-control" id="" value="{{ old('url') }}">
-                @if ($errors->has('url')) <p class="help-block">{{ $errors->first('url') }}</p> @endif
-            </div> 			
+                <label for="camp_about_url">Camp About URL </label>
+                <input type="text" name="camp_about_url" class="form-control" id="camp_about_url" value="{{ old('camp_about_url') }}">
+                @if ($errors->has('camp_about_url')) <p class="help-block">{{ $errors->first('camp_about_url') }}</p> @endif
+            </div> 
 
-            <button type="submit" class="btn btn-login">Create Camp</button>
+             <div class="form-group">
+                <label for="camp_about_nick_id">Camp About Nick Name </label>
+                <select name="camp_about_nick_id" id="camp_about_nick_id" class="form-control">
+                    <option value="0">--Select Camp About Nick Name--</option>
+					@foreach($allNicknames as $aboutnick)
+                    <option value="{{ $aboutnick->id }}">{{ $aboutnick->nick_name}}</option>
+                    @endforeach
+					
+                </select>            
+			</div>  			
+
+            <button type="submit" id="submit" class="btn btn-login">Create Camp</button>
         </form>
 </div>
 </div>

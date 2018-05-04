@@ -1,7 +1,7 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="{{ app()->getLocale() }}">
     <head>
-        <meta charset="utf-8">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -115,13 +115,18 @@
                    
 
                         <li class="nav-item">
-                            <a class="nav-link" href="#">
+                            <a class="nav-link" href="{{ url('/upload') }}">
                                 <span class="nav-link-text">Upload File</span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="#">
                                 <span class="nav-link-text">Help</span>
+                            </a>
+                        </li>
+						<li class="nav-item">
+                            <a class="nav-link" href="{{ url('/blog')}}">
+                                <span class="nav-link-text">Blog</span>
                             </a>
                         </li>
                     </ul>
@@ -143,7 +148,7 @@
 								
                                 <li>
                                     
-                                    <div class="filter">Filter < <input type="number" value="0.001"/></div>
+                                    <div class="filter">Filter < <input onblur="changeFilter(this)" type="number" value="{{ isset($_REQUEST['filter']) && !empty($_REQUEST['filter']) ? $_REQUEST['filter'] : '0.001' }}"/></div>
                                 </li>
                             </ul>
                         </li>
@@ -156,7 +161,7 @@
                             <ul class="sidenav-second-level collapse show" id="asof">
                                 <li>
 								 <form name="as_of" id="as_of" method="GET">
-                                 <input type="hidden" name="filter" value="0.001"/>
+                                 <input type="hidden" id="filter" name="filter" value="{{ isset($_REQUEST['filter']) && !empty($_REQUEST['filter']) ? $_REQUEST['filter'] : '0.001' }}"/>
 								   <input type="hidden" name="_token" value="{{ csrf_token() }}">
 									<div class="radio radio-primary">
 										<input type="radio" <?php echo (isset($_REQUEST['asof']) && $_REQUEST['asof']=="review") ? "checked='checked'" : '';?> class="asofdate" name="asof" id="radio1" value="review">
@@ -235,6 +240,11 @@
                     window.location.reload();
                 }
             });
+        }
+
+        function changeFilter(element){
+            $('#filter').val($(element).val());
+            $('#as_of').submit();
         }
     </script>	
 </body>

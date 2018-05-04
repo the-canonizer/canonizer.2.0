@@ -11,12 +11,29 @@
 |
 */
 
-Route::get('/', 'HomeController@index');
-Route::get('home', ['as'=>'home','uses'=>'HomeController@index']);
+Route::get('/admin/login','Admin\LoginController@getLogin');
+Route::post('/admin/login','Admin\LoginController@postLogin');
+Route::group(['prefix' => 'admin',  'middleware' => 'adminauth'],function () {
+    Route::get('/','Admin\ManageController@getIndex' );
+    Route::get('/namespace/create','Admin\ManageController@getCreateNamespace' );
+    Route::post('/namespace/create','Admin\ManageController@postCreateNamespace' );
+    Route::get('/namespace/edit/{id}','Admin\ManageController@getUpdateNamespace' );
+    Route::post('/namespace/edit/{id}','Admin\ManageController@postUpdateNamespace' );
+    
+    Route::get('/namespace-requests','Admin\ManageController@getNamespaceRequests' );
+    Route::get('/users','Admin\UserController@getIndex' );
+    Route::get('/users/edit/{id}','Admin\UserController@getEdit' );
+    Route::post('/users/edit/{id}','Admin\UserController@postUpdate' );
+	Route::get('/namespace','Admin\ManageController@namespace');
+    
+});
+
+Route::get('/home', ['as'=>'home','uses'=>'HomeController@index']);
 Route::get('browse', ['as'=>'browse','uses'=>'HomeController@browse']);
 Route::get('supportmigration', ['as'=>'supportmigration','uses'=>'HomeController@supportmigration']);
 
 Route::post('/change-algorithm','HomeController@changeAlgorithm')->name('change-algorithm');
+Route::post('/change-namespace','HomeController@changeNamespace')->name('change-namespace');
 
 
 Route::get('register','Auth\RegisterController@showRegistrationForm');
@@ -34,10 +51,12 @@ Route::get('resetlinksent','Auth\ForgotPasswordController@resetLinkSent');
 Route::get('resetpassword/{token}','Auth\ResetPasswordController@showResetForm');
 Route::post('reset','Auth\ResetPasswordController@reset');
 Route::get('topic/{id}/{campnum}', [ 'as' => 'topic', 'uses' => 'TopicController@show']);
+Route::get('topic/{id}', [ 'as' => 'topic', 'uses' => 'TopicController@show']);
 Route::post('loadtopic','HomeController@loadtopic');
 Route::get('camp/history/{id}/{campnum}', 'TopicController@camp_history');
 Route::get('statement/history/{id}/{campnum}', 'TopicController@statement_history');
 Route::get('topic-history/{id}', 'TopicController@topic_history');
+Route::get('api/v1/getcampoutline/{topic_num}/{camp_num}', 'ApiController@getcampoutline');
 
 Route::group([ 'middleware' => 'auth'], function()
 {
@@ -56,12 +75,14 @@ Route::group([ 'middleware' => 'auth'], function()
    Route::get('manage/topic/{id}', 'TopicController@manage_topic');
    Route::get('support/{id}/{campnum}', 'SettingsController@support');
    Route::get('support', [ 'as' => 'settings.support', 'uses' =>'SettingsController@support']);
+   Route::post('support-reorder', [ 'as' => 'settings.support-reorder', 'uses' =>'SettingsController@supportReorder']);
+   Route::get('upload', [ 'as' => 'upload.files', 'uses' =>'UploadController@getUpload']);
+   Route::post('upload', [ 'as' => 'upload.files.save', 'uses' =>'UploadController@postUpload']);
+   Route::get('settings/algo-preferences', [ 'as' => 'settings.algo-preferences', 'uses' => 'SettingsController@algo']);
+   Route::post('settings/algo-preferences', [ 'as' => 'settings.algo-preferences-save', 'uses' => 'SettingsController@postAlgo']);
    
 });
 
-/**
- * Routes Related to Camp Forums and threads
- */
 
 
 Route::get(
@@ -93,3 +114,11 @@ Route::post(
     '/forum/{topicid}-{topicname}/{campnum}/threads/{thread}/replies', 
     ['uses' => 'ReplyController@store']
 );
+
+if(env('APP_DEBUG')){
+    Route::get('/', 'HomeController@index'); 
+}else{
+    Route::get('/{params?}', 'HomeController@index')->where('params', '(.*)');
+}
+
+Route::get('/user/supports/{user_id}','TopicController@usersupports')->name('user_supports');
