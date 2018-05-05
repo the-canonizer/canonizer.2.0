@@ -61,6 +61,7 @@ class TopicController extends Controller {
             'topic_name'=>'required|max:30',
             'namespace' => 'required',
             'create_namespace'=>'required_if:namespace,other',
+			'nick_name'=>'required'
             
         ]);
         
@@ -487,6 +488,7 @@ class TopicController extends Controller {
         $validator = Validator::make($request->all(), [
             'statement'=>'required',
             'note' => 'required',
+			'nick_name'=>'required'
            
         ]);
         if ($validator->fails()) {
