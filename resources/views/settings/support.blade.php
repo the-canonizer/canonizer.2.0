@@ -102,7 +102,7 @@
                 });
                 </script>
                @else
-				  <h6 style="margin-top:30px;margin-left:20px;"> You didn't supported any camp yet for this topic.</h6>
+				  <h6 style="margin-top:30px;margin-left:20px;"> You currently don't support any camps in this topic.</h6>
                @endif			  
 
 

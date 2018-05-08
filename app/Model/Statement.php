@@ -36,7 +36,7 @@ class Statement extends Model {
 		 return self::where('topic_num',$topicnum)
 		             ->where('camp_num',$campnum)
 					 ->where('objector_nick_id', '=', NULL)
-					 ->where('go_live_time','<',time())
+					 ->where('go_live_time','<=',time())
 					 ->orderBy('submit_time', 'desc')
 					 ->first();
 		} else {
@@ -55,7 +55,7 @@ class Statement extends Model {
               return self::where('topic_num',$topicnum)
 		             ->where('camp_num',$campnum)
 					 ->where('objector_nick_id', '=', NULL)
-					 ->where('go_live_time','<',$asofdate) 
+					 ->where('go_live_time','<=',$asofdate) 
 					 ->orderBy('submit_time', 'desc')
 					 ->first();			  
 

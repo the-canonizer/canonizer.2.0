@@ -3,6 +3,7 @@
 
 <div class="camp top-head">
     <h3><b>Topic:</b>  {{ $topic->title}}</h3>
+	<h3><b>Camp:</b> {!! $parentcamp !!}</h3>  
      
 </div>
 
@@ -56,10 +57,8 @@
                
 			   <?php if(!empty($camps)) { 
 			            $currentLive = 0;
+						$currentTime = time();
 			            foreach($camps as $key=>$data) { 
-			               
-						   $currentTime = time();
-						   
 						   
 						   if($data->objector !== NULL)
 							   $bgcolor ="rgba(255, 0, 0, 0.5);"; //red
@@ -92,9 +91,13 @@
                  @endif 	 				 
                </div>    
                <div class="CmpHistoryPnl-footer">
+				  <?php if($currentTime < $data->go_live_time && $currentTime >= $data->submit_time) { ?> 
 				  <a id="object" class="btn btn-historysmt" href="<?php echo url('manage/camp/'.$data->id.'-objection');?>">Object</a>
-                  <a id="update" class="btn btn-historysmt" href="<?php echo url('manage/camp/'.$data->id);?>">Submit Camp Update Based On This</a>				  
-			    </div> 	
+                  <?php } ?>
+				  <a id="update" class="btn btn-historysmt" href="<?php echo url('manage/camp/'.$data->id);?>">Submit Camp Update Based On This</a>				  
+			      <a id="version" class="btn btn-historysmt" href="<?php echo url('topic/'.$data->topic_num.'/'.$data->camp_num.'?asof=bydate&asofdate='.date('Y/m/d H:i:s',$data->go_live_time));?>">View This Version</a>
+				 
+				</div> 	
 			   </div>
 			   <?php } 
 			    } else {

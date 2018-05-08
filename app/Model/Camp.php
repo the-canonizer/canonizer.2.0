@@ -198,7 +198,7 @@ class Camp extends Model {
 		             ->where('camp_name','=','Agreement')
 		             ->where('camp.objector_nick_id', '=', NULL)
 					 ->whereIn('namespace_id',explode(',',session('defaultNamespaceId',1)))
-                     ->where('camp.go_live_time','<',time())					 
+                     ->where('camp.go_live_time','<=',time())					 
 					 ->latest('support')->get()->unique('topic_num')->take($limit);
 					 
 		} else {
@@ -226,7 +226,7 @@ class Camp extends Model {
 		             //->where('id','<',$id)
 		             ->where('camp.objector_nick_id', '=', NULL)
 					 ->whereIn('namespace_id',explode(',',session('defaultNamespaceId',1)))
-                     ->where('camp.go_live_time','<',time())
+                     ->where('camp.go_live_time','<=',time())
 					 ->latest('support')->take(10)->offset($offset)->get()->unique('topic_num');
 		} else {
 			
@@ -249,7 +249,7 @@ class Camp extends Model {
 			return self::where('topic_num',$topicnum)
 						->where('camp_num','=', $campnum)
 						->where('objector_nick_id', '=', NULL)
-						->where('go_live_time','<',time())
+						->where('go_live_time','<=',time())
 						->latest('submit_time')->first();
 		} else {
 			
@@ -266,7 +266,7 @@ class Camp extends Model {
                 return self::where('topic_num',$topicnum)
 						->where('camp_num','=', $campnum)
 						->where('objector_nick_id', '=', NULL)
-						->where('go_live_time','<',$asofdate)
+						->where('go_live_time','<=',$asofdate)
 						->latest('submit_time')->first();
             }
 		}			
@@ -571,7 +571,7 @@ class Camp extends Model {
 						->where('camp_name', '!=', 'Agreement')  
 						->where('objector_nick_id', '=', NULL)
 						->whereRaw('go_live_time in (select max(go_live_time) from camp where topic_num='.$this->topic_num.' and objector_nick_id is null and go_live_time < "'.time().'" group by camp_num)')				
-						->where('go_live_time','<',time())
+						->where('go_live_time','<=',time())
 						->groupBy('camp_num')				
 						->orderBy('submit_time', 'desc')
 						->get()]);
@@ -599,7 +599,7 @@ class Camp extends Model {
                 ->where('camp_name', '!=', 'Agreement')  
                 ->where('objector_nick_id', '=', NULL)
 				->whereRaw('go_live_time in (select max(go_live_time) from camp where topic_num='.$this->topic_num.' and objector_nick_id is null group by camp_num)')				
-                ->where('go_live_time','<',$asofdate) 				
+                ->where('go_live_time','<=',$asofdate) 				
                 ->orderBy('submit_time', 'desc')
 				->groupBy('camp_num')
                 ->get()]);

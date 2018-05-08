@@ -449,7 +449,7 @@ class TopicController extends Controller {
         
         if($camp->save()) {
 			
-		  if(!isset($all['camp_num'])) {
+		  /*if(!isset($all['camp_num'])) {
 			  $statement = new Statement();	
 			  
 			  $statement->value = $all['statement'];
@@ -462,7 +462,7 @@ class TopicController extends Controller {
 			  $statement->language = 'English';
 					  
 			  $statement->save();
-		  }
+		  }*/
           Session::flash('success', $message);
 			
 		} else {
