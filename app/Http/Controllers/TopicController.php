@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
 use App\Library\General;
 use App\Library\Wiky;
-use App\Library\wikiparser\wikiParser;
+//use App\Library\Wikiparser\wikiParser;
 use App\Model\Topic;
 use App\Model\Camp;
 use App\Model\Statement;
@@ -191,7 +191,7 @@ class TopicController extends Controller {
         
 		$wiky=new Wiky;
 		
-		$WikiParser  = new wikiParser;
+		//$WikiParser  = new wikiParser;
         if(count($topic) <= 0) {
 			
 			Session::flash('error', "This topic is not live yet, you dont have access to view the detail. Please try after sometime.");
@@ -203,7 +203,7 @@ class TopicController extends Controller {
 			return back();
 		}
 		
-		return view('topics.view',  compact('topic','parentcampnum','parentcamp','camp','wiky','WikiParser'));
+		return view('topics.view',  compact('topic','parentcampnum','parentcamp','camp','wiky'));
     }
 
     

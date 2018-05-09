@@ -24,7 +24,7 @@ class internallink implements startOfLine
     }
     
     public function startOfLine($line) 
-    {
+    { 
         //So although were passed a line of text we might not actually need to do anything with it.
         return preg_replace_callback(internallink::regular_expression,array($this,'replace_callback'),$line);
     }
@@ -62,7 +62,7 @@ class internallink implements startOfLine
         
         if(strtoupper($namespace) === "FILE")
         {
-            return "<img src=\"" . $matches[4] . "\" alt=\"" . $matches[5] . "\"/>";
+            return "<img src=\"" . $matches[4] . "\" alt=\"" . $matches[4] . "\"/>";
         }
         else
         {

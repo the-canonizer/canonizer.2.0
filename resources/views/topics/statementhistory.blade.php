@@ -1,3 +1,4 @@
+<?php include(app_path() . '\Library\Wikiparser\wikiParser.class.php'); ?>
 @extends('layouts.app')
 @section('content')
 
@@ -67,17 +68,23 @@
 						   } else {
 							   $bgcolor ="#4e4ef3;"; //blue
 						   }
-                   $input=htmlspecialchars($data->value);						   
+                   $input=$data->value;						   
 			   ?>
 			    <div class="form-group CmpHistoryPnl" style="background-color:{{ $bgcolor }}; width:100%;">
                   <div class="statement"><b>Statement :</b> 
 				  <?php 
-				              
-							  $finalStatement  = $wiky->parse($input); 
-							  $rootUrl = str_replace("/public","",Request::root());
+				              $rootUrl = str_replace("/public","",Request::root());
+							  /*$finalStatement  = $wiky->parse($input); 
+							  
 							  $finalStatement = str_replace("http://canonizer.com",$rootUrl,$finalStatement);
 							  $finalStatement = str_replace("http://www.canonizer.com",$rootUrl,$finalStatement);
 							  
+							  echo $finalStatement;*/
+							  
+							  $WikiParser = new wikiParser;
+							  $output = $WikiParser->parse($input);
+							  $finalStatement = str_replace("http://canonizer.com",$rootUrl,$output);
+							  $finalStatement = str_replace("http://www.canonizer.com",$rootUrl,$finalStatement);
 							  echo $finalStatement;
 				   ?>
 				  
