@@ -1,4 +1,4 @@
-<?php include(app_path() . '\Library\wiki_parser\wikiParser.class.php'); ?>
+<?php include(app_path() . '/Library/wiki_parser/wikiParser.class.php'); ?>
 @extends('layouts.app')
 @section('content')
 @if(Session::has('error'))
