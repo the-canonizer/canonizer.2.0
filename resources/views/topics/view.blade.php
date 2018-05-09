@@ -1,3 +1,4 @@
+<?php include(app_path() . '\Library\Wikiparser\wikiParser.class.php'); ?>
 @extends('layouts.app')
 @section('content')
 @if(Session::has('error'))
@@ -61,16 +62,18 @@
 					
                     $statement = $camp->statement($camp->topic_num,$camp->camp_num);
                     if(isset($statement->value)) {
-                              $input=htmlentities($statement->value);
+                              $input=$statement->value;
 							  
-							  $finalStatement  = $wiky->parse($input); 
+							  //$finalStatement  = $wiky->parse($input); 
 							  
-							  $finalStatement = str_replace("http://canonizer.com",$rootUrl,$finalStatement);
-							  $finalStatement = str_replace("http://www.canonizer.com",$rootUrl,$finalStatement);
-							  
-							  echo $finalStatement;
+							  /// echo $finalStatement;
                               //html_entity_decode($input,ENT_QUOTES, "UTF-8")
-							 //echo $WikiParser->parse($statement->value);
+							  $WikiParser = new wikiParser;
+							  $output = $WikiParser->parse($input);
+							  $finalStatement = str_replace("http://canonizer.com",$rootUrl,$output);
+							  $finalStatement = str_replace("http://www.canonizer.com",$rootUrl,$finalStatement);
+							  echo $finalStatement;
+							 
 							
                         } else {
                             echo "No statement available";

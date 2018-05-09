@@ -12,7 +12,6 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
  */
-namespace App\Library\wikiparser {
 class wikiParser
 {
     private $parser_plugins = null;
@@ -20,7 +19,7 @@ class wikiParser
     private static $config_ini     = null;
     
     public function __construct()
-    {
+    { 
         $this->parser_plugins = array();
         
         if(!is_dir(dirname(__FILE__) . '/plugins/'))
@@ -90,7 +89,7 @@ class wikiParser
     {
         if(wikiParser::$config_ini === null)
         {
-            wikiParser::$config_ini = parse_ini_file(dirname(__FILE__) ."/config.pmwiki.ini", true);
+            wikiParser::$config_ini = parse_ini_file(dirname(__FILE__) ."/config.mediawiki.ini", true);
         }
         return wikiParser::$config_ini;
     }    
@@ -99,6 +98,27 @@ class wikiParser
     {
         //Parse Section
         //For each section on the config.ini
+		
+		$m = preg_match_all( "/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/", $wiki_text, $match);
+				
+			if ($m) {
+				$links = $match[0];
+				foreach($links as $link) {
+					$link = trim(strip_tags($link));
+					$extension = strtolower(trim(@end(explode(".",$link))));
+					switch($extension) {
+						case 'gif':
+						case 'png':
+						case 'jpg':
+						case 'jpeg':
+							$wiki_text = str_replace($link, '<img src="'.$link.'">', $wiki_text);       
+							break;
+						break;
+					}
+				}
+			}
+        
+		
         $parser_order_config = wikiParser::getConfigINI();
         
         $file_parsing_order = $parser_order_config['FileParsingOrder'];
@@ -129,7 +149,8 @@ class wikiParser
                 $wiki_text = $this->parseSection($parsing_section_name, $wiki_text);
             }            
         }
-        
+		
+		
         return $wiki_text;
     }
 
@@ -201,7 +222,7 @@ class wikiParser
         return $wiki_text;
     }
         
- }
 }
+
 
 ?>
