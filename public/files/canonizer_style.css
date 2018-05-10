@@ -1,0 +1,374 @@
+
+/* Style for data list */
+
+dl#xxlist{
+        margin:0px auto;
+}
+dl#xxlist *{
+    text-align:left;    
+}
+/* Force clear element */
+dl#xxlist div#xxlist_clr, b.clr{
+        float:none;
+        clear:both;
+        display:block;    
+}
+dl#xxlist a{
+    font:11px Verdana;
+    color:#204BC5;
+    text-decoration:underline;
+    padding:0px 0px 0px 5px;
+    margin:0px;
+}
+dl#xxlist a:hover{
+    color:#204BC5;    
+}
+dl#xxlist dd a{
+    color:green;
+}
+dl#xxlist dd a:hover{
+    color:darkgreen;
+}
+dl#xxlist a.no_link{
+        color:#204BC5;
+        text-decoration:none;
+        cursor:default;
+}
+dl#xxlist a.no_link:hover{
+        color:#204BC5;
+}
+dl#xxlist img{
+    border:0px;
+    margin-left:5px;
+    border:1px solid silver;
+}
+dl#xxlist dd{        
+    margin-left:10px;            
+    background-position:bottom right;
+    background-repeat:no-repeat;
+    font:11px Verdana;
+    color:#F30;
+    padding-bottom:10px;
+}
+dl#xxlist dd dd{
+    margin-left:30px; 
+    font:12px Verdana;
+    color:#F30;   
+    border:0px;
+}
+dl#xxlist dd dd dd{
+    color:#204BC5; 
+    padding-top:5px;
+    padding-bottom:5px;      
+}
+dl#xxlist dd dl{
+    margin-left:15px;
+    padding-left:0px;
+    float:left;  
+    border-left:1px dashed silver; 
+}
+dl#xxlist dd dl dd dl{
+    float:none;    
+}
+dl#xxlist dd dl dd *{
+    position:relative;
+    border:0px;    
+}
+dl#xxlist dd img{
+    float:left;  
+}
+dl#xxlist dd dl ul, dl#xxlist dd dl dd{                
+    clear:both;    
+}
+dl#xxlist dt{
+    padding:5px;
+    margin:0px 0px 10px 0px;
+    border:1px solid silver;
+    clear:left;
+    background-color:#F8F9DC;
+    color:#666666;
+    font:11px Verdana;     
+    display:block;       
+}
+dl#xxlist dd dt {
+    margin:0px;
+    width:auto;
+    background-color:#FFF;
+    border:0px;
+}
+dl#xxlist li{
+    padding:0px;    
+    float:none;
+    clear:both;
+    list-style-type:circle;
+    list-style-position:inside;
+}
+dl#xxlist ul a{
+    margin:0px;
+    padding:0px;
+}
+dl#xxlist ul{
+        background-color:transparent;
+        clear:left;
+}
+dl#xxlist a.prof_img{
+    float:left;
+    position:relative;
+}
+dl#xxlist dt.not_linked{
+    background-color:#EEE;
+    color:#999;
+}
+dl#xxlist dt.not_linked a:hover, dl#xxlist dt.not_linked a{
+    color:#999;
+}
+
+
+/* canonizer toggle arrow graphic */
+div.canon_toggle_arrow{
+    float:left;
+    clear:left;
+    width:10px;
+    height:10px;
+    line-height:1px; /* IE */
+    font-size:1px; /* IE */
+    background-repeat:no-repeat;
+    background-position:0px -10px;
+    cursor:pointer;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Style for profile counts list */
+
+#xxcount div{                        
+        display:block;
+        float:left;
+        width:220px;
+        height:90px;
+        margin:20px 10px 0px 10px;
+        padding:5px;
+        border:1px solid silver;
+        color:#204BC5;
+}
+#xxcount div *{
+        margin:0px;
+        padding:0px;
+    }
+#xxcount div dl{                   
+        padding:0px 5px 0px 5px;
+        margin:0px;
+        width:135px;
+        float:left;                        
+}
+#xxcount div a img{
+        float:left;
+        clear:left;  
+        border:1px solid silver; 
+        width:60px;
+        max-height:90px;
+}
+#xxcount div dl img{
+        float:none;
+        clear:none;
+        border:0px;    
+}
+#xxcount div dt a{
+        padding-left:5px;
+        cursor:pointer;
+        font:11px Verdana;
+        color:#204BC5;
+}
+#xxcount div dt a:hover{
+        color:#1C2E60;
+}
+#xxcount div dt{
+        font:bold 12px Verdana;
+        text-align:left;
+        color:#333;
+}
+#xxcount div dd{
+        padding:10px 0px 0px 25px;
+        margin-left:0px;
+        font:12px Verdana;
+}
+#xxcount div li{
+        padding:0px;
+        margin:0px;
+        cursor:pointer;
+        text-align:left;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Standardize */
+
+body{
+    text-align:center;
+    margin-bottom:20px;    
+}
+
+* a{
+    cursor:pointer;  
+    }
+
+/* Content container */
+/* Note: if you don't give this a fixed width, IE7 will take you for a long, uneventful ride through Microsoft land. Which is a bad place to be. */
+div#canon_content{
+        display:none;
+        margin:0px auto;
+        width:505px;
+    }
+    
+/* Canvas content container (this className is toggled on init)*/
+div#canon_canv_content{
+        display:none;
+        margin:0px auto;
+        background-color:#FFF;
+        margin:0px auto;
+        width:100%;
+    }
+
+/* Content Label (profile) */
+#canon_content h1{
+        font:bold 14px Verdana;
+        color:#333;
+        background-color:#F8F9DC;
+        border:1px solid silver;
+        border-left:0px;
+        border-right:0px;
+        margin:0px 0px 0px 0px;
+        padding:5px;
+        display:block;
+        width:auto;
+        text-align:left;
+}
+
+/* Content Form */
+form#canonizer_link_up{
+        display:none;
+        width:350px;
+        background-position:bottom right;
+        background-repeat:no-repeat;
+        border:1px solid silver;
+        margin:0px auto;
+        padding:10px 0px 0px 0px;
+        font:11px Verdana;
+}
+
+form#canonizer_link_up fieldset{
+        border:0px;
+        padding:20px 10px 10px 10px;
+        margin:0px auto;
+        text-align:center;
+}
+
+form#canonizer_link_up legend{
+        font:bold 14px Verdana;
+}
+
+form#canonizer_link_up label{
+        width:160px;
+        padding-right:10px;
+        text-align:right;
+        float:left;
+        clear:left;
+}
+
+form#canonizer_link_up input{
+        width:120px;
+        float:left;
+}
+
+form#canonizer_link_up input#canonizer_link_up_submit{
+        width:120px;
+        float:none;
+        background-color:#FFF;
+        border:1px solid #333;
+}
+
+form#canonizer_link_up a{
+        color:#F30;
+}
+
+form#canonizer_link_up a:hover{
+        color:green;
+}
+
+
+form#canonizer_link_up fieldset#getId{
+        padding-top:5px;
+}
+
+/* User Not Linked Display */
+
+div#canonizer_user_not_linked{
+        display:none;
+        color:#F30;
+        text-align:center;
+}
+
+div#canonizer_user_not_linked strong.mc{
+        display:block;
+        text-align:center;
+        padding-top:20px;
+}
+
+/* canonizer icon links */               
+#xxlist img.canon_link_icon, #xxcount img.canon_link_icon{
+    border:0px;  
+    display:inline;  
+}
+
+div#canon_title_content{
+    background-color:#FFF;
+    padding:0px 0px 20px 0px;
+    border:0px;
+    margin:10px;
+}
+
+div#canon_title_content img, div#canon_title_content_profile img{
+    height:150px;
+    width:150px;
+    margin-right:15px;
+    margin-bottom:5px;
+    float:left;
+}
+
+div#canon_title_content p{
+    display:block;
+    color:#333;
+    text-align:left;
+    font:11px Verdana;
+}
+
+div#canon_title_content p strong{
+    display:block;
+    margin:7px;
+    font:bold 14px Verdana;
+    color:#204BC5;
+}
+
+div#canon_title_content p a{
+    color:#204BC5;
+}
