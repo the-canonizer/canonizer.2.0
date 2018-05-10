@@ -69,7 +69,7 @@
            
             <div class="form-group">
                 <label for="">Additional Note</label>
-                <textarea class="form-control" rows="4" name="note" id="note">{{ $topic->note}}</textarea>
+                <textarea class="form-control" rows="4" name="note" id="note"> </textarea>
             </div>
             <?php if($objection=="objection") { ?>			
             <div class="form-group">

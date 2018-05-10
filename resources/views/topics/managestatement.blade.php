@@ -56,7 +56,7 @@
             
             <div class="form-group">
                 <label for="title">Note </label>
-                 <textarea class="form-control" id="note" rows="4" name="note">{{ $statement->note}}</textarea>
+                 <textarea class="form-control" id="note" rows="4" name="note"> </textarea>
                 @if ($errors->has('note')) <p class="help-block">{{ $errors->first('note') }}</p> @endif
             </div> 
            
