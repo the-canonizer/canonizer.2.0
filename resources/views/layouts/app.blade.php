@@ -120,7 +120,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">
+                            <a class="nav-link" href="{{ url('/topic/132-Help/1')}}">
                                 <span class="nav-link-text">Help</span>
                             </a>
                         </li>

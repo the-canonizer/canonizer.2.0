@@ -72,6 +72,8 @@
 							  $output = $WikiParser->parse($input);
 							  $finalStatement = str_replace("http://canonizer.com",$rootUrl,$output);
 							  $finalStatement = str_replace("http://www.canonizer.com",$rootUrl,$finalStatement);
+							  $finalStatement = str_replace("https://www.canonizer.com",$rootUrl,$finalStatement);
+							  $finalStatement = str_replace("https://canonizer.com",$rootUrl,$finalStatement);
 							  echo $finalStatement;
 							 
 							
@@ -132,7 +134,7 @@ change camps with them."><i class="fa fa-question"></i></a>
             <div class="row">
                 <div class="tree col-sm-12">
                     Topic Name : <?php echo $topic->topic_name;?> <br/>
-					Name Space : <?php echo (isset($topic->topic->topicnamespace->name)) ? $topic->topic->topicnamespace->name : 'N/A';?>
+					Name Space : <?php echo (isset($topic->namespace_name)) ? $topic->label : 'N/A';?>
                 </div>
               
             </div>    

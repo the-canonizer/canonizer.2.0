@@ -182,7 +182,7 @@ class TopicController extends Controller {
 		$topicnumArray  = explode("-",$id);
 		$topicnum       = $topicnumArray[0];
 		
-		$topic      = Camp::getAgreementTopic($topicnum);
+		$topic      = Camp::getAgreementTopic($topicnum,$_REQUEST);
 		
         $camp       = Camp::getLiveCamp($topicnum,$parentcampnum);
 		
@@ -194,12 +194,12 @@ class TopicController extends Controller {
 		//$WikiParser  = new wikiParser;
         if(count($topic) <= 0) {
 			
-			Session::flash('error', "This topic is not live yet, you dont have access to view the detail. Please try after sometime.");
+			Session::flash('error', "Topic does not exist.");
 			return back();
 		}
 		if(count($camp) <= 0) {
 			
-			Session::flash('error', "Selected camp is not available in the selected parameters, Please check the filters for more accurate results.");
+			Session::flash('error', "Camp does not exist.");
 			return back();
 		}
 		

@@ -27,7 +27,27 @@ class Camp extends Model {
     const AGREEMENT_CAMP = "Agreement";
 	
     public function topic() {
-        return $this->hasOne('App\Model\Topic', 'topic_num', 'topic_num');
+		
+			$as_of_time = time();
+			if(isset($_REQUEST['asof']) && $_REQUEST['asof']=='bydate'){
+				$as_of_time = strtotime($_REQUEST['asofdate']);
+			}
+		
+			
+			if(isset($_REQUEST['asof']) && $_REQUEST['asof']=="review") {
+			
+			    return $this->hasOne('App\Model\Topic', 'topic_num', 'topic_num')->orderBy('submit_time','DESC'); 
+				
+			
+				
+			} else { 
+			     return $this->hasOne('App\Model\Topic', 'topic_num', 'topic_num')
+			                 ->where('go_live_time','<=',$as_of_time)
+						     ->orderBy('go_live_time','DESC');
+			}			
+		
+
+        
     }
 	public function nickname() {
         return $this->hasOne('App\Model\Nickname', 'id', 'camp_about_nick_id');
@@ -167,23 +187,55 @@ class Camp extends Model {
 	
 	public static function getBrowseTopic(){
 		
-		$query = Topic::select('topic.topic_name','topic.namespace','topic.topic_num','camp.title','camp.camp_num')->join('camp','topic.topic_num','=','camp.topic_num')->where('camp_name','=','Agreement')
+		$as_of_time = time();
+			if(isset($_REQUEST['asof']) && $_REQUEST['asof']=='bydate'){
+				$as_of_time = strtotime($_REQUEST['asofdate']);
+			}
+		
+		$query = Topic::select('topic.topic_name','namespace.name as namespace','namespace.label','topic.topic_num','camp.title','camp.camp_num')
+		             ->join('camp','topic.topic_num','=','camp.topic_num')
+					 ->join('namespace','topic.namespace_id','=','namespace.id')
+					 ->where('camp_name','=','Agreement')
 		             ->where('camp.objector_nick_id', '=', NULL)
-                     ->where('camp.go_live_time','<=',time())
+                     ->where('camp.go_live_time','<=',$as_of_time)
 					 ->where('topic.topic_name','<>',"");
 		
 		if(isset($_REQUEST['namespace']) && (!empty($_REQUEST['namespace']) || $_REQUEST['namespace'] != 0)){
 			$query->where('namespace_id',$_REQUEST['namespace']);
 		}
 
-		return $query->orderBy('topic.namespace','ASC')->orderBy('topic.topic_name','ASC')->groupBy('topic_num')->get();
+		return $query->orderBy('topic.namespace','ASC')->orderBy('topic.topic_name','ASC')->orderBy('topic.go_live_time','DESC')->groupBy('topic_num')->get();
 	}
 	public static function getAgreementTopic($topicnum,$filter=array()){
 		
-		return self::select('topic.topic_name','camp.*')->join('topic','topic.topic_num','=','camp.topic_num')->where('camp.topic_num',$topicnum)->where('camp_name','=','Agreement')
+	  if(!isset($filter['asof']) || (isset($filter['asof']) && $filter['asof']=="default")) {	
+		return self::select('topic.topic_name','camp.*','namespace.name as namespace_name','namespace.label')
+		             ->join('topic','topic.topic_num','=','camp.topic_num')
+					 ->join('namespace','topic.namespace_id','=','namespace.id')
+					 ->where('topic.topic_num',$topicnum)->where('camp_name','=','Agreement')
 		             ->where('camp.objector_nick_id', '=', NULL)
                      ->where('camp.go_live_time','<=',time())
+					 ->orderBy('topic.go_live_time','DESC')->first();
+	  }	else {
+			
+			if(isset($filter['asof']) && $filter['asof']=="review") {
+             return self::select('topic.topic_name','camp.*','namespace.name as namespace_name,namespace.label')
+			         ->join('topic','topic.topic_num','=','camp.topic_num')
+					 ->join('namespace','topic.namespace_id','=','namespace.id')
+					 ->where('camp.topic_num',$topicnum)->where('camp_name','=','Agreement')
+		             ->where('camp.objector_nick_id', '=', NULL)                     
 					 ->latest('topic.submit_time')->first();
+            } else if(isset($filter['asof']) && $filter['asof']=="bydate") {
+				$asofdate =  strtotime(date('Y-m-d H:i:s', strtotime($filter['asofdate'])));
+				return self::select('topic.topic_name','camp.*','namespace.name as namespace_name,namespace.label')
+				     ->join('topic','topic.topic_num','=','camp.topic_num')
+					 ->join('namespace','topic.namespace_id','=','namespace.id')
+					 ->where('camp.topic_num',$topicnum)->where('camp_name','=','Agreement')
+		             ->where('camp.objector_nick_id', '=', NULL)
+                     ->where('camp.go_live_time','<=',$asofdate)
+					 ->latest('topic.submit_time')->first();
+			}	
+      }  			
 	}
 	public static function getAllAgreementTopic($limit=10,$filter=array()){
 		
@@ -198,7 +250,8 @@ class Camp extends Model {
 		             ->where('camp_name','=','Agreement')
 		             ->where('camp.objector_nick_id', '=', NULL)
 					 ->whereIn('namespace_id',explode(',',session('defaultNamespaceId',1)))
-                     ->where('camp.go_live_time','<=',time())					 
+                     ->where('camp.go_live_time','<=',time())
+                     ->orderBy('topic.go_live_time','DESC')					 
 					 ->latest('support')->get()->unique('topic_num')->take($limit);
 					 
 		} else {

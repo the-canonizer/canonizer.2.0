@@ -50,7 +50,7 @@ class Topic extends Model {
         return $this->hasMany('App\Model\Camp', 'topic_num', 'topic_num')->groupBy('camp_num');
     }
 	public function topic() {
-        return $this->hasOne('App\Model\Topic', 'topic_num', 'topic_num');
+        return $this->hasOne('App\Model\Topic', 'topic_num', 'topic_num')->orderBy('go_live_time','DESC');
     }
 	public function supports() {
         return $this->hasMany('App\Model\Support', 'topic_num', 'topic_num')->orderBy('support_order','ASC');
