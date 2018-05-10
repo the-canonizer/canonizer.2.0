@@ -10,7 +10,7 @@ jQuery('head').append('<link rel="stylesheet" href="https://canonizer.com/canoni
 
 function outlinecall(topic_num,camp_num) {
 
-	jQuery.getJSON('http://localhost/canonizer.2.0/public/api/v1/getcampoutline/'+topic_num+'/'+camp_num)
+	jQuery.getJSON('http://staging.canonizer.com/api/v1/getcampoutline/'+topic_num+'/'+camp_num)
 	  .done(function(data){
 		 jQuery('.post').append("<div class='tree treeview'><ul class='mainouter'>"+data.outline+"</ul></div>");
 	})

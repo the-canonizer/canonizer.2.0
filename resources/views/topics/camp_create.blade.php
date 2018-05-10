@@ -49,25 +49,13 @@
                 <input type="text" name="camp_name" class="form-control" id="camp_name" value="{{ old('camp_name')}}">
                  @if ($errors->has('camp_name')) <p class="help-block">{{ $errors->first('camp_name') }}</p> @endif
              </div> 
-            
            
-            <div class="form-group">
-                <label for="statement">Camp Statement</label>
-                <textarea class="form-control" rows="6" name="statement" id="statement">{{ old('statement')}}</textarea>
-                @if ($errors->has('statement')) <p class="help-block">{{ $errors->first('statement') }}</p> @endif
-            </div> 
             <div class="form-group">
                 <label for="keywords">Keywords </label>
                 <input type="text" name="keywords" class="form-control" id="keywords" value="{{ old('keywords') }}">
                 @if ($errors->has('keywords')) <p class="help-block">{{ $errors->first('keywords') }}</p> @endif
             </div> 
-            <!--<div class="form-group">
-                <label for="language">Language</label>
-                <select class="form-control" name="language" id="language">
-                    <option value="English">English</option>
-                    <option value="French">French</option>
-                </select>
-            </div>-->
+           
            
             <div class="form-group">
                 <label for="">Additional Note</label>

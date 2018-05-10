@@ -1,9 +1,10 @@
+<?php include(app_path() . '/Library/wiki_parser/wikiParser.class.php'); ?>
 @extends('layouts.app')
 @section('content')
 
 <div class="camp top-head">
     <h3><b>Topic:</b>  {{ $topic->title}}</h3>
-    
+    <h3><b>Camp:</b> {!! $parentcamp !!}</h3>  
 </div>
 
 
@@ -13,13 +14,13 @@
 
 @if(Session::has('error'))
 <div class="alert alert-danger">
-    <strong>Error!</strong>{{ Session::get('error')}}    
+    <strong>Error! </strong>{{ Session::get('error')}}    
 </div>
 @endif
 
 @if(Session::has('success'))
 <div class="alert alert-success">
-    <strong>Success!</strong>{{ Session::get('success')}}    
+    <strong>Success! </strong>{{ Session::get('success')}}    
 </div>
 @endif
 
@@ -53,10 +54,8 @@
 			   <?php 
 			        if(!empty($statement)) { 
 			            $currentLive = 0; 
+						$currentTime = time();
 			         foreach($statement as $key=>$data) { 
-			   
-			              $currentTime = time();
-						   
 						   
 						   if($data->objector !== NULL)
 							   $bgcolor ="rgba(255, 0, 0, 0.5);"; //red
@@ -69,17 +68,23 @@
 						   } else {
 							   $bgcolor ="#4e4ef3;"; //blue
 						   }
-                   $input=htmlspecialchars($data->value);						   
+                   $input=$data->value;						   
 			   ?>
 			    <div class="form-group CmpHistoryPnl" style="background-color:{{ $bgcolor }}; width:100%;">
                   <div class="statement"><b>Statement :</b> 
 				  <?php 
-				              
-							  $finalStatement  = $wiky->parse($input); 
-							  $rootUrl = str_replace("/public","",Request::root());
+				              $rootUrl = str_replace("/public","",Request::root());
+							  /*$finalStatement  = $wiky->parse($input); 
+							  
 							  $finalStatement = str_replace("http://canonizer.com",$rootUrl,$finalStatement);
 							  $finalStatement = str_replace("http://www.canonizer.com",$rootUrl,$finalStatement);
 							  
+							  echo $finalStatement;*/
+							  
+							  $WikiParser = new wikiParser;
+							  $output = $WikiParser->parse($input);
+							  $finalStatement = str_replace("http://canonizer.com",$rootUrl,$output);
+							  $finalStatement = str_replace("http://www.canonizer.com",$rootUrl,$finalStatement);
 							  echo $finalStatement;
 				   ?>
 				  
@@ -96,9 +101,13 @@
                   @endif 
 				  
 				 <div class="CmpHistoryPnl-footer">
+				  <?php if($currentTime < $data->go_live_time && $currentTime >= $data->submit_time) { ?>
 				    <a id="object" class="btn btn-historysmt" href="<?php echo url('manage/statement/'.$data->id.'-objection');?>">Object</a>
-				 	<a id="update" class="btn btn-historysmt" href="<?php echo url('manage/statement/'.$data->id);?>">Submit Statement Update Based On This</a>
-                 </div>
+				  <?php } ?>	
+					<a id="update" class="btn btn-historysmt" href="<?php echo url('manage/statement/'.$data->id);?>">Submit Statement Update Based On This</a>
+                    <a id="version" class="btn btn-historysmt" href="<?php echo url('topic/'.$data->topic_num.'/'.$data->camp_num.'?asof=bydate&asofdate='.date('Y/m/d H:i:s',$data->go_live_time));?>">View This Version</a>
+				 
+				 </div>
 			    </div> 	
 			   
 			   <?php } 

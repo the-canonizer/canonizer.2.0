@@ -39,9 +39,9 @@
 				@if ($errors->has('topic_name')) <p class="help-block">{{ $errors->first('topic_name') }}</p> @endif
             </div>            
             <div  class="form-group">
-                <label for="namespace">Name Space</label>
+                <label for="namespace">Namespace (General is recommended, unless you know otherwise)</label>
                 <select  onchange="selectNamespace(this)" name="namespace" id="namespace" class="form-control">
-                    <option value="">Select Namespace</option>
+                    
                     @foreach($namespaces as $namespace)
                     <option value="{{ $namespace->id }}" >{{$namespace->label}}</option>
                     @endforeach

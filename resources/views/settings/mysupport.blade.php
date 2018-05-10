@@ -81,7 +81,7 @@
 					   
                  @endforeach
                @else
-				  <h6 style="margin-top:30px;margin-left:20px;"> You didn't supported any camp yet.</h6>
+				  <h6 style="margin-top:30px;margin-left:20px;"> You currently don't support any camps.</h6>
                @endif			  
 
          </div>
