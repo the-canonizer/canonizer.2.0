@@ -85,6 +85,8 @@
 							  $output = $WikiParser->parse($input);
 							  $finalStatement = str_replace("http://canonizer.com",$rootUrl,$output);
 							  $finalStatement = str_replace("http://www.canonizer.com",$rootUrl,$finalStatement);
+							  $finalStatement = str_replace("https://www.canonizer.com",$rootUrl,$finalStatement);
+							  $finalStatement = str_replace("https://canonizer.com",$rootUrl,$finalStatement);
 							  echo $finalStatement;
 				   ?>
 				  
