@@ -123,6 +123,10 @@ class TopicController extends Controller {
 				$supportTopic->support_order = 1;
 				$supportTopic->save();
 				
+				session()->forget("topic-support-{$topic->topic_num}");
+			    session()->forget("topic-support-nickname-{$topic->topic_num}");
+			    session()->forget("topic-support-tree-{$topic->topic_num}");
+				
 			}
 			
 			
