@@ -22,8 +22,8 @@ To install composer visit - https://getcomposer.org/
 1. Clone Project from github - https://github.com/the-canonizer/canonizer.2.0
 Command: git clone https://github.com/the-canonizer/canonizer.2.0.git
 
-2. Run composer 
-php composer update
+2. Run composer after connecting to your repository root directory (where composer.phar exists)
+php composer.phar update
 
 composer will install all dependencies and all laravel packages.
 
