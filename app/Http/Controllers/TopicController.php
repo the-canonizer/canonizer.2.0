@@ -61,7 +61,8 @@ class TopicController extends Controller {
             'topic_name'=>'required|max:30',
             'namespace' => 'required',
             'create_namespace'=>'required_if:namespace,other',
-			'nick_name'=>'required'
+			'nick_name'=>'required',
+			'note'=>'required'
             
         ]);
         
@@ -123,6 +124,10 @@ class TopicController extends Controller {
 				$supportTopic->support_order = 1;
 				$supportTopic->save();
 				
+				session()->forget("topic-support-{$topic->topic_num}");
+			    session()->forget("topic-support-nickname-{$topic->topic_num}");
+			    session()->forget("topic-support-tree-{$topic->topic_num}");
+				
 			}
 			
 			
@@ -162,11 +167,12 @@ class TopicController extends Controller {
 		
 		$topic       = Topic::where('id',$id)->first();
         
-        $nickNames   = Nickname::personNickname();
 		$request->merge(['namespace'=>$topic->namespace_id]);
 		if(!count($topic)) return back();
         $namespaces= Namespaces::all();
 		
+		$nickNames = Nickname::topicNicknameUsed($topic->topic_num);
+        
 		return view('topics.managetopic', compact('topic','objection','nickNames','namespaces'));
 		
 	}
@@ -222,7 +228,7 @@ class TopicController extends Controller {
 		$parentcamp = Camp::campNameWithAncestors($camp,'');
 		
 		
-        $nickNames  = Nickname::personNickname();
+        $nickNames  = Nickname::topicNicknameUsed($topicnum);
         $allNicknames = Nickname::orderBy('nick_name','ASC')->get();
         return view('topics.camp_create',  compact('topic','parentcampnum','parentcamp','nickNames','allNicknames'));
     }
@@ -249,7 +255,7 @@ class TopicController extends Controller {
 
         $parentcamp = Camp::campNameWithAncestors($camp,'');
 				
-        $nickNames  = Nickname::personNickname();
+        $nickNames  = Nickname::topicNicknameUsed($camp->topic_num);
 		
 		$allNicknames = Nickname::orderBy('nick_name','ASC')->get();
 		
@@ -281,7 +287,7 @@ class TopicController extends Controller {
 		
 		$parentcamp    = Camp::campNameWithAncestors($camp,'');
 	
-		$nickNames     = Nickname::personNickname();
+		$nickNames     = Nickname::topicNicknameUsed($statement->topic_num);
        
         return view('topics.managestatement',  compact('objection','nickNames','topic','statement','parentcampnum','parentcamp'));
     }
@@ -305,7 +311,7 @@ class TopicController extends Controller {
 		
 		$parentcamp    = Camp::campNameWithAncestors($camp,'');
 	
-		$nickNames     = Nickname::personNickname();
+		$nickNames     = Nickname::topicNicknameUsed($topic_num);
        
         return view('topics.createstatement',  compact('objection','camp','nickNames','topic','parentcampnum','parentcamp'));
     }

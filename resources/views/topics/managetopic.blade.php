@@ -70,6 +70,7 @@
             <div class="form-group">
                 <label for="">Additional Note</label>
                 <textarea class="form-control" rows="4" name="note" id="note"> </textarea>
+				@if ($errors->has('note')) <p class="help-block">{{ $errors->first('note') }}</p> @endif
             </div>
             <?php if($objection=="objection") { ?>			
             <div class="form-group">
