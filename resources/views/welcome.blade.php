@@ -77,7 +77,7 @@ var offset = 10;
    $(document).scroll(function(e){
        var id = $('#btn-more').data('id');
        var queryString = "{!! Request::getQueryString() !!}";
-	   var scrollTop = $(window).scrollTop();
+	   var scrollTop = $(document).scrollTop();
 
 	   scrollTop = scrollTop + 650;
 		  if ( scrollTop > $('.sticky-footer').offset().top && request==false) {
