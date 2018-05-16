@@ -24,8 +24,7 @@
             <div class="content">
 
                 <iframe src="{{ url('/') }}/blog" style="position: relative;width: 100%;height:400px;border:none;"></iframe>
-                <!-- <iframe src="http://staging.canonizer.com/blog/" style="position: relative;width: 100%;height:400px;border:none;"></iframe> -->
-
+                
             </div>
         </div>
         <div class="Lcolor-Pnl">

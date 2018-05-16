@@ -39,7 +39,7 @@
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav search-box">
                     <li class="nav-item col-sm-7">
-                       <form method="get" action="http://www.google.com/custom" target="_top">
+                       <form method="get" action="https://www.google.com/custom" target="_top">
                             <div class="input-group search-panel">
                                <table>
 									<tr>
@@ -59,7 +59,7 @@
 									<input type="hidden" name="forid" value="1"></input>
 									<input type="hidden" name="ie" value="ISO-8859-1"></input>
 									<input type="hidden" name="oe" value="ISO-8859-1"></input>
-									<input type="hidden" name="cof" value="GALT:#0066CC;GL:1;DIV:#999999;VLC:336633;AH:center;BGC:FFFFFF;LBGC:FF9900;ALC:0066CC;LC:0066CC;T:000000;GFNT:666666;GIMP:666666;LH:43;LW:220;L:http://canonizer.com/images/CANONIZER.PNG;S:http://;FORID:1"></input>
+									<input type="hidden" name="cof" value="GALT:#0066CC;GL:1;DIV:#999999;VLC:336633;AH:center;BGC:FFFFFF;LBGC:FF9900;ALC:0066CC;LC:0066CC;T:000000;GFNT:666666;GIMP:666666;LH:43;LW:220;L:https://canonizer.com/images/CANONIZER.PNG;S:https://;FORID:1"></input>
 									<input type="hidden" name="hl" value="en"></input>
                               </div>
                         </form>
