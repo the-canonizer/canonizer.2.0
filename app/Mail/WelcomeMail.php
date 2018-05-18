@@ -8,7 +8,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use App\User;
 
-class PasswordResetMail extends Mailable
+class WelcomeMail extends Mailable
 {
     use Queueable, SerializesModels;
     public $user;
@@ -32,6 +32,6 @@ class PasswordResetMail extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.resetpassword');
+        return $this->markdown('emails.signup_welcome')->subject('Welcome to Canonizer.com');
     }
 }
