@@ -24,8 +24,7 @@
             <div class="content">
 
                 <iframe src="{{ url('/') }}/blog" style="position: relative;width: 100%;height:400px;border:none;"></iframe>
-                <!-- <iframe src="http://staging.canonizer.com/blog/" style="position: relative;width: 100%;height:400px;border:none;"></iframe> -->
-
+                
             </div>
         </div>
         <div class="Lcolor-Pnl">
@@ -77,7 +76,7 @@ var offset = 10;
    $(document).scroll(function(e){
        var id = $('#btn-more').data('id');
        var queryString = "{!! Request::getQueryString() !!}";
-	   var scrollTop = $(window).scrollTop();
+	   var scrollTop = $(document).scrollTop();
 
 	   scrollTop = scrollTop + 650;
 		  if ( scrollTop > $('.sticky-footer').offset().top && request==false) {

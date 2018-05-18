@@ -1,8 +1,16 @@
 jQuery('head').append('<link rel="stylesheet" href="https://canonizer.com/canonizer/public/css/canonizer.css" type="text/css" />');
 
+
+/* Following function will call REST getcamoutline API to get the complete tree outline */
+
+/* Params :  topic_num, camp_num */
+
+/* Developer : Karun Gautam */
+
+
 function outlinecall(topic_num,camp_num) {
 
-	jQuery.getJSON('http://localhost/canonizer.2.0/public/api/v1/getcampoutline/'+topic_num+'/'+camp_num)
+	jQuery.getJSON('http://production.canonizer.com/api/v1/getcampoutline/'+topic_num+'/'+camp_num)
 	  .done(function(data){
 		 jQuery('.post').append("<div class='tree treeview'><ul class='mainouter'>"+data.outline+"</ul></div>");
 	})
@@ -34,7 +42,6 @@ function camptree() {
 
 jQuery('document').ready(function () { 
     
-	camptree();
 	
     
 });

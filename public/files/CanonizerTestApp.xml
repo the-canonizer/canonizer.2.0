@@ -1,0 +1,842 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<Module> 
+  <ModulePrefs 
+        title='Canonizer' 
+        title_url='http://www.canonizer.com/'
+        description='This is my app.'
+        author=''
+        author_email=''
+        screenshot=''
+        thumbnail=''
+        directory_title=''
+        author_affiliation=''
+        author_location=''
+        author_photo=''
+        author_aboutme=''
+        author_quote=''
+        author_link=''
+        show_stats=''
+        show_in_directory=''
+        width=''
+        height=''
+        category=''
+        category2=''
+        singleton=''
+        scaling=''
+        scrolling=''
+  >
+    <Require feature='opensocial-0.7' /> 
+    <Require feature='dynamic-height' /> <!-- gadgets.window -->   
+    <Require feature='settitle' /> <!-- gadgets.window.setTitle -->
+    <Require feature='skins' /> <!-- gadgets.skins -->  
+    <Require feature='views' /> <!-- gadgets.views -->
+    <Require feature='tabs' /> <!-- gadgets.tabs -->
+  </ModulePrefs>
+  <Content type='html'>  
+      <![CDATA[
+    
+            <style type='text/css'>
+                
+                /* Login Form */
+                form#canonizer_link_up{
+                        display:none;
+                }
+                
+                div#canon_content{
+                        display:none;
+                    }
+                
+            </style>
+            
+            <style type='text/css'>
+            
+                /* Style for data list */
+            
+                dl#xxlist{
+                        margin:0px auto;
+                }
+                dl#xxlist a:hover{
+                    color:#333;    
+                }
+                dl#xxlist img{
+                    border:0px;
+                    margin-left:5px;
+                }
+                dl#xxlist dt{
+                    padding-top:5px;    
+                }
+                dl#xxlist a{
+                    text-decoration:none;    
+                }
+                dl#xxlist dd dl dt a{
+                        color:#F00;
+                }
+                dl#xxlist dd dl dd{
+                        color:#F90;
+                }
+                dl#xxlist dd dl dd dl dt a{
+                        color:#0F0;    
+                }
+                dl#xxlist dd dl dd dd dl dt a{
+                        color:#8C175E;    
+                } 
+                dl#xxlist dd dl dd dd dl dd{    
+                        color:#22CE87;
+                }
+                dl#xxlist li a{
+                        text-decoration:underline;
+                        color:#22CE87;
+                }
+                dl#xxlist ul{
+                        padding-bottom:10px;
+                    }
+            </style>     
+            
+            <style type='text/css'>
+            
+                /* Style for profile counts list */
+            
+                #xxcount div{                        
+                        display:block;
+                        width:230px;
+                        height:80px;
+                        margin:5px;
+                        padding:5px;
+                        border:1px solid silver;
+                        float:left;
+                        color:#204BC5;
+                }
+                #xxcount div *{
+                        margin:0px;
+                        padding:0px;
+                    }
+                #xxcount div dl{                   
+                        padding:0px 5px 0px 5px;
+                        margin:0px;
+                        width:150px;
+                        float:left;                        
+                }
+                #xxcount div img{
+                        float:left;
+                        clear:left;  
+                        border:1px solid silver;  
+                }
+                #xxcount div dl img{
+                        float:none;
+                        clear:none;
+                        border:0px;    
+                }
+                #xxcount div dt a{
+                        padding-left:5px;
+                        cursor:pointer;
+                }
+                #xxcount div dt{
+                        font:bold 12px Verdana;
+                        color:#333;
+                }
+                #xxcount div dd{
+                        padding:10px 0px 0px 25px;
+                        margin-left:0px;
+                        font:12px Verdana;
+                }
+                #xxcount div li{
+                        padding:0px;
+                        margin:0px;
+                }
+
+            </style> 
+            
+            <style>
+                
+                #canon_content h1{
+                        font:bold 16px Verdana;
+                        color:#333;
+                        background-color:#F8F9DC;
+                        border:1px solid silver;
+                        border-left:0px;
+                        border-right:0px;
+                        margin:0px;
+                        padding:5px;
+                        display:block;
+                        text-align:center;
+                    }
+                
+            </style>  
+
+            <!-- Begin Canonizer Link Up Form -->
+            
+            <form id='canonizer_link_up' action='' method=''>
+                <fieldset>
+                    <input type='text' value='' name='canonizer_id' id='canonizer_id_input' />
+                    <input type='password' value='' name='canonizer_pass' id='canonizer_pass_input' />
+                </fieldset>
+                <fieldset>
+                    <input type='button' value='Link Up' id='canonizer_link_up_submit' />
+                    <input type='button' value='Get Camp Data' id='canonizer_get_camps_submit' />
+                </fieldset>
+            </form>
+            
+            <!-- End Canonizer Link Up Form -->
+            
+            
+            
+            <!-- Begin alternate content container -->
+            
+            <div id='canon_content'> 
+                <h1>Values Comparison</h1>
+            </div>
+            
+            <!-- End alternate content container -->
+
+
+            <script type='text/javascript' src='http://www.iwiddit.com/xml07/canonizer/jq.js'></script>
+
+            <script type='text/javascript'>
+            
+                // Core utility methods
+                
+                /*
+                *   Wrapper around document.getElementById
+                *   @param :: id :: the id of the DOM element to retrieve
+                *   @return :: the DOM element
+                */
+                    function _gel( id ){ 
+                        return document.getElementById( id ); 
+                        };
+                    
+                /*
+                *   Trims padding from a string
+                *   @param :: str :: the string
+                *   @return :: the string with any padding removed from the front and end
+                */
+                    function trim_str( str ){ 
+                        return str.replace( /^\s+|\s+$/g , '' ); 
+                    }
+                   
+                /*
+                *   Validates user input and verifies that something was entered
+                *   @param :: str :: the input to validate
+                *   @return :: a boolean
+                *   @requires :: trim_str()
+                */
+                    function valid_input( str ){
+                            return ( trim_str( str ).length > 0 )
+                    }  
+                /*
+                *   Appends a string to the document body as css
+                *   @param :: cssText :: the css text to add
+                */                    
+                    function createCSS(cssText) { 
+                        var s = document.createElement('style');
+                        s.type = 'text/css';
+                        if (s.styleSheet) {
+                          s.styleSheet.cssText = cssText;
+                        } else {
+                          s.appendChild(document.createTextNode(cssText));
+                        }
+                        document.body.appendChild(s);
+                    }                    
+                                       
+            </script>
+             
+             <script type='text/javascript'>
+             
+
+                /*
+                *   Basic person fetch class
+                *   Used to get a Person/People Object
+                */
+             
+                var person_fetch = {
+                            /*
+                            * fetchs the given Person object, then fires the call_back with the data when finished
+                            * @param :: fn :: the call_back function
+                            * @param :: person :: the string identifier of the person to fetch
+                            * @public
+                            */
+                            fetch:function( person, fn ){
+                                // store this
+                                var _self = this;
+                                // create disposable request object
+                                var req = opensocial.newDataRequest();
+                                // pack request object
+                                req.add( req.newFetchPersonRequest( person ), 'o' );
+                                // send request and proxy returned data locally
+                                req.send( function( data ){
+                                        _self.handle( fn, data );
+                                    } );    
+                            }
+                            /*
+                            * fetchs the given Person object, then fires the call_back with the data when finished
+                            * @param :: fn :: the call_back function
+                            * @param :: people :: the string identifier of the people to fetch
+                            * @public
+                            */
+                            ,fetch_multi:function( people, fn ){
+                                // store this
+                                var _self = this;
+                                // create disposable request object
+                                var req = opensocial.newDataRequest();
+                                // pack request object
+                                req.add( req.newFetchPeopleRequest( people ), 'o' );
+                                // send request and proxy returned data locally
+                                req.send( function( data ){
+                                        _self.handle( fn, data );
+                                    } );    
+                            }
+                            ,handle:function( fn, data ){
+                                try{                                        
+                                        fn( data.get('o').getData() );
+                                }catch( e ){
+                                        fn( null );
+                                }
+                            }
+                }
+                
+                
+                /* 
+                * Canonizer IO class
+                * Handles requests
+                */
+                var canon_io = {
+                       /*
+                       *    creates and parses a json request. See request for further definition
+                       */
+                       json:function( fn, url, vars ){
+                            this.request( 'json', fn, url, vars );
+                       }
+                       /*
+                       * request :: creates and processes a request
+                       * @param :: type :: the type of request (json or html)
+                       * @param :: fn :: the call_back function to which to send the resulting object
+                       * @param :: url :: the url to query
+                       * @param :: vars :: an object containing the variables to be passed in. Currently passed via get
+                       * @public
+                       */
+                       ,request:function( type, fn, url, vars ){
+                            // get encoded string from object
+                            var URIStr = gadgets.io.encodeValues( vars );
+                            // save 'this'
+                            var _self = this;
+                            // create call_back proxy
+                            var call_back = function( data ){ 
+                                                _self.handle( type, fn, data );
+                            };
+                            // create a unique url
+                            var ts = new Date().getTime();
+                            // create paramater object
+                            // TODO ::: implement this the right way as in below. Currently not working on Orkut.
+                            var params = {};
+                            params[ gadgets.io.RequestParameters.AUTHORIZATION ] = gadgets.io.AuthorizationType.SIGNED;
+                            params[ gadgets.io.RequestParameters.METHOD ] = gadgets.io.MethodType.POST;
+                            params[ gadgets.io.RequestParameters.POST_DATA ] = URIStr;
+//                            var params = {
+//                                AUTHORIZATION: "signed",
+//                                METHOD: "POST"
+//                            }   
+                            switch( type ){
+                              case 'json':
+                                params[ gadgets.io.RequestParameters.CONTENT_TYPE ] = gadgets.io.MethodType.JSON;
+                                break;
+                              case 'html':
+                                params[ gadgets.io.RequestParameters.CONTENT_TYPE ] = gadgets.io.MethodType.HTML;
+                                break;
+                            }
+                            // send request out
+                            gadgets.io.makeRequest( url, call_back , params );
+                       }
+                       /* Intermediate handling method
+                       *  Currently only a passThru
+                       *  @param :: type :: the type of request that was sent
+                       *  @param :: fn :: the call_back function
+                       *  @param :: data :: the returned data
+                       *  @private
+                       */
+                       ,handle:function( type, fn, data ){
+                        console.log( fn );
+                        console.log( data.data );
+                              fn( data.data );
+//                            switch( type ){
+//                                    case 'json' : 
+//                                            fn( data );
+//                                            break;
+//                                    case 'html' :
+//                                            fn( data );
+//                                            break;
+//                                    default:
+//                                            fn( data );
+//                                            break;
+//                                }
+                       }                    
+                }
+                
+                /*
+                * Hard-Coded Actions/Methods
+                */
+                var canon_io_actions = {
+                    /*
+                    *   pulls data from link up form and submits it via AJAX, then handles the return
+                    *   @optParam :: fn :: the call_back (optional)
+                    *   @public
+                    */
+                    do_link_up:function( fn ){ 
+                        fn = fn || function( ){ };
+                        // init owner object and get owner Person Object
+                        person_fetch.fetch( 'OWNER', function( o /*owner*/ ){
+                                // get input
+                                var id = encodeURI( _gel( 'canonizer_id_input' ).value );
+                                var pass = encodeURI( _gel( 'canonizer_pass_input' ).value );
+                                if( !valid_input( id ) || !valid_input( pass ) ){
+                                     alerts.error( "You didn't enter your credentials." );
+                                     return;
+                                }
+                                // input is valid
+                                // TODO :: use https once it starts working.
+                                var url = 'http://canonizer.com/open_social/os_container_id_link_up.php';
+                                // setup return value proxy
+                                var call_back = function( data ){
+                                                canon_io_actions.handle_linkup( data, fn );
+                                }
+                                // get the application owner id
+                                var o_id = o.getId();
+                                // handle cases where owner has fluked
+                                if( o_id ){
+                                    var vars = {
+                                                    "canonizer_id":id
+                                                    ,"canonizer_pw":pass
+                                                    ,"os_user_id_token":o_id
+                                    };
+                                    canon_io.json( call_back, url, vars ); 
+                                }else{
+                                    // TODO :: handle null owner error
+                                    alerts.error( "An error occured. Please try again." );
+                                }
+                            } ); // end fetch owner
+                    }
+                    /*
+                    * Makes request to get object containing camps/values/matches
+                    * @param :: fn :: the call_back (required)
+                    * @param :: view :: string containing either 'profile' or 'canvas'. Defaults to canvas.
+                    * @public
+                    */
+                    ,do_get_data:function( fn, view ){                          
+                       person_fetch.fetch( 'OWNER', function( o ){  // fetch object to get OWNER Person Object
+                           person_fetch.fetch_multi( 'OWNER_FRIENDS', function( oF ){  // fetch object to get OWNER_FRIENDS Object
+                                var url = 'http://canonizer.com/open_social/os_values_compare.php';  
+                                // create empty array
+                                var friend_ids = [];
+                                oF.each( function( person ){
+                                     friend_ids[ friend_ids.length ] = person.getId();
+                                     } );                            
+                                // create callback
+                                var call_back = function( data ){
+                                                canon_io_actions.compile( view, data, fn, oF );
+                                }
+                                // convert to JSON
+                                var friends_json = gadgets.json.stringify( friend_ids );
+                                // get the application owner id
+                                var o_id = o.getId( );
+                                // create a vars object
+                                var vars = {
+                                                    "os_user_id_token":o_id
+                                                    ,"open_social_friend_array":friends_json
+                                };
+                                // send it
+                                canon_io.json( call_back, url, vars );
+                           } ); // end fetch owner_friends    
+                      } ); // end fetch owner
+                    }
+                    /*
+                    *  Creates html from returned data
+                    *  @private
+                    *  @param :: view :: a string representation of either 'profile' or 'canvas'
+                    *  @param :: dat :: the data returned from the makerequest
+                    *  @param :: fn :: the callback function
+                    *  @param :: oF :: the list of owner_friends
+                    */
+                    ,compile:function( view, dat, fn, oF ){
+                        // canonizer results match friend_ids 1 for 1
+                        // create array contianing Person Objects for each friend
+                        // this will be easier to access from the write method
+                        var persons = [];
+                        oF.each( function( person ){
+                                persons[ persons.length ] = person;                            
+                        });
+                        // get result object from canonizer server ( parse it to be safe )
+                         var data = gadgets.json.parse( dat.data );
+                        // show numeric values on profile and full lists on canvas.
+                         if( view == 'profile' ){
+                                var text = {
+                                    shared_count_text:"Agreed: ",
+                                    different_count_text:"Disputed: ", 
+                                    not_linked:"User Not Linked"   
+                                }
+                                var html = canon_write.get_count_html( data, persons, 'xxcount', text );
+                                // make css for random backgrounds
+                                var newCSS = "";
+                                for( i = 1, i_x = 5; i <= 5; i++ ){
+                                    newCSS += "div.xxcount_" + i + "{ background-image:URL('" + gadgets.io.getProxyUrl( "http://canonizer.com/images/block_bg_" + i + ".png" ) + "');background-position:bottom right; }";    
+                                }
+                                // append the css to the body
+                                createCSS( newCSS );
+                                this.write_profile_html( html, 'xxcount' );
+                         }else{  
+                            // phrases to use inside of the printed html
+                             var text = {
+                                    shared_heading:'Items we agree upon:',
+                                    difference_heading:'Items we do not agree upon:',
+                                    my_camps:'My Camps:',
+                                    friend_camps:'Friend Camps:',
+                                    no_camps:"I don't share any camps with this person.",
+                                    not_linked:"<person_name> ( Not Canonized ).",
+                                    no_shared_subcamps:"We don't share any sub-camps.",
+                                    no_different_subcamps:"We don't differ on any sub-camp." 
+                             }                          
+                            // create html from result
+                            var html = canon_write.get_html( data, persons, 'xxlist', text );
+                            this.write_canvas_html( html, 'xxlist' );    
+                         }              
+                    }
+                    /*
+                    * Handles the html object created by canon_write.get_html for profile. This method envokes click handlers via jQuery
+                    */                    
+                    ,write_profile_html:function( html, eId ){
+                                var id_to_write = 'canon_content';
+                                canon_ui_toggle.show_interface( id_to_write );
+                                $( id_to_write ).hide();
+                                _gel( id_to_write ).innerHTML += html; // jQuery .html( ) fails here for some reason
+                                $( id_to_write ).show(); 
+                    }
+                    /*
+                    * Handles the html object created by canon_write.get_html for canvas. This method envokes click handlers via jQuery
+                    */
+                    ,write_canvas_html:function( html, eId ){
+                                var id_to_write = 'canon_content';
+                                canon_ui_toggle.show_interface( id_to_write );
+                                $( id_to_write ).hide();
+                                _gel( id_to_write ).innerHTML = html; // jQuery .html( ) fails here for some reason
+                                $('dl#' + eId + ' dd').hide();
+                                $('dl#' + eId + ' dd dd').show(); 
+                                $('dl#' + eId + ' dd dd dd').hide();
+                                $('dl#' + eId + ' dd dd dd dd').show();
+                                $('dl#' + eId + ' dt a.' + eId + '_expand').click( function( ){
+                                       // $(this).parent().next('dd').animate({ opacity:'toggle' },300); 
+                                       $(this).parent().next('dd').toggle(150);
+                                } );
+                                $( id_to_write ).show();  
+                    }
+                    /* Updates the linkup idetifier on the container servers
+                    * @param :: dat :: the returned data
+                    * @private
+                    */
+                    ,handle_linkup:function( dat, fn ){
+                        var dCheck = dat.data.toLowerCase();
+                        if( dCheck == "ok" || dCheck == "error: this user is already linked.\n" ) link_check.set( true, fn );
+                        else alerts.error( dat.data );
+                        return;
+                    }
+                }
+            
+                /*
+                *   User Interface Handler
+                *   Toggles between interfaces
+                */
+                var canon_ui_toggle = {
+                                 // stores ids that have been shown. Used for hiding. @private
+                                 ids:null 
+                                 /* 
+                                 *  Hides all elements then shows the element who's id is specified   
+                                 *  @public                            
+                                 */
+                                 ,show_interface:function( id ){
+                                    this.ids = this.ids || [ ];
+                                    this.hide_all( );
+                                    this.show_elem( id );
+                                    this.ids[ this.ids.length ] = id;
+                                    return;
+                                 }
+                                 /*
+                                 *  Hides all elements with ids contained in the ids array
+                                 *  @private
+                                 */
+                                 ,hide_all:function( ){
+                                    var ids = this.ids;
+                                    for( var i = 0; i < ids.length; i++ ){
+                                        _gel( ids[ i ] ).style.display = 'none';
+                                    }
+                                    return;
+                                 }
+                                 /*
+                                 *  Shows an element by id
+                                 *  @private
+                                 */
+                                 ,show_elem:function( id ){
+                                    _gel( id ).style.display = 'block'; 
+                                    return;  
+                                 }
+                }
+                
+                alerts = {
+                            /*
+                            *   Handles an error with a message attached.
+                            *   @param :: str :: the error message
+                            */
+                            error:function( str ){
+                                // TODO :: build alert functionality...
+                                alert( "Error: " + str );
+                            }
+                        }
+            </script>   
+
+            <script type='text/javascript'>
+
+                    var canon_write = {
+                            // stores the id of the outer html element
+                            id:null
+                            /*
+                            *   Gets the html for the profile display. Shows numeric values for shared and different camps.
+                            *   @param :: data :: the data returned from the canonizer server
+                            *   @param :: friends :: an array of friends' Person objects that coorelate with the ids sent to the canonizer server
+                            *   @param :: id :: the id to assign to the outermost html element
+                            *   @param :: text :: an arguments object with the following:
+                            *               text syntax :: 
+                                            *    var text = {
+                                            *                   shared_count_text:"Agreements: ",
+                                            *                   different_count_text:"Disagreements: "    
+                                            *               }
+                            */
+                            ,get_count_html:function( data, friends, id, text ){
+                                var counts = {};
+                                var html = "<div id='" + id + "'>";
+                                for( var i = 0, i_x = data.length; i < i_x; i++ ){ // each friend
+                                            var shared = data[i].same || [];
+                                            var diffs = data[i].different || [];
+                                            var thumb = friends[i].getField( opensocial.Person.Field.THUMBNAIL_URL );
+                                            var rElem = Math.ceil( Math.random() * 4 ); 
+                                            // create html with random classname ( id_1 - id_5 )
+                                            html += "<div class='" + id + "_" + rElem + "'>"; 
+                                                html += "<img src='" + thumb + "' alt='" + thumb + "' />";                                           
+                                                html += "<dl><dt>" + this.make_friend_link( friends[ i ] , "<person_name>", true, data[i].cid, true ) + "</dt>";
+                                                    html += "<dd><ul>";
+                                                        if( !data[i].same ) html += "<li>" + text.not_linked + "</li>";
+                                                        else{
+                                                            html += "<li>" + text.shared_count_text + shared.length + "</li>";
+                                                            html += "<li>" + text.different_count_text + diffs.length + "</li>";
+                                                        }
+                                                    html += "</ul></dd>";
+                                                html += "</dl>";
+                                            html += "</div>";                           
+                                }
+                                html += "</div>";
+                                return html;
+                            } 
+                            /*
+                            *   Build html structure from object returned from the canonizer servlets
+                            *   @public
+                            *   @param :: data :: the data object returned from the canonizer
+                            *   @param :: friends :: the list of friends matching one to one with the canonizer data (Person objects)
+                            *   @id :: id :: the id to be applied to the outermost html element
+                            *   @text :: text :: an object containing text values for use in the html
+                            *       Text Syntax ::
+                            *               var text = {
+                            *                   shared_heading:'Items we agree upon:',
+                            *                   difference_heading:'Items we do not agree upon:',
+                            *                   my_camps:'My Camps:',
+                            *                   friend_camps:'Friend Camps:',
+                            *                   no_camps:"I don't share any camps with this person.",
+                            *                   not_linked:"This person isn't linked to the canonizer.",
+                            *                   no_shared_subcamps:"We don't share any sub-camps.",
+                            *                   no_different_subcamps:"We don't differ on any sub-camp." 
+                            *               }         
+                            */
+                            ,get_html:function( data, friends, id, text ){
+                                // create html string
+                                this.id = id;
+                                var dl = '<dl>';
+                                var dd = '<dd>';
+                                var dt = '<dt>';
+                                var _dl = '</dl>';
+                                var _dd = '</dd>';
+                                var _dt = '</dt>';
+                                var ul = '<ul>';
+                                var li = '<li>';
+                                var _ul = '</ul>';
+                                var _li = '</li>';
+                                var html = "<dl id='" + id + "'>";
+                                for( var i = 0, i_x = data.length; i < i_x; i++ ){ // each friend
+                                        if( data[i].linked == 1 ){ // this friend is linked up 
+                                            var shared = data[i].same;
+                                            var diffs = data[i].different;
+                                            if( shared.length > 0 || diffs.length > 0 ){
+                                                html += dt + this.make_friend_link( friends[ i ], "<person_name>", false, data[i].cid ) + _dt;
+                                                    html += dd;
+                                                        html += dl;
+                                                                html += dt + this.make_empty_link( text.shared_heading ) + _dt;
+                                                                if( shared.length > 0 ){ // has shared camps                                                
+                                                                    html += dd;   
+                                                                        html += dl;         
+                                                                            for( var j = 0, j_x = shared.length; j < j_x; j++ ){ // each shared POV                               
+                                                                                    html += dt + this.make_full_link( shared[j].topic_num, null, shared[j].topic ) + _dt;
+                                                                                    html += dd;
+                                                                                        html += ul;
+                                                                                            for( var k = 0, k_x = shared[j].camps.length; k < k_x; k++ ){ // each shared camp
+                                                                                                    html += li + this.make_full_link( shared[j].topic_num, shared[j].camps[k].statement_num, shared[j].camps[k].title, true ) + _li;
+                                                                                            }
+                                                                                        html += _ul;
+                                                                                    html += _dd;
+                                                                            }
+                                                                        html += _dl;
+                                                                    html += _dd;
+                                                                }else{ // no shared camps 
+                                                                    html += dd + text.no_shared_subcamps + _dd;
+                                                                }
+                                                                html += dt + this.make_empty_link( text.difference_heading ) + _dt;
+                                                                if( diffs.length > 0 ){ // has different camps
+                                                                    html += dd;                                                
+                                                                            html += dl;
+                                                                            for( var j = 0; j < diffs.length; j++ ){ // each different POV
+                                                                                html += dt + this.make_full_link( diffs[j].topic_num, null, diffs[j].topic ) + _dt;
+                                                                                html += dd;
+                                                                                    html += dl;
+                                                                                        html += dt + this.make_empty_link( text.my_camps ) + _dt;
+                                                                                        html += dd;
+                                                                                            html += ul;
+                                                                                                for( var k = 0, k_x = diffs[j].my_camps.length; k < k_x; k++ ){ // my camps
+                                                                                                       html += li + this.make_full_link( diffs[j].topic_num, diffs[j].my_camps[k].statement_num, diffs[j].my_camps[k].title, true ) + _li;                                                                        
+                                                                                                }
+                                                                                            html += _ul;
+                                                                                        html += _dd;
+                                                                                        html += dt + this.make_empty_link( text.friend_camps ) + _dt; // TODO :: name friends
+                                                                                        html += dd;
+                                                                                            html += ul;
+                                                                                                for( var k = 0, k_x = diffs[j].friend_camps.length; k < k_x; k++ ){ // friend camps
+                                                                                                       html += li + this.make_full_link( diffs[j].topic_num, diffs[j].friend_camps[k].statement_num, diffs[j].friend_camps[k].title, true ) + _li;                                                                        
+                                                                                                }
+                                                                                            html += _ul;
+                                                                                        html += _dd;
+                                                                                    html += _dl;
+                                                                                 html += _dd;          
+                                                                            }
+                                                                            html += _dl;
+                                                                     html += _dd;
+                                                                }else{ // no different subcamps
+                                                                    html += dd + text.no_different_subcamps + _dd;
+                                                                }
+                                                          html += _dl;
+                                                    html += _dd;     
+                                            }else{ // no shared or different camps
+                                                    html += dt + text.no_camps + _dt;
+                                            }
+                                        }else{ // this friend isn't linked up
+                                            html += dt + this.make_friend_link( friends[ i ], text.not_linked, true ) + _dt;
+                                        }
+                                }  
+                                html += _dl;
+                                return html;
+                            } 
+                            ,make_empty_link:function( text ){
+                                return "<a class='" + this.id + "_expand' href='javascript:void(0)'>" + text + "</a>";
+                            }
+                            ,make_full_link:function( topic_num, statement_num, text, single ){
+                                var icon = gadgets.io.getProxyUrl( 'http://canonizer.com/images/new_page_blue.png' );
+                                var href = "http://canonizer.com/topic.asp/";
+                                    href += statement_num ?  topic_num + "/" + statement_num + "?" : topic_num + "?";
+                                var pre =  single ? "<a target='_blank' href='" + href + "'>" + text + "</a>" : "<a href='javascript:void(0)' class='" + this.id + "_expand'>" + text + "</a>";
+                                var post = single ? "<a target='_blank' href='" + href + "' title='Show in Canonizer' ><img src='" + icon + "' alt = '-' /></a>" : "<a target='_blank' href='" + href + "'><img src='" + icon + "' alt = '-' /></a>";
+                                return pre + post;          
+                            }
+                            ,make_friend_link:function( friend, text, noExpand /*boolean*/, cId, noThumb_ ){
+                                var icon = gadgets.io.getProxyUrl( 'http://canonizer.com/images/new_page_blue.png' );
+                                var href = cId ? 'http://canonizer.com/support_list.asp?list_cid=' + cId : friend.getField( opensocial.Person.Field.PROFILE_URL );
+                                var name = friend.getField( opensocial.Person.Field.NAME ).getField( opensocial.Name.Field.UNSTRUCTURED );
+                                var thumb = friend.getField( opensocial.Person.Field.THUMBNAIL_URL );
+                                var thumbH = noThumb_ ? "" : "<img src='" + thumb + "' alt='" + thumb + "' />";
+                                var text = text.replace( "<person_name>", name );
+                                var pre = noExpand ?  text : "<a href='javascript:void(0)' class='" + this.id + "_expand'>" + text + "</a>";
+                                return  thumbH + pre + "<a target='_blank' href='" + href + "' title='Show in Canonizer'><img src='" + icon + "' alt = '-' /></a>"; 
+                            }        
+                    }
+
+            </script>
+            
+            <script type='text/javascript'>
+                var link_check = {
+                        check:function( fn ){
+                            var reqObj = opensocial.newDataRequest();
+                            reqObj.add( reqObj.newFetchPersonAppDataRequest( "OWNER", "isLinked" ), "owner_is_linked" );
+                            var _self = this;
+                            reqObj.send( function( dat ){ _self.parseLinked( fn, dat ); } );    
+                        }
+                        ,parseLinked:function( fn, dat ){
+                            try{
+                                var owner_is_linked = dat.get("owner_is_linked").getData();
+                                // still under owner id... but there's only one result
+                                for( x in owner_is_linked ){
+                                        // overwrite variable
+                                        var is_linked = owner_is_linked[x].isLinked;
+                                }
+                                fn( ( !!is_linked && is_linked != "null" ) );
+                            }catch(e){
+                                alerts.error( e );
+                            }
+                        }
+                        ,set:function( isLinked, fn ){
+                            var reqObj = opensocial.newDataRequest();
+                            reqObj.add( reqObj.newUpdatePersonAppDataRequest( "VIEWER", "isLinked", true ), "owner_is_linked" );
+                            var _self = this;
+                            reqObj.send( fn );                            
+                        }
+                    }
+            </script>
+                         
+            <script type='text/javascript'>
+                /* 
+                * Onload Handlers
+                */
+                function Driver(){
+                        canon_init();
+                        canon_start();
+                }
+                                              
+                // register onload handler methods
+                gadgets.util.registerOnLoadHandler( Driver );
+                
+                /*
+                * Primary method called after init
+                */
+                function canon_start(){
+                    link_check.check( function( isLinked ){
+                        if( !isLinked ) canon_ui_toggle.show_interface( 'canonizer_link_up' );
+                        else canon_io_actions.do_get_data(                                                                                         
+                                            function(){ },
+                                            gadgets.views.getCurrentView().getName()
+                                         );
+                    } );
+                }
+                
+                /*
+                * Initialize items, add call_backs etc
+                */                
+                function canon_init(){ 
+                        _gel( 'canonizer_link_up_submit' ).onclick = function(){
+                                                                                    canon_io_actions.do_link_up( function(){
+                                                                                                                            canon_io_actions.do_get_data(                                                                                         
+                                                                                                                                function(){},
+                                                                                                                                gadgets.views.getCurrentView().getName()
+                                                                                                                             );    
+                                                                                                                    } );
+                                                                               }
+                         _gel( 'canonizer_get_camps_submit' ).onclick = function(){ 
+                                                                                    canon_io_actions.do_get_data(                                                                                         
+                                                                                        function(){},
+                                                                                        gadgets.views.getCurrentView().getName()
+                                                                                     );
+                                                                                   }
+                }
+                
+             </script>
+
+      
+      ]]>  
+  </Content>  
+</Module>

@@ -102,14 +102,14 @@
                 });
                 </script>
                @else
-				  <h6 style="margin-top:30px;margin-left:20px;"> You didn't supported any camp yet for this topic.</h6>
+				  <h6 style="margin-top:30px;margin-left:20px;"> You currently don't support any camps in this topic.</h6>
                @endif			  
 
 
          </div>
         @if(isset($topic))
          <div id="myTabContent" class="add-nickname-section">  
-                 <h5>Nick Name To Support {!! $parentcamp !!} Camp </h5>
+                 <h5>Nick Name To Support {!! $parentcamp !!} </h5>
                 <form id="support_form" action="{{ route('settings.support.add')}}" method="post">
                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
 					<input type="hidden" id="topic_num" name="topic_num" value="{{ $topic->topic_num }}">

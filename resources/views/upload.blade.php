@@ -15,7 +15,7 @@
 <div class="right-whitePnl">
     <div class="container-fluid">
         <div class="Gcolor-Pnl">
-            <h3>Upload Images / Document Files</h3>
+            <h3>Upload Images Only</h3>
             <div class="content">	  
 			   <form method="post" class="form-horizontal" enctype="multipart/form-data">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}"/>

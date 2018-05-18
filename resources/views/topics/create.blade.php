@@ -23,7 +23,7 @@
         <form action="{{ url('/topic')}}" method="post">
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
             <div class="form-group">
-                <label for="camp_name">Nick Name</label>
+                <label for="camp_name">Nick Name <p class="help-block">(Once you pick a nick name, for anything about a topic, you must always use the same nick name.)</p></label>
                 <select name="nick_name" id="nick_name" class="form-control">
                     @foreach($nickNames as $nick)
                     <option value="{{ $nick->id }}">{{ $nick->nick_name}}</option>
@@ -34,14 +34,14 @@
 				 <a href="<?php echo url('settings/nickname');?>">Add new nickname </a>
             </div> 
             <div class="form-group">
-                <label for="topic name">Topic Name </label>
+                <label for="topic name">Topic Name ( Limit 30 char )</label>
                 <input type="text" name="topic_name" class="form-control" id="topic_name" value="">
 				@if ($errors->has('topic_name')) <p class="help-block">{{ $errors->first('topic_name') }}</p> @endif
             </div>            
             <div  class="form-group">
-                <label for="namespace">Name Space</label>
+                <label for="namespace">Namespace (General is recommended, unless you know otherwise)</label>
                 <select  onchange="selectNamespace(this)" name="namespace" id="namespace" class="form-control">
-                    <option value="">Select Namespace</option>
+                    
                     @foreach($namespaces as $namespace)
                     <option value="{{ $namespace->id }}" >{{$namespace->label}}</option>
                     @endforeach

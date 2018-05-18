@@ -9,3 +9,14 @@ UPDATE statement SET value=replace(value,"â€™","'");
 UPDATE statement SET value=replace(value,"â€˜","'");
 UPDATE statement SET value=replace(value,"â€œ",'"');
 UPDATE statement SET value=replace(value,"â€",'"');
+
+UPDATE camp SET camp_name=replace(camp_name,"â€™","'"),title=replace(title,"â€™","'"); 
+UPDATE camp SET camp_name=replace(camp_name,"â€˜","'"),title=replace(title,"â€™","'");
+UPDATE camp SET camp_name=replace(camp_name,"â€œ",'"'),title=replace(title,"â€™","'");
+UPDATE camp SET camp_name=replace(camp_name,"â€",'"'),title=replace(title,"â€™","'");
+
+
+UPDATE topic SET topic_name=replace(topic_name,"â€™","'"); 
+UPDATE topic SET topic_name=replace(topic_name,"â€˜","'");
+UPDATE topic SET topic_name=replace(topic_name,"â€œ",'"');
+UPDATE topic SET topic_name=replace(topic_name,"â€",'"');

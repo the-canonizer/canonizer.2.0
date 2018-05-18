@@ -8,6 +8,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use DB;
 use App\Model\Camp;
+use App\Model\Support;
+use App\Model\Topic;
+use App\Model\Statement;
 use Illuminate\Database\Eloquent\Collection;
 
 class Nickname extends Model
@@ -31,7 +34,18 @@ class Nickname extends Model
 		
         return  DB::table('nick_name')->select('id','nick_name')->where('owner_code',$encode)->get();
 	}
-
+    
+    public static function personNicknameArray() {
+		
+		$userNickname=array();
+		$nicknames = self::personNickname();
+			
+			foreach($nicknames as $nickname) {
+				
+				$userNickname[] = $nickname->id;
+			}
+		return $userNickname;	
+	}	
     public function getSupportCampList(){
 
         $as_of_time = time();
@@ -80,10 +94,57 @@ class Nickname extends Model
         return $supports;
     }
 
+	/* get user data based on owner_code */
+	
     public function getUser(){
         
         $userId = \App\Library\General::canon_decode($this->owner_code);
         return  \App\User::find($userId);
     }
+	
+	
+	/* Enforce single nickname to be used */
+	
+	/* Return single nickname used in any activity for that topic and if no nickname used then it will return all user nicknames */
+	
+	public static function topicNicknameUsed($topic_num) {
+		
+		$personNicknameArray = self::personNicknameArray();
+		$usedNickid  = 0;
+		$mysupports  = Support::select('nick_name_id')->where('topic_num',$topic_num)->whereIn('nick_name_id',$personNicknameArray)->where('end','=',0)->groupBy('topic_num')->orderBy('support_order','ASC')->first();
+		
+		if(empty($mysupports)) { 
+		 $mycamps     = Camp::select('submitter_nick_id')->where('topic_num',$topic_num)->whereIn('submitter_nick_id',$personNicknameArray)->orderBy('submit_time','DESC')->first();
+		
+		 if(empty($mycamps)) { 
+			$mystatement = Statement::select('submitter_nick_id')->where('topic_num',$topic_num)->whereIn('submitter_nick_id',$personNicknameArray)->orderBy('submit_time','DESC')->first();
+		    if(empty($mystatement)) { 
+			 $mytopic     = Topic::select('submitter_nick_id')->where('topic_num',$topic_num)->whereIn('submitter_nick_id',$personNicknameArray)->orderBy('submit_time','DESC')->first();			
+			  if(empty($mytopic)) {
+				  
+				$mythread    = \App\CThread::select('user_id')->where('topic_id',$topic_num)->whereIn('user_id',$personNicknameArray)->orderBy('created_at','DESC')->first();			
+		        if(!empty($mythread)) {
+				 $usedNickid = 	$mythread->user_id; 	
+				}
+			  } else {
+				 $usedNickid = 	$mytopic->submitter_nick_id; 
+			  }
+			} else {
+				
+			 $usedNickid = 	$mystatement->submitter_nick_id; 	
+			}
+		 } else {
+			$usedNickid = 	$mycamps->submitter_nick_id; 
+		 }
+		} else {
+		 $usedNickid = 	$mysupports->nick_name_id;
+		}
+		
+	  if($usedNickid) {
+		  
+		  return self::where('id','=',$usedNickid)->get();
+	  }	else return self::personNickname();
+        	
+	}	
 
 }

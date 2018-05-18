@@ -6,13 +6,13 @@
 
 @if(Session::has('error'))
 <div class="alert alert-danger">
-    <strong>Error!</strong>{{ Session::get('error')}}    
+    <strong>Error! </strong>{{ Session::get('error')}}    
 </div>
 @endif
 
 @if(Session::has('success'))
 <div class="alert alert-success">
-    <strong>Success!</strong>{{ Session::get('success')}}    
+    <strong>Success! </strong>{{ Session::get('success')}}    
 </div>
 @endif
 
@@ -41,14 +41,14 @@
              </div> 
 			
             <div class="form-group">
-                <label for="topic name">Topic Name </label>
+                <label for="topic name">Topic Name ( Limit 30 char )</label>
                 <input type="text" name="topic_name" class="form-control" id="topic_name" value="{{ $topic->topic_name}}">
 				@if ($errors->has('topic_name')) <p class="help-block">{{ $errors->first('topic_name') }}</p> @endif
             </div>            
             <div  class="form-group">
-                <label for="namespace">Name Space</label>
+                <label for="namespace">Namespace (General is recommended, unless you know otherwise)</label>
                 <select  onchange="selectNamespace(this)" name="namespace" id="namespace" class="form-control">
-                    <option value="">Select Namespace</option>
+                   
                     @foreach($namespaces as $namespace)
                     <option value="{{ $namespace->id }}" @if($topic->namespace_id == $namespace->id) selected @endif>{{$namespace->label}}</option>
                     @endforeach
@@ -65,17 +65,12 @@
                 <span class="note-label"><strong>Note</strong>: Name space is categorization of your topic, it can be something like: General,crypto_currency etc.</span>
                 @if ($errors->has('create_namespace')) <p class="help-block">{{ $errors->first('create_namespace') }}</p> @endif
 			</div>
-            <div class="form-group">
-                <label for="language">Language</label>
-                <select class="form-control" name="language" id="language">
-                    <option <?php if($topic->language=="English") echo "selected=selected";?> value="English">English</option>
-                    <option <?php if($topic->language=="French") echo "selected=selected";?> value="French">French</option>
-                </select>
-            </div>
+         
            
             <div class="form-group">
                 <label for="">Additional Note</label>
-                <textarea class="form-control" rows="4" name="note" id="note">{{ $topic->note}}</textarea>
+                <textarea class="form-control" rows="4" name="note" id="note"> </textarea>
+				@if ($errors->has('note')) <p class="help-block">{{ $errors->first('note') }}</p> @endif
             </div>
             <?php if($objection=="objection") { ?>			
             <div class="form-group">

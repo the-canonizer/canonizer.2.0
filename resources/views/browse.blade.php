@@ -44,7 +44,7 @@
 						  
 						 ?>
 					 
-					 <li id="outline_{{ $topic->topic_num }}" style="line-height: 2"> <a href="<?php echo url('topic/'.$topic_id.'/'.$topic->camp_num) ?>"> {{ $topic->namespace }}{{ $topic->topic_name }} </a> {{ $topic->title }}</li>
+					 <li id="outline_{{ $topic->topic_num }}" style="line-height: 2"> <a href="<?php echo url('topic/'.$topic_id.'/'.$topic->camp_num) ?>"> {{ $topic->label }} {{ $topic->topic_name }} </a></li>
 					 @endforeach
 					</ul>
 			    </div>
