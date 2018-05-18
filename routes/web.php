@@ -11,11 +11,6 @@
 |
 */
 
-if (version_compare(PHP_VERSION, '7.2.0', '>='))
-{
-    error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
-}
-
 Route::get('/admin/login','Admin\LoginController@getLogin');
 Route::post('/admin/login','Admin\LoginController@postLogin');
 Route::group(['prefix' => 'admin',  'middleware' => 'adminauth'],function () {
@@ -24,13 +19,13 @@ Route::group(['prefix' => 'admin',  'middleware' => 'adminauth'],function () {
     Route::post('/namespace/create','Admin\ManageController@postCreateNamespace' );
     Route::get('/namespace/edit/{id}','Admin\ManageController@getUpdateNamespace' );
     Route::post('/namespace/edit/{id}','Admin\ManageController@postUpdateNamespace' );
-
+    
     Route::get('/namespace-requests','Admin\ManageController@getNamespaceRequests' );
     Route::get('/users','Admin\UserController@getIndex' );
     Route::get('/users/edit/{id}','Admin\UserController@getEdit' );
     Route::post('/users/edit/{id}','Admin\UserController@postUpdate' );
 	Route::get('/namespace','Admin\ManageController@namespace');
-
+    
 });
 
 Route::get('/home', ['as'=>'home','uses'=>'HomeController@index']);
@@ -86,13 +81,13 @@ Route::group([ 'middleware' => 'auth'], function()
    Route::post('upload', [ 'as' => 'upload.files.save', 'uses' =>'UploadController@postUpload']);
    Route::get('settings/algo-preferences', [ 'as' => 'settings.algo-preferences', 'uses' => 'SettingsController@algo']);
    Route::post('settings/algo-preferences', [ 'as' => 'settings.algo-preferences-save', 'uses' => 'SettingsController@postAlgo']);
-
+   
 });
 
 
 
 Route::get(
-    '/forum/{topicid}-{topicname}/{campnum}/threads',
+    '/forum/{topicid}-{topicname}/{campnum}/threads', 
     ['uses' => 'CThreadsController@index']
 );
 
@@ -102,27 +97,27 @@ Route::get(
 );
 
 Route::get(
-    '/forum/{topicid}-{topicname}/{campnum}/threads/create',
+    '/forum/{topicid}-{topicname}/{campnum}/threads/create', 
     ['uses' => 'CThreadsController@create']
 );
 
 Route::get(
-    '/forum/{topicid}-{topicname}/{campnum}/threads/{thread}',
+    '/forum/{topicid}-{topicname}/{campnum}/threads/{thread}', 
     [ 'uses' => 'CThreadsController@show']
 );
 
 Route::post(
-    '/forum/{topicid}-{topicname}/{campnum}/threads',
+    '/forum/{topicid}-{topicname}/{campnum}/threads', 
     'CThreadsController@store'
 );
 
 Route::post(
-    '/forum/{topicid}-{topicname}/{campnum}/threads/{thread}/replies',
+    '/forum/{topicid}-{topicname}/{campnum}/threads/{thread}/replies', 
     ['uses' => 'ReplyController@store']
 );
 
 if(env('APP_DEBUG')){
-    Route::get('/', 'HomeController@index');
+    Route::get('/', 'HomeController@index'); 
 }else{
     Route::get('/{params?}', 'HomeController@index')->where('params', '(.*)');
 }

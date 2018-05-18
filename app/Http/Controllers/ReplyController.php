@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Auth;
  * @category Class
  * @package  MyPackage
  * @author   Ashutosh Kukreti <kukreti.ashutosh@gmail.com>
- * @license  GNU General Public License
+ * @license  GNU General Public License     
  * @link     http://example.com
  */
 
@@ -22,10 +22,10 @@ class ReplyController extends Controller
 {
     /**
      * Constructor
-     *
+     * 
      * @return Auth middleware required to reply
      */
-    public function __construct()
+    public function __construct() 
     {
         parent::__construct();
         $this->middleware('auth');
@@ -36,7 +36,7 @@ class ReplyController extends Controller
      * @parameter \App\CThread  $CThread
      * @return    \Illuminate\Http\Response
      */
-    public function store($topicid, $topicname, $campnum, $threadId, request $request)
+    public function store($topicid, $topicname, $campnum, $threadId, request $request) 
     {
 
          // $threads = new CThread;
@@ -44,8 +44,7 @@ class ReplyController extends Controller
          $this->validate(
              $request, [
                 'body' => 'required',
-                'nick_name' => 'required'
-             ]
+             ] 
          );
         /**
         * The below code is used to save the data into the database.
@@ -53,7 +52,7 @@ class ReplyController extends Controller
         $reply = new Reply;
 
         $reply->body = request('body');
-        $reply->user_id = request('nick_name');
+        $reply->user_id = Auth::id();
         $reply->c_thread_id = $threadId;
         $reply->save();
 

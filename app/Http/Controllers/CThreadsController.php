@@ -1,11 +1,10 @@
-<?php
+<?php 
 namespace App\Http\Controllers;
 
 use DB;
 use App\CThread;
 use App\Model\Camp;
 use App\Model\Topic;
-use App\Model\Nickname;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
@@ -16,7 +15,7 @@ use Illuminate\Support\Facades\Redirect;
  * @category Class
  * @package  MyPackage
  * @author   Ashutosh Kukreti <kukreti.ashutosh@gmail.com>
- * @license  GNU General Public License
+ * @license  GNU General Public License     
  * @link     http://example.com
  */
 
@@ -38,32 +37,31 @@ class CThreadsController extends Controller
      */
     public function index($topicid, $topicname, $campnum)
     {
-
+        
         if ((camp::where('camp_num', $campnum)->where('topic_num', $topicid)->value('camp_name')))
         {
             $threads = CThread::where('camp_id', $campnum)->
                                 where('topic_id', $topicid)->latest()->get();
         }
-        else {
+        else { 
             return (
-                'Validation Error!!!!'.
+                'Validation Error!!!!'. 
                 'Either Topic ID is not related to Camp or Invalid Topic Name.'
-            );
+            ); 
         }
-
+        
         $topic = getArray($topicid, $topicname, $campnum);
 
         /* Old view of retuning of the views
-        * the below view doesn't return the name of the Camp.
+        * the below view doesn't return the name of the Camp. 
         * from the users perspective it would be good if the name of the camp
         * is shown on the page.
         return view('threads.index', $topic, compact('threads'));
         */
         // New View
-        //dd($threads);
         return view(
             'threads.index',
-            $topic,
+            $topic, 
             [
                 'threads'          => $threads,
                 // Return the name of the camp to index View
@@ -85,13 +83,13 @@ class CThreadsController extends Controller
      */
 
     public function topicindex($topicid, $topicname) {
-
+        
         if (Topic::find($topicid)->topic_name){
             $threads = CThread::where('topic_id', $topicid)->latest()->get();
         }
         else {
             return (
-                'Validation Error!!!!'.
+                'Validation Error!!!!'. 
                 'Either Topic ID is not related to Camp or Invalid Topic Name.'
             );
         }
@@ -102,7 +100,7 @@ class CThreadsController extends Controller
 
         return view(
             'threads.index',
-            $topic,
+            $topic, 
             [
                 'threads'          => $threads,
                 // Return the name of the camp to index View
@@ -124,15 +122,12 @@ class CThreadsController extends Controller
      */
     public function create($topicid, $topicname, $campnum)
     {
-
-        $userNicknames = Nickname::topicNicknameUsed($topicid);
-
         $topic = getArray($topicid, $topicname, $campnum);
 
         return view(
-            'threads.create',
-            $topic,
-            compact('threads', 'userNicknames')
+            'threads.create', 
+            $topic, 
+            compact('threads')
         );
     }
 
@@ -151,37 +146,34 @@ class CThreadsController extends Controller
         $this->validate(
             $request, [
                 'title'    => 'required',
-                'nick_name' => 'required'
-                //'body'     => 'required',
+                'body'     => 'required',
             ]
         );
 
         $thread = CThread::create(
             [
-            'user_id'  => request('nick_name'),
+            'user_id'  => auth()->id(),
             'title'    => request('title'),
-            'body'     => request('title'),
+            'body'     => request('body'),
             'camp_id'  => $campnum,
             'topic_id' => $topicid
             ]
-        );
+        ); 
         return back();
     }
 
     /**
      * Display the specified resource.
-     *
+     * 
      * @parameter $CThread
      * @return    \Illuminate\Http\Response
      */
     public function show($topicid, $topicname, $campnum, $CThread)
     {
         $topic = getArray($topicid, $topicname, $campnum);
-
         return view(
-            'threads.show',
-             $topic, [
-                'userNicknames' => Nickname::topicNicknameUsed($topicid),
+            'threads.show', 
+            $topic, [
                 'threads' => CThread::findOrFail($CThread),
                 'replies' => CThread::findOrFail($CThread)
                                             ->replies()
@@ -227,7 +219,7 @@ class CThreadsController extends Controller
 
 /**
  * Return the array to the respective callers to save time
- *
+ * 
  * @parameter integer  $topicid
  */
 function getArray($topicid, $topicname, $campnum)
