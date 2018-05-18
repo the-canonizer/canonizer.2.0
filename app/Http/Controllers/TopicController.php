@@ -18,6 +18,12 @@ use DB;
 use Validator;
 use App\Model\Namespaces;
 use App\Model\NamespaceRequest;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ThankToSubmitterMail;
+use App\Mail\PurposedToSupportersMail;
+use App\Mail\ObjectionToSubmitterMail;
+use App\Mail\NewDelegatedSupporterMail;
+
 
 /**
  * TopicController Class Doc Comment
@@ -74,6 +80,7 @@ class TopicController extends Controller {
         
         try {
 			$current_time = time();
+			$eventtype ="CREATE";
             $topic = new Topic();
             $topic->topic_name = $all['topic_name'];		
 			
@@ -87,7 +94,7 @@ class TopicController extends Controller {
 			if(isset($all['topic_num'])) {
 				
 			 $topic->topic_num = $all['topic_num'];
-			 
+			 $eventtype  = "UPDATE";
 			 $message ="Topic update submitted successfully. It's live now.";
 			 $nickNames   = Nickname::personNicknameArray();
 			 
@@ -103,6 +110,7 @@ class TopicController extends Controller {
 				 //$topic->submitter_nick_id = $all['submitter'];
 				 $topic->object_reason = $all['object_reason'];
 				 $topic->object_time = $current_time;
+				 $eventtype = "OBJECTION";
 			 }			 
 			 
 			 
@@ -143,6 +151,30 @@ class TopicController extends Controller {
             DB::commit();
             
             Session::flash('success', $message);
+			
+			if($eventtype=="CREATE") {
+				
+				// send history link in email
+				$link = 'topic-history/'.$topic->topic_num;
+				
+				Mail::to(Auth::user()->email)->send(new ThankToSubmitterMail(Auth::user(),$link));
+				
+			} else if($eventtype=="OBJECTION") {
+				
+				$user = Nickname::getUserByNickName($all['submitter']);
+				
+				$link = 'topic-history/'.$topic->topic_num;
+				$data['object'] = $topic->topic_name;
+				$nickName = Nickname::getNickName($all['nick_name']);
+				
+				$data['nick_name'] = $nickName->nick_name;
+				$data['forum_link'] = 'forum/'.$topic->topic_num.'/1/threads';
+				$data['subject'] = $data['nick_name']." has objected to your proposed change.";
+				
+				
+				Mail::to($user->email)->send(new ObjectionToSubmitterMail($user,$link,$data));
+			}
+			
         } catch (Exception $e) {
             
             DB::rollback();

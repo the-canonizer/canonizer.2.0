@@ -102,6 +102,20 @@ class Nickname extends Model
         return  \App\User::find($userId);
     }
 	
+	public static function getUserByNickName($nick_id){
+		
+		$nickname = self::find($nick_id);
+        
+        $userId = \App\Library\General::canon_decode($nickname->owner_code);
+        return  \App\User::find($userId);
+    }
+	public static function getNickName($nick_id){
+		
+		return $nickname = self::find($nick_id);
+        
+       
+    }
+	
 	
 	/* Enforce single nickname to be used */
 	

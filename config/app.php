@@ -13,6 +13,9 @@ return [
     */
 
     'name' => env('APP_NAME', 'Canonizer'),
+	
+	'support_email' => env('APP_SUPPORT_EMAIL', 'support@canonizer.com'),
+	'email_signature' => env('APP_EMAIL_SIGNATURE', 'The Canonizer Team'),
 
     /*
     |--------------------------------------------------------------------------
