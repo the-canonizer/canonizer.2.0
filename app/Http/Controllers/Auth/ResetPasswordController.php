@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\User;
 use Illuminate\Foundation\Auth\RedirectsUsers;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\RecoverAccountMail;
 
 class ResetPasswordController extends Controller {
 
@@ -61,6 +63,12 @@ class ResetPasswordController extends Controller {
         $password = $request->get('password');
         $user = User::getByEmail($email);
         if ($this->resetPassword($user, $password)) {
+			
+			// send help link in email
+			$link = 'topic/38-Canonized-help-statement-text/1';
+			
+			Mail::to($user->email)->send(new RecoverAccountMail($user,$link));
+			
             return $this->sendResetResponse("Password Reset Successfully");
         }
 

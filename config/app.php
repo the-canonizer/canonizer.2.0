@@ -13,6 +13,10 @@ return [
     */
 
     'name' => env('APP_NAME', 'Canonizer'),
+	
+	'support_email' => env('APP_SUPPORT_EMAIL', 'support@canonizer.com'),
+	'email_signature' => env('APP_EMAIL_SIGNATURE', 'The Canonizer Team'),
+	'admin_email' => env('ADMIN_EMAIL', 'gautamv16@gmail.com'),
 
     /*
     |--------------------------------------------------------------------------
@@ -25,7 +29,7 @@ return [
     |
     */
 
-    'env' => env('APP_ENV', 'production'),
+    'env' => env('APP_ENV', 'development'),   // development , staging, production
 
     /*
     |--------------------------------------------------------------------------

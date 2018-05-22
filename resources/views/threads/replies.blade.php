@@ -1,7 +1,7 @@
 <div class="panel panel-default">
     <div class="panel-heading">
         <a href="#">
-            {{ $reply->owner->first_name }}
+            {{ $reply->owner->nick_name }}
         </a> replied {{ $reply->created_at->diffForHumans() }}
     </div>
     <div class="panel-body">

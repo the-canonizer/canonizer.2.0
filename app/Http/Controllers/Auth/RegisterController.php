@@ -6,6 +6,8 @@ use App\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\WelcomeMail;
 
 class RegisterController extends Controller
 {
@@ -63,21 +65,20 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        
-       // echo "<pre>"; print_r($data); exit;
-       /* $user = new User();
-        $user->first_name = $data['firstname'];
-        $user->last_name = $data['lastname'];
-        $user->middle_name = $data['middlename'];
-        $user->email = $data['email'];
-        $user->password = bcrypt($data['password']);
-        return $user->save();*/
-        return User::create([
+      
+        $user = User::create([
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
             'first_name' =>$data['firstname'],
             'last_name' =>$data['lastname'],
             'middle_name' =>$data['middlename'],
         ]);
+		
+		// send help link in email
+        $link = 'topic/38-Canonized-help-statement-text/1';
+		
+		Mail::to($user->email)->send(new WelcomeMail($user,$link));
+		
+		return $user;
     }
 }

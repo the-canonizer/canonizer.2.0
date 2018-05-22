@@ -56,8 +56,8 @@ return [
     */
 
     'from' => [
-        'address' => env('MAIL_FROM_ADDRESS', 'support@canonzier.com'),
-        'name' => env('MAIL_FROM_NAME', 'Canonizer Team'),
+        'address' => env('MAIL_FROM_ADDRESS', 'canonizer@canonzier.com'),
+        'name' => env('MAIL_FROM_NAME', 'The Canonizer Team'),
     ],
 
     /*
