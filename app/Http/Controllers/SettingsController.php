@@ -14,6 +14,8 @@ use App\Model\TopicSupport;
 use App\Model\SupportInstance;
 use Illuminate\Support\Facades\Validator;
 use Cookie;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\NewDelegatedSupporterMail;
 
 class SettingsController extends Controller
 {
@@ -225,7 +227,7 @@ class SettingsController extends Controller
 				return redirect()->back();
 			}	
 
-			
+			/* Enter support record to support table */
 			
 			$supportTopic  = new Support();
 			$supportTopic->topic_num = $input['topic_num'];
@@ -236,11 +238,28 @@ class SettingsController extends Controller
 				
 			$supportTopic->support_order = $input['lastsupport_order'] + 1;
 			$supportTopic->save();
-                 
+            
+            /* clear the existing session for the topic to get updated support count */
+			
 			session()->forget("topic-support-{$input['topic_num']}");
 			session()->forget("topic-support-nickname-{$input['topic_num']}");
 			session()->forget("topic-support-tree-{$input['topic_num']}");
+			
+			/* Send delegated support email to the direct supporter and all parent */
+			
+			$parentUser = Nickname::getUserByNickName($input['delegate_nick_name_id']);
+			
+			$nickName = Nickname::getNickName($input['delegate_nick_name_id']);
 				
+			$data['nick_name'] = $nickName->nick_name;
+			$data['subject']   = $nickName->nick_name." has just delegated his support to you.";	
+			$link = 'topic/'.$input['topic_num'].'/'.$input['camp_num'];
+			
+		    $receiver = (config('app.env')=="production") ? $parentUser->email : config('app.admin_email');	
+			
+			Mail::to($receiver)->send(new NewDelegatedSupporterMail($parentUser,$link,$data));
+           /* end of email */			
+			
 			Session::flash('success', "Your support has been submitted successfully.");
 			return redirect('support/'.$input['topic_num'].'/'.$input['camp_num']);
 		 	

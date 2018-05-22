@@ -13,16 +13,18 @@ class PurposedToSupportersMail extends Mailable
     use Queueable, SerializesModels;
     public $user;
     public $link;
+	public $data;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct(User $user, $link)
+    public function __construct(User $user, $link, $data)
     {
         $this->user = $user;
         $this->link = $link;
+		$this->data = $data;
     }
 
     /**
@@ -32,6 +34,6 @@ class PurposedToSupportersMail extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.purposedtosupporters');
+        return $this->markdown('emails.purposedtosupporters')->subject($this->data['subject']);
     }
 }
