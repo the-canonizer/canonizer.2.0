@@ -53,14 +53,10 @@ class CThreadsController extends Controller
 
         $topic = getArray($topicid, $topicname, $campnum);
 
-        /* Old view of retuning of the views
-        * the below view doesn't return the name of the Camp.
-        * from the users perspective it would be good if the name of the camp
-        * is shown on the page.
-        return view('threads.index', $topic, compact('threads'));
-        */
+        $camp       = Camp::getLiveCamp($topicid,$campnum);
+
         // New View
-        //dd($threads);
+        //dd($camp);
         return view(
             'threads.index',
             $topic,
@@ -72,7 +68,8 @@ class CThreadsController extends Controller
                                                     ->where('topic_num', $topicid)
                                                     ->value('camp_name'),
                 // Return the name of the Topic to index View
-                'topicGeneralName' => Topic::find($topicid)->topic_name
+                'topicGeneralName' => Topic::find($topicid)->topic_name,
+                'parentcamp'       => Camp::campNameWithAncestors($camp,''),
             ],
             compact('threads')
         );
