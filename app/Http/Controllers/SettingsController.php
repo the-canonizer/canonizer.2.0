@@ -145,7 +145,36 @@ class SettingsController extends Controller
 				
 				$userNickname[] = $nickname->id;
 			}
-		
+		    
+			$confirm_support = 0;
+			
+			$alreadySupport  = Support::where('topic_num',$topicnum)->where('camp_num',$campnum)->where('end','=',0)->whereIn('nick_name_id',$userNickname)->get();
+			if($alreadySupport->count() > 0 ) {
+				Session::flash('error', "You have already supported this camp, you cant submit your support again.");
+               // return redirect()->back();
+			}
+			
+			 $parentSupport = Camp::validateParentsupport($topicnum,$campnum,$userNickname,$confirm_support);
+			  
+			 if($parentSupport==="notlive") {
+			  Session::flash('error', "You cant submit your support to this camp as its not live yet.");
+              //return redirect()->back();
+			 } 
+			 else if($parentSupport==1) {
+				
+				Session::flash('error', "You are already supporting parent camp. If you commit this support, support for that camp will be removed.");
+                Session::flash('confirm',1);
+				//return redirect()->back();
+				
+			 }
+
+			 $childSupport = Camp::validateChildsupport($topicnum,$campnum,$userNickname,$confirm_support);
+			
+			if($childSupport) {
+			    Session::flash('error', "You are already supporting child camp. If you commit this support, support for that camp will be removed.");
+                Session::flash('confirm',1);
+				//return redirect()->back();
+			}
 		 
 		    $supportedTopic = Support::where('topic_num',$topicnum)
 									  ->whereIn('nick_name_id',$userNickname)
@@ -181,7 +210,7 @@ class SettingsController extends Controller
                 'nick_name.required' => 'Nickname is required.',
             ];
             
-
+   echo "<pre>"; print_r($request->all()); die;
             $validator = Validator::make($request->all(), [
                 'nick_name' => 'required',
                 
@@ -246,7 +275,7 @@ class SettingsController extends Controller
 			session()->forget("topic-support-tree-{$input['topic_num']}");
 			
 			/* Send delegated support email to the direct supporter and all parent */
-			
+		  if(isset($input['delegate_nick_name_id']) && $input['delegate_nick_name_id']!=0) {	
 			$parentUser = Nickname::getUserByNickName($input['delegate_nick_name_id']);
 			
 			$nickName = Nickname::getNickName($input['delegate_nick_name_id']);
@@ -259,7 +288,7 @@ class SettingsController extends Controller
 			
 			Mail::to($receiver)->send(new NewDelegatedSupporterMail($parentUser,$link,$data));
            /* end of email */			
-			
+		  }	
 			Session::flash('success', "Your support has been submitted successfully.");
 			return redirect('support/'.$input['topic_num'].'/'.$input['camp_num']);
 		 	
