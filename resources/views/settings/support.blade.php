@@ -39,26 +39,30 @@
 				<li class="active"><a class="" href="{{ route('settings.support')}}" >My Supports</a></li>
                 <li><a class="" href="{{ route('settings.algo-preferences')}}">Default Algorithm</a></li>
             </ul>
+		<form id="support_form" action="{{ route('settings.support.add')}}" method="post">	
          <div class="SupportCmp">
 		        <p style="margin-left: 15px;color:red">Note : To change support order of camp, drag & drop the camp box on your choice position. </p>
 		        <?php $lastsupportOrder = 0;?>
                 @if(count($supportedTopic))
                    
-                       <div class="SpCmpHd"><b>Your supported camps for topic "{{ $supportedTopic->topic->topic_name}}"</b></div>
+                   <div class="SpCmpHd"><b>Your supported camps for topic "{{ $supportedTopic->topic->topic_name}}"</b></div>
                		<div class="row column">
                        <?php  $topicSupport = $supportedTopic->topic->Getsupports($supportedTopic->topic_num,[$supportedTopic->nick_name_id]);?>
 					   @foreach($topicSupport as $k=>$support)
                       
                             <div id="positions_{{ $support->support_id }}" class="SpCmpBDY support-sorter-element ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
-                            <form action="{{ route('settings.support.delete')}}" id="support-{{$support->support_id}}" method="post">
+                            <!--<form action="{{ route('settings.support.delete')}}" id="support-{{$support->support_id}}" method="post">
                                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                
-                                <input type="hidden" id="support_id_{{ $support->support_id }}" name="support_id" value="{{ $support->support_id }}">
+                                <!--<input type="hidden" id="support_id_{{ $support->support_id }}" name="support_id" value="{{ $support->support_id }}">
                                 <input type="hidden" id="topic_num_{{ $support->support_id }}" name="topic_num" value="{{ $supportedTopic->topic_num }}">
                                 
                                 <input type="hidden" id="nick_name_id_{{ $support->support_id }}" name="nick_name_id" value="{{ $support->nick_name_id }}">
                             <button type="submit" id="submit_{{ $support->support_id }}" class="btn-sptclose"><i class="fa fa-close"></i></button>
-                            </form> 
+                            </form> -->
+							<input type="hidden" name="support_order[{{$support->camp->camp_num}}]" id="support_order_{{ $support->support_id }}" value="{{ $support->support_order  }}">
+                                
+							<input type="hidden" name="camp[{{$support->camp->camp_num}}]" value="{{ $support->camp->camp_num }}">
+							<input type="hidden" name="delegated[{{$support->camp->camp_num}}]" value="{{ $support->delegate_nick_name_id }}">
                             <b>Camp :</b> {{ $support->camp->camp_name }} <br/>
                              <b>Support Order :</b> <span class="support_order">{{ $support->support_order }}</span> Choice <br/>
                             <b>Nickname :</b> {{ $supportedTopic->nickname->nick_name }} <br/>
@@ -66,15 +70,43 @@
                             <b>Support Delegated To:</b> {{ $support->delegatednickname->nick_name}}
                             @endif
                         
-                        <?php if(isset($topic->topic_num) && $topic->topic_num==$supportedTopic->topic_num) $lastsupportOrder++;
+							<?php if(isset($topic->topic_num) && $topic->topic_num==$supportedTopic->topic_num) $lastsupportOrder++;
+								
+							?>
+                        
+                           </div>
+					   @endforeach
+					  
+					  @if(!Session::has('confirm')) 
+					   <!-- current supporting camp detail -->
+					   
+					   <div id="positions_0" class="SpCmpBDY support-sorter-element ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
+                            <!--<form action="{{ route('settings.support.delete')}}" id="support-0" method="post">
+                                <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                
+                                <input type="hidden" id="support_id_0" name="support_id" value="0">
+								<input type="hidden" id="support_id_0" name="support_id" value="0">
+                                <input type="hidden" id="topic_num_0" name="topic_num" value="{{ $camp->topic_num }}">
+                             
+                                <input type="hidden" id="nick_name_id_0" name="nick_name_id" value="{{ $supportedTopic->nickname->id }}">
+                            <button type="submit" id="submit_0" class="btn-sptclose"><i class="fa fa-close"></i></button>
+                            </form> -->
+							<input type="hidden" name="support_order[{{$camp->camp_num}}]" id="support_order_0 }}" value="{{ $support->support_order + 1  }}">
                             
-                        ?>
+							<input type="hidden" name="camp[{{$camp->camp_num}}]" value="{{ $camp->camp_num }}">
+							<input type="hidden" name="delegated[{{$camp->camp_num}}]" value="{{ $delegate_nick_name_id }}">
+                            
+                            <b>Camp :</b> {{ $camp->camp_name }} <br/>
+                             <b>Support Order :</b> <span class="support_order">{{ ++$lastsupportOrder }}</span> Choice <br/>
+                            <b>Nickname :</b> {{ $supportedTopic->nickname->nick_name }} <br/>
+                            @if($delegate_nick_name_id != 0) 						 
+                            <b>Support Delegated To:</b> NA
+                            @endif
+                        
+                        <?php $lastsupportOrder++; ?>
                         
                         </div>
-                      
-					   
-					   @endforeach
-                       
+                       @endif
 					</div>   
 					   
                 <script>
@@ -110,7 +142,7 @@
         @if(isset($topic))
          <div id="myTabContent" class="add-nickname-section">  
                  <h5>Nick Name To Support {!! $parentcamp !!} </h5>
-                <form id="support_form" action="{{ route('settings.support.add')}}" method="post">
+                
                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
 					<input type="hidden" id="topic_num" name="topic_num" value="{{ $topic->topic_num }}">
 					<input type="hidden" id="delegate_nick_name_id" name="delegate_nick_name_id" value="{{ $delegate_nick_name_id }}">
@@ -144,9 +176,10 @@
                     
                     <button type="submit" id="submit" class="btn btn-login">Confirm Support</button>
                     
-                </form>  
+                
         </div>
-	  @endif	           
+	  @endif
+     </form>  	  
     </div>   
  </div></div>
 </div>  <!-- /.right-whitePnl-->
