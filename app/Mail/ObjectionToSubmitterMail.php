@@ -13,7 +13,7 @@ class ObjectionToSubmitterMail extends Mailable
     use Queueable, SerializesModels;
     public $user;
     public $link;
-	public $data;
+    public $data;
 
     /**
      * Create a new message instance.
@@ -24,7 +24,7 @@ class ObjectionToSubmitterMail extends Mailable
     {
         $this->user = $user;
         $this->link = $link;
-		$this->data = $data;
+	$this->data = $data;
     }
 
     /**
