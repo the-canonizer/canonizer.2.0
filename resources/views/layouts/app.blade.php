@@ -82,11 +82,12 @@
                         @endif
                     </li>
                 </ul>
+				<?php $route = Route::getCurrentRoute()->getActionMethod(); ?> 
                 <ul class="navbar-nav navbar-sidenav" id="exampleAccordion">
                     <ul class="uppermenu">
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url('/')}}">
-                                <span class="nav-link-text">Canonizer Main</span>
+                                <span class="nav-link-text {{ ($route=='index') ? 'menu-active':''}}">Canonizer Main</span>
                             </a>
                         </li>
                        <!-- <li class="nav-item">
@@ -96,7 +97,7 @@
                         </li>-->
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url('/browse')}}">
-                                <span class="nav-link-text">Browse</span>
+                                <span class="nav-link-text {{ ($route=='browse') ? 'menu-active':''}}">Browse</span>
                             </a>
                         </li>
                         
@@ -109,21 +110,25 @@
                         @endif
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url('/topic/create')}}">
-                                <span class="nav-link-text">Create New Topic</span>
+                                <span class="nav-link-text {{ ($route=='create') ? 'menu-active':''}}">Create New Topic</span>
                             </a>
                         </li>
-                   
-
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url('/upload') }}">
-                                <span class="nav-link-text">Upload File</span>
+                                <span class="nav-link-text {{ ($route=='getUpload') ? 'menu-active':''}}">Upload File</span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url('/topic/132-Help/1')}}">
-                                <span class="nav-link-text">Help</span>
+                                <span class="nav-link-text {{ ($route=='show') ? 'menu-active':''}}">Help</span>
                             </a>
                         </li>
+						<li class="nav-item">
+                            <a class="nav-link" target="_blank" href="{{ url('/files/2012_amplifying_final.pdf')}}">
+                                <span class="nav-link-text">White Paper</span>
+                            </a>
+                        </li>
+						
 						<li class="nav-item">
                             <a class="nav-link" href="{{ url('/blog')}}">
                                 <span class="nav-link-text">Blog</span>
@@ -131,6 +136,14 @@
                         </li>
                     </ul>
                     <ul class="lowermneu canoalgo">
+					
+					<!-- set algorithm as per request -->
+					<?php 
+					$algorithms = \App\Model\Algorithm::getKeyList();
+					if(isset($_REQUEST['canonizer']) && in_array($_REQUEST['canonizer'],$algorithms)) {
+					  session(['defaultAlgo'=>$_REQUEST['canonizer']]);
+					}
+					?>
                         <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Components">
                             <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#canoalgo">
                                 <span class="nav-link-text">Canonizer</span>

@@ -157,7 +157,10 @@ class Camp extends Model {
     }
 
     public function scopeCampNameWithAncestors($query, $camp, $campname = '') {
-        $asofdate  = time();
+        $as_of_time = time();
+			if(isset($_REQUEST['asof']) && $_REQUEST['asof']=='bydate'){
+				$as_of_time = strtotime($_REQUEST['asofdate']);
+			}
 		if(!empty($camp)) {
 			if ($campname != '') {
 				$url = url('topic/'.$camp->topic_num.'/'.$camp->camp_num);
@@ -174,7 +177,7 @@ class Camp extends Model {
 						  //->where('camp_name', '!=', 'Agreement')  
 						  ->where('objector_nick_id', '=', NULL)
 						  ->whereRaw('go_live_time in (select max(go_live_time) from camp where topic_num='.$camp->topic_num.' and objector_nick_id is null group by camp_num)')				
-						  //->where('go_live_time','<',$asofdate)
+						  ->where('go_live_time','<=',$as_of_time)
 						  ->groupBy('camp_num')->orderBy('submit_time', 'desc')->first();
 				return self::campNameWithAncestors($pcamp, $campname);
 			}
@@ -190,7 +193,7 @@ class Camp extends Model {
 				$as_of_time = strtotime($_REQUEST['asofdate']);
 			}
 		
-		$query = Topic::select('topic.topic_name','namespace.name as namespace','namespace.label','topic.topic_num','camp.title','camp.camp_num')
+		$query = Topic::select('topic.go_live_time','topic.topic_name','namespace.name as namespace','namespace.label','topic.topic_num','camp.title','camp.camp_num')
 		             ->join('camp','topic.topic_num','=','camp.topic_num')
 					 ->join('namespace','topic.namespace_id','=','namespace.id')
 					 ->where('camp_name','=','Agreement')
@@ -230,8 +233,8 @@ class Camp extends Model {
 					 ->join('namespace','topic.namespace_id','=','namespace.id')
 					 ->where('camp.topic_num',$topicnum)->where('camp_name','=','Agreement')
 		             ->where('camp.objector_nick_id', '=', NULL)
-                     ->where('camp.go_live_time','<=',$asofdate)
-					 ->latest('topic.submit_time')->first();
+                     ->where('topic.go_live_time','<=',$asofdate)
+					 ->latest('topic.go_live_time')->first();
 			}	
       }  			
 	}
