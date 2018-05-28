@@ -23,7 +23,8 @@
             <h3>Canonizer Blog</h3>
             <div class="content">
 
-                <iframe src="{{ url('/') }}/blog" style="position: relative;width: 100%;height:400px;border:none;"></iframe>
+                <iframe src="{{ url('/') }}/blog" style="position: relative;width: 100%;height:400px;border:none;" id="homeiframe" onload='setTimeout("hideheader();",0);'>
+                </iframe>
                 
             </div>
         </div>
@@ -127,6 +128,12 @@ function changeNamespace(element){
             @endif
         }
     });
+}
+</script>
+<script type="text/javascript">
+function hideheader()
+{
+    $("#homeiframe").contents().find(".header_1").hide();
 }
 </script>
 @endsection
