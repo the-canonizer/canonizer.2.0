@@ -419,18 +419,18 @@ class Camp extends Model {
 		
 		$mysupports     = Support::where('topic_num',$topic_num)->whereIn('camp_num',$parentcamps)->whereIn('nick_name_id',$userNicknames)->where('end','=',0)->groupBy('topic_num')->orderBy('support_order','ASC')->first();
 		
-		if($confirm_support && count($mysupports)) {
+		/*if($confirm_support && count($mysupports)) {
 		  
 		 $mysupports->end = time();
 		 $mysupports->update();
 	
          $mysupports     = Support::where('topic_num',$topic_num)->whereIn('camp_num',$parentcamps)->whereIn('nick_name_id',$userNicknames)->where('end','=',0)->groupBy('topic_num')->orderBy('support_order','ASC')->first();
 				  
-		}
+		}*/
 		
 		
 		if(count($mysupports))
-			return true;
+			return $mysupports;
 		else
 			return false;
 		
@@ -444,17 +444,17 @@ class Camp extends Model {
 		
 		$mysupports     = Support::where('topic_num',$topic_num)->whereIn('camp_num',$childCamps)->whereIn('nick_name_id',$userNicknames)->where('end','=',0)->groupBy('topic_num')->orderBy('support_order','ASC')->first();
 		
-		if($confirm_support && count($mysupports)) {
+		/*if($confirm_support && count($mysupports)) {
 		  
 		 $mysupports->end = time();
 		 $mysupports->update();
 	
          $mysupports     = Support::where('topic_num',$topic_num)->whereIn('camp_num',$childCamps)->whereIn('nick_name_id',$userNicknames)->where('end','=',0)->groupBy('topic_num')->orderBy('support_order','ASC')->first();
 				  
-		}
+		}*/
 		
 		if(count($mysupports))
-			return true;
+			return $mysupports;
 		else
 			return false;
 		

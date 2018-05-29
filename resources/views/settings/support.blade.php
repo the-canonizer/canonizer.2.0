@@ -4,17 +4,17 @@
     <h1 class="page-title">Supported Camps</h1>
 </div> 
 
-@if(Session::has('error'))
+@if(!Session::has('success') && Session::has('error'))
 <div class="alert alert-danger">
-    <strong>Error! </strong>{{ Session::get('error')}}    
+    <strong>Error! </strong>{{ Session::get('error')}}  {{ Session::forget('error')}}  
 </div>
 @endif
 
-@if(Session::has('confirm'))
+@if(Session::has('confirm') && Session::get('confirm') != 'nosupport')
 
 <div class="alert alert-success">
    <div style="text-align:center">
-     <a href="{{$_SERVER['REQUEST_URI']}}"><input type="button" name="cancel" class="btn btn-login" value="Cancel"></a>
+     <a href="{{ route('settings.support')}}"><input type="button" name="cancel" class="btn btn-login" value="Cancel"></a>
      <input type="button" id="confirm_submit" name="submit" class="btn btn-login" value="Submit">
    </div>    
 </div>	
@@ -23,7 +23,7 @@
 
 @if(Session::has('success'))
 <div class="alert alert-success">
-    <strong>Success! </strong>{{ Session::get('success')}}    
+    <strong>Success! </strong>{{ Session::get('success')}}  {{ Session::forget('success')}}    
 </div>
 @endif
 
@@ -42,7 +42,9 @@
 		<form id="support_form" action="{{ route('settings.support.add')}}" method="post">	
          <div class="SupportCmp">
 		        <p style="margin-left: 15px;color:red">Note : To change support order of camp, drag & drop the camp box on your choice position. </p>
-		        <?php $lastsupportOrder = 0;?>
+		        <?php $lastsupportOrder = 0;
+				
+				?>
                 @if(count($supportedTopic))
                    
                    <div class="SpCmpHd"><b>Your supported camps for topic "{{ $supportedTopic->topic->topic_name}}"</b></div>
@@ -59,7 +61,7 @@
                                 <input type="hidden" id="nick_name_id_{{ $support->support_id }}" name="nick_name_id" value="{{ $support->nick_name_id }}">
                             <button type="submit" id="submit_{{ $support->support_id }}" class="btn-sptclose"><i class="fa fa-close"></i></button>
                             </form> -->
-							<input type="hidden" name="support_order[{{$support->camp->camp_num}}]" id="support_order_{{ $support->support_id }}" value="{{ $support->support_order  }}">
+							<input type="hidden" class="final_support_order" name="support_order[{{$support->camp->camp_num}}]" id="support_order_{{ $support->support_id }}" value="{{ $support->support_order  }}">
                                 
 							<input type="hidden" name="camp[{{$support->camp->camp_num}}]" value="{{ $support->camp->camp_num }}">
 							<input type="hidden" name="delegated[{{$support->camp->camp_num}}]" value="{{ $support->delegate_nick_name_id }}">
@@ -77,7 +79,8 @@
                            </div>
 					   @endforeach
 					  
-					  @if(!Session::has('confirm')) 
+					  @if(Session::has('confirm') && Session::get('confirm') != 'nosupport')
+					 
 					   <!-- current supporting camp detail -->
 					   
 					   <div id="positions_0" class="SpCmpBDY support-sorter-element ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
@@ -91,7 +94,7 @@
                                 <input type="hidden" id="nick_name_id_0" name="nick_name_id" value="{{ $supportedTopic->nickname->id }}">
                             <button type="submit" id="submit_0" class="btn-sptclose"><i class="fa fa-close"></i></button>
                             </form> -->
-							<input type="hidden" name="support_order[{{$camp->camp_num}}]" id="support_order_0 }}" value="{{ $support->support_order + 1  }}">
+							<input type="hidden" class="final_support_order" name="support_order[{{$camp->camp_num}}]" id="support_order_0 }}" value="{{ $support->support_order + 1  }}">
                             
 							<input type="hidden" name="camp[{{$camp->camp_num}}]" value="{{ $camp->camp_num }}">
 							<input type="hidden" name="delegated[{{$camp->camp_num}}]" value="{{ $delegate_nick_name_id }}">
@@ -106,7 +109,7 @@
                         <?php $lastsupportOrder++; ?>
                         
                         </div>
-                       @endif
+                      @endif
 					</div>   
 					   
                 <script>
@@ -116,16 +119,17 @@
                         cursor: 'move',
                         opacity: 0.6,
                         update: function(event, ui) {
-                            $.post('{{ route("settings.support-reorder") }}', $(this).sortable('serialize')+"&_token={{ csrf_token() }}&topicnum={{ $supportedTopic->topic_num }}", function(data) {
+                           /* $.post('{{ route("settings.support-reorder") }}', $(this).sortable('serialize')+"&_token={{ csrf_token() }}&topicnum={{ $supportedTopic->topic_num }}", function(data) {
                                 
                                 if(!data.success) {
                                     alert('Whoops, something went wrong :/');
                                 }
                                 
-                        }, 'json');
+                        }, 'json');*/
 
                         $( ".column" ).find('.support-sorter-element').each(function(i,v){
                                 $(v).find('.support_order').text(i+1);
+								$(v).find('.final_support_order').val(i+1);
                             });
 
                         } 
@@ -151,6 +155,7 @@
 					<input type="hidden" id="userNicknames" name="userNicknames" value="{{ serialize($userNickname) }}">
 					<input type="hidden" id="support_id" name="support_id" value="{{ isset($supportedTopic->support_id) ? $supportedTopic->support_id : '0'}}">
 					<input type="hidden" id="confirm_support" name="confirm_support" value="0">
+					<input type="hidden" id="removed_camp" name="removed_camp" value="{{ (Session::has('confirm')) ? Session::get('confirm') : 0 }}">
 					
 					
                     <div class="row">
