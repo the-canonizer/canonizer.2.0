@@ -126,7 +126,7 @@ change camps with them."><i class="fa fa-question"></i></a>
                 <a id="join_support_camp" class="btn btn-warning" href="<?php echo url('support/'.$topic_id.'/'.$camp->camp_num);?>">Join or Directly Support This Camp</a>
             </div>
         </div>
-   <?php print_r($topic); die;?>
+   
         <div class="Scolor-Pnl">
             <h3>Current Topic Record:
             </h3>
@@ -167,6 +167,7 @@ change camps with them."><i class="fa fa-question"></i></a>
         </div>
     </div>
 	<div class="post"> </div>
+	<?php print_r($topic); die;?>
 </div>  <!-- /.right-whitePnl-->
 
 @endsection
