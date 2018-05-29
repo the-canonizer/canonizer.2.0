@@ -245,14 +245,15 @@ class Camp extends Model {
 		if(!isset($filter['asof']) || (isset($filter['asof']) && $filter['asof']=="default")) {
 		
 		 return self::select(DB::raw('(select count(topic_support.id) from topic_support where topic_support.topic_num=camp.topic_num) as support, camp.*'))
-		             ->join('topic','topic.topic_num','=','camp.topic_num')
+		             //->join(DB::raw('SELECT MAX(id) max_id, topic_num from topic c_max ON (c_max.topic_num = camp.topic_num)'))
+					 ->join('topic','topic.topic_num','=','camp.topic_num')
 					 //->leftJoin('topic_support','camp.topic_num','=','topic_support.topic_num')
 					 //->leftJoin('support_instance','support_instance.topic_support_id','=','topic_support.id')
 		             ->where('camp_name','=','Agreement')
 		             ->where('camp.objector_nick_id', '=', NULL)
 					 ->whereIn('namespace_id',explode(',',session('defaultNamespaceId',1)))
                      ->where('camp.go_live_time','<=',time())
-                     //->orderBy('topic.go_live_time','DESC')					 
+                     //->whereRaw('topic.go_live_time','DESC')					 
 					 ->latest('support')->get()->unique('topic_num')->take($limit);
 					 
 		} else {
