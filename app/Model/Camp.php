@@ -157,7 +157,10 @@ class Camp extends Model {
     }
 
     public function scopeCampNameWithAncestors($query, $camp, $campname = '') {
-        $asofdate  = time();
+        $as_of_time = time();
+			if(isset($_REQUEST['asof']) && $_REQUEST['asof']=='bydate'){
+				$as_of_time = strtotime($_REQUEST['asofdate']);
+			}
 		if(!empty($camp)) {
 			if ($campname != '') {
 				$url = url('topic/'.$camp->topic_num.'/'.$camp->camp_num);
@@ -174,7 +177,7 @@ class Camp extends Model {
 						  //->where('camp_name', '!=', 'Agreement')  
 						  ->where('objector_nick_id', '=', NULL)
 						  ->whereRaw('go_live_time in (select max(go_live_time) from camp where topic_num='.$camp->topic_num.' and objector_nick_id is null group by camp_num)')				
-						  //->where('go_live_time','<',$asofdate)
+						  ->where('go_live_time','<=',$as_of_time)
 						  ->groupBy('camp_num')->orderBy('submit_time', 'desc')->first();
 				return self::campNameWithAncestors($pcamp, $campname);
 			}
@@ -190,7 +193,7 @@ class Camp extends Model {
 				$as_of_time = strtotime($_REQUEST['asofdate']);
 			}
 		
-		$query = Topic::select('topic.topic_name','namespace.name as namespace','namespace.label','topic.topic_num','camp.title','camp.camp_num')
+		$query = Topic::select('topic.go_live_time','topic.topic_name','namespace.name as namespace','namespace.label','topic.topic_num','camp.title','camp.camp_num')
 		             ->join('camp','topic.topic_num','=','camp.topic_num')
 					 ->join('namespace','topic.namespace_id','=','namespace.id')
 					 ->where('camp_name','=','Agreement')
@@ -230,8 +233,8 @@ class Camp extends Model {
 					 ->join('namespace','topic.namespace_id','=','namespace.id')
 					 ->where('camp.topic_num',$topicnum)->where('camp_name','=','Agreement')
 		             ->where('camp.objector_nick_id', '=', NULL)
-                     ->where('camp.go_live_time','<=',$asofdate)
-					 ->latest('topic.submit_time')->first();
+                     ->where('topic.go_live_time','<=',$asofdate)
+					 ->latest('topic.go_live_time')->first();
 			}	
       }  			
 	}
@@ -242,14 +245,15 @@ class Camp extends Model {
 		if(!isset($filter['asof']) || (isset($filter['asof']) && $filter['asof']=="default")) {
 		
 		 return self::select(DB::raw('(select count(topic_support.id) from topic_support where topic_support.topic_num=camp.topic_num) as support, camp.*'))
-		             ->join('topic','topic.topic_num','=','camp.topic_num')
+		             //->join(DB::raw('SELECT MAX(id) max_id, topic_num from topic c_max ON (c_max.topic_num = camp.topic_num)'))
+					 ->join('topic','topic.topic_num','=','camp.topic_num')
 					 //->leftJoin('topic_support','camp.topic_num','=','topic_support.topic_num')
 					 //->leftJoin('support_instance','support_instance.topic_support_id','=','topic_support.id')
 		             ->where('camp_name','=','Agreement')
 		             ->where('camp.objector_nick_id', '=', NULL)
 					 ->whereIn('namespace_id',explode(',',session('defaultNamespaceId',1)))
                      ->where('camp.go_live_time','<=',time())
-                     //->orderBy('topic.go_live_time','DESC')					 
+                     //->whereRaw('topic.go_live_time','DESC')					 
 					 ->latest('support')->get()->unique('topic_num')->take($limit);
 					 
 		} else {

@@ -26,6 +26,14 @@ class Algorithm{
             'transhumanist'=>'Transhumanist'
         );
     }
+	
+	/**
+    @return all the available algorithm key values
+    */
+    public static function getKeyList(){
+        return array('blind_popularity','mind_experts','computer_science_experts','PhD','christian','secular','mormon','uu','atheist','transhumanist'
+        );
+    }
     
     /**
         Returns camp_count

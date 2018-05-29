@@ -38,13 +38,13 @@
 					@foreach($topics as $topic)
 					
 					     <?php 
-						  $title = preg_replace('/[^A-Za-z0-9\-]/', '-', $topic->title);
+						  $title = preg_replace('/[^A-Za-z0-9\-]/', '-', $topic->topic_name);
 						   
 						  $topic_id = $topic->topic_num."-".$title;
 						  
 						 ?>
 					 
-					 <li id="outline_{{ $topic->topic_num }}" style="line-height: 2"> <a href="<?php echo url('topic/'.$topic_id.'/'.$topic->camp_num) ?>"> {{ $topic->label }} {{ $topic->topic_name }} </a></li>
+					 <li id="outline_{{ $topic->topic_num }}" style="line-height: 2"> <a href="<?php echo url('topic/'.$topic_id.'/'.$topic->camp_num.'?asof=bydate&asofdate='.date('Y/m/d H:i:s',$topic->go_live_time)) ?>"> {{ $topic->label }} {{ $topic->topic_name }} </a></li>
 					 @endforeach
 					</ul>
 			    </div>
