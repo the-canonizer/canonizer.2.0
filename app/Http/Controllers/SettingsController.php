@@ -140,11 +140,7 @@ class SettingsController extends Controller
 
 			//get nicknames
 			$nicknames = Nickname::where('owner_code','=',$encode)->get();
-			$userNickname=array();
-			foreach($nicknames as $nickname) {
-				
-				$userNickname[] = $nickname->id;
-			}
+			$userNickname= Nickname::personNicknameArray();
 		    
 			$confirm_support = 0;
 			
@@ -171,16 +167,20 @@ class SettingsController extends Controller
 			 $childSupport = Camp::validateChildsupport($topicnum,$campnum,$userNickname,$confirm_support);
 			
 			if($childSupport) {
-			    Session::flash('error', "You are already supporting child camp. If you commit this support, support for that camp will be removed.");
-                Session::flash('confirm',1);
+			    Session::flash('error', "You are already supporting child camp '".$childSupport->camp->camp_name."'. If you commit this support, support for that camp will be removed.");
+                Session::flash('confirm',$childSupport->camp_num);
 				//return redirect()->back();
 			}
-		 
+		    if(isset($childSupport->camp_num) && $campnum==$childSupport->camp_num) {
+				Session::flash('error', "You are already supporting '".$childSupport->camp->camp_name."' camp.");
+                Session::flash('confirm','nosupport');
+				
+			}
 		    $supportedTopic = Support::where('topic_num',$topicnum)
 									  ->whereIn('nick_name_id',$userNickname)
-									  ->whereRaw("(start < $as_of_time) and ((end = 0) or (end > $as_of_time))")
+									  ->whereRaw("(start <= ".$as_of_time.") and ((end = 0) or (end >= ".$as_of_time."))")
 									  ->groupBy('topic_num')->orderBy('start','DESC')->first();
-		
+         
             return view('settings.support',['userNickname'=>$userNickname,'supportedTopic'=>$supportedTopic,'topic'=>$topic,'nicknames'=>$nicknames,'camp'=>$onecamp,'parentcamp'=>$campWithParents,'delegate_nick_name_id'=>$delegate_nick_name_id]);
 	  } else {
 		    $id = Auth::user()->id; 
@@ -210,8 +210,8 @@ class SettingsController extends Controller
                 'nick_name.required' => 'Nickname is required.',
             ];
             
-   echo "<pre>"; print_r($request->all()); die;
-            $validator = Validator::make($request->all(), [
+   
+            /*$validator = Validator::make($request->all(), [
                 'nick_name' => 'required',
                 
             ],$messages);
@@ -254,43 +254,57 @@ class SettingsController extends Controller
 			    Session::flash('error', "You are already supporting child camp. If you commit this support, support for that camp will be removed.");
                 Session::flash('confirm',1);
 				return redirect()->back();
-			}	
+			}	*/
 
 			/* Enter support record to support table */
-			
-			$supportTopic  = new Support();
-			$supportTopic->topic_num = $input['topic_num'];
-			$supportTopic->nick_name_id = $input['nick_name'];
-			$supportTopic->delegate_nick_name_id = $input['delegate_nick_name_id'];
-			$supportTopic->start = time();
-		    $supportTopic->camp_num = $input['camp_num'];
+	        $data = $request->all();
+			$orderDecrement = 0;
+			foreach($data['support_order'] as $camp_num=>$support_order) {
+				$userNicknames  = Nickname::personNicknameArray();
+				$topic_num = $data['topic_num'];
 				
-			$supportTopic->support_order = $input['lastsupport_order'] + 1;
-			$supportTopic->save();
-            
-            /* clear the existing session for the topic to get updated support count */
-			
-			session()->forget("topic-support-{$input['topic_num']}");
-			session()->forget("topic-support-nickname-{$input['topic_num']}");
-			session()->forget("topic-support-tree-{$input['topic_num']}");
-			
+				$mysupports     = Support::where('topic_num',$topic_num)->where('camp_num',$camp_num)->whereIn('nick_name_id',$userNicknames)->where('end','=',0)->groupBy('topic_num')->orderBy('support_order','ASC')->first();
+			   if(isset($mysupports) && count($mysupports) > 0) { 
+				$mysupports->end = time();
+		        $mysupports->update();
+			   }	
+               if($data['removed_camp'] == $camp_num ) $orderDecrement = 1;
+			   
+			   if($data['removed_camp'] != $camp_num ) {
+				$supportTopic  = new Support();
+				$supportTopic->topic_num = $topic_num;
+				$supportTopic->nick_name_id = $data['nick_name'];
+				$supportTopic->delegate_nick_name_id = $data['delegate_nick_name_id'];
+				$supportTopic->start = time();
+				$supportTopic->camp_num = $camp_num;
+					
+				$supportTopic->support_order = $support_order - $orderDecrement;
+				$supportTopic->save();
+				
+				/* clear the existing session for the topic to get updated support count */
+				
+				session()->forget("topic-support-{$topic_num}");
+				session()->forget("topic-support-nickname-{$topic_num}");
+				session()->forget("topic-support-tree-{$topic_num}");
+			   }	
+			}
 			/* Send delegated support email to the direct supporter and all parent */
-		  if(isset($input['delegate_nick_name_id']) && $input['delegate_nick_name_id']!=0) {	
-			$parentUser = Nickname::getUserByNickName($input['delegate_nick_name_id']);
+		  if(isset($data['delegate_nick_name_id']) && $data['delegate_nick_name_id']!=0) {	
+			$parentUser = Nickname::getUserByNickName($data['delegate_nick_name_id']);
 			
-			$nickName = Nickname::getNickName($input['delegate_nick_name_id']);
+			$nickName = Nickname::getNickName($data['delegate_nick_name_id']);
 				
-			$data['nick_name'] = $nickName->nick_name;
-			$data['subject']   = $nickName->nick_name." has just delegated his support to you.";	
-			$link = 'topic/'.$input['topic_num'].'/'.$input['camp_num'];
+			$result['nick_name'] = $nickName->nick_name;
+			$result['subject']   = $nickName->nick_name." has just delegated his support to you.";	
+			$link = 'topic/'.$data['topic_num'].'/'.$data['camp_num'];
 			
 		    $receiver = (config('app.env')=="production") ? $parentUser->email : config('app.admin_email');	
 			
-			Mail::to($receiver)->send(new NewDelegatedSupporterMail($parentUser,$link,$data));
+			Mail::to($receiver)->send(new NewDelegatedSupporterMail($parentUser,$link,$result));
            /* end of email */			
 		  }	
 			Session::flash('success', "Your support has been submitted successfully.");
-			return redirect('support/'.$input['topic_num'].'/'.$input['camp_num']);
+			return redirect('support/'.$data['topic_num'].'/'.$data['camp_num']);
 		 	
         }else{
             return redirect()->route('login');
