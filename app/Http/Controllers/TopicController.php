@@ -263,7 +263,7 @@ class TopicController extends Controller {
 			Session::flash('error', "Camp does not exist.");
 			return back();
 		}
-		print_r($topic); die;
+		
 		return view('topics.view',  compact('topic','parentcampnum','parentcamp','camp','wiky'));
     }
 
