@@ -167,7 +167,7 @@ change camps with them."><i class="fa fa-question"></i></a>
         </div>
     </div>
 	<div class="post"> </div>
-	<?php print_r($topic); die;?>
+	
 </div>  <!-- /.right-whitePnl-->
 
 @endsection
