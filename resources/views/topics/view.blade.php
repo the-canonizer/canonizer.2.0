@@ -50,7 +50,7 @@
             </div>    
             </div>
         </div>
-        
+        <?php print_r($topic); die;?>
         <div class="Scolor-Pnl">
             <h3><?php echo ($parentcamp=="Agreement") ? $parentcamp : "Camp";?> Statement
             </h3>
