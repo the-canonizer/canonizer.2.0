@@ -199,6 +199,7 @@ class Camp extends Model {
 					 ->where('camp_name','=','Agreement')
 		             ->where('camp.objector_nick_id', '=', NULL)
                      ->where('camp.go_live_time','<=',$as_of_time)
+					 ->whereRaw('topic.go_live_time in (select max(topic.go_live_time) from topic where topic.topic_num=topic.topic_num and topic.objector_nick_id is null and topic.go_live_time <='.$as_of_time.' group by topic.topic_num)')
 					 ->where('topic.topic_name','<>',"");
 		
 		if(isset($_REQUEST['namespace']) && (!empty($_REQUEST['namespace']) || $_REQUEST['namespace'] != 0)){
@@ -240,7 +241,7 @@ class Camp extends Model {
 	}
 	public static function getAllAgreementTopic($limit=10,$filter=array()){
 		
-		
+		$as_of_time = time();
 
 		if(!isset($filter['asof']) || (isset($filter['asof']) && $filter['asof']=="default")) {
 		
@@ -252,7 +253,8 @@ class Camp extends Model {
 		             ->where('camp_name','=','Agreement')
 		             ->where('camp.objector_nick_id', '=', NULL)
 					 ->whereIn('namespace_id',explode(',',session('defaultNamespaceId',1)))
-                     ->where('camp.go_live_time','<=',time())
+                     ->where('camp.go_live_time','<=',$as_of_time)
+					 ->whereRaw('topic.go_live_time in (select max(topic.go_live_time) from topic where topic.topic_num=topic.topic_num and topic.objector_nick_id is null and topic.go_live_time <='.$as_of_time.' group by topic.topic_num)')
                      //->whereRaw('topic.go_live_time','DESC')					 
 					 ->latest('support')->get()->unique('topic_num')->take($limit);
 					 
@@ -417,7 +419,7 @@ class Camp extends Model {
 	    
 		$parentcamps    = self::getAllParent($onecamp);
 		
-		$mysupports     = Support::where('topic_num',$topic_num)->whereIn('camp_num',$parentcamps)->whereIn('nick_name_id',$userNicknames)->where('end','=',0)->groupBy('topic_num')->orderBy('support_order','ASC')->first();
+		$mysupports     = Support::where('topic_num',$topic_num)->whereIn('camp_num',$parentcamps)->whereIn('nick_name_id',$userNicknames)->where('end','=',0)->orderBy('support_order','ASC')->get();
 		
 		/*if($confirm_support && count($mysupports)) {
 		  
@@ -441,8 +443,8 @@ class Camp extends Model {
 		$onecamp        = self::getLiveCamp($topic_num,$camp_num);
 		
 	    $childCamps    = array_unique(self::getAllChildCamps($onecamp));
-		
-		$mysupports     = Support::where('topic_num',$topic_num)->whereIn('camp_num',$childCamps)->whereIn('nick_name_id',$userNicknames)->where('end','=',0)->groupBy('topic_num')->orderBy('support_order','ASC')->first();
+		//print_r($childCamps); die;
+		$mysupports     = Support::where('topic_num',$topic_num)->whereIn('camp_num',$childCamps)->whereIn('nick_name_id',$userNicknames)->where('end','=',0)->orderBy('support_order','ASC')->get();
 		
 		/*if($confirm_support && count($mysupports)) {
 		  
