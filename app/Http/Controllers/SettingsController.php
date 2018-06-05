@@ -156,32 +156,54 @@ class SettingsController extends Controller
 			  Session::flash('error', "You cant submit your support to this camp as its not live yet.");
               //return redirect()->back();
 			 } 
-			 else if($parentSupport==1) {
-				
-				Session::flash('error', "You are already supporting parent camp. If you commit this support, support for that camp will be removed.");
+			 else if($parentSupport) {
+				if(count($parentSupport)==1) {
+				 foreach($parentSupport as $parent); 
+				  if($parent->camp_num==$campnum) {	
+				  Session::flash('warning', "You are already supporting this camp. You cant submit support again.");
+                  Session::flash('confirm','samecamp');
+				  }
+				  else {
+					Session::flash('warning', 'The following  camp are parent camp to "'.$onecamp->camp_name.'" and will be removed if you commit this support.');
+                    Session::flash('confirm',1);
+				  }
+				}
+				else {	
+				Session::flash('warning', 'The following  camps are parent camps to "'.$onecamp->camp_name.'" and will be removed if you commit this support.');
                 Session::flash('confirm',1);
+				}
 				//return redirect()->back();
 				
 			 }
 
 			 $childSupport = Camp::validateChildsupport($topicnum,$campnum,$userNickname,$confirm_support);
-			
+			 //echo "<pre>";print_r($childSupport); die;
 			if($childSupport) {
-			    Session::flash('error', "You are already supporting child camp '".$childSupport->camp->camp_name."'. If you commit this support, support for that camp will be removed.");
-                Session::flash('confirm',$childSupport->camp_num);
+				if(count($childSupport)==1) {
+				 foreach($childSupport as $child); 
+				  if($child->camp_num==$campnum) {
+				  Session::flash('warning', "You are already supporting this camp. You cant submit support again.");
+				  Session::flash('confirm','samecamp');
+				 }
+				 else{
+				  Session::flash('warning', 'The following  camp are child camp to "'.$onecamp->camp_name.'" and will be removed if you commit this support.');
+                  Session::flash('confirm',1);	 
+				 }
+				}	
+				 else {	
+			      Session::flash('warning', 'The following  camps are child camps to "'.$onecamp->camp_name.'" and will be removed if you commit this support.');
+                
+				  Session::flash('confirm',1);
+				 }
 				//return redirect()->back();
 			}
-		    if(isset($childSupport->camp_num) && $campnum==$childSupport->camp_num) {
-				Session::flash('error', "You are already supporting '".$childSupport->camp->camp_name."' camp.");
-                Session::flash('confirm','nosupport');
-				
-			}
+		    
 		    $supportedTopic = Support::where('topic_num',$topicnum)
 									  ->whereIn('nick_name_id',$userNickname)
 									  ->whereRaw("(start <= ".$as_of_time.") and ((end = 0) or (end >= ".$as_of_time."))")
 									  ->groupBy('topic_num')->orderBy('start','DESC')->first();
          
-            return view('settings.support',['userNickname'=>$userNickname,'supportedTopic'=>$supportedTopic,'topic'=>$topic,'nicknames'=>$nicknames,'camp'=>$onecamp,'parentcamp'=>$campWithParents,'delegate_nick_name_id'=>$delegate_nick_name_id]);
+            return view('settings.support',['parentSupport'=>$parentSupport,'childSupport'=>$childSupport,'userNickname'=>$userNickname,'supportedTopic'=>$supportedTopic,'topic'=>$topic,'nicknames'=>$nicknames,'camp'=>$onecamp,'parentcamp'=>$campWithParents,'delegate_nick_name_id'=>$delegate_nick_name_id]);
 	  } else {
 		    $id = Auth::user()->id; 
 			$encode = General::canon_encode($id);
@@ -258,19 +280,20 @@ class SettingsController extends Controller
 
 			/* Enter support record to support table */
 	        $data = $request->all();
-			$orderDecrement = 0;
-			foreach($data['support_order'] as $camp_num=>$support_order) {
-				$userNicknames  = Nickname::personNicknameArray();
-				$topic_num = $data['topic_num'];
+			$userNicknames  = Nickname::personNicknameArray();
+			$topic_num = $data['topic_num'];
 				
-				$mysupports     = Support::where('topic_num',$topic_num)->where('camp_num',$camp_num)->whereIn('nick_name_id',$userNicknames)->where('end','=',0)->groupBy('topic_num')->orderBy('support_order','ASC')->first();
+			$mysupports     = Support::where('topic_num',$topic_num)->whereIn('nick_name_id',$userNicknames)->where('end','=',0)->orderBy('support_order','ASC')->get();
 			   if(isset($mysupports) && count($mysupports) > 0) { 
-				$mysupports->end = time();
-		        $mysupports->update();
-			   }	
-               if($data['removed_camp'] == $camp_num ) $orderDecrement = 1;
-			   
-			   if($data['removed_camp'] != $camp_num ) {
+				   foreach($mysupports as $singleSupport) {
+					$singleSupport->end = time();
+					$singleSupport->save();
+				   }	
+			   }
+          //echo "<pre>"; print_r($data); die;			   
+			foreach($data['support_order'] as $camp_num=>$support_order) {
+				
+               
 				$supportTopic  = new Support();
 				$supportTopic->topic_num = $topic_num;
 				$supportTopic->nick_name_id = $data['nick_name'];
@@ -278,7 +301,7 @@ class SettingsController extends Controller
 				$supportTopic->start = time();
 				$supportTopic->camp_num = $camp_num;
 					
-				$supportTopic->support_order = $support_order - $orderDecrement;
+				$supportTopic->support_order = $support_order;
 				$supportTopic->save();
 				
 				/* clear the existing session for the topic to get updated support count */
@@ -286,7 +309,7 @@ class SettingsController extends Controller
 				session()->forget("topic-support-{$topic_num}");
 				session()->forget("topic-support-nickname-{$topic_num}");
 				session()->forget("topic-support-tree-{$topic_num}");
-			   }	
+			  	
 			}
 			/* Send delegated support email to the direct supporter and all parent */
 		  if(isset($data['delegate_nick_name_id']) && $data['delegate_nick_name_id']!=0) {	
