@@ -33,7 +33,7 @@
             <input type="hidden" id="parent_camp_num" name="parent_camp_num" value="{{ $parentcampnum }}">
             
             <div class="form-group">
-                <label for="camp_name">Nick Name</label>
+                <label for="camp_name">Nick Name <span style="color:red">*</span></label>
                 <select name="nick_name" id="nick_name" class="form-control">
                     @foreach($nickNames as $nick)
                     <option value="{{ $nick->id }}">{{ $nick->nick_name}}</option>
@@ -45,7 +45,7 @@
              </div> 
             
              <div class="form-group">
-                <label for="camp_name">Camp Name ( Limit 30 Char )</label>
+                <label for="camp_name">Camp Name ( Limit 30 Char ) <span style="color:red">*</span></label>
                 <input type="text" name="camp_name" class="form-control" id="camp_name" value="{{ old('camp_name')}}">
                  @if ($errors->has('camp_name')) <p class="help-block">{{ $errors->first('camp_name') }}</p> @endif
              </div> 
@@ -58,7 +58,7 @@
            
            
             <div class="form-group">
-                <label for="">Additional Note</label>
+                <label for="">Additional Note <span style="color:red">*</span></label>
                 <textarea class="form-control" rows="4" name="note" id="note">{{ old('note')}}</textarea>
                 @if ($errors->has('note')) <p class="help-block">{{ $errors->first('note') }}</p> @endif
             </div>   

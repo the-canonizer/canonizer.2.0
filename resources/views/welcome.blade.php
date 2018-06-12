@@ -59,7 +59,7 @@
 					   <a id="btn-more" class="remove-row" data-id="{{ $topic->id }}"></a>
 					   
                     </ul>
-                    <button name="load_more" id="loadtopic">Load More</button>
+                    <button style="background: blue;color: white; cursor:pointer" name="load_more" id="loadtopic">Load All Topic</button>
                 </div>
 				@else
 				 <h6 style="margin-left:30px;"> No topic available.</h6>
@@ -79,11 +79,11 @@ var offset = 42;
        var id = $('#btn-more').data('id');
        var queryString = "{!! Request::getQueryString() !!}";
 	   var scrollTop = $(document).scrollTop();
-
+       $(this).hide();
 	  // scrollTop = scrollTop + 650;
 		 // if ( scrollTop > $('.sticky-footer').offset().top && request==false) {
 
-			   $("#btn-more").html("Please wait loading tree......");
+			   $("#btn-more").html("Please wait loading all topic tree......");
 			   request = true;
               // alert(offset);
 			   $.ajax({
