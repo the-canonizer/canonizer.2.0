@@ -1,9 +1,9 @@
 @component('mail::message')
  Hi {{ $user->first_name }} {{ $user->last_name }},<br/>
- <p>Your proposed change submitted for <a href="{{ url('/').'/'.$link}}">{{ $data['object'] }} </a> has been objected to by {{ $data['nick_name'] }}</p>
+ <p>Your proposed change submitted for {{$data['type']}} <a href="{{ url('/').'/'.$link}}">{{ $data['object'] }} </a> has been objected to by {{ $data['nick_name'] }}</p>
  
 @component('mail::button', ['url' => url('/') . '/' . $link])
-Click here to See this topic for options you can take if there are objections
+See this topic for options you can take if there are objections:
 @endcomponent
 
 <p>Include the following in that new help topic:</p>
