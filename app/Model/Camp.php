@@ -284,7 +284,7 @@ class Camp extends Model {
 		             ->where('camp.objector_nick_id', '=', NULL)
 					 ->whereIn('namespace_id',explode(',',session('defaultNamespaceId',1)))
                      ->where('camp.go_live_time','<=',time())
-					 ->latest('support')->take(10000)->offset(10)->get()->unique('topic_num');
+					 ->latest('support')->take(10000)->offset(14)->get()->unique('topic_num');
 		} else {
 			
 			if(isset($filter['asof']) && $filter['asof']=="review") {
