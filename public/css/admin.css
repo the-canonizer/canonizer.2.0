@@ -663,3 +663,7 @@ body {
     max-height: 300px !important;
     overflow: scroll;
 }
+.lbl-error{
+    color: red;
+    padding: 5px 2px;
+}

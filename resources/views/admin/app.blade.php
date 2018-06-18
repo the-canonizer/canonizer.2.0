@@ -12,10 +12,12 @@
         <link href="{{ URL::asset('/css/bootstrap.min.css') }}" rel="stylesheet">
         <!-- Custom fonts for this template-->
          <link href="{{ URL::asset('/css/admin.css') }}" rel="stylesheet">
+           <link href="{{ URL::asset('/select2/dist/css/select2.min.css') }}" rel="stylesheet">
 
         <link href="{{ URL::asset('/font-awesome/css/font-awesome.min.css') }}" rel="stylesheet" type="text/css">
          <script src="{{ URL::asset('/js/jquery.min.js') }}"></script>
          <script src="{{ URL::asset('/ckeditor/ckeditor.js') }}"></script>
+          <script src="{{ URL::asset('/select2/dist/js/select2.min.js') }}"></script>
        
     </head>
 <body>
@@ -43,6 +45,7 @@
                     <li><a href="{{ url('/admin/namespace-requests') }}"><i class="glyphicon glyphicon-calendar"></i> Namespace Requests</a></li>
                     <li><a href="{{ url('/admin/users') }}"><i class="glyphicon glyphicon-calendar"></i> Users</a></li>
                     <li><a href="{{ url('/admin/templates') }}"><i class="glyphicon glyphicon-pencil"></i> Templates</a></li>
+                    <li><a href="{{ url('/admin/sendmail') }}"><i class="glyphicon glyphicon-pencil"></i> Send Email</a></li>
                     <!--<li><a href="stats.html"><i class="glyphicon glyphicon-stats"></i> Statistics (Charts)</a></li>
                     <li><a href="tables.html"><i class="glyphicon glyphicon-list"></i> Tables</a></li>
                     <li><a href="buttons.html"><i class="glyphicon glyphicon-record"></i> Buttons</a></li>
