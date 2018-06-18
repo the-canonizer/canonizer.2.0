@@ -523,8 +523,8 @@ class TopicController extends Controller {
 				
 				$user = Nickname::getUserByNickName($all['submitter']);
 				
-				$link = 'camp-history/'.$topic->topic_num.'/'.$camp->camp_num;
-				$data['object'] = $topic->topic_name." : ".$camp->camp_name;
+				$link = 'camp-history/'.$camp->topic_num.'/'.$camp->camp_num;
+				$data['object'] = $camp->topic->topic_name." : ".$camp->camp_name;
 				$nickName = Nickname::getNickName($all['nick_name']);
 				
 				$data['nick_name'] = $nickName->nick_name;
@@ -538,7 +538,7 @@ class TopicController extends Controller {
 			    $directSupporter = Support::getDirectSupporter($camp->topic_num,$camp->camp_num);
 			    
 				$link = 'topic/'.$camp->topic_num.'/'.$camp->camp_num.'?asof=bydate&asofdate='.date('Y/m/d H:i:s',$camp->go_live_time);
-				$data['object'] = $topic->topic_name.' : '.$camp->camp_name;
+				$data['object'] = $camp->topic->topic_name.' : '.$camp->camp_name;
 				$data['type'] = 'camp';
 				$data['go_live_time'] = date('Y-m-d H:i:s', strtotime('+7 days'));
 				$nickName = Nickname::getNickName($all['nick_name']);
