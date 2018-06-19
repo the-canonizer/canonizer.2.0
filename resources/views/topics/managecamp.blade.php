@@ -69,7 +69,7 @@
                 @if ($errors->has('note')) <p class="help-block">{{ $errors->first('note') }}</p> @endif
             </div>   
             <div class="form-group">
-			     <span style="color:red">The following fields are rarely used and are for advanced users only.</span>
+			     <p style="color:red">The following fields are rarely used and are for advanced users only.</p>
                 <label for="camp_about_url">Camp About URL </label>
                 <input type="text" name="camp_about_url" class="form-control" id="camp_about_url" value="{{ $camp->camp_about_url }}">
                 @if ($errors->has('camp_about_url')) <p class="help-block">{{ $errors->first('camp_about_url') }}</p> @endif

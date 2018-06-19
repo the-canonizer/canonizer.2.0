@@ -69,7 +69,7 @@
             </div> 
 
              <div class="form-group">
-			    <span style="color:red">The following fields are rarely used and are for advanced users only.</span>
+			    <p style="color:red">The following fields are rarely used and are for advanced users only.</p>
                 <label for="camp_about_nick_id">Camp About Nick Name </label>
                 <select name="camp_about_nick_id" id="camp_about_nick_id" class="form-control">
                     <option value="0">--Select Camp About Nick Name--</option>
