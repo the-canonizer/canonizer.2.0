@@ -31,8 +31,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'adminauth'], function () {
     Route::get('/namespace', 'Admin\ManageController@namespace');
     Route::get('/templates', 'Admin\TemplateController@index');
     Route::get('/template/create', 'Admin\TemplateController@create');
-    Route::get('/template/edit/{id}', 'Admin\TemplateController@edit');
+    Route::get('/template/edit/{id}', 'Admin\TemplateController@edit');    
     Route::get('/template/delete/{id}', 'Admin\TemplateController@destroy');
+    Route::patch('/template/update/{id}', ['as'=>'template.update', 'uses'=>'Admin\TemplateController@update']);
     Route::post('/template/store', ['as'=>'template.store', 'uses'=>'Admin\TemplateController@store']);
     Route::get('/sendmail', ['as'=>'sendmail', 'uses'=>'Admin\UserController@getSendmail']);
     Route::post('/sendmail', ['as'=>'sendmail', 'uses'=>'Admin\UserController@postSendmail']);
