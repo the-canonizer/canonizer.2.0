@@ -122,6 +122,7 @@ class TopicController extends Controller {
 			/* If topic is created then add default support to that topic */ 
             if($topic->save()) {
 				
+			  if($eventtype=="CREATE") {	
 				$supportTopic  = new Support();
 				$supportTopic->topic_num    = $topic->topic_num;
 				$supportTopic->nick_name_id = $all['nick_name'];
@@ -135,7 +136,7 @@ class TopicController extends Controller {
 				session()->forget("topic-support-{$topic->topic_num}");
 			    session()->forget("topic-support-nickname-{$topic->topic_num}");
 			    session()->forget("topic-support-tree-{$topic->topic_num}");
-				
+			  }	
 			}
 			
 			

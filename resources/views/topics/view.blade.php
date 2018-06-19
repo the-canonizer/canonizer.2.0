@@ -151,7 +151,6 @@ change camps with them."><i class="fa fa-question"></i></a>
             <div class="row">
                 <div class="tree col-sm-12">
                     Camp Name : <?php echo $camp->camp_name;?> <br/>
-					Title : <?php echo $camp->title;?><br/>
 					Keywords : <?php echo $camp->key_words;?><br/>
 					Related URL : <?php echo $camp->url;?><br/>
 					
