@@ -122,6 +122,7 @@ class TopicController extends Controller {
 			/* If topic is created then add default support to that topic */ 
             if($topic->save()) {
 				
+			  if($eventtype=="CREATE") {	
 				$supportTopic  = new Support();
 				$supportTopic->topic_num    = $topic->topic_num;
 				$supportTopic->nick_name_id = $all['nick_name'];
@@ -135,7 +136,7 @@ class TopicController extends Controller {
 				session()->forget("topic-support-{$topic->topic_num}");
 			    session()->forget("topic-support-nickname-{$topic->topic_num}");
 			    session()->forget("topic-support-tree-{$topic->topic_num}");
-				
+			  }	
 			}
 			
 			
@@ -523,8 +524,8 @@ class TopicController extends Controller {
 				
 				$user = Nickname::getUserByNickName($all['submitter']);
 				
-				$link = 'camp-history/'.$topic->topic_num.'/'.$camp->camp_num;
-				$data['object'] = $topic->topic_name." : ".$camp->camp_name;
+				$link = 'camp-history/'.$camp->topic_num.'/'.$camp->camp_num;
+				$data['object'] = $camp->topic->topic_name." : ".$camp->camp_name;
 				$nickName = Nickname::getNickName($all['nick_name']);
 				
 				$data['nick_name'] = $nickName->nick_name;
@@ -538,7 +539,7 @@ class TopicController extends Controller {
 			    $directSupporter = Support::getDirectSupporter($camp->topic_num,$camp->camp_num);
 			    
 				$link = 'topic/'.$camp->topic_num.'/'.$camp->camp_num.'?asof=bydate&asofdate='.date('Y/m/d H:i:s',$camp->go_live_time);
-				$data['object'] = $topic->topic_name.' : '.$camp->camp_name;
+				$data['object'] = $camp->topic->topic_name.' : '.$camp->camp_name;
 				$data['type'] = 'camp';
 				$data['go_live_time'] = date('Y-m-d H:i:s', strtotime('+7 days'));
 				$nickName = Nickname::getNickName($all['nick_name']);
