@@ -249,6 +249,9 @@ class TopicController extends Controller {
 		
         $camp       = Camp::getLiveCamp($topicnum,$parentcampnum);
 		
+		session()->forget("topic-support-{$topicnum}");
+		session()->forget("topic-support-nickname-{$topicnum}");
+		session()->forget("topic-support-tree-{$topicnum}");
 		
         $parentcamp = Camp::campNameWithAncestors($camp,'');
         
