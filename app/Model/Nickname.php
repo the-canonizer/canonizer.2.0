@@ -72,7 +72,7 @@ class Nickname extends Model
                             where t.namespace_id=$namespace and t.topic_num = tz.topic_num and t.go_live_time = tz.topic_max_glt) uz
                 where s.topic_num = cz.topic_num and s.camp_num=cz.camp_num and s.go_live_time = cz.camp_max_glt and s.topic_num=uz.topic_num) u
         where u.topic_num = p.topic_num and ((u.camp_num = p.camp_num) or (u.camp_num = 1)) and p.nick_name_id = {$this->id} and
-        (p.start < $as_of_time) and ((p.end = 0) or (p.end > $as_of_time))";
+        (p.start < $as_of_time) and ((p.end = 0) or (p.end > $as_of_time)) order by p.support_order ASC";
         $results = DB::select($sql);
         $supports = [] ;
         foreach($results as $rs){
