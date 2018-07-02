@@ -57,7 +57,7 @@
 						$currentTime = time();
 			         foreach($statement as $key=>$data) { 
 						   
-						   if($data->objector !== NULL)
+						   if($data->objector_nick_id !== NULL)
 							   $bgcolor ="rgba(255, 0, 0, 0.5);"; //red
 						   else if($currentTime < $data->go_live_time && $currentTime >= $data->submit_time) {
 							   $bgcolor ="rgba(255, 255, 0, 0.5);"; //yellow

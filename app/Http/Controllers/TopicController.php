@@ -122,6 +122,7 @@ class TopicController extends Controller {
 			/* If topic is created then add default support to that topic */ 
             if($topic->save()) {
 				
+			  if($eventtype=="CREATE") {	
 				$supportTopic  = new Support();
 				$supportTopic->topic_num    = $topic->topic_num;
 				$supportTopic->nick_name_id = $all['nick_name'];
@@ -135,7 +136,7 @@ class TopicController extends Controller {
 				session()->forget("topic-support-{$topic->topic_num}");
 			    session()->forget("topic-support-nickname-{$topic->topic_num}");
 			    session()->forget("topic-support-tree-{$topic->topic_num}");
-				
+			  }	
 			}
 			
 			
@@ -166,7 +167,7 @@ class TopicController extends Controller {
 				$link = 'topic-history/'.$topic->topic_num;
 				$data['object'] = $topic->topic_name;
 				$nickName = Nickname::getNickName($all['nick_name']);
-				
+				$data['type'] = 'topic';
 				$data['nick_name'] = $nickName->nick_name;
 				$data['forum_link'] = 'forum/'.$topic->topic_num.'/1/threads';
 				$data['subject'] = $data['nick_name']." has objected to your proposed change.";
@@ -180,6 +181,7 @@ class TopicController extends Controller {
 				$link = 'topic/'.$topic->topic_num.'/'.$topic->camp_num.'?asof=bydate&asofdate='.date('Y/m/d H:i:s',$topic->go_live_time);
 				$data['object'] = $topic->topic_name;
 				$data['go_live_time'] = date('Y-m-d H:i:s', strtotime('+7 days'));
+				$data['type'] = 'topic';
 				$nickName = Nickname::getNickName($all['nick_name']);
 				
 				$data['nick_name'] = $nickName->nick_name;
@@ -247,6 +249,9 @@ class TopicController extends Controller {
 		
         $camp       = Camp::getLiveCamp($topicnum,$parentcampnum);
 		
+		session()->forget("topic-support-{$topicnum}");
+		session()->forget("topic-support-nickname-{$topicnum}");
+		session()->forget("topic-support-tree-{$topicnum}");
 		
         $parentcamp = Camp::campNameWithAncestors($camp,'');
         
@@ -522,14 +527,14 @@ class TopicController extends Controller {
 				
 				$user = Nickname::getUserByNickName($all['submitter']);
 				
-				$link = 'camp-history/'.$topic->topic_num.'/'.$camp->camp_num;
-				$data['object'] = $camp->camp_name;
+				$link = 'camp-history/'.$camp->topic_num.'/'.$camp->camp_num;
+				$data['object'] = $camp->topic->topic_name." : ".$camp->camp_name;
 				$nickName = Nickname::getNickName($all['nick_name']);
 				
 				$data['nick_name'] = $nickName->nick_name;
 				$data['forum_link'] = 'forum/'.$camp->topic_num.'/'.$camp->camp_num.'/threads';
 				$data['subject'] = $data['nick_name']." has objected to your proposed change.";
-				
+				$data['type'] = 'camp';
 				$receiver = (config('app.env')=="production") ? $user->email : config('app.admin_email');
 				Mail::to($receiver)->send(new ObjectionToSubmitterMail($user,$link,$data));
 			} else if($eventtype=="UPDATE") { 
@@ -537,7 +542,8 @@ class TopicController extends Controller {
 			    $directSupporter = Support::getDirectSupporter($camp->topic_num,$camp->camp_num);
 			    
 				$link = 'topic/'.$camp->topic_num.'/'.$camp->camp_num.'?asof=bydate&asofdate='.date('Y/m/d H:i:s',$camp->go_live_time);
-				$data['object'] = $camp->camp_name;
+				$data['object'] = $camp->topic->topic_name.' : '.$camp->camp_name;
+				$data['type'] = 'camp';
 				$data['go_live_time'] = date('Y-m-d H:i:s', strtotime('+7 days'));
 				$nickName = Nickname::getNickName($all['nick_name']);
 				
@@ -640,9 +646,9 @@ class TopicController extends Controller {
 				$user = Nickname::getUserByNickName($all['submitter']);
 				
 				$link = 'statement-history/'.$statement->topic_num.'/'.$statement->camp_num;
-				$data['object'] = "Camp Statement #".$statement->id;
+				$data['object'] = "#".$statement->id;
 				$nickName = Nickname::getNickName($all['nick_name']);
-				
+				$data['type'] = 'statement';
 				$data['nick_name'] = $nickName->nick_name;
 				$data['forum_link'] = 'forum/'.$statement->topic_num.'/'.$statement->camp_num.'/threads';
 				$data['subject'] = $data['nick_name']." has objected to your proposed change.";
@@ -654,8 +660,9 @@ class TopicController extends Controller {
 			   $directSupporter = Support::getDirectSupporter($statement->topic_num,$statement->camp_num);
 			    
 				$link = 'topic/'.$statement->topic_num.'/'.$statement->camp_num.'?asof=bydate&asofdate='.date('Y/m/d H:i:s',$statement->go_live_time);
-				$data['object'] = "Camp Statement #".$statement->id;
+				$data['object'] = "#".$statement->id;
 				$data['go_live_time'] = date('Y-m-d H:i:s', strtotime('+7 days'));
+				$data['type'] = 'statement';
 				$nickName = Nickname::getNickName($all['nick_name']);
 				
 				$data['nick_name'] = $nickName->nick_name;

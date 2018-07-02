@@ -1,7 +1,7 @@
 @component('mail::message')
  Hi {{ $user->first_name }} {{ $user->last_name }},<br/>
  <p>
-{{ $data['nick_name']}} has proposed a change to this <a href="{{ url('/') . '/' . $link }}">{{ $data['object']}} </a> which you currently directly support.  If no supporters of this camp object to this change, it will go live in one week i.e by {{ $data['go_live_time'] }}.
+{{ $data['nick_name']}} has proposed a change to this {{$data['type']}} <a href="{{ url('/') . '/' . $link }}">{{ $data['object']}} </a> which you currently directly support.  If no supporters of this {{$data['type']}} object to this change, it will go live in one week {{ $data['go_live_time'] }}.
 <p>
 
 <p>
