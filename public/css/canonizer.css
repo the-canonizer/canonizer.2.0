@@ -779,6 +779,21 @@ body.sidenav-toggled .right-whitePnl {
 }
 .search-box{
 	margin-top:0px;
+	margin-left: 0px;
+}
+ul.search-box .nav-item.col-sm-7{
+	padding: 0px;
+	float: left;
+	width: 100%;
+	margin-bottom: 40px;
+}
+ul.search-box .nav-item.col-sm-5{
+	padding:0px;
+	text-align: left !important;
+}
+.search-box .nav-item .nav-link{
+	display: block;
+	text-align: left;
 }
 .btn-search {
     padding: .5rem 0.75rem;
