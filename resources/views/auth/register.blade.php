@@ -9,8 +9,8 @@
         <input type="hidden" name="_token" value="{{ csrf_token() }}">
         <div class="form-group">
             <label for="firstname">First Name <span style="color:red">*</span></label>
-            <input type="text" name="firstname" class="form-control" id="firstname" value="{{ old('firstname')}}">
-            @if ($errors->has('firstname')) <p class="help-block">{{ $errors->first('firstname') }}</p> @endif
+            <input type="text" name="first_name" class="form-control" id="firstname" value="{{ old('first_name')}}">
+            @if ($errors->has('first_name')) <p class="help-block">{{ $errors->first('first_name') }}</p> @endif
         </div>
         
         <div class="form-group">
@@ -21,8 +21,8 @@
         
         <div class="form-group">
             <label>Last Name <span style="color:red">*</span></label>
-            <input type="text" name="lastname" class="form-control" id="lastname" value="{{ old('lastname')}}">
-            @if ($errors->has('lastname')) <p class="help-block">{{ $errors->first('lastname') }}</p> @endif
+            <input type="text" name="last_name" class="form-control" id="lastname" value="{{ old('last_name')}}">
+            @if ($errors->has('last_name')) <p class="help-block">{{ $errors->first('last_name') }}</p> @endif
         </div>
 
         <div class="form-group">
@@ -43,6 +43,17 @@
         </div>
         <button type="submit" id="submit" class="btn btn-login">Create your account</button>
     </form>
-</div>    
+</div> 
+<div class="col-sm-2 margin-btm-2"></div>
+ <div class="col-sm-5 margin-btm-2 lg-signup">
+           <div >Already have have account <a href="{{ url('/login') }}">Login Here</a></div>
+     </div>
+
 </div>  <!-- /.right-whitePnl-->
+<script>
+    window.onload = function() {
+  var input = document.getElementById("firstname").focus();
+}
+
+    </script>
 @endsection

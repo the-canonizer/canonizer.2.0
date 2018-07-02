@@ -1123,3 +1123,23 @@ address p{
  color:#1cb41c	
 	
 }
+.search-box .dropdown{
+	display: inline-flex;
+}
+.search-box a i.fa-user{
+	float: left;
+	margin-top: 3px;
+}
+span.brsr-name {
+    display: inline-block;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 130px;
+	overflow: hidden;
+	float:left;
+}
+.lg-signup{
+    text-align: center;
+    padding: 30px;
+    background: #ececec;
+}
