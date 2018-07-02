@@ -36,8 +36,10 @@
 						<?php $private_flags = explode(",",$user->private_flags); ?>
                         <div class="row">
                             <div class="col-sm-6 margin-btm-1">
-                                <label for="topic name">First Name </label></br>
-                                <div style="width:300px;float:left"><input type="text" name="first_name" class="form-control" id="first_name" value="{{ old('firstname',$user->first_name)}}">
+                                <label for="topic name">First Name <span style="color:red;">*</span></label></br>
+                                <div style="width:300px;float:left">
+								<input type="text" name="first_name" class="form-control" id="first_name" value="{{ old('firstname',$user->first_name)}}">
+								@if ($errors->has('first_name')) <p class="help-block">{{ $errors->first('first_name') }}</p> @endif
 								</div>
 								<div style="width:95px;float:right">
 								<select class="form-control" id="first_name_bit"  name="first_name_bit">
@@ -61,10 +63,11 @@
 								</div> 
 							</div>   
                             <div class="col-sm-6 margin-btm-1">
-                                <label for="last_name">Last Name</label></br>
+                                <label for="last_name">Last Name <span style="color:red;">*</span></label></br>
 								<div style="width:300px;float:left">
                                 <input type="text" name="last_name" class="form-control" id="last_name" value="{{ old('last_name', $user->last_name)}}">
-                                </div>
+                                @if ($errors->has('last_name')) <p class="help-block">{{ $errors->first('last_name') }}</p> @endif
+								</div>
 								<div style="width:95px;float:right">
 								<select class="form-control" id="last_name_bit"  name="last_name_bit">
 								 
@@ -97,9 +100,9 @@
                                 <label for="language">Languauge</label>
                                 <select name="language" id="language" class="form-control">
                                     <option value="English">English</option>
-                                    <option value="French">French</option>
-                                    <option value="Spanish">Spanish</option>
+                                    <option value="French">French</option>                                   
                                     <option value="Hindi">Hindi</option>
+									 <option value="Spanish">Spanish</option>
                                 </select>
                             </div>
                             <div class="col-sm-6 margin-btm-1">
