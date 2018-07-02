@@ -32,6 +32,27 @@ class SettingsController extends Controller
         $input = $request->all();
         $id = (isset($_GET['id'])) ? $_GET['id'] : '';
 		$private_flags = array();
+
+
+		$messages = [
+                'first_name.required' => 'First name is required.',
+				'last_name.required' => 'Last name is required.'
+            ];
+            
+
+            $validator = Validator::make($request->all(), [
+                'first_name' => 'required',
+                'last_name' => 'required',
+            ],$messages);
+    
+            if ($validator->fails()) {
+                return redirect()->back()
+                            ->withErrors($validator)
+                            ->withInput();
+            }
+
+
+
         if($id){
             $user = User::find($id);
             $user->first_name = $input['first_name']; 
@@ -85,11 +106,12 @@ class SettingsController extends Controller
         if($id){
             $messages = [
                 'private.required' => 'Visibility status is required.',
+				'nick_name.required' => 'Nick name is required.'
             ];
             
 
             $validator = Validator::make($request->all(), [
-                'nick_name' => 'required',
+                'nick_name' => 'required|unique:nick_name',
                 'private' => 'required',
             ],$messages);
     
