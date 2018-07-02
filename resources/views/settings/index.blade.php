@@ -22,7 +22,7 @@
     <div class="col-sm-12 margin-btm-2">
         <div class="well">
             <ul class="nav prfl_ul">
-                <li class="active"><a class="" href="{{ route('settings')}}">Manage Profile info</a></li>
+                <li class="active"><a class="" href="{{ route('settings')}}">Manage Profile Info</a></li>
                 <li><a class="" href="{{ route('settings.nickname')}}" >Add & Manage Nick Names</a></li>
 				<li class=""><a class="" href="{{ route('settings.support')}}" >My Supports</a></li>
                 <li><a class="" href="{{ route('settings.algo-preferences')}}">Default Algorithm</a></li>
@@ -181,7 +181,7 @@
 								</div>  
 							</div>
                             <div class="col-sm-6 margin-btm-1">
-                                <label for="country">Country</label>
+                                <label for="country">Country <span style="color:red;">*</span></label>
 								</br>
 								<div style="width:300px;float:left">
                                 <select name="country" id="country" class="form-control">

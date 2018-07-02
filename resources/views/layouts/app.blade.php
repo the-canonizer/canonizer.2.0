@@ -67,7 +67,7 @@
                     <li class="nav-item col-sm-5 text-right" style="padding-right:0px;">
                         @if(Auth::check())
 						<div class="dropdown">
-                            Browsing as: <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-fw fa-user"></i> {{ Auth::user()->first_name . ' ' . Auth::user()->last_name}} </a>
+                            Browsing as: <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-fw fa-user"></i> <span class="brsr-name">{{ Auth::user()->first_name . ' ' . Auth::user()->last_name}} </span></a>
                             <span class="caret"></span>
                             <ul class="dropdown-menu">
                                 <li><a href="{{ route('settings')}}">Account Settings</a></li>
@@ -208,13 +208,17 @@
             @extends('layouts.footer')
             
             <!-- Scroll to Top Button-->
-            <a class="scroll-to-top rounded" href="#page-top">
+            <a class="scroll-to-top rounded" onclick="topFunction()" href="javascript:void(0)">
                 <i class="fa fa-angle-up"></i>
             </a>
             <!-- Logout Modal-->
         </div>
     </div>
     <script>
+        function topFunction() {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+}
         $(document).ready(function () {
 
             $.ajaxSetup({
