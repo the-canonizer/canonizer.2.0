@@ -52,9 +52,6 @@ class SettingsController extends Controller
                             ->withErrors($validator)
                             ->withInput();
             }
-
-
-
         if($id){
             $user = User::find($id);
             $user->first_name = $input['first_name']; 
@@ -84,7 +81,6 @@ class SettingsController extends Controller
 			$flags = implode(",",$private_flags); 
 			
 			$user->private_flags = $flags;
-			 
             $user->update();
             Session::flash('success', "Profile updated successfully.");
             return redirect()->back();
