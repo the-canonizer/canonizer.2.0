@@ -49,7 +49,12 @@ class UploadController extends Controller
              $request->session()->flash('error', 'There is already a file with name '.$uniquename.', Please use different name.');
              return redirect()->back();			
 			 
-		 }
+		 } 
+
+         if(strlen($uniquename) > 200){
+             $request->session()->flash('error', 'File Name may not be greater than 200 characters');
+             return redirect()->back();	
+         }
 		
         if($file){
          $fullname = $uniquename . '.' . $file->getClientOriginalExtension();

@@ -113,7 +113,7 @@ class SettingsController extends Controller
             
 
             $validator = Validator::make($request->all(), [
-                'nick_name' => 'required|unique:nick_name',
+                'nick_name' => 'required|unique:nick_name|max:50',
                 'private' => 'required',
             ],$messages);
     

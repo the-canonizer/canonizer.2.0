@@ -31,7 +31,7 @@
 					
                 </select>
                  @if ($errors->has('nick_name')) <p class="help-block">{{ $errors->first('nick_name') }}</p> @endif
-				 <a href="<?php echo url('settings/nickname');?>">Add new nickname </a>
+				 <a href="<?php echo url('settings/nickname');?>">Add New Nick Name </a>
             </div> 
             <div class="form-group">
                 <label for="topic name">Topic Name ( Limit 30 char ) <span style="color:red">*</span></label>
@@ -69,6 +69,7 @@
             <div class="form-group">
                 <label for="">Additional Note <span style="color:red">*</span></label>
                 <textarea class="form-control" rows="4" name="note" id="note"></textarea>
+                @if ($errors->has('note')) <p class="help-block">{{ $errors->first('note') }}</p> @endif
             </div>    
 
             <button type="submit" id="submit" class="btn btn-login">Create Topic</button>
