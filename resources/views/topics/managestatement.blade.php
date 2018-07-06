@@ -38,7 +38,7 @@
 			<?php } ?>
                
              <div class="form-group">
-                <label for="camp_name">Nick Name</label>
+                <label for="camp_name">Nick Name <span style="color:red">*</span></label>
                 <select name="nick_name" id="nick_name" class="form-control">
                     @foreach($nickNames as $nick)
                     <option value="{{ $nick->id }}">{{ $nick->nick_name}}</option>
@@ -46,17 +46,17 @@
 					
                 </select>
                  @if ($errors->has('nick_name')) <p class="help-block">{{ $errors->first('nick_name') }}</p> @endif
-				 <a id="add_new_nickname" href="<?php echo url('settings/nickname');?>">Add new nickname </a>
+				 <a id="add_new_nickname" href="<?php echo url('settings/nickname');?>">Add New Nickname </a>
              </div> 			   
              <div class="form-group">
-                <label for="">Statement Value</label>
+                <label for="">Statement <span style="color:red">*</span></label>
                 <textarea class="form-control" rows="6" id="name" name="statement">{{ $statement->value}}</textarea>
                 @if ($errors->has('statement')) <p class="help-block">{{ $errors->first('statement') }}</p> @endif
              </div> 
             
             <div class="form-group">
-                <label for="title">Note </label>
-                 <textarea class="form-control" id="note" rows="4" name="note"> </textarea>
+                <label for="title">Note <span style="color:red">*</span></label>
+                 <textarea class="form-control" id="note" rows="4" name="note">{{ old('note')}}</textarea>
                 @if ($errors->has('note')) <p class="help-block">{{ $errors->first('note') }}</p> @endif
             </div> 
            

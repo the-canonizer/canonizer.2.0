@@ -15,8 +15,8 @@
         
         <div class="form-group">
             <label>Middle Name </label>
-            <input type="text" name="middlename" class="form-control" id="middlename" value="{{ old('middlename')}}">
-            @if ($errors->has('middlename')) <p class="help-block">{{ $errors->first('middlename') }}</p> @endif
+            <input type="text" name="middle_name" class="form-control" id="middle_name" value="{{ old('middle_name')}}">
+            @if ($errors->has('middle_name')) <p class="help-block">{{ $errors->first('middle_name') }}</p> @endif
         </div>
         
         <div class="form-group">
@@ -46,7 +46,7 @@
 </div> 
 <div class="col-sm-2 margin-btm-2"></div>
  <div class="col-sm-5 margin-btm-2 lg-signup">
-           <div >Already have have account <a href="{{ url('/login') }}">Login Here</a></div>
+           <div >Already have an account?  <a href="{{ url('/login') }}">Login Here</a></div>
      </div>
 
 </div>  <!-- /.right-whitePnl-->

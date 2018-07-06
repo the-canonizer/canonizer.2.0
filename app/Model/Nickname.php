@@ -32,7 +32,7 @@ class Nickname extends Model
 		$userid = Auth::user()->id; 
         $encode = General::canon_encode($userid);
 		
-        return  DB::table('nick_name')->select('id','nick_name')->where('owner_code',$encode)->get();
+        return  DB::table('nick_name')->select('id','nick_name')->where('owner_code',$encode)->orderBy('nick_name', 'ASC')->get();
 	}
     
     public static function personNicknameArray() {

@@ -99,10 +99,10 @@
                             <div class="col-sm-6 margin-btm-1">
                                 <label for="language">Languauge</label>
                                 <select name="language" id="language" class="form-control">
-                                    <option value="English">English</option>
-                                    <option value="French">French</option>                                   
-                                    <option value="Hindi">Hindi</option>
-									 <option value="Spanish">Spanish</option>
+                                    <option value="English" {{ (old('language',$user->language) == 'English') ? 'selected' : ''}}>English</option>
+                                    <option value="French" {{ (old('language',$user->language) == 'French') ? 'selected' : ''}}>French</option>                                   
+                                    <option value="Hindi" {{ (old('language',$user->language) == 'Hindi') ? 'selected' : ''}}>Hindi</option>
+									 <option value="Spanish" {{ (old('language',$user->language) == 'Spanish') ? 'selected' : ''}}>Spanish</option>
                                 </select>
                             </div>
                             <div class="col-sm-6 margin-btm-1">
