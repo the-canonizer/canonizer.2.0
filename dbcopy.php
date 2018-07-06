@@ -25,18 +25,18 @@ session_start();
 
 
 // database source
- $db['source']['host']='localhost';
- $db['source']['database']='canonizer';
- $db['source']['login']='root';
- $db['source']['password']='';
+ $db['source']['host']='canoniser-db.czjgaatug9jz.us-east-2.rds.amazonaws.com';
+ $db['source']['database']='production';
+ $db['source']['login']='dbinstanceuser';
+ $db['source']['password']='!C+4niZ3rDB!2329#';
  $db['source']['charset']='utf8';
 
 
 // database destination
- $db['destination']['host']='localhost';
- $db['destination']['database']='canonizer1';
- $db['destination']['login']='root';
- $db['destination']['password']='';
+ $db['destination']['host']='canoniser-db.czjgaatug9jz.us-east-2.rds.amazonaws.com';
+ $db['destination']['database']='staging';
+ $db['destination']['login']='dbinstanceuser';
+ $db['destination']['password']='!C+4niZ3rDB!2329#';
  $db['destination']['charset']='utf8';
 
 
