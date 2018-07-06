@@ -8,7 +8,7 @@
 
 
 <div class="page-titlePnl">
-    <h1 class="page-title">Submit update</h1>
+    <h1 class="page-title">Camp update</h1>
 </div> 
 
 @if(Session::has('error'))
@@ -38,7 +38,7 @@
 			<?php } ?>
            
             <div class="form-group">
-                <label for="camp_name">Nick Name</label>
+                <label for="camp_name">Nick Name <span style="color:red">*</span></label>
                 <select name="nick_name" id="nick_name" class="form-control">
                     @foreach($nickNames as $nick)
                     <option <?php if($camp->submitter_nick_id==$nick->id) echo "selected=selected";?> value="{{ $nick->id }}">{{ $nick->nick_name}}</option>
@@ -46,11 +46,11 @@
 					
                 </select>
                  @if ($errors->has('nick_name')) <p class="help-block">{{ $errors->first('nick_name') }}</p> @endif
-				 <a href="<?php echo url('settings/nickname');?>">Add new nickname </a>
+				 <a href="<?php echo url('settings/nickname');?>">Add New Nick Name </a>
              </div> 
             
              <div class="form-group">
-                <label for="camp_name">Camp Name ( Limit 30 Char )</label>
+                <label for="camp_name">Camp Name ( Limit 30 Char ) <span style="color:red">*</span></label>
                 <input type="text" name="camp_name" class="form-control" id="camp_name" value="{{ $camp->camp_name}}">
                  @if ($errors->has('camp_name')) <p class="help-block">{{ $errors->first('camp_name') }}</p> @endif
              </div> 
@@ -64,8 +64,8 @@
            
             
             <div class="form-group">
-                <label for="">Additional Note</label>
-                <textarea class="form-control" rows="4" name="note" id="note"> </textarea>
+                <label for="">Additional Note <span style="color:red">*</span></label>
+                <textarea class="form-control" rows="4" name="note" id="note">{{ old('note')}}</textarea>
                 @if ($errors->has('note')) <p class="help-block">{{ $errors->first('note') }}</p> @endif
             </div>   
             <div class="form-group">

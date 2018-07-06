@@ -499,7 +499,7 @@ class TopicController extends Controller {
 			 
 			 if(!$ifIamSingleSupporter) {
 			   $camp->go_live_time = strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
-			   $message ="Camp update submitted Successfully. Its under review, once approved it will be live.";
+			   $message ="Camp update submitted successfully.";
 			 }
 		 
 		 if(isset($all['objection']) && $all['objection']==1) {
@@ -618,7 +618,7 @@ class TopicController extends Controller {
 			 
 			 if(!$ifIamSingleSupporter) {
 			   $statement->go_live_time = strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
-			   $message ="Statement update submitted successfully. Its under review, once approved it will be live.";
+			   $message ="Statement update submitted successfully.";
 			 }
 			 
 			 if(isset($all['objection']) && $all['objection']==1) {
