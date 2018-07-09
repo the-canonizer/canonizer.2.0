@@ -9,7 +9,13 @@ class TestPages(unittest.TestCase):
 
     def setUp(self):
         driver_location = DEFAULT_CHROME_DRIVER_LOCATION
-        self.driver = webdriver.Chrome(driver_location)
+
+        options = webdriver.ChromeOptions()
+        options.binary_location = DEFAULT_BINARY_LOCATION
+        options.add_argument('headless')
+        options.add_argument('window-size=1200x600')
+
+        self.driver = webdriver.Chrome(driver_location, options=options)
         self.driver.get(DEFAULT_BASE_URL)
 
     def test_canonizer_home_page_load(self):
@@ -54,7 +60,7 @@ class TestPages(unittest.TestCase):
             DEFAULT_PASS,
             DEFAULT_PASS
         )
-        self.assertIn("The firstname field is required.", result)
+        self.assertIn("The first name field is required.", result)
 
     def test_registration_with_blank_last_name(self):
         print("\n" + str(test_cases(6)))
@@ -67,7 +73,7 @@ class TestPages(unittest.TestCase):
             DEFAULT_PASS,
             DEFAULT_PASS
         )
-        self.assertIn("The lastname field is required", result)
+        self.assertIn("The last name field is required.", result)
 
     def test_registration_with_blank_email(self):
         print ("\n" + str(test_cases(7)))
@@ -80,7 +86,7 @@ class TestPages(unittest.TestCase):
             DEFAULT_PASS,
             DEFAULT_PASS
         )
-        self.assertIn("The email field is required", result)
+        self.assertIn("The email field is required.", result)
 
     def test_registration_with_blank_password(self):
         print ("\n" + str(test_cases(8)))
@@ -130,6 +136,28 @@ class TestPages(unittest.TestCase):
     def test_user_must_be_signin_to_join_or_support_camp(self):
         print("\n" + str(test_cases(12)))
         mainPage = CanonizerMainPage(self.driver)
+
+    # 14 --> Index of test case is test_number - 1
+    def test_load_all_topics_button_text(self):
+        print("\n" + str(test_cases(13)))
+        mainPage = CanonizerMainPage(self.driver)
+        self.assertIn('Load All Topics', mainPage.check_load_all_topic_text())
+
+    #15
+    def test_register_page_should_have_login_option_for_existing_users(self):
+        print("\n" + str(test_cases(14)))
+        mainPage = CanonizerMainPage(self.driver)
+        registrationPage = mainPage.click_register_button()
+        self.assertIn('Login Here',
+                      registrationPage.registration_should_have_login_option_for_existing_users())
+
+    #16
+    def test_login_page_should_have_register_option_for_new_users(self):
+        print("\n" + str(test_cases(15)))
+        mainPage = CanonizerMainPage(self.driver)
+        loginPage = mainPage.click_login_button()
+        self.assertIn('Signup Now', loginPage.login_page_should_have_register_option_for_new_users())
+
 
     def tearDown(self):
         self.driver.close()
