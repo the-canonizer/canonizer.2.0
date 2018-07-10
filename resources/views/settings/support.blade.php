@@ -271,9 +271,13 @@
                     
                 
         </div>
+		@else
+		<div style="display:none">
+	     <button type="submit" id="submit" class="btn btn-login"></button>
+        </div>	
 	  @endif
      </form>  
-    </div>	 
+     
     </div>   
  </div></div>
 </div>  <!-- /.right-whitePnl-->
