@@ -62,8 +62,8 @@ class Nickname extends Model
             $as_of_clause = 'and go_live_time < ' . $as_of_time;
         }
 
-        $sql = "select u.topic_num, u.camp_num,u.camp_name, u.title, p.support_order, p.delegate_nick_name_id from support p, 
-        (select s.title, s.topic_num, s.camp_num from camp s,
+        $sql = "select u.topic_num, u.camp_num, u.title,u.camp_name, p.support_order, p.delegate_nick_name_id from support p, 
+        (select s.title,s.topic_num,s.camp_name, s.camp_num from camp s,
             (select topic_num, camp_num, max(go_live_time) as camp_max_glt from camp
                 where objector_nick_id is null $as_of_clause group by topic_num, camp_num) cz,
                 (select t.topic_num, t.topic_name, t.namespace, t.go_live_time from topic t,
@@ -78,16 +78,16 @@ class Nickname extends Model
         foreach($results as $rs){
             $topic_num     = $rs->topic_num;
 		    $camp_num = $rs->camp_num;
-            $title = preg_replace('/[^A-Za-z0-9\-]/', '-', $rs->title); 
+            $title = preg_replace('/[^A-Za-z0-9\-]/', '-', $rs->camp_name); 
 		    $topic_id = $topic_num."-".$title;
 		if($rs->delegate_nick_name_id) {
 			
             }else if ($camp_num == 1) {
-                $supports[$topic_num]['title'] = $rs->title;
+                $supports[$topic_num]['camp_name'] = $rs->camp_name;
                 
                 $supports[$topic_num]['link'] = url('topic/'.$topic_id.'/'.$camp_num);
             }else {
-                $supports[$topic_num]['array'][$rs->support_order][]=['title' =>$rs->title,'camp_num'=> $camp_num,'link'=>url('topic/'.$topic_id.'/'.$camp_num)];
+                $supports[$topic_num]['array'][$rs->support_order][]=['camp_name' =>$rs->camp_name,'camp_num'=> $camp_num,'link'=>url('topic/'.$topic_id.'/'.$camp_num)];
             }
         }
 
