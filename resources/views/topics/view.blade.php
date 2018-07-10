@@ -39,6 +39,7 @@
                 <div class="tree treeview col-sm-12">
                     <ul class="mainouter">
                     <?php 
+					    session(['supportCountTotal'=>0]);
                         $title      = preg_replace('/[^A-Za-z0-9\-]/', '-', $topic->title);						  
                         $topic_id  = $topic->topic_num."-".$title;
 						 ?>

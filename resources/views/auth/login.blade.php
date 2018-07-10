@@ -29,7 +29,7 @@
  </div>
  <div class="col-sm-2 margin-btm-2"></div>
  <div class="col-sm-5 margin-btm-2 lg-signup">
-           <div >Don't have account? <a href="{{ url('/register') }}">Signup Now</a></div>
+           <div >Don't have an account? <a href="{{ url('/register') }}">Signup Now</a></div>
      </div>
 </div>  <!-- /.right-whitePnl-->
 <script>

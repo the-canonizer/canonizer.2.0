@@ -231,7 +231,7 @@
 
 
          </div>
-        @if(isset($topic))
+        @if(isset($topic) && !Session::has('warning'))
          <div id="myTabContent" class="add-nickname-section">  
                  <h5>Nick Name To Support {!! $parentcamp !!} </h5>
                 
@@ -262,7 +262,7 @@
 							@endif
 						</select>
 						 @if ($errors->has('nick_name')) <p class="help-block">{{ $errors->first('nick_name') }}</p> @endif
-						 <a id="add_new_nickname" href="<?php echo url('settings/nickname');?>">Add new nickname </a>
+						 <a id="add_new_nickname" href="<?php echo url('settings/nickname');?>">Add New Nick Name </a>
 						</div> 
                        
                     </div>
@@ -272,7 +272,8 @@
                 
         </div>
 	  @endif
-     </form>  	  
+     </form>  
+    </div>	 
     </div>   
  </div></div>
 </div>  <!-- /.right-whitePnl-->
@@ -296,7 +297,8 @@
 {{ Session::forget('warning')}} 
 {{ Session::forget('success') }} 
 {{ Session::forget('confirm') }} 
+{{ Session::forget('error') }}
 
 
-    @endsection
+@endsection
 

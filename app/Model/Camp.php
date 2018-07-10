@@ -691,6 +691,7 @@ class Camp extends Model {
 				return;
 		}
 		
+		
 		$selected =  ($this->camp_num == $activeCamp) && $activeCampDefault ? "color:#08b608; font-weight:bold" : "";
 		if(($this->camp_num == $activeCamp)){
 					session(['supportCountTotal'=>$reducedTree[$this->camp_num]['score']]);
