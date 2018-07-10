@@ -166,14 +166,14 @@ class SettingsController extends Controller
 			
 			$alreadySupport  = Support::where('topic_num',$topicnum)->where('camp_num',$campnum)->where('end','=',0)->whereIn('nick_name_id',$userNickname)->get();
 			if($alreadySupport->count() > 0 ) {
-				Session::flash('error', "You have already supported this camp, you cant submit your support again.");
+				Session::flash('warning', "You have already supported this camp, you cant submit your support again.");
                // return redirect()->back();
 			}
 			
 			 $parentSupport = Camp::validateParentsupport($topicnum,$campnum,$userNickname,$confirm_support);
 			  
 			 if($parentSupport==="notlive") {
-			  Session::flash('error', "You cant submit your support to this camp as its not live yet.");
+			  Session::flash('warning', "You cant submit your support to this camp as its not live yet.");
               //return redirect()->back();
 			 } 
 			 else if($parentSupport) {

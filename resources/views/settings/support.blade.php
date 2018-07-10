@@ -231,7 +231,7 @@
 
 
          </div>
-        @if(isset($topic))
+        @if(isset($topic) && !Session::has('warning'))
          <div id="myTabContent" class="add-nickname-section">  
                  <h5>Nick Name To Support {!! $parentcamp !!} </h5>
                 
@@ -272,7 +272,8 @@
                 
         </div>
 	  @endif
-     </form>  	  
+     </form>  
+    </div>	 
     </div>   
  </div></div>
 </div>  <!-- /.right-whitePnl-->
@@ -296,7 +297,8 @@
 {{ Session::forget('warning')}} 
 {{ Session::forget('success') }} 
 {{ Session::forget('confirm') }} 
+{{ Session::forget('error') }}
 
 
-    @endsection
+@endsection
 

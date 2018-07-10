@@ -260,12 +260,12 @@ class TopicController extends Controller {
 		//$WikiParser  = new wikiParser;
         if(count($topic) <= 0) {
 			
-			Session::flash('error', "Topic does not exist.");
+			//Session::flash('error', "Topic does not exist.");
 			return back();
 		}
 		if(count($camp) <= 0) {
 			
-			Session::flash('error', "Camp does not exist.");
+			//Session::flash('error', "Camp does not exist.");
 			return back();
 		}
 		
