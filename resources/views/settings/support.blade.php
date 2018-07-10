@@ -231,11 +231,7 @@
 
 
          </div>
-        @if(isset($topic) && !Session::has('warning'))
-         <div id="myTabContent" class="add-nickname-section">  
-                 <h5>Nick Name To Support {!! $parentcamp !!} </h5>
-                
-                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+		            <input type="hidden" name="_token" value="{{ csrf_token() }}">
 					<input type="hidden" id="topic_num" name="topic_num" value="{{ $topic->topic_num }}">
 					<input type="hidden" id="delegate_nick_name_id" name="delegate_nick_name_id" value="{{ $delegate_nick_name_id }}">
 					<input type="hidden" id="camp_num" name="camp_num" value="{{ $camp->camp_num }}">
@@ -245,7 +241,12 @@
 					<input type="hidden" id="confirm_support" name="confirm_support" value="0">
 					<input type="hidden" id="removed_camp" name="removed_camp" value="">
 					
-					
+					 
+        @if(isset($topic) && !Session::has('warning'))
+         <div id="myTabContent" class="add-nickname-section">  
+                 <h5>Nick Name To Support {!! $parentcamp !!} </h5>
+                
+                    
                     <div class="row">
                         <div class="col-sm-6 margin-btm-1">
 						<select name="nick_name" id="select_nick_name" class="form-control">
