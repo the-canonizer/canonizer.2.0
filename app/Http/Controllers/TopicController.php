@@ -519,7 +519,7 @@ class TopicController extends Controller {
 		  if($eventtype=="CREATE") {
 				
 				// send history link in email
-				$link = 'camp-history/'.$camp->topic_num.'/'.$camp->camp_num;
+				$link = 'camp/history/'.$camp->topic_num.'/'.$camp->camp_num;
 				
 				Mail::to(Auth::user()->email)->send(new ThankToSubmitterMail(Auth::user(),$link));
 				
@@ -527,7 +527,7 @@ class TopicController extends Controller {
 				
 				$user = Nickname::getUserByNickName($all['submitter']);
 				
-				$link = 'camp-history/'.$camp->topic_num.'/'.$camp->camp_num;
+				$link = 'camp/history/'.$camp->topic_num.'/'.$camp->camp_num;
 				$data['object'] = $camp->topic->topic_name." : ".$camp->camp_name;
 				$nickName = Nickname::getNickName($all['nick_name']);
 				
@@ -637,7 +637,7 @@ class TopicController extends Controller {
 		  if($eventtype=="CREATE") {
 				
 				// send history link in email
-				$link = 'statement-history/'.$statement->topic_num.'/'.$statement->camp_num;
+				$link = 'statement/history/'.$statement->topic_num.'/'.$statement->camp_num;
 				
 				Mail::to(Auth::user()->email)->send(new ThankToSubmitterMail(Auth::user(),$link));
 				
@@ -645,7 +645,7 @@ class TopicController extends Controller {
 				
 				$user = Nickname::getUserByNickName($all['submitter']);
 				
-				$link = 'statement-history/'.$statement->topic_num.'/'.$statement->camp_num;
+				$link = 'statement/history/'.$statement->topic_num.'/'.$statement->camp_num;
 				$data['object'] = "#".$statement->id;
 				$nickName = Nickname::getNickName($all['nick_name']);
 				$data['type'] = 'statement';
