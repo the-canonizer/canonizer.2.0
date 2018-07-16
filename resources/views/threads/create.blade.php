@@ -47,7 +47,7 @@
 				                    @endforeach
 
 				                </select>
-				                 @if ($errors->has('nick_name')) <p class="help-block">{{ $errors->first('nick_name') }}</p> @endif
+				                 {{-- @if ($errors->has('nick_name')) <p class="help-block">{{ $errors->first('nick_name') }}</p> @endif --}}
 								 <a href="<?php echo url('settings/nickname');?>">Add New Nick Name </a>
 				            </div>
 
