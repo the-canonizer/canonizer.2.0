@@ -3,8 +3,16 @@
 @section('content')
 
     <div class="camp top-head">
-    <h3><b><a href="#">{{ $threads->creator->nick_name }}  </a> started this thread :
-                            "{{ $threads->title }}"</b></h3>
+        <hr>
+        <h3>
+            <b>
+                <a href="{{ URL::to('/')}}/forum/{{ $topicname }}/{{ $campnum }}/threads">
+                    &laquo; List of All Threads</a>
+                <hr>
+                <a href="#">{{ $threads->creator->nick_name }}
+                </a> started this thread : "{{ $threads->title }}"
+            </b>
+        </h3>
 	</div>
     <div class="right-whitePnl">
 
@@ -65,12 +73,20 @@
 
 							</select>
 							 @if ($errors->has('nick_name')) <p class="help-block">{{ $errors->first('nick_name') }}</p> @endif
-							 <a href="<?php echo url('settings/nickname');?>">Add new nickname </a>
+							 <a href="<?php echo url('settings/nickname');?>">Add New Nick Name </a>
 						</div>
 
                         <button type="submit" class="btn btn-primary">Submit</button>
 
                     </form>
+
+                    @if(session()->has('message'))
+                        <div class="alert alert-success">
+                            {{ session()->get('message') }}
+                        </div>
+                    @endif
+
+
                 @else
                     Please <a href="{{ url('/login') }}">Sign In</a> to comment on this Thread
                 @endif

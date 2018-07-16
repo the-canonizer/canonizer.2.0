@@ -2,10 +2,9 @@
 
 @section('content')
 	<div class="camp top-head">
-    <h3><b>Canonizer Forum Details:</b></h3>
+    <h3><b>Canonizer Forum Details</b></h3>
     <h3><b>Topic Name  : {{ $topicGeneralName }}</b></h3>
-    <h3><b>Camp Name  : {{ $campname }}</b></h3>
-	<h3><b>Camp:</b>
+	<h3><b>Camp Name :</b>
 		@php
 			echo $parentcamp
 		@endphp
@@ -36,7 +35,14 @@
                             @endforeach
                         </table>
 
-                    </div>
+						@if ($message = Session::get('success'))
+						<div class="alert alert-success alert-block">
+							<button type="button" class="close" data-dismiss="alert">×</button>
+								<strong>{{ $message }}</strong>
+						</div>
+						@endif
+
+					</div>
 
                 </div>
     </div>

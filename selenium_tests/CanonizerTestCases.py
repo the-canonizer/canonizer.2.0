@@ -23,6 +23,9 @@ testCases = {
     10: [moderate, 'In User Registration Page, when user puts different password for confirmation, '
                    'user must see Error Message'],
     11: [critical, 'When user clicks on What is Canonizer.com, page should be loaded.'],
-    12: [critical, 'If any unauthenticated user wants to join the camp, User should be directed to the login page']
+    12: [critical, 'If any unauthenticated user wants to join the camp, User should be directed to the login page'],
+    13: [low, 'When the main page loads, Text on button to upload all topic is "Load All Topics"'],
+    14: [low, 'Register page should have "Login" option/button for existing users'],
+    15: [low, 'Login Page should have "Register" Option/button for new users']
 }
 

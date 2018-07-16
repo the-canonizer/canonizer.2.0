@@ -55,8 +55,6 @@ class CThreadsController extends Controller
 
         $camp       = Camp::getLiveCamp($topicid,$campnum);
 
-        // New View
-        //dd($camp);
         return view(
             'threads.index',
             $topic,
@@ -68,7 +66,8 @@ class CThreadsController extends Controller
                                                     ->where('topic_num', $topicid)
                                                     ->value('camp_name'),
                 // Return the name of the Topic to index View
-                'topicGeneralName' => Topic::find($topicid)->topic_name,
+                //'topicGeneralName' => Topic::find($topicid)->topic_name,
+                'topicGeneralName'   => str_replace("-", " ", $topicname),
                 'parentcamp'       => Camp::campNameWithAncestors($camp,''),
             ],
             compact('threads')
@@ -125,11 +124,12 @@ class CThreadsController extends Controller
         $userNicknames = Nickname::topicNicknameUsed($topicid);
 
         $topic = getArray($topicid, $topicname, $campnum);
+        $topicGeneralName = str_replace("-", " ", $topicname);
 
         return view(
             'threads.create',
             $topic,
-            compact('threads', 'userNicknames')
+            compact('threads', 'userNicknames', 'topicGeneralName')
         );
     }
 
@@ -141,8 +141,6 @@ class CThreadsController extends Controller
      */
     public function store(Request $request, $topicid, $topicname, $campnum)
     {
-        //dd($request->all());
-        //dd($campnum, $topicid);
         //Validate the request for Error Handling
 
         $this->validate(
@@ -162,7 +160,11 @@ class CThreadsController extends Controller
             'topic_id' => $topicid
             ]
         );
-        return back();
+
+        // Return Url after creating thread Successfully
+        $return_url = 'forum/'.$topicid.'-'.$topicname.'/'.$campnum.'/threads';
+
+        return redirect($return_url)->with('success', 'Thread Posted Successfully!');
     }
 
     /**
