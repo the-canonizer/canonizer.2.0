@@ -5,7 +5,16 @@
 @section('content')
 
             <div class="camp top-head">
-    			<h3>Create a new thread for {{ $topicname }}</h3>
+                <hr>
+                <h3>
+                    <b>
+                        <a
+                        href="{{ URL::to('/') }}/forum/{{ $topicname }}/{{ $campnum }}/threads">
+                            &laquo; List of All Threads
+                        </a>
+                    </b>
+                </h3>
+    			<h3>Create a new thread for Topic : {{ $topicGeneralName }}</h3>
 			</div>
             <div class="right-whitePnl">
             	 <div class="panel panel-group">
@@ -16,7 +25,7 @@
 
                             <div class="form-group">
 
-                                <label for="title">Title of Thread: </label>
+                                <label for="title">Title of Thread: *</label>
 
                                 <input type="text" class="form-control" id="title" placeholder="Title" name="title">
 
@@ -39,7 +48,7 @@
 
 				                </select>
 				                 @if ($errors->has('nick_name')) <p class="help-block">{{ $errors->first('nick_name') }}</p> @endif
-								 <a href="<?php echo url('settings/nickname');?>">Add new nickname </a>
+								 <a href="<?php echo url('settings/nickname');?>">Add New Nick Name </a>
 				            </div>
 
                             <div class="form-group">
