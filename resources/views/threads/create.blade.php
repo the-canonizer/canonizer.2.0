@@ -25,7 +25,7 @@
 
                             <div class="form-group">
 
-                                <label for="title">Title of Thread: *</label>
+                                <label for="title">Title of Thread: <span style="color:red">*</span> </label>
 
                                 <input type="text" class="form-control" id="title" placeholder="Title" name="title">
 
