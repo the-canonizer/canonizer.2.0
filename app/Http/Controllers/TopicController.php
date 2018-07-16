@@ -169,7 +169,7 @@ class TopicController extends Controller {
 				$nickName = Nickname::getNickName($all['nick_name']);
 				$data['type'] = 'topic';
 				$data['nick_name'] = $nickName->nick_name;
-				$data['forum_link'] = 'forum/'.$topic->topic_num.'/1/threads';
+				$data['forum_link'] = 'forum/'.$topic->topic_num.'-'.$topic->topic_name.'/1/threads';
 				$data['subject'] = $data['nick_name']." has objected to your proposed change.";
 				
 				$receiver = (config('app.env')=="production") ? $user->email : config('app.admin_email');
@@ -185,7 +185,7 @@ class TopicController extends Controller {
 				$nickName = Nickname::getNickName($all['nick_name']);
 				
 				$data['nick_name'] = $nickName->nick_name;
-				$data['forum_link'] = 'forum/'.$topic->topic_num.'/1/threads';
+				$data['forum_link'] = 'forum/'.$topic->topic_num.'-'.$topic->topic_name.'/1/threads';
 				$data['subject'] = "Proposed change to ".$topic->topic_name." submitted";
 
 			  foreach($directSupporter as $supporter) { 
@@ -532,7 +532,7 @@ class TopicController extends Controller {
 				$nickName = Nickname::getNickName($all['nick_name']);
 				
 				$data['nick_name'] = $nickName->nick_name;
-				$data['forum_link'] = 'forum/'.$camp->topic_num.'/'.$camp->camp_num.'/threads';
+				$data['forum_link'] = 'forum/'.$camp->topic_num.'-'.$camp->camp_name.'/'.$camp->camp_num.'/threads';
 				$data['subject'] = $data['nick_name']." has objected to your proposed change.";
 				$data['type'] = 'camp';
 				$receiver = (config('app.env')=="production") ? $user->email : config('app.admin_email');
@@ -548,7 +548,7 @@ class TopicController extends Controller {
 				$nickName = Nickname::getNickName($all['nick_name']);
 				
 				$data['nick_name'] = $nickName->nick_name;
-				$data['forum_link'] = 'forum/'.$camp->topic_num.'/'.$camp->camp_num.'/threads';
+				$data['forum_link'] = 'forum/'.$camp->topic_num.'-'.$camp->camp_name.'/'.$camp->camp_num.'/threads';
 				$data['subject'] = "Proposed change to ".$camp->camp_name." submitted";
 
 			  foreach($directSupporter as $supporter) { 
@@ -650,7 +650,7 @@ class TopicController extends Controller {
 				$nickName = Nickname::getNickName($all['nick_name']);
 				$data['type'] = 'statement';
 				$data['nick_name'] = $nickName->nick_name;
-				$data['forum_link'] = 'forum/'.$statement->topic_num.'/'.$statement->camp_num.'/threads';
+				$data['forum_link'] = 'forum/'.$statement->topic_num.'-statement/'.$statement->camp_num.'/threads';
 				$data['subject'] = $data['nick_name']." has objected to your proposed change.";
 				
 				$receiver = (config('app.env')=="production") ? $user->email : config('app.admin_email');
@@ -666,7 +666,7 @@ class TopicController extends Controller {
 				$nickName = Nickname::getNickName($all['nick_name']);
 				
 				$data['nick_name'] = $nickName->nick_name;
-				$data['forum_link'] = 'forum/'.$statement->topic_num.'/'.$statement->camp_num.'/threads';
+				$data['forum_link'] = 'forum/'.$statement->topic_num.'-statement/'.$statement->camp_num.'/threads';
 				$data['subject'] = "Proposed change to camp statement #".$statement->id." submitted";
 
 			  foreach($directSupporter as $supporter) { 
