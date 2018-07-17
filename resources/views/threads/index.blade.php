@@ -13,7 +13,7 @@
     <div class="right-whitePnl">
       			<div class="panel panel-group">
                     <div class="panel panel-title">
-                        <h5>List of all the Threads</h5>
+                        <h5>List of All Threads</h5>
                     </div>
 
                     <div class="panel-body">
