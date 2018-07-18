@@ -37,7 +37,6 @@
                 </div>
 
 <!-- Replies To Thread -->
-                <!-- ?php $replies = $threads->replies()->paginate('10'); ?-->
                 <div class="pagination">
                     <a class="active item">
                         <ul class ="list-group">
@@ -62,10 +61,11 @@
                         <div class="form-group">
                             <br>
                             <textarea name="body" id="body" class="form-control" placeholder="Reply to thread Here" rows="5"></textarea>
+                            @if ($errors->has('body')) <p class="help-block">The reply field is required.</p> @endif
                         </div>
 
 						<div class="form-group">
-							<label for="camp_name">Nick Name <p class="help-block">(Once you pick a nick name, for anything about a topic, you must always use the same nick name.)</p></label>
+							<label for="camp_name">Nick Name <span style="color:red">*</span> <p class="help-block">(Once you pick a nick name, for anything about a topic, you must always use the same nick name.)</p></label>
 							<select name="nick_name" id="nick_name" class="form-control">
 								@foreach($userNicknames as $nick)
 								<option value="{{ $nick->id }}">{{ $nick->nick_name}}</option>
@@ -86,15 +86,11 @@
                         </div>
                     @endif
 
-
                 @else
                     Please <a href="{{ url('/login') }}">Sign In</a> to comment on this Thread
                 @endif
 
             </div>
-
-
-
 
     </div>
 @endsection

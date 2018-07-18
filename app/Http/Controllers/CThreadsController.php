@@ -41,13 +41,17 @@ class CThreadsController extends Controller
 
         if ((camp::where('camp_num', $campnum)->where('topic_num', $topicid)->value('camp_name')))
         {
+            // $threads = CThread::where('camp_id', $campnum)->
+            //                     where('topic_id', $topicid)->latest()->get();
+
             $threads = CThread::where('camp_id', $campnum)->
-                                where('topic_id', $topicid)->latest()->get();
+                                where('topic_id', $topicid)->
+                                latest()->paginate(10);
         }
         else {
             return (
                 'Validation Error!!!!'.
-                'Either Topic ID is not related to Camp or Invalid Topic Name.'
+                'Topic ID is not related to Camp.'
             );
         }
 
@@ -61,13 +65,13 @@ class CThreadsController extends Controller
             [
                 'threads'          => $threads,
                 // Return the name of the camp to index View
-                //'campname'         => Camp::find($campnum)->camp_name,
                 'campname'         => camp::where('camp_num', $campnum)
                                                     ->where('topic_num', $topicid)
                                                     ->value('camp_name'),
                 // Return the name of the Topic to index View
-                //'topicGeneralName' => Topic::find($topicid)->topic_name,
-                'topicGeneralName'   => str_replace("-", " ", $topicname),
+                'topicGeneralName' => Topic::where('topic_num', $topicid)
+                                             ->orderBy('go_live_time', 'desc')
+                                             ->first()->topic_name,
                 'parentcamp'       => Camp::campNameWithAncestors($camp,''),
             ],
             compact('threads')
@@ -102,7 +106,6 @@ class CThreadsController extends Controller
             [
                 'threads'          => $threads,
                 // Return the name of the camp to index View
-                //'campname'         => Camp::find($campnum)->camp_name,
                 'campname'         => camp::where('camp_num', $campnum)
                                             ->where('topic_num', $topicid)
                                             ->value('camp_name'),
@@ -124,7 +127,10 @@ class CThreadsController extends Controller
         $userNicknames = Nickname::topicNicknameUsed($topicid);
 
         $topic = getArray($topicid, $topicname, $campnum);
-        $topicGeneralName = str_replace("-", " ", $topicname);
+
+        $topicGeneralName = Topic::where('topic_num', $topicid)
+                                     ->orderBy('go_live_time', 'desc')
+                                     ->first()->topic_name;
 
         return view(
             'threads.create',
@@ -145,7 +151,7 @@ class CThreadsController extends Controller
 
         $this->validate(
             $request, [
-                'title'    => 'required',
+                'title'    => 'required|max:100',
                 'nick_name' => 'required'
                 //'body'     => 'required',
             ]
@@ -164,7 +170,7 @@ class CThreadsController extends Controller
         // Return Url after creating thread Successfully
         $return_url = 'forum/'.$topicid.'-'.$topicname.'/'.$campnum.'/threads';
 
-        return redirect($return_url)->with('success', 'Thread Posted Successfully!');
+        return redirect($return_url)->with('success', 'Thread Created Successfully!');
     }
 
     /**

@@ -18,8 +18,17 @@
 
                     <div class="panel-body">
                         <table class="table">
+
+							@if (count($threads) == 0)
+								<hr>
+								<p>No threads available for this topic.
+									Start <a href="{{ URL::to('/')}}/forum/{{ $topicname }}/{{ $campnum }}/threads/create">New Thread.
+									</a>
+								</p>
+							@endif
+
                             @foreach ($threads as $thread)
-                            <article></article>
+                            <article>
                                 <h5>
                                     <ul class = "list-group">
                                         <li class = "list-group-item">
@@ -30,9 +39,14 @@
 
                                     </ul>
                                 </h5>
+
                                 {{--  <div class="body"> {{ $thread->body }} </div>  --}}
                             </article>
                             @endforeach
+
+							<!-- For Pagination -->
+							{{ $threads->links() }}
+
                         </table>
 
 						@if ($message = Session::get('success'))
