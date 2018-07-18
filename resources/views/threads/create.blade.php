@@ -40,14 +40,14 @@
                             </div> --}}
 
 							<div class="form-group">
-				                <label for="camp_name">Nick Name <p class="help-block">(Once you pick a nick name, for anything about a topic, you must always use the same nick name.)</p></label>
+				                <label for="camp_name">Nick Name <span style="color:red">*</span><p class="help-block">(Once you pick a nick name, for anything about a topic, you must always use the same nick name.)</p></label>
 				                <select name="nick_name" id="nick_name" class="form-control">
 				                    @foreach($userNicknames as $nick)
 				                    <option value="{{ $nick->id }}">{{ $nick->nick_name}}</option>
 				                    @endforeach
 
 				                </select>
-				                 @if ($errors->has('nick_name')) <p class="help-block">{{ $errors->first('nick_name') }}</p> @endif
+				                 {{-- @if ($errors->has('nick_name')) <p class="help-block">{{ $errors->first('nick_name') }}</p> @endif --}}
 								 <a href="<?php echo url('settings/nickname');?>">Add New Nick Name </a>
 				            </div>
 
