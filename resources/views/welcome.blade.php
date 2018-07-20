@@ -23,7 +23,8 @@
             <h3>Canonizer Blog</h3>
             <div class="content">
 
-                <iframe src="{{ url('/') }}/blog" style="position: relative;width: 100%;height:400px;border:none;"></iframe>
+                <iframe src="{{ url('/') }}/blog" style="position: relative;width: 100%;height:400px;border:none;" id="homeiframe" onload='setTimeout("hideheader();",0);'>
+                </iframe>
                 
             </div>
         </div>
@@ -56,8 +57,9 @@
                          <?php $createCamp = 0;?>
                        @endforeach
 					   <a id="btn-more" class="remove-row" data-id="{{ $topic->id }}"></a>
+					   
                     </ul>
-
+                    <button style="background: blue;color: white; cursor:pointer" name="load_more" id="loadtopic">Load All Topics</button>
                 </div>
 				@else
 				 <h6 style="margin-left:30px;"> No topic available.</h6>
@@ -72,18 +74,18 @@
 
 <script>
 var request = false;
-var offset = 10;
-   $(document).scroll(function(e){
+var offset = 42;
+   $('#loadtopic').click(function(e){
        var id = $('#btn-more').data('id');
        var queryString = "{!! Request::getQueryString() !!}";
 	   var scrollTop = $(document).scrollTop();
+       $(this).hide();
+	  // scrollTop = scrollTop + 650;
+		 // if ( scrollTop > $('.sticky-footer').offset().top && request==false) {
 
-	   scrollTop = scrollTop + 650;
-		  if ( scrollTop > $('.sticky-footer').offset().top && request==false) {
-
-			   $("#btn-more").html("Please wait loading tree......");
+			   $("#btn-more").html("Please wait loading all topic tree......");
 			   request = true;
-
+              // alert(offset);
 			   $.ajax({
 				   url : '{{ url("loadtopic") }}?'+queryString,
 				   method : "POST",
@@ -97,7 +99,7 @@ var offset = 10;
 						  $('#load-data').append(data);
 						  camptree();
 						  request = false;
-						  offset = offset + 10;
+						  offset = offset + 11;
 
 					  }
 					  else
@@ -106,7 +108,7 @@ var offset = 10;
 					  }
 				   }
 			   });
-		  }
+		  //}
 		  e.stopImmediatePropagation();
 });
 
@@ -127,6 +129,12 @@ function changeNamespace(element){
             @endif
         }
     });
+}
+</script>
+<script type="text/javascript">
+function hideheader()
+{
+    $("#homeiframe").contents().find(".header_1").hide();
 }
 </script>
 @endsection

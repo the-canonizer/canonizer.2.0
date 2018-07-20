@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
 <div class="page-titlePnl">
-    <h1 class="page-title">Nicknames</h1>
+    <h1 class="page-title">Nick Names</h1>
 </div> 
 
 @if(Session::has('error'))
@@ -23,7 +23,7 @@
     <div class="col-sm-12 margin-btm-2">
         <div class="well">
             <ul class="nav prfl_ul">
-                <li><a class="" href="{{ route('settings')}}">Manage Profile info</a></li>
+                <li><a class="" href="{{ route('settings')}}">Manage Profile Info</a></li>
                 <li class="active"><a class="" href="{{ route('settings.nickname')}}" >Add & Manage Nick Names</a></li>
 				<li class=""><a class="" href="{{ route('settings.support')}}" >My Supports</a></li>
                 <li><a class="" href="{{ route('settings.algo-preferences')}}">Default Algorithm</a></li>
@@ -34,7 +34,7 @@
            <table class="table">
            <thead class="thead-default">
               <tr>
-                <th>S.No</th>
+                <th>Sr.No</th>
                 <th>Nick Name</th>
                 <th>Visibilty Status</th>
                 <!--th>Manage Actions</th-->
@@ -65,22 +65,22 @@
                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
                     <div class="row">
                         <div class="col-sm-6 margin-btm-1">
-                            <label for="nick_name">Add Nick Name</label>
+                            <label for="nick_name">Nick Name <span style="color:red">*</span></label>
                             <input type="text" name="nick_name" class="form-control" id="nick_name" value="{{ old('nick_name')}}">
                             @if ($errors->has('nick_name')) <p class="help-block">{{ $errors->first('nick_name') }}</p> @endif
                         </div>
                         <div class="col-sm-6 margin-btm-1">
-                            <label for="namespace">Visibility status</label>
+                            <label for="namespace">Visibility Status</label>
                             <select class="form-control" id="visibility_status" name="private">
                                 <option value="0">Public</option>
-                                <option vlaue="1">Private</option>
+                                <option value="1">Private</option>
                             </select>
                             @if ($errors->has('private')) <p class="help-block">{{ $errors->first('private') }}</p> @endif
                         </div> 
                     </div>
                     
                     <button type="submit" id="submit_create" class="btn btn-login">Create</button>
-                    <button type="submit" id="submit_cancel" class="btn btn-default">Cancel</button>
+                    <!--button type="submit" id="submit_cancel" class="btn btn-default">Cancel</button-->
                 </form>  
         </div>
     </div>   

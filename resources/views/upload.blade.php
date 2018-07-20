@@ -4,6 +4,13 @@
 <div class="alert alert-danger">
     <strong>Error! </strong>{{ Session::get('error')}}    
 </div>
+@else
+	
+@if ($errors->has('file')) 
+<div class="alert alert-danger">
+    <strong>Error! </strong>{{ $errors->first('file') }}  
+</div>
+@endif    		
 @endif
 
 @if(Session::has('success'))
@@ -11,11 +18,11 @@
     <strong>Success! </strong>{{ Session::get('success')}}    
 </div>
 @endif
-      	
+   
 <div class="right-whitePnl">
     <div class="container-fluid">
         <div class="Gcolor-Pnl">
-            <h3>Upload Images Only</h3>
+            <h3>Upload images only ( jpeg,bmp,png,jpg,gif ), Max size 25 MB</h3>
             <div class="content">	  
 			   <form method="post" class="form-horizontal" enctype="multipart/form-data">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
@@ -34,7 +41,7 @@
                <table class="table table-striped">
                 <tr><th>File Name</th><th>Short Code</th><th style="width:20%">Uploaded Date </th></tr>
                 @foreach($uploaded as $upload)
-                    <tr><td style="word-break:break-all">{{ $upload->file_name }} &nbsp;&nbsp;&nbsp;<a target="_blank" href="{{ url('files/'.$upload->file_name) }}"><i class="fa fa-external-link"></i></a></td>
+                    <tr><td style="word-break:break-all">{{ $upload->file_name }} &nbsp;&nbsp;&nbsp;<a target="_blank" href="{{ url('files/'.$upload->file_name) }}"><i title="View file" class="fa fa-external-link"></i></a></td>
                     <td style="word-break:break-all">{{ $upload->getShortCode() }}</td>
                     <td>{{ $upload->created_at }}</td></tr>
                 @endforeach

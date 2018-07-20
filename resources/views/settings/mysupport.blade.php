@@ -23,7 +23,7 @@
     <div class="col-sm-12 margin-btm-2">
         <div class="well">
             <ul class="nav prfl_ul">
-                <li><a class="" href="{{ route('settings')}}">Manage Profile info</a></li>
+                <li><a class="" href="{{ route('settings')}}">Manage Profile Info</a></li>
                 <li class=""><a class="" href="{{ route('settings.nickname')}}" >Add & Manage Nick Names</a></li>
 				<li class="active"><a class="" href="{{ route('settings.support')}}" >My Supports</a></li>
                 <li><a class="" href="{{ route('settings.algo-preferences')}}">Default Algorithm</a></li>
@@ -45,14 +45,10 @@
 							<input type="hidden" id="support_id_{{ $support->support_id }}" name="support_id" value="{{ $support->support_id }}">
 							<input type="hidden" id= "topic_num_{{ $support->support_id }}" name="topic_num" value="{{ $data->topic_num }}">
 							<input type="hidden" id= "nick_name_id_{{ $support->support_id }}" name="nick_name_id" value="{{ $support->nick_name_id }}">
-						  <button type="submit" id="submit_{{ $support->support_id }}" class="btn-sptclose"><i class="fa fa-close"></i></button>
+						  <button type="submit" id="submit_{{ $support->support_id }}" class="btn-sptclose" title="Remove Support"><i class="fa fa-close"></i></button>
 						 </form> 
-					     <b>Camp :</b> {{ $support->camp->camp_name }} <br/>
-					   	 <b>Support Order :</b> <span class="support_order">{{ $support->support_order }}</span> Choice <br/>
-						 <b>Nickname :</b> {{ $support->nickname->nick_name }} <br/>
-                         @if($support->delegate_nick_name_id != 0) 						 
-                            <b>Support Delegated To:</b> {{ $support->delegatednickname->nick_name}}
-                        @endif
+					     <b><span class="support_order">{{ $support->support_order }}</span> . {{ $support->camp->camp_name }} <br/>
+					   	 </b>
                        </div>
 					   @endforeach
                     </div>   

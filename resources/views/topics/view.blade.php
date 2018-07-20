@@ -39,6 +39,7 @@
                 <div class="tree treeview col-sm-12">
                     <ul class="mainouter">
                     <?php 
+					    session(['supportCountTotal'=>0]);
                         $title      = preg_replace('/[^A-Za-z0-9\-]/', '-', $topic->title);						  
                         $topic_id  = $topic->topic_num."-".$title;
 						 ?>
@@ -151,7 +152,6 @@ change camps with them."><i class="fa fa-question"></i></a>
             <div class="row">
                 <div class="tree col-sm-12">
                     Camp Name : <?php echo $camp->camp_name;?> <br/>
-					Title : <?php echo $camp->title;?><br/>
 					Keywords : <?php echo $camp->key_words;?><br/>
 					Related URL : <?php echo $camp->url;?><br/>
 					
@@ -167,6 +167,7 @@ change camps with them."><i class="fa fa-question"></i></a>
         </div>
     </div>
 	<div class="post"> </div>
+	
 </div>  <!-- /.right-whitePnl-->
 
 @endsection

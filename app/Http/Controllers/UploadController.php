@@ -21,17 +21,18 @@ class UploadController extends Controller
        
        
         $validator = Validator::make($request->all(), [
-            'file' => 'required|mimes:jpeg,bmp,png,jpg,gif',
+            'file' => 'required|mimes:jpeg,bmp,png,jpg,gif|max:2000',
             //'file_name' => 'required',
         ]);
 
         if($validator->fails()) {
              //session(['error'=> "Select a image file and fill file name"]);
-			 $request->session()->flash('error', 'Please select a image file.');
+			 //$request->session()->flash('error', 'Please select a image file.');
              return redirect()->back()->withErrors($validator);
         }
 
         $file = $request->file('file'); 
+		
 		
 		
 		if($request->input('file_name')=="") {
@@ -49,6 +50,15 @@ class UploadController extends Controller
              $request->session()->flash('error', 'There is already a file with name '.$uniquename.', Please use different name.');
              return redirect()->back();			
 			 
+		 } 
+
+         if(strlen($uniquename) > 200){
+             $request->session()->flash('error', 'File name may not be greater than 200 characters');
+             return redirect()->back();	
+         }
+		 if($file->getClientOriginalExtension()=="") {
+			 $request->session()->flash('error', 'Please select a image file.');
+             return redirect()->back();	
 		 }
 		
         if($file){

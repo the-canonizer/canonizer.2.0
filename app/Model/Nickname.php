@@ -32,7 +32,7 @@ class Nickname extends Model
 		$userid = Auth::user()->id; 
         $encode = General::canon_encode($userid);
 		
-        return  DB::table('nick_name')->select('id','nick_name')->where('owner_code',$encode)->get();
+        return  DB::table('nick_name')->select('id','nick_name')->where('owner_code',$encode)->orderBy('nick_name', 'ASC')->get();
 	}
     
     public static function personNicknameArray() {
@@ -62,8 +62,8 @@ class Nickname extends Model
             $as_of_clause = 'and go_live_time < ' . $as_of_time;
         }
 
-        $sql = "select u.topic_num, u.camp_num, u.title, p.support_order, p.delegate_nick_name_id from support p, 
-        (select s.title, s.topic_num, s.camp_num from camp s,
+        $sql = "select u.topic_num, u.camp_num, u.title,u.camp_name, p.support_order, p.delegate_nick_name_id from support p, 
+        (select s.title,s.topic_num,s.camp_name, s.camp_num from camp s,
             (select topic_num, camp_num, max(go_live_time) as camp_max_glt from camp
                 where objector_nick_id is null $as_of_clause group by topic_num, camp_num) cz,
                 (select t.topic_num, t.topic_name, t.namespace, t.go_live_time from topic t,
@@ -72,22 +72,22 @@ class Nickname extends Model
                             where t.namespace_id=$namespace and t.topic_num = tz.topic_num and t.go_live_time = tz.topic_max_glt) uz
                 where s.topic_num = cz.topic_num and s.camp_num=cz.camp_num and s.go_live_time = cz.camp_max_glt and s.topic_num=uz.topic_num) u
         where u.topic_num = p.topic_num and ((u.camp_num = p.camp_num) or (u.camp_num = 1)) and p.nick_name_id = {$this->id} and
-        (p.start < $as_of_time) and ((p.end = 0) or (p.end > $as_of_time))";
+        (p.start < $as_of_time) and ((p.end = 0) or (p.end > $as_of_time)) order by p.support_order ASC";
         $results = DB::select($sql);
         $supports = [] ;
         foreach($results as $rs){
             $topic_num     = $rs->topic_num;
 		    $camp_num = $rs->camp_num;
-            $title = preg_replace('/[^A-Za-z0-9\-]/', '-', $rs->title); 
+            $title = preg_replace('/[^A-Za-z0-9\-]/', '-', $rs->camp_name); 
 		    $topic_id = $topic_num."-".$title;
 		if($rs->delegate_nick_name_id) {
 			
             }else if ($camp_num == 1) {
-                $supports[$topic_num]['title'] = $rs->title;
+                $supports[$topic_num]['camp_name'] = ($rs->title=="") ? $rs->camp_name : $rs->title;
                 
                 $supports[$topic_num]['link'] = url('topic/'.$topic_id.'/'.$camp_num);
             }else {
-                $supports[$topic_num]['array'][$rs->support_order][]=['title' =>$rs->title,'camp_num'=> $camp_num,'link'=>url('topic/'.$topic_id.'/'.$camp_num)];
+                $supports[$topic_num]['array'][$rs->support_order][]=['camp_name' =>$rs->camp_name,'camp_num'=> $camp_num,'link'=>url('topic/'.$topic_id.'/'.$camp_num)];
             }
         }
 
@@ -100,6 +100,20 @@ class Nickname extends Model
         
         $userId = \App\Library\General::canon_decode($this->owner_code);
         return  \App\User::find($userId);
+    }
+	
+	public static function getUserByNickName($nick_id){
+		
+		$nickname = self::find($nick_id);
+        
+        $userId = \App\Library\General::canon_decode($nickname->owner_code);
+        return  \App\User::find($userId);
+    }
+	public static function getNickName($nick_id){
+		
+		return $nickname = self::find($nick_id);
+        
+       
     }
 	
 	

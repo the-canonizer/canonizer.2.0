@@ -23,7 +23,7 @@
         <form action="{{ url('/topic')}}" method="post">
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
             <div class="form-group">
-                <label for="camp_name">Nick Name <p class="help-block">(Once you pick a nick name, for anything about a topic, you must always use the same nick name.)</p></label>
+                <label for="camp_name">Nick Name <span style="color:red">*</span><p class="help-block">(Once you pick a nick name, for any contribution to a topic, you must always use the same nick name for any other contribution or forum post to this topic.)</p></label>
                 <select name="nick_name" id="nick_name" class="form-control">
                     @foreach($nickNames as $nick)
                     <option value="{{ $nick->id }}">{{ $nick->nick_name}}</option>
@@ -31,15 +31,15 @@
 					
                 </select>
                  @if ($errors->has('nick_name')) <p class="help-block">{{ $errors->first('nick_name') }}</p> @endif
-				 <a href="<?php echo url('settings/nickname');?>">Add new nickname </a>
+				 <a href="<?php echo url('settings/nickname');?>">Add New Nick Name </a>
             </div> 
             <div class="form-group">
-                <label for="topic name">Topic Name ( Limit 30 char )</label>
+                <label for="topic name">Topic Name ( Limit 30 char ) <span style="color:red">*</span></label>
                 <input type="text" name="topic_name" class="form-control" id="topic_name" value="">
 				@if ($errors->has('topic_name')) <p class="help-block">{{ $errors->first('topic_name') }}</p> @endif
             </div>            
             <div  class="form-group">
-                <label for="namespace">Namespace (General is recommended, unless you know otherwise)</label>
+                <label for="namespace">Namespace <span style="color:red">*</span>(General is recommended, unless you know otherwise)</label>
                 <select  onchange="selectNamespace(this)" name="namespace" id="namespace" class="form-control">
                     
                     @foreach($namespaces as $namespace)
@@ -67,8 +67,9 @@
             </div>-->
             
             <div class="form-group">
-                <label for="">Additional Note</label>
+                <label for="">Additional Note <span style="color:red">*</span></label>
                 <textarea class="form-control" rows="4" name="note" id="note"></textarea>
+                @if ($errors->has('note')) <p class="help-block">{{ $errors->first('note') }}</p> @endif
             </div>    
 
             <button type="submit" id="submit" class="btn btn-login">Create Topic</button>

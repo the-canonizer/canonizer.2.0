@@ -6,6 +6,8 @@ use App\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\WelcomeMail;
 
 class RegisterController extends Controller
 {
@@ -48,8 +50,8 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'firstname' => 'required|string|max:255',
-            'lastname' => 'required|string|max:255',
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:person',
             'password' => 'required|string|min:6|confirmed',
         ]);
@@ -63,21 +65,20 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        
-       // echo "<pre>"; print_r($data); exit;
-       /* $user = new User();
-        $user->first_name = $data['firstname'];
-        $user->last_name = $data['lastname'];
-        $user->middle_name = $data['middlename'];
-        $user->email = $data['email'];
-        $user->password = bcrypt($data['password']);
-        return $user->save();*/
-        return User::create([
+      
+        $user = User::create([
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
-            'first_name' =>$data['firstname'],
-            'last_name' =>$data['lastname'],
-            'middle_name' =>$data['middlename'],
+            'first_name' =>$data['first_name'],
+            'last_name' =>$data['last_name'],
+            'middle_name' =>$data['middle_name'],
         ]);
+		
+		// send help link in email
+        $link = 'topic/38-Canonized-help-statement-text/1';
+		
+		Mail::to($user->email)->send(new WelcomeMail($user,$link));
+		
+		return $user;
     }
 }

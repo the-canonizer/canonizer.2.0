@@ -14,6 +14,8 @@ use App\Model\TopicSupport;
 use App\Model\SupportInstance;
 use Illuminate\Support\Facades\Validator;
 use Cookie;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\NewDelegatedSupporterMail;
 
 class SettingsController extends Controller
 {
@@ -30,6 +32,26 @@ class SettingsController extends Controller
         $input = $request->all();
         $id = (isset($_GET['id'])) ? $_GET['id'] : '';
 		$private_flags = array();
+
+
+		$messages = [
+                'first_name.required' => 'First name is required.',
+				'last_name.required' => 'Last name is required.',
+				'country.required' => 'Country is required.'
+            ];
+            
+
+            $validator = Validator::make($request->all(), [
+                'first_name' => 'required|max:50',
+                'last_name' => 'required|max:50',
+				'country' => 'required',
+            ],$messages);
+    
+            if ($validator->fails()) {
+                return redirect()->back()
+                            ->withErrors($validator)
+                            ->withInput();
+            }
         if($id){
             $user = User::find($id);
             $user->first_name = $input['first_name']; 
@@ -59,7 +81,6 @@ class SettingsController extends Controller
 			$flags = implode(",",$private_flags); 
 			
 			$user->private_flags = $flags;
-			 
             $user->update();
             Session::flash('success', "Profile updated successfully.");
             return redirect()->back();
@@ -83,11 +104,12 @@ class SettingsController extends Controller
         if($id){
             $messages = [
                 'private.required' => 'Visibility status is required.',
+				'nick_name.required' => 'Nick name is required.'
             ];
             
 
             $validator = Validator::make($request->all(), [
-                'nick_name' => 'required',
+                'nick_name' => 'required|unique:nick_name|max:50',
                 'private' => 'required',
             ],$messages);
     
@@ -138,19 +160,70 @@ class SettingsController extends Controller
 
 			//get nicknames
 			$nicknames = Nickname::where('owner_code','=',$encode)->get();
-			$userNickname=array();
-			foreach($nicknames as $nickname) {
-				
-				$userNickname[] = $nickname->id;
+			$userNickname= Nickname::personNicknameArray();
+		    
+			$confirm_support = 0;
+			
+			$alreadySupport  = Support::where('topic_num',$topicnum)->where('camp_num',$campnum)->where('end','=',0)->whereIn('nick_name_id',$userNickname)->get();
+			if($alreadySupport->count() > 0 ) {
+				Session::flash('warning', "You have already supported this camp, you cant submit your support again.");
+               // return redirect()->back();
 			}
-		
-		 
+			
+			 $parentSupport = Camp::validateParentsupport($topicnum,$campnum,$userNickname,$confirm_support);
+			  
+			 if($parentSupport==="notlive") {
+			  Session::flash('warning', "You cant submit your support to this camp as its not live yet.");
+              //return redirect()->back();
+			 } 
+			 else if($parentSupport) {
+				if(count($parentSupport)==1) {
+				 foreach($parentSupport as $parent); 
+				  if($parent->camp_num==$campnum) {	
+				  Session::flash('warning', "You are already supporting this camp. You cant submit support again.");
+                  Session::flash('confirm','samecamp');
+				  }
+				  else {
+					Session::flash('warning', 'The following  camp are parent camp to "'.$onecamp->camp_name.'" and will be removed if you commit this support.');
+                    Session::flash('confirm',1);
+				  }
+				}
+				else {	
+				Session::flash('warning', 'The following  camps are parent camps to "'.$onecamp->camp_name.'" and will be removed if you commit this support.');
+                Session::flash('confirm',1);
+				}
+				//return redirect()->back();
+				
+			 }
+
+			 $childSupport = Camp::validateChildsupport($topicnum,$campnum,$userNickname,$confirm_support);
+			 //echo "<pre>";print_r($childSupport); die;
+			if($childSupport) {
+				if(count($childSupport)==1) {
+				 foreach($childSupport as $child); 
+				  if($child->camp_num==$campnum) {
+				  Session::flash('warning', "You are already supporting this camp. You cant submit support again.");
+				  Session::flash('confirm','samecamp');
+				 }
+				 else{
+				  Session::flash('warning', 'The following  camp are child camp to "'.$onecamp->camp_name.'" and will be removed if you commit this support.');
+                  Session::flash('confirm',1);	 
+				 }
+				}	
+				 else {	
+			      Session::flash('warning', 'The following  camps are child camps to "'.$onecamp->camp_name.'" and will be removed if you commit this support.');
+                
+				  Session::flash('confirm',1);
+				 }
+				//return redirect()->back();
+			}
+		    
 		    $supportedTopic = Support::where('topic_num',$topicnum)
 									  ->whereIn('nick_name_id',$userNickname)
-									  ->whereRaw("(start < $as_of_time) and ((end = 0) or (end > $as_of_time))")
+									  ->whereRaw("(start <= ".$as_of_time.") and ((end = 0) or (end >= ".$as_of_time."))")
 									  ->groupBy('topic_num')->orderBy('start','DESC')->first();
-		
-            return view('settings.support',['userNickname'=>$userNickname,'supportedTopic'=>$supportedTopic,'topic'=>$topic,'nicknames'=>$nicknames,'camp'=>$onecamp,'parentcamp'=>$campWithParents,'delegate_nick_name_id'=>$delegate_nick_name_id]);
+         
+            return view('settings.support',['parentSupport'=>$parentSupport,'childSupport'=>$childSupport,'userNickname'=>$userNickname,'supportedTopic'=>$supportedTopic,'topic'=>$topic,'nicknames'=>$nicknames,'camp'=>$onecamp,'parentcamp'=>$campWithParents,'delegate_nick_name_id'=>$delegate_nick_name_id]);
 	  } else {
 		    $id = Auth::user()->id; 
 			$encode = General::canon_encode($id);
@@ -176,21 +249,21 @@ class SettingsController extends Controller
         $id = Auth::user()->id;
         if($id){
             $messages = [
-                'nick_name.required' => 'Nickname is required.',
+                'nick_name.required' => 'The nick name field is required.',
             ];
             
-
+   
             $validator = Validator::make($request->all(), [
                 'nick_name' => 'required',
                 
             ],$messages);
     
-            if ($validator->fails()) { dd($validator);
+            if ($validator->fails()) {
                 return redirect()->back()
                             ->withErrors($validator)
                             ->withInput();
             }
-
+             /*
             $input = $request->all();
 			// Check if camp supported already then remove duplicacy.
 			$userNicknames  = unserialize($input['userNicknames']);
@@ -223,26 +296,58 @@ class SettingsController extends Controller
 			    Session::flash('error', "You are already supporting child camp. If you commit this support, support for that camp will be removed.");
                 Session::flash('confirm',1);
 				return redirect()->back();
-			}	
+			}	*/
 
-			
-			
-			$supportTopic  = new Support();
-			$supportTopic->topic_num = $input['topic_num'];
-			$supportTopic->nick_name_id = $input['nick_name'];
-			$supportTopic->delegate_nick_name_id = $input['delegate_nick_name_id'];
-			$supportTopic->start = time();
-		    $supportTopic->camp_num = $input['camp_num'];
+			/* Enter support record to support table */
+	        $data = $request->all();
+			$userNicknames  = Nickname::personNicknameArray();
+			$topic_num = $data['topic_num'];
 				
-			$supportTopic->support_order = $input['lastsupport_order'] + 1;
-			$supportTopic->save();
-                 
-			session()->forget("topic-support-{$input['topic_num']}");
-			session()->forget("topic-support-nickname-{$input['topic_num']}");
-			session()->forget("topic-support-tree-{$input['topic_num']}");
+			$mysupports     = Support::where('topic_num',$topic_num)->whereIn('nick_name_id',$userNicknames)->where('end','=',0)->orderBy('support_order','ASC')->get();
+			   if(isset($mysupports) && count($mysupports) > 0) { 
+				   foreach($mysupports as $singleSupport) {
+					$singleSupport->end = time();
+					$singleSupport->save();
+				   }	
+			   }
+          //echo "<pre>"; print_r($data); die;			   
+			foreach($data['support_order'] as $camp_num=>$support_order) {
 				
+               
+				$supportTopic  = new Support();
+				$supportTopic->topic_num = $topic_num;
+				$supportTopic->nick_name_id = $data['nick_name'];
+				$supportTopic->delegate_nick_name_id = $data['delegate_nick_name_id'];
+				$supportTopic->start = time();
+				$supportTopic->camp_num = $camp_num;
+					
+				$supportTopic->support_order = $support_order;
+				$supportTopic->save();
+				
+				/* clear the existing session for the topic to get updated support count */
+				
+				session()->forget("topic-support-{$topic_num}");
+				session()->forget("topic-support-nickname-{$topic_num}");
+				session()->forget("topic-support-tree-{$topic_num}");
+			  	
+			}
+			/* Send delegated support email to the direct supporter and all parent */
+		  if(isset($data['delegate_nick_name_id']) && $data['delegate_nick_name_id']!=0) {	
+			$parentUser = Nickname::getUserByNickName($data['delegate_nick_name_id']);
+			
+			$nickName = Nickname::getNickName($data['delegate_nick_name_id']);
+				
+			$result['nick_name'] = $nickName->nick_name;
+			$result['subject']   = $nickName->nick_name." has just delegated his support to you.";	
+			$link = 'topic/'.$data['topic_num'].'/'.$data['camp_num'];
+			
+		    $receiver = (config('app.env')=="production") ? $parentUser->email : config('app.admin_email');	
+			
+			Mail::to($receiver)->send(new NewDelegatedSupporterMail($parentUser,$link,$result));
+           /* end of email */			
+		  }	
 			Session::flash('success', "Your support has been submitted successfully.");
-			return redirect('support/'.$input['topic_num'].'/'.$input['camp_num']);
+			return redirect('support/'.$data['topic_num'].'/'.$data['camp_num']);
 		 	
         }else{
             return redirect()->route('login');

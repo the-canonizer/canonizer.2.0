@@ -38,7 +38,7 @@
 					@foreach($topics as $topic)
 					
 					     <?php 
-						  $title = preg_replace('/[^A-Za-z0-9\-]/', '-', $topic->title);
+						  $title = preg_replace('/[^A-Za-z0-9\-]/', '-', $topic->topic_name);
 						   
 						  $topic_id = $topic->topic_num."-".$title;
 						  

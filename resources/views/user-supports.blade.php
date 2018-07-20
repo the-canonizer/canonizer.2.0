@@ -61,12 +61,12 @@
             @if(count($supportedCamps) > 0)
 			   @foreach($supportedCamps as $supports)
                 <ul>
-                    <li><a href="{{ $supports['link'] }}">{{$supports['title']}}</a></li>
+                    <li><a href="{{ $supports['link'] }}">{{$supports['camp_name']}}</a></li>
                     <ul>
                         @if(isset($supports['array']))
                         @foreach($supports['array'] as $support_order)
                             @foreach($support_order as $support)
-                                <li><a href="{{ $support['link'] }}">{{$support['title']}}</a></li>
+                                <li><a href="{{ $support['link'] }}">{{$support['camp_name']}}</a></li>
                             @endforeach
                         @endforeach
                         @endif

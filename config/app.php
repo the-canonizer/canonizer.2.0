@@ -13,6 +13,10 @@ return [
     */
 
     'name' => env('APP_NAME', 'Canonizer'),
+	
+	'support_email' => env('APP_SUPPORT_EMAIL', 'support@canonizer.com'),
+	'email_signature' => env('APP_EMAIL_SIGNATURE', 'The Canonizer Team'),
+	'admin_email' => env('ADMIN_EMAIL', 'gautamv16@gmail.com'),
 
     /*
     |--------------------------------------------------------------------------
@@ -25,7 +29,7 @@ return [
     |
     */
 
-    'env' => env('APP_ENV', 'production'),
+    'env' => env('APP_ENV', 'development'),   // development , staging, production
 
     /*
     |--------------------------------------------------------------------------
@@ -176,6 +180,7 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        Collective\Html\HtmlServiceProvider::class,
 
     ],
 
@@ -225,6 +230,8 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
+        'Form' => Collective\Html\FormFacade::class,
+      'Html' => Collective\Html\HtmlFacade::class,
     ],
 
 ];

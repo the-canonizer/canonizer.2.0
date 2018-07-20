@@ -22,7 +22,7 @@
     <div class="col-sm-12 margin-btm-2">
         <div class="well">
             <ul class="nav prfl_ul">
-                <li class="active"><a class="" href="{{ route('settings')}}">Manage Profile info</a></li>
+                <li class="active"><a class="" href="{{ route('settings')}}">Manage Profile Info</a></li>
                 <li><a class="" href="{{ route('settings.nickname')}}" >Add & Manage Nick Names</a></li>
 				<li class=""><a class="" href="{{ route('settings.support')}}" >My Supports</a></li>
                 <li><a class="" href="{{ route('settings.algo-preferences')}}">Default Algorithm</a></li>
@@ -36,8 +36,10 @@
 						<?php $private_flags = explode(",",$user->private_flags); ?>
                         <div class="row">
                             <div class="col-sm-6 margin-btm-1">
-                                <label for="topic name">First Name </label></br>
-                                <div style="width:300px;float:left"><input type="text" name="first_name" class="form-control" id="first_name" value="{{ old('firstname',$user->first_name)}}">
+                                <label for="topic name">First Name <span style="color:red;">*</span></label></br>
+                                <div style="width:300px;float:left">
+								<input type="text" name="first_name" class="form-control" id="first_name" value="{{ old('firstname',$user->first_name)}}">
+								@if ($errors->has('first_name')) <p class="help-block">{{ $errors->first('first_name') }}</p> @endif
 								</div>
 								<div style="width:95px;float:right">
 								<select class="form-control" id="first_name_bit"  name="first_name_bit">
@@ -61,10 +63,11 @@
 								</div> 
 							</div>   
                             <div class="col-sm-6 margin-btm-1">
-                                <label for="last_name">Last Name</label></br>
+                                <label for="last_name">Last Name <span style="color:red;">*</span></label></br>
 								<div style="width:300px;float:left">
                                 <input type="text" name="last_name" class="form-control" id="last_name" value="{{ old('last_name', $user->last_name)}}">
-                                </div>
+                                @if ($errors->has('last_name')) <p class="help-block">{{ $errors->first('last_name') }}</p> @endif
+								</div>
 								<div style="width:95px;float:right">
 								<select class="form-control" id="last_name_bit"  name="last_name_bit">
 								 
@@ -96,10 +99,10 @@
                             <div class="col-sm-6 margin-btm-1">
                                 <label for="language">Languauge</label>
                                 <select name="language" id="language" class="form-control">
-                                    <option value="English">English</option>
-                                    <option value="French">French</option>
-                                    <option value="Spanish">Spanish</option>
-                                    <option value="Hindi">Hindi</option>
+                                    <option value="English" {{ (old('language',$user->language) == 'English') ? 'selected' : ''}}>English</option>
+                                    <option value="French" {{ (old('language',$user->language) == 'French') ? 'selected' : ''}}>French</option>                                   
+                                    <option value="Hindi" {{ (old('language',$user->language) == 'Hindi') ? 'selected' : ''}}>Hindi</option>
+									 <option value="Spanish" {{ (old('language',$user->language) == 'Spanish') ? 'selected' : ''}}>Spanish</option>
                                 </select>
                             </div>
                             <div class="col-sm-6 margin-btm-1">
@@ -178,7 +181,7 @@
 								</div>  
 							</div>
                             <div class="col-sm-6 margin-btm-1">
-                                <label for="country">Country</label>
+                                <label for="country">Country <span style="color:red;">*</span></label>
 								</br>
 								<div style="width:300px;float:left">
                                 <select name="country" id="country" class="form-control">

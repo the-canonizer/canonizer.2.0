@@ -18,6 +18,12 @@ use DB;
 use Validator;
 use App\Model\Namespaces;
 use App\Model\NamespaceRequest;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ThankToSubmitterMail;
+use App\Mail\PurposedToSupportersMail;
+use App\Mail\ObjectionToSubmitterMail;
+use App\Mail\NewDelegatedSupporterMail;
+
 
 /**
  * TopicController Class Doc Comment
@@ -74,6 +80,7 @@ class TopicController extends Controller {
         
         try {
 			$current_time = time();
+			$eventtype ="CREATE";
             $topic = new Topic();
             $topic->topic_name = $all['topic_name'];		
 			
@@ -87,7 +94,7 @@ class TopicController extends Controller {
 			if(isset($all['topic_num'])) {
 				
 			 $topic->topic_num = $all['topic_num'];
-			 
+			 $eventtype  = "UPDATE";
 			 $message ="Topic update submitted successfully. It's live now.";
 			 $nickNames   = Nickname::personNicknameArray();
 			 
@@ -103,6 +110,7 @@ class TopicController extends Controller {
 				 //$topic->submitter_nick_id = $all['submitter'];
 				 $topic->object_reason = $all['object_reason'];
 				 $topic->object_time = $current_time;
+				 $eventtype = "OBJECTION";
 			 }			 
 			 
 			 
@@ -114,6 +122,7 @@ class TopicController extends Controller {
 			/* If topic is created then add default support to that topic */ 
             if($topic->save()) {
 				
+			  if($eventtype=="CREATE") {	
 				$supportTopic  = new Support();
 				$supportTopic->topic_num    = $topic->topic_num;
 				$supportTopic->nick_name_id = $all['nick_name'];
@@ -127,7 +136,7 @@ class TopicController extends Controller {
 				session()->forget("topic-support-{$topic->topic_num}");
 			    session()->forget("topic-support-nickname-{$topic->topic_num}");
 			    session()->forget("topic-support-tree-{$topic->topic_num}");
-				
+			  }	
 			}
 			
 			
@@ -143,6 +152,54 @@ class TopicController extends Controller {
             DB::commit();
             
             Session::flash('success', $message);
+			
+			if($eventtype=="CREATE") {
+				
+				// send history link in email
+				$link = 'topic-history/'.$topic->topic_num;
+				
+				Mail::to(Auth::user()->email)->send(new ThankToSubmitterMail(Auth::user(),$link));
+				
+			} else if($eventtype=="OBJECTION") {
+				
+				$user = Nickname::getUserByNickName($all['submitter']);
+				
+				$link = 'topic-history/'.$topic->topic_num;
+				$data['object'] = $topic->topic_name;
+				$nickName = Nickname::getNickName($all['nick_name']);
+				$data['type'] = 'topic';
+				$data['nick_name'] = $nickName->nick_name;
+				$data['forum_link'] = 'forum/'.$topic->topic_num.'-'.$topic->topic_name.'/1/threads';
+				$data['subject'] = $data['nick_name']." has objected to your proposed change.";
+				
+				$receiver = (config('app.env')=="production") ? $user->email : config('app.admin_email');
+				Mail::to($receiver)->send(new ObjectionToSubmitterMail($user,$link,$data));
+			} else if($eventtype=="UPDATE") { 
+			    
+				$directSupporter = Support::getDirectSupporter($topic->topic_num);
+			    
+				$link = 'topic/'.$topic->topic_num.'/'.$topic->camp_num.'?asof=bydate&asofdate='.date('Y/m/d H:i:s',$topic->go_live_time);
+				$data['object'] = $topic->topic_name;
+				$data['go_live_time'] = date('Y-m-d H:i:s', strtotime('+7 days'));
+				$data['type'] = 'topic';
+				$nickName = Nickname::getNickName($all['nick_name']);
+				
+				$data['nick_name'] = $nickName->nick_name;
+				$data['forum_link'] = 'forum/'.$topic->topic_num.'-'.$topic->topic_name.'/1/threads';
+				$data['subject'] = "Proposed change to ".$topic->topic_name." submitted";
+
+			  foreach($directSupporter as $supporter) { 
+			    
+				$user = Nickname::getUserByNickName($supporter->nick_name_id);
+						
+				
+				$receiver = (config('app.env')=="production") ? $user->email : config('app.admin_email');
+				Mail::to($receiver)->send(new PurposedToSupportersMail($user,$link,$data));
+				
+			  }
+			
+			}
+			
         } catch (Exception $e) {
             
             DB::rollback();
@@ -192,6 +249,9 @@ class TopicController extends Controller {
 		
         $camp       = Camp::getLiveCamp($topicnum,$parentcampnum);
 		
+		session()->forget("topic-support-{$topicnum}");
+		session()->forget("topic-support-nickname-{$topicnum}");
+		session()->forget("topic-support-tree-{$topicnum}");
 		
         $parentcamp = Camp::campNameWithAncestors($camp,'');
         
@@ -200,12 +260,12 @@ class TopicController extends Controller {
 		//$WikiParser  = new wikiParser;
         if(count($topic) <= 0) {
 			
-			Session::flash('error', "Topic does not exist.");
+			//Session::flash('error', "Topic does not exist.");
 			return back();
 		}
 		if(count($camp) <= 0) {
 			
-			Session::flash('error', "Camp does not exist.");
+			//Session::flash('error', "Camp does not exist.");
 			return back();
 		}
 		
@@ -426,23 +486,24 @@ class TopicController extends Controller {
 		$camp->submitter_nick_id = $all['nick_name'];
         $camp->camp_about_url = $all['camp_about_url'];	
 		$camp->camp_about_nick_id = $all['camp_about_nick_id'];
-
+        $eventtype = "CREATE";
         if(isset($all['camp_num'])) {
+		 $eventtype = "UPDATE";	
 		 $camp->camp_num = $all['camp_num'];
 		 $camp->submitter_nick_id = $all['nick_name'];
 		 
-		     $message ="Camp update submitted Successfully. It's live now.";
+		     $message ="Camp update submitted successfully.";
 			 $nickNames   = Nickname::personNicknameArray();
 			 
 			 $ifIamSingleSupporter = Support::ifIamSingleSupporter($all['topic_num'],$all['camp_num'],$nickNames);
 			 
 			 if(!$ifIamSingleSupporter) {
 			   $camp->go_live_time = strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
-			   $message ="Camp update submitted Successfully. Its under review, once approved it will be live.";
+			   $message ="Camp update submitted successfully.";
 			 }
 		 
 		 if(isset($all['objection']) && $all['objection']==1) {
-		 
+		     $eventtype ="OBJECTION";
 			 $camp->objector_nick_id = $all['nick_name'];			 
 			 $camp->object_reason = $all['object_reason'];
 			 $camp->object_time = time();
@@ -450,25 +511,57 @@ class TopicController extends Controller {
 		 
 		} else {
 			
-			$message = 'Camp Created Successfully.';
+			$message = 'Camp created successfully.';
 		}		
         
         if($camp->save()) {
 			
-		  /*if(!isset($all['camp_num'])) {
-			  $statement = new Statement();	
-			  
-			  $statement->value = $all['statement'];
-			  $statement->topic_num = $all['topic_num'];
-			  $statement->camp_num = $camp->camp_num;
-			  $statement->note = $all['note'];
-			  $statement->submit_time = strtotime(date('Y-m-d H:i:s'));
-			  $statement->submitter_nick_id = $all['nick_name'];
-			  $statement->go_live_time = strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
-			  $statement->language = 'English';
-					  
-			  $statement->save();
-		  }*/
+		  if($eventtype=="CREATE") {
+				
+				// send history link in email
+				$link = 'camp/history/'.$camp->topic_num.'/'.$camp->camp_num;
+				
+				Mail::to(Auth::user()->email)->send(new ThankToSubmitterMail(Auth::user(),$link));
+				
+			} else if($eventtype=="OBJECTION") {
+				
+				$user = Nickname::getUserByNickName($all['submitter']);
+				
+				$link = 'camp/history/'.$camp->topic_num.'/'.$camp->camp_num;
+				$data['object'] = $camp->topic->topic_name." : ".$camp->camp_name;
+				$nickName = Nickname::getNickName($all['nick_name']);
+				
+				$data['nick_name'] = $nickName->nick_name;
+				$data['forum_link'] = 'forum/'.$camp->topic_num.'-'.$camp->camp_name.'/'.$camp->camp_num.'/threads';
+				$data['subject'] = $data['nick_name']." has objected to your proposed change.";
+				$data['type'] = 'camp';
+				$receiver = (config('app.env')=="production") ? $user->email : config('app.admin_email');
+				Mail::to($receiver)->send(new ObjectionToSubmitterMail($user,$link,$data));
+			} else if($eventtype=="UPDATE") { 
+			
+			    $directSupporter = Support::getDirectSupporter($camp->topic_num,$camp->camp_num);
+			    
+				$link = 'topic/'.$camp->topic_num.'/'.$camp->camp_num.'?asof=bydate&asofdate='.date('Y/m/d H:i:s',$camp->go_live_time);
+				$data['object'] = $camp->topic->topic_name.' : '.$camp->camp_name;
+				$data['type'] = 'camp';
+				$data['go_live_time'] = date('Y-m-d H:i:s', strtotime('+7 days'));
+				$nickName = Nickname::getNickName($all['nick_name']);
+				
+				$data['nick_name'] = $nickName->nick_name;
+				$data['forum_link'] = 'forum/'.$camp->topic_num.'-'.$camp->camp_name.'/'.$camp->camp_num.'/threads';
+				$data['subject'] = "Proposed change to ".$camp->camp_name." submitted";
+
+			  foreach($directSupporter as $supporter) { 
+			    
+				$user = Nickname::getUserByNickName($supporter->nick_name_id);
+						
+				
+				$receiver = (config('app.env')=="production") ? $user->email : config('app.admin_email');
+				Mail::to($receiver)->send(new PurposedToSupportersMail($user,$link,$data));
+				
+			  }
+			
+			}
           Session::flash('success', $message);
 			
 		} else {
@@ -512,23 +605,24 @@ class TopicController extends Controller {
 		  $statement->submitter_nick_id = $all['nick_name'];
 		  $statement->go_live_time = $currentTime;//strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
 		  $statement->language = 'English';
-		  
+		  $eventtype = "CREATE";
 		  if(isset($all['camp_num'])) {
+			 $eventtype = "UPDATE"; 
 			 $statement->camp_num = $all['camp_num'];
 			 $statement->submitter_nick_id = $all['nick_name'];
 			 
-			 $message ="Statement update submitted Successfully. It's live now.";
+			 $message ="Statement update submitted successfully.";
 			 $nickNames   = Nickname::personNicknameArray();
 			 
 			 $ifIamSingleSupporter = Support::ifIamSingleSupporter($all['topic_num'],$all['camp_num'],$nickNames);
 			 
 			 if(!$ifIamSingleSupporter) {
 			   $statement->go_live_time = strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
-			   $message ="Statement update submitted Successfully. Its under review, once approved it will be live.";
+			   $message ="Statement update submitted successfully.";
 			 }
 			 
 			 if(isset($all['objection']) && $all['objection']==1) {
-		 
+		         $eventtype = "OBJECTION";
 				 $statement->objector_nick_id = $all['nick_name'];
 				 $statement->object_reason = $all['object_reason'];
 				 $statement->object_time = time();
@@ -540,7 +634,51 @@ class TopicController extends Controller {
 		  }	
 		  
 		  $statement->save();
-		   
+		  if($eventtype=="CREATE") {
+				
+				// send history link in email
+				$link = 'statement/history/'.$statement->topic_num.'/'.$statement->camp_num;
+				
+				Mail::to(Auth::user()->email)->send(new ThankToSubmitterMail(Auth::user(),$link));
+				
+			} else if($eventtype=="OBJECTION") {
+				
+				$user = Nickname::getUserByNickName($all['submitter']);
+				
+				$link = 'statement/history/'.$statement->topic_num.'/'.$statement->camp_num;
+				$data['object'] = "#".$statement->id;
+				$nickName = Nickname::getNickName($all['nick_name']);
+				$data['type'] = 'statement';
+				$data['nick_name'] = $nickName->nick_name;
+				$data['forum_link'] = 'forum/'.$statement->topic_num.'-statement/'.$statement->camp_num.'/threads';
+				$data['subject'] = $data['nick_name']." has objected to your proposed change.";
+				
+				$receiver = (config('app.env')=="production") ? $user->email : config('app.admin_email');
+				Mail::to($receiver)->send(new ObjectionToSubmitterMail($user,$link,$data));
+			} else if($eventtype=="UPDATE") { 
+			
+			   $directSupporter = Support::getDirectSupporter($statement->topic_num,$statement->camp_num);
+			    
+				$link = 'topic/'.$statement->topic_num.'/'.$statement->camp_num.'?asof=bydate&asofdate='.date('Y/m/d H:i:s',$statement->go_live_time);
+				$data['object'] = "#".$statement->id;
+				$data['go_live_time'] = date('Y-m-d H:i:s', strtotime('+7 days'));
+				$data['type'] = 'statement';
+				$nickName = Nickname::getNickName($all['nick_name']);
+				
+				$data['nick_name'] = $nickName->nick_name;
+				$data['forum_link'] = 'forum/'.$statement->topic_num.'-statement/'.$statement->camp_num.'/threads';
+				$data['subject'] = "Proposed change to camp statement #".$statement->id." submitted";
+
+			  foreach($directSupporter as $supporter) { 
+			    
+				$user = Nickname::getUserByNickName($supporter->nick_name_id);
+						
+				
+				$receiver = (config('app.env')=="production") ? $user->email : config('app.admin_email');
+				Mail::to($receiver)->send(new PurposedToSupportersMail($user,$link,$data));
+				
+			  }
+			} 
 		
         
         return redirect('statement/history/'.$statement->topic_num.'/'.$statement->camp_num)->with(['success'=>$message]);
