@@ -186,7 +186,7 @@ class CThreadsController extends Controller
         return view(
             'threads.show',
              $topic, [
-                'userNicknames' => Nickname::topicNicknameUsed($topicid),
+                'userNicknames' => (auth()->check()) ? Nickname::topicNicknameUsed($topicid) : array(),
                 'threads' => CThread::findOrFail($CThread),
                 'replies' => CThread::findOrFail($CThread)
                                             ->replies()
