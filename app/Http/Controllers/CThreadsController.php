@@ -41,13 +41,17 @@ class CThreadsController extends Controller
 
         if ((camp::where('camp_num', $campnum)->where('topic_num', $topicid)->value('camp_name')))
         {
+            // $threads = CThread::where('camp_id', $campnum)->
+            //                     where('topic_id', $topicid)->latest()->get();
+
             $threads = CThread::where('camp_id', $campnum)->
-                                where('topic_id', $topicid)->latest()->get();
+                                where('topic_id', $topicid)->
+                                latest()->paginate(10);
         }
         else {
             return (
                 'Validation Error!!!!'.
-                'Either Topic ID is not related to Camp or Invalid Topic Name.'
+                'Topic ID is not related to Camp.'
             );
         }
 
@@ -55,20 +59,19 @@ class CThreadsController extends Controller
 
         $camp       = Camp::getLiveCamp($topicid,$campnum);
 
-        // New View
-        //dd($camp);
         return view(
             'threads.index',
             $topic,
             [
                 'threads'          => $threads,
                 // Return the name of the camp to index View
-                //'campname'         => Camp::find($campnum)->camp_name,
                 'campname'         => camp::where('camp_num', $campnum)
                                                     ->where('topic_num', $topicid)
                                                     ->value('camp_name'),
                 // Return the name of the Topic to index View
-                'topicGeneralName' => Topic::find($topicid)->topic_name,
+                'topicGeneralName' => Topic::where('topic_num', $topicid)
+                                             ->orderBy('go_live_time', 'desc')
+                                             ->first()->topic_name,
                 'parentcamp'       => Camp::campNameWithAncestors($camp,''),
             ],
             compact('threads')
@@ -103,7 +106,6 @@ class CThreadsController extends Controller
             [
                 'threads'          => $threads,
                 // Return the name of the camp to index View
-                //'campname'         => Camp::find($campnum)->camp_name,
                 'campname'         => camp::where('camp_num', $campnum)
                                             ->where('topic_num', $topicid)
                                             ->value('camp_name'),
@@ -126,10 +128,14 @@ class CThreadsController extends Controller
 
         $topic = getArray($topicid, $topicname, $campnum);
 
+        $topicGeneralName = Topic::where('topic_num', $topicid)
+                                     ->orderBy('go_live_time', 'desc')
+                                     ->first()->topic_name;
+
         return view(
             'threads.create',
             $topic,
-            compact('threads', 'userNicknames')
+            compact('threads', 'userNicknames', 'topicGeneralName')
         );
     }
 
@@ -141,13 +147,11 @@ class CThreadsController extends Controller
      */
     public function store(Request $request, $topicid, $topicname, $campnum)
     {
-        //dd($request->all());
-        //dd($campnum, $topicid);
         //Validate the request for Error Handling
 
         $this->validate(
             $request, [
-                'title'    => 'required',
+                'title'    => 'required|max:100',
                 'nick_name' => 'required'
                 //'body'     => 'required',
             ]
@@ -162,7 +166,11 @@ class CThreadsController extends Controller
             'topic_id' => $topicid
             ]
         );
-        return back();
+
+        // Return Url after creating thread Successfully
+        $return_url = 'forum/'.$topicid.'-'.$topicname.'/'.$campnum.'/threads';
+
+        return redirect($return_url)->with('success', 'Thread Created Successfully!');
     }
 
     /**
@@ -178,7 +186,7 @@ class CThreadsController extends Controller
         return view(
             'threads.show',
              $topic, [
-                'userNicknames' => Nickname::topicNicknameUsed($topicid),
+                'userNicknames' => (auth()->check()) ? Nickname::topicNicknameUsed($topicid) : array(),
                 'threads' => CThread::findOrFail($CThread),
                 'replies' => CThread::findOrFail($CThread)
                                             ->replies()

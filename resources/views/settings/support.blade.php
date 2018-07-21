@@ -231,11 +231,13 @@
 
 
          </div>
-        @if(isset($topic) && !Session::has('warning'))
+		            
+					
+					 
+        @if(isset($topic))
          <div id="myTabContent" class="add-nickname-section">  
                  <h5>Nick Name To Support {!! $parentcamp !!} </h5>
-                
-                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                <input type="hidden" name="_token" value="{{ csrf_token() }}">
 					<input type="hidden" id="topic_num" name="topic_num" value="{{ $topic->topic_num }}">
 					<input type="hidden" id="delegate_nick_name_id" name="delegate_nick_name_id" value="{{ $delegate_nick_name_id }}">
 					<input type="hidden" id="camp_num" name="camp_num" value="{{ $camp->camp_num }}">
@@ -244,8 +246,7 @@
 					<input type="hidden" id="support_id" name="support_id" value="{{ isset($supportedTopic->support_id) ? $supportedTopic->support_id : '0'}}">
 					<input type="hidden" id="confirm_support" name="confirm_support" value="0">
 					<input type="hidden" id="removed_camp" name="removed_camp" value="">
-					
-					
+                    
                     <div class="row">
                         <div class="col-sm-6 margin-btm-1">
 						<select name="nick_name" id="select_nick_name" class="form-control">
@@ -266,15 +267,17 @@
 						</div> 
                        
                     </div>
-                    
+                     @if(!Session::has('warning'))
                     <button type="submit" id="submit" class="btn btn-login">Confirm Support</button>
+				    @else
+					<div style="display:none">	
+					<button type="submit" id="submit" class="btn btn-login"></button>	
+					</div>
+					@endif
                     
                 
         </div>
-		@else
-		<div style="display:none">
-	     <button type="submit" id="submit" class="btn btn-login"></button>
-        </div>	
+		
 	  @endif
      </form>  
      

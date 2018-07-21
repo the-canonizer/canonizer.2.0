@@ -5,7 +5,16 @@
 @section('content')
 
             <div class="camp top-head">
-    			<h3>Create a new thread for {{ $topicname }}</h3>
+                <hr>
+                <h3>
+                    <b>
+                        <a
+                        href="{{ URL::to('/') }}/forum/{{ $topicname }}/{{ $campnum }}/threads">
+                            &laquo; List of All Threads
+                        </a>
+                    </b>
+                </h3>
+    			<h3>Create a new thread for Topic : {{ $topicGeneralName }}</h3>
 			</div>
             <div class="right-whitePnl">
             	 <div class="panel panel-group">
@@ -16,7 +25,7 @@
 
                             <div class="form-group">
 
-                                <label for="title">Title of Thread: </label>
+                                <label for="title">Title of Thread: <span style="color:red">*</span> </label>
 
                                 <input type="text" class="form-control" id="title" placeholder="Title" name="title">
 
@@ -31,15 +40,15 @@
                             </div> --}}
 
 							<div class="form-group">
-				                <label for="camp_name">Nick Name <p class="help-block">(Once you pick a nick name, for anything about a topic, you must always use the same nick name.)</p></label>
+				                <label for="camp_name">Nick Name <span style="color:red">*</span><p class="help-block">(Once you pick a nick name, for anything about a topic, you must always use the same nick name.)</p></label>
 				                <select name="nick_name" id="nick_name" class="form-control">
 				                    @foreach($userNicknames as $nick)
 				                    <option value="{{ $nick->id }}">{{ $nick->nick_name}}</option>
 				                    @endforeach
 
 				                </select>
-				                 @if ($errors->has('nick_name')) <p class="help-block">{{ $errors->first('nick_name') }}</p> @endif
-								 <a href="<?php echo url('settings/nickname');?>">Add new nickname </a>
+				                 {{-- @if ($errors->has('nick_name')) <p class="help-block">{{ $errors->first('nick_name') }}</p> @endif --}}
+								 <a href="<?php echo url('settings/nickname');?>">Add New Nick Name </a>
 				            </div>
 
                             <div class="form-group">

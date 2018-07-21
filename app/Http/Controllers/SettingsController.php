@@ -249,21 +249,21 @@ class SettingsController extends Controller
         $id = Auth::user()->id;
         if($id){
             $messages = [
-                'nick_name.required' => 'Nickname is required.',
+                'nick_name.required' => 'The nick name field is required.',
             ];
             
    
-            /*$validator = Validator::make($request->all(), [
+            $validator = Validator::make($request->all(), [
                 'nick_name' => 'required',
                 
             ],$messages);
     
-            if ($validator->fails()) { dd($validator);
+            if ($validator->fails()) {
                 return redirect()->back()
                             ->withErrors($validator)
                             ->withInput();
             }
-
+             /*
             $input = $request->all();
 			// Check if camp supported already then remove duplicacy.
 			$userNicknames  = unserialize($input['userNicknames']);
