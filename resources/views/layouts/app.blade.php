@@ -185,7 +185,7 @@
 										<label for="radio2">default</label>
 									</div>
 									<div class="radio radio-primary">
-										<input type="radio" <?php echo (isset($_REQUEST['asof']) && $_REQUEST['asof']=="bydate") ? "checked='checked'" : '';?> class="asofdate" name="asof"id="radio3" value="bydate">
+										<input readonly type="radio" <?php echo (isset($_REQUEST['asof']) && $_REQUEST['asof']=="bydate") ? "checked='checked'" : '';?> class="asofdate" name="asof"id="radio3" value="bydate">
 										<label for="radio3">as of (yy/mm/dd)</label>
 									</div>
 									<div><input type="text" id="asofdate" name="asofdate" value="<?php echo isset($_REQUEST['asofdate']) ? $_REQUEST['asofdate']: '';?>"/></div>
