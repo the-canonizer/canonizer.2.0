@@ -20,3 +20,17 @@ UPDATE topic SET topic_name=replace(topic_name,"â€™","'");
 UPDATE topic SET topic_name=replace(topic_name,"â€˜","'");
 UPDATE topic SET topic_name=replace(topic_name,"â€œ",'"');
 UPDATE topic SET topic_name=replace(topic_name,"â€",'"');
+
+UPDATE post SET body=replace(body,"â€™","'"); 
+UPDATE post SET body=replace(body,"â€˜","'");
+UPDATE post SET body=replace(body,"â€œ",'"');
+UPDATE post SET body=replace(body,"â€",'"');
+
+UPDATE post SET body=replace(body,"â€¦",'');
+
+UPDATE thread SET body=replace(body,"â€™","'"),title=replace(title,"â€™","'"); 
+UPDATE thread SET body=replace(body,"â€˜","'"),title=replace(title,"â€˜","'");
+UPDATE thread SET body=replace(body,"â€œ",'"'),title=replace(title,"â€œ",'"');
+UPDATE thread SET body=replace(body,"â€",'"'),title=replace(title,"â€",'"');
+
+UPDATE thread SET body=replace(body,"â€¦",''),title=replace(title,"â€¦",'');
