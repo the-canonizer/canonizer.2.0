@@ -72,7 +72,7 @@ class CThreadsController extends Controller
                 'topicGeneralName' => Topic::where('topic_num', $topicid)
                                              ->orderBy('go_live_time', 'desc')
                                              ->first()->topic_name,
-                'parentcamp'       => Camp::campNameWithAncestors($camp,''),
+                'parentcamp'       => Camp::campNameWithAncestors($camp,'Agreement'),
             ],
             compact('threads')
         );
