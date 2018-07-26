@@ -1,4 +1,4 @@
-jQuery('head').append('<link rel="stylesheet" href="https://canonizer.com/canonizer/public/css/canonizer.css" type="text/css" />');
+jQuery('head').append('<link rel="stylesheet" href="https://canonizer.com/css/canonizer.css" type="text/css" />');
 
 
 /* Following function will call REST getcamoutline API to get the complete tree outline */
@@ -10,7 +10,7 @@ jQuery('head').append('<link rel="stylesheet" href="https://canonizer.com/canoni
 
 function outlinecall(topic_num,camp_num) {
 
-	jQuery.getJSON('http://production.canonizer.com/api/v1/getcampoutline/'+topic_num+'/'+camp_num)
+	jQuery.getJSON('https://canonizer.com/api/v1/getcampoutline/'+topic_num+'/'+camp_num)
 	  .done(function(data){
 		 jQuery('.post').append("<div class='tree treeview'><ul class='mainouter'>"+data.outline+"</ul></div>");
 	})
