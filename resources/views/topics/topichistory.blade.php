@@ -69,7 +69,7 @@
                 <div>
                   <b>Topic Name :</b> {{ $data->topic_name }} <br/>
 				  <b>Note :</b> {{ $data->note }} <br/>
-				  <b>Language :</b> {{ $data->language }}<br/>
+				  
 				  <b>Namespace :</b> {{ $data->topicnamespace->label }} <br/>
 				  <b>Submitter Nickname :</b> {{ isset($data->submitternickname->nick_name) ? $data->submitternickname->nick_name : 'N/A' }} <br/>
 				  <b>Submitted on :</b> {{ to_local_time($data->submit_time) }} <br/>

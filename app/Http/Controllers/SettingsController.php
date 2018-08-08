@@ -338,7 +338,7 @@ class SettingsController extends Controller
 			$nickName = Nickname::getNickName($data['delegate_nick_name_id']);
 				
 			$result['nick_name'] = $nickName->nick_name;
-			$result['subject']   = $nickName->nick_name." has just delegated his support to you.";	
+			$result['subject']   = $nickName->nick_name." has just delegated their support to you.";	
 			$link = 'topic/'.$data['topic_num'].'/'.$data['camp_num'];
 			
 		    $receiver = (config('app.env')=="production") ? $parentUser->email : config('app.admin_email');	
