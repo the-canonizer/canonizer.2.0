@@ -110,9 +110,9 @@
 								</br>
 								<div style="width:300px;float:left">
                                 @if(old('birthday') != '')
-                                <input type="text" name="birthday" id="birthday" class="form-control" id="" value="{{ date('m/d/Y',strtotime(old('birthday')))}}">
+                                <input type="text" readonly name="birthday" id="birthday" class="form-control" id="" value="{{ date('m/d/Y',strtotime(old('birthday')))}}">
                                 @else
-                                <input type="text" name="birthday" id="birthday" class="form-control" id="" value="{{ (isset($user->birthday) && $user->birthday != '') ? date('m/d/Y',strtotime($user->birthday)) : '' }}">
+                                <input type="text" readonly name="birthday" id="birthday" class="form-control" id="" value="{{ (isset($user->birthday) && $user->birthday != '') ? date('m/d/Y',strtotime($user->birthday)) : '' }}">
                                 @endif
 								</div>
 								<div style="width:95px;float:right">
@@ -223,7 +223,8 @@
         $(document).ready(function () {
             $("#birthday").datepicker({
                 changeMonth: true,
-                changeYear: true
+                changeYear: true,
+				maxDate: 0
             });
         })
     </script>

@@ -34,7 +34,7 @@
                         <input class="form-control" id="file_name" name="file_name" placeholder="File Name" type="text"/>
                        
                     </div>
-               
+                    <p style="color:red">Warning : Once a file will be uploaded there is no way to delete the file.</p>
                     <button id="upload_file" class="btn btn-sm btn-primary">Upload</button>
                </form>
                <div  style="margin-top:10px;background:#fff;">

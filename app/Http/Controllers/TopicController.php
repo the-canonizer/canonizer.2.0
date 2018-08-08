@@ -64,7 +64,7 @@ class TopicController extends Controller {
         $all = $request->all();
 		
         $validator = Validator::make($request->all(), [
-            'topic_name'=>'required|max:30',
+            'topic_name'=>'required|unique:topic|max:30',
             'namespace' => 'required',
             'create_namespace'=>'required_if:namespace,other',
 			'nick_name'=>'required',
@@ -95,14 +95,14 @@ class TopicController extends Controller {
 				
 			 $topic->topic_num = $all['topic_num'];
 			 $eventtype  = "UPDATE";
-			 $message ="Topic update submitted successfully. It's live now.";
+			 $message ="Topic change submitted successfully.";
 			 $nickNames   = Nickname::personNicknameArray();
 			 
 			 $ifIamSingleSupporter = Support::ifIamSingleSupporter($all['topic_num'],0,$nickNames);
 			 
 			 if(!$ifIamSingleSupporter) {
 			   $topic->go_live_time = strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
-			   $message ="Topic update submitted successfully. Its under review, once approved it will be live.";
+			   $message ="Topic change submitted successfully. If no direct supporters object to this change, it will go live on ".date('Y-m-d H:i:s', strtotime('+7 days'));
 			 } 
 			 
 			 if(isset($all['objection']) && $all['objection']==1) {
@@ -116,7 +116,7 @@ class TopicController extends Controller {
 			 
 			}
 			else {
-			 $message ="Topic created successfully. It's live now.";	
+			 $message ="Topic created successfully.";	
 			}
 
 			/* If topic is created then add default support to that topic */ 
@@ -314,12 +314,14 @@ class TopicController extends Controller {
 		$topic      = Camp::getAgreementTopic($camp->topic_num);
 
         $parentcamp = Camp::campNameWithAncestors($camp,'');
+		
+		$parentcampsData = Camp::getAllParentCamp($camp->topic_num);
 				
         $nickNames  = Nickname::topicNicknameUsed($camp->topic_num);
 		
 		$allNicknames = Nickname::orderBy('nick_name','ASC')->get();
 		
-        return view('topics.managecamp',  compact('objection','topic','camp','parentcampnum','parentcamp','nickNames','allNicknames'));
+        return view('topics.managecamp',  compact('parentcampsData','objection','topic','camp','parentcampnum','parentcamp','nickNames','allNicknames'));
     }
 	
 	/**
@@ -492,14 +494,14 @@ class TopicController extends Controller {
 		 $camp->camp_num = $all['camp_num'];
 		 $camp->submitter_nick_id = $all['nick_name'];
 		 
-		     $message ="Camp update submitted successfully.";
+		     $message ="Camp change submitted successfully.";
 			 $nickNames   = Nickname::personNicknameArray();
 			 
 			 $ifIamSingleSupporter = Support::ifIamSingleSupporter($all['topic_num'],$all['camp_num'],$nickNames);
 			 
 			 if(!$ifIamSingleSupporter) {
 			   $camp->go_live_time = strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
-			   $message ="Camp update submitted successfully.";
+			   $message ="Camp change submitted successfully. If no direct supporters object to this change, it will go live on ".date('Y-m-d H:i:s', strtotime('+7 days'));
 			 }
 		 
 		 if(isset($all['objection']) && $all['objection']==1) {
