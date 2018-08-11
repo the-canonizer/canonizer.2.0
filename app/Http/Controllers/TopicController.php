@@ -63,21 +63,30 @@ class TopicController extends Controller {
     public function store(Request $request) {
         $all = $request->all();
 		
-        $validator = Validator::make($request->all(), [
-            'topic_name'=>'required|unique:topic|max:30',
+		$validatorArray = ['topic_name'=>'required|unique:topic|max:30',
             'namespace' => 'required',
             'create_namespace'=>'required_if:namespace,other',
 			'nick_name'=>'required',
 			'note'=>'required'
             
-        ]);
+        ];
+		if(isset($all['topic_num'])) {
+			$validatorArray = ['topic_name'=>'required|max:30',
+            'namespace' => 'required',
+            'create_namespace'=>'required_if:namespace,other',
+			'nick_name'=>'required',
+			'note'=>'required'
+            
+        ];
+		}	
+        $validator = Validator::make($request->all(), $validatorArray);
         
         if ($validator->fails()) {
             return back()->withErrors($validator->errors())->withInput($request->all());
         }
 		
         DB::beginTransaction();
-        
+        $go_live_time="";
         try {
 			$current_time = time();
 			$eventtype ="CREATE";
@@ -102,9 +111,11 @@ class TopicController extends Controller {
 			 
 			 if(!$ifIamSingleSupporter) {
 			   $topic->go_live_time = strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
-			   $message ="Topic change submitted successfully. If no direct supporters object to this change, it will go live on ".date('Y-m-d H:i:s', strtotime('+7 days'));
+			   $go_live_time = $topic->go_live_time;
+			   $message ="Topic change submitted successfully. If no direct supporters object to this change, it will go live on ";
+			   
 			 } 
-			 
+
 			 if(isset($all['objection']) && $all['objection']==1) {
 				 $topic->objector_nick_id = $all['nick_name'];
 				 //$topic->submitter_nick_id = $all['submitter'];
@@ -206,7 +217,7 @@ class TopicController extends Controller {
             Session::flash('error', "Fail to create topic, please try later.");
         }
 
-        return redirect('topic-history/'.$topic->topic_num)->with(['success'=>$message]);
+        return redirect('topic-history/'.$topic->topic_num)->with(['success'=>$message,'go_live_time'=>$go_live_time]);
     }
 	
 	 /**

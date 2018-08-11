@@ -21,9 +21,11 @@ class UploadController extends Controller
        
        
         $validator = Validator::make($request->all(), [
-            'file' => 'required|mimes:jpeg,bmp,png,jpg,gif|max:2000',
+            'file' => 'required|mimes:jpeg,bmp,png,jpg,gif|max:5120',
             //'file_name' => 'required',
-        ]);
+        ],
+		['file.max'=>'The file may not be greater than 5 MB.']
+		);
 
         if($validator->fails()) {
              //session(['error'=> "Select a image file and fill file name"]);
@@ -34,7 +36,6 @@ class UploadController extends Controller
         $file = $request->file('file'); 
 		
 		
-		
 		if($request->input('file_name')=="") {
 			
 		  $uniquename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);	
@@ -42,7 +43,7 @@ class UploadController extends Controller
 			
 		  $uniquename = trim($request->input('file_name'));	
 		}
-		
+	
 		 $existingFile = Upload::where('file_id',$uniquename)->get();
 		 
 		 if(count($existingFile) > 0 ) {
@@ -63,6 +64,17 @@ class UploadController extends Controller
 		
         if($file){
          $fullname = $uniquename . '.' . $file->getClientOriginalExtension();
+		 
+		 $dir    = public_path().'/files';
+         $files1 = scandir($dir);
+		 
+		 if(in_array($fullname,$files1)) {
+			$request->session()->flash('error', 'There is already a file with name '.$fullname.' Please use different name.');
+            return redirect()->back();	 
+			 
+		 }
+		 
+		 
          try{
             $path = $file->storeAs('files',$fullname,'public_files');
 			

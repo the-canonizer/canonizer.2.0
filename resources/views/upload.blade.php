@@ -22,7 +22,7 @@
 <div class="right-whitePnl">
     <div class="container-fluid">
         <div class="Gcolor-Pnl">
-            <h3>Upload images only ( jpeg,bmp,png,jpg,gif ), Max size 25 MB</h3>
+            <h3>Upload images only ( jpeg,bmp,png,jpg,gif ), Max size 5 MB</h3>
             <div class="content">	  
 			   <form method="post" class="form-horizontal" enctype="multipart/form-data">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
@@ -31,7 +31,7 @@
                         
                     </div>
                     <div class="form-group">
-                        <input class="form-control" id="file_name" name="file_name" placeholder="File Name" type="text"/>
+                        <input class="form-control" id="file_name" name="file_name" placeholder="File Name (with no extension)" type="text"/>
                        
                     </div>
                     <p style="color:red">Warning : Once a file will be uploaded there is no way to delete the file.</p>
