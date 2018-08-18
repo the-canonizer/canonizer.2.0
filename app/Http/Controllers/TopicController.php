@@ -63,21 +63,30 @@ class TopicController extends Controller {
     public function store(Request $request) {
         $all = $request->all();
 		
-        $validator = Validator::make($request->all(), [
-            'topic_name'=>'required|unique:topic|max:30',
+		$validatorArray = ['topic_name'=>'required|unique:topic|max:30',
             'namespace' => 'required',
             'create_namespace'=>'required_if:namespace,other',
 			'nick_name'=>'required',
 			'note'=>'required'
             
-        ]);
+        ];
+		if(isset($all['topic_num'])) {
+			$validatorArray = ['topic_name'=>'required|max:30',
+            'namespace' => 'required',
+            'create_namespace'=>'required_if:namespace,other',
+			'nick_name'=>'required',
+			'note'=>'required'
+            
+        ];
+		}	
+        $validator = Validator::make($request->all(), $validatorArray);
         
         if ($validator->fails()) {
             return back()->withErrors($validator->errors())->withInput($request->all());
         }
 		
         DB::beginTransaction();
-        
+        $go_live_time="";
         try {
 			$current_time = time();
 			$eventtype ="CREATE";
@@ -102,9 +111,11 @@ class TopicController extends Controller {
 			 
 			 if(!$ifIamSingleSupporter) {
 			   $topic->go_live_time = strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
-			   $message ="Topic change submitted successfully. If no direct supporters object to this change, it will go live on ".date('Y-m-d H:i:s', strtotime('+7 days'));
+			   $go_live_time = $topic->go_live_time;
+			   $message ="Topic change submitted successfully. If no direct supporters object to this change, it will go live on ";
+			   
 			 } 
-			 
+
 			 if(isset($all['objection']) && $all['objection']==1) {
 				 $topic->objector_nick_id = $all['nick_name'];
 				 //$topic->submitter_nick_id = $all['submitter'];
@@ -180,7 +191,7 @@ class TopicController extends Controller {
 			    
 				$link = 'topic/'.$topic->topic_num.'/'.$topic->camp_num.'?asof=bydate&asofdate='.date('Y/m/d H:i:s',$topic->go_live_time);
 				$data['object'] = $topic->topic_name;
-				$data['go_live_time'] = date('Y-m-d H:i:s', strtotime('+7 days'));
+				$data['go_live_time'] = $topic->go_live_time;
 				$data['type'] = 'topic';
 				$nickName = Nickname::getNickName($all['nick_name']);
 				
@@ -206,7 +217,7 @@ class TopicController extends Controller {
             Session::flash('error', "Fail to create topic, please try later.");
         }
 
-        return redirect('topic-history/'.$topic->topic_num)->with(['success'=>$message]);
+        return redirect('topic-history/'.$topic->topic_num)->with(['success'=>$message,'go_live_time'=>$go_live_time]);
     }
 	
 	 /**
@@ -248,7 +259,7 @@ class TopicController extends Controller {
 		$topic      = Camp::getAgreementTopic($topicnum,$_REQUEST);
 		
         $camp       = Camp::getLiveCamp($topicnum,$parentcampnum);
-		
+		 
 		session()->forget("topic-support-{$topicnum}");
 		session()->forget("topic-support-nickname-{$topicnum}");
 		session()->forget("topic-support-tree-{$topicnum}");
@@ -472,7 +483,7 @@ class TopicController extends Controller {
             return back()->withErrors($validator->errors())->withInput($request->all());
         }
         $message = null;
-        
+        $go_live_time = "";
         $camp = new Camp();
         $camp->topic_num = $all['topic_num'];
 		
@@ -501,7 +512,8 @@ class TopicController extends Controller {
 			 
 			 if(!$ifIamSingleSupporter) {
 			   $camp->go_live_time = strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
-			   $message ="Camp change submitted successfully. If no direct supporters object to this change, it will go live on ".date('Y-m-d H:i:s', strtotime('+7 days'));
+			   $message ="Camp change submitted successfully. If no direct supporters object to this change, it will go live on ";
+			   $go_live_time = $camp->go_live_time;
 			 }
 		 
 		 if(isset($all['objection']) && $all['objection']==1) {
@@ -546,7 +558,7 @@ class TopicController extends Controller {
 				$link = 'topic/'.$camp->topic_num.'/'.$camp->camp_num.'?asof=bydate&asofdate='.date('Y/m/d H:i:s',$camp->go_live_time);
 				$data['object'] = $camp->topic->topic_name.' : '.$camp->camp_name;
 				$data['type'] = 'camp';
-				$data['go_live_time'] = date('Y-m-d H:i:s', strtotime('+7 days'));
+				$data['go_live_time'] = $camp->go_live_time;
 				$nickName = Nickname::getNickName($all['nick_name']);
 				
 				$data['nick_name'] = $nickName->nick_name;
@@ -571,7 +583,7 @@ class TopicController extends Controller {
 		  $message = 'Camp not added, please try again.';	
 		}
         
-		return redirect('camp/history/'.$camp->topic_num.'/'.$camp->camp_num)->with(['success'=>$message]);
+		return redirect('camp/history/'.$camp->topic_num.'/'.$camp->camp_num)->with(['success'=>$message,'go_live_time'=>$go_live_time]);
                 
         
     }
@@ -596,7 +608,7 @@ class TopicController extends Controller {
             return back()->withErrors($validator->errors())->withInput($request->all());
         }
         
-        	
+          $go_live_time = "";	
 		  $statement = new Statement();	
 		  
 		  $statement->value = $all['statement'];
@@ -620,7 +632,8 @@ class TopicController extends Controller {
 			 
 			 if(!$ifIamSingleSupporter) {
 			   $statement->go_live_time = strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
-			   $message ="Statement update submitted successfully.";
+			   $message ="Statement change submitted successfully. If no direct supporters object to this change, it will go live on ";
+			   $go_live_time = $statement->go_live_time;
 			 }
 			 
 			 if(isset($all['objection']) && $all['objection']==1) {
@@ -663,7 +676,7 @@ class TopicController extends Controller {
 			    
 				$link = 'topic/'.$statement->topic_num.'/'.$statement->camp_num.'?asof=bydate&asofdate='.date('Y/m/d H:i:s',$statement->go_live_time);
 				$data['object'] = "#".$statement->id;
-				$data['go_live_time'] = date('Y-m-d H:i:s', strtotime('+7 days'));
+				$data['go_live_time'] = $statement->go_live_time;
 				$data['type'] = 'statement';
 				$nickName = Nickname::getNickName($all['nick_name']);
 				
@@ -683,7 +696,7 @@ class TopicController extends Controller {
 			} 
 		
         
-        return redirect('statement/history/'.$statement->topic_num.'/'.$statement->camp_num)->with(['success'=>$message]);
+        return redirect('statement/history/'.$statement->topic_num.'/'.$statement->camp_num)->with(['success'=>$message,'go_live_time'=>$go_live_time]);
                 
         
     }

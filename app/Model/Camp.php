@@ -180,6 +180,7 @@ class Camp extends Model {
 						  ->whereRaw('go_live_time in (select max(go_live_time) from camp where topic_num='.$camp->topic_num.' and objector_nick_id is null group by camp_num)')				
 						  ->where('go_live_time','<=',$as_of_time)
 						  ->groupBy('camp_num')->orderBy('submit_time', 'desc')->first();
+			    if(!empty($pcamp)) 			  
 				return self::campNameWithAncestors($pcamp, $campname);
 			}
 		}
