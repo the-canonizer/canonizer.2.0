@@ -170,18 +170,18 @@ class Camp extends Model {
 				$url = url('topic/'.$camp->topic_num.'/'.$camp->camp_num);
 				$campname = "<a href='".$url."'>".$camp->camp_name. '</a>';
 			}
-			if ($camp->parent_camp_num) {
+			if (isset($camp) && $camp->parent_camp_num) {
 				
 				
 				$pcamp = Camp::where('topic_num', $camp->topic_num)				          
 				          ->where('camp_num', $camp->parent_camp_num)
-						  //->where('camp_name', '!=', 'Agreement')  
+						 // ->where('camp_name', '!=', 'Agreement')  
 						  ->where('objector_nick_id', '=', NULL)
 						  ->whereRaw('go_live_time in (select max(go_live_time) from camp where topic_num='.$camp->topic_num.' and objector_nick_id is null group by camp_num)')				
 						  ->where('go_live_time','<=',$as_of_time)
 						  ->groupBy('camp_num')->orderBy('submit_time', 'desc')->first();
-			    if(!empty($pcamp)) 			  
-				return self::campNameWithAncestors($pcamp, $campname);
+				
+			    return self::campNameWithAncestors($pcamp, $campname);
 			}
 		}
         return $campname;
