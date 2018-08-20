@@ -42,7 +42,7 @@
                         <ul class ="list-group">
                             @foreach ($replies as $reply)
                             <li class = "list-group-item">
-                                @include('threads.replies')
+                                 @include('threads.replies')
                             </li>
                             @endforeach
                         </ul>
