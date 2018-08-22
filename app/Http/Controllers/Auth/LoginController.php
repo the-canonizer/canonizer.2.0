@@ -36,4 +36,21 @@ class LoginController extends Controller
     {
         $this->middleware('guest')->except('logout');
     }
+
+/**
+ * [showLoginForm description]
+ * To override the showLoginForm from the Laravel Framework
+ * to redirect the URL to the previous intended URL
+ *
+ * @return [type] [description]
+ */
+    public function showLoginForm()
+    {
+        if(!session()->has('url.intended'))
+        {
+            session(['url.intended' => url()->previous()]);
+        }
+
+    return view('auth.login');
+    }
 }

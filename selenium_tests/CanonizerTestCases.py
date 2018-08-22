@@ -26,6 +26,7 @@ testCases = {
     12: [critical, 'If any unauthenticated user wants to join the camp, User should be directed to the login page'],
     13: [low, 'When the main page loads, Text on button to upload all topic is "Load All Topics"'],
     14: [low, 'Register page should have "Login" option/button for existing users'],
-    15: [low, 'Login Page should have "Register" Option/button for new users']
+    15: [low, 'Login Page should have "Register" Option/button for new users'],
+    16: [low, 'On Registration Page, All Mandatory Fields are marked with * Sign']
 }
 

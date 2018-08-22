@@ -1,5 +1,7 @@
 import unittest
 from CanonizerHomePage import *
+from CanonizerRegistrationPage import  *
+from CanonizerLoginPage import *
 from CanonizerTestCases import test_cases
 from Config import *
 from selenium import webdriver
@@ -25,34 +27,36 @@ class TestPages(unittest.TestCase):
 
     def test_canonizer_register_button(self):
         print("\n" + str(test_cases(1)))
-        page = CanonizerMainPage(self.driver)
+        page = CanonizerRegisterPage(self.driver)
         registerPage = page.click_register_button()
         self.assertIn("/register", registerPage.get_url())
 
     def test_canonizer_login_button(self):
         print("\n" + str(test_cases(2)))
-        page = CanonizerMainPage(self.driver)
-        loginPage = page.click_login_button()
+        page = CanonizerLoginPage(self.driver)
+        loginPage = page.click_login_page_button()
         self.assertIn("/login", loginPage.get_url())
 
     def test_canonizer_login_with_valid_user(self):
         print ("\n" + str(test_cases(3)))
-        mainPage = CanonizerMainPage(self.driver)
-        loginPage = mainPage.click_login_button()
+        page = CanonizerLoginPage(self.driver)
+        loginPage = page.click_login_page_button()
         result = loginPage.login_with_valid_user(DEFAULT_USER, DEFAULT_PASS)
         self.assertIn("", result.get_url())
 
     def test_login_with_invalid_user(self):
         print ("\n" + str(test_cases(4)))
-        mainPage = CanonizerMainPage(self.driver)
-        loginPage = mainPage.click_login_button()
+        page = CanonizerLoginPage(self.driver)
+        loginPage = page.click_login_page_button()
         result = loginPage.login_with_invalid_user(DEFAULT_INVALID_USER, DEFAULT_INVALID_PASSWORD)
         self.assertIn("These credentials do not match our records.", result)
 
+    # Register Page Test Cases Start
+    # 05
     def test_registration_with_blank_first_name(self):
         print ("\n" + str(test_cases(5)))
-        mainPage = CanonizerMainPage(self.driver)
-        registrationPage = mainPage.click_register_button()
+        registerPage = CanonizerRegisterPage(self.driver)
+        registrationPage = registerPage.click_register_button()
 
         result = registrationPage.registration_with_blank_first_name(
             DEFAULT_LAST_NAME,
@@ -62,10 +66,11 @@ class TestPages(unittest.TestCase):
         )
         self.assertIn("The first name field is required.", result)
 
+    # 06
     def test_registration_with_blank_last_name(self):
         print("\n" + str(test_cases(6)))
-        mainPage = CanonizerMainPage(self.driver)
-        registrationPage = mainPage.click_register_button()
+        registerPage = CanonizerRegisterPage(self.driver)
+        registrationPage = registerPage.click_register_button()
 
         result = registrationPage.registration_with_blank_last_name(
             DEFAULT_FIRST_NAME,
@@ -75,10 +80,11 @@ class TestPages(unittest.TestCase):
         )
         self.assertIn("The last name field is required.", result)
 
+    # 07
     def test_registration_with_blank_email(self):
         print ("\n" + str(test_cases(7)))
-        mainPage = CanonizerMainPage(self.driver)
-        registrationPage = mainPage.click_register_button()
+        registerPage = CanonizerRegisterPage(self.driver)
+        registrationPage = registerPage.click_register_button()
 
         result = registrationPage.registration_with_blank_email(
             DEFAULT_FIRST_NAME,
@@ -88,10 +94,11 @@ class TestPages(unittest.TestCase):
         )
         self.assertIn("The email field is required.", result)
 
+    # 08
     def test_registration_with_blank_password(self):
         print ("\n" + str(test_cases(8)))
-        mainPage = CanonizerMainPage(self.driver)
-        registrationPage = mainPage.click_register_button()
+        registerPage = CanonizerRegisterPage(self.driver)
+        registrationPage = registerPage.click_register_button()
 
         result = registrationPage.registration_with_blank_password(
             DEFAULT_FIRST_NAME,
@@ -100,10 +107,11 @@ class TestPages(unittest.TestCase):
         )
         self.assertIn('The password field is required.', result)
 
+    # 09
     def test_registration_with_invalid_password_length(self):
         print ("\n" + str(test_cases(9)))
-        mainPage = CanonizerMainPage(self.driver)
-        registrationPage = mainPage.click_register_button()
+        registerPage = CanonizerRegisterPage(self.driver)
+        registrationPage = registerPage.click_register_button()
 
         result = registrationPage.registration_with_invalid_password_length(
             DEFAULT_FIRST_NAME,
@@ -114,10 +122,11 @@ class TestPages(unittest.TestCase):
         )
         self.assertIn('The password must be at least 6 characters.', result)
 
+    # 10
     def test_registration_with_different_confirmation_password(self):
         print ("\n" + str(test_cases(10)))
-        mainPage = CanonizerMainPage(self.driver)
-        registrationPage = mainPage.click_register_button()
+        registerPage = CanonizerRegisterPage(self.driver)
+        registrationPage = registerPage.click_register_button()
         result = registrationPage.registration_with_different_confirmation_password(
             DEFAULT_FIRST_NAME,
             DEFAULT_LAST_NAME,
@@ -143,20 +152,32 @@ class TestPages(unittest.TestCase):
         mainPage = CanonizerMainPage(self.driver)
         self.assertIn('Load All Topics', mainPage.check_load_all_topic_text())
 
-    #15
+    # 15
     def test_register_page_should_have_login_option_for_existing_users(self):
         print("\n" + str(test_cases(14)))
-        mainPage = CanonizerMainPage(self.driver)
-        registrationPage = mainPage.click_register_button()
+        registerPage = CanonizerRegisterPage(self.driver)
+        registrationPage = registerPage.click_register_button()
         self.assertIn('Login Here',
                       registrationPage.registration_should_have_login_option_for_existing_users())
 
-    #16
+    # 16
     def test_login_page_should_have_register_option_for_new_users(self):
         print("\n" + str(test_cases(15)))
-        mainPage = CanonizerMainPage(self.driver)
-        loginPage = mainPage.click_login_button()
+        page = CanonizerLoginPage(self.driver)
+        loginPage = page.click_login_page_button()
         self.assertIn('Signup Now', loginPage.login_page_should_have_register_option_for_new_users())
+
+    # 17
+    def test_register_page_mandatory_fields_are_marked_with_astrick(self):
+        """
+        Mandatory Fields in Registration Page Marked with *
+        :return:
+        """
+        print("\n" + str(test_cases(16)))
+        registerPage = CanonizerRegisterPage(self.driver)
+        registationPage = registerPage.click_register_button()
+        self.assertTrue(registationPage.register_page_mandatory_fields_are_marked_with_astrick())
+
 
 
     def tearDown(self):
