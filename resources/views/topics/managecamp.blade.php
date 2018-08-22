@@ -44,8 +44,10 @@
                 <label for="parent_camp_num">Parent Camp <span style="color:red">*</span></label>
                 <select  name="parent_camp_num" id="parent_camp_num" class="form-control">
                     @foreach($parentcampsData as $parent)
+					<?php if($camp->camp_num != $parent->camp_num) { ?>
                     <option <?php if($camp->parent_camp_num==$parent->camp_num) echo "selected=selected";?> value="{{ $parent->camp_num }}">{{ $parent->camp_name}}</option>
-                    @endforeach
+                    <?php } ?>
+					@endforeach
 					
                 </select>
                  @if ($errors->has('parent_camp_num')) <p class="help-block">{{ $errors->first('parent_camp_num') }}</p> @endif
