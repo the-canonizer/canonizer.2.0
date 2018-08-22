@@ -342,6 +342,7 @@ class Camp extends Model {
 		return self::where('topic_num',$topicnum)
 						->where('objector_nick_id', '=', NULL)
 						->where('go_live_time','<=',$asofdate)
+						->whereRaw('go_live_time in (select max(go_live_time) from camp where topic_num='.$topicnum.' and objector_nick_id is null and go_live_time < "'.$asofdate.'" group by camp_num)')				
 						->orderBy('submit_time','camp_name')->groupBy('camp_num')->get();
 		
 	}
