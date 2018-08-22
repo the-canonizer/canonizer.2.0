@@ -342,7 +342,7 @@ class Camp extends Model {
 		return self::where('topic_num',$topicnum)
 						->where('objector_nick_id', '=', NULL)
 						->where('go_live_time','<=',$asofdate)
-						->orderBy('submit_time','camp_name')->get();
+						->orderBy('submit_time','camp_name')->groupBy('camp_num')->get();
 		
 	}
 	public static function getCampHistory($topicnum,$campnum,$filter=array()){
