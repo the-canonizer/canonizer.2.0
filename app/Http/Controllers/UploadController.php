@@ -75,7 +75,7 @@ class UploadController extends Controller
 		 }
 		 
 		 
-         try{
+        // try{
             $path = $file->storeAs('files',$fullname,'public_files');
 			
             $upload = new Upload;
@@ -85,9 +85,9 @@ class UploadController extends Controller
             $upload->user_id = $request->user()->id;
             $upload->save();
            $request->session()->flash('success', 'File uploaded successfully!');
-        }catch(\Exception $e){
-            $request->session()->flash('error', $e->getMessage());
-        }    }else{
+       // }catch(\Exception $e){
+         //   $request->session()->flash('error', $e->getMessage());
+            }else{
             $request->session()->flash('error', "Select a file to upload");
         }
 
