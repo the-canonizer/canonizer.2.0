@@ -30,25 +30,30 @@
         <form action="{{ route('camp.save')}}" method="post">
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
             <input type="hidden" id="topic_num" name="topic_num" value="{{ $topic->topic_num }}">
-            <!--<input type="hidden" id="parent_camp_num" name="parent_camp_num" value="{{ $parentcampnum }}">-->
+            
 			<input type="hidden" id="camp_num" name="camp_num" value="{{ $camp->camp_num }}">
 			<input type="hidden" id="submitter" name="submitter" value="{{ $camp->submitter_nick_id }}">
 			<?php if($objection=="objection") { ?>
 			 <input type="hidden" name="objection" id="objection" value="1">
 			<?php } ?>
            
-            
+            <?php if($camp->camp_name=="Agreement") { ?>
+			<input type="hidden" id="parent_camp_num" name="parent_camp_num" value="{{ $parentcampnum }}">
+			<?php } else { ?>
 			<div class="form-group">
                 <label for="parent_camp_num">Parent Camp <span style="color:red">*</span></label>
-                <select name="parent_camp_num" id="parent_camp_num" class="form-control">
+                <select  name="parent_camp_num" id="parent_camp_num" class="form-control">
                     @foreach($parentcampsData as $parent)
+					<?php if($camp->camp_num != $parent->camp_num) { ?>
                     <option <?php if($camp->parent_camp_num==$parent->camp_num) echo "selected=selected";?> value="{{ $parent->camp_num }}">{{ $parent->camp_name}}</option>
-                    @endforeach
+                    <?php } ?>
+					@endforeach
 					
                 </select>
                  @if ($errors->has('parent_camp_num')) <p class="help-block">{{ $errors->first('parent_camp_num') }}</p> @endif
 				 
              </div> 
+			<?php } ?>
 			<div class="form-group">
                 <label for="camp_name">Nick Name <span style="color:red">*</span></label>
                 <select name="nick_name" id="nick_name" class="form-control">
