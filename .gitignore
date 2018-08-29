@@ -3,3 +3,4 @@ vendor/
 .env
 composer.lock
 /nbproject/private/
+public/robots.txt
