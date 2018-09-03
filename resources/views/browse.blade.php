@@ -35,6 +35,7 @@
 			   
 			    <div class="tree col-sm-12">
                     <ul class="mainouter" id="load-data">
+                                        @if(count($topics))
 					@foreach($topics as $topic)
 					
 					     <?php 
@@ -46,6 +47,9 @@
 					 
 					 <li id="outline_{{ $topic->topic_num }}" style="line-height: 2"> <a href="<?php echo url('topic/'.$topic_id.'/'.$topic->camp_num) ?>"> {{ $topic->label }} {{ $topic->topic_name }} </a></li>
 					 @endforeach
+                                         @else
+                                         <li><span class="no-record">No Record Found!</span></li>
+                                         @endif
 					</ul>
 			    </div>
 			</div>  

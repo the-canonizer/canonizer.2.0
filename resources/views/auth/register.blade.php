@@ -31,15 +31,20 @@
             @if ($errors->has('email')) <p class="help-block">{{ $errors->first('email') }}</p> @endif
         </div>
         <div class="form-group">
-            <label for="pwd">Password <span style="color:red">*</span></label>
+            <label for="pwd">Password <span style="color:red">*</span> 
+                <div class="pass_info"><i class="fa fa-info-circle" aria-hidden="true"></i>
+                    <ul class="ps_tooltp"><li>Password must be atleast 8 characters</li><li>Must have atleast one digit</li><li>Must have atleast one special character(@,# !,$..)</li></ul>
+                </div>
+            </label>
             <input type="password" name="password" class="form-control" id="password">
+             <!--<span style="display:none;" class="passStrengthCheck">Password must be atleast 8 characters, including atleast one digit and one special character(@,# !,$..)</span>-->
             @if ($errors->has('password')) <p class="help-block">{{ $errors->first('password') }}</p> @endif
         </div>
         
         <div class="form-group">
             <label for="pwd">Confirm Password <span style="color:red">*</span></label>
             <input type="password" name="password_confirmation" class="form-control" id="pwd_confirm">
-            
+           
         </div>
         <button type="submit" id="submit" class="btn btn-login">Create your account</button>
     </form>
@@ -55,5 +60,23 @@
   var input = document.getElementById("firstname").focus();
 }
 
+$('.pinfo').tooltip();
+
+/*
+function validatePassword(){
+    var pass = $('#password').val();
+    var pattern = /^(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^\w\s]).{8,}$/;
+    if (!pattern.test(pass) && pass != '')
+        {
+           $('.passStrengthCheck').show();
+            return false;
+        }else{
+            $('.passStrengthCheck').hide();
+             return true;
+        }
+            
+           
+}
+$('#password').on('change', validatePassword); */
     </script>
 @endsection
