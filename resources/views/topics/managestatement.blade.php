@@ -8,7 +8,7 @@
 
 
 <div class="page-titlePnl">
-    <h1 class="page-title">Statement update</h1>
+    <h1 class="page-title">Statement Update</h1>
 </div> 
 
 @if(Session::has('error'))
