@@ -15,7 +15,11 @@
             @if ($errors->has('email')) <p class="help-block">{{ $errors->first('email') }}</p> @endif
         </div>
         <div class="form-group">
-            <label for="password">Enter New Password <span style="color:red">*</span></label>
+            <label for="password">Enter New Password <span style="color:red">*</span>
+            <div class="pass_info"><i class="fa fa-info-circle" aria-hidden="true"></i>
+                    <ul class="ps_tooltp"><li>Password must be atleast 8 characters</li><li>Must have atleast one digit</li><li>Must have atleast one special character(@,# !,$..)</li></ul>
+                </div>
+            </label>
             <input type="password"  name="password" class="form-control" id="password" >
             @if ($errors->has('password')) <p class="help-block">{{ $errors->first('password') }}</p> @endif
         </div>

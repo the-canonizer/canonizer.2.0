@@ -84,7 +84,8 @@ class ResetPasswordController extends Controller {
     protected function rules() {
         return [
             'email' => 'required|email',
-            'password' => 'required|confirmed|min:6',
+            'password' => ['required','regex:/^(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^\w\s]).{8,}$/','confirmed'
+                ],
         ];
     }
 
@@ -94,7 +95,9 @@ class ResetPasswordController extends Controller {
      * @return array
      */
     protected function validationErrorMessages() {
-        return [];
+        return $message = [
+            'password.regex'=>'Password must be atleast 8 characters, including atleast one digit and one special character(@,# !,$..)'
+        ];
     }
 
     /**
