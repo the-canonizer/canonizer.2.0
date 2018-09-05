@@ -53,7 +53,8 @@
                                 <label for="namespace">Middle Name</label><br/>
                                 <div style="width:300px;float:left">
 								<input type="text" name="middle_name" class="form-control" id="middle_name" value="{{ old('middle_name', $user->middle_name)}}">
-                                </div>
+                                @if ($errors->has('middle_name')) <p class="help-block">{{ $errors->first('middle_name') }}</p> @endif
+								</div>
 								<div style="width:95px;float:right">
 								<select class="form-control" id="middle_name_bit" name="middle_name_bit">
 								 
