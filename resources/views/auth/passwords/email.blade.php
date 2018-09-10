@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
 <div class="page-titlePnl">
-    <h1 class="page-title">Forget Password</h1>
+    <h1 class="page-title">Forgot Password</h1>
 </div>       	
 <div class="right-whitePnl">
 <div class="col-sm-5 margin-btm-2">

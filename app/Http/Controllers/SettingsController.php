@@ -42,8 +42,9 @@ class SettingsController extends Controller
             
 
             $validator = Validator::make($request->all(), [
-                'first_name' => 'required|max:50',
-                'last_name' => 'required|max:50',
+                'first_name' => 'required|max:100',
+                'last_name' => 'required|max:100',
+				'middle_name' => 'max:100',
 				'country' => 'required',
             ],$messages);
     
