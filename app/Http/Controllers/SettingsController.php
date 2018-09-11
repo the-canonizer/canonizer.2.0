@@ -286,6 +286,7 @@ class SettingsController extends Controller {
               if($parentSupport==="notlive") {
               Session::flash('error', "You cant submit your support to this camp as its not live yet.");
               return redirect()->back();
+
               }
               else if($parentSupport==1) {
 
@@ -339,7 +340,7 @@ class SettingsController extends Controller {
             if (isset($data['delegate_nick_name_id']) && $data['delegate_nick_name_id'] != 0) {
                 $parentUser = Nickname::getUserByNickName($data['delegate_nick_name_id']);
 
-                $nickName = Nickname::getNickName($data['delegate_nick_name_id']);
+                $nickName = Nickname::getNickName($data['nick_name']);
 
                 $result['nick_name'] = $nickName->nick_name;
                 $result['subject'] = $nickName->nick_name . " has just delegated their support to you.";
@@ -444,9 +445,9 @@ class SettingsController extends Controller {
             ];
             $validator = Validator::make($request->all(), [
                         'old_password' => 'required',
-                        'new_password' => ['required','regex:/^(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^\w\s]).{8,}$/','different:old_password'],
+                        'new_password' => ['required', 'regex:/^(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^\w\s]).{8,}$/', 'different:old_password'],
                         'confirm_password' => 'required|same:new_password'
-            ],$message);
+                            ], $message);
             if ($validator->fails()) {
                 return redirect()->back()
                                 ->withErrors($validator) // send back all errors to the login form
