@@ -336,10 +336,10 @@ class SettingsController extends Controller
 		  if(isset($data['delegate_nick_name_id']) && $data['delegate_nick_name_id']!=0) {	
 			$parentUser = Nickname::getUserByNickName($data['delegate_nick_name_id']);
 			
-			$nickName = Nickname::getNickName($data['delegate_nick_name_id']);
+			$nickName = Nickname::getNickName($data['nick_name']);
 				
 			$result['nick_name'] = $nickName->nick_name;
-			$result['subject']   = $nickName->nick_name." has just delegated their support to you.";	
+			$result['subject']   = $nickName->nick_name." has just delegated their support to you.";
 			$link = 'topic/'.$data['topic_num'].'/'.$data['camp_num'];
 			
 		    $receiver = (config('app.env')=="production") ? $parentUser->email : config('app.admin_email');	
