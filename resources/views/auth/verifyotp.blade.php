@@ -16,6 +16,7 @@
        
 
         <div class="form-group">
+		    <p style="color:red">Note : A OTP has been sent to your registered email address. </p>
             <label>One Time Verification Code <span style="color:red">*</span></label>
             <input type="text" name="otp" class="form-control" id="otp" value="{{ old('otp')}}">
             @if ($errors->has('otp')) <p class="help-block">{{ $errors->first('otp') }}</p> @endif
