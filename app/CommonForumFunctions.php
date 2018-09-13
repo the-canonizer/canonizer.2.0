@@ -26,7 +26,7 @@ class CommonForumFunctions
      */
     public static function sendEmailToSupportersForumPost($topicid, $campnum, $link, $post, $threadId, $nick_id)
     {
-        $bcc_email[] = '';
+        $bcc_email;
 
         $camp  = CommonForumFunctions::getForumLiveCamp($topicid, $campnum);
         $subCampIds = CommonForumFunctions::getForumAllChildCamps($camp);
@@ -39,7 +39,7 @@ class CommonForumFunctions
         $data['thread'] = CThread::where('id', $threadId)->latest()->get();
         $data['subject'] = $topic_name." / ".$camp_name. " / ". $data['thread'][0]->title.
                             " post submitted.";
-        $data['camp_url'] = "topic/".$topicid."-".$topic_name."/".$camp_id."?";
+        $data['camp_url'] = "topic/".$topicid."-".$topic_name."/".$campnum."?";
 
         $data['nick_name'] = CommonForumFunctions::getForumNickName($nick_id);
 
@@ -65,7 +65,7 @@ class CommonForumFunctions
      */
     public static function sendEmailToSupportersForumThread($topicid, $campnum, $link, $thread_title, $nick_id)
     {
-        $bcc_email[] = '';
+        $bcc_email;
 
         $camp  = CommonForumFunctions::getForumLiveCamp($topicid, $campnum);
         $subCampIds = CommonForumFunctions::getForumAllChildCamps($camp);
