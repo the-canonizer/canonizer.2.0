@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
 <div class="page-titlePnl">
-    <h1 class="page-title">Nick Names</h1>
+    <h1 class="page-title">Change Password</h1>
 </div> 
 
 @if(Session::has('error'))
@@ -31,17 +31,17 @@
             </ul>
 
             <div id="myTabContent" class="add-nickname-section">  
-                 <h5>Change Password </h5>
+               
                 <form action="{{ route('settings.changepassword.save')}}" method="post">
                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
                     <div class="row">
                         <div class="col-sm-6 margin-btm-1">
-                            <label for="nick_name">Enter old password <span style="color:red">*</span></label>
+                            <label for="nick_name">Enter current password <span style="color:red">*</span></label>
                             <input type="password" name="old_password" class="form-control" id="nick_name" value="{{ old('old_password')}}">
                             @if ($errors->has('old_password')) <p class="help-block">{{ $errors->first('old_password') }}</p> @endif
                         </div>
                         <div class="col-sm-6 margin-btm-1">
-                            <label for="nick_name">Enter New password <span style="color:red">*</span></label>
+                            <label for="nick_name">Enter new password <span style="color:red">*</span></label>
                             <input type="password" name="new_password" class="form-control" id="nick_name" value="{{ old('new_password')}}">
                             @if ($errors->has('new_password')) <p class="help-block">{{ $errors->first('new_password') }}</p> @endif
                         </div>
