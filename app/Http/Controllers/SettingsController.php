@@ -441,7 +441,8 @@ class SettingsController extends Controller {
             // $data = $request->all();
             // echo "<pre>"; print_r($data); exit;
             $message = [
-                'new_password.regex' => 'Password must be atleast 8 characters, including atleast one digit and one special character(@,# !,$..)'
+                'new_password.regex' => 'Password must be atleast 8 characters, including atleast one digit and one special character(@,# !,$..)',
+				'old_password.required' => 'The current password field is required.'
             ];
             $validator = Validator::make($request->all(), [
                         'old_password' => 'required',
