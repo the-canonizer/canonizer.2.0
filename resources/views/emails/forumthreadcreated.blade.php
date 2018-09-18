@@ -18,3 +18,4 @@ Hi Canonizer User
 
 <p>  Sincerely, </p>
 <p> The Canonizer Team </p>
+@endcomponent
