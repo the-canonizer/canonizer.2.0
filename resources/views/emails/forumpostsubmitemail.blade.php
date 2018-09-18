@@ -1,5 +1,5 @@
 @component('mail::message')
-Hi Canonizer User,
+<p>Hi Canonizer User,</p>
 
 <p>
     {{ $data['nick_name']->nick_name }} has made the following post to the Camp
@@ -23,3 +23,4 @@ Hi Canonizer User,
 
 <p>  Sincerely, </p>
 <p> The Canonizer Team </p>
+@endcomponent
