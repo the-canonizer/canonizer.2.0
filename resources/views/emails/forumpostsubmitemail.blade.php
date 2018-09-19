@@ -11,7 +11,8 @@
 <p> <a href="{{ url('/').'/'.$link }}">{{ $data['thread'][0]->title }}</a> </p>
 
 <h4>Post: </h4>
-<p>{{$data['post']}}</p>
+
+<p> {!! nl2br(e($data['post']))!!}. </p>
 
 <h4>Note:</h4>
 <p>
