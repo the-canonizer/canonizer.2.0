@@ -442,11 +442,11 @@ class SettingsController extends Controller {
             // echo "<pre>"; print_r($data); exit;
             $message = [
                 'new_password.regex' => 'Password must be atleast 8 characters, including atleast one digit and one special character(@,# !,$..)',
-				'old_password.required' => 'The current password field is required.'
+				'current_password.required' => 'The current password field is required.'
             ];
             $validator = Validator::make($request->all(), [
-                        'old_password' => 'required',
-                        'new_password' => ['required', 'regex:/^(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^\w\s]).{8,}$/', 'different:old_password'],
+                        'current_password' => 'required',
+                        'new_password' => ['required', 'regex:/^(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^\w\s]).{8,}$/', 'different:current_password'],
                         'confirm_password' => 'required|same:new_password'
                             ], $message);
             if ($validator->fails()) {
@@ -455,7 +455,7 @@ class SettingsController extends Controller {
                                 ->withInput();
             }
 
-            if (!Hash::check($request->get('old_password'), $user->password)) {
+            if (!Hash::check($request->get('current_password'), $user->password)) {
                 session()->flash('error', 'Incorrect Current Password.');
                 return redirect()->back();
             }
@@ -465,6 +465,7 @@ class SettingsController extends Controller {
             $user->save();
 
             Auth::logout();
+			session(['url.intended' => '/home']);
             return redirect()->route('login');
         }
     }

@@ -8,7 +8,7 @@
 
 
 <div class="page-titlePnl">
-    <h1 class="page-title">Submit Statement</h1>
+    <h1 class="page-title">Add Camp Statement</h1>
 </div> 
 
 @if(Session::has('error'))

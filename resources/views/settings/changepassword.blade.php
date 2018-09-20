@@ -37,8 +37,8 @@
                     <div class="row">
                         <div class="col-sm-6 margin-btm-1">
                             <label for="nick_name">Enter current password <span style="color:red">*</span></label>
-                            <input type="password" name="old_password" class="form-control" id="nick_name" value="{{ old('old_password')}}">
-                            @if ($errors->has('old_password')) <p class="help-block">{{ $errors->first('old_password') }}</p> @endif
+                            <input type="password" name="current_password" class="form-control" id="nick_name" value="{{ old('current_password')}}">
+                            @if ($errors->has('current_password')) <p class="help-block">{{ $errors->first('current_password') }}</p> @endif
                         </div>
                         <div class="col-sm-6 margin-btm-1">
                             <label for="nick_name">Enter new password <span style="color:red">*</span></label>
