@@ -9,6 +9,11 @@ use App\Model\Nickname;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Mail;
+
+use App\Mail\ForumThreadCreatedMail;
+use App\Model\Support;
+use App\CommonForumFunctions;
 
 /**
  * CThreadsController Class Doc Comment
@@ -57,7 +62,7 @@ class CThreadsController extends Controller
 
         $topic = getArray($topicid, $topicname, $campnum);
 
-        $camp       = Camp::getLiveCamp($topicid,$campnum);
+        $camp  = Camp::getLiveCamp($topicid,$campnum);
 
         return view(
             'threads.index',
@@ -170,6 +175,9 @@ class CThreadsController extends Controller
         // Return Url after creating thread Successfully
         $return_url = 'forum/'.$topicid.'-'.$topicname.'/'.$campnum.'/threads';
 
+        CommonForumFunctions::sendEmailToSupportersForumThread($topicid, $campnum,
+                              $return_url,request('title'), request('nick_name'));
+
         return redirect($return_url)->with('success', 'Thread Created Successfully!');
     }
 
@@ -242,3 +250,6 @@ function getArray($topicid, $topicname, $campnum)
         'campnum'   => $campnum,
     );
 }
+
+
+?>

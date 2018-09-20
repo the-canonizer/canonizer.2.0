@@ -5,6 +5,8 @@
         </a> replied {{ $reply->created_at->diffForHumans() }}
     </div>
     <div class="panel-body">
-        {!! nl2br(preg_replace('/[^a-zA-Z0-9_ -,?."|\r|\n]/s','', $reply->body)) !!}
+        {!! nl2br(e(preg_replace('/[^a-zA-Z0-9_ \-,%&=?.:\/"|\r|\n]/s','', $reply->body))) !!}
+
+
     </div>
 </div>

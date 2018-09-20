@@ -50,6 +50,9 @@ Route::post('/change-namespace', 'HomeController@changeNamespace')->name('change
 Route::get('register', 'Auth\RegisterController@showRegistrationForm');
 Route::post('register', 'Auth\RegisterController@register');
 Route::get('logout', 'Auth\LoginController@logout');
+//Route::get('register/verify-otp', 'Auth\RegisterController@getOtpForm');
+Route::get('register/verify-otp', ['as' => 'register.otp', 'uses' => 'Auth\RegisterController@getOtpForm']);
+Route::post('register/verify-otp', 'Auth\RegisterController@postVerifyOtp');
 //Route::get('login','Auth\LoginController@showLoginForm');
 //Route::post('login','Auth\LoginController@login');
 Route::get('login', [ 'as' => 'login', 'uses' => 'Auth\LoginController@showLoginForm']);
@@ -91,6 +94,10 @@ Route::group([ 'middleware' => 'auth'], function() {
     Route::post('upload', [ 'as' => 'upload.files.save', 'uses' => 'UploadController@postUpload']);
     Route::get('settings/algo-preferences', [ 'as' => 'settings.algo-preferences', 'uses' => 'SettingsController@algo']);
     Route::post('settings/algo-preferences', [ 'as' => 'settings.algo-preferences-save', 'uses' => 'SettingsController@postAlgo']);
+
+    //change password
+     Route::get('settings/changepassword', [ 'as' => 'settings.changepassword', 'uses' => 'SettingsController@getChangePassword']);
+     Route::post('settings/changepassword', [ 'as' => 'settings.changepassword.save', 'uses' => 'SettingsController@postChangePassword']);
 });
 
 

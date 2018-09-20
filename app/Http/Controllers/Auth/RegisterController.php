@@ -8,6 +8,10 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\WelcomeMail;
+use App\Mail\OtpVerificationMail;
+use Illuminate\Http\Request;
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Support\Facades\Auth;
 
 class RegisterController extends Controller
 {
@@ -22,7 +26,7 @@ class RegisterController extends Controller
     |
     */
 
-    use RegistersUsers;
+    //use RegistersUsers;
 
     /**
      * Where to redirect users after registration.
@@ -55,11 +59,35 @@ class RegisterController extends Controller
         return Validator::make($data, [
             'first_name' => 'required|string|max:100',
             'last_name' => 'required|string|max:100',
-			'middle_name' => 'string|max:100',
+			'middle_name' => 'max:100',
             'email' => 'required|string|email|max:255|unique:person',
             'password' => ['required','regex:/^(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^\w\s]).{8,}$/','confirmed'
                 ],
         ],$message);
+    }
+    
+    
+    public function showRegistrationForm()
+    {
+        return view('auth.register');
+    }
+
+    /**
+     * Handle a registration request for the application.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function register(Request $request)
+    {
+        $this->validator($request->all())->validate();
+
+        return $this->create($request->all());
+
+        //$this->guard()->login($user);
+
+//        return $this->registered($request, $user)
+//                        ?: redirect($this->redirectPath());
     }
 
     /**
@@ -71,19 +99,65 @@ class RegisterController extends Controller
     protected function create(array $data)
     {
       
+         //Send 6 digit code & move to next step
+        $authCode = mt_rand(100000, 999999);
+        
         $user = User::create([
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
             'first_name' =>$data['first_name'],
             'last_name' =>$data['last_name'],
             'middle_name' =>$data['middle_name'],
+            'otp'=>$authCode
         ]);
-		
-		// send help link in email
-        $link = 'topic/38-Canonized-help-statement-text/1';
-		
-		Mail::to($user->email)->send(new WelcomeMail($user,$link));
-		
-		return $user;
+        
+        //otp email
+       Mail::to($user->email)->send(new OtpVerificationMail($user));
+      //return view('auth.verifyotp')->with('user', base64_encode($user->email));
+       return redirect()->route('register.otp', ['user' => base64_encode($user->email)]);
+      //return redirect()->to('register/verify-otp')->withInput(['user', base64_encode($user->email)]);
+        
+    }
+    
+    public function getOtpForm(Request $request){
+        $user = $request->get('user');
+        return view('auth.verifyotp', compact('user'));
+    }
+    
+    
+    public function postVerifyOtp(Request $request){
+        
+        $all = $request->all();
+        $email = base64_decode($all['user']);
+        $otp = $all['otp'];
+        $user = User::where('email', '=', $email)->first();
+        $message = [
+          'otp.required'=>'Please enter OTP'  
+        ];
+        $validator = Validator::make($all, [
+                    'otp' => 'required',
+        ],$message);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                            ->withErrors($validator) // send back all errors to the login form
+                            ->withInput();
+        }
+        if ($otp != $user->otp) {
+            session()->flash('error', 'Incorrect OTP Entered');
+            return redirect()->back();
+        }
+        //auth response date
+        $user->status = 1;
+        $user->otp='';
+        $user->update();
+        // send help link in email
+        $link = 'topic/38-Canonized-help-statement-text/1';		
+        Mail::to($user->email)->send(new WelcomeMail($user,$link));
+        
+        Auth::guard()->login($user);
+        return redirect()->to('/home');
+        
+        //return $user;
     }
 }

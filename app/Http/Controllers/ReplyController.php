@@ -5,8 +5,11 @@ namespace App\Http\Controllers;
 use App\CThread;
 use App\Reply;
 
+use App\CommonForumFunctions;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+
 
 /**
  * ReplyController Class Doc Comment
@@ -56,6 +59,14 @@ class ReplyController extends Controller
         $reply->user_id = request('nick_name');
         $reply->c_thread_id = $threadId;
         $reply->save();
+
+        // Return Url after creating thread Successfully
+        $return_url = 'forum/'.$topicid.'-'.$topicname.'/'.$campnum.'/threads/'.
+                       $threadId;
+
+        CommonForumFunctions::sendEmailToSupportersForumPost($topicid, $campnum, $return_url,
+                              request('body'), $threadId, request('nick_name')
+                          );
 
         return back();
     }
