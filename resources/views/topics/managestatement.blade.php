@@ -69,6 +69,27 @@
             </div> 				
             <?php } ?>  
             <button type="submit" id="submit" class="btn btn-login">Submit Update</button>
+            <button type="button" id="preview" class="btn btn-default" onclick="showPreview()">Preview</button>
+             <!-- preview Form -->
+            <div id="previewModal" class="modal fade" role="dialog">
+              <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h4 class="modal-title">Statement</h4>
+                  </div>
+                  <div class="modal-body" id="pre_statement"> </div>
+                  <div class="modal-footer">
+                      <button type="submit" id="submit" class="btn btn-login">Submit Update</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+            <!--ends preview -->
+        
         </form>
 </div>
 </div>
@@ -82,6 +103,49 @@
                 changeYear: true
             });
         })
+        
+        function showPreview(){
+            var statement = $('#name').val();
+            var note = $('#note').val();
+            var nickname = $("#nick_name option:selected").text();
+            var objector_nick_id = "{{ $statement->objector_nick_id}}";
+            var objector_nick_name = '';
+            <?php if($statement->objector_nick_id != null){ ?>
+             var objector_nick_name = "{{ $statement->objectornickname->nick_name}}";
+            <?php } ?>
+             var object_reason = "{{ $statement->object_reason}}";
+              var object_time = "{{ $statement->object_time}}";
+              var submit_time = "{{ $statement->submit_time}}";
+              var go_live_time = "{{ $statement->go_live_time}}";
+              
+              var formData = {
+                  nickname:nickname,
+                  note:note,
+                  statement:statement,
+                  objector_nick_id:objector_nick_id,
+                  objector_nick_name:objector_nick_name,
+                  object_reason:object_reason,
+                  object_time:object_time,
+                  submit_time:submit_time,
+                  go_live_time:go_live_time
+              };
+              
+              $.ajax({
+                  type:'POST',
+                  url:"{{ route('statement.preview')}}",
+                  data:formData,
+                  success:function(res){
+                      $('#pre_statement').html(res);
+                      $('#previewModal').modal('show');
+                  }
+              })
+            
+            
+            
+            
+            
+            
+        }
     </script>
 
 

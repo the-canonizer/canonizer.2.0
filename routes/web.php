@@ -94,7 +94,7 @@ Route::group([ 'middleware' => 'auth'], function() {
     Route::post('upload', [ 'as' => 'upload.files.save', 'uses' => 'UploadController@postUpload']);
     Route::get('settings/algo-preferences', [ 'as' => 'settings.algo-preferences', 'uses' => 'SettingsController@algo']);
     Route::post('settings/algo-preferences', [ 'as' => 'settings.algo-preferences-save', 'uses' => 'SettingsController@postAlgo']);
-
+    Route::post('statement/preview', [ 'as' => 'statement.preview', 'uses' => 'TopicController@preview_statement']);
     //change password
      Route::get('settings/changepassword', [ 'as' => 'settings.changepassword', 'uses' => 'SettingsController@getChangePassword']);
      Route::post('settings/changepassword', [ 'as' => 'settings.changepassword.save', 'uses' => 'SettingsController@postChangePassword']);

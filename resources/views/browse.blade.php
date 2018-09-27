@@ -16,14 +16,21 @@
     <div class="container-fluid">
         <div class="Gcolor-Pnl">
             <h3>Browse Topic
-            <div class="pull-right col-md-4">
-            <form>
+            <div class="col-md-6 pull-right">
+                <form class="row">
+                <div class="col-sm-8">
                 <select onchange="submitForm(this)" name="namespace" id="namespace" class="namespace-select">
                     <option value="">All</option>
                     @foreach($namespaces as $namespace)
                         <option data-namespace="{{ $namespace->label }}" value="{{ $namespace->id }}" {{ isset($_REQUEST['namespace']) && $namespace->id == $_REQUEST['namespace'] ? 'selected' : ''}}>{{$namespace->label}}</option>
                     @endforeach
                 </select>
+                </div>
+                @if(Auth::check())
+                    <div class="col-sm-4 checkbox pd-l-0">
+                    <label><input type="checkbox" name="my" value="1" {{ isset($_REQUEST['my']) &&  $_REQUEST['my'] == 1 ? 'checked' : ''}} onchange="submitForm(this)"> Only My Topics</label>
+                    </div>
+                @endif
                 </form>
             </div>
             </h3>
