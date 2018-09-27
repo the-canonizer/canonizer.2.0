@@ -40,7 +40,7 @@
 					   @foreach($topicSupport as $k=>$support)
 					    
 					   <div id="positions_{{ $support->support_id }}" class="SpCmpBDY support-sorter-element ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
-					     <form action="{{ route('settings.support.delete')}}" id="support-{{$support->support_id}}" method="post">
+					     <form onsubmit="return confirm('Do you really want to delete this support ?');" action="{{ route('settings.support.delete')}}" id="support-{{$support->support_id}}" method="post">
 						    <input type="hidden" name="_token" value="{{ csrf_token() }}">
 							
 							<input type="hidden" id="support_id_{{ $support->support_id }}" name="support_id" value="{{ $support->support_id }}">
