@@ -35,6 +35,7 @@
 			<input type="hidden" id="submitter" name="submitter" value="{{ $statement->submitter_nick_id }}">
             <?php if($objection=="objection") { ?>
 			<input type="hidden" id="objection" name="objection" value="1">
+			<input type="hidden" id="objection_id" name="objection_id" value="{{ $statement->id }}">
 			<?php } ?>
                
              <div class="form-group">
@@ -46,19 +47,17 @@
 					
                 </select>
                  @if ($errors->has('nick_name')) <p class="help-block">{{ $errors->first('nick_name') }}</p> @endif
-				 <a id="add_new_nickname" href="<?php echo url('settings/nickname');?>">Add New Nickname </a>
+				 <?php if(count($nickNames) == 0) { ?>
+				   <a id="add_new_nickname" href="<?php echo url('settings/nickname');?>">Add New Nickname</a>
+				 <?php } ?>
              </div> 			   
              <div class="form-group">
                 <label for="">Statement <span style="color:red">*</span></label>
-                <textarea class="form-control" rows="6" id="name" name="statement">{{ $statement->value}}</textarea>
+                <textarea <?php if($objection=="objection") { ?> readonly <?php } ?> class="form-control" rows="6" id="name" name="statement">{{ $statement->value}}</textarea>
                 @if ($errors->has('statement')) <p class="help-block">{{ $errors->first('statement') }}</p> @endif
              </div> 
             
-            <div class="form-group">
-                <label for="title">Note <span style="color:red">*</span></label>
-                 <textarea class="form-control" id="note" rows="4" name="note">{{ old('note')}}</textarea>
-                @if ($errors->has('note')) <p class="help-block">{{ $errors->first('note') }}</p> @endif
-            </div> 
+           
            
 		   
             <?php if($objection=="objection") { ?> 
@@ -67,8 +66,16 @@
                 <input type="text" name="object_reason" class="form-control" id="object_reason" value="">
 				@if ($errors->has('object_reason')) <p class="help-block">{{ $errors->first('object_reason') }}</p> @endif
             </div> 				
-            <?php } ?>  
-            <button type="submit" id="submit" class="btn btn-login">Submit Update</button>
+            <?php } else { ?>  
+			 <div class="form-group">
+                <label for="title">Note <span style="color:red">*</span></label>
+                 <textarea class="form-control" id="note" rows="4" name="note">{{ old('note')}}</textarea>
+                @if ($errors->has('note')) <p class="help-block">{{ $errors->first('note') }}</p> @endif
+            </div> 
+			<?php } ?>
+            <button type="submit" id="submit" class="btn btn-login">
+			<?php if($objection=="objection") { ?> Submit Objection <?php } else { ?>
+			Submit Update</button> <?php } ?>
         </form>
 </div>
 </div>

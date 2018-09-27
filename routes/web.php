@@ -65,6 +65,7 @@ Route::get('resetlinksent', 'Auth\ForgotPasswordController@resetLinkSent');
 Route::get('resetpassword/{token}', 'Auth\ResetPasswordController@showResetForm');
 Route::post('reset', 'Auth\ResetPasswordController@reset');
 Route::get('topic/{id}/{campnum}', [ 'as' => 'topic', 'uses' => 'TopicController@show']);
+Route::get('topic.asp/{id}/{campnum}', [ 'as' => 'topic', 'uses' => 'TopicController@show']);
 //Route::get('topic/{id}', [ 'as' => 'topic', 'uses' => 'TopicController@show']);
 Route::post('loadtopic', 'HomeController@loadtopic');
 Route::get('camp/history/{id}/{campnum}', 'TopicController@camp_history');

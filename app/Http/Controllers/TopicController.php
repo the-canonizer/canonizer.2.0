@@ -479,6 +479,16 @@ class TopicController extends Controller {
 			
         ]);
 		
+		 if(isset($all['objection']) && $all['objection']==1) {
+		
+           $validator = Validator::make($request->all(), [
+            'nick_name'=>'required',
+            'camp_name' => 'required|max:30',          
+			
+        ]);		
+			 
+		 }	 
+		
         if ($validator->fails()) {
             return back()->withErrors($validator->errors())->withInput($request->all());
         }
@@ -487,18 +497,19 @@ class TopicController extends Controller {
         $camp = new Camp();
         $camp->topic_num = $all['topic_num'];
 		
-        $camp->parent_camp_num = $all['parent_camp_num'];
-        //$camp->title = $all['title'];
-        $camp->camp_name = $all['camp_name'];
+		$camp->parent_camp_num = isset($all['parent_camp_num']) ? $all['parent_camp_num'] : "";
+		
+		$camp->camp_name = isset($all['camp_name']) ? $all['camp_name'] : "";
 		$camp->submit_time = strtotime(date('Y-m-d H:i:s'));
-        $camp->go_live_time = $currentTime; //strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
-        $camp->language = 'English';
-       
-        $camp->note = $all['note'];
-		$camp->key_words = $all['keywords'];
-		$camp->submitter_nick_id = $all['nick_name'];
-        $camp->camp_about_url = $all['camp_about_url'];	
-		$camp->camp_about_nick_id = $all['camp_about_nick_id'];
+		$camp->go_live_time = $currentTime; //strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
+		$camp->language = 'English';
+	   
+		$camp->note = isset($all['note']) ? $all['note'] : "";
+		$camp->key_words = isset($all['keywords']) ? $all['keywords'] : "";
+		$camp->submitter_nick_id = isset($all['nick_name']) ? $all['nick_name'] : "" ;
+		$camp->camp_about_url = isset($all['camp_about_url']) ? $all['camp_about_url'] : "";	
+		$camp->camp_about_nick_id = isset($all['camp_about_nick_id']) ? $all['camp_about_nick_id'] : "";
+		
         $eventtype = "CREATE";
         if(isset($all['camp_num'])) {
 		 $eventtype = "UPDATE";	
@@ -518,6 +529,7 @@ class TopicController extends Controller {
 		 
 		 if(isset($all['objection']) && $all['objection']==1) {
 		     $eventtype ="OBJECTION";
+			 $camp = Camp::where('id',$all['objection_id'])->first();
 			 $camp->objector_nick_id = $all['nick_name'];			 
 			 $camp->object_reason = $all['object_reason'];
 			 $camp->object_time = time();
@@ -604,21 +616,29 @@ class TopicController extends Controller {
 			'nick_name'=>'required'
            
         ]);
+		 if(isset($all['objection']) && $all['objection']==1) {
+			$validator = Validator::make($request->all(), [
+           
+            'nick_name'=>'required'
+           
+        ]); 
+		 }		 
         if ($validator->fails()) {
             return back()->withErrors($validator->errors())->withInput($request->all());
         }
         
           $go_live_time = "";	
 		  $statement = new Statement();	
-		  
-		  $statement->value = $all['statement'];
+		 
+		  $statement->value = isset($all['statement']) ? $all['statement'] : "";
 		  $statement->topic_num = $all['topic_num'];
 		  $statement->camp_num = $all['camp_num'];
-		  $statement->note = $all['note'];
+		  $statement->note = isset($all['note']) ? $all['note'] : "" ;
 		  $statement->submit_time = strtotime(date('Y-m-d H:i:s'));
 		  $statement->submitter_nick_id = $all['nick_name'];
 		  $statement->go_live_time = $currentTime;//strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
 		  $statement->language = 'English';
+		  
 		  $eventtype = "CREATE";
 		  if(isset($all['camp_num'])) {
 			 $eventtype = "UPDATE"; 
@@ -637,6 +657,7 @@ class TopicController extends Controller {
 			 }
 			 
 			 if(isset($all['objection']) && $all['objection']==1) {
+				 $statement = Statement::where('id',$all['objection_id'])->first();
 		         $eventtype = "OBJECTION";
 				 $statement->objector_nick_id = $all['nick_name'];
 				 $statement->object_reason = $all['object_reason'];

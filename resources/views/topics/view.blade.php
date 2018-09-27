@@ -59,7 +59,7 @@
                     <?php 
 					
 					$rootUrl = str_replace("/public","",Request::root());
-					
+					$rootUrl = str_replace("/index.php","",$rootUrl);
 					
                     $statement = $camp->statement($camp->topic_num,$camp->camp_num);
                     if(isset($statement->value)) {
