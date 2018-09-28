@@ -38,9 +38,9 @@ else if($currentLive!=1 && $currentTime >= $data['go_live_time']) {
 
     </div><br/>
     <b>Note :</b> {{ $data['note'] }} <br/>				 
-    <!--b>Submitted on :</b> {{ to_local_time($data['submit_time']) }} <br/-->
+    <b>Submitted on :</b> {{ date('d/m/Y, H:i:s',$data['submit_time']) }} <br/>
     <b>Submitter Nickname :</b> {{ ($data['nickname'] != '') ? $data['nickname'] : 'N/A' }} <br/>
-    <!--b>Go live Time :</b> {{ to_local_time($data['go_live_time']) }}<br/--> 
+    <b>Go live Time :</b> {{ date('d/m/Y, H:i:s',$data['go_live_time']) }}<br/--> 
 @if($data['objector_nick_id'] !=null)
 <b>Object Reason :</b> {{ $data['object_reason']}} <br/>	
 <b>Objector Nickname :</b> {{ $data['objector_nick_name'] }} <br/> 			  
