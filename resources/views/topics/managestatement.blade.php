@@ -80,8 +80,11 @@
             </div> 
 			<?php } ?>
             <button type="submit" id="submit" class="btn btn-login">
-			<?php if($objection=="objection") { ?> Submit Objection <?php } else { ?>
-			Submit Update</button> <?php } ?>   
+			<?php if($objection=="objection") { ?> 
+			   Submit Objection <?php } else { ?>
+			   Submit Update <?php } ?> 
+            </button>
+			
             <?php if($objection!="objection") { ?>				
             <button type="button" id="preview" class="btn btn-default" onclick="showPreview()">Preview</button>
 			<?php } ?>
