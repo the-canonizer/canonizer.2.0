@@ -16,8 +16,8 @@ else if($currentLive!=1 && $currentTime >= $data['go_live_time']) {
 
 
 ?>
-<div class="form-group CmpHistoryPnl" style="background-color:{{ $bgcolor }}; width:100%;">
-    <div class="statement"><b>Statement :</b> 
+<div class="form-group CmpHistoryPnl" style="background-color:#FFFF; width:100%;">
+    <div class="statement">
         <?php
         $rootUrl = str_replace("/public", "", Request::root());
         /* $finalStatement  = $wiky->parse($input); 

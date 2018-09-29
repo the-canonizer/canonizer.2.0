@@ -120,9 +120,10 @@
             <button type="submit" id="submit" class="btn btn-login">
 			<?php if($objection=="objection") { ?> Submit Objection <?php } else {?>
 			Submit Update <?php } ?>
-			</button>  
+			</button> 
+            <?php if($objection!="objection") { ?>			
             <button type="button" id="preview" class="btn btn-default" onclick="showPreview()">Preview</button>
-            
+            <?php } ?>
             
             <!-- preview Form -->
             <div id="previewModal" class="modal fade" role="dialog">
@@ -131,7 +132,7 @@
                 <!-- Modal content-->
                 <div class="modal-content">
                   <div class="modal-header">
-                    <h4 class="modal-title">Current Camp Record</h4>
+                    <h4 class="modal-title">Updated camp record preview</h4>
                   </div>
                   <div class="modal-body">
                     <div class="tree col-sm-12">

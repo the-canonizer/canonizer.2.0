@@ -81,8 +81,10 @@
 			<?php } ?>
             <button type="submit" id="submit" class="btn btn-login">
 			<?php if($objection=="objection") { ?> Submit Objection <?php } else { ?>
-			Submit Update</button> <?php } ?>    
+			Submit Update</button> <?php } ?>   
+            <?php if($objection!="objection") { ?>				
             <button type="button" id="preview" class="btn btn-default" onclick="showPreview()">Preview</button>
+			<?php } ?>
              <!-- preview Form -->
             <div id="previewModal" class="modal fade" role="dialog">
               <div class="modal-dialog">
@@ -90,7 +92,7 @@
                 <!-- Modal content-->
                 <div class="modal-content">
                   <div class="modal-header">
-                    <h4 class="modal-title">Statement</h4>
+                    <h4 class="modal-title">Statement preview</h4>
                   </div>
                   <div class="modal-body" id="pre_statement"> </div>
                   <div class="modal-footer">
