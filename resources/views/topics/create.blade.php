@@ -31,7 +31,9 @@
 					
                 </select>
                  @if ($errors->has('nick_name')) <p class="help-block">{{ $errors->first('nick_name') }}</p> @endif
+				 <?php if(count($nickNames) == 0) { ?>
 				 <a href="<?php echo url('settings/nickname');?>">Add New Nick Name </a>
+				 <?php } ?>
             </div> 
             <div class="form-group">
                 <label for="topic name">Topic Name ( Limit 30 char ) <span style="color:red">*</span></label>

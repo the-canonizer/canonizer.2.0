@@ -1207,3 +1207,19 @@ span.brsr-name {
 .ps_tooltp li{
     list-style: disc;
 }
+.checkbox label{
+    font-size:15px;
+    position: relative;
+    padding-left: 15px;
+}
+.checkbox label input[type="checkbox"]{
+    margin-top: 2px;
+    position: absolute;
+    left: 0;
+}
+.pd-l-0{
+    padding-left: 0px;
+}
+.pull-right{
+    float: right !important;
+}
