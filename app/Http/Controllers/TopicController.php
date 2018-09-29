@@ -78,7 +78,12 @@ class TopicController extends Controller {
 			'note'=>'required'
             
         ];
-		}	
+		}
+        if(isset($all['objection']) && $all['objection']==1) {
+			$validatorArray = ['object_reason'=>'required',
+            
+           ]; 
+		 }		
         $validator = Validator::make($request->all(), $validatorArray);
         
         if ($validator->fails()) {
@@ -91,14 +96,14 @@ class TopicController extends Controller {
 			$current_time = time();
 			$eventtype ="CREATE";
             $topic = new Topic();
-            $topic->topic_name = $all['topic_name'];		
+            $topic->topic_name = isset($all['topic_name']) ? $all['topic_name'] : "";		
 			
-            $topic->namespace_id = $all['namespace'];
+            $topic->namespace_id = isset($all['namespace']) ? $all['namespace'] : "";
             $topic->submit_time = $current_time;
-            $topic->submitter_nick_id = $all['nick_name'];
+            $topic->submitter_nick_id = isset($all['nick_name']) ? $all['nick_name'] : "";
             $topic->go_live_time = $current_time;//strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
             $topic->language = 'English';
-            $topic->note = $all['note'];
+            $topic->note = isset($all['note']) ? $all['note'] : "";
 						
 			if(isset($all['topic_num'])) {
 				
@@ -117,6 +122,8 @@ class TopicController extends Controller {
 			 } 
 
 			 if(isset($all['objection']) && $all['objection']==1) {
+				 
+				 $topic = Topic::where('id',$all['objection_id'])->first();
 				 $topic->objector_nick_id = $all['nick_name'];
 				 //$topic->submitter_nick_id = $all['submitter'];
 				 $topic->object_reason = $all['object_reason'];
@@ -151,7 +158,7 @@ class TopicController extends Controller {
 			}
 			
 			
-            if($all['namespace'] == 'other'){ /*Create new namespace request */
+            if(isset($all['namespace']) && $all['namespace'] == 'other'){ /*Create new namespace request */
                 $namespace_request = new NamespaceRequest;
                 $namespace_request->user_id = Auth::user()->id;
                 $namespace_request->name = $all['create_namespace'];
@@ -484,7 +491,7 @@ class TopicController extends Controller {
            $validator = Validator::make($request->all(), [
             'nick_name'=>'required',
             'camp_name' => 'required|max:30',          
-			
+			'object_reason'=>'required',
         ]);		
 			 
 		 }	 
@@ -617,10 +624,9 @@ class TopicController extends Controller {
            
         ]);
 		 if(isset($all['objection']) && $all['objection']==1) {
-			$validator = Validator::make($request->all(), [
-           
-            'nick_name'=>'required'
-           
+			$validator = Validator::make($request->all(), [           
+            'nick_name'=>'required',
+            'object_reason'=>'required',
         ]); 
 		 }		 
         if ($validator->fails()) {

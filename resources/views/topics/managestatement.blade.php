@@ -8,7 +8,13 @@
 
 
 <div class="page-titlePnl">
-    <h1 class="page-title">Statement Update</h1>
+    <h1 class="page-title">
+	 <?php if($objection=="objection") { ?> 
+	Object to this proposed update
+	 <?php } else { ?>
+	Statement update
+	 <?php } ?>
+	</h1>
 </div> 
 
 @if(Session::has('error'))
@@ -62,7 +68,7 @@
 		   
             <?php if($objection=="objection") { ?> 
             <div class="form-group">
-                <label for="topic name">Your Objection Reason </label>
+                <label for="topic name">Your Objection Reason <span style="color:red">*</span></label>
                 <input type="text" name="object_reason" class="form-control" id="object_reason" value="">
 				@if ($errors->has('object_reason')) <p class="help-block">{{ $errors->first('object_reason') }}</p> @endif
             </div> 				

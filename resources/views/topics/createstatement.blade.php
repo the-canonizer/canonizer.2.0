@@ -43,7 +43,9 @@
 					
                 </select>
                  @if ($errors->has('nick_name')) <p class="help-block">{{ $errors->first('nick_name') }}</p> @endif
-				 <a id="add_new_nickname" href="<?php echo url('settings/nickname');?>">Add New Nick Name </a>
+				  <?php if(count($nickNames) == 0) { ?>
+				  <a id="add_new_nickname" href="<?php echo url('settings/nickname');?>">Add New Nick Name </a>
+				  <?php } ?>
              </div> 			   
              <div class="form-group">
                 <label for="">Statement <span style="color:red">*</span></label>
