@@ -65,6 +65,7 @@ Route::get('resetlinksent', 'Auth\ForgotPasswordController@resetLinkSent');
 Route::get('resetpassword/{token}', 'Auth\ResetPasswordController@showResetForm');
 Route::post('reset', 'Auth\ResetPasswordController@reset');
 Route::get('topic/{id}/{campnum}', [ 'as' => 'topic', 'uses' => 'TopicController@show']);
+Route::get('topic.asp/{id}/{campnum}', [ 'as' => 'topic', 'uses' => 'TopicController@show']);
 //Route::get('topic/{id}', [ 'as' => 'topic', 'uses' => 'TopicController@show']);
 Route::post('loadtopic', 'HomeController@loadtopic');
 Route::get('camp/history/{id}/{campnum}', 'TopicController@camp_history');
@@ -94,7 +95,7 @@ Route::group([ 'middleware' => 'auth'], function() {
     Route::post('upload', [ 'as' => 'upload.files.save', 'uses' => 'UploadController@postUpload']);
     Route::get('settings/algo-preferences', [ 'as' => 'settings.algo-preferences', 'uses' => 'SettingsController@algo']);
     Route::post('settings/algo-preferences', [ 'as' => 'settings.algo-preferences-save', 'uses' => 'SettingsController@postAlgo']);
-
+    Route::post('statement/preview', [ 'as' => 'statement.preview', 'uses' => 'TopicController@preview_statement']);
     //change password
      Route::get('settings/changepassword', [ 'as' => 'settings.changepassword', 'uses' => 'SettingsController@getChangePassword']);
      Route::post('settings/changepassword', [ 'as' => 'settings.changepassword.save', 'uses' => 'SettingsController@postChangePassword']);

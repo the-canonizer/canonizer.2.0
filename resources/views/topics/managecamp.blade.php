@@ -8,7 +8,13 @@
 
 
 <div class="page-titlePnl">
-    <h1 class="page-title">Camp Update</h1>
+    <h1 class="page-title">
+	 <?php if($objection=="objection") { ?> 
+	Object to this proposed update
+	 <?php } else { ?>
+	Camp update
+	 <?php } ?>
+	</h1>
 </div> 
 
 @if(Session::has('error'))
@@ -35,6 +41,7 @@
 			<input type="hidden" id="submitter" name="submitter" value="{{ $camp->submitter_nick_id }}">
 			<?php if($objection=="objection") { ?>
 			 <input type="hidden" name="objection" id="objection" value="1">
+			 <input type="hidden" name="objection_id" id="objection_id" value="{{ $camp->id }}">
 			<?php } ?>
            
             <?php if($camp->camp_name=="Agreement") { ?>
@@ -63,7 +70,9 @@
 					
                 </select>
                  @if ($errors->has('nick_name')) <p class="help-block">{{ $errors->first('nick_name') }}</p> @endif
-				 <a href="<?php echo url('settings/nickname');?>">Add New Nick Name </a>
+				<?php if(count($nickNames) == 0) { ?> 
+				<a href="<?php echo url('settings/nickname');?>">Add New Nick Name</a>
+				<?php } ?>
              </div> 
             
              <div class="form-group">
@@ -71,9 +80,15 @@
                 <input type="text" name="camp_name" <?php if($camp->camp_name=="Agreement") echo "readonly";?> class="form-control" id="camp_name" value="{{ $camp->camp_name}}">
                  @if ($errors->has('camp_name')) <p class="help-block">{{ $errors->first('camp_name') }}</p> @endif
              </div> 
-           
-           
+             		
+            <?php if($objection=="objection") { ?>
             <div class="form-group">
+                <label for="topic name">Your Objection Reason <span style="color:red">*</span></label>
+                <input type="text" name="object_reason" class="form-control" id="object_reason" value="">
+				@if ($errors->has('object_reason')) <p class="help-block">{{ $errors->first('object_reason') }}</p> @endif
+            </div> 				
+            <?php } else { ?>
+			<div class="form-group">
                 <label for="keywords">Keywords </label>
                 <input type="text" name="keywords" class="form-control" id="keywords" value="{{ $camp->key_words }}">
                 @if ($errors->has('keywords')) <p class="help-block">{{ $errors->first('keywords') }}</p> @endif
@@ -99,16 +114,43 @@
                     <option <?php if($camp->camp_about_nick_id==$aboutnick->id) echo "selected=selected";?> value="{{ $aboutnick->id }}">{{ $aboutnick->nick_name}}</option>
                     @endforeach
 					
-                </select>            
+                </select>    
 			</div> 			
-            <?php if($objection=="objection") { ?>
-            <div class="form-group">
-                <label for="topic name">Your Objection Reason </label>
-                <input type="text" name="object_reason" class="form-control" id="object_reason" value="">
-				@if ($errors->has('object_reason')) <p class="help-block">{{ $errors->first('object_reason') }}</p> @endif
-            </div> 				
             <?php } ?>
-            <button type="submit" id="submit" class="btn btn-login">Submit Update</button>
+            <button type="submit" id="submit" class="btn btn-login">
+			<?php if($objection=="objection") { ?> Submit Objection <?php } else {?>
+			Submit Update <?php } ?>
+			</button> 
+            <?php if($objection!="objection") { ?>			
+            <button type="button" id="preview" class="btn btn-default" onclick="showPreview()">Preview</button>
+            <?php } ?>
+            
+            <!-- preview Form -->
+            <div id="previewModal" class="modal fade" role="dialog">
+              <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h4 class="modal-title">Updated camp record preview</h4>
+                  </div>
+                  <div class="modal-body">
+                    <div class="tree col-sm-12">
+                        Camp Name : <span id="pre_camp_name"></span> <br/>
+                        Keywords : <span id="pre_keywords"></span><br/>
+                        Related URL : <span id="pre_related_url"></span><br/>
+                        Related Nicknames : <span id="pre_nickname"></span><br/>
+                </div>
+                  </div>
+                  <div class="modal-footer">
+                      <button type="submit" id="submit" class="btn btn-login">Submit Update</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+            <!--ends preview -->
         </form>
 </div>
 </div>
@@ -122,6 +164,22 @@
                 changeYear: true
             });
         })
+        
+        function showPreview(){
+            var campname = $('#camp_name').val();
+            var keywords = $('#keywords').val();
+            var nickname = $("#camp_about_nick_id option:selected").text();
+            var related_url = $('#camp_about_url').val();
+            
+            $('#pre_camp_name').text(campname);
+            $('#pre_nickname').text((nickname != '') ? nickname : 'No nickname associated');
+            $('#pre_keywords').text(keywords);
+            $('#pre_related_url').text(related_url);
+            
+            $('#previewModal').modal('show');
+            
+            
+        }
     </script>
 
 

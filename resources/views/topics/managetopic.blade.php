@@ -1,7 +1,13 @@
 @extends('layouts.app')
 @section('content')
 <div class="page-titlePnl">
-    <h1 class="page-title">Manage Topic</h1>
+    <h1 class="page-title">
+	 <?php if($objection=="objection") { ?> 
+	Object to this proposed update
+	 <?php } else { ?>
+	Topic update
+	 <?php } ?>
+	</h1>
 </div> 
 
 @if(Session::has('error'))
@@ -26,6 +32,7 @@
 			<input type="hidden" id="submitter" name="submitter" value="{{ $topic->submitter_nick_id }}">
 			<?php if($objection=="objection") { ?>
 			 <input type="hidden" id="objection" name="objection" value="1">
+			 <input type="hidden" id="objection_id" name="objection_id" value="{{ $topic->id}}">
 			<?php } ?>
 			
 			<div class="form-group">
@@ -37,14 +44,21 @@
 					
                 </select>
                  @if ($errors->has('nick_name')) <p class="help-block">{{ $errors->first('nick_name') }}</p> @endif
-				 <a href="<?php echo url('settings/nickname');?>">Add New Nick Name </a>
+				<?php if(count($nickNames) == 0) { ?> <a href="<?php echo url('settings/nickname');?>">Add New Nick Name </a><?php } ?>
              </div> 
-			
-            <div class="form-group">
+			<div class="form-group">
                 <label for="topic name">Topic Name ( Limit 30 char ) <span style="color:red">*</span></label>
                 <input type="text" name="topic_name" class="form-control" id="topic_name" value="{{ $topic->topic_name}}">
 				@if ($errors->has('topic_name')) <p class="help-block">{{ $errors->first('topic_name') }}</p> @endif
-            </div>            
+            </div> 
+			<?php if($objection=="objection") { ?>			
+            <div class="form-group">
+                <label for="topic name">Your Objection Reason <span style="color:red">*</span></label>
+                <input type="text" name="object_reason" class="form-control" id="object_reason" value="">
+				@if ($errors->has('object_reason')) <p class="help-block">{{ $errors->first('object_reason') }}</p> @endif
+            </div> 			
+            <?php } else { ?>
+                       
             <div  class="form-group">
                 <label for="namespace">Namespace <span style="color:red">*</span> (General is recommended, unless you know otherwise)</label>
                 <select  onchange="selectNamespace(this)" name="namespace" id="namespace" class="form-control">
@@ -72,14 +86,10 @@
                 <textarea class="form-control" rows="4" name="note" id="note"> </textarea>
 				@if ($errors->has('note')) <p class="help-block">{{ $errors->first('note') }}</p> @endif
             </div>
-            <?php if($objection=="objection") { ?>			
-            <div class="form-group">
-                <label for="topic name">Your Objection Reason </label>
-                <input type="text" name="object_reason" class="form-control" id="object_reason" value="">
-				@if ($errors->has('object_reason')) <p class="help-block">{{ $errors->first('object_reason') }}</p> @endif
-            </div> 			
             <?php } ?>
-            <button type="submit" id="submit" class="btn btn-login">Submit Update</button>
+            <button type="submit" id="submit" class="btn btn-login">
+			<?php if($objection=="objection") { ?> Submit Objection <?php } else {?>
+			Submit Update<?php } ?></button>
         </form>
     </div>
  </div>   
