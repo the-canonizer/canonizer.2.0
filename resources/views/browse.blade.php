@@ -55,7 +55,11 @@
 					 <li id="outline_{{ $topic->topic_num }}" style="line-height: 2"> <a href="<?php echo url('topic/'.$topic_id.'/'.$topic->camp_num) ?>"> {{ $topic->label }} {{ $topic->topic_name }} </a></li>
 					 @endforeach
                                          @else
+                                         @if(isset($_REQUEST['asof']) && isset($_REQUEST['asofdate']))
                                          <li><span class="no-record">No records found for selected as of date.</span></li>
+                                         @else
+                                         <li><span class="no-record">No records found.</span></li>
+                                         @endif
                                          @endif
 					</ul>
 			    </div>
