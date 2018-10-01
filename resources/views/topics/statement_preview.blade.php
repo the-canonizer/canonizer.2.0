@@ -48,7 +48,7 @@ else if($currentLive!=1 && $currentTime >= $data['go_live_time']) {
     <b>Submitter Nickname :</b> {{ ($data['nickname'] != '') ? $data['nickname'] : 'N/A' }} <br/>
     <!--<b>Go live Time :</b> <span id="go_live_time"></span> <br/> -->
 @if($data['objector_nick_id'] !=null)
-<b>Object Reason :</b> {{ $data['object_reason']}} <br/>	
+<b>Object Reason :</b> <span style="word-wrap: break-word;">{{ $data['object_reason']}} </span><br/>	
 <b>Objector Nickname :</b> {{ $data['objector_nick_name'] }} <br/> 			  
 @endif 
 
