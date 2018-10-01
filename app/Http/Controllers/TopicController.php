@@ -623,7 +623,7 @@ class TopicController extends Controller {
         }
 
         
-          $go_live_time = "";	
+          $go_live_time = $currentTime;	
 		  $statement = new Statement();	
 		 
 		  $statement->value = isset($all['statement']) ? $all['statement'] : "";
@@ -657,6 +657,7 @@ class TopicController extends Controller {
 		         $eventtype = "OBJECTION";
 				 $statement->objector_nick_id = $all['nick_name'];
 				 $statement->object_reason = $all['objection_reason'];
+				 $statement->go_live_time = $go_live_time;
 				 $statement->object_time = time();
 			 }	
 			 
