@@ -46,7 +46,7 @@ else if($currentLive!=1 && $currentTime >= $data['go_live_time']) {
     <b>Note :</b> {{ $data['note'] }} <br/>				 
     <b>Submitted on :</b> <span id="submitted_on"></span> <br/>
     <b>Submitter Nickname :</b> {{ ($data['nickname'] != '') ? $data['nickname'] : 'N/A' }} <br/>
-    <b>Go live Time :</b> <span id="go_lie_time"></span> <br/> 
+    <b>Go live Time :</b> <span id="go_live_time"></span> <br/> 
 @if($data['objector_nick_id'] !=null)
 <b>Object Reason :</b> {{ $data['object_reason']}} <br/>	
 <b>Objector Nickname :</b> {{ $data['objector_nick_name'] }} <br/> 			  
@@ -56,7 +56,7 @@ else if($currentLive!=1 && $currentTime >= $data['go_live_time']) {
      $(document).ready(function () {
         var $unixtime = "{{ ($data['go_live_time']) }}";
         var goTime = new Date($unixtime * 1000).toLocaleString();
-        $('#go_lie_time').html(goTime);
+        $('#go_live_time').html(goTime);
         
         var $submitted = "{{ $data['submit_time'] }}";
         var subTime = new Date($submitted * 1000).toLocaleString();

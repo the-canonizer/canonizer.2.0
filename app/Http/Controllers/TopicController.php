@@ -68,7 +68,7 @@ class TopicController extends Controller {
         ];
 
         if(isset($all['objection']) && $all['objection']==1) {
-			$validatorArray = ['object_reason'=>'required',
+			$validatorArray = ['objection_reason'=>'required|max:100',
             
            ]; 
 		 }		
@@ -124,7 +124,7 @@ class TopicController extends Controller {
 				 $topic = Topic::where('id',$all['objection_id'])->first();
 				 $topic->objector_nick_id = $all['nick_name'];
 				 //$topic->submitter_nick_id = $all['submitter'];
-				 $topic->object_reason = $all['object_reason'];
+				 $topic->object_reason = $all['objection_reason'];
 				 $topic->object_time = $current_time;
 				 $eventtype = "OBJECTION";
 			 }			 
@@ -483,7 +483,7 @@ class TopicController extends Controller {
            $validator = Validator::make($request->all(), [
             'nick_name'=>'required',
             'camp_name' => 'required|max:30',          
-			'object_reason'=>'required',
+			'objection_reason'=>'required|max:100',
         ]);		
 			 
 		 }
@@ -530,7 +530,7 @@ class TopicController extends Controller {
 		     $eventtype ="OBJECTION";
 			 $camp = Camp::where('id',$all['objection_id'])->first();
 			 $camp->objector_nick_id = $all['nick_name'];			 
-			 $camp->object_reason = $all['object_reason'];
+			 $camp->object_reason = $all['objection_reason'];
 			 $camp->object_time = time();
 		 }	 
 		 
@@ -615,7 +615,7 @@ class TopicController extends Controller {
 		 if(isset($all['objection']) && $all['objection']==1) {
 			$validator = Validator::make($request->all(), [           
             'nick_name'=>'required',
-            'object_reason'=>'required',
+            'objection_reason'=>'required|max:100',
         ]); 
 		 }		 
         if ($validator->fails()) {
@@ -656,7 +656,7 @@ class TopicController extends Controller {
 				 $statement = Statement::where('id',$all['objection_id'])->first();
 		         $eventtype = "OBJECTION";
 				 $statement->objector_nick_id = $all['nick_name'];
-				 $statement->object_reason = $all['object_reason'];
+				 $statement->object_reason = $all['objection_reason'];
 				 $statement->object_time = time();
 			 }	
 			 

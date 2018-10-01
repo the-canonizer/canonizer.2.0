@@ -54,8 +54,8 @@
 			<?php if($objection=="objection") { ?>			
             <div class="form-group">
                 <label for="topic name">Your Objection Reason <span style="color:red">*</span></label>
-                <input type="text" name="object_reason" class="form-control" id="object_reason" value="">
-				@if ($errors->has('object_reason')) <p class="help-block">{{ $errors->first('object_reason') }}</p> @endif
+                <input type="text" name="objection_reason" class="form-control" id="objection_reason" value="">
+				@if ($errors->has('objection_reason')) <p class="help-block">{{ $errors->first('objection_reason') }}</p> @endif
             </div> 			
             <?php } else { ?>
                        

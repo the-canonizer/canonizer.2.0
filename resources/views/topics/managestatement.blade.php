@@ -69,8 +69,8 @@
             <?php if($objection=="objection") { ?> 
             <div class="form-group">
                 <label for="topic name">Your Objection Reason <span style="color:red">*</span></label>
-                <input type="text" name="object_reason" class="form-control" id="object_reason" value="">
-				@if ($errors->has('object_reason')) <p class="help-block">{{ $errors->first('object_reason') }}</p> @endif
+                <input type="text" name="objection_reason" class="form-control" id="objection_reason" value="">
+				@if ($errors->has('objection_reason')) <p class="help-block">{{ $errors->first('objection_reason') }}</p> @endif
             </div> 
             <?php }  else { ?>  
 			 <div class="form-group">
@@ -131,9 +131,9 @@
              var objector_nick_name = "{{ $statement->objectornickname->nick_name}}";
             <?php } ?>
              var object_reason = "{{ $statement->object_reason}}";
-              var object_time = "{{ $statement->object_time}}";
-              var submit_time = "{{ $statement->submit_time}}";
-              var go_live_time = "{{ $statement->go_live_time}}";
+              var object_time = "{{ time() }}";
+              var submit_time = "{{ time()}}";
+              var go_live_time = "{{ strtotime(date('Y-m-d H:i:s', strtotime('+7 days')))}}";
               
               var formData = {
                   nickname:nickname,
