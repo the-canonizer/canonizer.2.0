@@ -12,7 +12,7 @@
 
 <h4>Post: </h4>
 
-<p> {!! nl2br(e($data['post']))!!}. </p>
+<p> {!! $data['post'] !!}. </p>
 
 <h4>Note:</h4>
 <p>
