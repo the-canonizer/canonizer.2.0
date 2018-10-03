@@ -648,7 +648,7 @@ class TopicController extends Controller {
 			 
 			 if(!$ifIamSingleSupporter) {
 			   $statement->go_live_time = strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
-			   $message ="Statement change submitted successfully. If no direct supporters object to this change, it will go live on ";
+			   $message ="Statement change submitted successfully.";
 			   $go_live_time = $statement->go_live_time;
 			 }
 			 
