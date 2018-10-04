@@ -81,14 +81,20 @@
                     </form>
                     <!-- Added Here -->
 
-                    <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/summernote-lite.css" rel="stylesheet">
-                    <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/summernote-lite.js"></script>
+                    <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/summernote-lite.css" rel="stylesheet">
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/summernote-lite.js"></script> -->
+                    <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/summernote-bs4.css" rel="stylesheet">
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/summernote-bs4.js"></script>
 
                     <script>
                         $(document).ready(function() {
                             $('#body').summernote({
                                 tabsize: 2,
-                                height: 150
+                                height: 150,
+                                minHeight: null,             // set minimum height of editor
+                                maxHeight: null,  
+                                focus: true,
+                                placeholder: 'Post Your Mesage Here',
                             });
                         });
                     </script>
