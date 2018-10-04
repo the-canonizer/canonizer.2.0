@@ -73,7 +73,9 @@
 
 							</select>
 							 @if ($errors->has('nick_name')) <p class="help-block">{{ $errors->first('nick_name') }}</p> @endif
-							 <a href="<?php echo url('settings/nickname');?>">Add New Nick Name </a>
+                             <?php if(count($userNicknames) == 0) { ?>
+							       <a href="<?php echo url('settings/nickname');?>">Add New Nick Name </a>
+                             <?php } ?>
 						</div>
 
                         <button type="submit" class="btn btn-primary">Submit</button>
@@ -92,9 +94,10 @@
                                 tabsize: 2,
                                 height: 150,
                                 minHeight: null,             // set minimum height of editor
-                                maxHeight: null,  
+                                maxHeight: null,
                                 focus: true,
                                 placeholder: 'Post Your Mesage Here',
+
                             });
                         });
                     </script>
