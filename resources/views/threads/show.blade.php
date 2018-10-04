@@ -73,18 +73,24 @@
 
 							</select>
 							 @if ($errors->has('nick_name')) <p class="help-block">{{ $errors->first('nick_name') }}</p> @endif
-							 <?php if(count($userNicknames) == 0) { ?>
 							 <a href="<?php echo url('settings/nickname');?>">Add New Nick Name </a>
-							 <?php } ?>
 						</div>
 
                         <button type="submit" class="btn btn-primary">Submit</button>
 
                     </form>
                     <!-- Added Here -->
-                    <script src="https://cdn.ckeditor.com/4.7.1/standard/ckeditor.js"></script>
+
+                    <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/summernote-lite.css" rel="stylesheet">
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/summernote-lite.js"></script>
+
                     <script>
-                        CKEDITOR.replace( 'body' );
+                        $(document).ready(function() {
+                            $('#body').summernote({
+                                tabsize: 2,
+                                height: 150
+                            });
+                        });
                     </script>
                     <!-- Upto Here -->
                     @if(session()->has('message'))
