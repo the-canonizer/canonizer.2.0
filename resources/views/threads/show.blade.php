@@ -83,8 +83,6 @@
                     </form>
                     <!-- Added Here -->
 
-                    <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/summernote-lite.css" rel="stylesheet">
-                    <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/summernote-lite.js"></script> -->
                     <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/summernote-bs4.css" rel="stylesheet">
                     <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/summernote-bs4.js"></script>
 
@@ -93,11 +91,20 @@
                             $('#body').summernote({
                                 tabsize: 2,
                                 height: 150,
-                                minHeight: null,             // set minimum height of editor
+                                minHeight: null,
                                 maxHeight: null,
                                 focus: true,
-                                placeholder: 'Post Your Mesage Here',
-
+                                placeholder: 'Post Your Message Here',
+                                toolbar: [
+                                    ['style', ['style']],
+                                    ['font', ['bold', 'italic', 'underline', 'clear']],
+                                    ['fontname', ['fontname']],
+                                    ['color', ['color']],
+                                    ['para', ['ul', 'ol', 'paragraph']],
+                                    ['insert', ['link', 'hr']],
+                                    ['view', ['fullscreen', 'codeview']],
+                                    ['help', ['help']]
+                                  ],
                             });
                         });
                     </script>
