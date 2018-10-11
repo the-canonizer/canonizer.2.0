@@ -126,7 +126,7 @@
             <?php } ?>
             
             <!-- preview Form -->
-            <div id="previewModal" class="modal fade" role="dialog">
+            <div id="previewModal" class="modal fade preview-camp" role="dialog">
               <div class="modal-dialog">
 
                 <!-- Modal content-->
