@@ -106,7 +106,7 @@
                 <input type="text" name="camp_about_url" class="form-control" id="camp_about_url" value="{{ $camp->camp_about_url }}">
                 @if ($errors->has('camp_about_url')) <p class="help-block">{{ $errors->first('camp_about_url') }}</p> @endif
             </div>
-            <div class="form-group">
+            <div class="form-group" id="camp_about_nickname">
                 <label for="camp_about_nick_id">Camp About Nick Name </label>
                 <select name="camp_about_nick_id" id="camp_about_nick_id" class="form-control">
                     <option value="0">--Select Camp About Nick Name--</option>
@@ -136,6 +136,7 @@
                   </div>
                   <div class="modal-body">
                     <div class="tree col-sm-12">
+                        Parent Camp: <span id="">{!! $parentcamp !!}</span> <br/>
                         Camp Name : <span id="pre_camp_name"></span> <br/>
                         Keywords : <span id="pre_keywords"></span><br/>
                         Related URL : <span id="pre_related_url"></span><br/>
@@ -168,11 +169,17 @@
         function showPreview(){
             var campname = $('#camp_name').val();
             var keywords = $('#keywords').val();
+            var nicknameval = $("#camp_about_nick_id option:selected").val();
             var nickname = $("#camp_about_nick_id option:selected").text();
             var related_url = $('#camp_about_url').val();
             
             $('#pre_camp_name').text(campname);
+            if(nicknameval != '0'){
             $('#pre_nickname').text((nickname != '') ? nickname : 'No nickname associated');
+        }else{
+            $('#pre_nickname').html('');
+            $('#camp_about_nick_id').clone().attr('name', 'camp_about_nick_id').val('0').appendTo($('#pre_nickname'));
+       }
             $('#pre_keywords').text(keywords);
             $('#pre_related_url').text(related_url);
             

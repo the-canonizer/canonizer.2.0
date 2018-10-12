@@ -20,7 +20,7 @@
 
 @if(Session::has('success'))
 <div class="alert alert-success">
-    <strong>Success! </strong>{{ Session::get('success')}} {{ to_local_time(Session::get('go_live_time')) }}   
+    <strong>Success! </strong>{{ Session::get('success')}} {{ (Session::has('objection') && Session::get('objection') == 1 ) ? '' : to_local_time(Session::get('go_live_time')) }}   
 </div>
 @endif
 
