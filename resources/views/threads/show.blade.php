@@ -94,6 +94,7 @@
                                 minHeight: null,
                                 maxHeight: null,
                                 focus: true,
+                                disableDragAndDrop: true,
                                 placeholder: 'Post Your Message Here',
                                 toolbar: [
                                     ['style', ['style']],
