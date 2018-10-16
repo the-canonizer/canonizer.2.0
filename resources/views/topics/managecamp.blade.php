@@ -136,7 +136,7 @@
                   </div>
                   <div class="modal-body">
                     <div class="tree col-sm-12">
-                        Parent Camp: <span id="">{!! $parentcamp !!}</span> <br/>
+                        Parent Camp: <span id="parent_camp_name">{!! $parentcamp !!}</span> <br/>
                         Camp Name : <span id="pre_camp_name"></span> <br/>
                         Keywords : <span id="pre_keywords"></span><br/>
                         Related URL : <span id="pre_related_url"></span><br/>
@@ -171,15 +171,14 @@
             var keywords = $('#keywords').val();
             var nicknameval = $("#camp_about_nick_id option:selected").val();
             var nickname = $("#camp_about_nick_id option:selected").text();
+			var nicknameid = $("#camp_about_nick_id").val();
             var related_url = $('#camp_about_url').val();
-            
+            var parentcamp = $("#parent_camp_num option:selected").text();
             $('#pre_camp_name').text(campname);
-            if(nicknameval != '0'){
-            $('#pre_nickname').text((nickname != '') ? nickname : 'No nickname associated');
-        }else{
-            $('#pre_nickname').html('');
-            $('#camp_about_nick_id').clone().attr('name', 'camp_about_nick_id').val('0').appendTo($('#pre_nickname'));
-       }
+			$('#parent_camp_name').text(parentcamp);
+           
+            $('#pre_nickname').text((nicknameid != 0) ? nickname : 'No nickname associated');
+       
             $('#pre_keywords').text(keywords);
             $('#pre_related_url').text(related_url);
             
