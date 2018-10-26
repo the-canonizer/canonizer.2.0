@@ -24,7 +24,7 @@ class CommonForumFunctions
      * @param  [type] $nick_id  [description]
      * @return [type]           [description]
      */
-    public static function sendEmailToSupportersForumPost($topicid, $campnum, $link, $post, $threadId, $nick_id)
+    public static function sendEmailToSupportersForumPost($topicid, $campnum, $link, $post, $threadId, $nick_id, $topic_name_encoded)
     {
         $bcc_email;
 
@@ -39,7 +39,7 @@ class CommonForumFunctions
         $data['thread'] = CThread::where('id', $threadId)->latest()->get();
         $data['subject'] = $topic_name." / ".$camp_name. " / ". $data['thread'][0]->title.
                             " post submitted.";
-        $data['camp_url'] = "topic/".$topicid."-".$topic_name."/".$campnum."?";
+        $data['camp_url'] = "topic/".$topicid."-".$topic_name_encoded."/".$campnum."?";
 
         $data['nick_name'] = CommonForumFunctions::getForumNickName($nick_id);
 
@@ -63,7 +63,7 @@ class CommonForumFunctions
      * @param  [type] $campnum [description]
      * @return [type]          [description]
      */
-    public static function sendEmailToSupportersForumThread($topicid, $campnum, $link, $thread_title, $nick_id)
+    public static function sendEmailToSupportersForumThread($topicid, $campnum, $link, $thread_title, $nick_id, $topic_name_encoded)
     {
         $bcc_email;
 
@@ -77,7 +77,7 @@ class CommonForumFunctions
 
         $data['subject'] = $topic_name." / ".$data['camp_name']. " / ". $thread_title.
                             " created";
-        $data['camp_url'] = "topic/".$topicid."-".$topic_name."/". $campnum."?";
+        $data['camp_url'] = "topic/".$topicid."-".$topic_name_encoded."/". $campnum."?";
 
         $data['thread_title'] = $thread_title;
 
