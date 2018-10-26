@@ -63,7 +63,7 @@ class CommonForumFunctions
      * @param  [type] $campnum [description]
      * @return [type]          [description]
      */
-    public static function sendEmailToSupportersForumThread($topicid, $campnum, $link, $thread_title, $nick_id)
+    public static function sendEmailToSupportersForumThread($topicid, $campnum, $link, $thread_title, $nick_id, $topic_name_encoded)
     {
         $bcc_email;
 
@@ -77,7 +77,7 @@ class CommonForumFunctions
 
         $data['subject'] = $topic_name." / ".$data['camp_name']. " / ". $thread_title.
                             " created";
-        $data['camp_url'] = "topic/".$topicid."-".$topic_name."/". $campnum."?";
+        $data['camp_url'] = "topic/".$topicid."-".$topic_name_encoded."/". $campnum."?";
 
         $data['thread_title'] = $thread_title;
 
