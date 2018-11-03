@@ -3,7 +3,18 @@
         <table class="footer" align="center" width="570" cellpadding="0" cellspacing="0">
             <tr>
                 <td class="content-cell" align="center">
-                    {{ Illuminate\Mail\Markdown::parse($slot) }}
+                    <footer style="position: relative;width:100%;padding:40px 0px">
+                        <div class="container">
+                            <div class="row">
+                                <div style="text-align: center!important">
+                                    <small style='float: left;width:100%'>Copyright owned by the volunteers contributing to the system and its contents (2006 - {{ date('Y')}})</small>
+                                    <small style='float: left;width:100%'>Comments and Questions: support@canonizer.com</small>
+                                    <small style='float: left;width:100%'>Pattent: US 8,160,970 B2</small>
+                                    <small style='float: left;width:100%'>Version - Canonizer 2.0</small>
+                                </div>
+                            </div>
+                        </div>
+                    </footer>
                 </td>
             </tr>
         </table>
