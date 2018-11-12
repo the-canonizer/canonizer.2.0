@@ -4,12 +4,6 @@
     <h1 class="page-title">Change Password</h1>
 </div> 
 
-@if(Session::has('error'))
-<div class="alert alert-danger">
-    <strong>Error! </strong>{{ Session::get('error')}}    
-</div>
-@endif
-
 @if(Session::has('success'))
 <div class="alert alert-success">
     <strong>Success! </strong>{{ Session::get('success')}}    
@@ -37,17 +31,19 @@
                     <div class="row">
                         <div class="col-sm-6 margin-btm-1">
                             <label for="nick_name">Enter current password <span style="color:red">*</span></label>
-                            <input type="password" name="current_password" class="form-control" id="nick_name" value="{{ old('current_password')}}">
+                            <input type="password" name="current_password" class="form-control" id="current_password" value="{{ old('current_password')}}">
                             @if ($errors->has('current_password')) <p class="help-block">{{ $errors->first('current_password') }}</p> @endif
+                            @if(Session::has('error')) <p class="help-block">{{ Session::get('error')}} </p>@endif
+                        
                         </div>
                         <div class="col-sm-6 margin-btm-1">
                             <label for="nick_name">Enter new password <span style="color:red">*</span></label>
-                            <input type="password" name="new_password" class="form-control" id="nick_name" value="{{ old('new_password')}}">
+                            <input type="password" name="new_password" class="form-control" id="new_password" value="{{ old('new_password')}}">
                             @if ($errors->has('new_password')) <p class="help-block">{{ $errors->first('new_password') }}</p> @endif
                         </div>
                         <div class="col-sm-6 margin-btm-1">
                             <label for="nick_name">Confirm password <span style="color:red">*</span></label>
-                            <input type="password" name="confirm_password" class="form-control" id="nick_name" value="{{ old('confirm_password')}}">
+                            <input type="password" name="confirm_password" class="form-control" id="confirm_password" value="{{ old('confirm_password')}}">
                             @if ($errors->has('confirm_password')) <p class="help-block">{{ $errors->first('confirm_password') }}</p> @endif
                         </div>
                     </div>

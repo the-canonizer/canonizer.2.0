@@ -76,7 +76,7 @@
                 <label for="namespace">Other Namespace Name</label>
                 
                 <input type="text" name="create_namespace" class="form-control" id="create_namespace" value="">
-                <span class="note-label"><strong>Note</strong>: Name space is categorization of your topic, it can be something like: General,crypto_currency etc.</span>
+                <span class="note-label"><strong>Note</strong>: Name space for hierarchical categorization of topics. It can be something like: /crypto_currency/, /organizations// etc... It must start and end with "/"</span>
                 @if ($errors->has('create_namespace')) <p class="help-block">{{ $errors->first('create_namespace') }}</p> @endif
 			</div>
          
@@ -102,6 +102,16 @@
                 changeYear: true
             });
         })
+        
+        function selectNamespace(){
+            if($('#namespace').val() == 'other'){
+                $('#other-namespace').css('display','block');
+            }else{
+                $('#namespace').val('');
+                $('#other-namespace').css('display','none');
+            }
+        }
+        selectNamespace();
     </script>
 
 
