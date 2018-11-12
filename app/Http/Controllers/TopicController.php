@@ -158,14 +158,26 @@ class TopicController extends Controller {
 
             if (isset($all['namespace']) && $all['namespace'] == 'other') { /* Create new namespace request */
                 //$topic->submitter_nick_id = $all['submitter'];
-
+                
+                $othernamespace = trim($all['create_namespace'],'/');
+                $namespace = new Namespaces();
+                $namespace->parent_id = 0;
+                $namespace->name = $othernamespace;
+                $namespace->label = '/' . $othernamespace . '/';
+                $namespace->save();
+                
+                //update namespace id
+                $topic->namespace_id = $namespace->id;
+                $topic->update();
+                
+                /*
                 $namespace_request = new NamespaceRequest;
                 $namespace_request->user_id = Auth::user()->id;
                 $namespace_request->name = $all['create_namespace'];
                 $namespace_request->topic_num = $topic->topic_num;
                 $namespace_request->save();
                 $topic->namespace_id = 1;
-                $topic->save();
+                $topic->save();*/
             }
             DB::commit();
 
