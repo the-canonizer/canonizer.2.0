@@ -72,7 +72,7 @@ Route::get('camp/history/{id}/{campnum}', 'TopicController@camp_history');
 Route::get('statement/history/{id}/{campnum}', 'TopicController@statement_history');
 Route::get('topic-history/{id}', 'TopicController@topic_history');
 Route::get('api/v1/getcampoutline/{topic_num}/{camp_num}', 'ApiController@getcampoutline');
-
+Route::get('user/supports/{user_id}', 'TopicController@usersupports');
 Route::group([ 'middleware' => 'auth'], function() {
     Route::resource('topic', 'TopicController');
     Route::get('camp/create/{topicnum}/{campnum}', [ 'as' => 'camp.create', 'uses' => 'TopicController@create_camp']);
@@ -132,5 +132,3 @@ if (env('APP_DEBUG')) {
 } else {
     Route::get('/{params?}', 'HomeController@index')->where('params', '(.*)');
 }
-
-Route::get('/user/supports/{user_id}', 'TopicController@usersupports')->name('user_supports');
