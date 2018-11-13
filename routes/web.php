@@ -132,3 +132,4 @@ if (env('APP_DEBUG')) {
 } else {
     Route::get('/{params?}', 'HomeController@index')->where('params', '(.*)');
 }
+Route::get('user/supports/{user_id}', 'TopicController@usersupports')->name('user_supports');
