@@ -75,6 +75,9 @@ class TopicController extends Controller {
                 'note' => 'required'
             ];
         }
+        $message = [
+            'create_namespace.required_if' => 'The Other Namespace Name field is required when namespace is other.'
+        ];
 
         $objection = '';
         if (isset($all['objection']) && $all['objection'] == 1) {
@@ -83,9 +86,7 @@ class TopicController extends Controller {
             ];
         }
 
-
-
-        $validator = Validator::make($request->all(), $validatorArray);
+        $validator = Validator::make($request->all(), $validatorArray,$message);
 
         if ($validator->fails()) {
             return back()->withErrors($validator->errors())->withInput($request->all());
