@@ -75,6 +75,9 @@ class TopicController extends Controller {
                 'note' => 'required'
             ];
         }
+        $message = [
+            'create_namespace.required_if' => 'The Other Namespace Name field is required when namespace is other.'
+        ];
 
         $objection = '';
         if (isset($all['objection']) && $all['objection'] == 1) {
@@ -83,9 +86,7 @@ class TopicController extends Controller {
             ];
         }
 
-
-
-        $validator = Validator::make($request->all(), $validatorArray);
+        $validator = Validator::make($request->all(), $validatorArray,$message);
 
         if ($validator->fails()) {
             return back()->withErrors($validator->errors())->withInput($request->all());
@@ -548,7 +549,7 @@ class TopicController extends Controller {
                 $camp->objector_nick_id = $all['nick_name'];
                 $camp->object_reason = $all['objection_reason'];
                 $camp->object_time = time();
-                $message = 'Objection submitted successfully.';
+                $message = "Objection submitted successfully.";
             }
         } else {
 
@@ -668,6 +669,7 @@ class TopicController extends Controller {
             }
 
             if (isset($all['objection']) && $all['objection'] == 1) {
+				$message = "Objection submitted successfully.";
                 $statement = Statement::where('id', $all['objection_id'])->first();
                 $eventtype = "OBJECTION";
                 $statement->objector_nick_id = $all['nick_name'];

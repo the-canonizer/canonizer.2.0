@@ -54,10 +54,10 @@
                 @if ($errors->has('namespace')) <p class="help-block">{{ $errors->first('namespace') }}</p> @endif
 			</div>
             <div id="other-namespace" class="form-group" >
-                <label for="namespace">Other Namespace Name</label>
+                <label for="namespace">Other Namespace Name <span style="color:red">*</span></label>
                 
-                <input type="text" name="create_namespace" class="form-control" id="create_namespace" value="">
-                <span class="note-label"><strong>Note</strong>: Name space for hierarchical categorization of topics. It can be something like: /crypto_currency/, /organizations// etc... It must start and end with "/"</span>
+                <input type="text" name="create_namespace" class="form-control" id="create_namespace" value="{{ old('create_namespace')}}">
+                <span class="note-label"><strong>Note</strong>: Name space for hierarchical categorization of topics. It can be something like: /crypto_currency/, /organizations/ etc... It must start and end with "/"</span>
                 @if ($errors->has('create_namespace')) <p class="help-block">{{ $errors->first('create_namespace') }}</p> @endif
 			</div>
             <div class="form-group">
@@ -84,7 +84,7 @@
             if($('#namespace').val() == 'other'){
                 $('#other-namespace').css('display','block');
             }else{
-                $('#namespace').val('');
+               // $('#namespace').val('');
                 $('#other-namespace').css('display','none');
             }
         }
@@ -98,7 +98,7 @@
                var othernamespace = $('#create_namespace').val();
                if(othernamespace == ''){
                    valid = false;
-                   message = "Namespace can't be blank";
+                   message = "The Other Namespace Name field is required when namespace is other.";
                }
                
                $("#namespace option").each(function()
