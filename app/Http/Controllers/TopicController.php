@@ -158,26 +158,26 @@ class TopicController extends Controller {
 
             if (isset($all['namespace']) && $all['namespace'] == 'other') { /* Create new namespace request */
                 //$topic->submitter_nick_id = $all['submitter'];
-                
-                $othernamespace = trim($all['create_namespace'],'/');
+
+                $othernamespace = trim($all['create_namespace'], '/');
                 $namespace = new Namespaces();
                 $namespace->parent_id = 0;
                 $namespace->name = $othernamespace;
                 $namespace->label = '/' . $othernamespace . '/';
                 $namespace->save();
-                
+
                 //update namespace id
                 $topic->namespace_id = $namespace->id;
                 $topic->update();
-                
+
                 /*
-                $namespace_request = new NamespaceRequest;
-                $namespace_request->user_id = Auth::user()->id;
-                $namespace_request->name = $all['create_namespace'];
-                $namespace_request->topic_num = $topic->topic_num;
-                $namespace_request->save();
-                $topic->namespace_id = 1;
-                $topic->save();*/
+                  $namespace_request = new NamespaceRequest;
+                  $namespace_request->user_id = Auth::user()->id;
+                  $namespace_request->name = $all['create_namespace'];
+                  $namespace_request->topic_num = $topic->topic_num;
+                  $namespace_request->save();
+                  $topic->namespace_id = 1;
+                  $topic->save(); */
             }
             DB::commit();
 
@@ -448,9 +448,13 @@ class TopicController extends Controller {
         $parentcampnum = isset($onecamp->parent_camp_num) ? $onecamp->parent_camp_num : 0;
 
         $statement = Statement::getHistory($topicnum, $campnum);
+        $nickNames = Nickname::personNicknameArray();
+        $ifIamSupporter = Support::ifIamSupporter($topicnum, $campnum, $nickNames);
         $wiky = new Wiky;
 
-        return view('topics.statementhistory', compact('topic', 'statement', 'parentcampnum', 'onecamp', 'parentcamp', 'wiky'));
+        //echo "<pre>"; print_r($statement); exit;
+
+        return view('topics.statementhistory', compact('topic', 'statement', 'parentcampnum', 'onecamp', 'parentcamp', 'wiky','ifIamSupporter'));
     }
 
     /**
@@ -776,6 +780,12 @@ class TopicController extends Controller {
         $data['submit_time'] = strtotime(date('Y-m-d H:i:s'));
         $data['go_live_time'] = strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
         return view('topics.statement_preview', compact('data'));
+        exit;
+    }
+
+    public function statement_agreetochange(Request $request) {
+        echo "<pre>";
+        print_r($request->all());
         exit;
     }
 

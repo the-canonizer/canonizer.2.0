@@ -99,6 +99,8 @@ Route::group([ 'middleware' => 'auth'], function() {
     //change password
      Route::get('settings/changepassword', [ 'as' => 'settings.changepassword', 'uses' => 'SettingsController@getChangePassword']);
      Route::post('settings/changepassword', [ 'as' => 'settings.changepassword.save', 'uses' => 'SettingsController@postChangePassword']);
+    Route::post('statement/agreetochange', 'TopicController@statement_agreetochange');
+     
 });
 
 

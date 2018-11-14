@@ -55,12 +55,14 @@
 			        if(!empty($statement)) { 
 			            $currentLive = 0; 
 						$currentTime = time();
+                                                
 			         foreach($statement as $key=>$data) { 
-						   
+						   $isagreeFlag = false;
 						   if($data->objector_nick_id !== NULL)
 							   $bgcolor ="rgba(255, 0, 0, 0.5);"; //red
 						   else if($currentTime < $data->go_live_time && $currentTime >= $data->submit_time) {
 							   $bgcolor ="rgba(255, 255, 0, 0.5);"; //yellow
+                                                           $isagreeFlag = true;
 						   }   
 						   else if($currentLive!=1 && $currentTime >= $data->go_live_time) {
 							   $currentLive = 1;
@@ -108,8 +110,24 @@
                     <a id="version" class="btn btn-historysmt" href="<?php echo url('topic/'.$data->topic_num.'/'.$data->camp_num.'?asof=bydate&asofdate='.date('Y/m/d H:i:s',$data->submit_time));?>">View This Version</a>
 				 
 				 </div>
+                                @if(($isagreeFlag && $ifIamSupporter))
+                                <div class="CmpHistoryPnl-footer">
+                                    @if($isagreeFlag && $ifIamSupporter)
+                                    <div>
+                                       <input class="agree-to-change" type="checkbox" name="agree" value="" onchange="agreeToChannge()"> I agree with this statement change</form>
+                                    </div>
+                                    @endif
+                                    
+                                </div>
+                                @endif
+                                 
 			    </div> 	
-			   
+                    <form id="changeAgreeForm" action="<?php echo  url('statement/agreetochange')?>" method="post">
+                        <input type="hidden" name="topic_num" value="" />
+                        <input type="hidden" name="camp_name" value="" />
+                        <input type="hidden" name="statement" value="" />
+                        <input type="hidden" name="nick_name_id" value="" />
+                    </form>
 			   <?php } 
 				 } else {
 					 
@@ -128,7 +146,15 @@
                 changeMonth: true,
                 changeYear: true
             });
+            
+            $(".agree-to-change").change(function() {
+                if(this.checked) {
+                    alert('yes');
+                }
+            });
         })
+        
+        
     </script>
 
 

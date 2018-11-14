@@ -57,4 +57,9 @@ class Support extends Model {
 						->select(['nick_name_id','support_order','topic_num','camp_num'])
                         ->get();
 	}
+        
+        public static function ifIamSupporter($topinum,$campnum,$nickNames){
+            $support = self::where('topic_num','=',$topinum)->where('camp_num','=',$campnum)->whereIn('nick_name_id',$nickNames)->where('end','=',0)->get();
+            return count($support) ? 1 : 0 ;
+        }
 }
