@@ -63,6 +63,10 @@
 						   else if($currentTime < $data->go_live_time && $currentTime >= $data->submit_time) {
 							   $bgcolor ="rgba(255, 255, 0, 0.5);"; //yellow
                                                            $isagreeFlag = true;
+                                                           if($ifIamSupporter){
+                                                            $isAgreed = App\Model\ChangeAgreeLog::isAgreed($data->id,$ifIamSupporter);
+                                                           }
+                                                           
 						   }   
 						   else if($currentLive!=1 && $currentTime >= $data->go_live_time) {
 							   $currentLive = 1;
@@ -114,7 +118,7 @@
                                 <div class="CmpHistoryPnl-footer">
                                     @if($isagreeFlag && $ifIamSupporter)
                                     <div>
-                                       <input class="agree-to-change" type="checkbox" name="agree" value="" onchange="agreeToChannge()"> I agree with this statement change</form>
+                                       <input {{ (isset($isAgreed) && $isAgreed) ? 'checked' : '' }} {{ (isset($isAgreed) && $isAgreed) ? 'disabled' : '' }} class="agree-to-change" type="checkbox" name="agree" value="" onchange="agreeToChannge(this,'{{ $data->id}}')"> I agree with this statement change</form>
                                     </div>
                                     @endif
                                     
@@ -123,10 +127,12 @@
                                  
 			    </div> 	
                     <form id="changeAgreeForm" action="<?php echo  url('statement/agreetochange')?>" method="post">
-                        <input type="hidden" name="topic_num" value="" />
-                        <input type="hidden" name="camp_name" value="" />
-                        <input type="hidden" name="statement" value="" />
-                        <input type="hidden" name="nick_name_id" value="" />
+                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                        <input type="hidden" name="topic_num" value="{{ $topic->topic_num}}" />
+                        <input type="hidden" name="camp_num" value="{{ $onecamp->camp_num}}" />
+                        <input type="hidden" name="statement" value="" id="agree_to_statement"/>
+                        <input type="hidden" name="nick_name_id" value="{{ $ifIamSupporter }}" />
+                        <input type="hidden" name="change_for" value="statement" />
                     </form>
 			   <?php } 
 				 } else {
@@ -147,12 +153,21 @@
                 changeYear: true
             });
             
-            $(".agree-to-change").change(function() {
-                if(this.checked) {
-                    alert('yes');
-                }
-            });
+//            $(".agree-to-change").change(function() {
+//                if(this.checked) {
+//                    alert('yes');
+//                }
+//            });
         })
+        
+        function agreeToChannge(evt,id){
+            if(evt.checked){
+                $('#agree_to_statement').val(id);
+                $('#changeAgreeForm').submit();
+            }else{
+                alert('uncheck - ' + id);
+            }
+        }
         
         
     </script>

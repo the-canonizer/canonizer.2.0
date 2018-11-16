@@ -23,6 +23,7 @@ use App\Mail\ThankToSubmitterMail;
 use App\Mail\PurposedToSupportersMail;
 use App\Mail\ObjectionToSubmitterMail;
 use App\Mail\NewDelegatedSupporterMail;
+use App\Model\ChangeAgreeLog;
 
 /**
  * TopicController Class Doc Comment
@@ -86,7 +87,7 @@ class TopicController extends Controller {
             ];
         }
 
-        $validator = Validator::make($request->all(), $validatorArray,$message);
+        $validator = Validator::make($request->all(), $validatorArray, $message);
 
         if ($validator->fails()) {
             return back()->withErrors($validator->errors())->withInput($request->all());
@@ -421,11 +422,13 @@ class TopicController extends Controller {
         $camps = Camp::getCampHistory($topicnum, $campnum);
 
         $parentcampnum = (isset($onecamp->parent_camp_num)) ? $onecamp->parent_camp_num : 0;
+        $nickNames = Nickname::personNicknameArray();
+        $ifIamSupporter = Support::ifIamSupporter($topicnum, $campnum, $nickNames);
 
         //if(!count($onecamp)) return back();
         $wiky = new Wiky;
 
-        return view('topics.camphistory', compact('topic', 'camps', 'parentcampnum', 'onecamp', 'parentcamp', 'wiky'));
+        return view('topics.camphistory', compact('topic', 'camps', 'parentcampnum', 'onecamp', 'parentcamp', 'wiky', 'ifIamSupporter'));
     }
 
     /**
@@ -453,9 +456,9 @@ class TopicController extends Controller {
         $ifIamSupporter = Support::ifIamSupporter($topicnum, $campnum, $nickNames);
         $wiky = new Wiky;
 
-        //echo "<pre>"; print_r($statement); exit;
+        //echo "<pre>"; print_r($onecamp); exit;
 
-        return view('topics.statementhistory', compact('topic', 'statement', 'parentcampnum', 'onecamp', 'parentcamp', 'wiky','ifIamSupporter'));
+        return view('topics.statementhistory', compact('topic', 'statement', 'parentcampnum', 'onecamp', 'parentcamp', 'wiky', 'ifIamSupporter'));
     }
 
     /**
@@ -477,8 +480,10 @@ class TopicController extends Controller {
         }
 
         $wiky = new Wiky;
+        $nickNames = Nickname::personNicknameArray();
+        $ifIamSupporter = Support::ifIamSupporter($topicnum, 1, $nickNames);
 
-        return view('topics.topichistory', compact('topics', 'wiky'));
+        return view('topics.topichistory', compact('topics', 'wiky','ifIamSupporter' ,'topicnum'));
     }
 
     /**
@@ -669,7 +674,7 @@ class TopicController extends Controller {
             }
 
             if (isset($all['objection']) && $all['objection'] == 1) {
-				$message = "Objection submitted successfully.";
+                $message = "Objection submitted successfully.";
                 $statement = Statement::where('id', $all['objection_id'])->first();
                 $eventtype = "OBJECTION";
                 $statement->objector_nick_id = $all['nick_name'];
@@ -786,9 +791,63 @@ class TopicController extends Controller {
     }
 
     public function statement_agreetochange(Request $request) {
-        echo "<pre>";
-        print_r($request->all());
-        exit;
+        $data = $request->all();
+        $changeID = '';
+        $log = new ChangeAgreeLog();
+        $log->camp_num = $data['camp_num'];
+        $log->topic_num = $data['topic_num'];
+        $log->nick_name_id = $data['nick_name_id'];
+        $log->change_for = $data['change_for'];
+        if (isset($data['change_for']) && $data['change_for'] == 'statement') {
+            $log->change_id = $data['statement'];
+            $changeID = $data['statement'];
+        }else if (isset($data['change_for']) && $data['change_for'] == 'camp') {
+            $log->change_id = $data['camp_id'];
+             $changeID = $data['camp_id'];
+        }else if (isset($data['change_for']) && $data['change_for'] == 'topic') {
+            $log->change_id = $data['topic_id'];
+             $changeID = $data['topic_id'];
+        }
+        $log->save();
+        if (isset($data['change_for']) && $data['change_for'] == 'statement') {
+            $agreeCount = ChangeAgreeLog::where('topic_num', '=', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('change_id', '=', $changeID)->where('change_for','=','statement')->count();
+            $supporters = Support::getAllSupporters($data['topic_num'], $data['camp_num']);
+            if ($agreeCount == $supporters) {
+                //go live
+                $statement = Statement::where('id', $data['statement'])->first();
+                $statement->go_live_time = strtotime(date('Y-m-d H:i:s'));
+                $statement->update();
+                //clear log
+                ChangeAgreeLog::where('topic_num', '=', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('statement_id', '=', $changeID)->where('change_for','=',$data['change_for'])->delete();
+            }
+        } else if (isset($data['change_for']) && $data['change_for'] == 'camp') {
+            $agreeCount = ChangeAgreeLog::where('topic_num', '=', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('change_id','=',$changeID)->where('change_for','=',$data['change_for'])->count();
+            $supporters = Support::getAllSupporters($data['topic_num'], $data['camp_num']);
+            
+            if ($agreeCount == $supporters) {
+                //go live
+                $camp = Camp::where('id', $changeID)->first();
+                $camp->go_live_time = strtotime(date('Y-m-d H:i:s'));
+                $camp->update();
+                //clear log
+                ChangeAgreeLog::where('topic_num', '=', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('change_id','=',$changeID)->where('change_for', '=', $data['change_for'])->delete();
+            }
+        }else if (isset($data['change_for']) && $data['change_for'] == 'topic') {
+            $agreeCount = ChangeAgreeLog::where('topic_num', '=', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('change_id','=',$changeID)->where('change_for','=',$data['change_for'])->count();
+            $supporters = Support::getAllSupporters($data['topic_num'], $data['camp_num']);
+             if ($agreeCount == $supporters) {
+                //go live
+                $camp = Topic::where('id', $changeID)->first();
+                $camp->go_live_time = strtotime(date('Y-m-d H:i:s'));
+                $camp->update();
+                //clear log
+                ChangeAgreeLog::where('topic_num', '=', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('change_id','=',$changeID)->where('change_for', '=', $data['change_for'])->delete();
+            }
+        }
+
+
+        Session::flash('success', "Your agreement to statement submitted successfully");
+        return back();
     }
 
 }
