@@ -26,7 +26,7 @@
 <div class="right-whitePnl">
    <div class="row col-sm-12 justify-content-between">
     <div class="col-sm-6 margin-btm-2">
-        <form action="{{ url('/topic')}}" method="post">
+        <form action="{{ url('/topic')}}" method="post" id="topicForm">
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
 			<input type="hidden" id="topic_num" name="topic_num" value="{{ $topic->topic_num }}">
 			<input type="hidden" id="submitter" name="submitter" value="{{ $topic->submitter_nick_id }}">
@@ -87,9 +87,10 @@
 				@if ($errors->has('note')) <p class="help-block">{{ $errors->first('note') }}</p> @endif
             </div>
             <?php } ?>
-            <button type="submit" id="submit" class="btn btn-login">
-			<?php if($objection=="objection") { ?> Submit Objection <?php } else {?>
-			Submit Update<?php } ?></button>
+            <?php if($objection=="objection") { ?>
+            <button type="submit" id="submit-objection" class="btn btn-login">Submit Objection</button>
+             <?php } else {?>
+            <button type="submit" id="submit" class="btn btn-login">Submit Update<?php } ?></button>
         </form>
     </div>
  </div>   
@@ -112,6 +113,39 @@
             }
         }
         selectNamespace();
+        
+        $('#submit').click(function(e) {
+           // e.preventDefault();
+           var valid = true;
+           var message = "";
+           if($('#namespace').val() == 'other'){
+               var othernamespace = $('#create_namespace').val();
+               if(othernamespace == ''){
+                   valid = false;
+                   message = "The Other Namespace Name field is required when namespace is other.";
+               }
+               
+               $("#namespace option").each(function()
+                {
+                    if(($(this).text() == othernamespace) || ($(this).text() == '/'+ othernamespace + '/' ) ){
+                        valid = false;
+                        message = "Namespace already exists";
+                    };
+                });
+           }
+           if(valid){
+               $('#topicForm').submit();
+           }else{
+               e.preventDefault();
+               alert("Error: " + message);
+               return false;
+           }
+            
+        })
+        
+        
+        
+        
     </script>
 
 

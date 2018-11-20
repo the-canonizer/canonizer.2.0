@@ -105,7 +105,7 @@
                 {
                     if(($(this).text() == othernamespace) || ($(this).text() == '/'+ othernamespace + '/' ) ){
                         valid = false;
-                        message = "Namespace already exsist";
+                        message = "Namespace already exists";
                     };
                 });
            }
