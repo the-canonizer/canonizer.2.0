@@ -63,21 +63,22 @@ class TopicController extends Controller {
 
         $validatorArray = ['topic_name' => 'required|unique:topic|max:30',
             'namespace' => 'required',
-            'create_namespace' => 'required_if:namespace,other',
+            'create_namespace' => 'required_if:namespace,other|max:100',
             'nick_name' => 'required',
             'note' => 'required'
         ];
 
         if (isset($all['topic_num'])) {
-            $validatorArray = ['topic_name' => 'required|max:30',
+            $validatorArray = ['topic_name' => 'required|max:50',
                 'namespace' => 'required',
-                'create_namespace' => 'required_if:namespace,other',
+                'create_namespace' => 'required_if:namespace,other|max:100',
                 'nick_name' => 'required',
                 'note' => 'required'
             ];
         }
         $message = [
-            'create_namespace.required_if' => 'The Other Namespace Name field is required when namespace is other.'
+            'create_namespace.required_if' => 'The Other Namespace Name field is required when namespace is other.',
+            'create_namespace.max' => 'The Other Namespace may not be greater than 100 characters.'
         ];
 
         $objection = '';

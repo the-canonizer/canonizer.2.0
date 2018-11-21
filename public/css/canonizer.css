@@ -1236,3 +1236,6 @@ span.brsr-name {
 .user-address{
     word-break: break-word;
 }
+.mainouter li{
+    word-break: break-all;
+}
