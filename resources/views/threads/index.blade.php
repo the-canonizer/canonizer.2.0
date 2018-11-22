@@ -16,6 +16,18 @@
                         <h5>List of All Threads</h5>
                     </div>
 
+					<div>
+						<a class="btn btn-primary" href="{{ URL::to('/')}}/forum/{{ $topicname }}/{{ $campnum }}/threads/{{ $thread->id }}"> All Threads </a>
+
+						@if(Auth::check())
+							<a class="btn btn-primary" href="{{ URL::to('/')}}/forum/{{ $topicname }}/{{ $campnum }}/threads/{{ $thread->id }}?by=me"> My Threads </a>
+
+							<a class="btn btn-primary" href="{{ URL::to('/')}}/forum/{{ $topicname }}/{{ $campnum }}/threads/{{ $thread->id }}?by=participate"> Participation Threads </a>
+
+						@endif
+					</div>
+					<br>
+
                     <div class="panel-body">
                         <table class="table">
 
