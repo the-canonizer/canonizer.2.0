@@ -174,7 +174,7 @@ class CThreadsController extends Controller
 
         $this->validate(
             $request, [
-                'title'    => 'required|max:100',
+                'title'    => 'required|unique:thread|max:100',
                 'nick_name' => 'required'
                 //'body'     => 'required',
             ]

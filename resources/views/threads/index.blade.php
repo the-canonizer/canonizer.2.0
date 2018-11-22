@@ -24,6 +24,8 @@
 
 							<a class="btn btn-primary" href="{{ URL::to('/')}}/forum/{{ $topicname }}/{{ $campnum }}/threads/{{ $thread->id }}?by=participate"> Participation Threads </a>
 
+							<a class="btn btn-primary" href="{{ URL::to('/')}}/forum/{{ $topicname }}/{{ $campnum }}/threads/create"> Create New Thread </a>
+
 						@endif
 					</div>
 					<br>
