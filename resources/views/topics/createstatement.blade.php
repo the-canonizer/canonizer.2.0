@@ -54,7 +54,7 @@
              </div> 
             
             <div class="form-group">
-                <label for="title">Note <span style="color:red">*</span></label>
+                <label for="title">Note</label>
                  <textarea class="form-control" id="note" rows="4" name="note">{{ old('note')}}</textarea>
                 @if ($errors->has('note')) <p class="help-block">{{ $errors->first('note') }}</p> @endif
             </div> 

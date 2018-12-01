@@ -61,7 +61,7 @@
                 @if ($errors->has('create_namespace')) <p class="help-block">{{ $errors->first('create_namespace') }}</p> @endif
 			</div>
             <div class="form-group">
-                <label for="">Additional Note <span style="color:red">*</span></label>
+                <label for="">Additional Note</label>
                 <textarea class="form-control" rows="4" name="note" id="note">{{ old('note') }}</textarea>
                 @if ($errors->has('note')) <p class="help-block">{{ $errors->first('note') }}</p> @endif
             </div>    
