@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use DB;
 use App\CThread;
+use App\Reply;
 use App\Model\Camp;
 use App\Model\Topic;
 use App\Model\Nickname;
@@ -48,15 +49,21 @@ class CThreadsController extends Controller
         if ((camp::where('camp_num', $campnum)->where('topic_num', $topicid)->value('camp_name')))
         {
             if (request('by') == 'me') {
-
+                /**
+                 * Filter out the Threads by User
+                 * @var [type]
+                 */
                 $threads = CThread::where('camp_id', $campnum)->
                                     where('topic_id', $topicid)->
                                     where('user_id', $userNicknames[0]->id)->
                                     latest()->paginate(10);
-
             }
 
             elseif (request('by') == 'participate') {
+                /**
+                 * Filter out the threads on the basis of users Participation in Threads
+                 * @var [type]
+                 */
                 $threads = CThread::join('post', 'thread.id', '=', 'post.c_thread_id' )->
                                     select('thread.*')->
                                     where('camp_id', $campnum)->
@@ -64,8 +71,25 @@ class CThreadsController extends Controller
                                     where('post.user_id', $userNicknames[0]->id)->
                                     latest()->paginate(10);
             }
+            elseif (request('by') == 'most_replies') {
+                /**
+                 * Filter out the threads on the basis of most replies or the most popular threads
+                 * @var [type]
+                 */
+                $threads = CThread::join('post', 'thread.id', '=', 'post.c_thread_id' )->
+                                    select('thread.*', DB::raw('count(post.c_thread_id) as post_count')) ->
+                                    where('camp_id', $campnum)->
+                                    where('topic_id', $topicid)->
+                                    groupBy('thread.id')->
+                                    orderBy('post_count', 'desc')->
+                                    latest()->paginate(10);
+            }
 
             else {
+                /**
+                 * Filter out the threads on the basis of the latest creation dates
+                 * @var [type]
+                 */
                 $threads = CThread::where('camp_id', $campnum)->
                                     where('topic_id', $topicid)->
                                     latest()->paginate(10);
