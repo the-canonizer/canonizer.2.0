@@ -22,9 +22,11 @@
 						@if(Auth::check())
 							<a class="btn btn-primary" href="{{ URL::to('/')}}/forum/{{ $topicname }}/{{ $campnum }}/threads/{{ $thread->id }}?by=me"> My Threads </a>
 
-							<a class="btn btn-primary" href="{{ URL::to('/')}}/forum/{{ $topicname }}/{{ $campnum }}/threads/{{ $thread->id }}?by=participate"> Participation Threads </a>
+							<a class="btn btn-primary" href="{{ URL::to('/')}}/forum/{{ $topicname }}/{{ $campnum }}/threads/{{ $thread->id }}?by=participate"> My Participation </a>
 
-							<a class="btn btn-primary" href="{{ URL::to('/')}}/forum/{{ $topicname }}/{{ $campnum }}/threads/create"> Create New Thread </a>
+							<a class="btn btn-primary" href="{{ URL::to('/')}}/forum/{{ $topicname }}/{{ $campnum }}/threads/{{ $thread->id }}?by=most_replies"> Top 10 </a>
+
+							<a class="btn btn-primary" href="{{ URL::to('/')}}/forum/{{ $topicname }}/{{ $campnum }}/threads/create"> Create Thread </a>
 
 						@endif
 					</div>
@@ -43,16 +45,24 @@
 
                             @foreach ($threads as $thread)
                             <article>
-                                <h5>
-                                    <ul class = "list-group">
-                                        <li class = "list-group-item">
-                                            <a href="{{ URL::to('/')}}/forum/{{ $topicname }}/{{ $campnum }}/threads/{{ $thread->id }}">
-                                            {{ $thread->title }}
-                                            </a>
-                                        </li>
 
-                                    </ul>
-                                </h5>
+								<div class="level">
+									<h5>
+	                                    <ul class = "list-group">
+	                                        <li class = "list-group-item">
+	                                            <a href="{{ URL::to('/')}}/forum/{{ $topicname }}/{{ $campnum }}/threads/{{ $thread->id }}">
+	                                            {{ $thread->title }}
+	                                            </a>
+
+												<strong style="float: right">  {{ $thread->replies->count() }} {{ str_plural('reply', $thread->replies->count() ) }} </strong>
+
+	                                        </li>
+
+	                                    </ul>
+
+	                                </h5>
+
+								</div>
 
                                 {{--  <div class="body"> {{ $thread->body }} </div>  --}}
                             </article>
