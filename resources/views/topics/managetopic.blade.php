@@ -34,12 +34,17 @@
 			 <input type="hidden" id="objection" name="objection" value="1">
 			 <input type="hidden" id="objection_id" name="objection_id" value="{{ $topic->id}}">
 			<?php } ?>
+                         
+                         <?php if(isset($topicupdate) && $topicupdate=="update") { ?>
+			 <input type="hidden" id="topic_update" name="topic_update" value="1">
+			 <input type="hidden" id="topic_id" name="topic_id" value="{{ $topic->id}}">
+			<?php } ?>
 			
 			<div class="form-group">
                 <label for="camp_name">Nick Name <span style="color:red">*</span></label>
                 <select name="nick_name" id="nick_name" class="form-control">
                     @foreach($nickNames as $nick)
-                    <option value="{{ $nick->id }}">{{ $nick->nick_name}}</option>
+                    <option value="{{ $nick->id }}">{{ $nick->nick_name }}</option>
                     @endforeach
 					
                 </select>

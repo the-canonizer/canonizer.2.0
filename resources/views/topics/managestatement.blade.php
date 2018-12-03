@@ -42,7 +42,12 @@
             <?php if($objection=="objection") { ?>
 			<input type="hidden" id="objection" name="objection" value="1">
 			<input type="hidden" id="objection_id" name="objection_id" value="{{ $statement->id }}">
-			<?php } ?>
+	    <?php } ?>
+                        
+            <?php if($statementupdate=="update") { ?>
+			<input type="hidden" id="statement_update" name="statement_update" value="1">
+			<input type="hidden" id="statement_id" name="statement_id" value="{{ $statement->id }}">
+	    <?php } ?>
                
              <div class="form-group">
                 <label for="camp_name">Nick Name <span style="color:red">*</span></label>
@@ -75,7 +80,7 @@
             <?php }  else { ?>  
 			 <div class="form-group">
                 <label for="title">Note <span style="color:red">*</span></label>
-                 <textarea class="form-control" id="note" rows="4" name="note">{{ old('note')}}</textarea>
+                 <textarea class="form-control" id="note" rows="4" name="note">{{ old('note',$statement->note)}}</textarea>
                 @if ($errors->has('note')) <p class="help-block">{{ $errors->first('note') }}</p> @endif
             </div> 
 			<?php } ?>

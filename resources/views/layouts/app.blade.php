@@ -23,6 +23,11 @@
         <script src="{{ URL::asset('/js/jquery.min.js') }}"></script>
         <script src="{{ URL::asset('/js/jquery-ui/jquery-ui.js') }}"></script>
         <link href="{{ URL::asset('/js/jquery-ui/jquery-ui.css') }}" rel="stylesheet" type="text/css">
+        
+        <!--countdown timers -->
+        <script src="{{ URL::asset('/js/jquery.countdownTimer.min.js') }}"></script>
+        <link href="{{ URL::asset('/css/jquery.countdownTimer.css') }}" rel="stylesheet" type="text/css">
+        
 
 
     </head>

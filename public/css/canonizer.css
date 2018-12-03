@@ -1239,3 +1239,15 @@ span.brsr-name {
 .mainouter li{
     word-break: break-all;
 }
+.timer-dial{
+    float: left !important;
+    width: auto !important;
+    font-size: 14px !important;
+    padding: 2px;
+    margin-right: 4px;
+}
+.colorDefinition {
+    background: #0000ff !important;
+    color: #FFFFFF;
+    border-color: #0000ff !important;
+}

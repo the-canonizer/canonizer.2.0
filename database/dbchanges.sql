@@ -69,3 +69,8 @@ ALTER TABLE `change_agree_logs`
 --
 ALTER TABLE `change_agree_logs`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+-- grace period ---
+ALTER TABLE `statement` ADD `grace_period` INT NOT NULL DEFAULT '0' AFTER `language`;
+ALTER TABLE `camp` ADD `grace_period` INT NOT NULL DEFAULT '0' AFTER `camp_about_nick_id`;
+ALTER TABLE `topic` ADD `grace_period` INT NOT NULL DEFAULT '0' AFTER `namespace_id`;

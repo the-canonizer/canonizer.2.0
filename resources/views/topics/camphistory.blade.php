@@ -61,6 +61,15 @@
                     $currentTime = time();
                     foreach ($camps as $key => $data) {
                         $isagreeFlag = false;
+                        $submittime = $data->submit_time;
+                        $starttime = time();
+                        $endtime = $submittime + 60*60;
+                        $interval = $endtime - $starttime;
+                        $intervalTime = date('H:i:s',$interval);
+                        $grace_hour = date('H',strtotime($intervalTime));
+                        $grace_minute = date('i',strtotime($intervalTime));
+                        $grace_second = date('s',strtotime($intervalTime));
+                        $submitterUserID = App\Model\Nickname::getUserIDByNickName($data->submitter_nick_id);
                         if ($data->objector_nick_id !== NULL)
                             $bgcolor = "rgba(255, 0, 0, 0.5);"; //red
                         else if ($currentTime < $data->go_live_time && $currentTime >= $data->submit_time) {
@@ -69,6 +78,25 @@
                             if ($ifIamSupporter) {
                                 $isAgreed = App\Model\ChangeAgreeLog::isAgreed($data->id, $ifIamSupporter,'camp');
                             }
+                            
+                            //grace period
+                            if(Auth::check()){
+                            if(Auth::user()->id == $submitterUserID && $data->grace_period && $interval > 0){?>
+                              <script>
+                                    $(function(){
+                                      $("#countdowntimer<?php echo $data->id; ?>").countdowntimer({
+                                              hours: "<?php echo $grace_hour; ?>",
+                                              minutes : "<?php echo $grace_minute; ?>",
+                                              seconds : "<?php echo $grace_second; ?>",
+                                              timeUp : timeisUp
+                                      });
+
+                                      function timeisUp() {
+                                          notifyAndCloseTimer('<?php echo $data->id ;?>');                                                                                                                              }
+                                      });
+                                </script>
+                            <?php } } 
+                            
                         } else if ($currentLive != 1 && $currentTime >= $data->go_live_time) {
                             $currentLive = 1;
                             $bgcolor = "rgba(0, 128, 0, 0.5);"; // green
@@ -101,19 +129,28 @@
 
                             </div> 	
 
-                            @if(($isagreeFlag && $ifIamSupporter))
+                            @if($isagreeFlag && $ifIamSupporter)
                             <div class="CmpHistoryPnl-footer">
-                                @if($isagreeFlag && $ifIamSupporter)
                                 <div>
                                     <input {{ (isset($isAgreed) && $isAgreed) ? 'checked' : '' }} {{ (isset($isAgreed) && $isAgreed) ? 'disabled' : '' }} class="agree-to-change" type="checkbox" name="agree" value="" onchange="agreeToChannge(this,'{{ $data->id}}')"> I agree with this change</form>
                                 </div>
-                                @endif
-
                             </div>
                             @endif
+                            
+                             @if(Auth::check())
+                                @if(Auth::user()->id == $submitterUserID && $data->grace_period && $interval > 0)
+                                <div class="CmpHistoryPnl-footer">
+                                   <div style="float: right" id="countdowntimer_block<?php echo $data->id ;?>"> 
+                                       <div class="timer-dial" id="countdowntimer<?php echo $data->id ;?>"></div>
+                                      <a href="<?php echo url('manage/camp/'.$data->id.'-update');?>" class="btn btn-historysmt">Update Statement</a>
+                                      <a href="javascript:void(0)" onclick="notifyAndCloseTimer('<?php echo $data->id ;?>')"class="btn btn-historysmt">Stop</a>
+                                   </div>
+                                </div>
+                                @endif
+                             @endif
+                            
 
                         </div>
-
                         <!-- change agreement form -->
                         <form id="changeAgreeForm" action="<?php echo url('statement/agreetochange') ?>" method="post">
                             <input type="hidden" name="_token" value="{{ csrf_token() }}">
@@ -129,7 +166,7 @@
     }
 } else {
 
-    echo " No camp history available.";
+    echo "No camp history available.";
 }
 ?>
             </form>
@@ -140,20 +177,34 @@
 
 <script>
     $(document).ready(function () {
-    $("#datepicker").datepicker({
-    changeMonth: true,
-            changeYear: true
-    });
+        $("#datepicker").datepicker({
+        changeMonth: true,
+                changeYear: true
+        });
     })
 
-            function agreeToChannge(evt, id){
-            if (evt.checked){
-            $('#agree_to_camp').val(id);
-            $('#changeAgreeForm').submit();
-            } else{
-            alert('uncheck - ' + id);
-            }
-            }
+    function agreeToChannge(evt, id){
+        if (evt.checked){
+        $('#agree_to_camp').val(id);
+        $('#changeAgreeForm').submit();
+        } else{
+        alert('uncheck - ' + id);
+        }
+    }
+    
+    function notifyAndCloseTimer(id){
+        $('#countdowntimer_block'+id).remove();
+        $.ajax({
+            type:"POST",
+            datatype:"text",
+            data:{type:"camp",id:id},
+            url:"<?php echo  url('graceperiod/notify_change')?>",
+            success:function(res){
+
+            },
+            error:function(res){ alert('error occured');}
+        })
+    }
 </script>
 
 
