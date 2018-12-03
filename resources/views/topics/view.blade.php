@@ -55,8 +55,9 @@
         <div class="Scolor-Pnl">
 		     <?php $statement = $camp->statement($camp->topic_num,$camp->camp_num); ?>
             <h3><?php echo ($parentcamp=="Agreement") ? $parentcamp : "Camp";?> Statement
-			<span style="float:right; font-size:14px"><b>Go live Time :</b> {{ to_local_time($statement->go_live_time) }}</span>
-            </h3>
+			<?php if(isset($statement->go_live_time)) { ?><span style="float:right; font-size:14px"><b>Go live Time :</b> {{ to_local_time($statement->go_live_time) }}</span>
+            <?php } ?>
+			</h3>
             <div class="content" style="width:100%;" id="camp_statement">
                     <?php 
 					
