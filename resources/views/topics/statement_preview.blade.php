@@ -8,7 +8,7 @@ function local_time($unixtime) {
 <?php $input = $data['statement'];
 $currentLive = 0; 
 $currentTime = time();
-if($data['objector_nick_id'] !== NULL)
+if(isset($data['objector_nick_id']) && $data['objector_nick_id'] !== NULL)
         $bgcolor ="rgba(255, 0, 0, 0.5);"; //red
 else if($currentTime < $data['go_live_time'] && $currentTime >= $data['submit_time']) {
         $bgcolor ="rgba(255, 255, 0, 0.5);"; //yellow
@@ -47,7 +47,7 @@ else if($currentLive!=1 && $currentTime >= $data['go_live_time']) {
     <!--<b>Submitted on :</b> <span id="submitted_on"></span> <br/>-->
     <b>Submitter Nickname :</b> {{ ($data['nickname'] != '') ? $data['nickname'] : 'N/A' }} <br/>
     <!--<b>Go live Time :</b> <span id="go_live_time"></span> <br/> -->
-@if($data['objector_nick_id'] !=null)
+@if(isset($data['objector_nick_id']) && $data['objector_nick_id'] !=null)
 <b>Object Reason :</b> <span style="word-wrap: break-word;">{{ $data['object_reason']}} </span><br/>	
 <b>Objector Nickname :</b> {{ $data['objector_nick_name'] }} <br/> 			  
 @endif 

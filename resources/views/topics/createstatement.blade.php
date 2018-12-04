@@ -61,6 +61,31 @@
            
 		  
             <button type="submit" id="submit" class="btn btn-login">Submit Statement</button>
+            <button type="button" id="preview" class="btn btn-default" onclick="showPreview()">Preview</button>
+	
+            <!-- preview Form -->
+            <div id="previewModal" class="modal fade" role="dialog">
+              <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h4 class="modal-title">Statement preview</h4>
+                  </div>
+                  <div class="modal-body" id="pre_statement"> </div>
+                  <div class="modal-footer">
+                      <button type="submit" id="submit" class="btn btn-login">Submit Update</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+            <!--ends preview -->
+            
+            
+            
+            
         </form>
 </div>
 </div>
@@ -74,6 +99,32 @@
                 changeYear: true
             });
         })
+        
+        function showPreview(){
+            var statement = $('#name').val();
+            var note = $('#note').val();
+            var nickname = $("#nick_name option:selected").text();
+              var submit_time = "{{ time()}}";
+              var go_live_time = "{{ strtotime(date('Y-m-d H:i:s', strtotime('+7 days')))}}";
+              
+              var formData = {
+                  nickname:nickname,
+                  note:note,
+                  statement:statement,
+                  submit_time:submit_time,
+                  go_live_time:go_live_time
+              };
+              
+              $.ajax({
+                  type:'POST',
+                  url:"{{ route('statement.preview')}}",
+                  data:formData,
+                  success:function(res){
+                      $('#pre_statement').html(res);
+                      $('#previewModal').modal('show');
+                  }
+              })
+        }
     </script>
 
 

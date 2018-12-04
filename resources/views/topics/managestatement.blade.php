@@ -161,12 +161,6 @@
                       $('#previewModal').modal('show');
                   }
               })
-            
-            
-            
-            
-            
-            
         }
     </script>
 
