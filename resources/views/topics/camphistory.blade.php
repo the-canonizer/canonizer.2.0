@@ -61,6 +61,7 @@
                     $currentTime = time();
                     foreach ($camps as $key => $data) {
                         $isagreeFlag = false;
+                        $isGraceFlag = false;
                         $submittime = $data->submit_time;
                         $starttime = time();
                         $endtime = $submittime + 60*60;
@@ -75,6 +76,7 @@
                         else if ($currentTime < $data->go_live_time && $currentTime >= $data->submit_time) {
                             $bgcolor = "rgba(255, 255, 0, 0.5);"; //yellow
                             $isagreeFlag = true;
+                            $isGraceFlag = true;
                             if ($ifIamSupporter) {
                                 $isAgreed = App\Model\ChangeAgreeLog::isAgreed($data->id, $ifIamSupporter,'camp');
                             }
@@ -138,8 +140,9 @@
                             @endif
                             
                              @if(Auth::check())
-                                @if(Auth::user()->id == $submitterUserID && $data->grace_period && $interval > 0)
+                                @if(Auth::user()->id == $submitterUserID && $isGraceFlag &&  $data->grace_period && $interval > 0)
                                 <div class="CmpHistoryPnl-footer">
+                                    <div class="grace-period-note"><b>Note: </b>This countdown timer is the grace period in which you can make minor changes to your statement before other direct supporters are notified.</div>
                                    <div style="float: right" id="countdowntimer_block<?php echo $data->id ;?>"> 
                                        <div class="timer-dial" id="countdowntimer<?php echo $data->id ;?>"></div>
                                       <a href="<?php echo url('manage/camp/'.$data->id.'-update');?>" class="btn btn-historysmt">Update Statement</a>
