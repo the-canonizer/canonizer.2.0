@@ -83,7 +83,7 @@ class TopicController extends Controller {
         $objection = '';
         if (isset($all['objection']) && $all['objection'] == 1) {
             $objection = 1;
-            $validatorArray = ['objection_reason' => 'required|max:100',
+            $validatorArray = ['objection_reason' => 'required|max:100','nick_name' => 'required'
             ];
         }
 
