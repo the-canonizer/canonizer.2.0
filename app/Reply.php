@@ -12,7 +12,8 @@ class Reply extends Model
 
     protected $fillable = ['c_thread_id', 'user_id', 'body'];
 
-    public function owner() {
+    public function owner()
+    {
         return $this->belongsTo('App\Model\Nickname'::class, 'user_id');
     }
 }
