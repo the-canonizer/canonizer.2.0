@@ -1251,3 +1251,9 @@ span.brsr-name {
     color: #FFFFFF;
     border-color: #0000ff !important;
 }
+.grace-period-note{
+    float: left;
+    width: 69%;
+    font-size: 13px;
+    color: #0d0dc7;
+}
