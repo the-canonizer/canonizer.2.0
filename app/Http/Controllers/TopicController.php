@@ -864,36 +864,38 @@ class TopicController extends Controller {
         }
         $log->save();
         if (isset($data['change_for']) && $data['change_for'] == 'statement') {
+            $statement = Statement::where('id', $data['statement'])->first();
+            $submitterNickId = $statement->submitter_nick_id;
             $agreeCount = ChangeAgreeLog::where('topic_num', '=', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('change_id', '=', $changeID)->where('change_for', '=', 'statement')->count();
-            $supporters = Support::getAllSupporters($data['topic_num'], $data['camp_num']);
+            $supporters = Support::getAllSupporters($data['topic_num'], $data['camp_num'], $submitterNickId);
             if ($agreeCount == $supporters) {
-                //go live
-                $statement = Statement::where('id', $data['statement'])->first();
+                //go live                
                 $statement->go_live_time = strtotime(date('Y-m-d H:i:s'));
                 $statement->update();
                 //clear log
                 ChangeAgreeLog::where('topic_num', '=', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('change_id', '=', $changeID)->where('change_for', '=', $data['change_for'])->delete();
             }
         } else if (isset($data['change_for']) && $data['change_for'] == 'camp') {
+            $camp = Camp::where('id', $changeID)->first();
+            $submitterNickId = $camp->submitter_nick_id;
             $agreeCount = ChangeAgreeLog::where('topic_num', '=', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('change_id', '=', $changeID)->where('change_for', '=', $data['change_for'])->count();
-            $supporters = Support::getAllSupporters($data['topic_num'], $data['camp_num']);
-
+            $supporters = Support::getAllSupporters($data['topic_num'], $data['camp_num'],$submitterNickId);
             if ($agreeCount == $supporters) {
-                //go live
-                $camp = Camp::where('id', $changeID)->first();
+                //go live                
                 $camp->go_live_time = strtotime(date('Y-m-d H:i:s'));
                 $camp->update();
                 //clear log
                 ChangeAgreeLog::where('topic_num', '=', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('change_id', '=', $changeID)->where('change_for', '=', $data['change_for'])->delete();
             }
         } else if (isset($data['change_for']) && $data['change_for'] == 'topic') {
+            $topic = Topic::where('id', $changeID)->first();
+            $submitterNickId = $topic->submitter_nick_id;
             $agreeCount = ChangeAgreeLog::where('topic_num', '=', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('change_id', '=', $changeID)->where('change_for', '=', $data['change_for'])->count();
-            $supporters = Support::getAllSupporters($data['topic_num'], $data['camp_num']);
+            $supporters = Support::getAllSupporters($data['topic_num'], $data['camp_num'],$submitterNickId);
             if ($agreeCount == $supporters) {
-                //go live
-                $camp = Topic::where('id', $changeID)->first();
-                $camp->go_live_time = strtotime(date('Y-m-d H:i:s'));
-                $camp->update();
+                //go live               
+                $topic->go_live_time = strtotime(date('Y-m-d H:i:s'));
+                $topic->update();
                 //clear log
                 ChangeAgreeLog::where('topic_num', '=', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('change_id', '=', $changeID)->where('change_for', '=', $data['change_for'])->delete();
             }
