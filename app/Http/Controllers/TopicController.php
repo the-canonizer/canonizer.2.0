@@ -24,6 +24,7 @@ use App\Mail\PurposedToSupportersMail;
 use App\Mail\ObjectionToSubmitterMail;
 use App\Mail\NewDelegatedSupporterMail;
 use App\Model\ChangeAgreeLog;
+use App\Model\NewsFeed;
 
 /**
  * TopicController Class Doc Comment
@@ -310,8 +311,22 @@ class TopicController extends Controller {
             //Session::flash('error', "Camp does not exist.");
             return back();
         }
-
-        return view('topics.view', compact('topic', 'parentcampnum', 'parentcamp', 'camp', 'wiky'));
+        //news feeds
+        $editFlag = true;
+        $news = NewsFeed::where('topic_num', '=', $topicnum)
+                        ->where('camp_num', '=', $parentcampnum)
+                        ->where('end_time', '=', null)
+                        ->orderBy('order_id', 'ASC')->get();
+        if(!count($news) && $camp->parent_camp_num != null){
+            $neCampnum = $camp->parent_camp_num;
+            $news = NewsFeed::where('topic_num', '=', $topicnum)
+                        ->where('camp_num', '=', $neCampnum)
+                        ->where('end_time', '=', null)
+                        ->where('available_for_child','=',1)
+                        ->orderBy('order_id', 'ASC')->get();
+            $editFlag = false;
+        }
+        return view('topics.view', compact('topic', 'parentcampnum', 'parentcamp', 'camp', 'wiky', 'id','news','editFlag'));
     }
 
     /**
