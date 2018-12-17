@@ -127,7 +127,7 @@
            var valid = true;
            var message = "";
            if($('#namespace').val() == 'other'){
-               var othernamespace = $('#create_namespace').val();
+               var othernamespace = ($('#create_namespace').val()).trim();
                if(othernamespace == ''){
                    valid = false;
                    message = "The Other Namespace Name field is required when namespace is other.";
