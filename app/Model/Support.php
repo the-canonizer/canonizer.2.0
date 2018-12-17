@@ -64,9 +64,10 @@ class Support extends Model {
             return count($support) ? $support->nick_name_id : 0 ;
         }
         
-        public static function getAllSupporters($topic,$camp){
+        public static function getAllSupporters($topic,$camp,$excludeNickID){
            $support = self::where('topic_num','=',$topic)->where('camp_num','=',$camp)
                     ->where('end','=',0)
+                    ->where('nick_name_id','!=',$excludeNickID)
                     ->where('delegate_nick_name_id',0)->groupBy('nick_name_id')->get(); 
            
            return count($support);
