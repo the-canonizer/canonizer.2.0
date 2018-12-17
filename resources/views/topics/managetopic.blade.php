@@ -80,10 +80,11 @@
             <div id="other-namespace" class="form-group" >
                 <label for="namespace">Other Namespace Name <span style="color:red">*</span></label>
                 
-                <input type="text" name="create_namespace" class="form-control" id="create_namespace" value="">
+                <input type="text" name="create_namespace" class="form-control" id="create_namespace" value="{{old('create_namespace')}}">
                 <span class="note-label"><strong>Note</strong>: Name space for hierarchical categorization of topics. It can be something like: /crypto_currency/, /organizations// etc... It must start and end with "/"</span>
                 @if ($errors->has('create_namespace')) <p class="help-block">{{ $errors->first('create_namespace') }}</p> @endif
-			</div>
+	        <p class="help-block" id="err-other-namespace"></p>
+            </div>
          
            
             <div class="form-group">
@@ -112,9 +113,11 @@
         function selectNamespace(){
             if($('#namespace').val() == 'other'){
                 $('#other-namespace').css('display','block');
+                $('#err-other-namespace').text("");
             }else{
               //  $('#namespace').val('');
                 $('#other-namespace').css('display','none');
+                $('#err-other-namespace').text("");
             }
         }
         selectNamespace();
@@ -142,7 +145,8 @@
                $('#topicForm').submit();
            }else{
                e.preventDefault();
-               alert("Error: " + message);
+               $('#err-other-namespace').text(message);
+               //alert("Error: " + message);
                return false;
            }
             
