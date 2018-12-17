@@ -43,6 +43,11 @@
 			 <input type="hidden" name="objection" id="objection" value="1">
 			 <input type="hidden" name="objection_id" id="objection_id" value="{{ $camp->id }}">
 			<?php } ?>
+                         
+                        <?php if($campupdate=="update") { ?>
+                            <input type="hidden" id="camp_update" name="camp_update" value="1">
+                            <input type="hidden" id="camp_id" name="camp_id" value="{{ $camp->id }}">
+                        <?php } ?>
            
             <?php if($camp->camp_name=="Agreement") { ?>
 			<input type="hidden" id="parent_camp_num" name="parent_camp_num" value="{{ $parentcampnum }}">

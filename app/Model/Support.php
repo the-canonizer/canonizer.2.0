@@ -57,4 +57,19 @@ class Support extends Model {
 						->select(['nick_name_id','support_order','topic_num','camp_num'])
                         ->get();
 	}
+        
+        public static function ifIamSupporter($topinum,$campnum,$nickNames){
+            $support = self::where('topic_num','=',$topinum)->where('camp_num','=',$campnum)->whereIn('nick_name_id',$nickNames)->where('delegate_nick_name_id',0)->where('end','=',0)->first();
+            //echo "<pre>"; print_r($support); exit;
+            return count($support) ? $support->nick_name_id : 0 ;
+        }
+        
+        public static function getAllSupporters($topic,$camp){
+           $support = self::where('topic_num','=',$topic)->where('camp_num','=',$camp)
+                    ->where('end','=',0)
+                    ->where('delegate_nick_name_id',0)->groupBy('nick_name_id')->get(); 
+           
+           return count($support);
+           
+        }
 }

@@ -42,7 +42,12 @@
             <?php if($objection=="objection") { ?>
 			<input type="hidden" id="objection" name="objection" value="1">
 			<input type="hidden" id="objection_id" name="objection_id" value="{{ $statement->id }}">
-			<?php } ?>
+	    <?php } ?>
+                        
+            <?php if($statementupdate=="update") { ?>
+			<input type="hidden" id="statement_update" name="statement_update" value="1">
+			<input type="hidden" id="statement_id" name="statement_id" value="{{ $statement->id }}">
+	    <?php } ?>
                
              <div class="form-group">
                 <label for="camp_name">Nick Name <span style="color:red">*</span></label>
@@ -156,12 +161,6 @@
                       $('#previewModal').modal('show');
                   }
               })
-            
-            
-            
-            
-            
-            
         }
     </script>
 
