@@ -20,7 +20,7 @@
 
 @if(Session::has('success'))
 <div class="alert alert-success">
-    <strong>Success! </strong>{{ Session::get('success')}} {{ to_local_time(Session::get('go_live_time')) }}   
+    <strong>Success! </strong>{{ Session::get('success')}}   
 </div>
 @endif
 
@@ -54,13 +54,53 @@
 			   <?php 
 			        if(!empty($statement)) { 
 			            $currentLive = 0; 
-						$currentTime = time();
+				    $currentTime = time();
+                                    
+                                                
 			         foreach($statement as $key=>$data) { 
-						   
+						   $isagreeFlag = false;
+                                                   $isGraceFlag = false;
+                                                  
+                                                    $submittime = $data->submit_time;
+                                                    $starttime = time();
+                                                    $endtime = $submittime + 60*60;
+                                                    $interval = $endtime - $starttime;
+                                                    $intervalTime = date('H:i:s',$interval);
+                                                    $grace_hour = date('H',strtotime($intervalTime));
+                                                    $grace_minute = date('i',strtotime($intervalTime));
+                                                    $grace_second = date('s',strtotime($intervalTime));
+                                                    $submitterUserID = App\Model\Nickname::getUserIDByNickName($data->submitter_nick_id);
+                                                   
 						   if($data->objector_nick_id !== NULL)
 							   $bgcolor ="rgba(255, 0, 0, 0.5);"; //red
 						   else if($currentTime < $data->go_live_time && $currentTime >= $data->submit_time) {
 							   $bgcolor ="rgba(255, 255, 0, 0.5);"; //yellow
+                                                           $isagreeFlag = true;
+                                                           $isGraceFlag = TRUE;
+                                                           if($ifIamSupporter){
+                                                            $isAgreed = App\Model\ChangeAgreeLog::isAgreed($data->id,$ifIamSupporter);
+                                                           }
+                                                           
+                                                     if(Auth::check()){
+                                                     if(Auth::user()->id == $submitterUserID && $data->grace_period && $interval > 0){
+                                                     ?>
+                                                      <script>
+                                                            $(function(){
+                                                              $("#countdowntimer<?php echo $data->id; ?>").countdowntimer({
+                                                                      hours: "<?php echo $grace_hour; ?>",
+                                                                      minutes : "<?php echo $grace_minute; ?>",
+                                                                      seconds : "<?php echo $grace_second; ?>",
+                                                                      timeUp : timeisUp
+                                                              });
+
+                                                              function timeisUp() {
+                                                                  notifyAndCloseTimer('<?php echo $data->id ;?>');
+                                                               }
+                                                              });
+                                                        </script>
+                                                      
+                                                     <?php } }
+                                                           
 						   }   
 						   else if($currentLive!=1 && $currentTime >= $data->go_live_time) {
 							   $currentLive = 1;
@@ -105,11 +145,39 @@
 				    <a id="object" class="btn btn-historysmt" href="<?php echo url('manage/statement/'.$data->id.'-objection');?>">Object</a>
 				  <?php } ?>	
 					<a id="update" class="btn btn-historysmt" href="<?php echo url('manage/statement/'.$data->id);?>">Submit Statement Update Based On This</a>
-                    <a id="version" class="btn btn-historysmt" href="<?php echo url('topic/'.$data->topic_num.'/'.$data->camp_num.'?asof=bydate&asofdate='.date('Y/m/d H:i:s',$data->submit_time));?>">View This Version</a>
+                    <a id="version" class="btn btn-historysmt" href="<?php echo url('topic/'.$data->topic_num.'/'.$data->camp_num.'?asof=bydate&asofdate='.date('Y/m/d H:i:s',$data->go_live_time));?>">View This Version</a>
 				 
 				 </div>
+                                @if($isagreeFlag && $ifIamSupporter)
+                                <div class="CmpHistoryPnl-footer">
+                                    <div>
+                                       <input {{ (isset($isAgreed) && $isAgreed) ? 'checked' : '' }} {{ (isset($isAgreed) && $isAgreed) ? 'disabled' : '' }} class="agree-to-change" type="checkbox" name="agree" value="" onchange="agreeToChannge(this,'{{ $data->id}}')"> I agree with this statement change</form>
+                                    </div>
+                                </div>
+                                @endif
+                                
+                                @if(Auth::check())
+                                    @if(Auth::user()->id == $submitterUserID && $isGraceFlag && $data->grace_period && $interval > 0)
+                                    <div class="CmpHistoryPnl-footer" id="countdowntimer_block<?php echo $data->id ;?>">
+                                        <div class="grace-period-note"><b>Note: </b>This countdown timer is the grace period in which you can make minor changes to your statement before other direct supporters are notified.</div>
+                                        <div style="float: right" > 
+                                            <div class="timer-dial" id="countdowntimer<?php echo $data->id ;?>"></div>
+                                           <a href="<?php echo url('manage/statement/'.$data->id.'-update');?>" class="btn btn-historysmt">Update Statement</a>
+                                           <a href="javascript:void(0)" onclick="notifyAndCloseTimer('<?php echo $data->id ;?>')"class="btn btn-historysmt">Stop</a>
+                                        </div>
+                                    </div>
+                                    @endif
+                                @endif
+                                 
 			    </div> 	
-			   
+                    <form id="changeAgreeForm" action="<?php echo  url('statement/agreetochange')?>" method="post">
+                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                        <input type="hidden" name="topic_num" value="{{ $topic->topic_num}}" />
+                        <input type="hidden" name="camp_num" value="{{ $onecamp->camp_num}}" />
+                        <input type="hidden" name="statement" value="" id="agree_to_statement"/>
+                        <input type="hidden" name="nick_name_id" value="{{ $ifIamSupporter }}" />
+                        <input type="hidden" name="change_for" value="statement" />
+                    </form>
 			   <?php } 
 				 } else {
 					 
@@ -129,6 +197,30 @@
                 changeYear: true
             });
         })
+        
+        function agreeToChannge(evt,id){
+            if(evt.checked){
+                $('#agree_to_statement').val(id);
+                $('#changeAgreeForm').submit();
+            }else{
+                alert('uncheck - ' + id);
+            }
+        }
+        
+        function notifyAndCloseTimer(id){
+            $('#countdowntimer_block'+id).remove();
+            $.ajax({
+                type:"POST",
+                datatype:"text",
+                data:{type:"statement",id:id},
+                url:"<?php echo  url('graceperiod/notify_change')?>",
+                success:function(res){
+
+                },
+                error:function(res){ alert('error occured');}
+            })
+        }
+        
     </script>
 
 

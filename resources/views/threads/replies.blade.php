@@ -1,12 +1,16 @@
 <div class="panel panel-default">
     <div class="panel-heading">
-        <a href="#">
-            {{ $reply->owner->nick_name }}
-        </a> replied {{ $reply->created_at->diffForHumans() }}
+
+        <div class="level">
+            <a href="#">
+                {{ $reply->owner->nick_name }}
+            </a> replied {{ $reply->created_at->diffForHumans() }}
+            <br><br>
+        </div>
+
     </div>
-    <div class="panel-body">
-        {!! nl2br(e(preg_replace('/[^a-zA-Z0-9_ \-,%&=?.:\/"|\r|\n]/s','', $reply->body))) !!}
 
-
+    <div class="panel-body" style="word-break:break-all">
+        {!! html_entity_decode($reply->body) !!}
     </div>
 </div>

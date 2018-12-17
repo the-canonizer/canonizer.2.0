@@ -1,8 +1,14 @@
 <?php include(app_path() . '/Library/wiki_parser/wikiParser.class.php'); ?>
+<?php
+function local_time($unixtime) {
+			
+	echo "<script>document.write((new Date($unixtime * 1000)).toLocaleString())</script>";
+	
+ } ?>
 <?php $input = $data['statement'];
 $currentLive = 0; 
 $currentTime = time();
-if($data['objector_nick_id'] !== NULL)
+if(isset($data['objector_nick_id']) && $data['objector_nick_id'] !== NULL)
         $bgcolor ="rgba(255, 0, 0, 0.5);"; //red
 else if($currentTime < $data['go_live_time'] && $currentTime >= $data['submit_time']) {
         $bgcolor ="rgba(255, 255, 0, 0.5);"; //yellow
@@ -38,13 +44,28 @@ else if($currentLive!=1 && $currentTime >= $data['go_live_time']) {
 
     </div><br/>
     <b>Note :</b> {{ $data['note'] }} <br/>				 
-    <b>Submitted on :</b> {{ date('d/m/Y, H:i:s',$data['submit_time']) }} <br/>
+    <!--<b>Submitted on :</b> <span id="submitted_on"></span> <br/>-->
     <b>Submitter Nickname :</b> {{ ($data['nickname'] != '') ? $data['nickname'] : 'N/A' }} <br/>
-    <b>Go live Time :</b> {{ date('d/m/Y, H:i:s',$data['go_live_time']) }}<br/--> 
-@if($data['objector_nick_id'] !=null)
-<b>Object Reason :</b> {{ $data['object_reason']}} <br/>	
+    <!--<b>Go live Time :</b> <span id="go_live_time"></span> <br/> -->
+@if(isset($data['objector_nick_id']) && $data['objector_nick_id'] !=null)
+<b>Object Reason :</b> <span style="word-wrap: break-word;">{{ $data['object_reason']}} </span><br/>	
 <b>Objector Nickname :</b> {{ $data['objector_nick_name'] }} <br/> 			  
 @endif 
+
+<script>
+     $(document).ready(function () {
+        var $unixtime = "{{ ($data['go_live_time']) }}";
+        var goTime = new Date($unixtime * 1000).toLocaleString();
+       // $('#go_live_time').html(goTime);
+        
+        var $submitted = "{{ $data['submit_time'] }}";
+        var subTime = new Date($submitted * 1000).toLocaleString();
+        //$('#submitted_on').html(subTime);
+        
+        
+    })
+    
+</script>
 
 </div> 
 

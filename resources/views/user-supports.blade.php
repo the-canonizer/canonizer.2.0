@@ -18,7 +18,7 @@
             $privateFlags = explode(',',$user->private_flags);
             $supportedCamps = $nickName->getSupportCampList();
          ?>
-         <address>
+         <address class="user-address">
          @if(!in_array('last_name',$privateFlags) || !in_array('first_name',$privateFlags))
         <p><strong>Name : </strong>{{ !in_array('first_name',$privateFlags) ? $user->first_name : '' }} {{ !in_array('last_name',$privateFlags) ? $user->last_name : '' }}</p>
         @endif

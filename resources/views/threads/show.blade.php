@@ -73,13 +73,43 @@
 
 							</select>
 							 @if ($errors->has('nick_name')) <p class="help-block">{{ $errors->first('nick_name') }}</p> @endif
-							 <a href="<?php echo url('settings/nickname');?>">Add New Nick Name </a>
+                             <?php if(count($userNicknames) == 0) { ?>
+							       <a href="<?php echo url('settings/nickname');?>">Add New Nick Name </a>
+                             <?php } ?>
 						</div>
 
                         <button type="submit" class="btn btn-primary">Submit</button>
 
                     </form>
+                    <!-- Added Here -->
 
+                    <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/summernote-bs4.css" rel="stylesheet">
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/summernote-bs4.js"></script>
+
+                    <script>
+                        $(document).ready(function() {
+                            $('#body').summernote({
+                                tabsize: 2,
+                                height: 150,
+                                minHeight: null,
+                                maxHeight: null,
+                                focus: true,
+                                disableDragAndDrop: true,
+                                placeholder: 'Post Your Message Here',
+                                toolbar: [
+                                    ['style', ['style']],
+                                    ['font', ['bold', 'italic', 'underline', 'clear']],
+                                    ['fontname', ['fontname']],
+                                    ['color', ['color']],
+                                    ['para', ['ul', 'ol']],
+                                    ['insert', ['link', 'hr']],
+                                    ['view', ['fullscreen', 'codeview']],
+                                    ['help', ['help']]
+                                  ],
+                            });
+                        });
+                    </script>
+                    <!-- Upto Here -->
                     @if(session()->has('message'))
                         <div class="alert alert-success">
                             {{ session()->get('message') }}

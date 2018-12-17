@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use DB;
 use App\CThread;
+use App\Reply;
 use App\Model\Camp;
 use App\Model\Topic;
 use App\Model\Nickname;
@@ -43,15 +44,56 @@ class CThreadsController extends Controller
      */
     public function index($topicid, $topicname, $campnum)
     {
+        $userNicknames = Nickname::topicNicknameUsed($topicid);
 
         if ((camp::where('camp_num', $campnum)->where('topic_num', $topicid)->value('camp_name')))
         {
-            // $threads = CThread::where('camp_id', $campnum)->
-            //                     where('topic_id', $topicid)->latest()->get();
+            if (request('by') == 'me') {
+                /**
+                 * Filter out the Threads by User
+                 * @var [type]
+                 */
+                $threads = CThread::where('camp_id', $campnum)->
+                                    where('topic_id', $topicid)->
+                                    where('user_id', $userNicknames[0]->id)->
+                                    latest()->paginate(10);
+            }
 
-            $threads = CThread::where('camp_id', $campnum)->
-                                where('topic_id', $topicid)->
-                                latest()->paginate(10);
+            elseif (request('by') == 'participate') {
+                /**
+                 * Filter out the threads on the basis of users Participation in Threads
+                 * @var [type]
+                 */
+                $threads = CThread::join('post', 'thread.id', '=', 'post.c_thread_id' )->
+                                    select('thread.*')->
+                                    where('camp_id', $campnum)->
+                                    where('topic_id', $topicid)->
+                                    where('post.user_id', $userNicknames[0]->id)->
+                                    latest()->paginate(10);
+            }
+            elseif (request('by') == 'most_replies') {
+                /**
+                 * Filter out the threads on the basis of most replies or the most popular threads
+                 * @var [type]
+                 */
+                $threads = CThread::join('post', 'thread.id', '=', 'post.c_thread_id' )->
+                                    select('thread.*', DB::raw('count(post.c_thread_id) as post_count')) ->
+                                    where('camp_id', $campnum)->
+                                    where('topic_id', $topicid)->
+                                    groupBy('thread.id')->
+                                    orderBy('post_count', 'desc')->
+                                    latest()->paginate(10);
+            }
+
+            else {
+                /**
+                 * Filter out the threads on the basis of the latest creation dates
+                 * @var [type]
+                 */
+                $threads = CThread::where('camp_id', $campnum)->
+                                    where('topic_id', $topicid)->
+                                    latest()->paginate(10);
+            }
         }
         else {
             return (
@@ -156,7 +198,7 @@ class CThreadsController extends Controller
 
         $this->validate(
             $request, [
-                'title'    => 'required|max:100',
+                'title'    => 'required|unique:thread|max:100',
                 'nick_name' => 'required'
                 //'body'     => 'required',
             ]
@@ -176,7 +218,7 @@ class CThreadsController extends Controller
         $return_url = 'forum/'.$topicid.'-'.$topicname.'/'.$campnum.'/threads';
 
         CommonForumFunctions::sendEmailToSupportersForumThread($topicid, $campnum,
-                              $return_url,request('title'), request('nick_name'));
+                              $return_url,request('title'), request('nick_name'), $topicname);
 
         return redirect($return_url)->with('success', 'Thread Created Successfully!');
     }

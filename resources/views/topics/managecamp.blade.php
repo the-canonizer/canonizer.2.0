@@ -43,6 +43,11 @@
 			 <input type="hidden" name="objection" id="objection" value="1">
 			 <input type="hidden" name="objection_id" id="objection_id" value="{{ $camp->id }}">
 			<?php } ?>
+                         
+                        <?php if($campupdate=="update") { ?>
+                            <input type="hidden" id="camp_update" name="camp_update" value="1">
+                            <input type="hidden" id="camp_id" name="camp_id" value="{{ $camp->id }}">
+                        <?php } ?>
            
             <?php if($camp->camp_name=="Agreement") { ?>
 			<input type="hidden" id="parent_camp_num" name="parent_camp_num" value="{{ $parentcampnum }}">
@@ -84,8 +89,8 @@
             <?php if($objection=="objection") { ?>
             <div class="form-group">
                 <label for="topic name">Your Objection Reason <span style="color:red">*</span></label>
-                <input type="text" name="object_reason" class="form-control" id="object_reason" value="">
-				@if ($errors->has('object_reason')) <p class="help-block">{{ $errors->first('object_reason') }}</p> @endif
+                <input type="text" name="objection_reason" class="form-control" id="objection_reason" value="">
+				@if ($errors->has('objection_reason')) <p class="help-block">{{ $errors->first('objection_reason') }}</p> @endif
             </div> 				
             <?php } else { ?>
 			<div class="form-group">
@@ -106,7 +111,7 @@
                 <input type="text" name="camp_about_url" class="form-control" id="camp_about_url" value="{{ $camp->camp_about_url }}">
                 @if ($errors->has('camp_about_url')) <p class="help-block">{{ $errors->first('camp_about_url') }}</p> @endif
             </div>
-            <div class="form-group">
+            <div class="form-group" id="camp_about_nickname">
                 <label for="camp_about_nick_id">Camp About Nick Name </label>
                 <select name="camp_about_nick_id" id="camp_about_nick_id" class="form-control">
                     <option value="0">--Select Camp About Nick Name--</option>
@@ -126,7 +131,7 @@
             <?php } ?>
             
             <!-- preview Form -->
-            <div id="previewModal" class="modal fade" role="dialog">
+            <div id="previewModal" class="modal fade preview-camp" role="dialog">
               <div class="modal-dialog">
 
                 <!-- Modal content-->
@@ -136,6 +141,7 @@
                   </div>
                   <div class="modal-body">
                     <div class="tree col-sm-12">
+                        Parent Camp: <span id="parent_camp_name">{!! $parentcamp !!}</span> <br/>
                         Camp Name : <span id="pre_camp_name"></span> <br/>
                         Keywords : <span id="pre_keywords"></span><br/>
                         Related URL : <span id="pre_related_url"></span><br/>
@@ -168,11 +174,16 @@
         function showPreview(){
             var campname = $('#camp_name').val();
             var keywords = $('#keywords').val();
+            var nicknameval = $("#camp_about_nick_id option:selected").val();
             var nickname = $("#camp_about_nick_id option:selected").text();
+			var nicknameid = $("#camp_about_nick_id").val();
             var related_url = $('#camp_about_url').val();
-            
+            var parentcamp = $("#parent_camp_num option:selected").text();
             $('#pre_camp_name').text(campname);
-            $('#pre_nickname').text((nickname != '') ? nickname : 'No nickname associated');
+			$('#parent_camp_name').text(parentcamp);
+           
+            $('#pre_nickname').text((nicknameid != 0) ? nickname : 'No nickname associated');
+       
             $('#pre_keywords').text(keywords);
             $('#pre_related_url').text(related_url);
             

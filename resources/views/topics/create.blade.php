@@ -20,7 +20,7 @@
 <div class="right-whitePnl">
    <div class="row col-sm-12 justify-content-between">
     <div class="col-sm-6 margin-btm-2">
-        <form action="{{ url('/topic')}}" method="post">
+        <form action="{{ url('/topic')}}" method="post" id="topicForm">
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
             <div class="form-group">
                 <label for="camp_name">Nick Name <span style="color:red">*</span><p class="help-block">(Once you pick a nick name, for any contribution to a topic, you must always use the same nick name for any other contribution or forum post to this topic.)</p></label>
@@ -54,20 +54,12 @@
                 @if ($errors->has('namespace')) <p class="help-block">{{ $errors->first('namespace') }}</p> @endif
 			</div>
             <div id="other-namespace" class="form-group" >
-                <label for="namespace">Other Namespace Name</label>
+                <label for="namespace">Other Namespace Name <span style="color:red">*</span></label>
                 
-                <input type="text" name="create_namespace" class="form-control" id="create_namespace" value="">
-                <span class="note-label"><strong>Note</strong>: Name space is categorization of your topic, it can be something like: General,crypto_currency etc.</span>
+                <input type="text" name="create_namespace" class="form-control" id="create_namespace" value="{{ old('create_namespace')}}">
+                <span class="note-label"><strong>Note</strong>: Name space for hierarchical categorization of topics. It can be something like: /crypto_currency/, /organizations/ etc... It must start and end with "/"</span>
                 @if ($errors->has('create_namespace')) <p class="help-block">{{ $errors->first('create_namespace') }}</p> @endif
 			</div>
-           <!-- <div class="form-group">
-                <label for="language">Language</label>
-                <select class="form-control" name="language" id="language">
-                    <option value="English">English</option>
-                    <option value="French">French</option>
-                </select>
-            </div>-->
-            
             <div class="form-group">
                 <label for="">Additional Note <span style="color:red">*</span></label>
                 <textarea class="form-control" rows="4" name="note" id="note">{{ old('note') }}</textarea>
@@ -92,10 +84,40 @@
             if($('#namespace').val() == 'other'){
                 $('#other-namespace').css('display','block');
             }else{
+               // $('#namespace').val('');
                 $('#other-namespace').css('display','none');
             }
         }
         selectNamespace();
+        
+        $('#submit').click(function(e) {
+           // e.preventDefault();
+           var valid = true;
+           var message = "";
+           if($('#namespace').val() == 'other'){
+               var othernamespace = $('#create_namespace').val();
+               if(othernamespace == ''){
+                   valid = false;
+                   message = "The Other Namespace Name field is required when namespace is other.";
+               }
+               
+               $("#namespace option").each(function()
+                {
+                    if(($(this).text() == othernamespace) || ($(this).text() == '/'+ othernamespace + '/' ) ){
+                        valid = false;
+                        message = "Namespace already exists";
+                    };
+                });
+           }
+           if(valid){
+               $('#topicForm').submit();
+           }else{
+               e.preventDefault();
+               alert("Error: " + message);
+               return false;
+           }
+            
+        })
     </script>
 
 

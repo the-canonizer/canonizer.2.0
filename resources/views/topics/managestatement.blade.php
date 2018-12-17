@@ -42,7 +42,12 @@
             <?php if($objection=="objection") { ?>
 			<input type="hidden" id="objection" name="objection" value="1">
 			<input type="hidden" id="objection_id" name="objection_id" value="{{ $statement->id }}">
-			<?php } ?>
+	    <?php } ?>
+                        
+            <?php if($statementupdate=="update") { ?>
+			<input type="hidden" id="statement_update" name="statement_update" value="1">
+			<input type="hidden" id="statement_id" name="statement_id" value="{{ $statement->id }}">
+	    <?php } ?>
                
              <div class="form-group">
                 <label for="camp_name">Nick Name <span style="color:red">*</span></label>
@@ -69,19 +74,22 @@
             <?php if($objection=="objection") { ?> 
             <div class="form-group">
                 <label for="topic name">Your Objection Reason <span style="color:red">*</span></label>
-                <input type="text" name="object_reason" class="form-control" id="object_reason" value="">
-				@if ($errors->has('object_reason')) <p class="help-block">{{ $errors->first('object_reason') }}</p> @endif
+                <input type="text" name="objection_reason" class="form-control" id="objection_reason" value="">
+				@if ($errors->has('objection_reason')) <p class="help-block">{{ $errors->first('objection_reason') }}</p> @endif
             </div> 
             <?php }  else { ?>  
 			 <div class="form-group">
                 <label for="title">Note <span style="color:red">*</span></label>
-                 <textarea class="form-control" id="note" rows="4" name="note">{{ old('note')}}</textarea>
+                 <textarea class="form-control" id="note" rows="4" name="note">{{ old('note',$statement->note)}}</textarea>
                 @if ($errors->has('note')) <p class="help-block">{{ $errors->first('note') }}</p> @endif
             </div> 
 			<?php } ?>
             <button type="submit" id="submit" class="btn btn-login">
-			<?php if($objection=="objection") { ?> Submit Objection <?php } else { ?>
-			Submit Update</button> <?php } ?>   
+			<?php if($objection=="objection") { ?> 
+			   Submit Objection <?php } else { ?>
+			   Submit Update <?php } ?> 
+            </button>
+			
             <?php if($objection!="objection") { ?>				
             <button type="button" id="preview" class="btn btn-default" onclick="showPreview()">Preview</button>
 			<?php } ?>
@@ -128,9 +136,9 @@
              var objector_nick_name = "{{ $statement->objectornickname->nick_name}}";
             <?php } ?>
              var object_reason = "{{ $statement->object_reason}}";
-              var object_time = "{{ $statement->object_time}}";
-              var submit_time = "{{ $statement->submit_time}}";
-              var go_live_time = "{{ $statement->go_live_time}}";
+              var object_time = "{{ time() }}";
+              var submit_time = "{{ time()}}";
+              var go_live_time = "{{ strtotime(date('Y-m-d H:i:s', strtotime('+7 days')))}}";
               
               var formData = {
                   nickname:nickname,
@@ -153,12 +161,6 @@
                       $('#previewModal').modal('show');
                   }
               })
-            
-            
-            
-            
-            
-            
         }
     </script>
 

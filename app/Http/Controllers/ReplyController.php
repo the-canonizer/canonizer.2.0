@@ -65,7 +65,7 @@ class ReplyController extends Controller
                        $threadId;
 
         CommonForumFunctions::sendEmailToSupportersForumPost($topicid, $campnum, $return_url,
-                              request('body'), $threadId, request('nick_name')
+                              request('body'), $threadId, request('nick_name'), $topicname
                           );
 
         return back();
