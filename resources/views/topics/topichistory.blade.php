@@ -52,6 +52,7 @@
                 $currentTime = time();
                 foreach ($topics as $key => $data) {
                     $isagreeFlag = false;
+                    $isGraceFlag = false;
                     $submittime = $data->submit_time;
                     $starttime = time();
                     $endtime = $submittime + 60*60;
@@ -117,7 +118,7 @@
                             <a id="version" class="btn btn-historysmt" href="<?php echo url('topic/' . $data->topic_num . '/' . $data->camp_num . '?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $data->submit_time)); ?>">View This Version</a>
 
                         </div> 	
-                         @if($isagreeFlag && $ifIamSupporter)
+                         @if($isagreeFlag && $ifIamSupporter && Auth::user()->id != $submitterUserID)
                             <div class="CmpHistoryPnl-footer">
                                 <div>
                                     <input {{ (isset($isAgreed) && $isAgreed) ? 'checked' : '' }} {{ (isset($isAgreed) && $isAgreed) ? 'disabled' : '' }} class="agree-to-change" type="checkbox" name="agree" value="" onchange="agreeToChannge(this,'{{ $data->id}}')"> I agree with this change</form>

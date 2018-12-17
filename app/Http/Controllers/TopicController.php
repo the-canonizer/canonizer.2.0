@@ -872,7 +872,7 @@ class TopicController extends Controller {
                 $statement->go_live_time = strtotime(date('Y-m-d H:i:s'));
                 $statement->update();
                 //clear log
-                ChangeAgreeLog::where('topic_num', '=', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('statement_id', '=', $changeID)->where('change_for', '=', $data['change_for'])->delete();
+                ChangeAgreeLog::where('topic_num', '=', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('change_id', '=', $changeID)->where('change_for', '=', $data['change_for'])->delete();
             }
         } else if (isset($data['change_for']) && $data['change_for'] == 'camp') {
             $agreeCount = ChangeAgreeLog::where('topic_num', '=', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('change_id', '=', $changeID)->where('change_for', '=', $data['change_for'])->count();
