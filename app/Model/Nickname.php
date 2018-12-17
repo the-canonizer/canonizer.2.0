@@ -158,23 +158,27 @@ class Nickname extends Model {
         } else
             return self::personNickname();
     }
-    
-     public static function personNicknameIds() {
-         if(Auth::check()){
-        $userid = Auth::user()->id;
-        
-        $encode = General::canon_encode($userid);
 
-        return DB::table('nick_name')->where('owner_code', $encode)->orderBy('nick_name', 'ASC')->pluck('id')->toArray();
+    public static function personNicknameIds() {
+        if (Auth::check()) {
+            $userid = Auth::user()->id;
+
+            $encode = General::canon_encode($userid);
+
+            return DB::table('nick_name')->where('owner_code', $encode)->orderBy('nick_name', 'ASC')->pluck('id')->toArray();
         }
         return [];
     }
-    
+
     public static function getUserIDByNickName($nick_id) {
 
         $nickname = self::find($nick_id);
+        if (!empty($nickname) && count($nickname) > 0) {
+            $ownerCode = $nickname->owner_code;
+            return $userId = \App\Library\General::canon_decode($ownerCode);
+        }
 
-        return $userId = \App\Library\General::canon_decode($nickname->owner_code);
+        return null;
     }
 
 }
