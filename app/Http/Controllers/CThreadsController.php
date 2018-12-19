@@ -44,15 +44,18 @@ class CThreadsController extends Controller
      */
     public function index($topicid, $topicname, $campnum)
     {
-        $userNicknames[] = Nickname::topicNicknameUsed($topicid);
+
 
         if ((camp::where('camp_num', $campnum)->where('topic_num', $topicid)->value('camp_name')))
         {
+
             if (request('by') == 'me') {
                 /**
                  * Filter out the Threads by User
                  * @var [type]
                  */
+                $userNicknames = Nickname::topicNicknameUsed($topicid);
+
                 $threads = CThread::where('camp_id', $campnum)->
                                     where('topic_id', $topicid)->
                                     where('user_id', $userNicknames[0]->id)->
@@ -64,6 +67,8 @@ class CThreadsController extends Controller
                  * Filter out the threads on the basis of users Participation in Threads
                  * @var [type]
                  */
+                $userNicknames = Nickname::topicNicknameUsed($topicid);
+                
                 $threads = CThread::join('post', 'thread.id', '=', 'post.c_thread_id' )->
                                     select('thread.*')->
                                     where('camp_id', $campnum)->
