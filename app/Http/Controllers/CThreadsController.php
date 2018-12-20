@@ -61,8 +61,10 @@ class CThreadsController extends Controller
                                         where('user_id', $userNicknames[0]->id)->
                                         latest()->paginate(10);
                 }
+                else {
+                    $threads = [];
+                }
             }
-
             elseif (request('by') == 'participate') {
                 /**
                  * Filter out the threads on the basis of users Participation in Threads
@@ -77,6 +79,9 @@ class CThreadsController extends Controller
                                         where('topic_id', $topicid)->
                                         where('post.user_id', $userNicknames[0]->id)->
                                         latest()->paginate(10);
+                }
+                else {
+                    $threads = [];
                 }
             }
             elseif (request('by') == 'most_replies') {

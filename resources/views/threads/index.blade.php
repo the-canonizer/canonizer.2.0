@@ -35,7 +35,7 @@
                     <div class="panel-body">
                         <table class="table">
 
-							@if (count($threads) == 0 || empty($threads))
+							@if (count($threads) == 0)
 								<hr>
 								<p>No threads available for this topic.
 									Start <a href="{{ URL::to('/')}}/forum/{{ $topicname }}/{{ $campnum }}/threads/create">New Thread.
@@ -69,7 +69,9 @@
                             @endforeach
 
 							<!-- For Pagination -->
-							{{ $threads->links() }}
+							@if (count($threads) > 0)
+								{{ $threads->links() }}
+							@endif
 
                         </table>
 
