@@ -568,7 +568,7 @@ class Camp extends Model {
                 }
                 $childCount = is_array($array['children']) ? count($array['children']) : 0;
                 $class = is_array($array['children']) && count($array['children']) > 0 ? 'parent' : '';
-                $icon = ($childCount) ?  '<i class="fa fa-arrow-down"></i>' : '';
+                $icon = ($childCount || ($campnum == $activeCamp)) ?  '<i class="fa fa-arrow-down"></i>' : '';
                 $html .= "<li id='tree_" . $this->topic_num . "_" . $currentCamp . "_" . $campnum . "'>";
                 //$selected = '';
                 $selected = ($campnum == $activeCamp) && $activeCampDefault ? "color:#08b608; font-weight:bold" : "";
