@@ -45,7 +45,6 @@ class CThreadsController extends Controller
     public function index($topicid, $topicname, $campnum)
     {
 
-
         if ((camp::where('camp_num', $campnum)->where('topic_num', $topicid)->value('camp_name')))
         {
 
@@ -68,13 +67,15 @@ class CThreadsController extends Controller
                  * @var [type]
                  */
                 $userNicknames = Nickname::topicNicknameUsed($topicid);
-                
-                $threads = CThread::join('post', 'thread.id', '=', 'post.c_thread_id' )->
-                                    select('thread.*')->
-                                    where('camp_id', $campnum)->
-                                    where('topic_id', $topicid)->
-                                    where('post.user_id', $userNicknames[0]->id)->
-                                    latest()->paginate(10);
+
+                if ($userNicknames) {
+                    $threads = CThread::join('post', 'thread.id', '=', 'post.c_thread_id' )->
+                                        select('thread.*')->
+                                        where('camp_id', $campnum)->
+                                        where('topic_id', $topicid)->
+                                        where('post.user_id', $userNicknames[0]->id)->
+                                        latest()->paginate(10);
+                }
             }
             elseif (request('by') == 'most_replies') {
                 /**
