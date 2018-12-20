@@ -437,6 +437,7 @@ class TopicController extends Controller {
         $parentcamp = (count($onecamp)) ? Camp::campNameWithAncestors($onecamp, '') : "n/a";
 
         $camps = Camp::getCampHistory($topicnum, $campnum);
+        //echo "<pre>"; print_r($camps); exit;
 
         $parentcampnum = (isset($onecamp->parent_camp_num)) ? $onecamp->parent_camp_num : 0;
         $nickNames = null;
