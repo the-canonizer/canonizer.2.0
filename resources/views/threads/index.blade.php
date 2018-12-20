@@ -69,7 +69,9 @@
                             @endforeach
 
 							<!-- For Pagination -->
-							{{ $threads->links() }}
+							@if (count($threads) > 0)
+								{{ $threads->links() }}
+							@endif
 
                         </table>
 

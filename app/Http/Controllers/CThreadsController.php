@@ -44,32 +44,45 @@ class CThreadsController extends Controller
      */
     public function index($topicid, $topicname, $campnum)
     {
-        $userNicknames[] = Nickname::topicNicknameUsed($topicid);
 
         if ((camp::where('camp_num', $campnum)->where('topic_num', $topicid)->value('camp_name')))
         {
+
             if (request('by') == 'me') {
                 /**
                  * Filter out the Threads by User
                  * @var [type]
                  */
-                $threads = CThread::where('camp_id', $campnum)->
-                                    where('topic_id', $topicid)->
-                                    where('user_id', $userNicknames[0]->id)->
-                                    latest()->paginate(10);
-            }
+                $userNicknames = Nickname::topicNicknameUsed($topicid);
 
+                if (count($userNicknames) > 0) {
+                    $threads = CThread::where('camp_id', $campnum)->
+                                        where('topic_id', $topicid)->
+                                        where('user_id', $userNicknames[0]->id)->
+                                        latest()->paginate(10);
+                }
+                else {
+                    $threads = [];
+                }
+            }
             elseif (request('by') == 'participate') {
                 /**
                  * Filter out the threads on the basis of users Participation in Threads
                  * @var [type]
                  */
-                $threads = CThread::join('post', 'thread.id', '=', 'post.c_thread_id' )->
-                                    select('thread.*')->
-                                    where('camp_id', $campnum)->
-                                    where('topic_id', $topicid)->
-                                    where('post.user_id', $userNicknames[0]->id)->
-                                    latest()->paginate(10);
+                $userNicknames = Nickname::topicNicknameUsed($topicid);
+
+                if (count($userNicknames) > 0) {
+                    $threads = CThread::join('post', 'thread.id', '=', 'post.c_thread_id' )->
+                                        select('thread.*')->
+                                        where('camp_id', $campnum)->
+                                        where('topic_id', $topicid)->
+                                        where('post.user_id', $userNicknames[0]->id)->
+                                        latest()->paginate(10);
+                }
+                else {
+                    $threads = [];
+                }
             }
             elseif (request('by') == 'most_replies') {
                 /**
