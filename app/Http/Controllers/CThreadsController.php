@@ -45,7 +45,6 @@ class CThreadsController extends Controller
     public function index($topicid, $topicname, $campnum)
     {
         $userNicknames[] = Nickname::topicNicknameUsed($topicid);
-	dd($userNicknames);
 
         if ((camp::where('camp_num', $campnum)->where('topic_num', $topicid)->value('camp_name')))
         {
