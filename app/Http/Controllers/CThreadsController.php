@@ -55,10 +55,12 @@ class CThreadsController extends Controller
                  */
                 $userNicknames = Nickname::topicNicknameUsed($topicid);
 
-                $threads = CThread::where('camp_id', $campnum)->
-                                    where('topic_id', $topicid)->
-                                    where('user_id', $userNicknames[0]->id)->
-                                    latest()->paginate(10);
+                if (count($userNicknames) > 0) {
+                    $threads = CThread::where('camp_id', $campnum)->
+                                        where('topic_id', $topicid)->
+                                        where('user_id', $userNicknames[0]->id)->
+                                        latest()->paginate(10);
+                }
             }
 
             elseif (request('by') == 'participate') {
@@ -68,7 +70,7 @@ class CThreadsController extends Controller
                  */
                 $userNicknames = Nickname::topicNicknameUsed($topicid);
 
-                if ($userNicknames) {
+                if (count($userNicknames) > 0) {
                     $threads = CThread::join('post', 'thread.id', '=', 'post.c_thread_id' )->
                                         select('thread.*')->
                                         where('camp_id', $campnum)->
