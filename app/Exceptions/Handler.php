@@ -45,7 +45,7 @@ class Handler extends ExceptionHandler
     public function render($request, Exception $exception)
     {
         if ($exception instanceof \ErrorException) {
-            $response = response()->view('errors.error-404', [prev_url => url()->current() ]);
+            $response = response()->view('errors.error-404', ['prev_url' => url()->current() ]);
             return  $this->toIlluminateResponse($response, $exception);
         }
 
