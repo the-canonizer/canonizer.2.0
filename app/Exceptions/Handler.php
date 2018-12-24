@@ -45,7 +45,19 @@ class Handler extends ExceptionHandler
     public function render($request, Exception $exception)
     {
         if ($exception instanceof \ErrorException) {
-            $response = response()->view('errors.error-404', [prev_url => url()->current() ]);
+            if (strpos(url()->current(), 'forum') == true) {
+                $url_string = preg_split("/(\/|-)/", url()->current());
+                
+                $response = response()->view('errors.error-404',
+                                        ['prev_url'  => url()->current(),
+                                         'topicname' => $url_string[4]."-topic",
+                                         'campnum'   => $url_string[10]
+                                     ]);
+            }
+            else {
+                $response = response()->view('errors.error-404', ['prev_url' => url()->current() ]);
+            }
+
             return  $this->toIlluminateResponse($response, $exception);
         }
 
