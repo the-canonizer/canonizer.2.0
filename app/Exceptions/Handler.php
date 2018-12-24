@@ -49,7 +49,7 @@ class Handler extends ExceptionHandler
         }
 
         if ( config('app.debug') ) {
-            return response()->view('errors.error-404', [ prev_url => url()->current() ]);
+            return response()->view('errors.error-404', [ 'prev_url' => url()->current() ]);
         }
 
         if ( ! config('app.debug') ) {
@@ -57,7 +57,7 @@ class Handler extends ExceptionHandler
         }
         //return parent::render($request, $exception);
 
-        return response()->view('errors.error-404', [ prev_url => url()->current() ]);
+        return response()->view('errors.error-404', [ 'prev_url' => url()->current() ]);
     }
 
     /**
