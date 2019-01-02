@@ -19,11 +19,13 @@
 </div>
 <div class="right-whitePnl">
     <div class="container-fluid">
-
         <div class="Gcolor-Pnl">
-            <h3>What is Canonizer.com?</h3>
+            <h3>Canonizer Introduction</h3>
             <div class="content">
-                <iframe style="position: relative;width: 100%;height:400px;border:none;"  src="https://player.vimeo.com/video/307590745" frameborder="0" allowfullscreen></iframe>
+
+                <iframe src="https://player.vimeo.com/video/307590745" style="position: relative;width: 100%;height:400px;border:none;" id="homeiframe" onload='setTimeout("hideheader();",0);'>
+                </iframe>
+
             </div>
         </div>
 
@@ -128,6 +130,12 @@ function changeNamespace(element){
             @endif
         }
     });
+}
+</script>
+<script type="text/javascript">
+function hideheader()
+{
+    $("#homeiframe").contents().find(".header_1").hide();
 }
 </script>
 @endsection
