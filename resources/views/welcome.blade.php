@@ -19,15 +19,14 @@
 </div>
 <div class="right-whitePnl">
     <div class="container-fluid">
-        <div class="Gcolor-Pnl">
-            <h3>Canonizer Blog</h3>
-            <div class="content">
 
-                <iframe src="{{ URL::asset('/') }}/blog" style="position: relative;width: 100%;height:400px;border:none;" id="homeiframe" onload='setTimeout("hideheader();",0);'>
-                </iframe>
-                
+        <div class="Gcolor-Pnl">
+            <h3>What is Canonizer.com?</h3>
+            <div class="content">
+                <iframe style="position: relative;width: 100%;height:400px;border:none;"  src="https://player.vimeo.com/video/307590745" frameborder="0" allowfullscreen></iframe>
             </div>
         </div>
+
         <div class="Lcolor-Pnl">
             <h3>Canonized list for
                 <select onchange="changeNamespace(this)" id="namespace">
@@ -57,7 +56,7 @@
                          <?php $createCamp = 0;?>
                        @endforeach
 					   <a id="btn-more" class="remove-row" data-id="{{ $topic->id }}"></a>
-					   
+
                     </ul>
                     <button style="background: blue;color: white; cursor:pointer" name="load_more" id="loadtopic">Load All Topics</button>
                 </div>
@@ -129,12 +128,6 @@ function changeNamespace(element){
             @endif
         }
     });
-}
-</script>
-<script type="text/javascript">
-function hideheader()
-{
-    $("#homeiframe").contents().find(".header_1").hide();
 }
 </script>
 @endsection
