@@ -17,7 +17,7 @@
         <link href="{{ URL::asset('/font-awesome/css/font-awesome.min.css') }}" rel="stylesheet" type="text/css">
         <!-- Custom styles for this template-->
         <link href="{{ URL::asset('/css/canonizer.css') }}" rel="stylesheet">
-        
+
         <!-- jquery  -->
         <script src="{{ URL::asset('/js/jquery.min.js') }}"></script>
         <script src="{{ URL::asset('/js/jquery.min.js') }}"></script>
@@ -51,9 +51,9 @@
 										<label for="ss1" title="Search canonizer.com"><font size="-1" color="black">Canonizer.com</font></label></td>
 									</tr>
 								</table>
-                                <input type="hidden" name="search_param" value="all" id="search_param">         
+                                <input type="hidden" name="search_param" value="all" id="search_param">
                                 <input type="text" class="form-control search" name="q" id="sbi" placeholder="Search for...">
-                               
+
 									<input type="submit" name="sa" value="Google Search" id="sbb"></input>
 									<input type="hidden" name="client" value="pub-6646446076038181"></input>
 									<input type="hidden" name="forid" value="1"></input>
@@ -72,17 +72,17 @@
                             <ul class="dropdown-menu">
                                 <li><a href="{{ route('settings')}}">Account Settings</a></li>
                                 <li><a href="{{ url('/logout')}}">Logout</a></li>
-                            </ul>                        
+                            </ul>
 
                         </div>
                         @else
-						<a class="nav-link guestLogin">Browsing as: Guest_31</a>	
+						<a class="nav-link guestLogin">Browsing as: Guest_31</a>
                         <a class="nav-link" href="{{ url('/login')}}"><i class="fa fa-fw fa-user"></i> Log in</a>
                         <a class="nav-link" href="{{ url('/register')}}"><i class="fa fa-fw fa-user-plus"></i> Register </a>
                         @endif
                     </li>
                 </ul>
-				<?php $route = Route::getCurrentRoute()->getActionMethod(); ?> 
+				<?php $route = Route::getCurrentRoute()->getActionMethod(); ?>
                 <ul class="navbar-nav navbar-sidenav" id="exampleAccordion">
                     <ul class="uppermenu">
                         <li class="nav-item">
@@ -90,27 +90,17 @@
                                 <span class="nav-link-text {{ ($route=='index') ? 'menu-active':''}}">Canonizer Main</span>
                             </a>
                         </li>
-                       <!-- <li class="nav-item">
-                            <a class="nav-link" href="{{ url('topic/10-Canonizer-organization-home-page-/1')}}">
-                                <span class="nav-link-text">What is Canonizer.com</span>
-                            </a>
-                        </li>-->
+
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url('/browse')}}">
                                 <span class="nav-link-text {{ ($route=='browse') ? 'menu-active':''}}">Browse</span>
                             </a>
                         </li>
-                        
-                        @if(strpos(url()->current(), 'forum') == true )
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ URL::to('/')}}/forum/{{ $topicname }}/{{ $campnum }}/threads/create">
-                                <span class="nav-link-text">Create New Thread</span>
-                            </a>
-                        </li>
-                        @endif
+
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url('/topic/create')}}">
-                                <span class="nav-link-text {{ ($route=='create') ? 'menu-active':''}}">Create New Topic</span>
+
+                                <span class="nav-link-text {{ ($route=='create' & str_contains(Request::fullUrl(), 'topic') ) ? 'menu-active':''}}">Create New Topic</span>
                             </a>
                         </li>
                         <li class="nav-item">
@@ -128,7 +118,7 @@
                                 <span class="nav-link-text">White Paper</span>
                             </a>
                         </li>
-						
+
 						<li class="nav-item">
                             <a class="nav-link" href="{{ url('/blog')}}">
                                 <span class="nav-link-text">Blog</span>
@@ -136,9 +126,9 @@
                         </li>
                     </ul>
                     <ul class="lowermneu canoalgo">
-					
+
 					<!-- set algorithm as per request -->
-					<?php 
+					<?php
 					$algorithms = \App\Model\Algorithm::getKeyList();
 					if(isset($_REQUEST['canonizer']) && in_array($_REQUEST['canonizer'],$algorithms)) {
 					  session(['defaultAlgo'=>$_REQUEST['canonizer']]);
@@ -158,9 +148,9 @@
                                     </select>
 									<a href="<?php echo url('topic/53-Canonized-Canonizer-Algorithms/2') ?>"><span>Algorithm Information</span></a>
                                 </li>
-								
+
                                 <li>
-                                    
+
                                     <div class="filter">Filter < <input onkeypress="changeFilterOnEnter(this,event)" onblur="changeFilter(this)" type="number" value="{{ isset($_REQUEST['filter']) && !empty($_REQUEST['filter']) ? $_REQUEST['filter'] : '0.001' }}"/></div>
                                 </li>
                             </ul>
@@ -189,7 +179,7 @@
 										<label for="radio3">as of (yy/mm/dd)</label>
 									</div>
 									<div><input readonly type="text" id="asofdate" name="asofdate" value="<?php echo isset($_REQUEST['asofdate']) ? $_REQUEST['asofdate']: '';?>"/></div>
-								</form>	
+								</form>
                                 </li>
                             </ul>
                         </li>
@@ -203,10 +193,10 @@
             @yield('content')
         <div class="homeADDright">
 			@include('partials.advertisement')
-		</div>    
+		</div>
             <!-- footer -->
             @extends('layouts.footer')
-            
+
             <!-- Scroll to Top Button-->
             <a class="scroll-to-top rounded" onclick="topFunction()" href="javascript:void(0)">
                 <i class="fa fa-angle-up"></i>
@@ -231,21 +221,21 @@
                 changeMonth: true,
                 changeYear: true,
 				dateFormat: 'yy/mm/dd'
-            });	
+            });
 
 			$(".asofdate, #asofdate").change(function(){
 				// Do something interesting here
 				 var value = $('#asofdate').val();
-				 
+
 				 var bydate = $("input[name='asof']:checked"). val();
-				
+
 				 if(value=="" && bydate == 'bydate') {
 					 $('#asofdate').focus();
 				  return false;
-				 }	 
+				 }
 				 $('#as_of').submit();
 			});
-			
+
         });
 
         function changeAlgorithmChoice(element){
@@ -261,19 +251,19 @@
 
         function changeFilter(element){
             $('#filter').val($(element).val());
-			
+
             $('#as_of').submit();
         }
 		function changeFilterOnEnter(element,e){
-			
+
 		  if(e.keyCode === 13){
             e.preventDefault();
             $('#filter').val($(element).val());
-			
+
             $('#as_of').submit();
-		  }	
+		  }
         }
-    </script>	
-    
+    </script>
+
 </body>
 </html>
