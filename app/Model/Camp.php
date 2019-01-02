@@ -7,6 +7,7 @@ use App\Model\Nickname;
 use DB;
 use App\Model\Algorithm;
 use App\Model\TopicSupport;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Database\Eloquent\Collection;
 
 class Camp extends Model {
@@ -559,7 +560,7 @@ class Camp extends Model {
         if ($currentCamp == $activeCamp) {
             $html = '<ul><li class="create-new-li"><span><a href="' . route('camp.create', [$this->topic_num, $currentCamp]) . '">&lt;Start new supporting camp here&gt;</a></span></li>';
         }
-
+  
         if (is_array($traversedTreeArray)) {
             foreach ($traversedTreeArray as $campnum => $array) {
                 $filter = isset($_REQUEST['filter']) && is_numeric($_REQUEST['filter']) ? $_REQUEST['filter'] : 0.001;
@@ -569,6 +570,7 @@ class Camp extends Model {
                 $childCount = is_array($array['children']) ? count($array['children']) : 0;
                 $class = is_array($array['children']) && count($array['children']) > 0 ? 'parent' : '';
                 $icon = ($childCount || ($campnum == $activeCamp)) ?  '<i class="fa fa-arrow-down"></i>' : '';
+				
                 $html .= "<li id='tree_" . $this->topic_num . "_" . $currentCamp . "_" . $campnum . "'>";
                 //$selected = '';
                 $selected = ($campnum == $activeCamp) && $activeCampDefault ? "color:#08b608; font-weight:bold" : "";
@@ -709,7 +711,15 @@ class Camp extends Model {
         $html = "<li id='tree_" . $this->topic_num . "_" . $activeCamp . "_" . $this->camp_num . "'>";
         $parentClass = is_array($reducedTree[$this->camp_num]['children']) && count($reducedTree[$this->camp_num]['children']) > 0 ? 'parent' : '';
         $icon = is_array($reducedTree[$this->camp_num]['children']) && count($reducedTree[$this->camp_num]['children']) > 0 ? '<i class="fa fa-arrow-down"></i>' : '';
-        $html .= '<span class="' . $parentClass . '">'. $icon.' </span>';
+        if(count($reducedTree[$this->camp_num]['children']) == 0 )
+		$icon = '<i class="fa fa-arrow-down"></i>';
+	  
+        $action = Route::getCurrentRoute()->getActionMethod();
+
+        if($action =="index")		
+ 	      $icon = '<i class="fa fa-arrow-right"></i>';
+	  
+		$html .= '<span class="' . $parentClass . '">'. $icon.' </span>';
         $html .= '<div class="tp-title"><a style="' . $selected . '" href="' . $reducedTree[$this->camp_num]['link'] . '">' . $reducedTree[$this->camp_num]['title'] . '</a><div class="badge">' . round($reducedTree[$this->camp_num]['score'], 2) . '</div></div>';
         $html .= $this->buildCampTree($reducedTree[$this->camp_num]['children'], $this->camp_num, $activeCamp, $activeCampDefault);
         $html .= "</li>";

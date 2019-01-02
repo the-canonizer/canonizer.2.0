@@ -45,7 +45,7 @@
         @endif
         </address>
         <div class="Gcolor-Pnl">
-            <h3>Nick Name : {{ $nickName->nick_name}} 
+            <h3 style="word-break: break-all;">Nick Name : {{ $nickName->nick_name}} 
             <div class="pull-right col-md-4">
             <form>
                 <select onchange="submitForm(this)" name="namespace" id="namespace" class="namespace-select">
