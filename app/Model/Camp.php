@@ -557,7 +557,10 @@ class Camp extends Model {
 
     public function buildCampTree($traversedTreeArray, $currentCamp = null, $activeCamp = null, $activeCampDefault = false) {
         $html = '<ul>';
-        if ($currentCamp == $activeCamp) {
+		$action = Route::getCurrentRoute()->getActionMethod();
+
+        
+        if ($currentCamp == $activeCamp && $action != "index") {
             $html = '<ul><li class="create-new-li"><span><a href="' . route('camp.create', [$this->topic_num, $currentCamp]) . '">&lt;Start new supporting camp here&gt;</a></span></li>';
         }
   
@@ -716,7 +719,7 @@ class Camp extends Model {
 	  
         $action = Route::getCurrentRoute()->getActionMethod();
 
-        if($action =="index")		
+        if($action =="index" || $action =="loadtopic")		
  	      $icon = '<i class="fa fa-arrow-right"></i>';
 	  
 		$html .= '<span class="' . $parentClass . '">'. $icon.' </span>';
