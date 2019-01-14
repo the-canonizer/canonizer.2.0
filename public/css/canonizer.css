@@ -1257,3 +1257,59 @@ span.brsr-name {
     font-size: 13px;
     color: #0d0dc7;
 }
+.news-feed{
+    margin-right: 9px;
+    font-size: 17px;
+    margin-top: 4px;
+}
+.news-pnl h3{
+    background: #0000ff8c !important;
+}
+.rowNews {
+    background: #ececec78;
+    float: left;
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 10px;
+}
+span.childOpt-news {
+    font-size: 14px;
+    margin-top: 5px;
+    float: left;
+}
+input[type="checkbox"] {
+    margin-top: 4px;
+    float: left;
+    margin-right: 6px;
+}
+.stepNum{
+    position: absolute;
+    left: -14px;
+    top: 40%;
+    background-color: #000;
+    color: #fff;
+    border-radius: 50px;
+    font-size: 14px;
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 30px;
+}
+.sortable:hover{
+    cursor: pointer;
+}
+a.rgWT {
+    color: #fff;
+    margin-top: 2px;
+    font-size: 17px;
+}
+.content ul li.news-list{
+    list-style:disc;
+}
+.content ul li.news-list a{
+    color:#333;
+}
+.content ul li.news-list a:hover{
+    color:#0000ff;
+}
