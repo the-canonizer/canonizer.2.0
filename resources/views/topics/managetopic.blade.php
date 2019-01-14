@@ -29,6 +29,7 @@
         <form action="{{ url('/topic')}}" method="post" id="topicForm">
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
 			<input type="hidden" id="topic_num" name="topic_num" value="{{ $topic->topic_num }}">
+			<input type="hidden" id="id" name="id" value="{{ $topic->id }}">
 			<input type="hidden" id="submitter" name="submitter" value="{{ $topic->submitter_nick_id }}">
 			<?php if($objection=="objection") { ?>
 			 <input type="hidden" id="objection" name="objection" value="1">
@@ -75,7 +76,7 @@
                 </select>
                 <!--
                 <input type="text" name="namespace" class="form-control" id="" value="">-->
-                @if ($errors->has('namespace')) <p class="help-block">{{ $errors->first('namespace') }}</p> @endif
+                @if ($errors->has('namespace')) <p class="help-block namespace-error">{{ $errors->first('namespace') }}</p> @endif
 			</div>
             <div id="other-namespace" class="form-group" >
                 <label for="namespace">Other Namespace Name <span style="color:red">*</span></label>
@@ -83,7 +84,7 @@
                 <input type="text" name="create_namespace" class="form-control" id="create_namespace" value="{{old('create_namespace')}}">
                 <span class="note-label"><strong>Note</strong>: Name space for hierarchical categorization of topics. It can be something like: /crypto_currency/, /organizations// etc... It must start and end with "/"</span>
                 @if ($errors->has('create_namespace')) <p class="help-block">{{ $errors->first('create_namespace') }}</p> @endif
-	        <p class="help-block" id="err-other-namespace"></p>
+	        <p class="help-block namespace-error" id="err-other-namespace"></p>
             </div>
          
            
@@ -128,6 +129,7 @@
            var message = "";
            if($('#namespace').val() == 'other'){
                var othernamespace = ($('#create_namespace').val()).trim();
+			  othernamespace = othernamespace.toLowerCase();
                if(othernamespace == ''){
                    valid = false;
                    message = "The Other Namespace Name field is required when namespace is other.";
@@ -135,7 +137,9 @@
                
                $("#namespace option").each(function()
                 {
-                    if(($(this).text() == othernamespace) || ($(this).text() == '/'+ othernamespace + '/' ) ){
+					var thistext = $(this).text(); 
+					thistext = thistext.toLowerCase();
+                    if((thistext == othernamespace) || (thistext == '/'+ othernamespace + '/' ) || (thistext == '/'+ othernamespace) || (thistext == othernamespace + '/' )){
                         valid = false;
                         message = "Namespace already exists";
                     };
@@ -145,6 +149,7 @@
                $('#topicForm').submit();
            }else{
                e.preventDefault();
+			   $('.help-block').text('');
                $('#err-other-namespace').text(message);
                //alert("Error: " + message);
                return false;
