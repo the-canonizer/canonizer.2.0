@@ -98,7 +98,8 @@
            var valid = true;
            var message = "";
            if($('#namespace').val() == 'other'){
-               var othernamespace = ($('#create_namespace').val()).trim();
+              var othernamespace = ($('#create_namespace').val()).trim();
+			  othernamespace = othernamespace.toLowerCase();
                if(othernamespace == ''){
                    valid = false;
                    message = "The Other Namespace Name field is required when namespace is other.";
@@ -106,7 +107,9 @@
                
                $("#namespace option").each(function()
                 {
-                    if(($(this).text() == othernamespace) || ($(this).text() == '/'+ othernamespace + '/')  || ($(this).text() == '/'+ othernamespace) || ($(this).text() == othernamespace + '/' ) ){
+                    var thistext = $(this).text(); 
+					thistext = thistext.toLowerCase();
+                    if((thistext == othernamespace) || (thistext == '/'+ othernamespace + '/' ) || (thistext == '/'+ othernamespace) || (thistext == othernamespace + '/' )){
                         valid = false;
                         message = "Namespace already exists";
                     };
@@ -116,6 +119,7 @@
                $('#topicForm').submit();
            }else{
                e.preventDefault();
+			    $('.help-block').text('');
                 $('#err-other-namespace').text(message);
                return false;
            }
