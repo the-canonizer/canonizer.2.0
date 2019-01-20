@@ -64,9 +64,10 @@ class NewsFeedController extends Controller
 
         ];
         foreach($all['news_order'] as $key=>$order){
-            $messages["display_text.".$key .".required"]='Display Text  is required';
-            $messages["link.".$key .".regex"]='Link is Invalid';
-            $messages["link.".$key .".required"]='Link is required';
+            $messages["display_text.".$key .".required"]='Display text is required.';
+			$messages["display_text.".$key .".max"]='Display text may not be greater then 256 characters.';
+            $messages["link.".$key .".regex"]='Link is invalid.';
+            $messages["link.".$key .".required"]='Link is required.';
         }
         $validator = Validator::make($request->all(), $validatorArray,$messages);
 

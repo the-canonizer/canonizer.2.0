@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
 <div class="page-titlePnl">
-    <h1 class="page-title">Edit News Feed</h1>
+    <h1 class="page-title">Edit News</h1>
 </div> 
 
 @if(Session::has('error'))
@@ -31,7 +31,7 @@
                         <input type="hidden" class="final_news_order" name="news_order[]" id="news_order_{{$key + 1}}" value="{{ $key + 1  }}">
                         <span class="stepNum inset news_order">{{$key+1}}</span>
                         <div class="form-group col-sm-6">
-                            <label for="topic name">Topic Name ( Limit 256 Characters ) <span style="color:red">*</span></label>
+                            <label for="topic name">Display Text ( Limit 256 Characters ) <span style="color:red">*</span></label>
                             <textarea style="min-height: 61px;" type="text" name="display_text[]" class="form-control" id="display_text">{{ old('display_text.'.$key,$feed->display_text)}}</textarea>
                             @if ($errors->has('display_text.'.$key)) <p class="help-block">{{ $errors->first('display_text.'.$key) }}</p> @endif
                         </div>            

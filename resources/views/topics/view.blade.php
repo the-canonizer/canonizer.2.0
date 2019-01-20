@@ -51,7 +51,7 @@
             page which can contain a statement of belief.  The green line
             indicates the camp page you are currently on and the statement below
             is for that camp."><i class="fa fa-question"></i></a>
-             <a class="pull-right news-feed" href="{{ url('/addnews/' . $id . '/' . $parentcampnum)}}">Add News Feed</a>
+             <a class="pull-right news-feed" href="{{ url('/addnews/' . $id . '/' . $parentcampnum)}}">Add News</a>
             </h3>
             <div class="content">
             <div class="row">
