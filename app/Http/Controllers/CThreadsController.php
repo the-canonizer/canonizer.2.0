@@ -221,7 +221,7 @@ class CThreadsController extends Controller
         );
 
         if (count($thread_flag) > 0) {
-            dd(count($thread_flag));
+            
             // Return Url if thread name found
             $return_url = 'forum/'.$topicid.'-'.$topicname.'/'.$campnum.'/threads/create';
 
