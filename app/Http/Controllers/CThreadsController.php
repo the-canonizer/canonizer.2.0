@@ -211,7 +211,7 @@ class CThreadsController extends Controller
         //Validate the request for Error Handling
         $thread_flag = CThread::where('camp_id', $campnum)->
                                 where('topic_id', $topicid)->
-                                where('title', $request->{'title'})->latest();
+                                where('title', $request->{'title'})->get();
 
         $this->validate(
             $request, [
@@ -221,6 +221,7 @@ class CThreadsController extends Controller
         );
 
         if (count($thread_flag) > 0) {
+            dd(count($thread_flag));
             // Return Url if thread name found
             $return_url = 'forum/'.$topicid.'-'.$topicname.'/'.$campnum.'/threads/create';
 
