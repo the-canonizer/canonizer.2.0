@@ -211,7 +211,7 @@ class CThreadsController extends Controller
         //Validate the request for Error Handling
         $thread_flag = CThread::where('camp_id', $campnum)->
                                 where('topic_id', $topicid)->
-                                where('title', $request->{title})->get();
+                                where('title', $request->{'title'})->latest();
 
         $this->validate(
             $request, [
