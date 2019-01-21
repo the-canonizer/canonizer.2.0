@@ -11,6 +11,7 @@ use App\Model\Nickname;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Validation\Rule;
 
 use App\Mail\ForumThreadCreatedMail;
 use App\Model\Support;
@@ -208,13 +209,23 @@ class CThreadsController extends Controller
     public function store(Request $request, $topicid, $topicname, $campnum)
     {
         //Validate the request for Error Handling
+        $thread_flag = CThread::where('camp_id', $campnum)->
+                                where('topic_id', $topicid)->
+                                where('title', $request->{title})->get();
 
         $this->validate(
             $request, [
-                'title'    => 'required|unique:thread,topic_id,camp_id|max:100',
+                'title'    => 'required|max:100',
                 'nick_name' => 'required'
             ]
         );
+
+        if (count($thread_flag) > 0) {
+            // Return Url if thread name found
+            $return_url = 'forum/'.$topicid.'-'.$topicname.'/'.$campnum.'/threads/create';
+
+            return redirect($return_url)->with('error', 'Thread Title Must be Unique!');
+        }
 
         $thread = CThread::create(
             [
@@ -226,11 +237,11 @@ class CThreadsController extends Controller
             ]
         );
 
-        // Return Url after creating thread Successfully
-        $return_url = 'forum/'.$topicid.'-'.$topicname.'/'.$campnum.'/threads';
-
         CommonForumFunctions::sendEmailToSupportersForumThread($topicid, $campnum,
                               $return_url,request('title'), request('nick_name'), $topicname);
+
+        // Return Url after creating thread Successfully
+        $return_url = 'forum/'.$topicid.'-'.$topicname.'/'.$campnum.'/threads';
 
         return redirect($return_url)->with('success', 'Thread Created Successfully!');
     }
