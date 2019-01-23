@@ -131,9 +131,14 @@
                         </li>
                     </ul>
 					<?php 
+					$routeArray = app('request')->route()->getAction();					
+					$controllerAction = class_basename($routeArray['controller']);
+					
+                    list($controller, $action) = explode('@', $controllerAction);
+
 					$visibleRoutes = array("index","show","topic_history","statement_history","camp_history");
 					
-					if(in_array($route,$visibleRoutes)) { ?>
+					if(in_array($route,$visibleRoutes) && $controller != "CThreadsController") { ?>
                     <ul class="lowermneu canoalgo">
 
 					<!-- set algorithm as per request -->
