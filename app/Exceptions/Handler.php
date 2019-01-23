@@ -47,7 +47,7 @@ class Handler extends ExceptionHandler
         if ($exception instanceof \ErrorException) {
             if (strpos(url()->current(), 'forum') == true) {
                 $url_string = preg_split("/(\/|-)/", url()->current());
-                
+
                 $response = response()->view('errors.error-404',
                                         ['prev_url'  => url()->current(),
                                          'topicname' => $url_string[4]."-topic",
