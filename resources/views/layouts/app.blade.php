@@ -130,10 +130,17 @@
                             </a>
                         </li>
                     </ul>
+					<?php 
+					$visibleRoutes = array("index","show","topic_history","statement_history","camp_history");
+					
+					if(in_array($route,$visibleRoutes)) { ?>
                     <ul class="lowermneu canoalgo">
 
 					<!-- set algorithm as per request -->
 					<?php
+					
+
+					
 					$algorithms = \App\Model\Algorithm::getKeyList();
 					if(isset($_REQUEST['canonizer']) && in_array($_REQUEST['canonizer'],$algorithms)) {
 					  session(['defaultAlgo'=>$_REQUEST['canonizer']]);
@@ -189,6 +196,7 @@
                             </ul>
                         </li>
                     </ul>
+					<?php } ?>
                 </ul>
             </div>
         </nav>

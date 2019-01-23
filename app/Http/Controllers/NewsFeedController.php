@@ -65,7 +65,7 @@ class NewsFeedController extends Controller
         ];
         foreach($all['news_order'] as $key=>$order){
             $messages["display_text.".$key .".required"]='Display text is required.';
-			$messages["display_text.".$key .".max"]='Display text may not be greater then 256 characters.';
+			$messages["display_text.".$key .".max"]='Display text may not be greater than 256 characters.';
             $messages["link.".$key .".regex"]='Link is invalid.';
             $messages["link.".$key .".required"]='Link is required.';
         }
