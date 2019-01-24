@@ -138,7 +138,7 @@
 
 					$visibleRoutes = array("index","show","topic_history","statement_history","camp_history");
 					
-					if(in_array($route,$visibleRoutes) && $controller != "CThreadsController") { ?>
+					if(in_array($route,$visibleRoutes) && $controller != "CThreadsController" && $controller != "SettingsController") { ?>
                     <ul class="lowermneu canoalgo">
 
 					<!-- set algorithm as per request -->
