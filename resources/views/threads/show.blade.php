@@ -7,7 +7,7 @@
         <h3>
             <b>
                 <a href="{{ URL::to('/')}}/forum/{{ $topicname }}/{{ $campnum }}/threads">
-                    &laquo; List of All Threads</a>
+                    &laquo; List of All Camp Threads</a>
                 <hr>
                 <a href="#">{{ $threads->creator->nick_name }}
                 </a> started this thread : "{{ $threads->title }}"
