@@ -10,11 +10,12 @@
                     <b>
                         <a
                         href="{{ URL::to('/') }}/forum/{{ $topicname }}/{{ $campnum }}/threads">
-                            &laquo; List of All Threads
+                            &laquo; List of All Camp Threads
                         </a>
                     </b>
                 </h3>
-    			<h3>Create a new thread for Topic : {{ $topicGeneralName }}</h3>
+    			<h3>Create a new thread for Camp : @php echo $parentcamp @endphp
+            </h3>
 			</div>
             <div class="right-whitePnl">
             	 <div class="panel panel-group">
