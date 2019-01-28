@@ -12,3 +12,4 @@ moderate;In User Registration Page, when user puts password less than 6 characte
 moderate;In User Registration Page, when user puts different password for confirmation user must see Error Message
 critical;When user clicks on What is Canonizer.com, page should be loaded.
 critical;If any unauthenticated user wants to join the camp, User should be directed to the login page
+critical;Verify Canonizer Forum Details is opening when you click on Camp Forum on agreement page
