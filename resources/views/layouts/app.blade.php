@@ -23,6 +23,11 @@
         <script src="{{ URL::asset('/js/jquery.min.js') }}"></script>
         <script src="{{ URL::asset('/js/jquery-ui/jquery-ui.js') }}"></script>
         <link href="{{ URL::asset('/js/jquery-ui/jquery-ui.css') }}" rel="stylesheet" type="text/css">
+        
+        <!--countdown timers -->
+        <script src="{{ URL::asset('/js/jquery.countdownTimer.min.js') }}"></script>
+        <link href="{{ URL::asset('/css/jquery.countdownTimer.css') }}" rel="stylesheet" type="text/css">
+        
 
 
     </head>
@@ -125,10 +130,22 @@
                             </a>
                         </li>
                     </ul>
+					<?php 
+					$routeArray = app('request')->route()->getAction();					
+					$controllerAction = class_basename($routeArray['controller']);
+					
+                    list($controller, $action) = explode('@', $controllerAction);
+
+					$visibleRoutes = array("index","show","topic_history","statement_history","camp_history");
+					
+					if(in_array($route,$visibleRoutes) && $controller != "CThreadsController" && $controller != "SettingsController") { ?>
                     <ul class="lowermneu canoalgo">
 
 					<!-- set algorithm as per request -->
 					<?php
+					
+
+					
 					$algorithms = \App\Model\Algorithm::getKeyList();
 					if(isset($_REQUEST['canonizer']) && in_array($_REQUEST['canonizer'],$algorithms)) {
 					  session(['defaultAlgo'=>$_REQUEST['canonizer']]);
@@ -184,6 +201,7 @@
                             </ul>
                         </li>
                     </ul>
+					<?php } ?>
                 </ul>
             </div>
         </nav>

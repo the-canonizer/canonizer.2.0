@@ -59,9 +59,10 @@
                 <input type="text" name="create_namespace" class="form-control" id="create_namespace" value="{{ old('create_namespace')}}">
                 <span class="note-label"><strong>Note</strong>: Name space for hierarchical categorization of topics. It can be something like: /crypto_currency/, /organizations/ etc... It must start and end with "/"</span>
                 @if ($errors->has('create_namespace')) <p class="help-block">{{ $errors->first('create_namespace') }}</p> @endif
-			</div>
+                <p class="help-block" id="err-other-namespace"></p>
+            </div>
             <div class="form-group">
-                <label for="">Additional Note <span style="color:red">*</span></label>
+                <label for="">Additional Note</label>
                 <textarea class="form-control" rows="4" name="note" id="note">{{ old('note') }}</textarea>
                 @if ($errors->has('note')) <p class="help-block">{{ $errors->first('note') }}</p> @endif
             </div>    
@@ -83,9 +84,11 @@
         function selectNamespace(){
             if($('#namespace').val() == 'other'){
                 $('#other-namespace').css('display','block');
+                $('#err-other-namespace').text("");
             }else{
                // $('#namespace').val('');
                 $('#other-namespace').css('display','none');
+                $('#err-other-namespace').text("");
             }
         }
         selectNamespace();
@@ -95,7 +98,8 @@
            var valid = true;
            var message = "";
            if($('#namespace').val() == 'other'){
-               var othernamespace = $('#create_namespace').val();
+              var othernamespace = ($('#create_namespace').val()).trim();
+			  othernamespace = othernamespace.toLowerCase();
                if(othernamespace == ''){
                    valid = false;
                    message = "The Other Namespace Name field is required when namespace is other.";
@@ -103,9 +107,11 @@
                
                $("#namespace option").each(function()
                 {
-                    if(($(this).text() == othernamespace) || ($(this).text() == '/'+ othernamespace + '/' ) ){
+                    var thistext = $(this).text(); 
+					thistext = thistext.toLowerCase();
+                    if((thistext == othernamespace) || (thistext == '/'+ othernamespace + '/' ) || (thistext == '/'+ othernamespace) || (thistext == othernamespace + '/' )){
                         valid = false;
-                        message = "Namespace already exsist";
+                        message = "Namespace already exists";
                     };
                 });
            }
@@ -113,7 +119,8 @@
                $('#topicForm').submit();
            }else{
                e.preventDefault();
-               alert("Error: " + message);
+			    $('.help-block').text('');
+                $('#err-other-namespace').text(message);
                return false;
            }
             
