@@ -28,7 +28,7 @@ class ForumThreadCreatedMail extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.forumthreadcreated')->
+        return $this->markdown('emails.forumthreadcreatedmail')->
                       subject($this->data['subject']);
     }
 }
