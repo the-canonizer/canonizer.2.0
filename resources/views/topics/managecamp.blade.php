@@ -43,6 +43,11 @@
 			 <input type="hidden" name="objection" id="objection" value="1">
 			 <input type="hidden" name="objection_id" id="objection_id" value="{{ $camp->id }}">
 			<?php } ?>
+                         
+                        <?php if($campupdate=="update") { ?>
+                            <input type="hidden" id="camp_update" name="camp_update" value="1">
+                            <input type="hidden" id="camp_id" name="camp_id" value="{{ $camp->id }}">
+                        <?php } ?>
            
             <?php if($camp->camp_name=="Agreement") { ?>
 			<input type="hidden" id="parent_camp_num" name="parent_camp_num" value="{{ $parentcampnum }}">
@@ -77,7 +82,7 @@
             
              <div class="form-group">
                 <label for="camp_name">Camp Name ( Limit 30 Char ) <span style="color:red">*</span></label>
-                <input type="text" name="camp_name" <?php if($camp->camp_name=="Agreement") echo "readonly";?> class="form-control" id="camp_name" value="{{ $camp->camp_name}}">
+                <input type="text" maxlength="30" name="camp_name" <?php if($camp->camp_name=="Agreement") echo "readonly";?> class="form-control" id="camp_name" value="{{ $camp->camp_name}}">
                  @if ($errors->has('camp_name')) <p class="help-block">{{ $errors->first('camp_name') }}</p> @endif
              </div> 
              		
@@ -96,7 +101,7 @@
            
             
             <div class="form-group">
-                <label for="">Additional Note <span style="color:red">*</span></label>
+                <label for="">Additional Note </label>
                 <textarea class="form-control" rows="4" name="note" id="note">{{ old('note')}}</textarea>
                 @if ($errors->has('note')) <p class="help-block">{{ $errors->first('note') }}</p> @endif
             </div>   

@@ -21,7 +21,7 @@
                 <li class=""><a class="" href="{{ route('settings.nickname')}}" >Add & Manage Nick Names</a></li>
 				<li class=""><a class="" href="{{ route('settings.support')}}" >My Supports</a></li>
                 <li><a class="" href="{{ route('settings.algo-preferences')}}">Default Algorithm</a></li>
-                <li><a class="active" href="{{ route('settings.changepassword')}}">Change Password</a></li>
+                <li class="active"><a class="" href="{{ route('settings.changepassword')}}">Change Password</a></li>
             </ul>
 
             <div id="myTabContent" class="add-nickname-section">  

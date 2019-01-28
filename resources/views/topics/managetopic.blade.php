@@ -26,20 +26,26 @@
 <div class="right-whitePnl">
    <div class="row col-sm-12 justify-content-between">
     <div class="col-sm-6 margin-btm-2">
-        <form action="{{ url('/topic')}}" method="post">
+        <form action="{{ url('/topic')}}" method="post" id="topicForm">
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
 			<input type="hidden" id="topic_num" name="topic_num" value="{{ $topic->topic_num }}">
+			<input type="hidden" id="id" name="id" value="{{ $topic->id }}">
 			<input type="hidden" id="submitter" name="submitter" value="{{ $topic->submitter_nick_id }}">
 			<?php if($objection=="objection") { ?>
 			 <input type="hidden" id="objection" name="objection" value="1">
 			 <input type="hidden" id="objection_id" name="objection_id" value="{{ $topic->id}}">
+			<?php } ?>
+                         
+                         <?php if(isset($topicupdate) && $topicupdate=="update") { ?>
+			 <input type="hidden" id="topic_update" name="topic_update" value="1">
+			 <input type="hidden" id="topic_id" name="topic_id" value="{{ $topic->id}}">
 			<?php } ?>
 			
 			<div class="form-group">
                 <label for="camp_name">Nick Name <span style="color:red">*</span></label>
                 <select name="nick_name" id="nick_name" class="form-control">
                     @foreach($nickNames as $nick)
-                    <option value="{{ $nick->id }}">{{ $nick->nick_name}}</option>
+                    <option value="{{ $nick->id }}">{{ $nick->nick_name }}</option>
                     @endforeach
 					
                 </select>
@@ -70,26 +76,28 @@
                 </select>
                 <!--
                 <input type="text" name="namespace" class="form-control" id="" value="">-->
-                @if ($errors->has('namespace')) <p class="help-block">{{ $errors->first('namespace') }}</p> @endif
+                @if ($errors->has('namespace')) <p class="help-block namespace-error">{{ $errors->first('namespace') }}</p> @endif
 			</div>
             <div id="other-namespace" class="form-group" >
                 <label for="namespace">Other Namespace Name <span style="color:red">*</span></label>
                 
-                <input type="text" name="create_namespace" class="form-control" id="create_namespace" value="">
+                <input type="text" name="create_namespace" class="form-control" id="create_namespace" value="{{old('create_namespace')}}">
                 <span class="note-label"><strong>Note</strong>: Name space for hierarchical categorization of topics. It can be something like: /crypto_currency/, /organizations// etc... It must start and end with "/"</span>
                 @if ($errors->has('create_namespace')) <p class="help-block">{{ $errors->first('create_namespace') }}</p> @endif
-			</div>
+	        <p class="help-block namespace-error" id="err-other-namespace"></p>
+            </div>
          
            
             <div class="form-group">
-                <label for="">Additional Note <span style="color:red">*</span></label>
+                <label for="">Additional Note</label>
                 <textarea class="form-control" rows="4" name="note" id="note"> </textarea>
 				@if ($errors->has('note')) <p class="help-block">{{ $errors->first('note') }}</p> @endif
             </div>
             <?php } ?>
-            <button type="submit" id="submit" class="btn btn-login">
-			<?php if($objection=="objection") { ?> Submit Objection <?php } else {?>
-			Submit Update<?php } ?></button>
+            <?php if($objection=="objection") { ?>
+            <button type="submit" id="submit-objection" class="btn btn-login">Submit Objection</button>
+             <?php } else {?>
+            <button type="submit" id="submit" class="btn btn-login">Submit Update<?php } ?></button>
         </form>
     </div>
  </div>   
@@ -106,12 +114,52 @@
         function selectNamespace(){
             if($('#namespace').val() == 'other'){
                 $('#other-namespace').css('display','block');
+                $('#err-other-namespace').text("");
             }else{
               //  $('#namespace').val('');
                 $('#other-namespace').css('display','none');
+                $('#err-other-namespace').text("");
             }
         }
         selectNamespace();
+        
+        $('#submit').click(function(e) {
+           // e.preventDefault();
+           var valid = true;
+           var message = "";
+           if($('#namespace').val() == 'other'){
+               var othernamespace = ($('#create_namespace').val()).trim();
+			  othernamespace = othernamespace.toLowerCase();
+               if(othernamespace == ''){
+                   valid = false;
+                   message = "The Other Namespace Name field is required when namespace is other.";
+               }
+               
+               $("#namespace option").each(function()
+                {
+					var thistext = $(this).text(); 
+					thistext = thistext.toLowerCase();
+                    if((thistext == othernamespace) || (thistext == '/'+ othernamespace + '/' ) || (thistext == '/'+ othernamespace) || (thistext == othernamespace + '/' )){
+                        valid = false;
+                        message = "Namespace already exists";
+                    };
+                });
+           }
+           if(valid){
+               $('#topicForm').submit();
+           }else{
+               e.preventDefault();
+			   $('.help-block').text('');
+               $('#err-other-namespace').text(message);
+               //alert("Error: " + message);
+               return false;
+           }
+            
+        })
+        
+        
+        
+        
     </script>
 
 

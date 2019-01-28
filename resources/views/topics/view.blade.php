@@ -21,6 +21,24 @@
 </div>      	
 <div class="right-whitePnl">
     <div class="container-fluid">
+         @if(count($news) > 0)
+        <div class="news-pnl Scolor-Pnl">
+            <h3>News Feeds
+                @if($editFlag)<a class="pull-right rgWT" href="{{  url('editnews/' . $id . '/' . $parentcampnum)}}"><i class="fa fa-pencil-square-o"></i> Edit News</a>@endif
+            </h3>
+            <div class="content">
+                <ul>
+            @foreach($news as $feed)
+            <li class="news-list">
+                <a target="_blank" href="{{ $feed->link}}">
+                    <span>{{$feed->display_text}}</span>
+                </a>
+            </li>
+            @endforeach
+            </ul>
+            </div>
+        </div>
+         @endif
         
          <div class="Scolor-Pnl">
             <h3>Canonizer Sorted Camp Tree
@@ -33,6 +51,7 @@
             page which can contain a statement of belief.  The green line
             indicates the camp page you are currently on and the statement below
             is for that camp."><i class="fa fa-question"></i></a>
+             <a class="pull-right news-feed" href="{{ url('/addnews/' . $id . '/' . $parentcampnum)}}">Add News</a>
             </h3>
             <div class="content">
             <div class="row">
@@ -53,15 +72,18 @@
         </div>
         
         <div class="Scolor-Pnl">
+		     <?php $statement = $camp->statement($camp->topic_num,$camp->camp_num); ?>
             <h3><?php echo ($parentcamp=="Agreement") ? $parentcamp : "Camp";?> Statement
-            </h3>
+			<?php if(isset($statement->go_live_time)) { ?><span style="float:right; font-size:14px"><b>Go live Time :</b> {{ to_local_time($statement->go_live_time) }}</span>
+            <?php } ?>
+			</h3>
             <div class="content" style="width:100%;" id="camp_statement">
                     <?php 
 					
 					$rootUrl = str_replace("/public","",Request::root());
 					$rootUrl = str_replace("/index.php","",$rootUrl);
 					
-                    $statement = $camp->statement($camp->topic_num,$camp->camp_num);
+
                     if(isset($statement->value)) {
                               $input=$statement->value;
 							  
