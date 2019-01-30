@@ -1,5 +1,5 @@
 from CanonizerBase import Page
-from Identifiers import LoginPageIdentifiers, HomePageIdentifiers
+from Identifiers import LoginPageIdentifiers, HomePageIdentifiers, ForgotPasswordIdentifiers
 
 
 class CanonizerLoginPage(Page):
@@ -59,7 +59,6 @@ class CanonizerLoginPage(Page):
     def login(self, user, password):
         """
         This function is to click the login button and return result to the main program.
-
         Args:
             :param user: Email ID of the User
             :param password: Password of the User
@@ -105,3 +104,10 @@ class CanonizerLoginPage(Page):
             Return the result to the main program.
         """
         return self.find_element(*LoginPageIdentifiers.SIGNUPNOW).text
+
+
+
+
+
+
+

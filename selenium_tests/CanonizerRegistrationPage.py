@@ -23,7 +23,6 @@ class CanonizerRegisterPage(Page):
         self.find_element(*RegistrationPageIdentifiers.REGISTER).click()
         return CanonizerRegisterPage(self.driver)
 
-
     def enter_first_name(self, firstname):
         self.find_element(*RegistrationPageIdentifiers.FIRST_NAME).send_keys(firstname)
 
@@ -66,7 +65,7 @@ class CanonizerRegisterPage(Page):
         return self.find_element(*RegistrationPageIdentifiers.ERROR_LAST_NAME).text
 
     def registration_with_blank_email(self, firstname, lastname, password, confirmpassword):
-        self.register(firstname, lastname,'', password, confirmpassword)
+        self.register(firstname, lastname, '', password, confirmpassword)
         return self.find_element(*RegistrationPageIdentifiers.ERROR_EMAIL).text
 
     def registration_with_blank_password(self, firstname, lastname, user):
