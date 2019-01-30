@@ -228,7 +228,7 @@ class CThreadsController extends Controller
             // Return Url if thread name found
             $return_url = 'forum/'.$topicid.'-'.$topicname.'/'.$campnum.'/threads/create';
 
-            return redirect($return_url)->with('error', 'Thread Title Must be Unique!');
+            return redirect($return_url)->with('error', 'Thread title must be unique!');
         }
 
         $thread = CThread::create(
