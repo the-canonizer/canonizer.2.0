@@ -5,7 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
-        <title>Canonizer  Test</title>
+        <title>Canonizer</title>
 
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
@@ -130,10 +130,22 @@
                             </a>
                         </li>
                     </ul>
+					<?php 
+					$routeArray = app('request')->route()->getAction();					
+					$controllerAction = class_basename($routeArray['controller']);
+					
+                    list($controller, $action) = explode('@', $controllerAction);
+
+					$visibleRoutes = array("index","show","topic_history","statement_history","camp_history");
+					
+					if(in_array($route,$visibleRoutes) && $controller != "CThreadsController" && $controller != "SettingsController") { ?>
                     <ul class="lowermneu canoalgo">
 
 					<!-- set algorithm as per request -->
 					<?php
+					
+
+					
 					$algorithms = \App\Model\Algorithm::getKeyList();
 					if(isset($_REQUEST['canonizer']) && in_array($_REQUEST['canonizer'],$algorithms)) {
 					  session(['defaultAlgo'=>$_REQUEST['canonizer']]);
@@ -189,6 +201,7 @@
                             </ul>
                         </li>
                     </ul>
+					<?php } ?>
                 </ul>
             </div>
         </nav>

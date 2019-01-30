@@ -24,6 +24,7 @@ use App\Mail\PurposedToSupportersMail;
 use App\Mail\ObjectionToSubmitterMail;
 use App\Mail\NewDelegatedSupporterMail;
 use App\Model\ChangeAgreeLog;
+use App\Model\NewsFeed;
 
 /**
  * TopicController Class Doc Comment
@@ -64,27 +65,27 @@ class TopicController extends Controller {
         $validatorArray = ['topic_name' => 'required|unique:topic|max:30',
             'namespace' => 'required',
             'create_namespace' => 'required_if:namespace,other|max:100',
-            'nick_name' => 'required',
-            'note' => 'required'
+            'nick_name' => 'required'
+            //'note' => 'required'
         ];
 
         if (isset($all['topic_num'])) {
-            $validatorArray = ['topic_name' => 'required|max:50',
+            $validatorArray = ['topic_name' => 'required|max:30',
                 'namespace' => 'required',
                 'create_namespace' => 'required_if:namespace,other|max:100',
-                'nick_name' => 'required',
-                'note' => 'required'
+                'nick_name' => 'required'
+               // 'note' => 'required'
             ];
         }
         $message = [
             'create_namespace.required_if' => 'The Other Namespace Name field is required when namespace is other.',
-            'create_namespace.max' => 'The Other Namespace may not be greater than 100 characters.'
+            'create_namespace.max' => 'The Other Namespace Name may not be greater than 100 characters.'
         ];
 
         $objection = '';
         if (isset($all['objection']) && $all['objection'] == 1) {
             $objection = 1;
-            $validatorArray = ['objection_reason' => 'required|max:100',
+            $validatorArray = ['objection_reason' => 'required|max:100','nick_name' => 'required'
             ];
         }
 
@@ -310,8 +311,22 @@ class TopicController extends Controller {
             //Session::flash('error', "Camp does not exist.");
             return back();
         }
-
-        return view('topics.view', compact('topic', 'parentcampnum', 'parentcamp', 'camp', 'wiky'));
+        //news feeds
+        $editFlag = true;
+        $news = NewsFeed::where('topic_num', '=', $topicnum)
+                        ->where('camp_num', '=', $parentcampnum)
+                        ->where('end_time', '=', null)
+                        ->orderBy('order_id', 'ASC')->get();
+        if(!count($news) && $camp->parent_camp_num != null){
+            $neCampnum = $camp->parent_camp_num;
+            $news = NewsFeed::where('topic_num', '=', $topicnum)
+                        ->where('camp_num', '=', $neCampnum)
+                        ->where('end_time', '=', null)
+                        ->where('available_for_child','=',1)
+                        ->orderBy('order_id', 'ASC')->get();
+            $editFlag = false;
+        }
+        return view('topics.view', compact('topic', 'parentcampnum', 'parentcamp', 'camp', 'wiky', 'id','news','editFlag'));
     }
 
     /**
@@ -437,6 +452,7 @@ class TopicController extends Controller {
         $parentcamp = (count($onecamp)) ? Camp::campNameWithAncestors($onecamp, '') : "n/a";
 
         $camps = Camp::getCampHistory($topicnum, $campnum);
+        //echo "<pre>"; print_r($camps); exit;
 
         $parentcampnum = (isset($onecamp->parent_camp_num)) ? $onecamp->parent_camp_num : 0;
         $nickNames = null;
@@ -526,8 +542,8 @@ class TopicController extends Controller {
         $currentTime = time();
         $validator = Validator::make($request->all(), [
                     'nick_name' => 'required',
-                    'camp_name' => 'required|max:30',
-                    'note' => 'required',
+                    'camp_name' => 'required|max:30'
+                   // 'note' => 'required',
         ]);
         $objection = '';
         if (isset($all['objection']) && $all['objection'] == 1) {
@@ -674,7 +690,7 @@ class TopicController extends Controller {
         $currentTime = time();
         $validator = Validator::make($request->all(), [
                     'statement' => 'required',
-                    'note' => 'required',
+                    //'note' => 'required',
                     'nick_name' => 'required'
         ]);
         if (isset($all['objection']) && $all['objection'] == 1) {
@@ -864,36 +880,38 @@ class TopicController extends Controller {
         }
         $log->save();
         if (isset($data['change_for']) && $data['change_for'] == 'statement') {
+            $statement = Statement::where('id', $data['statement'])->first();
+            $submitterNickId = $statement->submitter_nick_id;
             $agreeCount = ChangeAgreeLog::where('topic_num', '=', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('change_id', '=', $changeID)->where('change_for', '=', 'statement')->count();
-            $supporters = Support::getAllSupporters($data['topic_num'], $data['camp_num']);
+            $supporters = Support::getAllSupporters($data['topic_num'], $data['camp_num'], $submitterNickId);
             if ($agreeCount == $supporters) {
-                //go live
-                $statement = Statement::where('id', $data['statement'])->first();
+                //go live                
                 $statement->go_live_time = strtotime(date('Y-m-d H:i:s'));
                 $statement->update();
                 //clear log
-                ChangeAgreeLog::where('topic_num', '=', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('statement_id', '=', $changeID)->where('change_for', '=', $data['change_for'])->delete();
+                ChangeAgreeLog::where('topic_num', '=', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('change_id', '=', $changeID)->where('change_for', '=', $data['change_for'])->delete();
             }
         } else if (isset($data['change_for']) && $data['change_for'] == 'camp') {
+            $camp = Camp::where('id', $changeID)->first();
+            $submitterNickId = $camp->submitter_nick_id;
             $agreeCount = ChangeAgreeLog::where('topic_num', '=', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('change_id', '=', $changeID)->where('change_for', '=', $data['change_for'])->count();
-            $supporters = Support::getAllSupporters($data['topic_num'], $data['camp_num']);
-
+            $supporters = Support::getAllSupporters($data['topic_num'], $data['camp_num'],$submitterNickId);
             if ($agreeCount == $supporters) {
-                //go live
-                $camp = Camp::where('id', $changeID)->first();
+                //go live                
                 $camp->go_live_time = strtotime(date('Y-m-d H:i:s'));
                 $camp->update();
                 //clear log
                 ChangeAgreeLog::where('topic_num', '=', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('change_id', '=', $changeID)->where('change_for', '=', $data['change_for'])->delete();
             }
         } else if (isset($data['change_for']) && $data['change_for'] == 'topic') {
+            $topic = Topic::where('id', $changeID)->first();
+            $submitterNickId = $topic->submitter_nick_id;
             $agreeCount = ChangeAgreeLog::where('topic_num', '=', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('change_id', '=', $changeID)->where('change_for', '=', $data['change_for'])->count();
-            $supporters = Support::getAllSupporters($data['topic_num'], $data['camp_num']);
+            $supporters = Support::getAllSupporters($data['topic_num'], $data['camp_num'],$submitterNickId);
             if ($agreeCount == $supporters) {
-                //go live
-                $camp = Topic::where('id', $changeID)->first();
-                $camp->go_live_time = strtotime(date('Y-m-d H:i:s'));
-                $camp->update();
+                //go live               
+                $topic->go_live_time = strtotime(date('Y-m-d H:i:s'));
+                $topic->update();
                 //clear log
                 ChangeAgreeLog::where('topic_num', '=', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('change_id', '=', $changeID)->where('change_for', '=', $data['change_for'])->delete();
             }

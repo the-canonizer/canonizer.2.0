@@ -66,7 +66,6 @@ Route::get('resetpassword/{token}', 'Auth\ResetPasswordController@showResetForm'
 Route::post('reset', 'Auth\ResetPasswordController@reset');
 Route::get('topic/{id}/{campnum}', [ 'as' => 'topic', 'uses' => 'TopicController@show']);
 Route::get('topic.asp/{id}/{campnum}', [ 'as' => 'topic', 'uses' => 'TopicController@show']);
-//Route::get('topic/{id}', [ 'as' => 'topic', 'uses' => 'TopicController@show']);
 Route::post('loadtopic', 'HomeController@loadtopic');
 Route::get('camp/history/{id}/{campnum}', 'TopicController@camp_history');
 Route::get('statement/history/{id}/{campnum}', 'TopicController@statement_history');
@@ -76,6 +75,7 @@ Route::get('user/supports/{user_id}', 'TopicController@usersupports');
 Route::group([ 'middleware' => 'auth'], function() {
     Route::resource('topic', 'TopicController');
     Route::get('camp/create/{topicnum}/{campnum}', [ 'as' => 'camp.create', 'uses' => 'TopicController@create_camp']);
+	Route::get('topic/create', [ 'as' => 'topic.create', 'uses' => 'TopicController@create']);
     Route::post('camp/save', [ 'as' => 'camp.save', 'uses' => 'TopicController@store_camp']);
     Route::post('statement/save', [ 'as' => 'statement.save', 'uses' => 'TopicController@store_statement']);
     Route::get('settings', [ 'as' => 'settings', 'uses' => 'SettingsController@index']);
@@ -101,9 +101,16 @@ Route::group([ 'middleware' => 'auth'], function() {
      Route::post('settings/changepassword', [ 'as' => 'settings.changepassword.save', 'uses' => 'SettingsController@postChangePassword']);
     Route::post('statement/agreetochange', 'TopicController@statement_agreetochange');
     Route::post('graceperiod/notify_change', 'TopicController@notify_change');
+    
+    //news feed
+    Route::get('/addnews/{topicnum}/{campnum}',['as'=>'addnews','uses'=>'NewsFeedController@create']);
+    Route::post('/newsfeed/save',['as'=>'newsfeed.save','uses'=>'NewsFeedController@store']);
+    Route::get('/editnews/{topicnum}/{campnum}',['as'=>'newsfeed.edit','uses'=>'NewsFeedController@edit']);
+     Route::post('/newsfeed/update',['as'=>'newsfeed.update','uses'=>'NewsFeedController@update']);
      
 });
-
+Route::get('topic/{id}', [ 'as' => 'topic', 'uses' => 'TopicController@show']);
+Route::get('topic.asp/{id}', [ 'as' => 'topic', 'uses' => 'TopicController@show']);
 
 
 Route::get(

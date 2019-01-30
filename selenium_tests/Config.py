@@ -35,4 +35,6 @@ DEFAULT_FIRST_NAME = "Ashutosh"
 DEFAULT_MIDDLE_NAME = ""
 DEFAULT_LAST_NAME = "Kukreti"
 
+DEFAULT_TESTING_THREAD_PATH = "https://staging.canonizer.com/forum/189-testing/1/threads"
+
 print(DEFAULT_CHROME_DRIVER_LOCATION)

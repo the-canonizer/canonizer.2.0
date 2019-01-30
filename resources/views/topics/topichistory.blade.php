@@ -52,6 +52,7 @@
                 $currentTime = time();
                 foreach ($topics as $key => $data) {
                     $isagreeFlag = false;
+                    $isGraceFlag = false;
                     $submittime = $data->submit_time;
                     $starttime = time();
                     $endtime = $submittime + 60*60;
@@ -117,7 +118,7 @@
                             <a id="version" class="btn btn-historysmt" href="<?php echo url('topic/' . $data->topic_num . '/' . $data->camp_num . '?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $data->submit_time)); ?>">View This Version</a>
 
                         </div> 	
-                         @if($isagreeFlag && $ifIamSupporter)
+                         @if($isagreeFlag && $ifIamSupporter && Auth::user()->id != $submitterUserID)
                             <div class="CmpHistoryPnl-footer">
                                 <div>
                                     <input {{ (isset($isAgreed) && $isAgreed) ? 'checked' : '' }} {{ (isset($isAgreed) && $isAgreed) ? 'disabled' : '' }} class="agree-to-change" type="checkbox" name="agree" value="" onchange="agreeToChannge(this,'{{ $data->id}}')"> I agree with this change</form>
@@ -127,9 +128,9 @@
                          
                           @if(Auth::check())
                           @if(Auth::user()->id == $submitterUserID && $isGraceFlag && $data->grace_period && $interval > 0)
-                          <div class="CmpHistoryPnl-footer">
+                          <div class="CmpHistoryPnl-footer" id="countdowntimer_block<?php echo $data->id ;?>">
                                 <div class="grace-period-note"><b>Note: </b>This countdown timer is the grace period in which you can make minor changes to your statement before other direct supporters are notified.</div>
-                                <div style="float: right" id="countdowntimer_block<?php echo $data->id ;?>"> 
+                                <div style="float: right" > 
                                     <div class="timer-dial" id="countdowntimer<?php echo $data->id ;?>"></div>
                                    <a href="<?php echo url('manage/topic/'.$data->id.'-update');?>" class="btn btn-historysmt">Update Statement</a>
                                    <a href="javascript:void(0)" onclick="notifyAndCloseTimer('<?php echo $data->id ;?>')"class="btn btn-historysmt">Stop</a>

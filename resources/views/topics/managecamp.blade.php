@@ -82,7 +82,7 @@
             
              <div class="form-group">
                 <label for="camp_name">Camp Name ( Limit 30 Char ) <span style="color:red">*</span></label>
-                <input type="text" name="camp_name" <?php if($camp->camp_name=="Agreement") echo "readonly";?> class="form-control" id="camp_name" value="{{ $camp->camp_name}}">
+                <input type="text" maxlength="30" name="camp_name" <?php if($camp->camp_name=="Agreement") echo "readonly";?> class="form-control" id="camp_name" value="{{ $camp->camp_name}}">
                  @if ($errors->has('camp_name')) <p class="help-block">{{ $errors->first('camp_name') }}</p> @endif
              </div> 
              		
@@ -101,7 +101,7 @@
            
             
             <div class="form-group">
-                <label for="">Additional Note <span style="color:red">*</span></label>
+                <label for="">Additional Note </label>
                 <textarea class="form-control" rows="4" name="note" id="note">{{ old('note')}}</textarea>
                 @if ($errors->has('note')) <p class="help-block">{{ $errors->first('note') }}</p> @endif
             </div>   
