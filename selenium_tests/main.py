@@ -1180,6 +1180,8 @@ class TestPages(unittest.TestCase):
         self.driver.close()
 
 
+# test
+
 if __name__ == "__main__":
     suite = unittest.TestLoader().loadTestsFromTestCase(TestPages)
     unittest.TextTestRunner(verbosity=2).run(suite)
