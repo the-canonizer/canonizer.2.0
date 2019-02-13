@@ -1,5 +1,7 @@
 from CanonizerBase import Page
 from Identifiers import LoginPageIdentifiers, HomePageIdentifiers
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
 
 
 class CanonizerLoginPage(Page):
@@ -55,6 +57,15 @@ class CanonizerLoginPage(Page):
             Once the page is loaded, return result to the main program.
         """
         self.find_element(*LoginPageIdentifiers.SUBMIT).click()
+
+    def click_logout_button(self):
+        """
+            Function is to logout from the canonizer application
+        :return:
+        """
+        self.find_element(*LoginPageIdentifiers.PROFILE).click()
+
+        self.find_element(*LoginPageIdentifiers.LOGOUT_OPTION).click()
 
     def login(self, user, password):
         """

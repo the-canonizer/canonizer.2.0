@@ -2,23 +2,38 @@ import unittest
 from CanonizerHomePage import *
 from CanonizerRegistrationPage import  *
 from CanonizerLoginPage import *
+from CanonizerForumsPage import *
 from CanonizerTestCases import test_cases
 from Config import *
 from selenium import webdriver
+import time
+import re
 
 
 class TestPages(unittest.TestCase):
 
     def setUp(self):
+        """
+            Initialize the Things
+        :return:
+        """
         driver_location = DEFAULT_CHROME_DRIVER_LOCATION
 
         options = webdriver.ChromeOptions()
         options.binary_location = DEFAULT_BINARY_LOCATION
-        options.add_argument('headless')
+        #options.add_argument('headless')
         options.add_argument('window-size=1200x600')
 
         self.driver = webdriver.Chrome(driver_location, options=options)
         self.driver.get(DEFAULT_BASE_URL)
+
+    def login_to_canonizer_app(self):
+        """
+            This Application will allow you to login to canonizer App on need basis
+        :param flag:
+        :return:
+        """
+        return CanonizerLoginPage(self.driver).click_login_page_button().login_with_valid_user(DEFAULT_USER, DEFAULT_PASS)
 
     def test_canonizer_home_page_load(self):
         print("\n" + str(test_cases(0)))
@@ -41,7 +56,7 @@ class TestPages(unittest.TestCase):
         print ("\n" + str(test_cases(3)))
         page = CanonizerLoginPage(self.driver)
         loginPage = page.click_login_page_button()
-        result = loginPage.login_with_valid_user(DEFAULT_USER, DEFAULT_PASS)
+        result = loginPage.login_with_valid_user(DEFAULT_USER, '123456')
         self.assertIn("", result.get_url())
 
     def test_login_with_invalid_user(self):
@@ -178,7 +193,191 @@ class TestPages(unittest.TestCase):
         registationPage = registerPage.click_register_button()
         self.assertTrue(registationPage.register_page_mandatory_fields_are_marked_with_astrick())
 
+    #Thread_1
+    def test_load_forum_page_from_camp(self):
+        """
+        Load Forum Page From Camp Page
+        :return:
+        """
+        print("\n" + str(test_cases('t_1')))
 
+        self.assertTrue(CanonizerForumsPage(self.driver).load_camp_forum_page())
+
+    # Thread_2
+    def test_forum_must_have_topic_camp_name(self):
+        """
+        Forum Page Must Have:
+            - Valid Topic Name
+            - Valid Camp Name
+        :return:
+        """
+        print("\n" + str(test_cases('t_2')))
+
+        topic, camp = CanonizerForumsPage(self.driver).verify_topic_and_camp_name()
+
+        if topic == 2 and camp == 'Agreement':
+            self.assertTrue("Success")
+        else:
+            self.assertFalse("Blank Topic Or Camp Name")
+
+    # Thread_3
+    def test_forum_threads_must_be_clickable(self):
+        """
+            All The Threads of the forum must be clickable
+        :return:
+        """
+        print("\n" + str(test_cases('t_3')))
+
+        self.assertTrue(CanonizerForumsPage(self.driver))
+
+    # Thread 4
+    def test_forums_load_create_new_thread_page(self):
+        """
+        Automated Test For Load Create New Thread Page In Forums
+        :return:
+        """
+        print("\n" + str(test_cases('t_4')))
+
+        # Only if Login is Required
+        self.login_to_canonizer_app()
+
+        result = CanonizerForumsPage(self.driver).forums_load_create_new_thread_page()
+
+        flag = re.search('create', result.current_url, re.M)
+
+        self.assertTrue(flag)
+
+    # Thread 5
+    def test_forums_create_new_thread(self):
+        """
+            Automated Test For Create New Thread In Forums
+        :return:
+        """
+        print("\n" + str(test_cases('t_5')))
+
+        self.assertIn('Threads Created SuccessFully', CanonizerForumsPage(self.driver).forums_create_new_thread())
+
+    # Thread 6
+    def test_forums_threads_have_pagination(self):
+        """
+            Automated Test For Pagination of Forums
+
+            Note:- This test will only be valid for forums having more than 10 threads.
+                   If any forum doesn't have sufficient threads then it will fail.
+                   Make Sure to chose forums to load having more than 10 threads.
+        :return:
+        """
+        print("\n" + str(test_cases('t_6')))
+
+        self.assertTrue(CanonizerForumsPage(self.driver).forums_threads_have_pagination())
+
+    # Thread 7
+    def test_forums_authenticated_user_post_reply_to_threads(self):
+        """
+            Automated Test for post reply on thread
+        :return:
+        """
+        print("\n" + str(test_cases('t_7')))
+
+        self.login_to_canonizer_app()
+
+        self.assertTrue(
+            CanonizerForumsPage(self.driver).forums_authenticated_user_can_reply_to_threads(DEFAULT_TESTING_THREAD_PATH)
+        )
+
+    # Thread 8
+    def test_forums_guest_user_cannot_post_reply_to_thread(self):
+        """
+            Automated Test Case For Guest User Can't Reply To Thread
+        :return:
+        """
+        print("\n" + str(test_cases('t_8')))
+
+        self.assertFalse(
+            CanonizerForumsPage(self.driver).forums_guest_user_cannot_reply_to_threads(DEFAULT_TESTING_THREAD_PATH))
+
+    # Thread 9
+    def test_forums_threads_must_have_title_field(self):
+        """
+            Automated Test Case To check if the thread has title
+        :return:
+        """
+        print("\n" + str(test_cases('t_9')))
+
+        self.login_to_canonizer_app()
+
+        self.assertTrue(
+            CanonizerForumsPage(self.driver).forums_threads_must_have_title_field(DEFAULT_TESTING_THREAD_PATH))
+
+    # Thread 10
+    def test_forums_thread_title_cannot_be_left_blank(self):
+        """
+            Automated Test Case to raise error if user submit empty thread.
+        :return:
+        """
+
+        print("\n" + str(test_cases('t_10')))
+
+        self.login_to_canonizer_app()
+
+        self.assertIn("The title field is required.", CanonizerForumsPage(
+            self.driver).forums_thread_title_cannot_be_left_blank(DEFAULT_TESTING_THREAD_PATH))
+
+    # Thread 11
+    def test_forums_user_can_read_all_post_assosiated_with_thread(self):
+        """
+
+        :return:
+        """
+        print("\n" + str(test_cases('t_11')))
+
+        self.assertTrue(
+            CanonizerForumsPage(self.driver).forums_user_can_read_all_post_assosiated_with_thread(
+                DEFAULT_TESTING_THREAD_PATH))
+
+    # Thread 12
+    def test_forums_create_thread_page_has_nick_name_field(self):
+        """
+            Automated test case to check if the thread has nickname field
+        :return:
+        """
+        print("\n" + str(test_cases('t_13')))
+
+        self.login_to_canonizer_app()
+        self.assertTrue(
+            CanonizerForumsPage(self.driver).forums_create_thread_page_has_nick_name_field(DEFAULT_TESTING_THREAD_PATH))
+
+    def test_forums_post_to_thread_has_nick_name_field(self):
+        """
+            Automated test case to check of post has nick name
+        :return:
+        """
+
+        print("\n" + str(test_cases('t_11')))
+
+        self.login_to_canonizer_app()
+        self.assertTrue(
+            CanonizerForumsPage(self.driver).forums_post_to_thread_has_nick_name_field(DEFAULT_TESTING_THREAD_PATH))
+
+    def test_forum_thread_title_marked_with_asterisk(self):
+        """
+            Automated Test Case to check if the thread title (Mandatory) is marked with asterick
+        :return:
+        """
+
+        self.login_to_canonizer_app()
+        self.assertTrue(
+            CanonizerForumsPage(self.driver).forum_thread_title_marked_with_asterisk(DEFAULT_TESTING_THREAD_PATH))
+
+    def test_forum_thread_nick_name_marked_with_asterisk(self):
+        """
+            Automated Test Case to check if the thread nick name field (Mandatory) is marked with asterick
+        :return:
+        """
+
+        self.login_to_canonizer_app()
+        self.assertTrue(
+            CanonizerForumsPage(self.driver).forum_thread_nick_name_marked_with_asterisk(DEFAULT_TESTING_THREAD_PATH))
 
     def tearDown(self):
         self.driver.close()

@@ -44,6 +44,7 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+
         if ($exception instanceof \ErrorException) {
 			
 		
@@ -62,6 +63,7 @@ class Handler extends ExceptionHandler
 
             return  $this->toIlluminateResponse($response, $exception);
         }
+
 
         return parent::render($request, $exception);
     }
