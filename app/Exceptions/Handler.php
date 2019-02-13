@@ -45,6 +45,8 @@ class Handler extends ExceptionHandler
     public function render($request, Exception $exception)
     {
         if ($exception instanceof \ErrorException) {
+			
+		
             if (strpos(url()->current(), 'forum') == true) {
                 $url_string = preg_split("/(\/|-)/", url()->current());
 
