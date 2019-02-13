@@ -103,9 +103,9 @@
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url('/topic/create')}}">
+                            <a class="nav-link" href="{{ url('/create/topic')}}">
 
-                                <span class="nav-link-text {{ ($route=='create' & str_contains(Request::fullUrl(), 'topic') ) ? 'menu-active':''}}">Create New Topic</span>
+                                <span class="nav-link-text {{ ($route=='topic' & str_contains(Request::fullUrl(), 'topic') ) ? 'menu-active':''}}">Create New Topic</span>
                             </a>
                         </li>
                         <li class="nav-item">
