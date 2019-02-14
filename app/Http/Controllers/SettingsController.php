@@ -155,7 +155,7 @@ class SettingsController extends Controller {
 			else {
 			$six_digit_random_number = mt_rand(100000, 999999);
 			$result['otp'] = $six_digit_random_number;
-            $result['subject'] = "";
+            $result['subject'] = "Canonizer verification code";
            
             $receiver = $input['phone_number']."@".$input['mobile_carrier'];
 
