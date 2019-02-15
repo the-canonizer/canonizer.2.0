@@ -44,7 +44,7 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
-        // if ($exception instanceof \ErrorException) {
+        /* if ($exception instanceof \ErrorException) {
         //     if (strpos(url()->current(), 'forum') == true) {
         //         $url_string = preg_split("/(\/|-)/", url()->current());
         //
@@ -59,7 +59,7 @@ class Handler extends ExceptionHandler
         //     }
         //
         //     return  $this->toIlluminateResponse($response, $exception);
-        // }
+        // } */
 
         return parent::render($request, $exception);
     }
