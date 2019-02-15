@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Validator;
 use Cookie;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\NewDelegatedSupporterMail;
+use App\Mail\PhoneOTPMail;
 use Hash;
 
 class SettingsController extends Controller {
@@ -109,7 +110,68 @@ class SettingsController extends Controller {
         $nicknames = Nickname::where('owner_code', '=', $encode)->get();
         return view('settings.nickname', ['nicknames' => $nicknames, 'user' => $user]);
     }
+    public function phone_verify(Request $request) {
+        $input = $request->all();
+        $id = (isset($_GET['id'])) ? $_GET['id'] : '';
+        $private_flags = array();
 
+
+        $messages = [
+            'phone_number.required' => 'Phone number is required.'
+            
+        ];
+
+
+        $validator = Validator::make($request->all(), [
+                    'phone_number' => 'required|max:10',
+                   
+                        ], $messages);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                            ->withErrors($validator)
+                            ->withInput();
+        }
+		
+		if ($id) {
+            $user = User::find($id);
+			
+			if(isset($input['verify_code']) && $input['verify_code'] !="") {
+				
+				if($user->otp==trim($input['verify_code'])) {
+					
+					Session::flash('success', "Your phone number has been verified successfully.");
+					$user->mobile_verified = 1;
+			
+			        $user->update();
+				} else {
+					$user->mobile_verified = 0;
+			
+			        $user->update();
+					Session::flash('otpsent', "Invalid verification code.");
+				}
+				
+			}
+			else {
+			$six_digit_random_number = mt_rand(100000, 999999);
+			$result['otp'] = $six_digit_random_number;
+            $result['subject'] = "Canonizer verification code";
+           
+            $receiver = $input['phone_number']."@".$input['mobile_carrier'];
+
+			$user->phone_number = $input['phone_number'];
+			$user->mobile_carrier = $input['mobile_carrier'];
+			$user->otp = $six_digit_random_number;
+			
+			$user->update();
+			Session::flash('otpsent', "A 6 digit code has been sent on your phone number for verification.");
+			Mail::to($receiver)->send(new PhoneOTPMail($user, $result));
+		  }	
+		}	
+		
+		
+        return redirect()->back();
+	}	
     public function add_nickname(Request $request) {
         $id = Auth::user()->id;
         if ($id) {
