@@ -245,11 +245,11 @@ class CThreadsController extends Controller
             ]
         );
 
-        CommonForumFunctions::sendEmailToSupportersForumThread($topicid, $campnum,
-                              $return_url,request('title'), request('nick_name'), $topicname);
-
         // Return Url after creating thread Successfully
         $return_url = 'forum/'.$topicid.'-'.$topicname.'/'.$campnum.'/threads';
+        
+        CommonForumFunctions::sendEmailToSupportersForumThread($topicid, $campnum,
+                              $return_url, request('title'), request('nick_name'), $topicname);
 
         return redirect($return_url)->with('success', 'Thread Created Successfully!');
     }
