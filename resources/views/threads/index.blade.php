@@ -46,7 +46,7 @@
                             @foreach ($threads as $thread)
                             <article>
 
-								<div class="level">
+								<div class="level" style="word-break:break-all">
 									<h5>
 	                                    <ul class = "list-group">
 	                                        <li class = "list-group-item">
@@ -54,7 +54,14 @@
 	                                            {{ $thread->title }}
 	                                            </a>
 
-												<strong style="float: right">  {{ $thread->replies->count() }} {{ str_plural('reply', $thread->replies->count() ) }} </strong>
+												@if (  $participateFlag  == 1)
+													<hr>
+													{!! html_entity_decode($thread->body) !!}
+
+												@else
+													<strong style="float: right">  {{ $thread->replies->count() }} {{ str_plural('reply', $thread->replies->count() ) }} </strong>
+												@endif
+
 
 	                                        </li>
 
