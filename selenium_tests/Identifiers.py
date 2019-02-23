@@ -70,21 +70,25 @@ class CanonizerSearchPageIdentifiers(object):
     DummySearch = (By.XPATH, '')
     SEARCH_KEYWORD = (By.ID, 'sbi')
     WEB = (By.ID, 'ss0')
+    WEB_LABEL = (By.XPATH, '//*[@id="navbarResponsive"]/ul[1]/li[1]/form/div/table/tbody/tr/td[1]/label/font')
     CANONIZER_COM = (By.ID, 'ss1')
     SEARCH_BUTTON = (By.ID, 'sbb')
 
 
 class UploadFileIdentifiers(object):
     """
-    Class to hold the Upload File Element Path
+    Class to hold the Upload File page Identifiers
     """
     UPLOADFILE = (By.XPATH, '//*[@id="exampleAccordion"]/ul[1]/li[4]/a/span')
     FILE_NAME = (By.XPATH, '/html/body/div[1]/div[1]/div/div/div/form/div[1]/input')
     ERROR_FILE_NAME = (By.XPATH, '/html/body/div[1]/div[1]')
     UPLOAD = (By.ID, 'upload_file')
     NEW_FILE_NAME = (By.ID, 'file_name')
-    ERROR_FILE_SIZE = (By.XPATH, '/html/body/div[1]/div[1]')
+    ERROR_FILE_SIZE = (By.XPATH, '/html/body/div/div[1]')
     CHOOSE_FILE = (By.XPATH, '/html/body/div[1]/div[1]/div/div/div/form/div[1]/input')
+    INVALID_FILE_FORMAT_ERROR = (By.XPATH, '/html/body/div/div[1]')
+    SAME_FILE_NAME_ERROR = (By.XPATH, '/html/body/div/div[1]')
+    ERROR_ZERO_FILE_SIZE = (By.XPATH, '/html/body/div/div[1]')
 
 
 class UserProfileIdentifiers(object):
@@ -254,7 +258,7 @@ class AsOfIdentifiers(object):
 
 class TopicUpdatePageIdentifiers(object):
     """
-
+        Class to hold the Topic Update Page Identifiers
     """
     TOPIC_IDENTIFIER = (By.XPATH, '//*[@id="outline_88"]/a')
     MANAGE_EDIT_TOPIC = (By.XPATH, '//*[@id="edit_topic"]')
@@ -280,7 +284,7 @@ class TopicUpdatePageIdentifiers(object):
 
 class TopicObjectPageIdentifiers(object):
     """
-
+        Class to hold the Topic Object Page Identifiers
     """
     NICK_NAME = (By.ID, 'nick_name')
     TOPIC_NAME = (By.ID, 'topic_name')
@@ -293,7 +297,7 @@ class TopicObjectPageIdentifiers(object):
 
 class CreateNewCampPageIdentifiers(object):
     """
-
+        Class to hold the Create New Camp Page Identifiers
     """
     CREATE_CAMP = (By.XPATH, '//*[@id="tree_88_1_1"]/ul/li[1]/span/a')
     NICK_NAME = (By.ID, 'nick_name')
@@ -312,7 +316,7 @@ class CreateNewCampPageIdentifiers(object):
 
 class CampEditPageIdentifiers(object):
     """
-
+        Class to hold the Edit Camp Page Identifiers
     """
     MANAGE_EDIT_CAMP = (By.XPATH, '//*[@id="edit_camp"]')
     SUBMIT_CAMP_UPDATE_BASED_ON_THIS = (By.XPATH, '//*[@id="update"]')
@@ -335,7 +339,7 @@ class CampEditPageIdentifiers(object):
 
 class CampStatementEditPageIdentifiers(object):
     """
-
+        Class to hold the Camp Statement Page Identifiers
     """
     EDIT_CAMP_STATEMENT = (By.ID, 'edit_camp_statement')
     SUBMIT_STATEMENT_UPDATE_BASED_ON_THIS = (By.XPATH, '//*[@id="update"]')
@@ -355,9 +359,9 @@ class CampStatementEditPageIdentifiers(object):
 class AddNewsPageIdentifiers(object):
 
     """
-
+        Class to hold the Add News Page Identifiers
     """
-    ADD_NEWS = (By.XPATH, '/html/body/div[1]/div[2]/div[1]/div[1]/h3/a[2]')
+    ADD_NEWS = (By.XPATH, '/html/body/div[1]/div[2]/div[1]/div[2]/h3/a[2]')
     DISPLAY_TEXT = (By.ID, 'display_text')
     DISPLAY_TEXT_ASTRK = (By.XPATH, '//*[@id="topicForm"]/div[1]/label/span')
     LINK = (By.ID, 'link')
@@ -366,13 +370,29 @@ class AddNewsPageIdentifiers(object):
     CREATENEWS = (By.ID, 'submit')
     ERROR_DISPLAY_TEXT = (By.XPATH, '//*[@id="topicForm"]/div[1]/p')
     ERROR_LINK = (By.XPATH, '//*[@id="topicForm"]/div[2]/p')
+    CANCEL = (By.XPATH, '//*[@id="topicForm"]/a')
+    ERROR_INVALID_LINK = (By.XPATH, '//*[@id="topicForm"]/div[2]/p')
 
 
 class EditNewsPageIdentifiers(object):
     """
-
+        Class to hold the Edit News Page Identifiers
     """
     EDIT_NEWS = (By.XPATH, '/html/body/div[1]/div[2]/div[1]/div[1]/h3/a')
+    DISPLAY_TEXT = (By.ID, 'display_text')
+    LINK = (By.ID, 'link')
+    CANCEL = (By.XPATH, '//*[@id="topicForm"]/a')
+    DISPLAY_TEXT = (By.ID, 'display_text')
+    DISPLAY_TEXT_ASTRK = (By.XPATH, '//*[@id="sortable"]/div[1]/div[1]/label/span')
+    LINK = (By.ID, 'link')
+    LINK_ASTRK = (By.XPATH, '//*[@id="sortable"]/div[1]/div[2]/label/span')
+    SUBMIT = (By.ID, 'submit')
+    ERROR_DISPLAY_TEXT = (By.XPATH, '//*[@id="sortable"]/div[1]/div[1]/p')
+    ERROR_LINK = (By.XPATH,'//*[@id="sortable"]/div[1]/div[2]/p')
+    ERROR_INVALID_LINK =(By.XPATH, '//*[@id="sortable"]/div[1]/div[2]/p')
+
+
+
 
 
 

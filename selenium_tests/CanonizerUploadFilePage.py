@@ -29,7 +29,7 @@ class CanonizerUploadFilePage(Page):
 
     def click_upload_button(self):
         """
-        This function clicks the Create Account Button
+        This function clicks the Upload Button
         :return:
         """
         self.find_element(*UploadFileIdentifiers.UPLOAD).click()
@@ -45,6 +45,20 @@ class CanonizerUploadFilePage(Page):
     def upload_file_with_size_file_more_than_5mb(self, originalfilename):
         self.upload(originalfilename)
         return self.find_element(*UploadFileIdentifiers.ERROR_FILE_SIZE).text
+
+    def upload_file_with_invalid_format(self, originalfilename):
+        self.upload(originalfilename)
+        return self.find_element(*UploadFileIdentifiers.INVALID_FILE_FORMAT_ERROR).text
+
+    def upload_file_with_same_file_name(self, originalfilename):
+        self.upload(originalfilename)
+        return self.find_element(*UploadFileIdentifiers.SAME_FILE_NAME_ERROR).text
+
+    def upload_file_with_size_zero_bytes(self, originalfilename):
+        self.upload(originalfilename)
+        return self.find_element(*UploadFileIdentifiers.ERROR_ZERO_FILE_SIZE).text
+
+
 
 
 

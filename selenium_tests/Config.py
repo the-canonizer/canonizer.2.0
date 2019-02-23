@@ -41,7 +41,10 @@ DEFAULT_LAST_NAME = "Chavan"
 DEFAULT_ORIGINAL_FILE_NAME = ""
 DEFAULT_NEW_FILE_NAME = ""
 DEFAULT_FILE_SIZE = ""
-FILE_WITH_MORE_THAN_5MB = "PIA00272.jpg"
+INVALID_FILE_FORMAT = "C:\\Users\\ajay\\Desktop\\Canonizer text file.txt"
+FILE_WITH_MORE_THAN_5MB = "E:\\ambition\\images universe ona stronomy by only ajjjjay\\PIA00272.jpg"
+FILE_WITH_SAME_NAME = "C:\\Users\\Public\\Pictures\\Sample Pictures\\Hydrangeas.jpg"
+FILE_WITH_ZERO_BYTES = "C:\\Users\\ajay\Desktop\\New Bitmap Image.bmp"
 
 # Create New Topic Configuration Parameters
 DEFAULT_NICK_NAME = ""

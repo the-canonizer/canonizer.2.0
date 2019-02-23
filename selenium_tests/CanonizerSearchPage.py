@@ -25,24 +25,54 @@ class CanonizerSearchPage(Page):
     def enter_search_keyword(self, search_keyword):
         self.find_element(*CanonizerSearchPageIdentifiers.SEARCH_KEYWORD).send_keys(search_keyword)
 
+    def check_web(self, web):
+        self.find_element(*CanonizerSearchPageIdentifiers.WEB).send_keys(web)
+
+    def check_canonizer_com(self, canonizer_com):
+        self.find_element(*CanonizerSearchPageIdentifiers.CANONIZER_COM).send_keys(canonizer_com)
 
     def click_google_search_button(self):
         """
-        This function verify if the login page loads properly
-        :return:
-            Once the page is loaded, return result to the main program.
         """
-        self.find_element(*LoginPageIdentifiers.SUBMIT).click()
+        self.find_element(*CanonizerSearchPageIdentifiers.SEARCH_BUTTON).click()
 
-    def google_search(self, search_keyword, option):
+    def google_search(self, search_keyword, web):
         """
-        This function is to click the login button and return result to the main program.
-        Args:
-            :param user: Email ID of the User
-            :param password: Password of the User
-        :return:
-            After Entering the Username and Password, function clicks on the login button and returns the control.
         """
         self.enter_search_keyword(search_keyword)
-        self.enter_password(password)
-        self.click_login_button()
+        self.check_web(web)
+        self.click_google_search_button()
+
+    def click_search_button_web(self):
+        """
+
+        :param web:
+        :return:
+        """
+        self.hover(*CanonizerSearchPageIdentifiers.WEB_LABEL)
+        self.find_element(*CanonizerSearchPageIdentifiers.WEB_LABEL).click()
+        self.hover(*CanonizerSearchPageIdentifiers.SEARCH_BUTTON)
+        self.find_element(*CanonizerSearchPageIdentifiers.SEARCH_BUTTON).click()
+        return CanonizerSearchPage(self.driver)
+
+    def click_search_button_keyword_web(self, search_keyword):
+        """
+
+        :param web:
+        :return:
+        """
+        self.enter_search_keyword(search_keyword)
+        self.click_search_button_web()
+        return CanonizerSearchPage(self.driver)
+
+    def click_search_button_keyword_canonizer_com(self, search_keyword):
+        """
+
+        :param web:
+        :return:
+        """
+        self.enter_search_keyword(search_keyword)
+        self.click_search_button()
+        return CanonizerSearchPage(self.driver)
+
+

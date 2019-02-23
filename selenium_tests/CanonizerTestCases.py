@@ -144,7 +144,23 @@ testCases = {
     130: [moderate, 'On Add News Page, All mandatory fields are marked with # sign'],
     131: [moderate, 'On Add News page, When user doesn\'t put Display Text , user must see Error Message'],
     132: [moderate, 'On Add News page, When user doesn\'t put Link , user must see Error Message'],
-    133: [moderate, 'When user click on Edit News ,user should see Edit News page']
+    133: [moderate, 'On Add News Page, When user click on cancel button user should see agreement page'],
+    134: [moderate, 'When user click on Edit News ,user should see Edit News page'],
+    135: [moderate, 'On Edit News Page, When user click on cancel button user should see agreement page'],
+    136: [moderate, 'On Edit News page, When user doesn\'t put Display Text , user must see Error Message'],
+    137: [moderate, 'On Edit News page, When user doesn\'t put Link , user must see Error Message'],
+    138: [moderate, 'On Edit News page, When user put invalid Link , user must see Error Message'],
+    139: [moderate, 'On Add News page, When user put invalid Link , user must see Error Message'],
+    140: [moderate, 'On Add News page, When user put valid data , news should get added'],
+    141: [moderate, 'On Edit News page, When user put valid data , news should get updated'],
+    142: [critical, 'On File Upload page, When user upload file other than jpeg,bmp,png,jpg,gif ,user should see error message'],
+    143: [critical, 'On File Upload page, When user upload file more than 5mb size ,user should see error message'],
+    144: [critical, 'On File Upload page, When user upload file with same file name ,user should see error message'],
+    145: [critical, 'On File Upload page, When user upload file with 0 bytes ,user should see error message'],
+    146: [low, 'When user check canonizer.com and click on Google Search button, user should redirect to canonizer.com search page'],
+    147: [low, 'When user check web and click on Google Search button, user should redirect to google search page'],
+    148: [low, 'When user enters search keyword,check web and click on Google Search button, user should redirect to google search page'],
+    149: [low, 'When user enters search keyword,check canonizer.com and click on Google Search button, user should redirect to canonizer.com search page']
 
 }
 

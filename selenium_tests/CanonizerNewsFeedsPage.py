@@ -23,7 +23,7 @@ class CanonizerAddNewsFeedsPage(Page):
 
     def add_news_page_mandatory_fields_are_marked_with_asterisk(self):
         """
-        This Function checks, if Mandatory fields on Register Page Marked with *
+        This Function checks, if Mandatory fields on Add News Page Marked with *
         :return: the element value
         """
 
@@ -61,13 +61,25 @@ class CanonizerAddNewsFeedsPage(Page):
         self.create_news(display_text, '', available_for_child_camps)
         return self.find_element(*AddNewsPageIdentifiers.ERROR_LINK).text
 
+    def click_add_news_cancel_button(self):
+        self.load_add_news_feed_page()
+        # Click On Cancel Button
+        self.hover(*AddNewsPageIdentifiers.CANCEL)
+        self.find_element(*AddNewsPageIdentifiers.CANCEL).click()
+        return CanonizerAddNewsFeedsPage(self.driver)
+
+    def create_news_with_invalid_link_format(self, display_text, link, available_for_child_camps):
+        self.create_news(display_text, link, available_for_child_camps)
+        return self.find_element(*AddNewsPageIdentifiers.ERROR_INVALID_LINK).text
+
+    def create_news_with_valid_data(self, display_text, link, available_for_child_camps):
+        self.create_news(display_text, link, available_for_child_camps)
+        return self
+
 
 class CanonizerEditNewsFeedsPage(Page):
 
     def load_edit_news_feed_page(self):
-        """
-            Go To The topic
-        """
         # Browse to Browse Page
         self.hover(*BrowsePageIdentifiers.BROWSE)
         self.find_element(*BrowsePageIdentifiers.BROWSE).click()
@@ -79,4 +91,55 @@ class CanonizerEditNewsFeedsPage(Page):
         # Click on Edit News
         self.hover(*EditNewsPageIdentifiers.EDIT_NEWS)
         self.find_element(*EditNewsPageIdentifiers.EDIT_NEWS).click()
-        return CanonizerAddNewsFeedsPage(self.driver)
+        return CanonizerEditNewsFeedsPage(self.driver)
+
+    def click_edit_news_cancel_button(self):
+        self.load_edit_news_feed_page()
+        # Click On Cancel Button
+        self.hover(*EditNewsPageIdentifiers.CANCEL)
+        self.find_element(*EditNewsPageIdentifiers.CANCEL).click()
+        return CanonizerEditNewsFeedsPage(self.driver)
+
+    def update_display_text(self, display_text):
+        self.find_element(*EditNewsPageIdentifiers.DISPLAY_TEXT).send_keys(display_text)
+
+    def update_link(self, link):
+        self.find_element(*EditNewsPageIdentifiers.LINK).send_keys(link)
+
+    def update_available_for_child_camps(self, available_for_child_camps):
+        self.find_element(*EditNewsPageIdentifiers.LINK).send_keys(available_for_child_camps)
+
+    def click_submit_button(self):
+        """
+        This function clicks the Submit Button
+        :return:
+        """
+        self.find_element(*EditNewsPageIdentifiers.SUBMIT).click()
+
+    def update_news(self, display_text, link, available_for_child_camps):
+        self.update_display_text(display_text)
+        self.update_link(link)
+        self.update_available_for_child_camps(available_for_child_camps)
+        self.click_submit_button()
+
+    def update_news_with_blank_display_text(self, link, available_for_child_camps):
+        self.find_element(*EditNewsPageIdentifiers.DISPLAY_TEXT).clear()
+        self.update_news('', link, available_for_child_camps)
+        return self.find_element(*EditNewsPageIdentifiers.ERROR_DISPLAY_TEXT).text
+
+    def update_news_with_blank_link(self, display_text, available_for_child_camps):
+        self.find_element(*EditNewsPageIdentifiers.LINK).clear()
+        self.update_news(display_text, '', available_for_child_camps)
+        return self.find_element(*EditNewsPageIdentifiers.ERROR_LINK).text
+
+    def update_news_with_invalid_link_format(self, display_text, link, available_for_child_camps):
+        self.find_element(*EditNewsPageIdentifiers.DISPLAY_TEXT).clear()
+        self.find_element(*EditNewsPageIdentifiers.LINK).clear()
+        self.update_news(display_text, link, available_for_child_camps)
+        return self.find_element(*EditNewsPageIdentifiers.ERROR_INVALID_LINK).text
+
+    def update_news_with_valid_data(self, display_text, link, available_for_child_camps):
+        self.find_element(*EditNewsPageIdentifiers.DISPLAY_TEXT).clear()
+        self.find_element(*EditNewsPageIdentifiers.LINK).clear()
+        self.update_news(display_text, link, available_for_child_camps)
+        return self

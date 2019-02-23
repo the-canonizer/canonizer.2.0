@@ -256,7 +256,7 @@ class TestPages(unittest.TestCase):
         print("\n" + str(test_cases(25)))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
-        result = CanonizerUploadFilePage(self.driver).click_upload_file_page_button.upload_file_with_blank_file()
+        result = CanonizerUploadFilePage(self.driver).click_upload_file_page_button().upload_file_with_blank_file()
         self.assertIn("Error! The file field is required.", result)
 
     # ----- Upload File Page Test Cases End -----
@@ -1133,6 +1133,7 @@ class TestPages(unittest.TestCase):
         result = CanonizerCampStatementPage(self.driver).load_edit_camp_statement_page().submit_statement_update_with_blank_nick_name(
             "Test",
             "",)
+        print(result)
         self.assertIn("The nick name field is required.", result)
 
     # ----- Add News and Edit News Test Cases Start -----
@@ -1146,14 +1147,14 @@ class TestPages(unittest.TestCase):
         print("\n" + str(test_cases(130)))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
-        # Click on the Manage/Edit Camp Statement  link
+        # Click on the Add News link
         self.assertTrue(CanonizerAddNewsFeedsPage(self.driver).load_add_news_feed_page().add_news_page_mandatory_fields_are_marked_with_asterisk())
 
     def test_create_news_with_blank_display_text(self):
         print("\n" + str(test_cases(131)))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
-        # Go to Manage/Edit Camp and check if nick name is blank
+        # Go to Add News and check if display text is blank
         result = CanonizerAddNewsFeedsPage(self.driver).load_add_news_feed_page().create_news_with_blank_display_text(
             "Test",
             "")
@@ -1163,25 +1164,172 @@ class TestPages(unittest.TestCase):
         print("\n" + str(test_cases(132)))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
-        # Go to Manage/Edit Camp and check if nick name is blank
+        # Go to Add News and check if link is blank
         result = CanonizerAddNewsFeedsPage(self.driver).load_add_news_feed_page().create_news_with_blank_link(
             "Test",
             "")
         self.assertIn("The link field is required.", result)
 
-    def test_load_edit_news_feed_page(self):
+    def test_click_add_news_cancel_button(self):
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         print("\n" + str(test_cases(133)))
+        self.assertIn("topic/88-Theories-of-Consciousness/1", CanonizerAddNewsFeedsPage(self.driver).click_add_news_cancel_button().get_url())
+
+    def test_load_edit_news_feed_page(self):
+        # Click on the Login Page and Create a Login Session and for further actions.
+        self.login_to_canonizer_app()
+        print("\n" + str(test_cases(134)))
         self.assertIn("editnews/88-Theories-of-Consciousness/1", CanonizerEditNewsFeedsPage(self.driver).load_edit_news_feed_page().get_url())
 
-# ----- Add News and Edit News Test Cases End -----
+    def test_click_edit_news_cancel_button(self):
+        # Click on the Login Page and Create a Login Session and for further actions.
+        self.login_to_canonizer_app()
+        print("\n" + str(test_cases(135)))
+        self.assertIn("topic/88-Theories-of-Consciousness/1", CanonizerEditNewsFeedsPage(self.driver).click_edit_news_cancel_button().get_url())
+
+    def test_update_news_with_blank_display_text(self):
+        print("\n" + str(test_cases(136)))
+        # Click on the Login Page and Create a Login Session and for further actions.
+        self.login_to_canonizer_app()
+        # Go to Edit News and check if display text is blank
+        result = CanonizerEditNewsFeedsPage(self.driver).load_edit_news_feed_page().update_news_with_blank_display_text(
+            "Test",
+            "")
+        self.assertIn("Display text is required.", result)
+
+    def test_update_news_with_blank_link(self):
+        print("\n" + str(test_cases(137)))
+        # Click on the Login Page and Create a Login Session and for further actions.
+        self.login_to_canonizer_app()
+        # Go to Edit News and check if link is blank
+        result = CanonizerEditNewsFeedsPage(self.driver).load_edit_news_feed_page().update_news_with_blank_link(
+            "Test",
+            "")
+        self.assertIn("Link is required.", result)
+
+    def test_update_news_with_invalid_link_format(self):
+        print("\n" + str(test_cases(138)))
+        # Click on the Login Page and Create a Login Session and for further actions.
+        self.login_to_canonizer_app()
+        # Go to Edit News and check entered link is invalid
+        result = CanonizerEditNewsFeedsPage(self.driver).load_edit_news_feed_page().update_news_with_invalid_link_format(
+            "Test",
+            "Test",
+            "")
+        self.assertIn("Link is invalid.", result)
+
+    def test_create_news_with_invalid_link_format(self):
+        print("\n" + str(test_cases(139)))
+        # Click on the Login Page and Create a Login Session and for further actions.
+        self.login_to_canonizer_app()
+        # Go to Add News and check entered link is invalid
+        result = CanonizerAddNewsFeedsPage(self.driver).load_add_news_feed_page().create_news_with_invalid_link_format(
+            "Test",
+            "Test",
+            "")
+        self.assertIn("The link format is invalid.", result)
+
+    def test_create_news_with_valid_data(self):
+        print("\n" + str(test_cases(140)))
+        # Click on the Login Page and Create a Login Session and for further actions.
+        self.login_to_canonizer_app()
+        # Go to Add News and check update news with valid data
+        result = CanonizerAddNewsFeedsPage(self.driver).load_add_news_feed_page().create_news_with_valid_data(
+            "Test",
+            "https://test12345",
+            "")
+        self.assertIn("topic/88-Theories-of-Consciousness/1", result.get_url())
+
+    def test_update_news_with_valid_data(self):
+        print("\n" + str(test_cases(141)))
+         # Click on the Login Page and Create a Login Session and for further actions.
+        self.login_to_canonizer_app()
+        # Go to Edit News and check update news with valid data
+        result = CanonizerEditNewsFeedsPage(self.driver).load_edit_news_feed_page().update_news_with_valid_data(
+            "Test",
+            "https://test12345",
+            "")
+        self.assertIn("topic/88-Theories-of-Consciousness/1", result.get_url())
+
+    # ----- Add News and Edit News Test Cases End -----
+    # ----- File Upload Test Cases Start -----
+
+    def test_upload_file_with_invalid_format(self):
+        print("\n" + str(test_cases(142)))
+        # Click on the Login Page and Create a Login Session and for further actions.
+        self.login_to_canonizer_app()
+        # Go to Edit News and check update news with valid data
+        result = CanonizerUploadFilePage(self.driver).click_upload_file_page_button().upload_file_with_invalid_format(
+            INVALID_FILE_FORMAT)
+        self.assertIn("Error! The file must be a file of type: jpeg, bmp, png, jpg, gif.", result)
+
+    def test_upload_file_with_size_file_more_than_5mb(self):
+        print("\n" + str(test_cases(143)))
+        # Click on the Login Page and Create a Login Session and for further actions.
+        self.login_to_canonizer_app()
+        # Go to Edit News and check update news with valid data
+        result = CanonizerUploadFilePage(self.driver).click_upload_file_page_button().upload_file_with_size_file_more_than_5mb(
+            FILE_WITH_MORE_THAN_5MB)
+        self.assertIn("Error! The file may not be greater than 5 MB.", result)
+
+    def test_upload_file_with_same_file_name(self):
+        print("\n" + str(test_cases(144)))
+        # Click on the Login Page and Create a Login Session and for further actions.
+        self.login_to_canonizer_app()
+        # Go to Edit News and check update news with valid data
+        result = CanonizerUploadFilePage(
+            self.driver).click_upload_file_page_button().upload_file_with_same_file_name(
+            FILE_WITH_SAME_NAME)
+        self.assertIn("Error! There is already a file with name Hydrangeas, Please use different name.", result)
+
+    def test_upload_file_with_size_zero_bytes(self):
+        print("\n" + str(test_cases(145)))
+        # Click on the Login Page and Create a Login Session and for further actions.
+        self.login_to_canonizer_app()
+        # Go to Edit News and check update news with valid data
+        result = CanonizerUploadFilePage(self.driver).click_upload_file_page_button().upload_file_with_size_zero_bytes(
+            FILE_WITH_ZERO_BYTES)
+        self.assertIn("Error! The file must be a file of type: jpeg, bmp, png, jpg, gif.", result)
+
+    # ----- File Upload Test Cases End -----
+    # ----- Search Test Cases Start -----
+    def test_click_search_button(self):
+        # Click on the Login Page and Create a Login Session and for further actions.
+        self.login_to_canonizer_app()
+        print("\n" + str(test_cases(146)))
+        result = CanonizerSearchPage(self.driver).click_search_button()
+        self.assertIn("", result.get_url())
+
+    def test_click_search_button_web(self):
+        # Click on the Login Page and Create a Login Session and for further actions.
+        self.login_to_canonizer_app()
+        print("\n" + str(test_cases(147)))
+        result = CanonizerSearchPage(self.driver).click_search_button_web()
+        self.assertIn("", result.get_url())
+
+    def test_click_search_button_keyword_web(self):
+        # Click on the Login Page and Create a Login Session and for further actions.
+        self.login_to_canonizer_app()
+        print("\n" + str(test_cases(148)))
+        result = CanonizerSearchPage(self.driver).click_search_button_keyword_web('Testing')
+        self.assertIn("", result.get_url())
+
+    def test_click_search_button_keyword_canonizer_com(self):
+        # Click on the Login Page and Create a Login Session and for further actions.
+        self.login_to_canonizer_app()
+        print("\n" + str(test_cases(149)))
+        result = CanonizerSearchPage(self.driver).click_search_button_keyword_canonizer_com('Testing')
+        self.assertIn("", result.get_url())
+
+    # ----- Search Test Cases End -----
+
+
     def tearDown(self):
         self.driver.close()
 
 
-# test
-
 if __name__ == "__main__":
     suite = unittest.TestLoader().loadTestsFromTestCase(TestPages)
     unittest.TextTestRunner(verbosity=2).run(suite)
+
