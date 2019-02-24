@@ -48,7 +48,7 @@ class CThreadsController extends Controller
 
         if ((camp::where('camp_num', $campnum)->where('topic_num', $topicid)->value('camp_name')))
         {
-
+            $partcipateFlag = 0;
             if (request('by') == 'me') {
                 /**
                  * Filter out the Threads by User
@@ -75,15 +75,17 @@ class CThreadsController extends Controller
 
                 if (count($userNicknames) > 0) {
                     $threads = CThread::join('post', 'thread.id', '=', 'post.c_thread_id' )->
-                                        select('thread.*')->
+                                        select('thread.*', 'post.body')->
                                         where('camp_id', $campnum)->
                                         where('topic_id', $topicid)->
                                         where('post.user_id', $userNicknames[0]->id)->
-                                        latest()->paginate(10);
+                                        latest()->paginate(20);
                 }
                 else {
                     $threads = [];
                 }
+                $partcipateFlag = 1;
+                //dd($threads);
             }
             elseif (request('by') == 'most_replies') {
                 /**
@@ -120,6 +122,7 @@ class CThreadsController extends Controller
 
         $camp  = Camp::getLiveCamp($topicid,$campnum);
 
+        //dd($partcipateFlag);
         return view(
             'threads.index',
             $topic,
@@ -134,6 +137,7 @@ class CThreadsController extends Controller
                                              ->orderBy('go_live_time', 'desc')
                                              ->first()->topic_name,
                 'parentcamp'       => Camp::campNameWithAncestors($camp,''),
+                'participateFlag'  => $partcipateFlag
             ],
             compact('threads')
         );
@@ -241,11 +245,11 @@ class CThreadsController extends Controller
             ]
         );
 
-        CommonForumFunctions::sendEmailToSupportersForumThread($topicid, $campnum,
-                              $return_url,request('title'), request('nick_name'), $topicname);
-
         // Return Url after creating thread Successfully
         $return_url = 'forum/'.$topicid.'-'.$topicname.'/'.$campnum.'/threads';
+        
+        CommonForumFunctions::sendEmailToSupportersForumThread($topicid, $campnum,
+                              $return_url, request('title'), request('nick_name'), $topicname);
 
         return redirect($return_url)->with('success', 'Thread Created Successfully!');
     }
