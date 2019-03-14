@@ -110,3 +110,6 @@ ALTER TABLE `news_feed`
 --
 ALTER TABLE `news_feed`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  
+  
+ALTER TABLE `person` ADD `phone_number` VARCHAR(10) NULL AFTER `country`, ADD `mobile_carrier` VARCHAR(50) NULL AFTER `phone_number`, ADD `mobile_verified` INT NOT NULL DEFAULT '0' AFTER `mobile_carrier`;  

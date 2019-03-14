@@ -295,21 +295,24 @@ class TopicController extends Controller {
         session()->forget("topic-support-{$topicnum}");
         session()->forget("topic-support-nickname-{$topicnum}");
         session()->forget("topic-support-tree-{$topicnum}");
-
+        if (count($camp) > 0) {
         $parentcamp = Camp::campNameWithAncestors($camp, '');
-
+        } else {
+			
+		 $parentcamp = "N/A";	
+		}
         $wiky = new Wiky;
 
         //$WikiParser  = new wikiParser;
         if (count($topic) <= 0) {
 
             //Session::flash('error', "Topic does not exist.");
-            return back();
+           return back();
         }
         if (count($camp) <= 0) {
 
             //Session::flash('error', "Camp does not exist.");
-            return back();
+            //return back();
         }
         //news feeds
         $editFlag = true;
@@ -317,7 +320,7 @@ class TopicController extends Controller {
                         ->where('camp_num', '=', $parentcampnum)
                         ->where('end_time', '=', null)
                         ->orderBy('order_id', 'ASC')->get();
-        if(!count($news) && $camp->parent_camp_num != null){
+        if(!count($news) && count($camp) && $camp->parent_camp_num != null){
             $neCampnum = $camp->parent_camp_num;
             $news = NewsFeed::where('topic_num', '=', $topicnum)
                         ->where('camp_num', '=', $neCampnum)

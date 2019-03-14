@@ -70,7 +70,7 @@
             </div>    
             </div>
         </div>
-        
+        <?php if(count($camp) > 0) { ?>
         <div class="Scolor-Pnl">
 		     <?php $statement = $camp->statement($camp->topic_num,$camp->camp_num); ?>
             <h3><?php echo ($parentcamp=="Agreement") ? $parentcamp : "Camp";?> Statement
@@ -187,6 +187,11 @@ change camps with them."><i class="fa fa-question"></i></a>
             	<a id="edit_camp" class="btn btn-success"href="<?php echo url('camp/history/'.$camp->topic_num.'/'.$camp->camp_num);?>">Manage/Edit This Camp</a>
             </div>
         </div>
+     <?php } else { ?>
+	  <div>
+	   No camp data available.
+	  </div>
+	 <?php } ?>
     </div>
 	<div class="post"> </div>
 	
