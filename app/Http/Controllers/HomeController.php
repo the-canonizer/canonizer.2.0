@@ -26,7 +26,7 @@ class HomeController extends Controller {
                 session(['defaultUserAlgo' => $defaultAlgo]);
             }
         }
-		session()->flush();
+		//session()->flush();
         $namespaces = Namespaces::all();
         $topics = Camp::getAllAgreementTopic(10, $_REQUEST);
 
