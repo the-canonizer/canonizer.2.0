@@ -175,10 +175,10 @@ change camps with them."><i class="fa fa-question"></i></a>
                 <div class="tree col-sm-12">
                     Camp Name : <?php echo $camp->camp_name;?> <br/>
 					Keywords : <?php echo $camp->key_words;?><br/>
-					Related URL : <?php echo $camp->url;?><br/>
+					Camp About URL : <?php echo $camp->url;?><br/>
 					
 					
-					Related Nicknames : <?php echo (isset($camp->nickname->nick_name)) ? $camp->nickname->nick_name : "No nickname associated";?> <br/>
+					Camp About Nick Name : <?php echo (isset($camp->nickname->nick_name)) ? $camp->nickname->nick_name : "No nickname associated";?> <br/>
                 </div>
               
             </div>    

@@ -70,7 +70,7 @@ class TopicController extends Controller {
         ];
 
         if (isset($all['topic_num'])) {
-            $validatorArray = ['topic_name' => 'required|max:30',
+            $validatorArray = ['topic_name' => 'required|max:30|unique:topic,topic_name,'.$all['id'],
                 'namespace' => 'required',
                 'create_namespace' => 'required_if:namespace,other|max:100',
                 'nick_name' => 'required'
@@ -590,7 +590,7 @@ class TopicController extends Controller {
             $nickNames = Nickname::personNicknameArray();
 
             $ifIamSingleSupporter = Support::ifIamSingleSupporter($all['topic_num'], $all['camp_num'], $nickNames);
-
+           
             if (!$ifIamSingleSupporter) {
                 $camp->go_live_time = strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
                 $message = "Camp change submitted successfully. If no direct supporters object to this change, it will go live on ";
@@ -940,6 +940,7 @@ class TopicController extends Controller {
             $data['object'] = "#" . $statement->id;
             $data['go_live_time'] = $statement->go_live_time;
             $data['type'] = 'statement';
+			$data['note'] = $statement->note;
             $nickName = Nickname::getNickName($statement->submitter_nick_id);
 
             $data['nick_name'] = $nickName->nick_name;
@@ -957,6 +958,7 @@ class TopicController extends Controller {
             $data['object'] = $camp->topic->topic_name . ' : ' . $camp->camp_name;
             $data['type'] = 'camp';
             $data['go_live_time'] = $camp->go_live_time;
+			$data['note'] = $camp->note;
             $nickName = Nickname::getNickName($camp->submitter_nick_id);
 
             $data['nick_name'] = $nickName->nick_name;
@@ -975,6 +977,7 @@ class TopicController extends Controller {
             $data['object'] = $topic->topic_name;
             $data['go_live_time'] = $topic->go_live_time;
             $data['type'] = 'topic';
+			$data['note'] = $topic->note;
             $nickName = Nickname::getNickName($topic->submitter_nick_id);
 
             $data['nick_name'] = $nickName->nick_name;

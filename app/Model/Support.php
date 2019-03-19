@@ -42,7 +42,7 @@ class Support extends Model {
 			}
 		});
 		
-		return count($othersupports) ? 0 : 1 ;
+		return count($othersupports) ? 1 : 0 ;
 	   
 	}	
 	

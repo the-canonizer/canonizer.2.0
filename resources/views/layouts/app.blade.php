@@ -87,7 +87,9 @@
                         @endif
                     </li>
                 </ul>
-				<?php $route = Route::getCurrentRoute()->getActionMethod(); ?>
+				<?php $route = Route::getCurrentRoute()->getActionMethod(); 
+			
+				?>
                 <ul class="navbar-nav navbar-sidenav" id="exampleAccordion">
                     <ul class="uppermenu">
                         <li class="nav-item">
@@ -108,6 +110,14 @@
                                 <span class="nav-link-text {{ ($route=='topic' & str_contains(Request::fullUrl(), 'topic') ) ? 'menu-active':''}}">Create New Topic</span>
                             </a>
                         </li>
+						<?php if($route=='show') { ?>
+						<li class="nav-item">
+                            <a class="nav-link" href="{{ url('/camp/create/88/1')}}">
+
+                                <span class="nav-link-text">Create New Camp</span>
+                            </a>
+                        </li>
+						<?php } ?>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url('/upload') }}">
                                 <span class="nav-link-text {{ ($route=='getUpload') ? 'menu-active':''}}">Upload File</span>
@@ -115,7 +125,7 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url('/topic/132-Help/1')}}">
-                                <span class="nav-link-text {{ ($route=='show') ? 'menu-active':''}}">Help</span>
+                                <span class="nav-link-text {{ (str_contains(Request::fullUrl(), '132-Help')) ? 'menu-active':''}}">Help</span>
                             </a>
                         </li>
 						<li class="nav-item">

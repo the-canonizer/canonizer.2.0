@@ -21,10 +21,11 @@ class UploadController extends Controller
        
        
         $validator = Validator::make($request->all(), [
-            'file' => 'required|mimes:jpeg,bmp,png,jpg,gif|max:5120',
+            'file' => 'required|mimes:jpeg,bmp,png,jpg,gif|max:5120|min:100',
             //'file_name' => 'required',
         ],
 		['file.max'=>'The file may not be greater than 5 MB.']
+		['file.min'=>'The file must have 1 KB in size.']
 		);
 
         if($validator->fails()) {
