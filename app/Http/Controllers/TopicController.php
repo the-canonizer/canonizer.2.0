@@ -68,16 +68,16 @@ class TopicController extends Controller {
             //'note' => 'required'
         ];
 
-        if (isset($all['topic_num'])) { 
+        if (isset($all['topic_num'])) {  
         
-            $validatorArray = ['topic_name' => 'required|max:30|unique:topic,topic_name,'.$all['id'],
+            $validatorArray = ['topic_name' => 'required|max:30|unique:topic,topic_name',
                 'namespace' => 'required',
                 'create_namespace' => 'required_if:namespace,other|max:100',
                 'nick_name' => 'required'
                // 'note' => 'required'
             ];
         }
-         
+
         
         $message = [
             'create_namespace.required_if' => 'The Other Namespace Name field is required when namespace is other.',
@@ -92,11 +92,9 @@ class TopicController extends Controller {
         }
 
         $validator = Validator::make($request->all(), $validatorArray, $message);
-       
         if ($validator->fails()) {  
             return back()->withErrors($validator->errors())->withInput($request->all());
         }
-        
         DB::beginTransaction();
         $go_live_time = "";
         try {
