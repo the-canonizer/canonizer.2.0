@@ -61,15 +61,15 @@ class TopicController extends Controller {
      */
     public function store(Request $request) {
         $all = $request->all();
-
-        $validatorArray = ['topic_name' => 'required|unique:topic|max:30',
+       $validatorArray = ['topic_name' => 'required|unique:topic|max:30',
             'namespace' => 'required',
             'create_namespace' => 'required_if:namespace,other|max:100',
             'nick_name' => 'required'
             //'note' => 'required'
         ];
 
-        if (isset($all['topic_num'])) {
+        if (isset($all['topic_num'])) { 
+        
             $validatorArray = ['topic_name' => 'required|max:30|unique:topic,topic_name,'.$all['id'],
                 'namespace' => 'required',
                 'create_namespace' => 'required_if:namespace,other|max:100',
@@ -77,6 +77,8 @@ class TopicController extends Controller {
                // 'note' => 'required'
             ];
         }
+         
+        
         $message = [
             'create_namespace.required_if' => 'The Other Namespace Name field is required when namespace is other.',
             'create_namespace.max' => 'The Other Namespace Name may not be greater than 100 characters.'
@@ -90,11 +92,11 @@ class TopicController extends Controller {
         }
 
         $validator = Validator::make($request->all(), $validatorArray, $message);
-
-        if ($validator->fails()) {
+       
+        if ($validator->fails()) {  
             return back()->withErrors($validator->errors())->withInput($request->all());
         }
-
+        
         DB::beginTransaction();
         $go_live_time = "";
         try {
@@ -123,7 +125,7 @@ class TopicController extends Controller {
                 if (!$ifIamSingleSupporter) {
                     $topic->go_live_time = strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
                     $go_live_time = $topic->go_live_time;
-                    $message = "Topic change submitted successfully. If no direct supporters object to this change, it will go live on ";
+                    $message = "Topic change submitted successfully.";
                 }
 
                 if (isset($all['objection']) && $all['objection'] == 1) {
