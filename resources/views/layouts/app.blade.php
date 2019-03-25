@@ -88,7 +88,13 @@
                     </li>
                 </ul>
 				<?php $route = Route::getCurrentRoute()->getActionMethod(); 
-			
+                $parameters = Route::current()->parameters();
+                $id = (isset($parameters) && $parameters['id']) ? $parameters['id'] : null;
+                $campNum = (isset($parameters) && $parameters['campnum']) ? $parameters['campnum'] : null;
+                 $campUrl = "/camp/create";
+                if($id!=null && $campNum !=null){
+                    $campUrl = "/camp/create/$id/$campNum";
+                }
 				?>
                 <ul class="navbar-nav navbar-sidenav" id="exampleAccordion">
                     <ul class="uppermenu">
@@ -112,7 +118,7 @@
                         </li>
 						<?php if($route=='show') { ?>
 						<li class="nav-item">
-                            <a class="nav-link" href="{{ url('/camp/create/88/1')}}">
+                            <a class="nav-link" href='{{ url("$campUrl")}}'>
 
                                 <span class="nav-link-text">Create New Camp</span>
                             </a>
