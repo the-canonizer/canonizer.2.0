@@ -61,6 +61,7 @@ class TopicController extends Controller {
      */
     public function store(Request $request) {
         $all = $request->all();
+
        $validatorArray = ['topic_name' => 'required|unique:topic|max:30',
             'namespace' => 'required',
             'create_namespace' => 'required_if:namespace,other|max:100',
@@ -69,15 +70,24 @@ class TopicController extends Controller {
         ];
 
         if (isset($all['topic_num'])) {  
-        
-            $validatorArray = ['topic_name' => 'required|max:30',
+            $oldTopicData = Topic::where('id', $all['id'])->first();
+            if($oldTopicData->topic_name == $all['topic_name']){
+                $validatorArray = ['topic_name' => 'required|max:30',
+                'namespace' => 'required',
+                'create_namespace' => 'required_if:namespace,other|max:100',
+                'nick_name' => 'required'
+                    // 'note' => 'required'
+                ];
+            }else{
+                $validatorArray = ['topic_name' => 'required|max:30|unique:topic,topic_name,'.$all["id"],
                 'namespace' => 'required',
                 'create_namespace' => 'required_if:namespace,other|max:100',
                 'nick_name' => 'required'
                // 'note' => 'required'
             ];
+            }
+            
         }
-
         
         $message = [
             'create_namespace.required_if' => 'The Other Namespace Name field is required when namespace is other.',
