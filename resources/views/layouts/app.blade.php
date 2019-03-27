@@ -89,8 +89,8 @@
                 </ul>
 				<?php $route = Route::getCurrentRoute()->getActionMethod(); 
                 $parameters = Route::current()->parameters();
-                $id = (isset($parameters) && $parameters['id']) ? $parameters['id'] : null;
-                $campNum = (isset($parameters) && $parameters['campnum']) ? $parameters['campnum'] : null;
+                $id = (isset($parameters['id']) && $parameters['id']) ? $parameters['id'] : null;
+                $campNum = (isset($parameters['campnum']) && $parameters['campnum']) ? $parameters['campnum'] : null;
                  $campUrl = "/camp/create";
                 if($id!=null && $campNum !=null){
                     $campUrl = "/camp/create/$id/$campNum";
