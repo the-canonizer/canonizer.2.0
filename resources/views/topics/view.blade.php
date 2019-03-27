@@ -197,6 +197,12 @@ change camps with them."><i class="fa fa-question"></i></a>
 	
 </div>  <!-- /.right-whitePnl-->
 
+<?php } else { ?>
+ <div class="Scolor-Pnl">
+            <h3>Topic does not have any record for selected date.
+            </h3>
+            
+</div>
+<?php } ?>	
 @endsection
-
-<?php } ?>
+	
