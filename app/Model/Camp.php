@@ -226,7 +226,7 @@ class Camp extends Model {
                             ->where('camp.objector_nick_id', '=', NULL)
                             ->where('topic.objector_nick_id', '=', NULL)
                             ->where('camp.go_live_time', '<=', time())
-                            ->orderBy('topic.submit_time')->first();
+                            ->latest('topic.submit_time')->first();
         } else {
 
             if (isset($filter['asof']) && $filter['asof'] == "review") {

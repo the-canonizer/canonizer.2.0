@@ -307,7 +307,7 @@ class TopicController extends Controller {
         if (count($topic) <= 0) {
 
             //Session::flash('error', "Topic does not exist.");
-           return back();
+          // return back();
         }
         if (count($camp) <= 0) {
 
