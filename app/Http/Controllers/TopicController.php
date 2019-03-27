@@ -593,7 +593,7 @@ class TopicController extends Controller {
            
             if (!$ifIamSingleSupporter) {
                 $camp->go_live_time = strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
-                $message = "Camp change submitted successfully. If no direct supporters object to this change, it will go live on ";
+                $message = "Camp change submitted successfully.";
                 $go_live_time = $camp->go_live_time;
             }
 
