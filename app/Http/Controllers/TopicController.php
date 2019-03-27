@@ -70,7 +70,7 @@ class TopicController extends Controller {
 
         if (isset($all['topic_num'])) {  
         
-            $validatorArray = ['topic_name' => 'required|max:30|unique:topic,topic_name,'.$all['id'],
+            $validatorArray = ['topic_name' => 'required|max:30|unique:topic,topic_name,250',
                 'namespace' => 'required',
                 'create_namespace' => 'required_if:namespace,other|max:100',
                 'nick_name' => 'required'
