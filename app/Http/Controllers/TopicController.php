@@ -61,34 +61,20 @@ class TopicController extends Controller {
      */
     public function store(Request $request) {
         $all = $request->all();
-
-       $validatorArray = ['topic_name' => 'required|unique:topic|max:30',
+         $validatorArray = ['topic_name' => 'required|max:30',
             'namespace' => 'required',
             'create_namespace' => 'required_if:namespace,other|max:100',
             'nick_name' => 'required'
             //'note' => 'required'
         ];
-
-        if (isset($all['topic_num'])) {  
-            $oldTopicData = Topic::where('id', $all['id'])->first();
-            if($oldTopicData->topic_name == $all['topic_name']){
-                $validatorArray = ['topic_name' => 'required|max:30',
-                'namespace' => 'required',
-                'create_namespace' => 'required_if:namespace,other|max:100',
-                'nick_name' => 'required'
-                    // 'note' => 'required'
-                ];
-            }else{
-                $validatorArray = ['topic_name' => 'required|max:30|unique:topic,topic_name,'.$all["id"],
-                'namespace' => 'required',
-                'create_namespace' => 'required_if:namespace,other|max:100',
-                'nick_name' => 'required'
-               // 'note' => 'required'
-            ];
-            }
-            
-        }
-        
+         
+     $oldTopicData = Topic::select('topic.*')
+                            ->join('camp','camp.topic_num','=','topic.topic_num')
+                            ->where('camp.camp_name','=','Agreement')
+                             ->where('topic_name', $all['topic_name'])
+                             ->where('topic.go_live_time',"<=",time())
+                             ->latest('submit_time')
+                             ->first();
         $message = [
             'create_namespace.required_if' => 'The Other Namespace Name field is required when namespace is other.',
             'create_namespace.max' => 'The Other Namespace Name may not be greater than 100 characters.'
@@ -102,6 +88,21 @@ class TopicController extends Controller {
         }
 
         $validator = Validator::make($request->all(), $validatorArray, $message);
+        $validator->after(function ($validator) use ($all,$oldTopicData){  
+            if (isset($all['topic_num'])) {  
+            
+                    if($oldTopicData->topic_num != $all['topic_num']){
+                       $validator->errors()->add('topic_name', 'The topic name has already been taken');
+                    }
+                    
+                }else{ 
+                    if($oldTopicData && isset($oldTopicData['topic_name'])){
+                        $validator->errors()->add('topic_name', 'The topic name has already been taken');
+                    }
+
+                }
+        });
+        
         if ($validator->fails()) {  
             return back()->withErrors($validator->errors())->withInput($request->all());
         }
