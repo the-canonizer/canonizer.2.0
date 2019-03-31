@@ -1,0 +1,1 @@
+Your six digit verification code is :{{ $data['otp']}}.

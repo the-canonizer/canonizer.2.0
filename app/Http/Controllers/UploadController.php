@@ -19,17 +19,11 @@ class UploadController extends Controller
 
     public function postUpload(Request $request){
        
-       
-        $validator = Validator::make($request->all(), [
-            'file' => 'required|mimes:jpeg,bmp,png,jpg,gif|max:5120',
-            //'file_name' => 'required',
-        ],
-		['file.max'=>'The file may not be greater than 5 MB.']
-		);
-
+        $validatorArray = [
+            'file' => 'required|mimes:jpeg,bmp,png,jpg,gif|max:5120|min:1'
+        ];
+        $validator = Validator::make($request->all(),$validatorArray);
         if($validator->fails()) {
-             //session(['error'=> "Select a image file and fill file name"]);
-			 //$request->session()->flash('error', 'Please select a image file.');
              return redirect()->back()->withErrors($validator);
         }
 

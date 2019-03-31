@@ -31,7 +31,70 @@
             </ul>
 
             <div id="myTabContent" class="" style="margin-top:20px;">
-                    
+			<form name="verify_number" action="{{ route('settings.phone.verify',['id'=>$user->id])}}" method="post">
+                   <input type="hidden" name="_token" value="{{ csrf_token() }}">
+				   <input type="hidden" name="verify_phone" value="1">
+                   <div class="row">
+                            <div class="col-sm-6 margin-btm-1">
+                                <label for="phone_number">Phone Number <span style="color:red;">*</span></label>
+								</br>
+                                <div style="width:300px;float:left">
+								<input type="number" name="phone_number" class="form-control" id="phone_number" value="{{ old('phone_number',$user->phone_number)}}">
+								@if ($errors->has('phone_number')) <p class="help-block">{{ $errors->first('phone_number') }}</p> @endif
+								
+								</div>
+								<?php if ($user->mobile_verified) { ?>
+								<div style="width:95px;float:right">
+								<img style="width:35px" src="{{ URL::asset('/img/tick_sended.png')}}">
+								</div>
+								<?php } ?>
+								
+                            </div>
+							<div class="col-sm-6 margin-btm-1">
+                                <label for="mobile_carrier">Mobile Carrier <span style="color:red;">*</span></label></br>
+                                <div style="width:300px;float:left">
+								 <select class="form-control" id="mobile_carrier"  name="mobile_carrier">
+								 <option value="sms.alltelwireless.com" <?php echo ($user->mobile_carrier=="sms.alltelwireless.com") ? "selected='selected'" : ""; ?> >Alltel</option>
+								 <option value="txt.att.net" <?php echo ($user->mobile_carrier=="txt.att.net") ? "selected='selected'" : ""; ?>>AT&T</option>
+								 <option value="sms.myboostmobile.com" <?php echo ($user->mobile_carrier=="sms.myboostmobile.com") ? "selected='selected'" : ""; ?>>Boost Mobile</option>
+								 <option value="mms.cricketwireless.net" <?php echo ($user->mobile_carrier=="mms.cricketwireless.net") ? "selected='selected'" : ""; ?>>Cricket Wireless</option>
+								 <option value="mymetropcs.com" <?php echo ($user->mobile_carrier=="mymetropcs.com") ? "selected='selected'" : ""; ?>>MetroPCS</option>
+								 <option value="text.republicwireless.com" <?php echo ($user->mobile_carrier=="text.republicwireless.com") ? "selected='selected'" : ""; ?>>Republic Wireless</option>
+								 <option value="messaging.sprintpcs.com" <?php echo ($user->mobile_carrier=="messaging.sprintpcs.com") ? "selected='selected'" : ""; ?>>Sprint</option>
+								 <option value="tmomail.net" <?php echo ($user->mobile_carrier=="tmomail.net") ? "selected='selected'" : ""; ?>>T-Mobile</option>
+								 <option value="email.uscc.net" <?php echo ($user->mobile_carrier=="email.uscc.net") ? "selected='selected'" : ""; ?>>U.S. Cellular</option>
+								 <option value="vtext.com" <?php echo ($user->mobile_carrier=="vtext.com") ? "selected='selected'" : ""; ?>>Verizon Wireless</option>
+								 <option value="vmobl.com" <?php echo ($user->mobile_carrier=="vmobl.com") ? "selected='selected'" : ""; ?>>Virgin Mobile</option>
+                                 </select> 
+								</div>
+								
+                            </div>
+							
+							@if(Session::has('otpsent'))
+							<div class="alert alert-danger" style="width: 80%;margin-left: 10%;text-align: center">
+								<strong>Verification : </strong>{{ Session::get('otpsent')}}   
+							</div>
+							<br/> 
+							<div class="col-sm-6 margin-btm-1">
+                                <label for="verify_code">Verify Code :</label>
+                                
+								<input type="number" name="verify_code" class="form-control" id="verify_code" value="">
+															
+                            </div>
+							@endif
+							
+							<div style="text-align:center; width:90%">
+							<button type="submit" id="submit" class="btn btn-login">
+							@if(Session::has('otpsent'))
+							Confirm
+						    @else
+							Verify
+                            @endif 						
+							</button>
+							</div>
+					</div>
+					</form>
+					<hr/>
                     <form action="{{ route('settings.profile.update',['id'=>$user->id])}}" method="post">
                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
 						<?php $private_flags = explode(",",$user->private_flags); ?>

@@ -61,15 +61,15 @@ class TopicController extends Controller {
      */
     public function store(Request $request) {
         $all = $request->all();
-
-        $validatorArray = ['topic_name' => 'required|unique:topic|max:30',
+       $validatorArray = ['topic_name' => 'required|unique:topic|max:30',
             'namespace' => 'required',
             'create_namespace' => 'required_if:namespace,other|max:100',
             'nick_name' => 'required'
             //'note' => 'required'
         ];
 
-        if (isset($all['topic_num'])) {
+        if (isset($all['topic_num'])) {  
+        
             $validatorArray = ['topic_name' => 'required|max:30',
                 'namespace' => 'required',
                 'create_namespace' => 'required_if:namespace,other|max:100',
@@ -77,6 +77,8 @@ class TopicController extends Controller {
                // 'note' => 'required'
             ];
         }
+
+        
         $message = [
             'create_namespace.required_if' => 'The Other Namespace Name field is required when namespace is other.',
             'create_namespace.max' => 'The Other Namespace Name may not be greater than 100 characters.'
@@ -90,11 +92,9 @@ class TopicController extends Controller {
         }
 
         $validator = Validator::make($request->all(), $validatorArray, $message);
-
-        if ($validator->fails()) {
+        if ($validator->fails()) {  
             return back()->withErrors($validator->errors())->withInput($request->all());
         }
-
         DB::beginTransaction();
         $go_live_time = "";
         try {
@@ -123,7 +123,7 @@ class TopicController extends Controller {
                 if (!$ifIamSingleSupporter) {
                     $topic->go_live_time = strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
                     $go_live_time = $topic->go_live_time;
-                    $message = "Topic change submitted successfully. If no direct supporters object to this change, it will go live on ";
+                    $message = "Topic change submitted successfully.";
                 }
 
                 if (isset($all['objection']) && $all['objection'] == 1) {
@@ -295,21 +295,24 @@ class TopicController extends Controller {
         session()->forget("topic-support-{$topicnum}");
         session()->forget("topic-support-nickname-{$topicnum}");
         session()->forget("topic-support-tree-{$topicnum}");
-
+        if (count($camp) > 0) {
         $parentcamp = Camp::campNameWithAncestors($camp, '');
-
+        } else {
+			
+		 $parentcamp = "N/A";	
+		}
         $wiky = new Wiky;
 
         //$WikiParser  = new wikiParser;
         if (count($topic) <= 0) {
 
             //Session::flash('error', "Topic does not exist.");
-            return back();
+          // return back();
         }
         if (count($camp) <= 0) {
 
             //Session::flash('error', "Camp does not exist.");
-            return back();
+            //return back();
         }
         //news feeds
         $editFlag = true;
@@ -317,7 +320,7 @@ class TopicController extends Controller {
                         ->where('camp_num', '=', $parentcampnum)
                         ->where('end_time', '=', null)
                         ->orderBy('order_id', 'ASC')->get();
-        if(!count($news) && $camp->parent_camp_num != null){
+        if(!count($news) && count($camp) && $camp->parent_camp_num != null){
             $neCampnum = $camp->parent_camp_num;
             $news = NewsFeed::where('topic_num', '=', $topicnum)
                         ->where('camp_num', '=', $neCampnum)
@@ -587,10 +590,10 @@ class TopicController extends Controller {
             $nickNames = Nickname::personNicknameArray();
 
             $ifIamSingleSupporter = Support::ifIamSingleSupporter($all['topic_num'], $all['camp_num'], $nickNames);
-
+           
             if (!$ifIamSingleSupporter) {
                 $camp->go_live_time = strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
-                $message = "Camp change submitted successfully. If no direct supporters object to this change, it will go live on ";
+                $message = "Camp change submitted successfully.";
                 $go_live_time = $camp->go_live_time;
             }
 
@@ -937,6 +940,7 @@ class TopicController extends Controller {
             $data['object'] = "#" . $statement->id;
             $data['go_live_time'] = $statement->go_live_time;
             $data['type'] = 'statement';
+			$data['note'] = $statement->note;
             $nickName = Nickname::getNickName($statement->submitter_nick_id);
 
             $data['nick_name'] = $nickName->nick_name;
@@ -954,6 +958,7 @@ class TopicController extends Controller {
             $data['object'] = $camp->topic->topic_name . ' : ' . $camp->camp_name;
             $data['type'] = 'camp';
             $data['go_live_time'] = $camp->go_live_time;
+			$data['note'] = $camp->note;
             $nickName = Nickname::getNickName($camp->submitter_nick_id);
 
             $data['nick_name'] = $nickName->nick_name;
@@ -972,6 +977,7 @@ class TopicController extends Controller {
             $data['object'] = $topic->topic_name;
             $data['go_live_time'] = $topic->go_live_time;
             $data['type'] = 'topic';
+			$data['note'] = $topic->note;
             $nickName = Nickname::getNickName($topic->submitter_nick_id);
 
             $data['nick_name'] = $nickName->nick_name;

@@ -82,6 +82,7 @@ Route::group([ 'middleware' => 'auth'], function() {
     Route::post('statement/save', [ 'as' => 'statement.save', 'uses' => 'TopicController@store_statement']);
     Route::get('settings', [ 'as' => 'settings', 'uses' => 'SettingsController@index']);
     Route::post('settings/profile/update', [ 'as' => 'settings.profile.update', 'uses' => 'SettingsController@profile_update']);
+	Route::post('settings/phone/verify', [ 'as' => 'settings.phone.verify', 'uses' => 'SettingsController@phone_verify']);
     Route::get('settings/nickname', [ 'as' => 'settings.nickname', 'uses' => 'SettingsController@nickname']);
     Route::post('settings/nickname/add', [ 'as' => 'settings.nickname.add', 'uses' => 'SettingsController@add_nickname']);
     Route::post('settings/support/add', [ 'as' => 'settings.support.add', 'uses' => 'SettingsController@add_support']);

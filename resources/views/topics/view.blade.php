@@ -70,7 +70,7 @@
             </div>    
             </div>
         </div>
-        
+        <?php if(count($camp) > 0) { ?>
         <div class="Scolor-Pnl">
 		     <?php $statement = $camp->statement($camp->topic_num,$camp->camp_num); ?>
             <h3><?php echo ($parentcamp=="Agreement") ? $parentcamp : "Camp";?> Statement
@@ -175,10 +175,10 @@ change camps with them."><i class="fa fa-question"></i></a>
                 <div class="tree col-sm-12">
                     Camp Name : <?php echo $camp->camp_name;?> <br/>
 					Keywords : <?php echo $camp->key_words;?><br/>
-					Related URL : <?php echo $camp->url;?><br/>
+					Camp About URL : <?php echo $camp->camp_about_url;?><br/>
 					
 					
-					Related Nicknames : <?php echo (isset($camp->nickname->nick_name)) ? $camp->nickname->nick_name : "No nickname associated";?> <br/>
+					Camp About Nick Name : <?php echo (isset($camp->nickname->nick_name)) ? $camp->nickname->nick_name : "No nickname associated";?> <br/>
                 </div>
               
             </div>    
@@ -187,11 +187,26 @@ change camps with them."><i class="fa fa-question"></i></a>
             	<a id="edit_camp" class="btn btn-success"href="<?php echo url('camp/history/'.$camp->topic_num.'/'.$camp->camp_num);?>">Manage/Edit This Camp</a>
             </div>
         </div>
+     <?php } else { ?>
+	  <div>
+	   No camp data available.
+	  </div>
+	 <?php } ?>
     </div>
 	<div class="post"> </div>
 	
 </div>  <!-- /.right-whitePnl-->
 
+<?php } else { ?>
+ <div class="Scolor-Pnl">
+            <h3>Topic does not have any record for selected date.
+            </h3>
+            
+</div>
+<br/>
+<br/>
+<br/>
+<br/>
+<?php } ?>	
 @endsection
-
-<?php } ?>
+	
