@@ -90,11 +90,23 @@
 				<?php $route = Route::getCurrentRoute()->getActionMethod(); 
                 $parameters = Route::current()->parameters();
                 $id = (isset($parameters['id']) && $parameters['id']) ? $parameters['id'] : null;
-                $campNum = (isset($parameters['campnum']) && $parameters['campnum']) ? $parameters['campnum'] : null;
+                if($id == null){
+                    if(isset($parameters['topicid']) && $parameters['topicid']){
+                        if(isset($parameters['topicname'])){
+                            $id = $parameters['topicid']."-".$parameters['topicname'];
+                        }else{
+                            $id = null;
+                        }
+                    }else{
+                        $id = null;
+                    } 
+                }
+                 $campNum = (isset($parameters['campnum']) && $parameters['campnum']) ? $parameters['campnum'] : null;
                  $campUrl = "/camp/create";
                 if($id!=null && $campNum !=null){
                     $campUrl = "/camp/create/$id/$campNum";
                 }
+
 				?>
                 <ul class="navbar-nav navbar-sidenav" id="exampleAccordion">
                     <ul class="uppermenu">
