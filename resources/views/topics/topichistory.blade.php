@@ -14,7 +14,7 @@
 
 @if(Session::has('success'))
 <div class="alert alert-success">
-    <strong>Success! </strong>{{ Session::get('success')}} {{ (Session::has('objection') && Session::get('objection') == 1 ) ? '' : to_local_time(Session::get('go_live_time')) }}    
+    <strong>Success! </strong>{{ Session::get('success')}}    
 </div>
 @endif
 
@@ -115,7 +115,7 @@
                                 <a id="object" class="btn btn-historysmt" href="<?php echo url('manage/topic/' . $data->id . '-objection'); ?>">Object</a>
                             <?php } ?>  
                             <a id="update" class="btn btn-historysmt" href="<?php echo url('manage/topic/' . $data->id); ?>">Submit Topic Update Based On This</a>				  
-                            <a id="version" class="btn btn-historysmt" href="<?php echo url('topic/' . $data->topic_num . '/' . $data->camp_num . '?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $data->submit_time)); ?>">View This Version</a>
+                            <a id="version" class="btn btn-historysmt" href="<?php echo url('topic/' . $data->topic_num . '/1?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $data->submit_time)); ?>">View This Version</a>
 
                         </div> 	
                          @if($isagreeFlag && $ifIamSupporter && Auth::user()->id != $submitterUserID)

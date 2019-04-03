@@ -20,7 +20,7 @@
 
 @if(Session::has('success'))
 <div class="alert alert-success">
-    <strong>Success! </strong>{{ Session::get('success')}} {{ (Session::has('objection') && Session::get('objection') == 1 ) ? '' : to_local_time(Session::get('go_live_time')) }}   
+    <strong>Success! </strong>{{ Session::get('success')}} 
 </div>
 @endif
 
@@ -114,7 +114,7 @@
                                 <b>Keyword :</b> {{ $data->key_words }} <br/>
                                 <b>Note :</b> {{ $data->note }} <br/>
 
-                                <b>URL :</b> {{ $data->camp_about_url }} <br/>
+                                <b>Camp About URL :</b> {{ $data->camp_about_url }} <br/>
                                 <b>Submitter Nickname :</b> {{ isset($data->submitternickname->nick_name) ? $data->submitternickname->nick_name : 'N/A' }} <br/>
                                 <b>Submitted on :</b> {{ to_local_time($data->submit_time) }} <br/>
                                 <b>Go live Time :</b> {{ to_local_time($data->go_live_time)}} <br/>
