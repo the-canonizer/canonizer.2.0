@@ -175,10 +175,10 @@ change camps with them."><i class="fa fa-question"></i></a>
                 <div class="tree col-sm-12">
                     Camp Name : <?php echo $camp->camp_name;?> <br/>
 					Keywords : <?php echo $camp->key_words;?><br/>
-					Related URL : <?php echo $camp->url;?><br/>
+					Camp About URL : <?php echo $camp->camp_about_url;?><br/>
 					
 					
-					Related Nicknames : <?php echo (isset($camp->nickname->nick_name)) ? $camp->nickname->nick_name : "No nickname associated";?> <br/>
+					Camp About Nick Name : <?php echo (isset($camp->nickname->nick_name)) ? $camp->nickname->nick_name : "No nickname associated";?> <br/>
                 </div>
               
             </div>    
@@ -197,6 +197,16 @@ change camps with them."><i class="fa fa-question"></i></a>
 	
 </div>  <!-- /.right-whitePnl-->
 
+<?php } else { ?>
+ <div class="Scolor-Pnl">
+            <h3>Topic does not have any record for selected date.
+            </h3>
+            
+</div>
+<br/>
+<br/>
+<br/>
+<br/>
+<?php } ?>	
 @endsection
-
-<?php } ?>
+	
