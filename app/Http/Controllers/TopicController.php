@@ -302,7 +302,6 @@ class TopicController extends Controller {
         $topic = Camp::getAgreementTopic($topicnum, $_REQUEST);
 
         $camp = Camp::getLiveCamp($topicnum, $parentcampnum);
-
         session()->forget("topic-support-{$topicnum}");
         session()->forget("topic-support-nickname-{$topicnum}");
         session()->forget("topic-support-tree-{$topicnum}");
@@ -464,9 +463,7 @@ class TopicController extends Controller {
         $topic = Camp::getAgreementTopic($topicnum);
         $onecamp = Camp::getLiveCamp($topicnum, $campnum);
         $parentcamp = (count($onecamp)) ? Camp::campNameWithAncestors($onecamp, '') : "n/a";
-
         $camps = Camp::getCampHistory($topicnum, $campnum);
-        //echo "<pre>"; print_r($camps); exit;
 
         $parentcampnum = (isset($onecamp->parent_camp_num)) ? $onecamp->parent_camp_num : 0;
         $nickNames = null;
@@ -741,8 +738,8 @@ class TopicController extends Controller {
             $nickNames = Nickname::personNicknameArray();
 
             $ifIamSingleSupporter = Support::ifIamSingleSupporter($all['topic_num'], $all['camp_num'], $nickNames);
-
-            if (!$ifIamSingleSupporter) {
+            $IfHasOtherStatements = Statement::getCampStatements($all['topic_num'], $all['camp_num']);
+            if (!$ifIamSingleSupporter && $IfHasOtherStatements) {
                 $statement->go_live_time = strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
                 $message = "Statement change submitted successfully.";
                 $go_live_time = $statement->go_live_time;
@@ -769,7 +766,6 @@ class TopicController extends Controller {
         } else {
             $message = 'Camp statement submitted successfully.';
         }
-
         $statement->save();
         if ($eventtype == "CREATE") {
 

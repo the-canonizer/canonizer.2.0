@@ -72,7 +72,7 @@
         </div>
         <?php if(count($camp) > 0) { ?>
         <div class="Scolor-Pnl">
-		     <?php $statement = $camp->statement($camp->topic_num,$camp->camp_num); ?>
+		     <?php $statement = $camp->statement($camp->topic_num,$camp->camp_num);  ?>
             <h3><?php echo ($parentcamp=="Agreement") ? $parentcamp : "Camp";?> Statement
 			<?php if(isset($statement->go_live_time)) { ?><span style="float:right; font-size:14px"><b>Go live Time :</b> {{ to_local_time($statement->go_live_time) }}</span>
             <?php } ?>

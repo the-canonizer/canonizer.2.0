@@ -72,7 +72,7 @@
                     @foreach($namespaces as $namespace)
                     <option value="{{ $namespace->id }}" @if($topic->namespace_id == $namespace->id) selected @endif>{{$namespace->label}}</option>
                     @endforeach
-                    <option value="other" @if(old('namespace') == 'other') selected @endif>Other</option>
+                    <!-- <option value="other" @if(old('namespace') == 'other') selected @endif>Other</option> -->
                 </select>
                 <!--
                 <input type="text" name="namespace" class="form-control" id="" value="">-->

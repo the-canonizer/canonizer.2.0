@@ -54,7 +54,7 @@
 			   <?php 
 			        if(!empty($statement)) { 
 			            $currentLive = 0; 
-				    $currentTime = time();
+				          $currentTime = time();
                                     
                                                 
 			         foreach($statement as $key=>$data) { 

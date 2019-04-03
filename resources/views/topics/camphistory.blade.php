@@ -55,10 +55,11 @@
                 <input type="hidden" id="topic_num" name="topic_num" value="{{ $topic->topic_num }}">
 
 
-                <?php
-                if (!empty($camps)) {
+                <?php  
+                if (!empty($camps) && !empty($topic)) { 
                     $currentLive = 0;
                     $currentTime = time();
+
                     foreach ($camps as $key => $data) {
                         $isagreeFlag = false;
                         $isGraceFlag = false;
@@ -159,7 +160,9 @@
                         <form id="changeAgreeForm" action="<?php echo url('statement/agreetochange') ?>" method="post">
                             <input type="hidden" name="_token" value="{{ csrf_token() }}">
                             <input type="hidden" name="topic_num" value="{{ $topic->topic_num}}" />
-                            <input type="hidden" name="camp_num" value="{{ $onecamp->camp_num}}" />
+                            <?php if(!empty($onecamp)){ ?> 
+                                    <input type="hidden" name="camp_num" value="{{ $onecamp->camp_num}}" />
+                            <?php }  ?>
                             <input type="hidden" name="camp_id" value="" id="agree_to_camp" />
                             <input type="hidden" name="nick_name_id" value="{{ $ifIamSupporter }}" />
                             <input type="hidden" name="change_for" value="camp" />
