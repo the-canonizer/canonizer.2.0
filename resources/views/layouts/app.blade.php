@@ -23,11 +23,11 @@
         <script src="{{ URL::asset('/js/jquery.min.js') }}"></script>
         <script src="{{ URL::asset('/js/jquery-ui/jquery-ui.js') }}"></script>
         <link href="{{ URL::asset('/js/jquery-ui/jquery-ui.css') }}" rel="stylesheet" type="text/css">
-        
+
         <!--countdown timers -->
         <script src="{{ URL::asset('/js/jquery.countdownTimer.min.js') }}"></script>
         <link href="{{ URL::asset('/css/jquery.countdownTimer.css') }}" rel="stylesheet" type="text/css">
-        
+
 
 
     </head>
@@ -87,7 +87,7 @@
                         @endif
                     </li>
                 </ul>
-				<?php $route = Route::getCurrentRoute()->getActionMethod(); 
+				<?php $route = Route::getCurrentRoute()->getActionMethod();
                 $parameters = Route::current()->parameters();
                 $id = (isset($parameters['id']) && $parameters['id']) ? $parameters['id'] : null;
                 if($id == null){
@@ -99,7 +99,7 @@
                         }
                     }else{
                         $id = null;
-                    } 
+                    }
                 }
                  $campNum = (isset($parameters['campnum']) && $parameters['campnum']) ? $parameters['campnum'] : null;
                  $campUrl = "/camp/create";
@@ -128,7 +128,7 @@
                                 <span class="nav-link-text {{ ($route=='topic' & str_contains(Request::fullUrl(), 'topic') ) ? 'menu-active':''}}">Create New Topic</span>
                             </a>
                         </li>
-						<?php if($route=='show') { ?>
+						<?php if($route=='show' and (strpos(Request::fullUrl(), 'forum' ) === 'false') ) { ?>
 						<li class="nav-item">
                             <a class="nav-link" href='{{ url("$campUrl")}}'>
 
@@ -158,22 +158,22 @@
                             </a>
                         </li>
                     </ul>
-					<?php 
-					$routeArray = app('request')->route()->getAction();					
+					<?php
+					$routeArray = app('request')->route()->getAction();
 					$controllerAction = class_basename($routeArray['controller']);
-					
+
                     list($controller, $action) = explode('@', $controllerAction);
 
 					$visibleRoutes = array("index","show","topic_history","statement_history","camp_history");
-					
+
 					if(in_array($route,$visibleRoutes) && $controller != "CThreadsController" && $controller != "SettingsController") { ?>
                     <ul class="lowermneu canoalgo">
 
 					<!-- set algorithm as per request -->
 					<?php
-					
 
-					
+
+
 					$algorithms = \App\Model\Algorithm::getKeyList();
 					if(isset($_REQUEST['canonizer']) && in_array($_REQUEST['canonizer'],$algorithms)) {
 					  session(['defaultAlgo'=>$_REQUEST['canonizer']]);
