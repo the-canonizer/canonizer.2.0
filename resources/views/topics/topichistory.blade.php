@@ -1,6 +1,13 @@
 @extends('layouts.app')
 @section('content')
 
+<div class="camp top-head">
+   <?php if(isset($topics[0])) { 
+   $title      = preg_replace('/[^A-Za-z0-9\-]/', '-', $topics[0]->topic_name);	
+   ?> <h3><b>Topic:</b>  {{ $topics[0]->topic_name}}</h3>
+    <h3><b>Camp:</b> <a href="/topic/<?php echo $topics[0]->topic_num."-".$title?>/1">Agreement</a></h3>  
+   <?php } ?>
+</div>
 
 <div class="page-titlePnl">
     <h1 class="page-title">Topic History</h1>

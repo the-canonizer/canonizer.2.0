@@ -164,7 +164,7 @@
 
                     list($controller, $action) = explode('@', $controllerAction);
 
-					$visibleRoutes = array("index","show","topic_history","statement_history","camp_history");
+					$visibleRoutes = array("index","show");
 
 					if(in_array($route,$visibleRoutes) && $controller != "CThreadsController" && $controller != "SettingsController") { ?>
                     <ul class="lowermneu canoalgo">

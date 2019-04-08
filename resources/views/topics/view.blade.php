@@ -107,7 +107,10 @@
                 ?>
             </div>
             <div class="footer">
-			<?php if(isset($statement->value)) { ?>
+			<?php 
+			$statementCount = count($camp->anystatement($camp->topic_num,$camp->camp_num));
+			
+			if($statementCount > 0) { ?>
             	<a id="edit_camp_statement" class="btn btn-success" href="<?php echo url('statement/history/'.$topic_id.'/'.$camp->camp_num);?>">Manage/Edit Camp Statement</a>
 			<?php } else { ?>
                 <a id="add_camp_statement" class="btn btn-success" href="<?php echo url('create/statement/'.$camp->topic_num.'/'.$camp->camp_num);?>">Add Camp Statement</a>

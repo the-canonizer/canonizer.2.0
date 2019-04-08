@@ -133,6 +133,12 @@ class Camp extends Model {
 
         return $statement;
     }
+	public function scopeAnystatement($query, $topicnum, $campnum) {
+
+        $statement = Statement::getAnyStatement($topicnum, $campnum);
+     
+        return $statement;
+    }
 
     public function scopeGetSupportedNicknames($query, $topicnum, $campnum = null) {
         $query = TopicSupport::where('topic_num', '=', $topicnum)
