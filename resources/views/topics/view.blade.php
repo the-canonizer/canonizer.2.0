@@ -149,7 +149,7 @@ change camps with them."><i class="fa fa-question"></i></a>
             </div>    
             </div>
             <div class="footer">
-                <a id="join_support_camp" class="btn btn-warning" href="<?php echo url('support/'.$topic_id.'/'.$camp->camp_num);?>">Join or Directly Support This Camp</a>
+               <a id="join_support_camp" class="btn btn-warning" href="<?php echo url('support/'.$topic_id.'/'.$camp->camp_num);?>">Directly Join or Manage Support</a>
             </div>
         </div>
    

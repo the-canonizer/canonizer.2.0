@@ -122,7 +122,7 @@
                                 <a id="object" class="btn btn-historysmt" href="<?php echo url('manage/topic/' . $data->id . '-objection'); ?>">Object</a>
                             <?php } ?>  
                             <a id="update" class="btn btn-historysmt" href="<?php echo url('manage/topic/' . $data->id); ?>">Submit Topic Update Based On This</a>				  
-                            <a id="version" class="btn btn-historysmt" href="<?php echo url('topic/' . $data->topic_num . '/1?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $data->submit_time)); ?>">View This Version</a>
+                            <a id="version" class="btn btn-historysmt" href="<?php echo url('topic/' . $data->topic_num . '/1?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $data->go_live_time)); ?>">View This Version</a>
 
                         </div> 	
                          @if($isagreeFlag && $ifIamSupporter && Auth::user()->id != $submitterUserID)

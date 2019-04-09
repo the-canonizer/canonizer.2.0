@@ -730,6 +730,7 @@ class TopicController extends Controller {
 
         $eventtype = "CREATE";
         if (isset($all['camp_num'])) {
+			
             $eventtype = "UPDATE";
             $statement->camp_num = $all['camp_num'];
             $statement->submitter_nick_id = $all['nick_name'];
@@ -738,8 +739,9 @@ class TopicController extends Controller {
             $nickNames = Nickname::personNicknameArray();
 
             $ifIamSingleSupporter = Support::ifIamSingleSupporter($all['topic_num'], $all['camp_num'], $nickNames);
-            $IfHasOtherStatements = Statement::getCampStatements($all['topic_num'], $all['camp_num']);
-            if (!$ifIamSingleSupporter && $IfHasOtherStatements) {
+            //$IfHasOtherStatements = Statement::getCampStatements($all['topic_num'], $all['camp_num']);
+
+            if (!$ifIamSingleSupporter) {
                 $statement->go_live_time = strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
                 $message = "Statement change submitted successfully.";
                 $go_live_time = $statement->go_live_time;
@@ -754,7 +756,6 @@ class TopicController extends Controller {
                 $statement->go_live_time = $go_live_time;
                 $statement->object_time = time();
             }
-
             if (isset($all['statement_update']) && $all['statement_update'] == 1) {
                 $message = "Updation in your changed statement are successful.";
                 $statement = Statement::where('id', $all['statement_id'])->first();
@@ -766,6 +767,7 @@ class TopicController extends Controller {
         } else {
             $message = 'Camp statement submitted successfully.';
         }
+		
         $statement->save();
         if ($eventtype == "CREATE") {
 
