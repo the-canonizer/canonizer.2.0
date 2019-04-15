@@ -620,7 +620,7 @@ class Camp extends Model {
 
     public function campTree($algorithm, $activeAcamp = null, $supportCampCount = 0, $needSelected = 0) {
         //return '';
-        session()->flush();//dd(1);
+        //session()->flush();//dd(1);
 
         $as_of_time = time();
         if (isset($_REQUEST['asof']) && $_REQUEST['asof'] == 'bydate') {
