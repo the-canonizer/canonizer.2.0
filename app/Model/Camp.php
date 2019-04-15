@@ -620,7 +620,7 @@ class Camp extends Model {
 
     public function campTree($algorithm, $activeAcamp = null, $supportCampCount = 0, $needSelected = 0) {
         //return '';
-        //session()->flush();dd(1);
+        session()->flush();//dd(1);
 
         $as_of_time = time();
         if (isset($_REQUEST['asof']) && $_REQUEST['asof'] == 'bydate') {
@@ -681,11 +681,12 @@ class Camp extends Model {
                 session(["topic-child-{$this->topic_num}" => self::where('topic_num', '=', $this->topic_num)
                             ->where('camp_name', '!=', 'Agreement')
                             ->where('objector_nick_id', '=', NULL)
-                            //->whereRaw('go_live_time in (select max(go_live_time) from camp where topic_num=' . $this->topic_num . ' and objector_nick_id is null group by camp_num)')
+                            ->whereRaw('go_live_time in (select max(go_live_time) from camp where topic_num=' . $this->topic_num . ' and objector_nick_id is null group by camp_num)')
                             ->where('go_live_time', '<=', $asofdate)
-                            ->orderBy('submit_time', 'desc')
+                            ->orderBy('submit_time', 'DESC')
                             ->groupBy('camp_num')
                             ->get()]);
+							
             }
         }
 
