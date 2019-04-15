@@ -128,7 +128,9 @@
                                 <span class="nav-link-text {{ ($route=='topic' & str_contains(Request::fullUrl(), 'topic') ) ? 'menu-active':''}}">Create New Topic</span>
                             </a>
                         </li>
-						<?php if($route=='show' and (strpos(Request::fullUrl(), 'forum' ) === 'false') ) { ?>
+
+						<?php if($route=='show' and strpos(Request::fullUrl(), 'forum' ) == 0 ) { ?>
+                        
 						<li class="nav-item">
                             <a class="nav-link" href='{{ url("$campUrl")}}'>
 
