@@ -107,7 +107,10 @@
                 ?>
             </div>
             <div class="footer">
-			<?php if(isset($statement->value)) { ?>
+			<?php 
+			$statementCount = count($camp->anystatement($camp->topic_num,$camp->camp_num));
+			
+			if($statementCount > 0) { ?>
             	<a id="edit_camp_statement" class="btn btn-success" href="<?php echo url('statement/history/'.$topic_id.'/'.$camp->camp_num);?>">Manage/Edit Camp Statement</a>
 			<?php } else { ?>
                 <a id="add_camp_statement" class="btn btn-success" href="<?php echo url('create/statement/'.$camp->topic_num.'/'.$camp->camp_num);?>">Add Camp Statement</a>
@@ -146,7 +149,7 @@ change camps with them."><i class="fa fa-question"></i></a>
             </div>    
             </div>
             <div class="footer">
-                <a id="join_support_camp" class="btn btn-warning" href="<?php echo url('support/'.$topic_id.'/'.$camp->camp_num);?>">Join or Directly Support This Camp</a>
+               <a id="join_support_camp" class="btn btn-warning" href="<?php echo url('support/'.$topic_id.'/'.$camp->camp_num);?>">Directly Join or Manage Support</a>
             </div>
         </div>
    

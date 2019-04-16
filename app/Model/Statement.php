@@ -69,6 +69,13 @@ class Statement extends Model {
             }
         }
     }
+	public static function getAnyStatement($topicnum, $campnum, $filter = array()) {
+
+       
+            return self::where('topic_num', $topicnum)
+                            ->where('camp_num', $campnum)->get();
+       
+    }
     
     
 

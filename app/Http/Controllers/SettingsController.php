@@ -239,7 +239,7 @@ class SettingsController extends Controller {
 
             $alreadySupport = Support::where('topic_num', $topicnum)->where('camp_num', $campnum)->where('end', '=', 0)->whereIn('nick_name_id', $userNickname)->get();
             if ($alreadySupport->count() > 0) {
-                Session::flash('warning', "You have already supported this camp, you cant submit your support again.");
+                //Session::flash('warning', "You have already supported this camp, you cant submit your support again.");
                 // return redirect()->back();
             }
 
@@ -253,7 +253,7 @@ class SettingsController extends Controller {
                     foreach ($parentSupport as $parent)
                         ;
                     if ($parent->camp_num == $campnum) {
-                        Session::flash('warning', "You are already supporting this camp. You cant submit support again.");
+                        //Session::flash('warning', "You are already supporting this camp. You cant submit support again.");
                         Session::flash('confirm', 'samecamp');
                     } else {
                         Session::flash('warning', 'The following  camp are parent camp to "' . $onecamp->camp_name . '" and will be removed if you commit this support.');
@@ -273,7 +273,7 @@ class SettingsController extends Controller {
                     foreach ($childSupport as $child)
                         ;
                     if ($child->camp_num == $campnum) {
-                        Session::flash('warning', "You are already supporting this camp. You cant submit support again.");
+                        //Session::flash('warning', "You are already supporting this camp. You cant submit support again.");
                         Session::flash('confirm', 'samecamp');
                     } else {
                         Session::flash('warning', 'The following  camp are child camp to "' . $onecamp->camp_name . '" and will be removed if you commit this support.');
