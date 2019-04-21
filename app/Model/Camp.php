@@ -171,10 +171,12 @@ class Camp extends Model {
         }
         if (!empty($camp)) {
             if ($campname != '') {
-                $url = url('topic/' . $camp->topic_num . '/' . $camp->camp_num);
+				$title      = preg_replace('/[^A-Za-z0-9\-]/', '-', $camp->camp_name);
+                $url = url('topic/' . $camp->topic_num . '-'.$title.'/' . $camp->camp_num);
                 $campname = "<a href='" . $url . "'>" . $camp->camp_name . '</a> / ' . $campname;
             } else {
-                $url = url('topic/' . $camp->topic_num . '/' . $camp->camp_num);
+				$title      = preg_replace('/[^A-Za-z0-9\-]/', '-', $camp->camp_name);
+                $url = url('topic/' . $camp->topic_num .'-'.$title. '/' . $camp->camp_num);
                 $campname = "<a href='" . $url . "'>" . $camp->camp_name . '</a>';
             }
             if (isset($camp) && $camp->parent_camp_num) {
@@ -186,7 +188,7 @@ class Camp extends Model {
                                 ->where('objector_nick_id', '=', NULL)
                                 //->whereRaw('go_live_time in (select max(go_live_time) from camp where topic_num=' . $camp->topic_num . ' and objector_nick_id is null group by camp_num)')
                                 ->where('go_live_time', '<=', $as_of_time)
-                                ->groupBy('camp_num')->orderBy('submit_time', 'desc')->first();
+                                ->orderBy('submit_time', 'desc')->first();
 
                 return self::campNameWithAncestors($pcamp, $campname);
             }
