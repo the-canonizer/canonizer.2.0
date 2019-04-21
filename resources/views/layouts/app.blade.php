@@ -180,6 +180,12 @@
 					if(isset($_REQUEST['canonizer']) && in_array($_REQUEST['canonizer'],$algorithms)) {
 					  session(['defaultAlgo'=>$_REQUEST['canonizer']]);
 					}
+                    if(isset($_REQUEST['asof']) && $_REQUEST['asof'] !='') {
+                      session(['asofDefault'=>$_REQUEST['asof']]);
+                    }
+                    if(isset($_REQUEST['asofdate']) && $_REQUEST['asofdate']) {
+                      session(['asofdateDefault'=>$_REQUEST['asofdate']]);
+                    }
 					?>
                         <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Components">
                             <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#canoalgo">
@@ -214,18 +220,18 @@
                                  <input type="hidden" id="filter" name="filter" value="{{ isset($_REQUEST['filter']) && !empty($_REQUEST['filter']) ? $_REQUEST['filter'] : '0.001' }}"/>
 								   <input type="hidden" name="_token" value="{{ csrf_token() }}">
 									<div class="radio radio-primary">
-										<input type="radio" <?php echo (isset($_REQUEST['asof']) && $_REQUEST['asof']=="review") ? "checked='checked'" : '';?> class="asofdate" name="asof" id="radio1" value="review">
+										<input type="radio" <?php echo (session('asofDefault')=="review") ? "checked='checked'" : '';?> class="asofdate" name="asof" id="radio1" value="review">
 										<label for="radio1">include review</label>
 									</div>
 									<div class="radio radio-primary">
-										<input type="radio" <?php echo ((isset($_REQUEST['asof']) && $_REQUEST['asof']!="review") || !isset($_REQUEST['asof'])) ? "checked='checked'" : '';?> class="asofdate" name="asof" id="radio2" value="default">
+										<input type="radio" <?php echo (session('asofDefault')!="review") || !(session('asofDefault')) ? "checked='checked'" : '';?> class="asofdate" name="asof" id="radio2" value="default">
 										<label for="radio2">default</label>
 									</div>
 									<div class="radio radio-primary">
-										<input type="radio" <?php echo (isset($_REQUEST['asof']) && $_REQUEST['asof']=="bydate") ? "checked='checked'" : '';?> class="asofdate" name="asof"id="radio3" value="bydate">
+										<input type="radio" <?php echo (session('asofDefault')=="bydate") ? "checked='checked'" : '';?> class="asofdate" name="asof"id="radio3" value="bydate">
 										<label for="radio3">as of (yy/mm/dd)</label>
 									</div>
-									<div><input readonly type="text" id="asofdate" name="asofdate" value="<?php echo isset($_REQUEST['asofdate']) ? $_REQUEST['asofdate']: '';?>"/></div>
+									<div><input readonly type="text" id="asofdate" name="asofdate" value="<?php echo (session('asofdateDefault')) ? session('asofdateDefault'): '';?>"/></div>
 								</form>
                                 </li>
                             </ul>

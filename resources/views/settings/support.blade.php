@@ -162,7 +162,7 @@
                        @endif					  
 					   @endforeach
 					  
-				  @if(Session::get('confirm') !='samecamp')	  
+				  @if(Session::get('confirm') !='samecamp') 
 					   <!-- current supporting camp detail -->
 					<div class="col-sm-12">   
 					   <div id="positions_0" class="SpCmpBDY support-sorter-element ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
@@ -176,7 +176,7 @@
                                 <input type="hidden" id="nick_name_id_0" name="nick_name_id" value="{{ $supportedTopic->nickname->id }}">
                             <button type="submit" id="submit_0" class="btn-sptclose"><i class="fa fa-close"></i></button>
                             </form> -->
-							<input type="hidden" class="final_support_order" name="support_order[{{$camp->camp_num}}]" id="support_order_0 }}" value="{{ $key + 1  }}">
+							<input type="hidden" class="final_support_order" name="support_order[{{$camp->camp_num}}]" id="support_order_0" value="{{ $key + 1  }}">
                             
 							<input type="hidden" name="camp[{{$camp->camp_num}}]" value="{{ $camp->camp_num }}">
 							<input type="hidden" name="delegated[{{$camp->camp_num}}]" value="{{ $delegate_nick_name_id }}">
@@ -228,6 +228,7 @@
                 });
                 </script>
                @else
+
 				   <div class="row">
 				  	<div class="col-sm-12">   
 					   <div id="positions_0" class="SpCmpBDY support-sorter-element ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">

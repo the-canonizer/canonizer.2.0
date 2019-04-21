@@ -25,6 +25,13 @@ class HomeController extends Controller {
                 session(['defaultAlgo' => $defaultAlgo]);
                 session(['defaultUserAlgo' => $defaultAlgo]);
             }
+
+            if(isset($_REQUEST['asof']) && $_REQUEST['asof']!=''){
+                session(['asofDefault'=>$_REQUEST['asof']]);
+            }
+            if(isset($_REQUEST['asofdate']) && $_REQUEST['asofdate']!=''){
+                session(['asofdateDefault'=>$_REQUEST['asofdate']]);
+            }
         }
 		//session()->flush();
         $namespaces = Namespaces::all();
@@ -157,6 +164,8 @@ class HomeController extends Controller {
     public function changeAlgorithm(Request $request) {
         session(['defaultAlgo' => $request->input('algo')]);
     }
+
+
 
     public function changeNamespace(Request $request) {
         $namespace = Namespaces::find($request->input('namespace'));

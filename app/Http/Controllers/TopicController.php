@@ -86,9 +86,9 @@ class TopicController extends Controller {
             $validatorArray = ['objection_reason' => 'required|max:100','nick_name' => 'required'
             ];
         }
-
-        $validator = Validator::make($request->all(), $validatorArray, $message);
-        $validator->after(function ($validator) use ($all,$oldTopicData){  
+         $validator = Validator::make($request->all(), $validatorArray, $message);
+        if(isset($oldTopicData) && $oldTopicData!=null){
+           $validator->after(function ($validator) use ($all,$oldTopicData){  
             if (isset($all['topic_num'])) {  
             
                     if($oldTopicData->topic_num != $all['topic_num']){
@@ -101,7 +101,9 @@ class TopicController extends Controller {
                     }
 
                 }
-        });
+            }); 
+        }
+        
         
         if ($validator->fails()) {  
             return back()->withErrors($validator->errors())->withInput($request->all());

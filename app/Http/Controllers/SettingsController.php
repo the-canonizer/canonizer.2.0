@@ -211,7 +211,7 @@ class SettingsController extends Controller {
     public function support($id = null, $campnums = null) {
 
         $as_of_time = time();
-        if (isset($id)) {
+        if (isset($id)) { 
             $topicnumArray = explode("-", $id);
             $topicnum = $topicnumArray[0];
             // get deligated nickname if exist
@@ -248,45 +248,50 @@ class SettingsController extends Controller {
             if ($parentSupport === "notlive") {
                 Session::flash('warning', "You cant submit your support to this camp as its not live yet.");
                 //return redirect()->back();
-            } else if ($parentSupport) {
+            }else if ($parentSupport) { 
                 if (count($parentSupport) == 1) {
                     foreach ($parentSupport as $parent)
-                        ;
                     if ($parent->camp_num == $campnum) {
                         //Session::flash('warning', "You are already supporting this camp. You cant submit support again.");
                         Session::flash('confirm', 'samecamp');
-                    } else {
+                    } 
+                    // commented as per requirement in issue no 389 of 11th release
+                    /*else {
                         Session::flash('warning', 'The following  camp are parent camp to "' . $onecamp->camp_name . '" and will be removed if you commit this support.');
                         Session::flash('confirm', 1);
-                    }
-                } else {
+                    }*/
+                } 
+                // commented as per requirement in issue no 389 of 11th release
+                /*else {
                     Session::flash('warning', 'The following  camps are parent camps to "' . $onecamp->camp_name . '" and will be removed if you commit this support.');
                     Session::flash('confirm', 1);
-                }
+                }*/
                 //return redirect()->back();
             }
 
             $childSupport = Camp::validateChildsupport($topicnum, $campnum, $userNickname, $confirm_support);
-            //echo "<pre>";print_r($childSupport); die;
-            if ($childSupport) {
+           
+            if ($childSupport) { 
                 if (count($childSupport) == 1) {
                     foreach ($childSupport as $child)
-                        ;
-                    if ($child->camp_num == $campnum) {
+                    if ($child->camp_num == $campnum) { 
                         //Session::flash('warning', "You are already supporting this camp. You cant submit support again.");
                         Session::flash('confirm', 'samecamp');
-                    } else {
+                    } 
+                    // commented as per requirement in issue no 389 of 11th release
+                    /*else {
                         Session::flash('warning', 'The following  camp are child camp to "' . $onecamp->camp_name . '" and will be removed if you commit this support.');
                         Session::flash('confirm', 1);
-                    }
-                } else {
+                    }*/
+                } 
+                // commented as per requirement in issue no 389 of 11th release
+                /*else {
                     Session::flash('warning', 'The following  camps are child camps to "' . $onecamp->camp_name . '" and will be removed if you commit this support.');
 
                     Session::flash('confirm', 1);
-                }
+                }*/
                 //return redirect()->back();
             }
-
             $supportedTopic = Support::where('topic_num', $topicnum)
                             ->whereIn('nick_name_id', $userNickname)
                             ->whereRaw("(start <= " . $as_of_time . ") and ((end = 0) or (end >= " . $as_of_time . "))")
@@ -378,10 +383,10 @@ class SettingsController extends Controller {
                     $singleSupport->save();
                 }
             }
-            //echo "<pre>"; print_r($data); die;			   
+            //echo "<pre>"; print_r($data); die;
+            $last_camp =  $data['camp_num'];			   
             foreach ($data['support_order'] as $camp_num => $support_order) {
-
-
+                $last_camp = $camp_num;
                 $supportTopic = new Support();
                 $supportTopic->topic_num = $topic_num;
                 $supportTopic->nick_name_id = $data['nick_name'];
@@ -397,6 +402,9 @@ class SettingsController extends Controller {
                 session()->forget("topic-support-{$topic_num}");
                 session()->forget("topic-support-nickname-{$topic_num}");
                 session()->forget("topic-support-tree-{$topic_num}");
+            }
+            if($last_camp == $data['camp_num']){
+                Session::flash('confirm',"samecamp");
             }
             /* Send delegated support email to the direct supporter and all parent */
             if (isset($data['delegate_nick_name_id']) && $data['delegate_nick_name_id'] != 0) {
@@ -414,7 +422,8 @@ class SettingsController extends Controller {
                 /* end of email */
             }
             Session::flash('success', "Your support has been submitted successfully.");
-            return redirect('support/' . $data['topic_num'] . '/' . $data['camp_num']);
+            // return redirect('support/' . $data['topic_num'] . '/' . $data['camp_num']);
+              return redirect('support/' . $data['topic_num'] . '/' . $last_camp);
         } else {
             return redirect()->route('login');
         }
