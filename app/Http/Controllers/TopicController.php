@@ -352,7 +352,10 @@ class TopicController extends Controller {
      */
     public function create_camp(Request $request, $topicnum, $parentcampnum) {
 
-        $topic = Camp::getAgreementTopic($topicnum);
+        $topicnumArray = explode("-", $topicnum);
+        $topicnum = $topicnumArray[0];
+		
+		$topic = Camp::getAgreementTopic($topicnum);
 
         $camp = Camp::getLiveCamp($topicnum, $parentcampnum);
 
