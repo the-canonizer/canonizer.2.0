@@ -385,7 +385,8 @@ class SettingsController extends Controller {
             }
             //echo "<pre>"; print_r($data); die;
             $last_camp =  $data['camp_num'];			   
-            foreach ($data['support_order'] as $camp_num => $support_order) {
+           if(isset($data['support_order'])) { 
+		    foreach ($data['support_order'] as $camp_num => $support_order) {
                 $last_camp = $camp_num;
                 $supportTopic = new Support();
                 $supportTopic->topic_num = $topic_num;
@@ -403,6 +404,7 @@ class SettingsController extends Controller {
                 session()->forget("topic-support-nickname-{$topic_num}");
                 session()->forget("topic-support-tree-{$topic_num}");
             }
+		   }	
             if($last_camp == $data['camp_num']){
                 Session::flash('confirm',"samecamp");
             }

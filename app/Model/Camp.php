@@ -234,6 +234,7 @@ class Camp extends Model {
                             ->where('camp.objector_nick_id', '=', NULL)
                             ->where('topic.objector_nick_id', '=', NULL)
                             ->where('camp.go_live_time', '<=', time())
+							->where('topic.go_live_time', '<=', time())
                             ->latest('topic.submit_time')->first();
         } else {
 

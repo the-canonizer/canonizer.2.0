@@ -30,7 +30,7 @@
         <form action="{{ route('camp.save')}}" method="post">
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
             <input type="hidden" id="topic_num" name="topic_num" value="{{ $topic->topic_num }}">
-            <input type="hidden" id="parent_camp_num" name="parent_camp_num" value="{{ $parentcampnum }}">
+           <!-- <input type="hidden" id="parent_camp_num" name="parent_camp_num" value="{{ $parentcampnum }}">-->
             
             <div class="form-group">
                 <label for="camp_name">Nick Name <span style="color:red">*</span></label>
@@ -45,7 +45,19 @@
 				 Add New Nick Name </a>
 				 <?php } ?>
              </div> 
-            
+            <div class="form-group">
+                <label for="parent_camp_num">Parent Camp <span style="color:red">*</span></label>
+                <select  name="parent_camp_num" id="parent_camp_num" class="form-control">
+                    @foreach($parentcampsData as $parent)
+					
+                    <option <?php if($camp->camp_num==$parent->camp_num) echo "selected=selected";?> value="{{ $parent->camp_num }}">{{ $parent->camp_name}}</option>
+                  
+					@endforeach
+					
+                </select>
+                 @if ($errors->has('parent_camp_num')) <p class="help-block">{{ $errors->first('parent_camp_num') }}</p> @endif
+				 
+             </div> 
              <div class="form-group">
                 <label for="camp_name">Camp Name ( Limit 30 Char ) <span style="color:red">*</span></label>
                 <input type="text" name="camp_name" class="form-control" maxlength="30" id="camp_name" value="{{ old('camp_name')}}">
