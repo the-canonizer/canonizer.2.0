@@ -354,16 +354,20 @@ class TopicController extends Controller {
      */
     public function create_camp(Request $request, $topicnum, $parentcampnum) {
 
-        $topic = Camp::getAgreementTopic($topicnum);
+        $topicnumArray = explode("-", $topicnum);
+        $topicnum = $topicnumArray[0];
+		
+		$topic = Camp::getAgreementTopic($topicnum);
 
         $camp = Camp::getLiveCamp($topicnum, $parentcampnum);
 
         $parentcamp = Camp::campNameWithAncestors($camp, '');
-
+        
+		$parentcampsData = Camp::getAllParentCamp($topicnum);
 
         $nickNames = Nickname::topicNicknameUsed($topicnum);
         $allNicknames = Nickname::orderBy('nick_name', 'ASC')->get();
-        return view('topics.camp_create', compact('topic', 'parentcampnum', 'parentcamp', 'nickNames', 'allNicknames'));
+        return view('topics.camp_create', compact('camp','parentcampsData','topic', 'parentcampnum', 'parentcamp', 'nickNames', 'allNicknames'));
     }
 
     /**
