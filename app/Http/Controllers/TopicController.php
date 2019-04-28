@@ -300,6 +300,7 @@ class TopicController extends Controller {
 
         $topicnumArray = explode("-", $id);
         $topicnum = $topicnumArray[0];
+        
 
         $topic = Camp::getAgreementTopic($topicnum, $_REQUEST);
 
@@ -341,6 +342,7 @@ class TopicController extends Controller {
                         ->orderBy('order_id', 'ASC')->get();
             $editFlag = false;
         }
+        
         return view('topics.view', compact('topic', 'parentcampnum', 'parentcamp', 'camp', 'wiky', 'id','news','editFlag'));
     }
 

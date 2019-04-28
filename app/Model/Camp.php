@@ -238,7 +238,7 @@ class Camp extends Model {
         } else {
 
             if (isset($filter['asof']) && $filter['asof'] == "review") {
-                return self::select('topic.topic_name', 'camp.*', 'namespace.name as namespace_name,namespace.label')
+                return self::select('topic.topic_name', 'camp.*', 'namespace.name as namespace_name','namespace.label')
                                 ->join('topic', 'topic.topic_num', '=', 'camp.topic_num')
                                 ->join('namespace', 'topic.namespace_id', '=', 'namespace.id')
                                 ->where('camp.topic_num', $topicnum)->where('camp_name', '=', 'Agreement')
@@ -247,7 +247,7 @@ class Camp extends Model {
                                 ->latest('topic.submit_time')->first();
             } else if (isset($filter['asof']) && $filter['asof'] == "bydate") {
                 $asofdate = strtotime(date('Y-m-d H:i:s', strtotime($filter['asofdate'])));
-                return self::select('topic.topic_name', 'camp.*', 'namespace.name as namespace_name,namespace.label')
+                return self::select('topic.topic_name', 'camp.*', 'namespace.name as namespace_name','namespace.label')
                                 ->join('topic', 'topic.topic_num', '=', 'camp.topic_num')
                                 ->join('namespace', 'topic.namespace_id', '=', 'namespace.id')
                                 ->where('camp.topic_num', $topicnum)->where('camp_name', '=', 'Agreement')
@@ -332,7 +332,6 @@ class Camp extends Model {
                                 ->where('objector_nick_id', '=', NULL)
                                 ->latest('submit_time')->first();
             } else if (isset($_REQUEST['asof']) && $_REQUEST['asof'] == "bydate") {
-
                 $asofdate = strtotime(date('Y-m-d H:i:s', strtotime($_REQUEST['asofdate'])));
                 return self::where('topic_num', $topicnum)
                                 ->where('camp_num', '=', $campnum)

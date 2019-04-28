@@ -124,12 +124,15 @@
                                 <b>Objector Nickname :</b> {{ $data->objectornickname->nick_name }} <br/> 			  
                                 @endif 	 				 
                             </div>    
-                            <div class="CmpHistoryPnl-footer">
+                            <div class="CmpHistoryPnl-footer"><?php
+                                $date = to_local_time($data->go_live_time);
+                           ?>
         <?php if ($currentTime < $data->go_live_time && $currentTime >= $data->submit_time) { ?> 
                                     <a id="object" class="btn btn-historysmt" href="<?php echo url('manage/camp/' . $data->id . '-objection'); ?>">Object</a>
                                 <?php } ?>
                                 <a id="update" class="btn btn-historysmt" href="<?php echo url('manage/camp/' . $data->id); ?>">Submit Camp Update Based On This</a>				  
-                                <a id="version" class="btn btn-historysmt" href="<?php echo url('topic/' . $data->topic_num . '/' . $data->camp_num . '?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $data->go_live_time)); ?>">View This Version</a>
+                                <!-- <a id="version" class="btn btn-historysmt" href="<?php //echo url('topic/' . $data->topic_num . '/' . $data->camp_num . '?asof=bydate&asofdate=' . date('d/m/Y H:i:s', $data->go_live_time)); ?>">View This Version</a> -->
+                                <a id="version" class="btn btn-historysmt" href="<?php echo url('topic/' . $data->topic_num . '/' . $data->camp_num . '?asof=bydate&asofdate=' . date('d/m/Y H:i:s', $data->go_live_time)); ?>">View This Version</a>
 
                             </div> 	
 

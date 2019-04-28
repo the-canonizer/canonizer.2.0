@@ -254,18 +254,14 @@ class SettingsController extends Controller {
                     if ($parent->camp_num == $campnum) {
                         //Session::flash('warning', "You are already supporting this camp. You cant submit support again.");
                         Session::flash('confirm', 'samecamp');
-                    } 
-                    // commented as per requirement in issue no 389 of 11th release
-                    /*else {
+                    } else {
                         Session::flash('warning', 'The following  camp are parent camp to "' . $onecamp->camp_name . '" and will be removed if you commit this support.');
                         Session::flash('confirm', 1);
-                    }*/
-                } 
-                // commented as per requirement in issue no 389 of 11th release
-                /*else {
+                    }
+                } else {
                     Session::flash('warning', 'The following  camps are parent camps to "' . $onecamp->camp_name . '" and will be removed if you commit this support.');
                     Session::flash('confirm', 1);
-                }*/
+                }
                 //return redirect()->back();
             }
 
@@ -277,19 +273,15 @@ class SettingsController extends Controller {
                     if ($child->camp_num == $campnum) { 
                         //Session::flash('warning', "You are already supporting this camp. You cant submit support again.");
                         Session::flash('confirm', 'samecamp');
-                    } 
-                    // commented as per requirement in issue no 389 of 11th release
-                    /*else {
+                    }else {
                         Session::flash('warning', 'The following  camp are child camp to "' . $onecamp->camp_name . '" and will be removed if you commit this support.');
                         Session::flash('confirm', 1);
-                    }*/
-                } 
-                // commented as per requirement in issue no 389 of 11th release
-                /*else {
+                    }
+                }else {
                     Session::flash('warning', 'The following  camps are child camps to "' . $onecamp->camp_name . '" and will be removed if you commit this support.');
 
                     Session::flash('confirm', 1);
-                }*/
+                }
                 //return redirect()->back();
             }
             $supportedTopic = Support::where('topic_num', $topicnum)
