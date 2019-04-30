@@ -15,7 +15,7 @@
 <div class="right-whitePnl">
     <div class="container-fluid">
         <div class="Gcolor-Pnl">
-            <h3>Browse Topic
+            <h3>Select Namespace
             <div class="col-md-6 pull-right">
                 <form class="row">
                 <div class="col-sm-8">

@@ -30,6 +30,14 @@ class Statement extends Model {
         return self::where('topic_num', $topicnum)->where('camp_num', $campnum)->latest('submit_time')->get();
     }
 
+    public static function getCampStatements($topicnum, $campnum){
+       $statements = self ::where('topic_num', $topicnum)
+                            ->where('camp_num', $campnum)
+                            ->where('objector_nick_id', '=', NULL)
+                            ->orderBy('submit_time', 'desc')
+                            ->first();
+        return count($statements) ? 1 : 0 ;
+    }
     public static function getLiveStatement($topicnum, $campnum, $filter = array()) {
 
         if (!isset($_REQUEST['asof']) || (isset($_REQUEST['asof']) && $_REQUEST['asof'] == "default")) {
@@ -60,6 +68,13 @@ class Statement extends Model {
                                 ->first();
             }
         }
+    }
+	public static function getAnyStatement($topicnum, $campnum, $filter = array()) {
+
+       
+            return self::where('topic_num', $topicnum)
+                            ->where('camp_num', $campnum)->get();
+       
     }
     
     

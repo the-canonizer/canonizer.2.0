@@ -23,11 +23,11 @@
         <script src="{{ URL::asset('/js/jquery.min.js') }}"></script>
         <script src="{{ URL::asset('/js/jquery-ui/jquery-ui.js') }}"></script>
         <link href="{{ URL::asset('/js/jquery-ui/jquery-ui.css') }}" rel="stylesheet" type="text/css">
-        
+
         <!--countdown timers -->
         <script src="{{ URL::asset('/js/jquery.countdownTimer.min.js') }}"></script>
         <link href="{{ URL::asset('/css/jquery.countdownTimer.css') }}" rel="stylesheet" type="text/css">
-        
+
 
 
     </head>
@@ -87,14 +87,26 @@
                         @endif
                     </li>
                 </ul>
-				<?php $route = Route::getCurrentRoute()->getActionMethod(); 
+				<?php $route = Route::getCurrentRoute()->getActionMethod();
                 $parameters = Route::current()->parameters();
                 $id = (isset($parameters['id']) && $parameters['id']) ? $parameters['id'] : null;
-                $campNum = (isset($parameters['campnum']) && $parameters['campnum']) ? $parameters['campnum'] : null;
+                if($id == null){
+                    if(isset($parameters['topicid']) && $parameters['topicid']){
+                        if(isset($parameters['topicname'])){
+                            $id = $parameters['topicid']."-".$parameters['topicname'];
+                        }else{
+                            $id = null;
+                        }
+                    }else{
+                        $id = null;
+                    }
+                }
+                 $campNum = (isset($parameters['campnum']) && $parameters['campnum']) ? $parameters['campnum'] : null;
                  $campUrl = "/camp/create";
                 if($id!=null && $campNum !=null){
                     $campUrl = "/camp/create/$id/$campNum";
                 }
+
 				?>
                 <ul class="navbar-nav navbar-sidenav" id="exampleAccordion">
                     <ul class="uppermenu">
@@ -116,7 +128,9 @@
                                 <span class="nav-link-text {{ ($route=='topic' & str_contains(Request::fullUrl(), 'topic') ) ? 'menu-active':''}}">Create New Topic</span>
                             </a>
                         </li>
-						<?php if($route=='show') { ?>
+
+						<?php if($route=='show' and strpos(Request::fullUrl(), 'forum' ) == 0 ) { ?>
+                        
 						<li class="nav-item">
                             <a class="nav-link" href='{{ url("$campUrl")}}'>
 
@@ -146,26 +160,32 @@
                             </a>
                         </li>
                     </ul>
-					<?php 
-					$routeArray = app('request')->route()->getAction();					
+					<?php
+					$routeArray = app('request')->route()->getAction();
 					$controllerAction = class_basename($routeArray['controller']);
-					
+
                     list($controller, $action) = explode('@', $controllerAction);
 
-					$visibleRoutes = array("index","show","topic_history","statement_history","camp_history");
-					
+					$visibleRoutes = array("index","show");
+
 					if(in_array($route,$visibleRoutes) && $controller != "CThreadsController" && $controller != "SettingsController") { ?>
                     <ul class="lowermneu canoalgo">
 
 					<!-- set algorithm as per request -->
 					<?php
-					
 
-					
+
+
 					$algorithms = \App\Model\Algorithm::getKeyList();
 					if(isset($_REQUEST['canonizer']) && in_array($_REQUEST['canonizer'],$algorithms)) {
 					  session(['defaultAlgo'=>$_REQUEST['canonizer']]);
 					}
+                    if(isset($_REQUEST['asof']) && $_REQUEST['asof'] !='') {
+                      session(['asofDefault'=>$_REQUEST['asof']]);
+                    }
+                    if(isset($_REQUEST['asofdate']) && $_REQUEST['asofdate']) {
+                      session(['asofdateDefault'=>$_REQUEST['asofdate']]);
+                    }
 					?>
                         <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Components">
                             <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#canoalgo">
@@ -200,18 +220,24 @@
                                  <input type="hidden" id="filter" name="filter" value="{{ isset($_REQUEST['filter']) && !empty($_REQUEST['filter']) ? $_REQUEST['filter'] : '0.001' }}"/>
 								   <input type="hidden" name="_token" value="{{ csrf_token() }}">
 									<div class="radio radio-primary">
-										<input type="radio" <?php echo (isset($_REQUEST['asof']) && $_REQUEST['asof']=="review") ? "checked='checked'" : '';?> class="asofdate" name="asof" id="radio1" value="review">
+										<input type="radio" <?php echo (session('asofDefault')=="review") ? "checked='checked'" : '';?> class="asofdate" name="asof" id="radio1" value="review">
 										<label for="radio1">include review</label>
 									</div>
 									<div class="radio radio-primary">
-										<input type="radio" <?php echo ((isset($_REQUEST['asof']) && $_REQUEST['asof']!="review") || !isset($_REQUEST['asof'])) ? "checked='checked'" : '';?> class="asofdate" name="asof" id="radio2" value="default">
+										<input type="radio" <?php echo (session('asofDefault')!="review") || !(session('asofDefault')) ? "checked='checked'" : '';?> class="asofdate" name="asof" id="radio2" value="default">
 										<label for="radio2">default</label>
 									</div>
 									<div class="radio radio-primary">
-										<input type="radio" <?php echo (isset($_REQUEST['asof']) && $_REQUEST['asof']=="bydate") ? "checked='checked'" : '';?> class="asofdate" name="asof"id="radio3" value="bydate">
+										<input type="radio" <?php echo (session('asofDefault')=="bydate") ? "checked='checked'" : '';?> class="asofdate" name="asof"id="radio3" value="bydate">
 										<label for="radio3">as of (yy/mm/dd)</label>
 									</div>
-									<div><input readonly type="text" id="asofdate" name="asofdate" value="<?php echo isset($_REQUEST['asofdate']) ? $_REQUEST['asofdate']: '';?>"/></div>
+									
+									<div><input readonly type="text" id="asofdate" name="asofdate" value=""/></div>
+								    <script>
+									var date = new Date(<?= strtotime(session('asofdateDefault')) ?> * 1000).toLocaleString();
+									
+									$('#asofdate').val(date);
+									</script>
 								</form>
                                 </li>
                             </ul>

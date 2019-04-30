@@ -61,24 +61,20 @@ class TopicController extends Controller {
      */
     public function store(Request $request) {
         $all = $request->all();
-       $validatorArray = ['topic_name' => 'required|unique:topic|max:30',
+         $validatorArray = ['topic_name' => 'required|max:30',
             'namespace' => 'required',
             'create_namespace' => 'required_if:namespace,other|max:100',
             'nick_name' => 'required'
             //'note' => 'required'
         ];
-
-        if (isset($all['topic_num'])) {  
-        
-            $validatorArray = ['topic_name' => 'required|max:30',
-                'namespace' => 'required',
-                'create_namespace' => 'required_if:namespace,other|max:100',
-                'nick_name' => 'required'
-               // 'note' => 'required'
-            ];
-        }
-
-        
+         
+     $oldTopicData = Topic::select('topic.*')
+                            ->join('camp','camp.topic_num','=','topic.topic_num')
+                            ->where('camp.camp_name','=','Agreement')
+                             ->where('topic_name', $all['topic_name'])
+                             ->where('topic.go_live_time',"<=",time())
+                             ->latest('submit_time')
+                             ->first();
         $message = [
             'create_namespace.required_if' => 'The Other Namespace Name field is required when namespace is other.',
             'create_namespace.max' => 'The Other Namespace Name may not be greater than 100 characters.'
@@ -90,8 +86,25 @@ class TopicController extends Controller {
             $validatorArray = ['objection_reason' => 'required|max:100','nick_name' => 'required'
             ];
         }
+         $validator = Validator::make($request->all(), $validatorArray, $message);
+        if(isset($oldTopicData) && $oldTopicData!=null){
+           $validator->after(function ($validator) use ($all,$oldTopicData){  
+            if (isset($all['topic_num'])) {  
+            
+                    if($oldTopicData->topic_num != $all['topic_num']){
+                       $validator->errors()->add('topic_name', 'The topic name has already been taken');
+                    }
+                    
+                }else{ 
+                    if($oldTopicData && isset($oldTopicData['topic_name'])){
+                        $validator->errors()->add('topic_name', 'The topic name has already been taken');
+                    }
 
-        $validator = Validator::make($request->all(), $validatorArray, $message);
+                }
+            }); 
+        }
+        
+        
         if ($validator->fails()) {  
             return back()->withErrors($validator->errors())->withInput($request->all());
         }
@@ -288,10 +301,13 @@ class TopicController extends Controller {
         $topicnumArray = explode("-", $id);
         $topicnum = $topicnumArray[0];
 
+        if(session('campnum')) {
+			session()->forget('campnum');
+			return redirect()->refresh();
+		}
         $topic = Camp::getAgreementTopic($topicnum, $_REQUEST);
 
         $camp = Camp::getLiveCamp($topicnum, $parentcampnum);
-
         session()->forget("topic-support-{$topicnum}");
         session()->forget("topic-support-nickname-{$topicnum}");
         session()->forget("topic-support-tree-{$topicnum}");
@@ -329,6 +345,7 @@ class TopicController extends Controller {
                         ->orderBy('order_id', 'ASC')->get();
             $editFlag = false;
         }
+
         return view('topics.view', compact('topic', 'parentcampnum', 'parentcamp', 'camp', 'wiky', 'id','news','editFlag'));
     }
 
@@ -340,16 +357,20 @@ class TopicController extends Controller {
      */
     public function create_camp(Request $request, $topicnum, $parentcampnum) {
 
-        $topic = Camp::getAgreementTopic($topicnum);
+        $topicnumArray = explode("-", $topicnum);
+        $topicnum = $topicnumArray[0];
+		
+		$topic = Camp::getAgreementTopic($topicnum);
 
         $camp = Camp::getLiveCamp($topicnum, $parentcampnum);
 
         $parentcamp = Camp::campNameWithAncestors($camp, '');
-
+        
+		$parentcampsData = Camp::getAllParentCamp($topicnum);
 
         $nickNames = Nickname::topicNicknameUsed($topicnum);
         $allNicknames = Nickname::orderBy('nick_name', 'ASC')->get();
-        return view('topics.camp_create', compact('topic', 'parentcampnum', 'parentcamp', 'nickNames', 'allNicknames'));
+        return view('topics.camp_create', compact('camp','parentcampsData','topic', 'parentcampnum', 'parentcamp', 'nickNames', 'allNicknames'));
     }
 
     /**
@@ -453,9 +474,7 @@ class TopicController extends Controller {
         $topic = Camp::getAgreementTopic($topicnum);
         $onecamp = Camp::getLiveCamp($topicnum, $campnum);
         $parentcamp = (count($onecamp)) ? Camp::campNameWithAncestors($onecamp, '') : "n/a";
-
         $camps = Camp::getCampHistory($topicnum, $campnum);
-        //echo "<pre>"; print_r($camps); exit;
 
         $parentcampnum = (isset($onecamp->parent_camp_num)) ? $onecamp->parent_camp_num : 0;
         $nickNames = null;
@@ -722,6 +741,7 @@ class TopicController extends Controller {
 
         $eventtype = "CREATE";
         if (isset($all['camp_num'])) {
+			
             $eventtype = "UPDATE";
             $statement->camp_num = $all['camp_num'];
             $statement->submitter_nick_id = $all['nick_name'];
@@ -730,6 +750,7 @@ class TopicController extends Controller {
             $nickNames = Nickname::personNicknameArray();
 
             $ifIamSingleSupporter = Support::ifIamSingleSupporter($all['topic_num'], $all['camp_num'], $nickNames);
+            //$IfHasOtherStatements = Statement::getCampStatements($all['topic_num'], $all['camp_num']);
 
             if (!$ifIamSingleSupporter) {
                 $statement->go_live_time = strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
@@ -746,7 +767,6 @@ class TopicController extends Controller {
                 $statement->go_live_time = $go_live_time;
                 $statement->object_time = time();
             }
-
             if (isset($all['statement_update']) && $all['statement_update'] == 1) {
                 $message = "Updation in your changed statement are successful.";
                 $statement = Statement::where('id', $all['statement_id'])->first();
@@ -758,7 +778,7 @@ class TopicController extends Controller {
         } else {
             $message = 'Camp statement submitted successfully.';
         }
-
+		
         $statement->save();
         if ($eventtype == "CREATE") {
 
