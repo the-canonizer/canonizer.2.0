@@ -114,12 +114,12 @@
                                 <a id="object" class="btn btn-historysmt" href="<?php echo url('manage/topic/' . $data->id . '-objection'); ?>">Object</a>
                             <?php } ?>  
                             <a id="update" class="btn btn-historysmt" href="<?php echo url('manage/topic/' . $data->id); ?>">Submit Topic Update Based On This</a>				  
-                            <a id="version" class="btn btn-historysmt" href="<?php echo url('topic/' . $data->topic_num . '/1?asof=bydate&asofdate='); ?>">View This Version</a>
-                            <script>
+                            <a id="version" class="btn btn-historysmt" href="<?php echo url('topic/' . $data->topic_num . '/1?asof=bydate&asofdate=' . date('d/m/Y H:i:s', $data->go_live_time)); ?>">View This Version</a>
+                               <script>
                                      var href = $('#version').attr('href');
                                      var date = new Date(<?= $data->go_live_time ?> * 1000).toLocaleString();
                                      href = href+date;
-                                     $('#version').attr('href',href);
+                                     //$('#version').attr('href',href);
                                  </script>
 
                         </div> 	

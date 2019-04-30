@@ -231,7 +231,12 @@
 										<input type="radio" <?php echo (session('asofDefault')=="bydate") ? "checked='checked'" : '';?> class="asofdate" name="asof"id="radio3" value="bydate">
 										<label for="radio3">as of (yy/mm/dd)</label>
 									</div>
-									<div><input readonly type="text" id="asofdate" name="asofdate" value="<?php echo (session('asofdateDefault')) ? session('asofdateDefault'): '';?>"/></div>
+									
+									<div><input readonly type="text" id="asofdate" name="asofdate" value=""/></div>
+								    <script>
+									var date = new Date(<?= strtotime(session('asofdateDefault')) ?> * 1000).toLocaleString();
+									$('#asofdate').val(date);
+									</script>
 								</form>
                                 </li>
                             </ul>
