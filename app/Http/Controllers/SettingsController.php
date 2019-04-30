@@ -217,6 +217,8 @@ class SettingsController extends Controller {
             // get deligated nickname if exist
             $campnumArray = explode("-", $campnums);
             $campnum = $campnumArray[0];
+			session(['campnum'=>$campnum]);
+		
             $delegate_nick_name_id = (isset($campnumArray[1])) ? $campnumArray[1] : 0;
 
             $id = Auth::user()->id;
@@ -423,9 +425,9 @@ class SettingsController extends Controller {
                 Mail::to($receiver)->send(new NewDelegatedSupporterMail($parentUser, $link, $result));
                 /* end of email */
             }
-            Session::flash('success', "Your support has been submitted successfully.");
+            Session::flash('success', "Your support update has been submitted successfully.");
             // return redirect('support/' . $data['topic_num'] . '/' . $data['camp_num']);
-              return redirect('support/' . $data['topic_num'] . '/' . $last_camp);
+              return redirect('topic/' . $data['topic_num'] . '/' . session('campnum'));
         } else {
             return redirect()->route('login');
         }
