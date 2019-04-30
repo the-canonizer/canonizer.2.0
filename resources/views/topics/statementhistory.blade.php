@@ -145,8 +145,13 @@
 				    <a id="object" class="btn btn-historysmt" href="<?php echo url('manage/statement/'.$data->id.'-objection');?>">Object</a>
 				  <?php } ?>	
 					<a id="update" class="btn btn-historysmt" href="<?php echo url('manage/statement/'.$data->id);?>">Submit Statement Update Based On This</a>
-                    <a id="version" class="btn btn-historysmt" href="<?php echo url('topic/'.$data->topic_num.'/'.$data->camp_num.'?asof=bydate&asofdate='.date('Y/m/d H:i:s',$data->go_live_time));?>">View This Version</a>
-				 
+                    <a id="version" class="btn btn-historysmt" href="<?php echo url('topic/'.$data->topic_num.'/'.$data->camp_num.'?asof=bydate&asofdate=');?>">View This Version</a>
+				          <script>
+                   var href = $('#version').attr('href');
+                   var date = new Date(<?= $data->go_live_time ?> * 1000).toLocaleString();
+                   href = href+date;
+                   $('#version').attr('href',href);
+               </script>
 				 </div>
                                 @if($isagreeFlag && $ifIamSupporter && Auth::user()->id != $submitterUserID)
                                 <div class="CmpHistoryPnl-footer">

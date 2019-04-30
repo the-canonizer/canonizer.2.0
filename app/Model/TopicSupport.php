@@ -186,13 +186,12 @@ class TopicSupport extends Model {
         
         $as_of_time = time();
 		if(isset($_REQUEST['asof']) && $_REQUEST['asof']=='bydate'){
-			$as_of_time = strtotime($_REQUEST['asofdate']);
+           $as_of_time = strtotime($_REQUEST['asofdate']);
 		}
-        
         if(!session("topic-support-tree-$topicnum")){
             session(["topic-support-tree-$topicnum"=>Support::where('topic_num','=',$topicnum)
             //->where('delegate_nick_name_id',$delegateNickId)
-            ->whereRaw("(start < $as_of_time) and ((end = 0) or (end > $as_of_time))")
+            ->whereRaw("(start <= $as_of_time) and ((end = 0) or (end >= $as_of_time))")
             //->where('camp_num',$campnum)
             ->orderBy('start','DESC')
             ->select(['support_order','camp_num','topic_num','nick_name_id','delegate_nick_name_id'])

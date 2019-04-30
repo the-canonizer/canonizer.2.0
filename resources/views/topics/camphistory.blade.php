@@ -118,18 +118,25 @@
                                 <b>Camp About URL :</b> {{ $data->camp_about_url }} <br/>
                                 <b>Submitter Nickname :</b> {{ isset($data->submitternickname->nick_name) ? $data->submitternickname->nick_name : 'N/A' }} <br/>
                                 <b>Submitted on :</b> {{ to_local_time($data->submit_time) }} <br/>
-                                <b>Go live Time :</b> {{ to_local_time($data->go_live_time)}} <br/>
+                                <b>Go live Time :</b> {{ to_local_time($data->go_live_time)}}<br/>
                                 @if($data->objector_nick_id !=null)
                                 <b>Object Reason :</b> {{ $data->object_reason}} <br/>	
                                 <b>Objector Nickname :</b> {{ $data->objectornickname->nick_name }} <br/> 			  
                                 @endif 	 				 
                             </div>    
                             <div class="CmpHistoryPnl-footer">
+                               
         <?php if ($currentTime < $data->go_live_time && $currentTime >= $data->submit_time) { ?> 
                                     <a id="object" class="btn btn-historysmt" href="<?php echo url('manage/camp/' . $data->id . '-objection'); ?>">Object</a>
                                 <?php } ?>
                                 <a id="update" class="btn btn-historysmt" href="<?php echo url('manage/camp/' . $data->id); ?>">Submit Camp Update Based On This</a>				  
-                                <a id="version" class="btn btn-historysmt" href="<?php echo url('topic/' . $data->topic_num . '/' . $data->camp_num . '?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $data->go_live_time)); ?>">View This Version</a>
+                                 <a id="version" class="btn btn-historysmt" href="<?php echo url('topic/' . $data->topic_num . '/' . $data->camp_num . '?asof=bydate&asofdate='); ?>">View This Version</a>
+                                 <script>
+                                     var href = $('#version').attr('href');
+                                     var date = new Date(<?= $data->go_live_time ?> * 1000).toLocaleString();
+                                     href = href+date;
+                                     $('#version').attr('href',href);
+                                 </script>
 
                             </div> 	
 
