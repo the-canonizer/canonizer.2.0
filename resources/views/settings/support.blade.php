@@ -290,7 +290,8 @@
                        
                     </div>
                      @if(!Session::has('warning'))
-                    <button type="submit" id="submit" class="btn btn-login">Confirm Support</button>
+                    <button type="submit" id="submit" class="btn btn-login">Submit</button>
+				    <a  class="btn btn-login" href="<?php echo url('topic/'.$topic->topic_num.'/'.session('campnum'));?>">Cancel</a>
 				    @else
 					<div style="display:none">	
 					<button type="submit" id="submit" class="btn btn-login"></button>	

@@ -235,6 +235,7 @@
 									<div><input readonly type="text" id="asofdate" name="asofdate" value=""/></div>
 								    <script>
 									var date = new Date(<?= strtotime(session('asofdateDefault')) ?> * 1000).toLocaleString();
+									
 									$('#asofdate').val(date);
 									</script>
 								</form>
