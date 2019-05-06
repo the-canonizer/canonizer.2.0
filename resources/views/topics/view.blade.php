@@ -71,7 +71,7 @@
             </div>
         </div>
         <?php if(count($camp) > 0) { ?>
-        <div class="Scolor-Pnl">
+        <div class="Scolor-Pnl" id="statement">
 		     <?php $statement = $camp->statement($camp->topic_num,$camp->camp_num);  ?>
             <h3><?php echo ($parentcamp=="Agreement") ? $parentcamp : "Camp";?> Statement
 			<?php if(isset($statement->go_live_time)) { ?><span style="float:right; font-size:14px"><b>Go live Time :</b> {{ to_local_time($statement->go_live_time) }}</span>
@@ -210,6 +210,11 @@ change camps with them."><i class="fa fa-question"></i></a>
 <br/>
 <br/>
 <br/>
-<?php } ?>	
+<?php } ?>
+<script>
+  $('html, body').animate({
+        scrollTop: $("#statement").offset().top
+    }, 2000);
+</script>	
 @endsection
 	
