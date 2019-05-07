@@ -40,6 +40,13 @@ class TopicController extends Controller {
     public function __construct() {
         parent::__construct();
         //$this->middleware('auth'); //->except('logout');
+		if(isset($_REQUEST['asof']) && $_REQUEST['asof'] !='') {
+		  session(['asofDefault'=>$_REQUEST['asof']]);
+		}
+		if(isset($_REQUEST['asofdate']) && $_REQUEST['asofdate']) {
+		  session(['asofdateDefault'=>$_REQUEST['asofdate']]);
+		}
+		
     }
 
     /**

@@ -1,12 +1,26 @@
 @extends('layouts.app')
 @section('content')
 
+<?php if (!empty($topics)) {
+	            $topicBreadName = "";
+                $currentLive = 0;
+                $currentTime = time();
+				$topicNum = 0;
+                foreach ($topics as $key => $data) {
+                    
+                   if ($currentLive != 1 && $currentTime >= $data->go_live_time) {
+                        $currentLive = 1;
+                      $topicBreadName = $data->topic_name; 
+					  $topicNum = $data->topic_num;
+					  $urltitle      = $topicNum."-".preg_replace('/[^A-Za-z0-9\-]/', '-', $data->topic_name);
+                    } 
+				}	
+                    ?>
 <div class="camp top-head">
-    <h3><b>Topic:</b>  {!! $parentTopic !!}</h3>
-
+    <h3><b>Topic:</b>  <a href="/topic/{{$urltitle}}/1" >{{ $topicBreadName}}</a></h3>
+   
 </div>
-
-
+<?php } ?>
 <div class="page-titlePnl">
     <h1 class="page-title">Topic History</h1>
 </div> 

@@ -33,7 +33,7 @@ class Camp extends Model {
             $as_of_time = strtotime($_REQUEST['asofdate']);
         }
 
-        if (isset($_REQUEST['asof']) && $_REQUEST['asof'] == "review") {
+        if ((isset($_REQUEST['asof']) && $_REQUEST['asof'] == "review") || session('asofDefault')=="review") {
 
             return $this->hasOne('App\Model\Topic', 'topic_num', 'topic_num')->orderBy('submit_time', 'DESC');
         } else {
@@ -238,7 +238,7 @@ class Camp extends Model {
                             ->latest('topic.submit_time')->first();
         } else {
 
-            if (isset($filter['asof']) && $filter['asof'] == "review") {
+            if ((isset($filter['asof']) && $filter['asof'] == "review") || session('asofDefault')=="review") {
                 return self::select('topic.topic_name', 'camp.*', 'namespace.name as namespace_name','namespace.label')
                                 ->join('topic', 'topic.topic_num', '=', 'camp.topic_num')
                                 ->join('namespace', 'topic.namespace_id', '=', 'namespace.id')
@@ -277,7 +277,7 @@ class Camp extends Model {
                             ->latest('support')->get()->unique('topic_num')->take($limit);
         } else {
 
-            if (isset($filter['asof']) && $filter['asof'] == "review") {
+            if ((isset($filter['asof']) && $filter['asof'] == "review") || session('asofDefault')=="review") {
 
                 return self::where('camp_name', '=', 'Agreement')->join('topic', 'topic.topic_num', '=', 'camp.topic_num')->whereIn('namespace_id', explode(',', session('defaultNamespaceId')))->latest('camp.submit_time')->get()->take($limit);
             } else if (isset($filter['asof']) && $filter['asof'] == "bydate") {
@@ -304,7 +304,7 @@ class Camp extends Model {
                             ->latest('support')->take(10000)->offset(18)->get()->unique('topic_num');
         } else {
 
-            if (isset($filter['asof']) && $filter['asof'] == "review") {
+            if ((isset($filter['asof']) && $filter['asof'] == "review") || session('asofDefault')=="review") {
 
                 return self::where('camp_name', '=', 'Agreement')->join('topic', 'topic.topic_num', '=', 'camp.topic_num')->whereIn('namespace_id', explode(',', session('defaultNamespaceId')))->latest('camp.submit_time')->take(10)->offset($offset)->get();
             } else if (isset($filter['asof']) && $filter['asof'] == "bydate") {
@@ -326,7 +326,7 @@ class Camp extends Model {
                             ->latest('submit_time')->first();
         } else {
 
-            if (isset($_REQUEST['asof']) && $_REQUEST['asof'] == "review") {
+            if ((isset($_REQUEST['asof']) && $_REQUEST['asof'] == "review") || session('asofDefault')=="review") {
 
                 return self::where('topic_num', $topicnum)
                                 ->where('camp_num', '=', $campnum)
@@ -665,7 +665,7 @@ class Camp extends Model {
                         ->get()]);
         } else {
 
-            if (isset($_REQUEST['asof']) && $_REQUEST['asof'] == "review") {
+            if ((isset($_REQUEST['asof']) && $_REQUEST['asof'] == "review") || session('asofDefault')=="review") {
 
 
                 session(["topic-child-{$this->topic_num}" => self::where('topic_num', '=', $this->topic_num)

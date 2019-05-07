@@ -716,7 +716,7 @@ h1.page-title{
     }
     .content-wrapper {
         margin-left: 250px;
-        margin-top:-25px;
+        /*margin-top:-25px;*/
     }
     body.sidenav-toggled .right-whitePnl {
         margin-left: 55px;
