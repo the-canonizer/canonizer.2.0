@@ -10,7 +10,7 @@
 
     </div>
 
-    <div class="panel-body" style="word-break:break-all">
+    <div class="panel-body" style="word-break:break-word">
         {!! html_entity_decode($reply->body) !!}
     </div>
 </div>
