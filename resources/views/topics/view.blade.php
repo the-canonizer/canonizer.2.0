@@ -160,7 +160,7 @@ change camps with them."><i class="fa fa-question"></i></a>
             <div class="row">
                 <div class="tree col-sm-12">
                     Topic Name : <?php echo $topic->topic_name;?> <br/>
-					Name Space : <?php echo (isset($topic->namespace_name)) ? $topic->label : 'N/A';?>
+					Namespace : <?php echo (isset($topic->namespace_name)) ? $topic->label : 'N/A';?>
                 </div>
               
             </div>    

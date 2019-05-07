@@ -45,11 +45,11 @@ else if($currentLive!=1 && $currentTime >= $data['go_live_time']) {
     </div><br/>
     <b>Note :</b> {{ $data['note'] }} <br/>				 
     <!--<b>Submitted on :</b> <span id="submitted_on"></span> <br/>-->
-    <b>Submitter Nickname :</b> {{ ($data['nickname'] != '') ? $data['nickname'] : 'N/A' }} <br/>
+    <b>Submitter Nick Name :</b> {{ ($data['nickname'] != '') ? $data['nickname'] : 'N/A' }} <br/>
     <!--<b>Go live Time :</b> <span id="go_live_time"></span> <br/> -->
 @if(isset($data['objector_nick_id']) && $data['objector_nick_id'] !=null)
 <b>Object Reason :</b> <span style="word-wrap: break-word;">{{ $data['object_reason']}} </span><br/>	
-<b>Objector Nickname :</b> {{ $data['objector_nick_name'] }} <br/> 			  
+<b>Objector Nick Name :</b> {{ $data['objector_nick_name'] }} <br/> 			  
 @endif 
 
 <script>

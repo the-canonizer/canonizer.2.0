@@ -36,7 +36,7 @@
                             @if ($errors->has('display_text.'.$key)) <p class="help-block">{{ $errors->first('display_text.'.$key) }}</p> @endif
                         </div>            
                         <div  class="form-group col-sm-6">
-                            <label for="namespace">Link ( Limit 2000 Characters )<span style="color:red">*</span></label>
+                            <label for="namespace">Link ( Limit 2000 Characters ) <span style="color:red">*</span></label>
                             <input type="text" maxlength="2000" name="link[]" class="form-control" id="link" value="{{old('link.'.$key,$feed->link)}}">
                             @if ($errors->has('link.'.$key)) <p class="help-block">{{ $errors->first('link.'.$key) }}</p> @endif
                             <span class="childOpt-news"> <input type="checkbox" name="available_for_child[{{$key}}]" value="1" {{ (old('available_for_child.0',$feed->available_for_child)) ? "checked" : ""  }}>Available for child camps</span>
