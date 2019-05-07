@@ -536,6 +536,7 @@ class TopicController extends Controller {
         $topicnum = $topicnumArray[0];
 
         $topics = Topic::getHistory($topicnum);
+        $parentTopic = (sizeof($topics) > 1) ? $topics[0]->topic_name : null;
 
 
         if (!count($topics)) {
@@ -550,7 +551,7 @@ class TopicController extends Controller {
             $ifIamSupporter = Support::ifIamSupporter($topicnum, 1, $nickNames);
         }
 
-        return view('topics.topichistory', compact('topics', 'wiky', 'ifIamSupporter', 'topicnum'));
+        return view('topics.topichistory', compact('topics', 'wiky', 'ifIamSupporter', 'topicnum','parentTopic'));
     }
 
     /**
