@@ -80,6 +80,7 @@ class TopicController extends Controller {
                             ->where('camp.camp_name','=','Agreement')
                              ->where('topic_name', $all['topic_name'])
                              ->where('topic.go_live_time',"<=",time())
+                             ->orWhere('topic.go_live_time',">",time())
                              ->latest('submit_time')
                              ->first();
         $message = [
@@ -115,7 +116,8 @@ class TopicController extends Controller {
         if ($validator->fails()) {  
             return back()->withErrors($validator->errors())->withInput($request->all());
         }
-        DB::beginTransaction();
+
+         DB::beginTransaction();
         $go_live_time = "";
         try {
             $current_time = time();
