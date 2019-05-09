@@ -10,7 +10,7 @@
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
 
-        <link rel="shortcut icon" href="img/favicon.ico" >
+        <link rel="shortcut icon" href="/img/favicon.ico" >
         <!-- Bootstrap core CSS-->
         <link href="{{ URL::asset('/css/bootstrap.min.css') }}" rel="stylesheet">
         <!-- Custom fonts for this template-->
@@ -130,7 +130,7 @@
                         </li>
 
 						<?php if($route=='show' and strpos(Request::fullUrl(), 'forum' ) == 0 ) { ?>
-                        
+
 						<li class="nav-item">
                             <a class="nav-link" href='{{ url("$campUrl")}}'>
 
