@@ -17,7 +17,9 @@
 					<div class="row">
 					
 					 
-					 <?php if(isset($childSupport) && !empty($childSupport) ) { foreach($childSupport as $supportData) { 
+					 <?php
+
+					  if(isset($childSupport) && !empty($childSupport) ) { foreach($childSupport as $supportData) { 
 					       $removedCampList[]=$supportData->camp->camp_num;
 					 ?>
  					  <div class="col-sm-12">   
@@ -89,7 +91,9 @@
 					 <div class="col-sm-6">
 					<div class="row column">
 					
-                       <?php $k = 0; $topicSupport = $supportedTopic->topic->Getsupports($supportedTopic->topic_num,[$supportedTopic->nick_name_id]);?>
+                       <?php $k = 0; $topicSupport = $supportedTopic->topic->Getsupports($supportedTopic->topic_num,[$supportedTopic->nick_name_id]);
+
+                       ?>
 					   @foreach($topicSupport as $k=>$support)
 					  
                        <div class="col-sm-12">
@@ -112,6 +116,7 @@
 							<?php if(isset($topic->topic_num) && $topic->topic_num==$supportedTopic->topic_num) $lastsupportOrder++;
 								
 							?>
+							<span class="remove_camp">X</span>
                         
                            </div>
 					  </div>
@@ -124,7 +129,9 @@
 					<div class="col-sm-6">
 					 <div class="row column">
 					 
-                       <?php $key = 0; $topicSupport = $supportedTopic->topic->Getsupports($supportedTopic->topic_num,[$supportedTopic->nick_name_id]);?>
+                       <?php $key = 0; $topicSupport = $supportedTopic->topic->Getsupports($supportedTopic->topic_num,[$supportedTopic->nick_name_id]);
+
+                       ?>
 					   @foreach($topicSupport as $k=>$support)
 					   
 					   @if(!in_array($support->camp->camp_num,$removedCampList)) <?php $key = $key + 1; ?>
@@ -148,13 +155,14 @@
 							<?php if(isset($topic->topic_num) && $topic->topic_num==$supportedTopic->topic_num) $lastsupportOrder++;
 								
 							?>
+							<span class="remove_camp">X</span>
                         
                            </div>
 					  </div>
                        @endif					  
 					   @endforeach
 					  
-				  @if(Session::get('confirm') !='samecamp')	  
+				  @if(Session::get('confirm') !='samecamp') 
 					   <!-- current supporting camp detail -->
 					<div class="col-sm-12">   
 					   <div id="positions_0" class="SpCmpBDY support-sorter-element ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
@@ -168,14 +176,15 @@
                                 <input type="hidden" id="nick_name_id_0" name="nick_name_id" value="{{ $supportedTopic->nickname->id }}">
                             <button type="submit" id="submit_0" class="btn-sptclose"><i class="fa fa-close"></i></button>
                             </form> -->
-							<input type="hidden" class="final_support_order" name="support_order[{{$camp->camp_num}}]" id="support_order_0 }}" value="{{ $key + 1  }}">
+							<input type="hidden" class="final_support_order" name="support_order[{{$camp->camp_num}}]" id="support_order_0" value="{{ $key + 1  }}">
                             
 							<input type="hidden" name="camp[{{$camp->camp_num}}]" value="{{ $camp->camp_num }}">
 							<input type="hidden" name="delegated[{{$camp->camp_num}}]" value="{{ $delegate_nick_name_id }}">
                             
-                            <b><span class="support_order">{{ $key+1 }} </span> . {{ $camp->camp_name }} <br/>
+                            <b><span class="support_order">{{ $key+1 }} </span> . {{ $camp->camp_name }} <br/></b>
+                            <span class="remove_camp">X</span>
                             
-                        
+                        	
                         <?php $lastsupportOrder++; ?>
                         
                         </div>
@@ -199,7 +208,6 @@
                                 }
                                 
                         }, 'json');*/
-
                         $( ".column" ).find('.support-sorter-element').each(function(i,v){
                                 $(v).find('.support_order').text(i+1);
 								$(v).find('.final_support_order').val(i+1);
@@ -207,10 +215,20 @@
 
                         } 
                     });
+
+                     $('.remove_camp').click(function(){
+                        	$(this).parent(".support-sorter-element").remove();
+                        	$( ".column" ).find('.support-sorter-element').each(function(i,v){
+                                $(v).find('.support_order').text(i+1);
+								$(v).find('.final_support_order').val(i+1);
+                            });
+
+                        })
                     
                 });
                 </script>
                @else
+
 				   <div class="row">
 				  	<div class="col-sm-12">   
 					   <div id="positions_0" class="SpCmpBDY support-sorter-element ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
@@ -221,6 +239,8 @@
 							<input type="hidden" name="delegated[{{$camp->camp_num}}]" value="{{ $delegate_nick_name_id }}">
                             
                             <b><span class="support_order">{{ ++$lastsupportOrder }} </span> . {{ $camp->camp_name }} </b><br/>
+
+
                             
                         <?php $lastsupportOrder++; ?>
                         
@@ -270,7 +290,8 @@
                        
                     </div>
                      @if(!Session::has('warning'))
-                    <button type="submit" id="submit" class="btn btn-login">Confirm Support</button>
+                    <button type="submit" id="submit" class="btn btn-login">Submit</button>
+				    <a  class="btn btn-login" href="<?php echo url('topic/'.$topic->topic_num.'/'.session('campnum'));?>">Cancel</a>
 				    @else
 					<div style="display:none">	
 					<button type="submit" id="submit" class="btn btn-login"></button>	
@@ -303,6 +324,15 @@
 			})	
         })
 </script>
+<style>
+	.remove_camp{
+		    position: absolute;
+		    top: 2px;
+		    right: 5px;
+		    cursor: pointer;
+	}
+</style>
+
 {{ Session::forget('warning')}} 
 {{ Session::forget('success') }} 
 {{ Session::forget('confirm') }} 

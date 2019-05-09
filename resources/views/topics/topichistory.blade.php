@@ -1,7 +1,26 @@
 @extends('layouts.app')
 @section('content')
 
-
+<?php if (!empty($topics)) {
+	            $topicBreadName = "";
+                $currentLive = 0;
+                $currentTime = time();
+				$topicNum = 0;
+                foreach ($topics as $key => $data) {
+                    
+                   if ($currentLive != 1 && $currentTime >= $data->go_live_time) {
+                        $currentLive = 1;
+                      $topicBreadName = $data->topic_name; 
+					  $topicNum = $data->topic_num;
+					  $urltitle      = $topicNum."-".preg_replace('/[^A-Za-z0-9\-]/', '-', $data->topic_name);
+                    } 
+				}	
+                    ?>
+<div class="camp top-head">
+    <h3><b>Topic:</b>  <a href="/topic/{{$urltitle}}/1" >{{ $topicBreadName}}</a></h3>
+   
+</div>
+<?php } ?>
 <div class="page-titlePnl">
     <h1 class="page-title">Topic History</h1>
 </div> 
@@ -99,7 +118,7 @@
                     <div class="form-group CmpHistoryPnl" style="background-color:{{ $bgcolor }}">
                         <div>
                             <b>Topic Name :</b> {{ $data->topic_name }} <br/>
-                            <b>Note :</b> {{ $data->note }} <br/>
+                            <b>Edit summary :</b> {{ $data->note }} <br/>
 
                             <b>Namespace :</b> {{ $data->topicnamespace->label }} <br/>
                             <b>Submitter Nickname :</b> {{ isset($data->submitternickname->nick_name) ? $data->submitternickname->nick_name : 'N/A' }} <br/>
@@ -115,7 +134,13 @@
                                 <a id="object" class="btn btn-historysmt" href="<?php echo url('manage/topic/' . $data->id . '-objection'); ?>">Object</a>
                             <?php } ?>  
                             <a id="update" class="btn btn-historysmt" href="<?php echo url('manage/topic/' . $data->id); ?>">Submit Topic Update Based On This</a>				  
-                            <a id="version" class="btn btn-historysmt" href="<?php echo url('topic/' . $data->topic_num . '/1?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $data->submit_time)); ?>">View This Version</a>
+                            <a id="version" class="btn btn-historysmt" href="<?php echo url('topic/' . $data->topic_num . '/1?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $data->go_live_time)); ?>">View This Version</a>
+                               <script>
+                                     var href = $('#version').attr('href');
+                                     var date = new Date(<?= $data->go_live_time ?> * 1000).toLocaleString();
+                                     href = href+date;
+                                     //$('#version').attr('href',href);
+                                 </script>
 
                         </div> 	
                          @if($isagreeFlag && $ifIamSupporter && Auth::user()->id != $submitterUserID)
@@ -129,10 +154,10 @@
                           @if(Auth::check())
                           @if(Auth::user()->id == $submitterUserID && $isGraceFlag && $data->grace_period && $interval > 0)
                           <div class="CmpHistoryPnl-footer" id="countdowntimer_block<?php echo $data->id ;?>">
-                                <div class="grace-period-note"><b>Note: </b>This countdown timer is the grace period in which you can make minor changes to your statement before other direct supporters are notified.</div>
+                                <div class="grace-period-note"><b>Note: </b>This countdown timer is the grace period in which you can make minor changes to your topic before other direct supporters are notified.</div>
                                 <div style="float: right" > 
                                     <div class="timer-dial" id="countdowntimer<?php echo $data->id ;?>"></div>
-                                   <a href="<?php echo url('manage/topic/'.$data->id.'-update');?>" class="btn btn-historysmt">Update Statement</a>
+                                   <a href="<?php echo url('manage/topic/'.$data->id.'-update');?>" class="btn btn-historysmt">Update Topic</a>
                                    <a href="javascript:void(0)" onclick="notifyAndCloseTimer('<?php echo $data->id ;?>')"class="btn btn-historysmt">Stop</a>
                                 </div>
                           </div>

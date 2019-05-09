@@ -2,7 +2,7 @@
 @section('content')
 
 <div class="camp top-head">
-    <h3><b>Topic:</b>  {{ $topic->title}}</h3>
+    <h3><b>Topic:</b>  {{ $topic->topic_name}}</h3>
     <h3><b>Camp:</b> {!! $parentcamp !!}</h3>  
 </div>
 
@@ -79,7 +79,7 @@
             </div> 
             <?php }  else { ?>  
 			 <div class="form-group">
-                <label for="title">Note</label>
+                <label for="title">Edit summary (Briefly describe your changes)</label>
                  <textarea class="form-control" id="note" rows="4" name="note">{{ old('note')}}</textarea>
                 @if ($errors->has('note')) <p class="help-block">{{ $errors->first('note') }}</p> @endif
             </div> 

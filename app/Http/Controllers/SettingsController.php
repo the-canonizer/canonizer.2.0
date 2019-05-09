@@ -211,12 +211,14 @@ class SettingsController extends Controller {
     public function support($id = null, $campnums = null) {
 
         $as_of_time = time();
-        if (isset($id)) {
+        if (isset($id)) { 
             $topicnumArray = explode("-", $id);
             $topicnum = $topicnumArray[0];
             // get deligated nickname if exist
             $campnumArray = explode("-", $campnums);
             $campnum = $campnumArray[0];
+			session(['campnum'=>$campnum]);
+		
             $delegate_nick_name_id = (isset($campnumArray[1])) ? $campnumArray[1] : 0;
 
             $id = Auth::user()->id;
@@ -239,7 +241,7 @@ class SettingsController extends Controller {
 
             $alreadySupport = Support::where('topic_num', $topicnum)->where('camp_num', $campnum)->where('end', '=', 0)->whereIn('nick_name_id', $userNickname)->get();
             if ($alreadySupport->count() > 0) {
-                Session::flash('warning', "You have already supported this camp, you cant submit your support again.");
+                //Session::flash('warning', "You have already supported this camp, you cant submit your support again.");
                 // return redirect()->back();
             }
 
@@ -248,12 +250,11 @@ class SettingsController extends Controller {
             if ($parentSupport === "notlive") {
                 Session::flash('warning', "You cant submit your support to this camp as its not live yet.");
                 //return redirect()->back();
-            } else if ($parentSupport) {
+            }else if ($parentSupport) { 
                 if (count($parentSupport) == 1) {
                     foreach ($parentSupport as $parent)
-                        ;
                     if ($parent->camp_num == $campnum) {
-                        Session::flash('warning', "You are already supporting this camp. You cant submit support again.");
+                        //Session::flash('warning', "You are already supporting this camp. You cant submit support again.");
                         Session::flash('confirm', 'samecamp');
                     } else {
                         Session::flash('warning', 'The following  camp are parent camp to "' . $onecamp->camp_name . '" and will be removed if you commit this support.');
@@ -267,26 +268,24 @@ class SettingsController extends Controller {
             }
 
             $childSupport = Camp::validateChildsupport($topicnum, $campnum, $userNickname, $confirm_support);
-            //echo "<pre>";print_r($childSupport); die;
-            if ($childSupport) {
+           
+            if ($childSupport) { 
                 if (count($childSupport) == 1) {
                     foreach ($childSupport as $child)
-                        ;
-                    if ($child->camp_num == $campnum) {
-                        Session::flash('warning', "You are already supporting this camp. You cant submit support again.");
+                    if ($child->camp_num == $campnum) { 
+                        //Session::flash('warning', "You are already supporting this camp. You cant submit support again.");
                         Session::flash('confirm', 'samecamp');
-                    } else {
+                    }else {
                         Session::flash('warning', 'The following  camp are child camp to "' . $onecamp->camp_name . '" and will be removed if you commit this support.');
                         Session::flash('confirm', 1);
                     }
-                } else {
+                }else {
                     Session::flash('warning', 'The following  camps are child camps to "' . $onecamp->camp_name . '" and will be removed if you commit this support.');
 
                     Session::flash('confirm', 1);
                 }
                 //return redirect()->back();
             }
-
             $supportedTopic = Support::where('topic_num', $topicnum)
                             ->whereIn('nick_name_id', $userNickname)
                             ->whereRaw("(start <= " . $as_of_time . ") and ((end = 0) or (end >= " . $as_of_time . "))")
@@ -378,10 +377,11 @@ class SettingsController extends Controller {
                     $singleSupport->save();
                 }
             }
-            //echo "<pre>"; print_r($data); die;			   
-            foreach ($data['support_order'] as $camp_num => $support_order) {
-
-
+            //echo "<pre>"; print_r($data); die;
+            $last_camp =  $data['camp_num'];			   
+           if(isset($data['support_order'])) { 
+		    foreach ($data['support_order'] as $camp_num => $support_order) {
+                $last_camp = $camp_num;
                 $supportTopic = new Support();
                 $supportTopic->topic_num = $topic_num;
                 $supportTopic->nick_name_id = $data['nick_name'];
@@ -398,6 +398,10 @@ class SettingsController extends Controller {
                 session()->forget("topic-support-nickname-{$topic_num}");
                 session()->forget("topic-support-tree-{$topic_num}");
             }
+		   }	
+            if($last_camp == $data['camp_num']){
+                Session::flash('confirm',"samecamp");
+            }
             /* Send delegated support email to the direct supporter and all parent */
             if (isset($data['delegate_nick_name_id']) && $data['delegate_nick_name_id'] != 0) {
                 $parentUser = Nickname::getUserByNickName($data['delegate_nick_name_id']);
@@ -413,8 +417,9 @@ class SettingsController extends Controller {
                 Mail::to($receiver)->send(new NewDelegatedSupporterMail($parentUser, $link, $result));
                 /* end of email */
             }
-            Session::flash('success', "Your support has been submitted successfully.");
-            return redirect('support/' . $data['topic_num'] . '/' . $data['camp_num']);
+            Session::flash('success', "Your support update has been submitted successfully.");
+            // return redirect('support/' . $data['topic_num'] . '/' . $data['camp_num']);
+              return redirect('topic/' . $data['topic_num'] . '/' . session('campnum'));
         } else {
             return redirect()->route('login');
         }
