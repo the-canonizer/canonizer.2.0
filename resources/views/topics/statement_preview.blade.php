@@ -43,7 +43,7 @@ else if($currentLive!=1 && $currentTime >= $data['go_live_time']) {
         ?>
 
     </div><br/>
-    <b>Note :</b> {{ $data['note'] }} <br/>				 
+    <b>Edit summary :</b> {{ $data['note'] }} <br/>				 
     <!--<b>Submitted on :</b> <span id="submitted_on"></span> <br/>-->
     <b>Submitter Nick Name :</b> {{ ($data['nickname'] != '') ? $data['nickname'] : 'N/A' }} <br/>
     <!--<b>Go live Time :</b> <span id="go_live_time"></span> <br/> -->

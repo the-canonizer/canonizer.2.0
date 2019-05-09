@@ -113,7 +113,7 @@
                                 <b>Camp Name :</b> {{ $data->camp_name }} <br/>
 								 @if(!empty($pCamp))<b>Parent Camp: </b>{{$pCamp->camp_name }}<br>@endif
                                 <b>Keyword :</b> {{ $data->key_words }} <br/>
-                                <b>Note :</b> {{ $data->note }} <br/>
+                                <b>Edit summary :</b> {{ $data->note }} <br/>
 
                                 <b>Camp About URL :</b> {{ $data->camp_about_url }} <br/>
                                 <b>Submitter Nickname :</b> {{ isset($data->submitternickname->nick_name) ? $data->submitternickname->nick_name : 'N/A' }} <br/>
