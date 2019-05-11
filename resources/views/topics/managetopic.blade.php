@@ -72,7 +72,7 @@
                     @foreach($namespaces as $namespace)
                     <option value="{{ $namespace->id }}" @if($topic->namespace_id == $namespace->id) selected @endif>{{$namespace->label}}</option>
                     @endforeach
-                    <option value="other" @if(old('namespace') == 'other') selected @endif>Other</option>
+                    <!-- <option value="other" @if(old('namespace') == 'other') selected @endif>Other</option> -->
                 </select>
                 <!--
                 <input type="text" name="namespace" class="form-control" id="" value="">-->
@@ -82,14 +82,14 @@
                 <label for="namespace">Other Namespace Name <span style="color:red">*</span></label>
                 
                 <input type="text" name="create_namespace" class="form-control" id="create_namespace" value="{{old('create_namespace')}}">
-                <span class="note-label"><strong>Note</strong>: Name space for hierarchical categorization of topics. It can be something like: /crypto_currency/, /organizations// etc... It must start and end with "/"</span>
+                <span class="note-label"><strong>Note</strong>: Namespace for hierarchical categorization of topics. It can be something like: /crypto_currency/, /organizations// etc... It must start and end with "/"</span>
                 @if ($errors->has('create_namespace')) <p class="help-block">{{ $errors->first('create_namespace') }}</p> @endif
 	        <p class="help-block namespace-error" id="err-other-namespace"></p>
             </div>
          
            
             <div class="form-group">
-                <label for="">Additional Note</label>
+                <label for="">Edit summary (Briefly describe your changes)</label>
                 <textarea class="form-control" rows="4" name="note" id="note"> </textarea>
 				@if ($errors->has('note')) <p class="help-block">{{ $errors->first('note') }}</p> @endif
             </div>

@@ -71,8 +71,8 @@
             </div>
         </div>
         <?php if(count($camp) > 0) { ?>
-        <div class="Scolor-Pnl">
-		     <?php $statement = $camp->statement($camp->topic_num,$camp->camp_num); ?>
+        <div class="Scolor-Pnl" id="statement">
+		     <?php $statement = $camp->statement($camp->topic_num,$camp->camp_num);  ?>
             <h3><?php echo ($parentcamp=="Agreement") ? $parentcamp : "Camp";?> Statement
 			<?php if(isset($statement->go_live_time)) { ?><span style="float:right; font-size:14px"><b>Go live Time :</b> {{ to_local_time($statement->go_live_time) }}</span>
             <?php } ?>
@@ -107,7 +107,10 @@
                 ?>
             </div>
             <div class="footer">
-			<?php if(isset($statement->value)) { ?>
+			<?php 
+			$statementCount = count($camp->anystatement($camp->topic_num,$camp->camp_num));
+			
+			if($statementCount > 0) { ?>
             	<a id="edit_camp_statement" class="btn btn-success" href="<?php echo url('statement/history/'.$topic_id.'/'.$camp->camp_num);?>">Manage/Edit Camp Statement</a>
 			<?php } else { ?>
                 <a id="add_camp_statement" class="btn btn-success" href="<?php echo url('create/statement/'.$camp->topic_num.'/'.$camp->camp_num);?>">Add Camp Statement</a>
@@ -146,7 +149,7 @@ change camps with them."><i class="fa fa-question"></i></a>
             </div>    
             </div>
             <div class="footer">
-                <a id="join_support_camp" class="btn btn-warning" href="<?php echo url('support/'.$topic_id.'/'.$camp->camp_num);?>">Join or Directly Support This Camp</a>
+               <a id="join_support_camp" class="btn btn-warning" href="<?php echo url('support/'.$topic_id.'/'.$camp->camp_num);?>">Directly Join or Manage Support</a>
             </div>
         </div>
    
@@ -157,7 +160,7 @@ change camps with them."><i class="fa fa-question"></i></a>
             <div class="row">
                 <div class="tree col-sm-12">
                     Topic Name : <?php echo $topic->topic_name;?> <br/>
-					Name Space : <?php echo (isset($topic->namespace_name)) ? $topic->label : 'N/A';?>
+					Namespace : <?php echo (isset($topic->namespace_name)) ? $topic->label : 'N/A';?>
                 </div>
               
             </div>    
@@ -207,6 +210,11 @@ change camps with them."><i class="fa fa-question"></i></a>
 <br/>
 <br/>
 <br/>
-<?php } ?>	
+<?php } ?>
+<script>
+  $('html, body').animate({
+        scrollTop: $("#statement").offset().top
+    }, 2000);
+</script>	
 @endsection
 	

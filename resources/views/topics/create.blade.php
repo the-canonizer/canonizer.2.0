@@ -47,7 +47,7 @@
                     @foreach($namespaces as $namespace)
                     <option value="{{ $namespace->id }}" >{{$namespace->label}}</option>
                     @endforeach
-                    <option value="other" @if(old('namespace') == 'other') selected @endif>Other</option>
+                    <!-- <option value="other" @if(old('namespace') == 'other') selected @endif>Other</option> -->
                 </select>
                 <!--
                 <input type="text" name="namespace" class="form-control" id="" value="">-->
@@ -62,7 +62,7 @@
                 <p class="help-block" id="err-other-namespace"></p>
             </div>
             <div class="form-group">
-                <label for="">Additional Note</label>
+                <label for="">Edit summary (Briefly describe your changes)</label>
                 <textarea class="form-control" rows="4" name="note" id="note">{{ old('note') }}</textarea>
                 @if ($errors->has('note')) <p class="help-block">{{ $errors->first('note') }}</p> @endif
             </div>    

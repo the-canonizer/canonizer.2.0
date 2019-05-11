@@ -32,7 +32,7 @@
 				@if ($errors->has('display_text')) <p class="help-block">{{ $errors->first('display_text') }}</p> @endif
             </div>            
             <div  class="form-group">
-                <label for="namespace">Link ( Limit 2000 Characters )<span style="color:red">*</span></label>
+                <label for="namespace">Link ( Limit 2000 Characters ) <span style="color:red">*</span></label>
                 <input type="text" maxlength="2000" name="link" class="form-control" id="link" value="{{old('link')}}">
                 @if ($errors->has('link')) <p class="help-block">{{ $errors->first('link') }}</p> @endif
 	    </div>

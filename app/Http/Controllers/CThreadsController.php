@@ -134,6 +134,7 @@ class CThreadsController extends Controller
                                                     ->value('camp_name'),
                 // Return the name of the Topic to index View
                 'topicGeneralName' => Topic::where('topic_num', $topicid)
+                                             ->where('topic.go_live_time', '<=', time())
                                              ->orderBy('go_live_time', 'desc')
                                              ->first()->topic_name,
                 'parentcamp'       => Camp::campNameWithAncestors($camp,''),
@@ -247,7 +248,7 @@ class CThreadsController extends Controller
 
         // Return Url after creating thread Successfully
         $return_url = 'forum/'.$topicid.'-'.$topicname.'/'.$campnum.'/threads';
-        
+
         CommonForumFunctions::sendEmailToSupportersForumThread($topicid, $campnum,
                               $return_url, request('title'), request('nick_name'), $topicname);
 

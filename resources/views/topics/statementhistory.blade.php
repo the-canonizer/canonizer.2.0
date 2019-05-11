@@ -3,7 +3,7 @@
 @section('content')
 
 <div class="camp top-head">
-    <h3><b>Topic:</b>  {{ $topic->title}}</h3>
+    <h3><b>Topic:</b>  {{ $topic->topic_name}}</h3>
     <h3><b>Camp:</b> {!! $parentcamp !!}</h3>  
 </div>
 
@@ -54,7 +54,7 @@
 			   <?php 
 			        if(!empty($statement)) { 
 			            $currentLive = 0; 
-				    $currentTime = time();
+				          $currentTime = time();
                                     
                                                 
 			         foreach($statement as $key=>$data) { 
@@ -131,7 +131,7 @@
 				   ?>
 				  
 				  </div><br/>
-				  <b>Note :</b> {{ $data->note }} <br/>				 
+				  <b>Edit summary :</b> {{ $data->note }} <br/>				 
 				  <b>Submitted on :</b> {{ to_local_time($data->submit_time) }} <br/>
 				  <b>Submitter Nickname :</b> {{ isset($data->submitternickname->nick_name) ? $data->submitternickname->nick_name : 'N/A' }} <br/>
 				  <b>Go live Time :</b> {{ to_local_time($data->go_live_time) }}<br/> 
@@ -145,8 +145,13 @@
 				    <a id="object" class="btn btn-historysmt" href="<?php echo url('manage/statement/'.$data->id.'-objection');?>">Object</a>
 				  <?php } ?>	
 					<a id="update" class="btn btn-historysmt" href="<?php echo url('manage/statement/'.$data->id);?>">Submit Statement Update Based On This</a>
-                    <a id="version" class="btn btn-historysmt" href="<?php echo url('topic/'.$data->topic_num.'/'.$data->camp_num.'?asof=bydate&asofdate='.date('Y/m/d H:i:s',$data->go_live_time));?>">View This Version</a>
-				 
+                    <a id="version" class="btn btn-historysmt" href="<?php echo url('topic/'.$data->topic_num.'/'.$data->camp_num.'?asof=bydate&asofdate='. date('Y/m/d H:i:s', $data->go_live_time)); ?>">View This Version</a>
+				          <script>
+                   var href = $('#version').attr('href');
+                   var date = new Date(<?= $data->go_live_time ?> * 1000).toLocaleString();
+                   href = href+date;
+                   //$('#version').attr('href',href);
+               </script>
 				 </div>
                                 @if($isagreeFlag && $ifIamSupporter && Auth::user()->id != $submitterUserID)
                                 <div class="CmpHistoryPnl-footer">
