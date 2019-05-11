@@ -131,7 +131,7 @@
 				   ?>
 				  
 				  </div><br/>
-				  <b>Note :</b> {{ $data->note }} <br/>				 
+				  <b>Edit summary :</b> {{ $data->note }} <br/>				 
 				  <b>Submitted on :</b> {{ to_local_time($data->submit_time) }} <br/>
 				  <b>Submitter Nickname :</b> {{ isset($data->submitternickname->nick_name) ? $data->submitternickname->nick_name : 'N/A' }} <br/>
 				  <b>Go live Time :</b> {{ to_local_time($data->go_live_time) }}<br/> 

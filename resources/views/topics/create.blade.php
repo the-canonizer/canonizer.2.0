@@ -62,7 +62,7 @@
                 <p class="help-block" id="err-other-namespace"></p>
             </div>
             <div class="form-group">
-                <label for="">Additional Note</label>
+                <label for="">Edit summary (Briefly describe your changes)</label>
                 <textarea class="form-control" rows="4" name="note" id="note">{{ old('note') }}</textarea>
                 @if ($errors->has('note')) <p class="help-block">{{ $errors->first('note') }}</p> @endif
             </div>    
