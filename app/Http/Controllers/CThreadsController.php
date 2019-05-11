@@ -134,8 +134,8 @@ class CThreadsController extends Controller
                                                     ->value('camp_name'),
                 // Return the name of the Topic to index View
                 'topicGeneralName' => Topic::where('topic_num', $topicid)
-                                             ->where('topic.go_live_time', '<=', time())
-                                             ->orderBy('go_live_time', 'desc')
+                                             ->where('go_live_time', '<=', time())
+                                             ->latest('submit_time')
                                              ->first()->topic_name,
                 'parentcamp'       => Camp::campNameWithAncestors($camp,''),
                 'participateFlag'  => $partcipateFlag
