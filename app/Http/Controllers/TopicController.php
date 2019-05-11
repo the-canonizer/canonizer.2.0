@@ -913,6 +913,7 @@ class TopicController extends Controller {
         $log->save();
         if (isset($data['change_for']) && $data['change_for'] == 'statement') {
             $statement = Statement::where('id', $data['statement'])->first();
+		   if(isset($statement)) {	
             $submitterNickId = $statement->submitter_nick_id;
             $agreeCount = ChangeAgreeLog::where('topic_num', '=', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('change_id', '=', $changeID)->where('change_for', '=', 'statement')->count();
             $supporters = Support::getAllSupporters($data['topic_num'], $data['camp_num'], $submitterNickId);
@@ -923,8 +924,10 @@ class TopicController extends Controller {
                 //clear log
                 ChangeAgreeLog::where('topic_num', '=', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('change_id', '=', $changeID)->where('change_for', '=', $data['change_for'])->delete();
             }
+		  }	
         } else if (isset($data['change_for']) && $data['change_for'] == 'camp') {
             $camp = Camp::where('id', $changeID)->first();
+			if(isset($camp)) {
             $submitterNickId = $camp->submitter_nick_id;
             $agreeCount = ChangeAgreeLog::where('topic_num', '=', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('change_id', '=', $changeID)->where('change_for', '=', $data['change_for'])->count();
             $supporters = Support::getAllSupporters($data['topic_num'], $data['camp_num'],$submitterNickId);
@@ -935,8 +938,10 @@ class TopicController extends Controller {
                 //clear log
                 ChangeAgreeLog::where('topic_num', '=', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('change_id', '=', $changeID)->where('change_for', '=', $data['change_for'])->delete();
             }
+			}	
         } else if (isset($data['change_for']) && $data['change_for'] == 'topic') {
             $topic = Topic::where('id', $changeID)->first();
+			if(isset($topic)) { 
             $submitterNickId = $topic->submitter_nick_id;
             $agreeCount = ChangeAgreeLog::where('topic_num', '=', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('change_id', '=', $changeID)->where('change_for', '=', $data['change_for'])->count();
             $supporters = Support::getAllSupporters($data['topic_num'], $data['camp_num'],$submitterNickId);
@@ -947,6 +952,7 @@ class TopicController extends Controller {
                 //clear log
                 ChangeAgreeLog::where('topic_num', '=', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('change_id', '=', $changeID)->where('change_for', '=', $data['change_for'])->delete();
             }
+		  }	
         }
 
 
