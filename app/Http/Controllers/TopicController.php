@@ -79,8 +79,7 @@ class TopicController extends Controller {
                             ->join('camp','camp.topic_num','=','topic.topic_num')
                             ->where('camp.camp_name','=','Agreement')
                              ->where('topic_name', $all['topic_name'])
-                             ->where('topic.go_live_time',"<=",time())
-                             ->orWhere('topic.go_live_time',">",time())
+                             ->where('topic.objector_nick_id',"=",null)
                              ->latest('submit_time')
                              ->first();
         $message = [
