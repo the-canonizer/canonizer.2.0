@@ -36,8 +36,8 @@
 				 <?php } ?>
             </div> 
             <div class="form-group">
-                <label for="topic name">Topic Name ( Limit 30 char ) <span style="color:red">*</span></label>
-                <input type="text" name="topic_name" class="form-control" id="topic_name" value="{{ old('topic_name')}}">
+                <label for="topic name">Topic Name ( Limit 30 chars ) <span style="color:red">*</span></label>
+                <input type="text" onkeydown="restrictTextField(event,30)" name="topic_name" class="form-control" id="topic_name" value="{{ old('topic_name')}}">
 				@if ($errors->has('topic_name')) <p class="help-block">{{ $errors->first('topic_name') }}</p> @endif
             </div>            
             <div  class="form-group">
@@ -54,9 +54,9 @@
                 @if ($errors->has('namespace')) <p class="help-block">{{ $errors->first('namespace') }}</p> @endif
 			</div>
             <div id="other-namespace" class="form-group" >
-                <label for="namespace">Other Namespace Name <span style="color:red">*</span></label>
+                <label for="namespace">Other Namespace Name ( Limit 100 chars ) <span style="color:red">*</span></label>
                 
-                <input type="text" name="create_namespace" class="form-control" id="create_namespace" value="{{ old('create_namespace')}}">
+                <input type="text" onkeydown="restrictTextField(event,30)" name="create_namespace" class="form-control" id="create_namespace" value="{{ old('create_namespace')}}">
                 <span class="note-label"><strong>Note</strong>: Name space for hierarchical categorization of topics. It can be something like: /crypto_currency/, /organizations/ etc... It must start and end with "/"</span>
                 @if ($errors->has('create_namespace')) <p class="help-block">{{ $errors->first('create_namespace') }}</p> @endif
                 <p class="help-block" id="err-other-namespace"></p>

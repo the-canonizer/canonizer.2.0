@@ -26,9 +26,9 @@
 
                             <div class="form-group">
 
-                                <label for="title">Title of Thread <span style="color:red">*</span> </label>
+                                <label for="title">Title of Thread ( Limit 100 Chars ) <span style="color:red">*</span> </label>
 
-                                <input type="text" class="form-control" id="title" placeholder="Title" name="title">
+                                <input type="text" onkeydown="restrictTextField(event,100)" class="form-control" id="title" placeholder="Title" name="title">
 
                             </div>
 

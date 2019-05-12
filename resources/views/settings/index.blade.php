@@ -39,7 +39,7 @@
                                 <label for="phone_number">Phone Number <span style="color:red;">*</span></label>
 								</br>
                                 <div style="width:300px;float:left">
-								<input type="number" name="phone_number" class="form-control" id="phone_number" value="{{ old('phone_number',$user->phone_number)}}">
+								<input type="number" onkeydown="restrictTextField(event,10)" name="phone_number" class="form-control" id="phone_number" value="{{ old('phone_number',$user->phone_number)}}">
 								@if ($errors->has('phone_number')) <p class="help-block">{{ $errors->first('phone_number') }}</p> @endif
 								
 								</div>
@@ -100,9 +100,9 @@
 						<?php $private_flags = explode(",",$user->private_flags); ?>
                         <div class="row">
                             <div class="col-sm-6 margin-btm-1">
-                                <label for="topic name">First Name <span style="color:red;">*</span></label></br>
+                                <label for="topic name">First Name ( Limit 100 chars ) <span style="color:red;">*</span></label></br>
                                 <div style="width:300px;float:left">
-								<input type="text" name="first_name" class="form-control" id="first_name" value="{{ old('firstname',$user->first_name)}}">
+								<input type="text" onkeydown="restrictTextField(event,100)" name="first_name" class="form-control" id="first_name" value="{{ old('firstname',$user->first_name)}}">
 								@if ($errors->has('first_name')) <p class="help-block">{{ $errors->first('first_name') }}</p> @endif
 								</div>
 								<div style="width:95px;float:right">
@@ -114,9 +114,9 @@
 								</div>
                             </div>
                             <div class="col-sm-6 margin-btm-1">
-                                <label for="namespace">Middle Name</label><br/>
+                                <label for="namespace">Middle Name ( Limit 100 chars )</label><br/>
                                 <div style="width:300px;float:left">
-								<input type="text" name="middle_name" class="form-control" id="middle_name" value="{{ old('middle_name', $user->middle_name)}}">
+								<input type="text" onkeydown="restrictTextField(event,100)" name="middle_name" class="form-control" id="middle_name" value="{{ old('middle_name', $user->middle_name)}}">
                                 @if ($errors->has('middle_name')) <p class="help-block">{{ $errors->first('middle_name') }}</p> @endif
 								</div>
 								<div style="width:95px;float:right">
@@ -128,9 +128,9 @@
 								</div> 
 							</div>   
                             <div class="col-sm-6 margin-btm-1">
-                                <label for="last_name">Last Name <span style="color:red;">*</span></label></br>
+                                <label for="last_name">Last Name ( Limit 100 chars ) <span style="color:red;">*</span></label></br>
 								<div style="width:300px;float:left">
-                                <input type="text" name="last_name" class="form-control" id="last_name" value="{{ old('last_name', $user->last_name)}}">
+                                <input type="text"  onkeydown="restrictTextField(event,100)" name="last_name" class="form-control" id="last_name" value="{{ old('last_name', $user->last_name)}}">
                                 @if ($errors->has('last_name')) <p class="help-block">{{ $errors->first('last_name') }}</p> @endif
 								</div>
 								<div style="width:95px;float:right">
@@ -189,10 +189,10 @@
 								</div> 
                             </div>
                             <div class="col-sm-6 margin-btm-1">
-                                <label for="address_1">Address Line 1</label>
+                                <label for="address_1">Address Line 1 (Limit 255 Chars) </label>
 								</br>
 								<div style="width:300px;float:left">
-                                <input type="text" name="address_1" class="form-control" id="address_1" value="{{ old('address_1', $user->address_1)}}">
+                                <input type="text" onkeydown="restrictTextField(event,255)" name="address_1" class="form-control" id="address_1" value="{{ old('address_1', $user->address_1)}}">
                                 </div>
 								<div style="width:95px;float:right">
 								<select class="form-control" id="address_1_bit"  name="address_1_bit">
@@ -203,10 +203,10 @@
 								</div> 
 							</div>
                             <div class="col-sm-6 margin-btm-1">
-                                <label for="address_2">Address Line 2</label>
+                                <label for="address_2">Address Line 2 (Limit 255 Chars)</label>
 								</br>
 								<div style="width:300px;float:left">
-                                <input type="text" name="address_2" class="form-control" id="address_2" value="{{ old('address_2', $user->address_2)}}">
+                                <input type="text" name="address_2" onkeydown="restrictTextField(event,255)" class="form-control" id="address_2" value="{{ old('address_2', $user->address_2)}}">
                                 </div>
 								<div style="width:95px;float:right">
 								<select class="form-control" id="address_2_bit"  name="address_2_bit">
@@ -218,10 +218,10 @@
 							</div>
                             <div class="col-sm-6 margin-btm-1">
 
-                                <label for="city">City</label>
+                                <label for="city">City Limit 255 Chars)</label>
 								</br>
 								<div style="width:300px;float:left">
-                                <input type="text" name="city" class="form-control" id="city" value="{{ old('city', $user->city)}}">
+                                <input type="text" onkeydown="restrictTextField(event,255)" name="city" class="form-control" id="city" value="{{ old('city', $user->city)}}">
                                 </div>
 								<div style="width:95px;float:right">
 								<select class="form-control" id="city_bit"  name="city_bit">
@@ -232,10 +232,10 @@
 								</div> 
 							</div>
                             <div class="col-sm-6 margin-btm-1">
-                                <label for="state">State</label>
+                                <label for="state">State (Limit 255 Chars) </label>
 								</br>
 								<div style="width:300px;float:left">
-                                <input type="text" name="state" class="form-control" id="state" value="{{ old('state', $user->state)}}">
+                                <input type="text" onkeydown="restrictTextField(event,255)" name="state" class="form-control" id="state" value="{{ old('state', $user->state)}}">
                                 </div>
 								<div style="width:95px;float:right">
 								<select class="form-control" id="state_bit"  name="state_bit">
@@ -262,10 +262,10 @@
 								</div> 
 							</div>
                             <div class="col-sm-6 margin-btm-1">
-                                <label for="postal_code">Zip Code</label>
+                                <label for="postal_code">Zip Code (Limit 255 Chars)</label>
 								</br>
 								<div style="width:300px;float:left">
-                                <input type="text" name="postal_code" class="form-control" id="postal_code" value="{{ old('postal_code', $user->postal_code)}}">
+                                <input type="text" name="postal_code"  onkeydown="restrictTextField(event,255)" class="form-control" id="postal_code" value="{{ old('postal_code', $user->postal_code)}}">
                                </div>
 								<div style="width:95px;float:right">
 								<select class="form-control" id="postal_code_bit"  name="postal_code_bit">

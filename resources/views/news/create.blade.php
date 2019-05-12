@@ -27,13 +27,13 @@
             <input type="hidden" name="topic_slug" value="{{$topic}}" />
            
             <div class="form-group">
-                <label for="topic name">Display Text ( Limit 256 Characters ) <span style="color:red">*</span></label>
-                <textarea type="text" name="display_text" class="form-control" id="display_text">{{ old('display_text')}}</textarea>
+                <label for="topic name">Display Text ( Limit 256 Chars ) <span style="color:red">*</span></label>
+                <textarea type="text" onkeydown="restrictTextField(event,256)" name="display_text" class="form-control" id="display_text">{{ old('display_text')}}</textarea>
 				@if ($errors->has('display_text')) <p class="help-block">{{ $errors->first('display_text') }}</p> @endif
             </div>            
             <div  class="form-group">
-                <label for="namespace">Link ( Limit 2000 Characters ) <span style="color:red">*</span></label>
-                <input type="text" maxlength="2000" name="link" class="form-control" id="link" value="{{old('link')}}">
+                <label for="namespace">Link ( Limit 2000 Chars ) <span style="color:red">*</span></label>
+                <input type="text"  onkeydown="restrictTextField(event,2000)" maxlength="2000" name="link" class="form-control" id="link" value="{{old('link')}}">
                 @if ($errors->has('link')) <p class="help-block">{{ $errors->first('link') }}</p> @endif
 	    </div>
             

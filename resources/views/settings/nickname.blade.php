@@ -66,8 +66,8 @@
                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
                     <div class="row">
                         <div class="col-sm-6 margin-btm-1">
-                            <label for="nick_name">Nick Name <span style="color:red">*</span></label>
-                            <input type="text" name="nick_name" class="form-control" id="nick_name" value="{{ old('nick_name')}}">
+                            <label for="nick_name">Nick Name (Limit 50 Chars) <span style="color:red">*</span></label>
+                            <input type="text" onkeydown="restrictTextField(event,50)" name="nick_name" class="form-control" id="nick_name" value="{{ old('nick_name')}}">
                             @if ($errors->has('nick_name')) <p class="help-block">{{ $errors->first('nick_name') }}</p> @endif
                         </div>
                         <div class="col-sm-6 margin-btm-1">
