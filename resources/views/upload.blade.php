@@ -31,7 +31,7 @@
                         
                     </div>
                     <div class="form-group">
-                        <input class="form-control" id="file_name" name="file_name" placeholder="File Name (with no extension)" type="text"/>
+                        <input class="form-control" onkeydown="restrictTextField(event,200)" id="file_name" name="file_name" placeholder="File Name (with no extension)" type="text"/>
                        
                     </div>
                     <p style="color:red">Warning : Once a file will be uploaded there is no way to delete the file.</p>

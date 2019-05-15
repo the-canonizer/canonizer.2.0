@@ -73,8 +73,8 @@
 		   
             <?php if($objection=="objection") { ?> 
             <div class="form-group">
-                <label for="topic name">Your Objection Reason <span style="color:red">*</span></label>
-                <input type="text" name="objection_reason" class="form-control" id="objection_reason" value="">
+                <label for="topic name">Your Objection Reason ( Limit 100 Chars ) <span style="color:red">*</span></label>
+                <input type="text" name="objection_reason" onkeydown="restrictTextField(event,100)" class="form-control" id="objection_reason" value="">
 				@if ($errors->has('objection_reason')) <p class="help-block">{{ $errors->first('objection_reason') }}</p> @endif
             </div> 
             <?php }  else { ?>  

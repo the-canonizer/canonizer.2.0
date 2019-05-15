@@ -31,13 +31,13 @@
                         <input type="hidden" class="final_news_order" name="news_order[]" id="news_order_{{$key + 1}}" value="{{ $key + 1  }}">
                         <span class="stepNum inset news_order">{{$key+1}}</span>
                         <div class="form-group col-sm-6">
-                            <label for="topic name">Display Text ( Limit 256 Characters ) <span style="color:red">*</span></label>
-                            <textarea style="min-height: 61px;" type="text" name="display_text[]" class="form-control" id="display_text">{{ old('display_text.'.$key,$feed->display_text)}}</textarea>
+                            <label for="topic name">Display Text ( Limit 256 Chars ) <span style="color:red">*</span></label>
+                            <textarea style="min-height: 61px;" onkeydown="restrictTextField(event,256)" type="text" name="display_text[]" class="form-control" id="display_text">{{ old('display_text.'.$key,$feed->display_text)}}</textarea>
                             @if ($errors->has('display_text.'.$key)) <p class="help-block">{{ $errors->first('display_text.'.$key) }}</p> @endif
                         </div>            
                         <div  class="form-group col-sm-6">
-                            <label for="namespace">Link ( Limit 2000 Characters ) <span style="color:red">*</span></label>
-                            <input type="text" maxlength="2000" name="link[]" class="form-control" id="link" value="{{old('link.'.$key,$feed->link)}}">
+                            <label for="namespace">Link ( Limit 2000 Chars ) <span style="color:red">*</span></label>
+                            <input type="text" maxlength="2000" onkeydown="restrictTextField(event,2000)" name="link[]" class="form-control" id="link" value="{{old('link.'.$key,$feed->link)}}">
                             @if ($errors->has('link.'.$key)) <p class="help-block">{{ $errors->first('link.'.$key) }}</p> @endif
                             <span class="childOpt-news"> <input type="checkbox" name="available_for_child[{{$key}}]" value="1" {{ (old('available_for_child.0',$feed->available_for_child)) ? "checked" : ""  }}>Available for child camps</span>
                         </div>

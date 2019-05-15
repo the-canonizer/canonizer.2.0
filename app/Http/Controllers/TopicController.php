@@ -97,7 +97,6 @@ class TopicController extends Controller {
         if(isset($oldTopicData) && $oldTopicData!=null){
            $validator->after(function ($validator) use ($all,$oldTopicData){  
             if (isset($all['topic_num'])) {  
-            
                     if($oldTopicData->topic_num != $all['topic_num']){
                        $validator->errors()->add('topic_name', 'The topic name has already been taken');
                     }
@@ -749,17 +748,16 @@ class TopicController extends Controller {
         $statement->grace_period = 1;
 
         $eventtype = "CREATE";
+        $message = "Statement submitted successfully.";
         if (isset($all['camp_num'])) {
 			
-            $eventtype = "UPDATE";
+            
             $statement->camp_num = $all['camp_num'];
             $statement->submitter_nick_id = $all['nick_name'];
 
-            $message = "Statement update submitted successfully.";
             $nickNames = Nickname::personNicknameArray();
 
             $ifIamSingleSupporter = Support::ifIamSingleSupporter($all['topic_num'], $all['camp_num'], $nickNames);
-            //$IfHasOtherStatements = Statement::getCampStatements($all['topic_num'], $all['camp_num']);
 
             if (!$ifIamSingleSupporter) {
                 $statement->go_live_time = strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
@@ -777,6 +775,7 @@ class TopicController extends Controller {
                 $statement->object_time = time();
             }
             if (isset($all['statement_update']) && $all['statement_update'] == 1) {
+                $eventtype = "UPDATE";
                 $message = "Updation in your changed statement are successful.";
                 $statement = Statement::where('id', $all['statement_id'])->first();
                 $eventtype = "STATEMENT_UPDATE";
@@ -784,14 +783,11 @@ class TopicController extends Controller {
                 $statement->note = isset($all['note']) ? $all['note'] : "";
                 $statement->submitter_nick_id = $all['nick_name'];
             }
-        } else {
-            $message = 'Camp statement submitted successfully.';
-        }
-		
+        } 
+
         $statement->save();
         if ($eventtype == "CREATE") {
-
-            // send history link in email
+           // send history link in email
             $link = 'statement/history/' . $statement->topic_num . '/' . $statement->camp_num;
 
             Mail::to(Auth::user()->email)->send(new ThankToSubmitterMail(Auth::user(), $link));
