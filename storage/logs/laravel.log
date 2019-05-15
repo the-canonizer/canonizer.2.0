@@ -21454,3 +21454,6 @@ Stack trace:
 #57 H:\xampp\htdocs\canonizer.2.0\public\index.php(56): Illuminate\Foundation\Http\Kernel->handle(Object(Illuminate\Http\Request))
 #58 H:\xampp\htdocs\canonizer.2.0\server.php(21): require_once('H:\\xampp\\htdocs...')
 #59 {main}  
+[2019-05-15 05:55:59] development.ERROR: Symfony\Component\Debug\Exception\FatalErrorException: Cannot use isset() on the result of an expression (you can use "null !== expression" instead) in E:\xampp\htdocs\canonizer.2.0\app\Model\Camp.php:614
+Stack trace:
+#0 {main}  

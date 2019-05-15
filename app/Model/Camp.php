@@ -611,7 +611,8 @@ class Camp extends Model {
             $title = preg_replace('/[^A-Za-z0-9\-]/', '-', $child->camp_name);
             $topic_id = $child->topic_num . "-" . $title;
             $array[$child->camp_num]['title'] = $child->camp_name;
-            $array[$child->camp_num]['link'] = url('topic/' . $topic_id . '/' . $child->camp_num . '?' . app('request')->getQueryString());
+			$queryString = (app('request')->getQueryString()) ? '?'.app('request')->getQueryString() : "";
+            $array[$child->camp_num]['link'] = url('topic/' . $topic_id . '/' . $child->camp_num . $queryString .'#statement');
             $array[$child->camp_num]['score'] = $this->getCamptSupportCount($algorithm, $child->topic_num, $child->camp_num);
             $children = $this->traverseCampTree($algorithm, $child->topic_num, $child->camp_num, $child->parent_camp_num);
 
@@ -697,7 +698,7 @@ class Camp extends Model {
         $topic_id = $this->topic_num . "-" . $title;
         $tree = [];
         $tree[$this->camp_num]['title'] = $this->topic->topic_name;
-        $tree[$this->camp_num]['link'] = url('topic/' . $topic_id . '/' . $this->camp_num);
+        $tree[$this->camp_num]['link'] = url('topic/' . $topic_id . '/' . $this->camp_num.'#statement');
         $tree[$this->camp_num]['score'] = $this->getCamptSupportCount($algorithm, $this->topic_num, $this->camp_num);
         $tree[$this->camp_num]['children'] = $this->traverseCampTree($algorithm, $this->topic_num, $this->camp_num);
 

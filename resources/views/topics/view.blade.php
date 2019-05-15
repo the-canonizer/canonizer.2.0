@@ -212,9 +212,13 @@ change camps with them."><i class="fa fa-question"></i></a>
 <br/>
 <?php } ?>
 <script>
+
+var type = window.location.hash.substr(1);
+if(type=="statement") {
   $('html, body').animate({
         scrollTop: $("#statement").offset().top
     }, 2000);
+}	
 </script>	
 @endsection
 	
