@@ -580,7 +580,7 @@ class Camp extends Model {
 					
 				 $filter = 0.00;	
 				}
-                if ($array['score'] < $filter) {
+                if ($array['score'] < $filter && $currentCamp == $activeCamp) {
                     continue;
                 }
                 $childCount = is_array($array['children']) ? count($array['children']) : 0;
