@@ -226,7 +226,7 @@ class SettingsController extends Controller {
 
             $topic = Camp::where('topic_num', $topicnum)->where('camp_name', '=', 'Agreement')->latest('submit_time')->first();
             //$camp = Camp::where('topic_num',$topicnum)->where('camp_num','=', $campnum)->latest('submit_time','objector')->get();
-            $onecamp = Camp::where('topic_num', $topicnum)->where('camp_num', '=', $campnum)->latest('submit_time')->first();
+            $onecamp = Camp::where('topic_num', $topicnum)->where('camp_num', '=', $campnum)->where('go_live_time', '<=', $as_of_time)->latest('submit_time')->first();
             $campWithParents = Camp::campNameWithAncestors($onecamp, '');
 
             if (!count($onecamp)) {
