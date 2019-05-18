@@ -585,6 +585,24 @@ class TopicController extends Controller {
                         'objection_reason' => 'required|max:100',
             ]);
         }
+        $topicnum = (isset($all['topic_num'])) ? $all['topic_num'] : null;
+        if($topicnum!=null){
+            $old_parent_camps = Camp::getAllParentCamp($topicnum);
+            $camp_exists = 0;
+            if($old_parent_camps && $old_parent_camps != null){
+                foreach ($old_parent_camps as $key => $value) {
+                   if($value->camp_name == $all['camp_name']){
+                        $camp_exists = 1;
+                   }
+                }
+            }
+            if($camp_exists){
+               $validator->after(function ($validator){
+                     $validator->errors()->add('camp_name', 'The camp name has already been taken');
+                }); 
+            }
+        }
+       
         if ($validator->fails()) {
             return back()->withErrors($validator->errors())->withInput($request->all());
         }
@@ -969,7 +987,8 @@ class TopicController extends Controller {
             $directSupporter = Support::getDirectSupporter($statement->topic_num, $statement->camp_num);
 
             $link = 'topic/' . $statement->topic_num . '/' . $statement->camp_num . '?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $statement->go_live_time);
-            $data['object'] = "#" . $statement->id;
+            $livecamp = Camp::getLiveCamp($statement->topic_num,$statement->camp_num);
+            $data['object'] = " for camp" . $livecamp->camp_name;
             $data['go_live_time'] = $statement->go_live_time;
             $data['type'] = 'statement';
 			$data['note'] = $statement->note;
