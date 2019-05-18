@@ -21825,3 +21825,15 @@ Stack trace:
 #59 H:\xampp\htdocs\canonizer.2.0\server.php(21): require_once('H:\\xampp\\htdocs...')
 #60 {main}  
 >>>>>>> ff6811a9fc885e6a6be0528ab85c5c7135e9a7d7
+[2019-05-18 12:01:31] development.ERROR: Symfony\Component\Debug\Exception\FatalErrorException: Cannot use isset() on the result of an expression (you can use "null !== expression" instead) in E:\xampp\htdocs\canonizer.2.0\app\Model\Camp.php:579
+Stack trace:
+#0 {main}  
+[2019-05-18 12:02:58] development.ERROR: Symfony\Component\Debug\Exception\FatalErrorException: Cannot use isset() on the result of an expression (you can use "null !== expression" instead) in E:\xampp\htdocs\canonizer.2.0\app\Model\Camp.php:579
+Stack trace:
+#0 {main}  
+[2019-05-18 12:03:01] development.ERROR: Symfony\Component\Debug\Exception\FatalErrorException: Cannot use isset() on the result of an expression (you can use "null !== expression" instead) in E:\xampp\htdocs\canonizer.2.0\app\Model\Camp.php:579
+Stack trace:
+#0 {main}  
+[2019-05-18 12:03:03] development.ERROR: Symfony\Component\Debug\Exception\FatalErrorException: Cannot use isset() on the result of an expression (you can use "null !== expression" instead) in E:\xampp\htdocs\canonizer.2.0\app\Model\Camp.php:579
+Stack trace:
+#0 {main}  

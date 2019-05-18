@@ -188,7 +188,7 @@ class Camp extends Model {
                                 ->where('objector_nick_id', '=', NULL)
                                 //->whereRaw('go_live_time in (select max(go_live_time) from camp where topic_num=' . $camp->topic_num . ' and objector_nick_id is null group by camp_num)')
                                 ->where('go_live_time', '<=', $as_of_time)
-                                ->orderBy('submit_time', 'desc')->first();
+                                ->orderBy('submit_time', 'DESC')->first();
 
                 return self::campNameWithAncestors($pcamp, $campname);
             }
@@ -575,6 +575,11 @@ class Camp extends Model {
         if (is_array($traversedTreeArray)) {
             foreach ($traversedTreeArray as $campnum => $array) {
                 $filter = isset($_REQUEST['filter']) && is_numeric($_REQUEST['filter']) ? $_REQUEST['filter'] : 0.001;
+				
+			    if(session('filter')==="removed") {
+					
+				 $filter = 0.00;	
+				}
                 if ($array['score'] < $filter) {
                     continue;
                 }

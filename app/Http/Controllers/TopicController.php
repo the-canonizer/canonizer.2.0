@@ -575,6 +575,7 @@ class TopicController extends Controller {
                     'camp_name' => 'required|max:30'
                    // 'note' => 'required',
         ]);
+		session(['filter'=>'removed']);
         $objection = '';
         if (isset($all['objection']) && $all['objection'] == 1) {
             $objection = 1;
