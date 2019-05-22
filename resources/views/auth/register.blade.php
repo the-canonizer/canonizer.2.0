@@ -8,26 +8,26 @@
     <form action="{{ url('/register')}}" method="post">
         <input type="hidden" name="_token" value="{{ csrf_token() }}">
         <div class="form-group">
-            <label for="firstname">First Name <span style="color:red">*</span></label>
-            <input type="text" name="first_name" class="form-control" id="firstname" value="{{ old('first_name')}}">
+            <label for="firstname">First Name (Limit 100 Chars)<span style="color:red">*</span></label>
+            <input type="text" name="first_name" onkeydown="restrictTextField(event,100)" class="form-control" id="firstname" value="{{ old('first_name')}}">
             @if ($errors->has('first_name')) <p class="help-block">{{ $errors->first('first_name') }}</p> @endif
         </div>
         
         <div class="form-group">
-            <label>Middle Name </label>
-            <input type="text" name="middle_name" class="form-control" id="middle_name" value="{{ old('middle_name')}}">
+            <label>Middle Name (Limit 100 Chars)</label>
+            <input type="text" name="middle_name" onkeydown="restrictTextField(event,100)" class="form-control" id="middle_name" value="{{ old('middle_name')}}">
             @if ($errors->has('middle_name')) <p class="help-block">{{ $errors->first('middle_name') }}</p> @endif
         </div>
         
         <div class="form-group">
-            <label>Last Name <span style="color:red">*</span></label>
-            <input type="text" name="last_name" class="form-control" id="lastname" value="{{ old('last_name')}}">
+            <label>Last Name (Limit 100 Chars)<span style="color:red">*</span></label>
+            <input type="text" name="last_name" onkeydown="restrictTextField(event,100)" class="form-control" id="lastname" value="{{ old('last_name')}}">
             @if ($errors->has('last_name')) <p class="help-block">{{ $errors->first('last_name') }}</p> @endif
         </div>
 
         <div class="form-group">
-            <label>Email <span style="color:red">*</span></label>
-            <input type="email" name="email" class="form-control" id="email" value="{{ old('email')}}">
+            <label>Email (Limit 255 Chars)<span style="color:red">*</span></label>
+            <input type="email" name="email" onkeydown="restrictTextField(event,255)" class="form-control" id="email" value="{{ old('email')}}">
             @if ($errors->has('email')) <p class="help-block">{{ $errors->first('email') }}</p> @endif
         </div>
         <div class="form-group">

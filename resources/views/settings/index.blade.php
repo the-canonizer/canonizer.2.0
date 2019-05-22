@@ -218,7 +218,7 @@
 							</div>
                             <div class="col-sm-6 margin-btm-1">
 
-                                <label for="city">City Limit 255 Chars)</label>
+                                <label for="city">City (Limit 255 Chars)</label>
 								</br>
 								<div style="width:300px;float:left">
                                 <input type="text" onkeydown="restrictTextField(event,255)" name="city" class="form-control" id="city" value="{{ old('city', $user->city)}}">
