@@ -586,7 +586,8 @@ class TopicController extends Controller {
             ]);
         }
         $topicnum = (isset($all['topic_num'])) ? $all['topic_num'] : null;
-        if($topicnum!=null){
+        if($topicnum!=null && !(isset($all['camp_num']) && array_key_exists(camp_num, $all))){
+
             $old_parent_camps = Camp::getAllParentCamp($topicnum);
             $camp_exists = 0;
             if($old_parent_camps && $old_parent_camps != null){
@@ -736,6 +737,7 @@ class TopicController extends Controller {
      */
     public function store_statement(Request $request) {
         $all = $request->all();
+
         $currentTime = time();
         $validator = Validator::make($request->all(), [
                     'statement' => 'required',
@@ -768,6 +770,7 @@ class TopicController extends Controller {
 
         $eventtype = "CREATE";
         $message = "Statement submitted successfully.";
+
         if (isset($all['camp_num'])) {
 			
             
@@ -783,7 +786,6 @@ class TopicController extends Controller {
                 $message = "Statement change submitted successfully.";
                 $go_live_time = $statement->go_live_time;
             }
-
             if (isset($all['objection']) && $all['objection'] == 1) {
                 $message = "Objection submitted successfully.";
                 $statement = Statement::where('id', $all['objection_id'])->first();
