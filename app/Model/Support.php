@@ -25,7 +25,7 @@ class Support extends Model {
         return $this->hasOne('App\Model\Camp', 'camp_num', 'camp_num')->where('camp.topic_num',$this->topic_num)->orderBy('camp.submit_time','DESC');
     }
 	public function topic() {
-        return $this->hasOne('App\Model\Topic', 'topic_num', 'topic_num')->orderBy('topic.submit_time','DESC');
+        return $this->hasOne('App\Model\Topic', 'topic_num', 'topic_num')->where('topic.go_live_time','<=',time())->orderBy('topic.submit_time','DESC');
     }
 	
 	public function delegatednickname() {

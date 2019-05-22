@@ -211,7 +211,7 @@ class SettingsController extends Controller {
     public function support($id = null, $campnums = null) {
 
         $as_of_time = time();
-        if (isset($id)) { 
+        if (isset($id)) {
             $topicnumArray = explode("-", $id);
             $topicnum = $topicnumArray[0];
             // get deligated nickname if exist
@@ -297,6 +297,7 @@ class SettingsController extends Controller {
             $encode = General::canon_encode($id);
 
             $nicknames = Nickname::where('owner_code', '=', $encode)->get();
+			$delegatedNick = new Nickname();
             $userNickname = array();
             foreach ($nicknames as $nickname) {
 
@@ -308,7 +309,7 @@ class SettingsController extends Controller {
                             ->whereRaw("(start < $as_of_time) and ((end = 0) or (end > $as_of_time))")
                             ->groupBy('topic_num')->orderBy('start', 'DESC')->get();
 
-            return view('settings.mysupport', ['userNickname' => $userNickname, 'supportedTopic' => $supportedTopic, 'nicknames' => $nicknames]);
+            return view('settings.mysupport', ['delegatedNick'=>$delegatedNick,'userNickname' => $userNickname, 'supportedTopic' => $supportedTopic, 'nicknames' => $nicknames]);
         }
     }
 
@@ -508,7 +509,7 @@ class SettingsController extends Controller {
             // $data = $request->all();
             // echo "<pre>"; print_r($data); exit;
             $message = [
-                'new_password.regex' => 'Password must be atleast 8 characters, including atleast one digit and one special character(@,# !,$..)',
+                'new_password.regex' => 'Password must be atleast 8 characters, including atleast one digit, one lower case letter and one special character(@,# !,$..)',
 				'current_password.required' => 'The current password field is required.'
             ];
             $validator = Validator::make($request->all(), [

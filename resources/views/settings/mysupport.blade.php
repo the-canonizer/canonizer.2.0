@@ -38,7 +38,7 @@
                		<div class="row column{{ $data->topic_num }}">
 					   <?php $topicSupport = $data->topic->Getsupports($data->topic_num,$userNickname);?>
 					   @foreach($topicSupport as $k=>$support)
-
+                        <?php if($support->delegate_nick_name_id == 0) { ?>
 					   <div id="positions_{{ $support->support_id }}" class="SpCmpBDY support-sorter-element ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
 					     <form onsubmit="return confirm('Do you really want to delete this support ?');" action="{{ route('settings.support.delete')}}" id="support-{{$support->support_id}}" method="post">
 						    <input type="hidden" name="_token" value="{{ csrf_token() }}">
@@ -51,6 +51,16 @@
 					     <b><span class="support_order">{{ $support->support_order }}</span> . <a style="text-decoration: underline; color: blue;" href="/topic/{{ $data->topic_num }}-{{ $data->topic->topic_name }}/{{ $support->camp->camp_num }}"> {{ $support->camp->camp_name }}  </a> <br/>
 					   	 </b>
                        </div>
+						<?php } else { 
+						  $delegatedNickDetail  = $delegatedNick->getNickName($support->delegate_nick_name_id);
+						 ?>
+						 <div id="positions" class="SpCmpBDY support-sorter-element ui-widget">
+					   
+						  Support delegated to {{$delegatedNickDetail->nick_name }}
+						</div>
+						 <?php
+						 break;
+						 } ?>
 					   @endforeach
                     </div>
                     <script>

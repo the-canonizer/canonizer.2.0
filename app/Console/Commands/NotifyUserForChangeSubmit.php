@@ -69,7 +69,8 @@ class NotifyUserForChangeSubmit extends Command {
                 $directSupporter = Support::getDirectSupporter($statement->topic_num, $statement->camp_num);
 
                 $link = 'topic/' . $statement->topic_num . '/' . $statement->camp_num . '?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $statement->go_live_time);
-                $data['object'] = "#" . $statement->id;
+                $livecamp = Camp::getLiveCamp($statement->topic_num,$statement->camp_num);
+                $data['object'] = " for camp" . $livecamp->camp_name;
                 $data['go_live_time'] = $statement->go_live_time;
                 $data['type'] = 'statement';
                 $nickName = Nickname::getNickName($statement->submitter_nick_id);

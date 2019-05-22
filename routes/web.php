@@ -145,3 +145,7 @@ if (env('APP_DEBUG')) {
     Route::get('/{params?}', 'HomeController@index')->where('params', '(.*)');
 }
 Route::get('user/supports/{user_id}', 'TopicController@usersupports')->name('user_supports');
+
+Route::get('/topic/notifysupporter',function(){
+    \Artisan::call('notify:supporters');
+});
