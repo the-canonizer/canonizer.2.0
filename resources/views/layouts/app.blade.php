@@ -203,8 +203,19 @@
                                 </li>
 
                                 <li>
-
-                                    <div class="filter">Filter < <input onkeypress="changeFilterOnEnter(this,event)" onblur="changeFilter(this)" type="number" value="{{ isset($_REQUEST['filter']) && !empty($_REQUEST['filter']) ? $_REQUEST['filter'] : '0.001' }}"/></div>
+                                 <?php
+								 $filter = '0.001';
+								 if(session('filter')==="removed") {
+					
+								   $filter = '0.00';	
+								 }
+								 if(isset($_REQUEST['filter']) && !empty($_REQUEST['filter'])) {
+									
+                                    $filter = $_REQUEST['filter'];										
+									 
+								 }
+								 ?>
+                                    <div class="filter">Filter < <input onkeypress="changeFilterOnEnter(this,event)" onblur="changeFilter(this)" type="number" value="{{ $filter }}"/></div>
                                 </li>
                             </ul>
                         </li>
