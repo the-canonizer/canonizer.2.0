@@ -586,7 +586,7 @@ class TopicController extends Controller {
             ]);
         }
         $topicnum = (isset($all['topic_num'])) ? $all['topic_num'] : null;
-        if($topicnum!=null && !(isset($all['camp_num']) && array_key_exists(camp_num, $all))){
+        if($topicnum!=null && !(isset($all['camp_num']) && array_key_exists('camp_num', $all))){
 
             $old_parent_camps = Camp::getAllParentCamp($topicnum);
             $camp_exists = 0;
