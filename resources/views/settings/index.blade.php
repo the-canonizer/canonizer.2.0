@@ -100,7 +100,7 @@
 						<?php $private_flags = explode(",",$user->private_flags); ?>
                         <div class="row">
                             <div class="col-sm-6 margin-btm-1">
-                                <label for="topic name">First Name ( Limit 100 chars ) <span style="color:red;">*</span></label></br>
+                                <label for="topic name">First Name ( Limit 100 Chars ) <span style="color:red;">*</span></label></br>
                                 <div style="width:300px;float:left">
 								<input type="text" onkeydown="restrictTextField(event,100)" name="first_name" class="form-control" id="first_name" value="{{ old('firstname',$user->first_name)}}">
 								@if ($errors->has('first_name')) <p class="help-block">{{ $errors->first('first_name') }}</p> @endif
@@ -114,7 +114,7 @@
 								</div>
                             </div>
                             <div class="col-sm-6 margin-btm-1">
-                                <label for="namespace">Middle Name ( Limit 100 chars )</label><br/>
+                                <label for="namespace">Middle Name ( Limit 100 Chars )</label><br/>
                                 <div style="width:300px;float:left">
 								<input type="text" onkeydown="restrictTextField(event,100)" name="middle_name" class="form-control" id="middle_name" value="{{ old('middle_name', $user->middle_name)}}">
                                 @if ($errors->has('middle_name')) <p class="help-block">{{ $errors->first('middle_name') }}</p> @endif
@@ -128,7 +128,7 @@
 								</div> 
 							</div>   
                             <div class="col-sm-6 margin-btm-1">
-                                <label for="last_name">Last Name ( Limit 100 chars ) <span style="color:red;">*</span></label></br>
+                                <label for="last_name">Last Name ( Limit 100 Chars ) <span style="color:red;">*</span></label></br>
 								<div style="width:300px;float:left">
                                 <input type="text"  onkeydown="restrictTextField(event,100)" name="last_name" class="form-control" id="last_name" value="{{ old('last_name', $user->last_name)}}">
                                 @if ($errors->has('last_name')) <p class="help-block">{{ $errors->first('last_name') }}</p> @endif
