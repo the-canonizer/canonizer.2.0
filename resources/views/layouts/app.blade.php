@@ -212,7 +212,9 @@
 								 if(isset($_REQUEST['filter']) && !empty($_REQUEST['filter'])) {
 									
                                     $filter = $_REQUEST['filter'];										
-									 
+									session()->forget('filter'); 
+								 } else if(session('filter')!="removed") {
+									$filter = $_SESSION['filterchange'];	 
 								 }
 								 ?>
                                     <div class="filter">Filter < <input onkeypress="changeFilterOnEnter(this,event)" onblur="changeFilter(this)" type="number" value="{{ $filter }}"/></div>

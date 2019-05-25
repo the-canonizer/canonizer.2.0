@@ -588,6 +588,9 @@ class Camp extends Model {
 			    if(session('filter')==="removed") {
 					
 				 $filter = 0.00;	
+				} else if(isset($_SESSION['filterchange'])) {
+					
+				 $filter = $_SESSION['filterchange'];
 				}
                 if ($array['score'] < $filter && $currentCamp == $activeCamp) {
                     continue;
@@ -724,7 +727,15 @@ class Camp extends Model {
         $reducedTree = $this->campTree(session('defaultAlgo', 'blind_popularity'), $activeAcamp = null, $supportCampCount = 0, $needSelected = 0);
 
         $filter = isset($_REQUEST['filter']) && is_numeric($_REQUEST['filter']) ? $_REQUEST['filter'] : 0.001;
-
+        
+		       if(session('filter')==="removed") {
+					
+				 $filter = 0.00;	
+				} else if(isset($_SESSION['filterchange'])) {
+					
+				 $filter = $_SESSION['filterchange'];
+				}
+		
         if ($reducedTree[$this->camp_num]['score'] < $filter) {
             return;
         }
