@@ -119,7 +119,8 @@ class TestPages(unittest.TestCase):
             DEFAULT_USER,
             '12345',
             '12345')
-        self.assertIn('The password must be at least 6 characters.', result)
+        #self.assertIn('The password must be at least 6 characters.', result)
+        self.assertIn('Password must be atleast 8 characters, including atleast one digit, one lower case letter and one special character(@,# !,$..)',result)
 
     # 10
     def test_registration_with_different_confirmation_password(self):
@@ -156,13 +157,13 @@ class TestPages(unittest.TestCase):
         self.assertIn('Signup Now', CanonizerLoginPage(self.driver).click_login_page_button().login_page_should_have_register_option_for_new_users())
 
     # 17
-    def test_register_page_mandatory_fields_are_marked_with_astrick(self):
+    def test_register_page_mandatory_fields_are_marked_with_asterisk(self):
         """
         Mandatory Fields in Registration Page Marked with *
         :return:
         """
         print("\n" + str(test_cases(16)))
-        self.assertTrue(CanonizerRegisterPage(self.driver).click_register_button().register_page_mandatory_fields_are_marked_with_astrick())
+        self.assertTrue(CanonizerRegisterPage(self.driver).click_register_button().register_page_mandatory_fields_are_marked_with_asterisk())
 
     # ----- FORGOT PASSWORD Test Cases Start -----
 
@@ -201,7 +202,7 @@ class TestPages(unittest.TestCase):
         result = CanonizerForgotPasswordPage(self.driver).click_forgot_password_page_button().forgot_password_with_valid_email(DEFAULT_USER)
         self.assertIn("", result.get_url())
 
-    def test_forgot_password_page_mandatory_fields_are_marked_with_astrick(self):
+    def test_forgot_password_page_mandatory_fields_are_marked_with_asterisk(self):
         """
         Mandatory Fields in Forgot Password Page Marked with *
         :return:
@@ -210,7 +211,7 @@ class TestPages(unittest.TestCase):
         # Click on the Login Page
         CanonizerLoginPage(self.driver).click_login_page_button()
         # Click on the Forgot Password link
-        self.assertTrue(CanonizerForgotPasswordPage(self.driver).click_forgot_password_page_button().forgot_password_page_mandatory_fields_are_marked_with_astrick())
+        self.assertTrue(CanonizerForgotPasswordPage(self.driver).click_forgot_password_page_button().forgot_password_page_mandatory_fields_are_marked_with_asterisk())
     # ----- FORGOT PASSWORD Test Cases End -----
 
     # ----- Browse Page Test Cases Start -----
@@ -307,7 +308,7 @@ class TestPages(unittest.TestCase):
 
         # 30
 
-    def test_create_new_topic_page_mandatory_fields_are_marked_with_astrick(self):
+    def test_create_new_topic_page_mandatory_fields_are_marked_with_asterisk(self):
         """
         Mandatory Fields in Registration Page Marked with *
         :return:
@@ -316,7 +317,7 @@ class TestPages(unittest.TestCase):
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the Create New Topic  link
-        self.assertTrue(CanonizerCreateNewTopicPage(self.driver).click_create_new_topic_page_button().create_new_topic_page_mandatory_fields_are_marked_with_astrick())
+        self.assertTrue(CanonizerCreateNewTopicPage(self.driver).click_create_new_topic_page_button().create_new_topic_page_mandatory_fields_are_marked_with_asterisk())
 
     def test_create_topic_with_duplicate_topic_name(self):
         print("\n" + str(test_cases(31)))
@@ -547,27 +548,27 @@ class TestPages(unittest.TestCase):
     def test_check_Steps_to_Create_a_New_Topic_page_loaded_without_login(self):
         print("\n" + str(test_cases(53)))
         # Click on the Help and Click on the Steps_to_Create_a_New_Topic
-        CanonizerHelpPage(self.driver).check_what_is_canonizer_help_page_loaded().check_Steps_to_Create_a_New_Topic_page_loaded().open("/login")
+        CanonizerHelpPage(self.driver).check_what_is_canonizer_help_page_loaded().check_Steps_to_Create_a_New_Topic_page_loaded().open("/topic/131-Create-Topic-Steps")
 
     def test_check_Dealing_With_Disagreements_page_loaded_without_login(self):
         print("\n" + str(test_cases(54)))
         # Click on the Help and Click on the Dealing With Disagreements
-        CanonizerHelpPage(self.driver).check_what_is_canonizer_help_page_loaded().check_Dealing_With_Disagreements_page_loaded(). open("/login")
+        CanonizerHelpPage(self.driver).check_what_is_canonizer_help_page_loaded().check_Dealing_With_Disagreements_page_loaded(). open("/topic/38")
 
     def test_check_Wiki_Markup_Information_page_loaded_without_login(self):
         print("\n" + str(test_cases(55)))
         # Click on the Help and Click on Wiki Markup Information
-        CanonizerHelpPage(self.driver).check_what_is_canonizer_help_page_loaded().check_Wiki_Markup_Information_page_loaded(). open("/login")
+        CanonizerHelpPage(self.driver).check_what_is_canonizer_help_page_loaded().check_Wiki_Markup_Information_page_loaded(). open("topic/73-wiki-text/1")
 
     def test_check_Adding_the_Canonizer_Feedback_Camp_Outline_to_Internet_Articles_page_loaded_without_login(self):
         print("\n" + str(test_cases(56)))
         # Click on the Help and Click on Adding the Canonizer Feedback Camp Outline to Internet Articles
-        CanonizerHelpPage(self.driver).check_what_is_canonizer_help_page_loaded().check_Adding_the_Canonizer_Feedback_Camp_Outline_to_Internet_Articles_page_loaded(). open("/login")
+        CanonizerHelpPage(self.driver).check_what_is_canonizer_help_page_loaded().check_Adding_the_Canonizer_Feedback_Camp_Outline_to_Internet_Articles_page_loaded(). open("/topic/58")
 
     # ----- Help Page Test Cases End -----
 
     # ----- Add & Manage Nick Names Page Test Cases Start -----
-    def test_nick_names_page_mandatory_fields_are_marked_with_astrick(self):
+    def test_nick_names_page_mandatory_fields_are_marked_with_asterisk(self):
         """
         Mandatory Fields in Nick Names Page Marked with *
         :return:
@@ -577,7 +578,7 @@ class TestPages(unittest.TestCase):
         self.login_to_canonizer_app()
         # Click on Username->Account Settings->Nick Names sub tab
         CanonizerAccountSettingsPage(self.driver).click_username_link_button().click_account_settings_page_button().click_account_settings_add_manage_nick_names_page_button()
-        self.assertTrue(CanonizerAccountSettingsNickNamesPage(self.driver).nick_names_page_mandatory_fields_are_marked_with_astrick())
+        self.assertTrue(CanonizerAccountSettingsNickNamesPage(self.driver).nick_names_page_mandatory_fields_are_marked_with_asterisk())
 
     def test_create_with_blank_nick_name(self):
         print("\n" + str(test_cases(58)))
@@ -616,7 +617,7 @@ class TestPages(unittest.TestCase):
 
     # ----- Add & Manage Nick Names Page Test Cases End -----
     # ----- My Profile Page Test Cases Start -----
-    def test_manage_profile_info_page_mandatory_fields_are_marked_with_astrick(self):
+    def test_manage_profile_info_page_mandatory_fields_are_marked_with_asterisk(self):
         """
         Mandatory Fields in Manage Profile Info Page Marked with *
         :return:
@@ -626,7 +627,7 @@ class TestPages(unittest.TestCase):
         self.login_to_canonizer_app()
         # Click on the username->Account Settings->Manage Profile Info sub tab
         CanonizerAccountSettingsPage(self.driver).click_username_link_button().click_account_settings_page_button().click_account_settings_manage_profile_info_page_button()
-        self.assertTrue(AccountSettingsManageProfileInfoPage(self.driver).manage_profile_info_page_mandatory_fields_are_marked_with_astrick())
+        self.assertTrue(AccountSettingsManageProfileInfoPage(self.driver).manage_profile_info_page_mandatory_fields_are_marked_with_asterisk())
 
     def test_update_profile_with_blank_first_name(self):
         print("\n" + str(test_cases(63)))
@@ -647,6 +648,27 @@ class TestPages(unittest.TestCase):
             '',
             '')
         self.assertIn("First name is required.", result)
+
+    def test_update_profile_with_blank_last_name(self):
+        print("\n" + str(test_cases(64)))
+        # Click on the Login Page and Create a Login Session and for further actions.
+        self.login_to_canonizer_app()
+        # Click on the username->Account Settings->Manage Profile Info sub tab
+        CanonizerAccountSettingsPage(
+        self.driver).click_username_link_button().click_account_settings_page_button().click_account_settings_manage_profile_info_page_button()
+        result = AccountSettingsManageProfileInfoPage(self.driver).update_profile_with_blank_last_name(
+            DEFAULT_FIRST_NAME,
+            DEFAULT_MIDDLE_NAME,
+            DEFAULT_USER,
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '')
+        self.assertIn("Last name is required.", result)
 
         # ----- My Profile Page Test Cases End -----
         # ----- Browse Page Test Cases Start -----
@@ -1243,7 +1265,7 @@ class TestPages(unittest.TestCase):
 
     def test_update_news_with_valid_data(self):
         print("\n" + str(test_cases(141)))
-         # Click on the Login Page and Create a Login Session and for further actions.
+        # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Go to Edit News and check update news with valid data
         result = CanonizerEditNewsFeedsPage(self.driver).load_edit_news_feed_page().update_news_with_valid_data(
@@ -1271,7 +1293,8 @@ class TestPages(unittest.TestCase):
         # Go to Edit News and check update news with valid data
         result = CanonizerUploadFilePage(self.driver).click_upload_file_page_button().upload_file_with_size_file_more_than_5mb(
             FILE_WITH_MORE_THAN_5MB)
-        self.assertIn("Error! The file may not be greater than 5 MB.", result)
+        #self.assertIn("Error! The file may not be greater than 5 MB.", result)
+        self.assertIn("Error! The file may not be greater than 5120 kilobytes.", result)
 
     def test_upload_file_with_same_file_name(self):
         print("\n" + str(test_cases(144)))
@@ -1324,6 +1347,94 @@ class TestPages(unittest.TestCase):
 
     # ----- Search Test Cases End -----
 
+    def test_verify_phone_number_with_blank_phone_number(self):
+        print("\n" + str(test_cases(150)))
+        # Click on the Login Page and Create a Login Session and for further actions.
+        self.login_to_canonizer_app()
+        # Click on the username->Account Settings->Manage Profile Info sub tab
+        CanonizerAccountSettingsPage(self.driver).click_username_link_button().click_account_settings_page_button().click_account_settings_manage_profile_info_page_button()
+        result = AccountSettingsManageProfileInfoPage(self.driver).verify_phone_number_with_blank_phone_number()
+        self.assertIn("Phone number is required.", result)
+
+    def test_select_by_value_crypto_currency_ethereum(self):
+        print("\n" + str(test_cases(151)))
+        # Click on the Login Page and Create a Login Session and for further actions.
+        self.login_to_canonizer_app()
+        # Click on the Browse link
+        self.assertIn("/browse?namespace=21", CanonizerBrowsePage(self.driver).click_browse_page_button().select_dropdown_value().select_by_value_crypto_currency_ethereum().get_url())
+
+    def test_select_by_value_crypto_currency_ethereum_Only_My_Topics(self):
+        print("\n" + str(test_cases(152)))
+        # Click on the Login Page and Create a Login Session and for further actions.
+        self.login_to_canonizer_app()
+        # Click on the Browse link
+        self.assertIn("/browse?namespace=21&my=1", CanonizerBrowsePage(self.driver).click_only_my_topics_button().select_by_value_crypto_currency_ethereum().get_url())
+
+    def test_check_Canonizer_is_the_final_word_on_everything_page_loaded(self):
+        print("\n" + str(test_cases(153)))
+        # Click on the Login Page and Create a Login Session and for further actions.
+        self.login_to_canonizer_app()
+        # Click on the Help and click on Adding the Canonizer Feedback Camp Outline to Internet Articles
+        CanonizerHelpPage(self.driver).check_what_is_canonizer_help_page_loaded().check_Canonizer_is_the_final_word_on_everything_page_loaded().open("https://vimeo.com/307590745")
+
+    def test_check_Canonizer_is_the_final_word_on_everything_page_loaded_without_login(self):
+        print("\n" + str(test_cases(154)))
+        # Click on the Help and Click on the Steps_to_Create_a_New_Topic
+        CanonizerHelpPage(self.driver).check_what_is_canonizer_help_page_loaded().check_Canonizer_is_the_final_word_on_everything_page_loaded().open("https://vimeo.com/307590745")
+
+    def test_check_consensus_out_of_controversy_use_case_page_loaded(self):
+        print("\n" + str(test_cases(155)))
+        # Click on the Login Page and Create a Login Session and for further actions.
+        self.login_to_canonizer_app()
+        # Click on the Help and click on Adding the Canonizer Feedback Camp Outline to Internet Articles
+        CanonizerHelpPage(self.driver).check_what_is_canonizer_help_page_loaded().check_consensus_out_of_controversy_use_case_page_loaded().open("topic/132-Consensus-out-of-controversy/2")
+
+    def test_check_consensus_out_of_controversy_use_case_page_loaded_without_login(self):
+        print("\n" + str(test_cases(156)))
+        # Click on the Help and Click on the Steps_to_Create_a_New_Topic
+        CanonizerHelpPage(self.driver).check_what_is_canonizer_help_page_loaded().check_consensus_out_of_controversy_use_case_page_loaded().open("topic/132-Consensus-out-of-controversy/2")
+
+    def test_load_create_new_camp_page(self):
+        # Click on the Login Page and Create a Login Session and for further actions.
+        self.login_to_canonizer_app()
+        print("\n" + str(test_cases(157)))
+        self.assertIn("camp/create/88-Theories-of-Consciousness/1", CanonizerCampPage(self.driver).load_create_new_camp_page().get_url())
+
+    def test_save_with_invalid_new_password(self):
+        print("\n" + str(test_cases(158)))
+        # Click on the Login Page and Create a Login Session and for further actions.
+        self.login_to_canonizer_app()
+        # Click on the username->Account Settings->Change Password sub tab
+        CanonizerAccountSettingsPage(self.driver).click_username_link_button().click_account_settings_page_button().click_account_settings_change_password_page_button()
+        result = CanonizerAccountSettingsChangePasswordPage(self.driver).save_with_invalid_new_password(
+            'Test@12345',
+            'TEST@123456',
+            'TEST@123456')
+        self.assertIn("Password must be atleast 8 characters, including atleast one digit and one special character(@,# !,$..)", result)
+
+    def test_login_with_blank_email(self):
+        print ("\n" + str(test_cases(159)))
+        result = CanonizerLoginPage(self.driver).click_login_page_button().login_with_blank_email(
+            DEFAULT_PASS)
+        self.assertIn("The email field is required.", result)
+
+    def test_login_with_blank_password(self):
+        print("\n" + str(test_cases(160)))
+        result = CanonizerLoginPage(self.driver).click_login_page_button().login_with_blank_password(
+            DEFAULT_USER)
+        self.assertIn("The password field is required.", result)
+
+    def test_login_page_mandatory_fields_are_marked_with_asterisk(self):
+        """
+        Mandatory Fields in login Page Marked with *
+        :return:
+        """
+        print("\n" + str(test_cases(161)))
+        self.assertTrue(CanonizerLoginPage(self.driver).click_login_page_button().login_page_mandatory_fields_are_marked_with_asterisk())
+
+    def test_login_should_have_forgot_password_link(self):
+        print("\n" + str(test_cases(162)))
+        self.assertIn('Forgot Password', CanonizerLoginPage(self.driver).click_login_page_button().login_should_have_forgot_password_link())
 
     def tearDown(self):
         self.driver.close()
@@ -1332,4 +1443,3 @@ class TestPages(unittest.TestCase):
 if __name__ == "__main__":
     suite = unittest.TestLoader().loadTestsFromTestCase(TestPages)
     unittest.TextTestRunner(verbosity=2).run(suite)
-

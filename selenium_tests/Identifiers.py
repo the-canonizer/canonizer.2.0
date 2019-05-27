@@ -22,9 +22,10 @@ class HomePageIdentifiers(object):
     WHATISCANONIZER = (By.XPATH, '//*[@id="exampleAccordion"]/ul[1]/li[2]/a')
     WHATISCANONIZERHEADING = (By.XPATH, '//*[@id="exampleAccordion"]/ul[1]/li[1]/a/span')
     LOADALLTOPICS   = (By.ID, 'loadtopic')
-    UPLOADFILE = (By.XPATH, '//*[@id="exampleAccordion"]/ul[1]/li[4]/a/span')
-    WHITE_PAPER = (By.XPATH, '//*[@id="exampleAccordion"]/ul[1]/li[6]/a/span')
-    BLOG = (By.XPATH, '//*[@id="exampleAccordion"]/ul[1]/li[7]/a/span')
+    CREATE_NEW_CAMP = (By.XPATH, '//*[@id="exampleAccordion"]/ul[1]/li[4]/a/span')
+    UPLOADFILE = (By.XPATH, '//*[@id="exampleAccordion"]/ul[1]/li[5]/a/span')
+    WHITE_PAPER = (By.XPATH, '//*[@id="exampleAccordion"]/ul[1]/li[7]/a/span')
+    BLOG = (By.XPATH, '//*[@id="exampleAccordion"]/ul[1]/li[8]/a/span')
 
 
 class LoginPageIdentifiers(object):
@@ -36,6 +37,11 @@ class LoginPageIdentifiers(object):
     SUBMIT        = (By.ID, 'submit')
     ERROR_MESSAGE = (By.XPATH, '/html/body/div[1]/div[2]/div/form/div[1]/p')
     SIGNUPNOW     = (By.XPATH, '/html/body/div[1]/div[2]/div[3]/div/a')
+    ERROR_EMAIL = (By.XPATH, '/html/body/div/div[2]/div[1]/form/div[1]/p')
+    ERROR_PASSWORD = (By.XPATH, '/html/body/div/div[2]/div[1]/form/div[2]/p')
+    EMAIL_ASTRK = (By.XPATH, '/html/body/div/div[2]/div[1]/form/div[1]/label/span')
+    PASSWORD_ASTRK = (By.XPATH, '/html/body/div/div[2]/div[1]/form/div[2]/label/span')
+    FORGOTPASSWORD = (By.XPATH, '/html/body/div/div[2]/div[1]/form/div[3]/a')
 
 
 class RegistrationPageIdentifiers(object):
@@ -102,11 +108,14 @@ class HelpIdentifiers(object):
     """
     Class to hold the Help Page Identifiers
     """
-    HELP = (By.XPATH, '//*[@id="exampleAccordion"]/ul[1]/li[5]/a')
-    STEPS_TO_CREATE_A_NEW_TOPIC = (By.XPATH, '//*[@id="camp_statement"]/start/start/ul/li[1]/a')
-    DEALING_WITH_DISAGREEMENTS = (By.XPATH, '//*[@id="camp_statement"]/start/start/ul/li[2]/a')
-    WIKI_MARKUP_INFORMATION = (By.XPATH, '//*[@id="camp_statement"]/start/start/ul/li[3]/a')
-    ADDING_CANO_FEEDBACK = (By.XPATH, '//*[@id="camp_statement"]/start/start/ul/li[4]/a')
+    HELP = (By.XPATH, '//*[@id="exampleAccordion"]/ul[1]/li[5]/a/span')
+    #HELP = (By.XPATH, '//*[@id="exampleAccordion"]/ul[1]/li[6]/a/span')
+    STEPS_TO_CREATE_A_NEW_TOPIC = (By.XPATH, '//*[@id="camp_statement"]/start/start/ul/li[2]/a')
+    DEALING_WITH_DISAGREEMENTS = (By.XPATH, '//*[@id="camp_statement"]/start/start/ul/li[4]/a')
+    WIKI_MARKUP_INFORMATION = (By.XPATH, '//*[@id="camp_statement"]/start/start/ul/li[5]/a')
+    ADDING_CANO_FEEDBACK = (By.XPATH, '//*[@id="camp_statement"]/start/start/ul/li[6]/a')
+    CANONIZER_IS_THE_FINAL_WORD_ON_EVERYTHING = (By.XPATH, '//*[@id="camp_statement"]/start/start/ul/li[1]/a')
+    CONSENSUS_OUT_OF_CONTROVERSY_USE_CASE = (By.XPATH, '//*[@id="camp_statement"]/start/start/ul/li[3]/a')
 
 
 class ForgotPasswordIdentifiers(object):
@@ -191,6 +200,7 @@ class AccountSettingsChangePasswordIdentifiers(object):
     INVALID_CURRENT_PASSWORD = (By.XPATH, '//*[@id="myTabContent"]/form/div/div[1]/p')
     PASSWORD_MISMATCH = (By.XPATH, '//*[@id="myTabContent"]/form/div/div[3]/p')
     CURRENT_NEW_PASSWORD_MUST_DIFF = (By.XPATH, '//*[@id="myTabContent"]/form/div/div[2]/p')
+    INVALID_NEW_PASSWORD = (By.XPATH, '//*[@id="myTabContent"]/form/div/div[2]/p')
 
 
 class AddAndManageNickNamesIdentifiers(object):
@@ -229,6 +239,9 @@ class AccountSettingsManageProfileInfoIdentifiers(object):
     ERROR_MIDDLE_NAME = (By.XPATH, '//*[@id="myTabContent"]/form/div/div[2]/div[1]/p')
     ERROR_LAST_NAME = (By.XPATH, '//*[@id="myTabContent"]/form/div/div[3]/div[1]/p')
     UPDATE = (By.ID, 'submit')
+    PHONE_NUMBER = (By.ID, 'phone_number')
+    ERROR_PHONE_NUMBER = (By.XPATH, '//*[@id="myTabContent"]/form[1]/div/div[1]/div/p')
+    VERIFY = (By.XPATH, '//*[@id="submit"]')
 
 
 class AlgorithmInformationIdentifiers(object):
@@ -299,6 +312,7 @@ class CreateNewCampPageIdentifiers(object):
     """
         Class to hold the Create New Camp Page Identifiers
     """
+
     CREATE_CAMP = (By.XPATH, '//*[@id="tree_88_1_1"]/ul/li[1]/span/a')
     NICK_NAME = (By.ID, 'nick_name')
     CAMP_NAME = (By.ID, 'camp_name')

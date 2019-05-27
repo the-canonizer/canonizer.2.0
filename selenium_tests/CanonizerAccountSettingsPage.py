@@ -169,6 +169,10 @@ class CanonizerAccountSettingsChangePasswordPage(Page):
         self.save(current_password, new_password, confirm_password)
         return self.find_element(*AccountSettingsChangePasswordIdentifiers.CURRENT_NEW_PASSWORD_MUST_DIFF).text
 
+    def save_with_invalid_new_password(self, current_password, new_password, confirm_password):
+        self.save(current_password, new_password, confirm_password)
+        return self.find_element(*AccountSettingsChangePasswordIdentifiers.INVALID_NEW_PASSWORD).text
+
 
 class CanonizerAccountSettingsNickNamesPage(Page):
 
@@ -186,7 +190,7 @@ class CanonizerAccountSettingsNickNamesPage(Page):
         self.enter_nick_name(nick_name)
         self.click_create_button()
 
-    def nick_names_page_mandatory_fields_are_marked_with_astrick(self):
+    def nick_names_page_mandatory_fields_are_marked_with_asterisk(self):
         """
         This Function checks, if Mandatory fields on Nick Names Page Marked with *
         Nick Name is Mandatory Field
@@ -251,6 +255,9 @@ class AccountSettingsManageProfileInfoPage(Page):
     def enter_zip_code(self, zip_code):
             self.find_element(*AccountSettingsManageProfileInfoIdentifiers.ZIP_CODE).send_keys(zip_code)
 
+    def enter_phone_number(self, phone_number):
+            self.find_element(*AccountSettingsManageProfileInfoIdentifiers.PHONE_NUMBER).send_keys(phone_number)
+
     def click_update_button(self):
         """
         This function clicks the Update Button
@@ -273,7 +280,14 @@ class AccountSettingsManageProfileInfoPage(Page):
         self.enter_zip_code(zip_code)
         self.click_update_button()
 
-    def manage_profile_info_page_mandatory_fields_are_marked_with_astrick(self):
+    def click_verify_button(self):
+        self.find_element(*AccountSettingsManageProfileInfoIdentifiers.VERIFY).click()
+
+    def verify_phone_number(self, phone_number):
+        self.enter_phone_number(phone_number)
+        self.click_verify_button()
+
+    def manage_profile_info_page_mandatory_fields_are_marked_with_asterisk(self):
         """
         This Function checks, if Mandatory fields on Manage Profile Info Page Marked with *
         Nick Name is Mandatory Field
@@ -286,12 +300,19 @@ class AccountSettingsManageProfileInfoPage(Page):
             self.find_element(*AccountSettingsManageProfileInfoIdentifiers.COUNTRY_ASTRK)
 
     def update_profile_with_blank_first_name(self, middle_name, last_name, email, language, dob, address_line1, address_line2, city, state, country, zip_code):
+        self.find_element(*AccountSettingsManageProfileInfoIdentifiers.FIRST_NAME).clear()
         self.update('', middle_name, last_name, email, language, dob, address_line1, address_line2, city, state, country, zip_code)
         return self.find_element(*AccountSettingsManageProfileInfoIdentifiers.ERROR_FIRST_NAME).text
 
     def update_profile_with_blank_last_name(self, first_name, middle_name, email, language, dob, address_line1, address_line2, city, state, country, zip_code):
+        self.find_element(*AccountSettingsManageProfileInfoIdentifiers.LAST_NAME).clear()
         self.update(first_name, middle_name, '', email, language, dob, address_line1, address_line2, city, state, country, zip_code)
-        return self.find_element(*AccountSettingsManageProfileInfoIdentifiers.ERROR_FIRST_NAME).text
+        return self.find_element(*AccountSettingsManageProfileInfoIdentifiers.ERROR_LAST_NAME).text
+
+    def verify_phone_number_with_blank_phone_number(self):
+        self.find_element(*AccountSettingsManageProfileInfoIdentifiers.PHONE_NUMBER).clear()
+        self.verify_phone_number('')
+        return self.find_element(*AccountSettingsManageProfileInfoIdentifiers.ERROR_PHONE_NUMBER).text
 
 
 

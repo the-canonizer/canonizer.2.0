@@ -42,20 +42,20 @@ class CanonizerCreateNewTopicPage(Page):
         """
         self.find_element(*CreateNewTopicPageIdentifiers.CREATETOPIC).click()
 
-    def create_topic(self, nickname, topic_name, namespace, other_namespace_name, note):
+    def create_topic(self, nickname, topic_name, namespace, note):
         self.enter_nick_name(nickname)
         self.enter_topic_name(topic_name)
         self.enter_namespace(namespace)
-        self.enter_other_namespace_name(other_namespace_name)
+        #self.enter_other_namespace_name(other_namespace_name)
         self.enter_note(note)
         self.click_create_topic_button()
 
-    def create_topic_with_blank_nick_name(self, topic_name, namespace, other_namespace_name, note):
-        self.create_topic('', topic_name, namespace, other_namespace_name, note)
+    def create_topic_with_blank_nick_name(self, topic_name, namespace, note):
+        self.create_topic('', topic_name, namespace, note)
         return self.find_element(*CreateNewTopicPageIdentifiers.ERROR_NICK_NAME).text
 
-    def create_topic_with_blank_topic_name(self, nickname, namespace, other_namespace_name, note):
-        self.create_topic(nickname, '', namespace, other_namespace_name, note)
+    def create_topic_with_blank_topic_name(self, nickname, namespace, note):
+        self.create_topic(nickname, '', namespace, note)
         return self.find_element(*CreateNewTopicPageIdentifiers.ERROR_TOPIC_NAME).text
 
     def create_topic_with_blank_other_namespace_name(self, nickname, topic_name, namespace, note):
@@ -65,7 +65,7 @@ class CanonizerCreateNewTopicPage(Page):
     def create_new_topic_page_should_have_add_new_nick_name_link_for_new_users(self):
         return self.find_element(*CreateNewTopicPageIdentifiers.ADDNEWNICKNAME).text
 
-    def create_new_topic_page_mandatory_fields_are_marked_with_astrick(self):
+    def create_new_topic_page_mandatory_fields_are_marked_with_asterisk(self):
         """
         This Function checks, if Mandatory fields on Register Page Marked with *
         First Name, Last Name, Email, Password, Confirm Password are Mandatory Fields

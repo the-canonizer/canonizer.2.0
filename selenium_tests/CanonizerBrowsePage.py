@@ -138,6 +138,11 @@ class CanonizerBrowsePage(Page):
         self.find_element(*BrowsePageIdentifiers.NAMESPACE).click()
         return CanonizerBrowsePage(self.driver)
 
+    def select_by_value_crypto_currency_ethereum(self):
+        select = Select(self.find_element(*BrowsePageIdentifiers.NAMESPACE))
+        select.select_by_value("21")
+        return CanonizerBrowsePage(self.driver)
+
 
 
 

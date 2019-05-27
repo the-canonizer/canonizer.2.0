@@ -34,7 +34,6 @@ class CanonizerMainPage(Page):
         """
         return self.find_element(*HomePageIdentifiers.LOADALLTOPICS).text
 
-
     def click_what_is_canonizer_page_link(self):
         """
         This Function is to verify if the canonizer main page loads properly

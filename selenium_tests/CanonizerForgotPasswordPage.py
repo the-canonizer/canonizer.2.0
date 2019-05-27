@@ -82,7 +82,7 @@ class CanonizerForgotPasswordPage(Page):
         self.submit(email)
         return self
 
-    def forgot_password_page_mandatory_fields_are_marked_with_astrick(self):
+    def forgot_password_page_mandatory_fields_are_marked_with_asterisk(self):
         """
         This Function checks, if Mandatory fields on Register Page Marked with *
         First Name, Last Name, Email, Password, Confirm Password are Mandatory Fields

@@ -83,7 +83,7 @@ class CanonizerRegisterPage(Page):
     def registration_should_have_login_option_for_existing_users(self):
         return self.find_element(*RegistrationPageIdentifiers.LOGINOPTION).text
 
-    def register_page_mandatory_fields_are_marked_with_astrick(self):
+    def register_page_mandatory_fields_are_marked_with_asterisk(self):
         """
         This Function checks, if Mandatory fields on Register Page Marked with *
         First Name, Last Name, Email, Password, Confirm Password are Mandatory Fields

@@ -105,9 +105,27 @@ class CanonizerLoginPage(Page):
         """
         return self.find_element(*LoginPageIdentifiers.SIGNUPNOW).text
 
+    def login_with_blank_email(self, password):
+        self.login('', password)
+        return self.find_element(*LoginPageIdentifiers.ERROR_EMAIL).text
 
+    def login_with_blank_password(self, email):
+        self.login(email, '')
+        return self.find_element(*LoginPageIdentifiers.ERROR_PASSWORD).text
 
+    def login_page_mandatory_fields_are_marked_with_asterisk(self):
+        """
+        This Function checks, if Mandatory fields on Register Page Marked with *
+        First Name, Last Name, Email, Password, Confirm Password are Mandatory Fields
 
+        :return: the element value
+        """
+        return \
+            self.find_element(*LoginPageIdentifiers.EMAIL_ASTRK) and \
+            self.find_element(*LoginPageIdentifiers.PASSWORD_ASTRK)
+
+    def login_should_have_forgot_password_link(self):
+        return self.find_element(*LoginPageIdentifiers.FORGOTPASSWORD).text
 
 
 

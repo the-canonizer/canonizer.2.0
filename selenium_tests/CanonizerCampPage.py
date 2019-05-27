@@ -1,5 +1,5 @@
 from CanonizerBase import Page
-from Identifiers import CreateNewCampPageIdentifiers, BrowsePageIdentifiers, TopicUpdatePageIdentifiers, CampEditPageIdentifiers
+from Identifiers import CreateNewCampPageIdentifiers, BrowsePageIdentifiers, TopicUpdatePageIdentifiers, CampEditPageIdentifiers, HomePageIdentifiers
 from selenium.webdriver.support.ui import Select
 
 
@@ -21,6 +21,24 @@ class CanonizerCampPage(Page):
         self.hover(*CreateNewCampPageIdentifiers.CREATE_CAMP)
         self.find_element(*CreateNewCampPageIdentifiers.CREATE_CAMP).click()
         return CanonizerCampPage(self.driver)
+
+    def load_create_new_camp_page(self):
+        """
+            Go To The topic
+        """
+        # Browse to Browse Page
+        self.hover(*BrowsePageIdentifiers.BROWSE)
+        self.find_element(*BrowsePageIdentifiers.BROWSE).click()
+
+        # Browse to Topic Name
+        self.hover(*TopicUpdatePageIdentifiers.TOPIC_IDENTIFIER)
+        self.find_element(*TopicUpdatePageIdentifiers.TOPIC_IDENTIFIER).click()
+
+        # Click on Create New Camp
+        self.hover(*HomePageIdentifiers.CREATE_NEW_CAMP)
+        self.find_element(*HomePageIdentifiers.CREATE_NEW_CAMP).click()
+        return CanonizerCampPage(self.driver)
+
 
     def create_new_camp_page_mandatory_fields_are_marked_with_asterisk(self):
         """
