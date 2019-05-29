@@ -223,8 +223,10 @@ class TopicController extends Controller {
 
                 // send history link in email
                 $link = 'topic-history/' . $topic->topic_num;
-
-                Mail::to(Auth::user()->email)->send(new ThankToSubmitterMail(Auth::user(), $link));
+                $data['object'] = $topic->topic_name;
+				$data['link'] = 'topic/' . $topic->topic_num . '/1';
+				
+                Mail::to(Auth::user()->email)->send(new ThankToSubmitterMail(Auth::user(), $link,$data));
             } else if ($eventtype == "OBJECTION") {
 
                 $user = Nickname::getUserByNickName($all['submitter']);
@@ -682,8 +684,9 @@ class TopicController extends Controller {
 
                 // send history link in email
                 $link = 'camp/history/' . $camp->topic_num . '/' . $camp->camp_num;
-
-                Mail::to(Auth::user()->email)->send(new ThankToSubmitterMail(Auth::user(), $link));
+                $data['object'] = $camp->topic->topic_name . " : " . $camp->camp_name;
+				$data['link'] = 'topic/' . $camp->topic_num . '/1';
+                Mail::to(Auth::user()->email)->send(new ThankToSubmitterMail(Auth::user(), $link,$data));
             } else if ($eventtype == "OBJECTION") {
 
                 $user = Nickname::getUserByNickName($all['submitter']);
@@ -815,8 +818,10 @@ class TopicController extends Controller {
         if ($eventtype == "CREATE") {
            // send history link in email
             $link = 'statement/history/' . $statement->topic_num . '/' . $statement->camp_num;
-
-            Mail::to(Auth::user()->email)->send(new ThankToSubmitterMail(Auth::user(), $link));
+            $livecamp = Camp::getLiveCamp($statement->topic_num,$statement->camp_num);
+			$data['object'] = $livecamp->topic->topic_name . " : " . $livecamp->camp_name;
+			$data['link'] = 'topic/' . $statement->topic_num . '/1';
+            Mail::to(Auth::user()->email)->send(new ThankToSubmitterMail(Auth::user(), $link,$data));
         } else if ($eventtype == "OBJECTION") {
 
             $user = Nickname::getUserByNickName($all['submitter']);

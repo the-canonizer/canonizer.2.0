@@ -583,15 +583,18 @@ class Camp extends Model {
         if (is_array($traversedTreeArray)) {
             foreach ($traversedTreeArray as $campnum => $array) {
                 $filter = isset($_REQUEST['filter']) && is_numeric($_REQUEST['filter']) ? $_REQUEST['filter'] : 0.001;
-				
-			    if(session('filter')==="removed") {
+				if(isset($_REQUEST['filter']) && !empty($_REQUEST['filter'])) {
+									
+					session()->forget('filter');
+				}
+			    if(session('filter')==="removed") { echo "hiiii here";
 					
 				 $filter = 0.00;	
 				} else if(isset($_SESSION['filterchange'])) {
 					
-				 $filter = $_SESSION['filterchange'];
+				  $filter = $_SESSION['filterchange'];
 				}
-                if ($array['score'] < $filter && $currentCamp == $activeCamp) {
+                if ($array['score'] < $filter && $campnum != $activeCamp) {
                     continue;
                 }
                 $childCount = is_array($array['children']) ? count($array['children']) : 0;

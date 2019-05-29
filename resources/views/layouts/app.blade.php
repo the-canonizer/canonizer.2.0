@@ -212,7 +212,7 @@
 								 if(isset($_REQUEST['filter']) && !empty($_REQUEST['filter'])) {
 									
                                     $filter = $_REQUEST['filter'];										
-									session()->forget('filter'); 
+									session()->forget('filter');
 								 } else if(session('filter')!="removed") {
 									$filter = (isset($_SESSION['filterchange'])) ? $_SESSION['filterchange'] : '0.001';	 
 								 }
