@@ -97,6 +97,7 @@ class CanonizerRegisterPage(Page):
             self.find_element(*RegistrationPageIdentifiers.PASSWORD_ASTRK) and \
             self.find_element(*RegistrationPageIdentifiers.CNFM_PSSWD_ASTRK)
 
-
-
+    def registration_with_duplicate_email(self, firstname, lastname, email, password, confirmpassword):
+        self.register(firstname, lastname, email, password, confirmpassword)
+        return self.find_element(*RegistrationPageIdentifiers.ERROR_DUPLICATE_EMAIL).text
 

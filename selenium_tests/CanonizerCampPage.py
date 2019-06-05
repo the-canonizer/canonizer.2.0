@@ -39,7 +39,6 @@ class CanonizerCampPage(Page):
         self.find_element(*HomePageIdentifiers.CREATE_NEW_CAMP).click()
         return CanonizerCampPage(self.driver)
 
-
     def create_new_camp_page_mandatory_fields_are_marked_with_asterisk(self):
         """
         This Function checks, if Mandatory fields on Register Page Marked with *
@@ -101,6 +100,10 @@ class CanonizerCampPage(Page):
     def create_new_camp_page_should_have_add_new_nick_name_link_for_new_users(self):
         return self.find_element(*CreateNewCampPageIdentifiers.ADDNEWNICKNAME).text
 
+    def create_camp_with_duplicate_camp_name(self, nick_name, camp_name, keywords, note, camp_about_url, camp_about_nick_name):
+        self.create_camp(nick_name, camp_name, keywords, note, camp_about_url, camp_about_nick_name)
+        return self.find_element(*CreateNewCampPageIdentifiers.ERROR_DUPLICATE_CAMP_NAME).text
+
 
 class CanonizerEditCampPage(Page):
 
@@ -115,6 +118,10 @@ class CanonizerEditCampPage(Page):
         # Browse to Topic Name
         self.hover(*TopicUpdatePageIdentifiers.TOPIC_IDENTIFIER)
         self.find_element(*TopicUpdatePageIdentifiers.TOPIC_IDENTIFIER).click()
+
+        # Browse to Camp Name
+        self.hover(*CampEditPageIdentifiers.CAMP_IDENTIFIER)
+        self.find_element(*CampEditPageIdentifiers.CAMP_IDENTIFIER).click()
 
         # Click on Manage/Edit This camp
         self.hover(*CampEditPageIdentifiers.MANAGE_EDIT_CAMP)
@@ -215,3 +222,7 @@ class CanonizerEditCampPage(Page):
     def submit_camp_update_page_should_have_add_new_nick_name_link_for_new_users(self):
         return self.find_element(*CampEditPageIdentifiers.ADDNEWNICKNAME).text
 
+    def submit_camp_update_with_duplicate_camp_name(self, nick_name, camp_name, keywords, note, camp_about_url, camp_about_nick_name):
+        self.find_element(*CampEditPageIdentifiers.CAMP_NAME).clear()
+        self.submit_update(nick_name, camp_name, keywords, note, camp_about_url, camp_about_nick_name)
+        return self.find_element(*CampEditPageIdentifiers.ERROR_DUPLICATE_CAMP_NAME).text

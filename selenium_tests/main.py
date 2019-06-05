@@ -412,7 +412,7 @@ class TestPages(unittest.TestCase):
         """
         This test is to check the account settings->Change Password page load in the Canonizer Application
         """
-        print("\n" + str(test_cases(38)))
+        print("\n" + str(test_cases(39)))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the username and Click on Account Settings and check settings/changepassword in URL Name
@@ -1281,7 +1281,7 @@ class TestPages(unittest.TestCase):
         print("\n" + str(test_cases(142)))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
-        # Go to Edit News and check update news with valid data
+        # Go to Upload File and check upload file with invalid file format
         result = CanonizerUploadFilePage(self.driver).click_upload_file_page_button().upload_file_with_invalid_format(
             INVALID_FILE_FORMAT)
         self.assertIn("Error! The file must be a file of type: jpeg, bmp, png, jpg, gif.", result)
@@ -1290,7 +1290,7 @@ class TestPages(unittest.TestCase):
         print("\n" + str(test_cases(143)))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
-        # Go to Edit News and check update news with valid data
+        # Go to Upload File and check upload file with file size more than 5MB
         result = CanonizerUploadFilePage(self.driver).click_upload_file_page_button().upload_file_with_size_file_more_than_5mb(
             FILE_WITH_MORE_THAN_5MB)
         #self.assertIn("Error! The file may not be greater than 5 MB.", result)
@@ -1300,7 +1300,7 @@ class TestPages(unittest.TestCase):
         print("\n" + str(test_cases(144)))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
-        # Go to Edit News and check update news with valid data
+        # Go to Upload File and check upload file with existing file name
         result = CanonizerUploadFilePage(
             self.driver).click_upload_file_page_button().upload_file_with_same_file_name(
             FILE_WITH_SAME_NAME)
@@ -1310,7 +1310,7 @@ class TestPages(unittest.TestCase):
         print("\n" + str(test_cases(145)))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
-        # Go to Edit News and check update news with valid data
+        # Go to Upload File and check upload file with size zero bytes
         result = CanonizerUploadFilePage(self.driver).click_upload_file_page_button().upload_file_with_size_zero_bytes(
             FILE_WITH_ZERO_BYTES)
         self.assertIn("Error! The file must be a file of type: jpeg, bmp, png, jpg, gif.", result)
@@ -1374,24 +1374,24 @@ class TestPages(unittest.TestCase):
         print("\n" + str(test_cases(153)))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
-        # Click on the Help and click on Adding the Canonizer Feedback Camp Outline to Internet Articles
+        # Click on the Help and click on Canonizer is the final word on everything
         CanonizerHelpPage(self.driver).check_what_is_canonizer_help_page_loaded().check_Canonizer_is_the_final_word_on_everything_page_loaded().open("https://vimeo.com/307590745")
 
     def test_check_Canonizer_is_the_final_word_on_everything_page_loaded_without_login(self):
         print("\n" + str(test_cases(154)))
-        # Click on the Help and Click on the Steps_to_Create_a_New_Topic
+        # Click on the Help and Click on Canonizer is the final word on everything
         CanonizerHelpPage(self.driver).check_what_is_canonizer_help_page_loaded().check_Canonizer_is_the_final_word_on_everything_page_loaded().open("https://vimeo.com/307590745")
 
     def test_check_consensus_out_of_controversy_use_case_page_loaded(self):
         print("\n" + str(test_cases(155)))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
-        # Click on the Help and click on Adding the Canonizer Feedback Camp Outline to Internet Articles
+        # Click on the Help and click on Consensus out of controversy use case
         CanonizerHelpPage(self.driver).check_what_is_canonizer_help_page_loaded().check_consensus_out_of_controversy_use_case_page_loaded().open("topic/132-Consensus-out-of-controversy/2")
 
     def test_check_consensus_out_of_controversy_use_case_page_loaded_without_login(self):
         print("\n" + str(test_cases(156)))
-        # Click on the Help and Click on the Steps_to_Create_a_New_Topic
+        # Click on the Help and Click on Consensus out of controversy use case
         CanonizerHelpPage(self.driver).check_what_is_canonizer_help_page_loaded().check_consensus_out_of_controversy_use_case_page_loaded().open("topic/132-Consensus-out-of-controversy/2")
 
     def test_load_create_new_camp_page(self):
@@ -1435,6 +1435,91 @@ class TestPages(unittest.TestCase):
     def test_login_should_have_forgot_password_link(self):
         print("\n" + str(test_cases(162)))
         self.assertIn('Forgot Password', CanonizerLoginPage(self.driver).click_login_page_button().login_should_have_forgot_password_link())
+
+    def test_registration_with_duplicate_email(self):
+        print("\n" + str(test_cases(163)))
+        result = CanonizerRegisterPage(self.driver).click_register_button().registration_with_duplicate_email(
+            DEFAULT_FIRST_NAME,
+            DEFAULT_LAST_NAME,
+            DEFAULT_USER,
+            DEFAULT_PASS,
+            DEFAULT_PASS)
+        self.assertIn("The email has already been taken.", result)
+
+    def test_check_topic_page_from_my_supports_loaded(self):
+        print("\n" + str(test_cases(164)))
+        # Click on Account Settings->My Supports->Topic name
+        self.login_to_canonizer_app()
+        # Click on the Account Settings->My Supports->Topic name link
+        CanonizerAccountSettingsPage(self.driver).click_username_link_button().click_account_settings_page_button().click_account_settings_my_supports_page_button()
+        self.assertIn("topic/88-Theories%20of%20Consciousness", AccountSettingsMySupportsPage(self.driver).check_topic_page_from_my_supports_loaded().get_url())
+
+    def test_check_camp_page_from_my_supports_loaded(self):
+        print("\n" + str(test_cases(165)))
+        # Click on Account Settings->My Supports->Topic name
+        self.login_to_canonizer_app()
+        # Click on the Account Settings->My Supports->Camp name link
+        CanonizerAccountSettingsPage(self.driver).click_username_link_button().click_account_settings_page_button().click_account_settings_my_supports_page_button()
+        self.assertIn("topic/88-Theories%20of%20Consciousness/1", AccountSettingsMySupportsPage(self.driver).check_camp_page_from_my_supports_loaded().get_url())
+
+    def test_submit_update_with_blank_topic_name(self):
+        print("\n" + str(test_cases(166)))
+        # Click on the Login Page and Create a Login Session and for further actions.
+        self.login_to_canonizer_app()
+        # Click on the Topic update and check if topic name is blank
+        result = CanonizerTopicUpdatePage(self.driver).load_topic_update_page().submit_update_with_blank_topic_name(
+            "Test",
+            "",
+            "")
+        self.assertIn("The topic name field is required.", result)
+
+    def test_submit_topic_update_with_duplicate_topic_name(self):
+        print("\n" + str(test_cases(167)))
+        # Click on the Login Page and Create a Login Session and for further actions.
+        self.login_to_canonizer_app()
+        # Click on the Topic update and check if topic name is duplicate
+        result = CanonizerTopicUpdatePage(self.driver).load_topic_update_page().submit_topic_update_with_duplicate_topic_name(
+            "",
+            "Camp duplicate test",
+            "",
+            "")
+        self.assertIn("The topic name has already been taken", result)
+
+    def test_create_camp_with_duplicate_camp_name(self):
+        print("\n" + str(test_cases(168)))
+        # Click on the Login Page and Create a Login Session and for further actions.
+        self.login_to_canonizer_app()
+        # Click on the Create New camp link and check if camp name is duplicate
+        result = CanonizerCampPage(self.driver).load_create_camp_page().create_camp_with_duplicate_camp_name(
+            "",
+            "Approachable Via Science",
+            "",
+            "",
+            "",
+            "")
+        self.assertIn("The camp name has already been taken", result)
+
+    def test_submit_camp_update_with_duplicate_camp_name(self):
+        print("\n" + str(test_cases(169)))
+        # Click on the Login Page and Create a Login Session and for further actions.
+        self.login_to_canonizer_app()
+        # Click on the Manage/Edit This Camp link and check if camp name is duplicate
+        result = CanonizerEditCampPage(self.driver).load_camp_update_page().submit_camp_update_with_duplicate_camp_name(
+            "",
+            "Approachable Via Science",
+            "",
+            "",
+            "",
+            "")
+        self.assertIn("The camp name has already been taken", result)
+
+    def test_edit_news_page_mandatory_fields_are_marked_with_asterisk(self):
+        print("\n" + str(test_cases(170)))
+        # Click on the Login Page and Create a Login Session and for further actions.
+        self.login_to_canonizer_app()
+        # Click on the Edit News link
+        self.assertTrue(CanonizerEditNewsFeedsPage(self.driver).load_edit_news_feed_page().edit_news_page_mandatory_fields_are_marked_with_asterisk())
+
 
     def tearDown(self):
         self.driver.close()

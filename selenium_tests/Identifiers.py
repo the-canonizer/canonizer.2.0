@@ -66,6 +66,7 @@ class RegistrationPageIdentifiers(object):
     ERROR_LAST_NAME  = (By.XPATH, '/html/body/div[1]/div[2]/div/form/div[3]/p')
     ERROR_EMAIL      = (By.XPATH, '/html/body/div[1]/div[2]/div/form/div[4]/p')
     ERROR_PASSWORD   = (By.XPATH, '/html/body/div[1]/div[2]/div/form/div[5]/p')
+    ERROR_DUPLICATE_EMAIL = (By.XPATH, '/html/body/div/div[2]/div[1]/form/div[4]/p')
 
 
 class WhatIsCanonizerPageIdentifiers(object):
@@ -293,6 +294,7 @@ class TopicUpdatePageIdentifiers(object):
     OBJECT = (By.ID, 'object')
     ADDNEWNICKNAME = (By.XPATH, '//*[@id="topicForm"]/div[1]/a')
     SELECTED_NICK_NAME = (By.XPATH, '//*[@id="nick_name"]/option[1]')
+    ERROR_DUPLICATE_TOPIC_NAME = (By.XPATH, '//*[@id="topicForm"]/div[2]/p')
 
 
 class TopicObjectPageIdentifiers(object):
@@ -326,6 +328,7 @@ class CreateNewCampPageIdentifiers(object):
     ERROR_NICK_NAME = (By.XPATH, '/html/body/div[1]/div[3]/div/div/form/div[1]/p')
     ERROR_CAMP_NAME = (By.XPATH, '/html/body/div[1]/div[3]/div/div/form/div[2]/p')
     ADDNEWNICKNAME = (By.XPATH, '/html/body/div[1]/div[3]/div/div/form/div[1]/a')
+    ERROR_DUPLICATE_CAMP_NAME = (By.XPATH, '/html/body/div/div[3]/div/div/form/div[3]/p')
 
 
 class CampEditPageIdentifiers(object):
@@ -349,6 +352,8 @@ class CampEditPageIdentifiers(object):
     ERROR_CAMP_NAME = (By.XPATH, '/html/body/div[1]/div[3]/div/div/form/div[2]/p')
     ADDNEWNICKNAME = (By.XPATH, '/html/body/div[1]/div[3]/div/div/form/div[1]/a')
     SUBMIT_UPDATE = (By.ID, 'submit')
+    ERROR_DUPLICATE_CAMP_NAME = (By.XPATH, '/html/body/div/div[3]/div/div/form/div[3]/p')
+    CAMP_IDENTIFIER = (By.XPATH, '//*[@id="tree_88_2_6"]/div/a')
 
 
 class CampStatementEditPageIdentifiers(object):
@@ -396,17 +401,20 @@ class EditNewsPageIdentifiers(object):
     DISPLAY_TEXT = (By.ID, 'display_text')
     LINK = (By.ID, 'link')
     CANCEL = (By.XPATH, '//*[@id="topicForm"]/a')
-    DISPLAY_TEXT = (By.ID, 'display_text')
-    DISPLAY_TEXT_ASTRK = (By.XPATH, '//*[@id="sortable"]/div[1]/div[1]/label/span')
-    LINK = (By.ID, 'link')
-    LINK_ASTRK = (By.XPATH, '//*[@id="sortable"]/div[1]/div[2]/label/span')
+    DISPLAY_TEXT_ASTRK = (By.XPATH, '//*[@id="sortable"]/div/div[1]/label/span')
+    LINK_ASTRK = (By.XPATH, '//*[@id="sortable"]/div/div[2]/label/span')
     SUBMIT = (By.ID, 'submit')
     ERROR_DISPLAY_TEXT = (By.XPATH, '//*[@id="sortable"]/div[1]/div[1]/p')
-    ERROR_LINK = (By.XPATH,'//*[@id="sortable"]/div[1]/div[2]/p')
-    ERROR_INVALID_LINK =(By.XPATH, '//*[@id="sortable"]/div[1]/div[2]/p')
+    ERROR_LINK = (By.XPATH, '//*[@id="sortable"]/div[1]/div[2]/p')
+    ERROR_INVALID_LINK = (By.XPATH, '//*[@id="sortable"]/div[1]/div[2]/p')
 
 
-
+class MySupportsPageIdentifiers(object):
+    """
+    Class to hold the My Supports Page Identifiers
+    """
+    TOPIC_NAME = (By.XPATH, '/html/body/div/div[2]/div/div/div/div/div[1]/b/a')
+    CAMP_NAME = (By.XPATH, '//*[@id="positions_2585"]/b/a')
 
 
 

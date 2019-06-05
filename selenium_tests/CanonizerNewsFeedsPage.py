@@ -143,3 +143,13 @@ class CanonizerEditNewsFeedsPage(Page):
         self.find_element(*EditNewsPageIdentifiers.LINK).clear()
         self.update_news(display_text, link, available_for_child_camps)
         return self
+
+    def edit_news_page_mandatory_fields_are_marked_with_asterisk(self):
+        """
+        This Function checks, if Mandatory fields on Add News Page Marked with *
+        :return: the element value
+        """
+
+        return \
+            self.find_element(*EditNewsPageIdentifiers.DISPLAY_TEXT_ASTRK) and \
+            self.find_element(*EditNewsPageIdentifiers.LINK_ASTRK)

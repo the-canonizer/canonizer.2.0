@@ -127,7 +127,7 @@ testCases = {
     115: [low, 'On Topic Update, All Mandatory Fields are marked with * Sign'],
     116: [low, 'On Topic objection, All Mandatory Fields are marked with * Sign'],
     117: [low, 'On Topic Update, Add New Nick Name link should present for users who doesn\'t have nick name yet'],
-    118: [low, 'On Create New Camp page, When user doesn\'t put Nick Name , user must see Error Message'],
+    118: [low, 'On Topic Update page, When user doesn\'t put Nick Name , user must see Error Message'],
     119: [moderate, 'When user click on Create New Camp ,user should see Create New Camp page'],
     120: [low, 'On Create New Camp page, All Mandatory Fields are marked with * Sign'],
     121: [low, 'On Create New Camp page, When user doesn\'t put Nick Name , user must see Error Message'],
@@ -171,7 +171,15 @@ testCases = {
     159: [moderate, 'In Login Page, When user doesn\'t put Email, user must see Error Message'],
     160: [moderate, 'In Login Page, When user doesn\'t put Password, user must see Error Message'],
     161: [low, 'On Login Page, All Mandatory Fields are marked with * Sign'],
-    162: [low, 'Login page should have "Forgot Password" link']
+    162: [low, 'Login page should have "Forgot Password" link'],
+    163: [moderate, 'In Registration page, When user enter duplicate Email, should see error message'],
+    164: [moderate, 'In My Supports page, When user click on Topic name, user should redirect to respective page'],
+    165: [moderate, 'In My Supports page, When user click on Camp name, user should redirect to respective page'],
+    166: [low, 'On Topic Update, When user doesn\'t put Topic Name, user must see Error Message'],
+    167: [moderate, 'In Topic Update page, When user enter duplicate Topic name, should see error message'],
+    168: [moderate, 'In Create New Camp page, When user enter duplicate Camp name, should see error message'],
+    169: [moderate, 'In Camp Update page, When user enter duplicate Camp name, should see error message'],
+    170: [moderate, 'On Edit News Page, All mandatory fields are marked with # sign']
 
 
 }

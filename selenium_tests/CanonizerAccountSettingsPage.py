@@ -1,5 +1,5 @@
 from CanonizerBase import Page
-from Identifiers import AccountSettingsIdentifiers, LogoutIdentifiers, AccountSettingsChangePasswordIdentifiers, AddAndManageNickNamesIdentifiers, AccountSettingsManageProfileInfoIdentifiers
+from Identifiers import AccountSettingsIdentifiers, LogoutIdentifiers, AccountSettingsChangePasswordIdentifiers, AddAndManageNickNamesIdentifiers, AccountSettingsManageProfileInfoIdentifiers, MySupportsPageIdentifiers
 
 
 class CanonizerAccountSettingsPage(Page):
@@ -215,6 +215,28 @@ class CanonizerAccountSettingsNickNamesPage(Page):
     def create_with_valid_nick_name(self, nick_name):
         self.create(nick_name)
         return self
+
+
+class AccountSettingsMySupportsPage(Page):
+    def check_topic_page_from_my_supports_loaded(self):
+        """
+        This function verifies if the canonizer help page loads properly.
+        :return:
+        """
+
+        self.hover(*MySupportsPageIdentifiers.TOPIC_NAME)
+        self.find_element(*MySupportsPageIdentifiers.TOPIC_NAME).click()
+        return AccountSettingsMySupportsPage(self.driver)
+
+    def check_camp_page_from_my_supports_loaded(self):
+        """
+        This function verifies if the canonizer help page loads properly.
+        :return:
+        """
+
+        self.hover(*MySupportsPageIdentifiers.CAMP_NAME)
+        self.find_element(*MySupportsPageIdentifiers.CAMP_NAME).click()
+        return AccountSettingsMySupportsPage(self.driver)
 
 
 class AccountSettingsManageProfileInfoPage(Page):

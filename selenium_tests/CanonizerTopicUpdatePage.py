@@ -93,8 +93,8 @@ class CanonizerTopicUpdatePage(Page):
     def enter_namespace(self, namespace):
         self.find_element(*TopicUpdatePageIdentifiers.NAMESPACE).send_keys(namespace)
 
-    def enter_other_namespace_name(self, other_namespace_name):
-        self.find_element(*TopicUpdatePageIdentifiers.OTHER_NAMESPACE_NAME).send_keys(other_namespace_name)
+    #def enter_other_namespace_name(self, other_namespace_name):
+     #   self.find_element(*TopicUpdatePageIdentifiers.OTHER_NAMESPACE_NAME).send_keys(other_namespace_name)
 
     def enter_note(self, note):
         self.find_element(*TopicUpdatePageIdentifiers.NOTE).send_keys(note)
@@ -118,11 +118,17 @@ class CanonizerTopicUpdatePage(Page):
         self.submit_update('', topic_name, namespace, note)
         return self.find_element(*TopicUpdatePageIdentifiers.ERROR_NICK_NAME).text
 
-    def submit_update_with_blank_topic_name(self, nickname, namespace, other_namespace_name, note):
-        self.submit_update(nickname, '', namespace, other_namespace_name, note)
+    def submit_update_with_blank_topic_name(self, nickname, namespace, note):
+        self.find_element(*TopicUpdatePageIdentifiers.TOPIC_NAME).clear()
+        self.submit_update(nickname, '', namespace, note)
         return self.find_element(*TopicUpdatePageIdentifiers.ERROR_TOPIC_NAME).text
 
     def submit_update_with_blank_other_namespace_name(self, nickname, topic_name, namespace, note):
         self.submit_update(nickname, topic_name, namespace, '', note)
         return self.find_element(*TopicUpdatePageIdentifiers.ERROR_OTHER_NAMESPACE_NAME).text
+
+    def submit_topic_update_with_duplicate_topic_name(self, nick_name, topic_name, namespace, note):
+        self.find_element(*TopicUpdatePageIdentifiers.TOPIC_NAME).clear()
+        self.submit_update(nick_name, topic_name, namespace, note)
+        return self.find_element(*TopicUpdatePageIdentifiers.ERROR_DUPLICATE_TOPIC_NAME).text
 
