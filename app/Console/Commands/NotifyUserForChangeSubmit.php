@@ -77,7 +77,7 @@ class NotifyUserForChangeSubmit extends Command {
 
                 $data['nick_name'] = $nickName->nick_name;
                 $data['forum_link'] = 'forum/' . $statement->topic_num . '-statement/' . $statement->camp_num . '/threads';
-                $data['subject'] = "Proposed change to camp statement #" . $statement->id . " submitted";
+                $data['subject'] = "Proposed change to statement for camp " . $livecamp->camp_name . " submitted";
                 self::mailSupporters($directSupporter, $link, $data);       //mail supporters
                 echo " \n Your change to statement #' .$statement->id. 'has been submitted to your supporters \n";
             } else if ($type == 'camp') {
