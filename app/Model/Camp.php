@@ -35,7 +35,7 @@ class Camp extends Model {
 
         if ((isset($_REQUEST['asof']) && $_REQUEST['asof'] == "review") || session('asofDefault')=="review") {
 
-            return $this->hasOne('App\Model\Topic', 'topic_num', 'topic_num')->orderBy('submit_time', 'DESC');
+            return $this->hasOne('App\Model\Topic', 'topic_num', 'topic_num')->where('objector_nick_id', '=', NULL)->orderBy('submit_time', 'DESC');
         } else {
             return $this->hasOne('App\Model\Topic', 'topic_num', 'topic_num')
                             ->where('go_live_time', '<=', $as_of_time)
@@ -441,7 +441,7 @@ class Camp extends Model {
         $childsData = Camp::where('topic_num', '=', $topicnum)
                         ->where('parent_camp_num', '=', $parentcamp)
                         ->where('camp_name', '!=', 'Agreement')
-                        // ->where('objector_nick_id', '=', NULL)
+                        //->where('objector_nick_id', '=', NULL)
                         //->where('go_live_time','<=',time()) 				
                         //->orderBy('submit_time', 'desc')
                         ->get()->unique('camp_num');
@@ -587,7 +587,7 @@ class Camp extends Model {
 									
 					session()->forget('filter');
 				}
-			    if(session('filter')==="removed") { echo "hiiii here";
+			    if(session('filter')==="removed") {
 					
 				 $filter = 0.00;	
 				} else if(isset($_SESSION['filterchange'])) {
@@ -643,7 +643,7 @@ class Camp extends Model {
     public function campTree($algorithm, $activeAcamp = null, $supportCampCount = 0, $needSelected = 0) {
         //return '';
         //session()->flush();//dd(1);
-
+   
         $as_of_time = time();
         if (isset($_REQUEST['asof']) && $_REQUEST['asof'] == 'bydate') {
             $as_of_time = strtotime($_REQUEST['asofdate']);
@@ -684,13 +684,14 @@ class Camp extends Model {
                         ->orderBy('submit_time', 'desc')
                         ->get()]);
         } else {
-
+            
             if ((isset($_REQUEST['asof']) && $_REQUEST['asof'] == "review") || session('asofDefault')=="review") {
-
-
+            
+            
                 session(["topic-child-{$this->topic_num}" => self::where('topic_num', '=', $this->topic_num)
                             //->where('parent_camp_num', '=', $parentcamp)
                             ->where('camp_name', '!=', 'Agreement')
+							->where('objector_nick_id', '=', NULL)
                             ->whereRaw('go_live_time in (select max(go_live_time) from camp where topic_num=' . $this->topic_num . ' and objector_nick_id is null group by camp_num)')
                             ->orderBy('submit_time', 'desc')
                             ->groupBy('camp_num')

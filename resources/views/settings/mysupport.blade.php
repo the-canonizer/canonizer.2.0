@@ -33,8 +33,8 @@
 		        <p style="margin-left: 15px;color:red">Note : To change support order of camp, drag & drop the camp box on your choice position. </p>
                 @if(count($supportedTopic))
                  @foreach($supportedTopic as $data)
-
-                       <div class="SpCmpHd"><b>For Topic : <a href="/topic/{{ $data->topic->topic_num }}-{{ $data->topic->topic_name}}/">{{ $data->topic->topic_name}} </a> </b></div>
+                 <?php $title      = preg_replace('/[^A-Za-z0-9\-]/', '-', $data->topic->topic_name);	?>
+                       <div class="SpCmpHd"><b>For Topic : <a href="/topic/{{ $data->topic->topic_num }}-{{ $title }}/">{{ $data->topic->topic_name}} </a> </b></div>
                		<div class="row column{{ $data->topic_num }}">
 					   <?php $topicSupport = $data->topic->Getsupports($data->topic_num,$userNickname);?>
 					   @foreach($topicSupport as $k=>$support)
@@ -48,7 +48,8 @@
 							<input type="hidden" id= "nick_name_id_{{ $support->support_id }}" name="nick_name_id" value="{{ $support->nick_name_id }}">
 						  <button type="submit" id="submit_{{ $support->support_id }}" class="btn-sptclose" title="Remove Support"><i class="fa fa-close"></i></button>
 						 </form>
-					     <b><span class="support_order">{{ $support->support_order }}</span> . <a style="text-decoration: underline; color: blue;" href="/topic/{{ $data->topic_num }}-{{ $data->topic->topic_name }}/{{ $support->camp->camp_num }}"> {{ $support->camp->camp_name }}  </a> <br/>
+						
+					     <b><span class="support_order">{{ $support->support_order }}</span> . <a style="text-decoration: underline; color: blue;" href="/topic/{{ $data->topic_num }}-{{ $title }}/{{ $support->camp->camp_num }}"> {{ $support->camp->camp_name }}  </a> <br/>
 					   	 </b>
                        </div>
 						<?php } else { 
