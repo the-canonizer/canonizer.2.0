@@ -154,8 +154,8 @@
                                     <div class="grace-period-note"><b>Note: </b>This countdown timer is the grace period in which you can make minor changes to your camp before other direct supporters are notified.</div>
                                    <div style="float: right"> 
                                        <div class="timer-dial" id="countdowntimer<?php echo $data->id ;?>"></div>
-                                      <a href="<?php echo url('manage/camp/'.$data->id.'-update');?>" class="btn btn-historysmt">Update Camp</a>
-                                      <a href="javascript:void(0)" onclick="notifyAndCloseTimer('<?php echo $data->id ;?>')"class="btn btn-historysmt">Stop</a>
+                                      <a href="<?php echo url('manage/camp/'.$data->id.'-update');?>" class="btn btn-historysmt">Edit Change</a>
+                                      <a href="javascript:void(0)" onclick="notifyAndCloseTimer('<?php echo $data->id ;?>')"class="btn btn-historysmt">Commit Change</a>
                                    </div>
                                 </div>
                                 @endif
