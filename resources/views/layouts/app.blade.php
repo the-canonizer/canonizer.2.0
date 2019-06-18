@@ -101,7 +101,7 @@
                         $id = null;
                     }
                 }
-                 $campNum = (isset($parameters['campnum']) && $parameters['campnum']) ? $parameters['campnum'] : null;
+                 $campNum = (isset($parameters['campnum']) && $parameters['campnum']) ? $parameters['campnum'] : 1;
                  $campUrl = "/camp/create";
                 if($id!=null && $campNum !=null){
                     $campUrl = "/camp/create/$id/$campNum";
@@ -129,15 +129,15 @@
                             </a>
                         </li>
 
-						<?php if($route=='show' and strpos(Request::fullUrl(), 'forum' ) == 0 ) { ?>
-
+						<?php if($route=='show' and strpos(Request::fullUrl(), 'forum' ) == 0 ) { 
+                        if($id!=null && $campNum !=null){ ?>
 						<li class="nav-item">
                             <a class="nav-link" href='{{ url("$campUrl")}}'>
 
                                 <span class="nav-link-text">Create New Camp</span>
                             </a>
                         </li>
-						<?php } ?>
+						<?php } } ?>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url('/upload') }}">
                                 <span class="nav-link-text {{ ($route=='getUpload') ? 'menu-active':''}}">Upload File</span>

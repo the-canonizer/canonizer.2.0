@@ -232,11 +232,11 @@ class TopicController extends Controller {
                 $user = Nickname::getUserByNickName($all['submitter']);
 
                 $link = 'topic/' . $topic->topic_num . '/1';
-                $data['object'] = $topic->topic_name;
+                $data['object'] = $oldTopicData->topic_name;
                 $nickName = Nickname::getNickName($all['nick_name']);
                 $data['type'] = 'topic';
                 $data['nick_name'] = $nickName->nick_name;
-                $data['forum_link'] = 'forum/' . $topic->topic_num . '-' . $topic->topic_name . '/1/threads';
+                $data['forum_link'] = 'forum/' . $topic->topic_num . '-' . $oldTopicData->topic_name . '/1/threads';
                 $data['subject'] = $data['nick_name'] . " has objected to your proposed change.";
 
                 $receiver = (config('app.env') == "production") ? $user->email : config('app.admin_email');
@@ -690,9 +690,9 @@ class TopicController extends Controller {
             } else if ($eventtype == "OBJECTION") {
 
                 $user = Nickname::getUserByNickName($all['submitter']);
-
+                $livecamp = Camp::getLiveCamp($camp->topic_num,$camp->camp_num);
                 $link = 'topic/' . $camp->topic_num . '/1';
-                $data['object'] = $camp->topic->topic_name . " : " . $camp->camp_name;
+                $data['object'] = $camp->topic->topic_name . " : " . $livecamp->camp_name;
                 $nickName = Nickname::getNickName($all['nick_name']);
 
                 $data['nick_name'] = $nickName->nick_name;
