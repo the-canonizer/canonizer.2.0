@@ -230,13 +230,17 @@ class TopicController extends Controller {
             } else if ($eventtype == "OBJECTION") {
 
                 $user = Nickname::getUserByNickName($all['submitter']);
-
+                $liveTopic = Topic::select('topic.*')
+                             ->where('topic.topic_num', $topic->topic_num)
+                             ->where('topic.objector_nick_id',"=",null)
+                             ->latest('topic.submit_time')
+                             ->first();
                 $link = 'topic/' . $topic->topic_num . '/1';
-                $data['object'] = $oldTopicData->topic_name;
+                $data['object'] = $liveTopic->topic_name;
                 $nickName = Nickname::getNickName($all['nick_name']);
                 $data['type'] = 'topic';
                 $data['nick_name'] = $nickName->nick_name;
-                $data['forum_link'] = 'forum/' . $topic->topic_num . '-' . $oldTopicData->topic_name . '/1/threads';
+                $data['forum_link'] = 'forum/' . $topic->topic_num . '-' . $liveTopic->topic_name . '/1/threads';
                 $data['subject'] = $data['nick_name'] . " has objected to your proposed change.";
 
                 $receiver = (config('app.env') == "production") ? $user->email : config('app.admin_email');
