@@ -223,18 +223,24 @@ class TopicController extends Controller {
 
                 // send history link in email
                 $link = 'topic-history/' . $topic->topic_num;
-
-                Mail::to(Auth::user()->email)->send(new ThankToSubmitterMail(Auth::user(), $link));
+                $data['object'] = "topic ".$topic->topic_name;
+				$data['link'] = 'topic/' . $topic->topic_num . '/1';
+				
+                Mail::to(Auth::user()->email)->send(new ThankToSubmitterMail(Auth::user(), $link,$data));
             } else if ($eventtype == "OBJECTION") {
 
                 $user = Nickname::getUserByNickName($all['submitter']);
-
+                $liveTopic = Topic::select('topic.*')
+                             ->where('topic.topic_num', $topic->topic_num)
+                             ->where('topic.objector_nick_id',"=",null)
+                             ->latest('topic.submit_time')
+                             ->first();
                 $link = 'topic/' . $topic->topic_num . '/1';
-                $data['object'] = $topic->topic_name;
+                $data['object'] = $liveTopic->topic_name;
                 $nickName = Nickname::getNickName($all['nick_name']);
                 $data['type'] = 'topic';
                 $data['nick_name'] = $nickName->nick_name;
-                $data['forum_link'] = 'forum/' . $topic->topic_num . '-' . $topic->topic_name . '/1/threads';
+                $data['forum_link'] = 'forum/' . $topic->topic_num . '-' . $liveTopic->topic_name . '/1/threads';
                 $data['subject'] = $data['nick_name'] . " has objected to your proposed change.";
 
                 $receiver = (config('app.env') == "production") ? $user->email : config('app.admin_email');
@@ -682,14 +688,15 @@ class TopicController extends Controller {
 
                 // send history link in email
                 $link = 'camp/history/' . $camp->topic_num . '/' . $camp->camp_num;
-
-                Mail::to(Auth::user()->email)->send(new ThankToSubmitterMail(Auth::user(), $link));
+                $data['object'] = "camp ".$camp->topic->topic_name . " : " . $camp->camp_name;
+				$data['link'] = 'topic/' . $camp->topic_num . '/1';
+                Mail::to(Auth::user()->email)->send(new ThankToSubmitterMail(Auth::user(), $link,$data));
             } else if ($eventtype == "OBJECTION") {
 
                 $user = Nickname::getUserByNickName($all['submitter']);
-
+                $livecamp = Camp::getLiveCamp($camp->topic_num,$camp->camp_num);
                 $link = 'topic/' . $camp->topic_num . '/1';
-                $data['object'] = $camp->topic->topic_name . " : " . $camp->camp_name;
+                $data['object'] = $camp->topic->topic_name . " : " . $livecamp->camp_name;
                 $nickName = Nickname::getNickName($all['nick_name']);
 
                 $data['nick_name'] = $nickName->nick_name;
@@ -815,8 +822,10 @@ class TopicController extends Controller {
         if ($eventtype == "CREATE") {
            // send history link in email
             $link = 'statement/history/' . $statement->topic_num . '/' . $statement->camp_num;
-
-            Mail::to(Auth::user()->email)->send(new ThankToSubmitterMail(Auth::user(), $link));
+            $livecamp = Camp::getLiveCamp($statement->topic_num,$statement->camp_num);
+			$data['object'] = "statement ".$livecamp->topic->topic_name . " : " . $livecamp->camp_name;
+			$data['link'] = 'topic/' . $statement->topic_num . '/1';
+            Mail::to(Auth::user()->email)->send(new ThankToSubmitterMail(Auth::user(), $link,$data));
         } else if ($eventtype == "OBJECTION") {
 
             $user = Nickname::getUserByNickName($all['submitter']);
@@ -1003,7 +1012,7 @@ class TopicController extends Controller {
 
             $data['nick_name'] = $nickName->nick_name;
             $data['forum_link'] = 'forum/' . $statement->topic_num . '-statement/' . $statement->camp_num . '/threads';
-            $data['subject'] = "Proposed change to camp statement #" . $statement->id . " submitted";
+            $data['subject'] = "Proposed change to statement for camp " . $livecamp->camp_name . " submitted";
             $this->mailSupporters($directSupporter, $link, $data);       //mail supporters
             return response()->json(['id' => $statement->id, 'message' => 'Your change to statement has been submitted to your supporters.']);
         } else if ($type == 'camp') {
@@ -1013,7 +1022,7 @@ class TopicController extends Controller {
 
             $directSupporter = Support::getDirectSupporter($camp->topic_num, $camp->camp_num);
             $link = 'topic/' . $camp->topic_num . '/' . $camp->camp_num . '?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $camp->go_live_time);
-            $data['object'] = $camp->topic->topic_name . ' : ' . $camp->camp_name;
+            $data['object'] = "camp ".$camp->topic->topic_name . ' : ' . $camp->camp_name;
             $data['type'] = 'camp';
             $data['go_live_time'] = $camp->go_live_time;
 			$data['note'] = $camp->note;
@@ -1032,7 +1041,7 @@ class TopicController extends Controller {
             $directSupporter = Support::getDirectSupporter($topic->topic_num);
 
             $link = 'topic/' . $topic->topic_num . '/' . $topic->camp_num . '?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $topic->go_live_time);
-            $data['object'] = $topic->topic_name;
+            $data['object'] = "topic ".$topic->topic_name;
             $data['go_live_time'] = $topic->go_live_time;
             $data['type'] = 'topic';
 			$data['note'] = $topic->note;

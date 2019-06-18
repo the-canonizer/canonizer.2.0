@@ -8,7 +8,7 @@
 				$topicNum = 0;
                 foreach ($topics as $key => $data) {
                     
-                   if ($currentLive != 1 && $currentTime >= $data->go_live_time) {
+                   if ($currentLive != 1 && $currentTime >= $data->go_live_time && $data->objector_nick_id == NULL) {
                         $currentLive = 1;
                       $topicBreadName = $data->topic_name; 
 					  $topicNum = $data->topic_num;

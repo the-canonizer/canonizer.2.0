@@ -135,6 +135,7 @@ class CThreadsController extends Controller
                 // Return the name of the Topic to index View
                 'topicGeneralName' => Topic::where('topic_num', $topicid)
                                              ->where('go_live_time', '<=', time())
+											 ->where('objector_nick_id','=',NULL)
                                              ->latest('submit_time')
                                              ->first()->topic_name,
                 'parentcamp'       => Camp::campNameWithAncestors($camp,''),
