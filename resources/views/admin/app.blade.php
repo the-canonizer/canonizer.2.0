@@ -46,6 +46,7 @@
                     <li><a href="{{ url('/admin/users') }}"><i class="glyphicon glyphicon-calendar"></i> Users</a></li>
                     <li><a href="{{ url('/admin/templates') }}"><i class="glyphicon glyphicon-pencil"></i> Templates</a></li>
                     <li><a href="{{ url('/admin/sendmail') }}"><i class="glyphicon glyphicon-pencil"></i> Send Email</a></li>
+                    <li><a href="{{ url('/admin/videopodcast') }}"><i class="glyphicon glyphicon-facetime-video"></i> Video Podcast</a></li>
                     <!--<li><a href="stats.html"><i class="glyphicon glyphicon-stats"></i> Statistics (Charts)</a></li>
                     <li><a href="tables.html"><i class="glyphicon glyphicon-list"></i> Tables</a></li>
                     <li><a href="buttons.html"><i class="glyphicon glyphicon-record"></i> Buttons</a></li>

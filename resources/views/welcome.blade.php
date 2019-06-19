@@ -29,7 +29,9 @@
             </div>
         </div>
         <div class="Lcolor-Pnl">
-            <h3>Canonized list for
+          <div class="row">
+            <div class="col-md-6">
+                  <h3>Canonized list for
                 <select onchange="changeNamespace(this)" id="namespace">
                     @foreach($namespaces as $namespace)
                         <option data-namespace="{{ $namespace->label }}" value="{{ $namespace->id }}" {{ $namespace->id == session('defaultNamespaceId') ? 'selected' : ''}}>{{$namespace->label}}</option>
@@ -40,8 +42,8 @@
             </h3>
             <div class="content">
             <div class="row">
-			   @if(count($topics))
-			    <div class="tree col-sm-12">
+         @if(count($topics))
+          <div class="tree col-sm-12">
                     <ul class="mainouter" id="load-data">
                       <?php $createCamp = 1; ?>
 
@@ -56,16 +58,23 @@
                          {!! $topic->campTreeHtml($createCamp) !!}
                          <?php $createCamp = 0;?>
                        @endforeach
-					   <a id="btn-more" class="remove-row" data-id="{{ $topic->id }}"></a>
+             <a id="btn-more" class="remove-row" data-id="{{ $topic->id }}"></a>
 
                     </ul>
                     <button style="background: blue;color: white; cursor:pointer" name="load_more" id="loadtopic">Load All Topics</button>
                 </div>
-				@else
-				 <h6 style="margin-left:30px;"> No topic available.</h6>
+        @else
+         <h6 style="margin-left:30px;"> No topic available.</h6>
                 @endif
               </div>
             </div>
+
+            </div>
+            <div class="col-md-6">
+                  {!!$videopodcast->html_content!!}
+            </div>
+          </div>
+            
 
         </div>
     </div>
