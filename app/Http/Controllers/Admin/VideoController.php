@@ -20,14 +20,13 @@ class VideoController extends Controller
         if(isset($data['id'])){
         	$videopodcast = VideoPodcast::where('id','=',$data['id'])->first(); 
         	$videopodcast->html_content = html_entity_decode($data['html_content']);        	
-	        $videopodcast->updated_at = date();
+	        $videopodcast->updated_at = date('Y-m-d H:i:s');
         }else{
         	$videopodcast = new VideoPodcast();
         	$videopodcast->html_content = html_entity_decode($data['html_content']);
-	        $videopodcast->created_at = date();
-	        $videopodcast->updated_at = date();
+	        $videopodcast->created_at = date('Y-m-d H:i:s');
+	        $videopodcast->updated_at = date('Y-m-d H:i:s');
         }
-        
         $videopodcast->save();
         return redirect('/admin/videopodcast');
         
