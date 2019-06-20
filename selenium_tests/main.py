@@ -17,6 +17,8 @@ from CanonizerTopicUpdatePage import *
 from CanonizerCampPage import *
 from CanonizerCampStatementPage import *
 from CanonizerNewsFeedsPage import *
+from CanonizerBrokenURL import *
+import os
 import re
 
 
@@ -1155,7 +1157,6 @@ class TestPages(unittest.TestCase):
         result = CanonizerCampStatementPage(self.driver).load_edit_camp_statement_page().submit_statement_update_with_blank_nick_name(
             "Test",
             "",)
-        print(result)
         self.assertIn("The nick name field is required.", result)
 
     # ----- Add News and Edit News Test Cases Start -----
@@ -1519,6 +1520,60 @@ class TestPages(unittest.TestCase):
         self.login_to_canonizer_app()
         # Click on the Edit News link
         self.assertTrue(CanonizerEditNewsFeedsPage(self.driver).load_edit_news_feed_page().edit_news_page_mandatory_fields_are_marked_with_asterisk())
+
+    def test_load_add_camp_statement_page(self):
+        # Click on the Login Page and Create a Login Session and for further actions.
+        self.login_to_canonizer_app()
+        print("\n" + str(test_cases(171)))
+        self.assertIn("create/statement/235/1", AddCampStatementPage(self.driver).load_add_camp_statement_page().get_url())
+
+    def test_add_camp_statement_page_mandatory_fields_are_marked_with_asterisk(self):
+        print("\n" + str(test_cases(172)))
+        # Click on the Login Page and Create a Login Session and for further actions.
+        self.login_to_canonizer_app()
+        # Click on the Create New camp  link
+        self.assertTrue(AddCampStatementPage(self.driver).load_add_camp_statement_page().add_camp_statement_page_mandatory_fields_are_marked_with_asterisk())
+
+    def test_submit_statement_with_blank_nick_name(self):
+        print("\n" + str(test_cases(173)))
+        # Click on the Login Page and Create a Login Session and for further actions.
+        self.login_to_canonizer_app()
+        # Go to Manage/Edit Camp and check if nick name is blank
+        result = AddCampStatementPage(self.driver).load_add_camp_statement_page().submit_statement_with_blank_nick_name(
+            "Test",
+            "")
+        self.assertIn("The nick name field is required.", result)
+
+    def test_submit_statement_with_blank_statement(self):
+        print("\n" + str(test_cases(174)))
+        # Click on the Login Page and Create a Login Session and for further actions.
+        self.login_to_canonizer_app()
+        # Go to Manage/Edit Camp and check if nick name is blank
+        result = AddCampStatementPage(self.driver).load_add_camp_statement_page().submit_statement_with_blank_statement(
+            "Test",
+            "")
+        self.assertIn("The statement field is required.", result)
+
+    def test_add_camp_statement_page_should_have_add_new_nick_name_link_for_new_users(self):
+        print("\n" + str(test_cases(175)))
+        # Click on the Login Page and Create a Login Session and for further actions.
+        self.login_to_canonizer_app()
+        self.assertTrue(AddCampStatementPage(self.driver).load_add_camp_statement_page().add_camp_statement_page_should_have_add_new_nick_name_link_for_new_users())
+
+    def test_registration_with_blank_spaces_first_name(self):
+        print("\n" + str(test_cases(176)))
+        result = CanonizerRegisterPage(self.driver).click_register_button().registration_with_blank_spaces_first_name(
+            "      ",
+            DEFAULT_LAST_NAME,
+            DEFAULT_USER,
+            DEFAULT_PASS,
+            DEFAULT_PASS)
+        self.assertIn("The first name field is required.", result)
+
+    def test_broken_url(self):
+        self.assertTrue(
+            CanonizerBrokenURL(self.driver).search_topic_on_google_search()
+        )
 
 
     def tearDown(self):

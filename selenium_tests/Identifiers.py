@@ -26,6 +26,15 @@ class HomePageIdentifiers(object):
     UPLOADFILE = (By.XPATH, '//*[@id="exampleAccordion"]/ul[1]/li[5]/a/span')
     WHITE_PAPER = (By.XPATH, '//*[@id="exampleAccordion"]/ul[1]/li[7]/a/span')
     BLOG = (By.XPATH, '//*[@id="exampleAccordion"]/ul[1]/li[8]/a/span')
+    GOOGLESEARCH = (By.ID, 'sbi')
+    GOOGLESEARCHSUBMIT = (By.ID, 'sbb')
+    # Broken URL XPATH
+    BROKENURL_1 = (By.XPATH, '//*[@id="rso"]/div/div/div[1]/div/div/div[1]/a')
+    BROKENURL_2 = (By.XPATH, '//*[@id="rso"]/div/div/div[2]/div/div/div[1]/a')
+    BROKENURL_3 = (By.XPATH, '//*[@id="rso"]/div/div/div[3]/div/div/div[1]/a')
+    BROKENURL_4 = (By.XPATH, '//*[@id="rso"]/div/div/div[4]/div/div/div[1]/a')
+    BROKENURL_5 = (By.XPATH, '//*[@id="rso"]/div/div/div[5]/div/div/div[1]/a')
+    TURNOFFSETTINGS = (By.XPATH, '/html/body/pre')
 
 
 class LoginPageIdentifiers(object):
@@ -415,6 +424,23 @@ class MySupportsPageIdentifiers(object):
     """
     TOPIC_NAME = (By.XPATH, '/html/body/div/div[2]/div/div/div/div/div[1]/b/a')
     CAMP_NAME = (By.XPATH, '//*[@id="positions_2585"]/b/a')
+
+
+class AddCampStatementPageIdentifiers(object):
+    """
+        Class to hold the Camp Statement Page Identifiers
+    """
+    ADD_CAMP_STATEMENT = (By.ID, 'add_camp_statement')
+    NICK_NAME = (By.ID, 'nick_name')
+    STATEMENT = (By.ID, 'name')
+    NOTE = (By.ID, 'note')
+    NICK_NAME_ASTRK = (By.XPATH, '/html/body/div/div[3]/div/div/form/div[1]/label/span')
+    STATEMENT_ASTRK = (By.XPATH, '/html/body/div/div[3]/div/div/form/div[2]/label/span')
+    ERROR_NICK_NAME = (By.XPATH, '/html/body/div/div[3]/div/div/form/div[1]/p')
+    ERROR_STATEMENT = (By.XPATH, '/html/body/div/div[3]/div/div/form/div[2]/p')
+    SUBMIT_STATEMENT = (By.ID, 'submit')
+    ADDNEWNICKNAME = (By.XPATH, '//*[@id="add_new_nickname"]')
+    TOPIC_IDENTIFIER = (By.XPATH, '//*[@id="outline_235"]/a')
 
 
 

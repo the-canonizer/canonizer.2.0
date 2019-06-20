@@ -101,3 +101,9 @@ class CanonizerRegisterPage(Page):
         self.register(firstname, lastname, email, password, confirmpassword)
         return self.find_element(*RegistrationPageIdentifiers.ERROR_DUPLICATE_EMAIL).text
 
+    def registration_with_blank_spaces_first_name(self, firstname, lastname, email, password, confirmpassword):
+        self.register(firstname, lastname, email, password, confirmpassword)
+        return self.find_element(*RegistrationPageIdentifiers.ERROR_FIRST_NAME).text
+
+
+

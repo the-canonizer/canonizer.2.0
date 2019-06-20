@@ -179,7 +179,13 @@ testCases = {
     167: [moderate, 'In Topic Update page, When user enter duplicate Topic name, should see error message'],
     168: [moderate, 'In Create New Camp page, When user enter duplicate Camp name, should see error message'],
     169: [moderate, 'In Camp Update page, When user enter duplicate Camp name, should see error message'],
-    170: [moderate, 'On Edit News Page, All mandatory fields are marked with # sign']
+    170: [moderate, 'On Edit News Page, All mandatory fields are marked with # sign'],
+    171: [moderate, 'When user click on Add Camp Statement ,user should see Add Camp Statement page'],
+    172: [low, 'On Add Camp Statement page, All Mandatory Fields are marked with * Sign'],
+    173: [low, 'On Add Camp Statement page, When user doesn\'t put Nick Name, user must see Error Message'],
+    174: [low, 'On Add Camp Statement page, When user doesn\'t put Statement, user must see Error Message'],
+    175: [low, 'On Add Camp Statement, Add New Nick Name link should present for users who doesn\'t have nick name yet'],
+    176: [moderate, 'In User Registration Page, When user put blank spaces in  First Name, user must see Error Message']
 
 
 }

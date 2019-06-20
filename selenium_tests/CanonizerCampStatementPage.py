@@ -1,5 +1,5 @@
 from CanonizerBase import Page
-from Identifiers import CampStatementEditPageIdentifiers,BrowsePageIdentifiers, TopicUpdatePageIdentifiers
+from Identifiers import CampStatementEditPageIdentifiers,BrowsePageIdentifiers, TopicUpdatePageIdentifiers, AddCampStatementPageIdentifiers
 
 
 class CanonizerCampStatementPage(Page):
@@ -78,3 +78,71 @@ class CanonizerCampStatementPage(Page):
 
     def statement_update_page_should_have_add_new_nick_name_link_for_new_users(self):
         return self.find_element(*CampStatementEditPageIdentifiers.ADDNEWNICKNAME).text
+
+
+class AddCampStatementPage(Page):
+    def load_add_camp_statement_page(self):
+        """
+            Go To The topic
+        """
+        # Browse to Browse Page
+        self.hover(*BrowsePageIdentifiers.BROWSE)
+        self.find_element(*BrowsePageIdentifiers.BROWSE).click()
+
+        # Browse to Topic Name
+        self.hover(*AddCampStatementPageIdentifiers.TOPIC_IDENTIFIER)
+        self.find_element(*AddCampStatementPageIdentifiers.TOPIC_IDENTIFIER).click()
+
+        # Click Add Camp Statement This camp
+        self.hover(*AddCampStatementPageIdentifiers.ADD_CAMP_STATEMENT)
+        self.find_element(*AddCampStatementPageIdentifiers.ADD_CAMP_STATEMENT).click()
+        return AddCampStatementPage(self.driver)
+
+    def add_camp_statement_page_mandatory_fields_are_marked_with_asterisk(self):
+        """
+        This Function checks, if Mandatory fields on Add Camp Statement Page Marked with *
+        :return: the element value
+        """
+
+        return \
+            self.find_element(*AddCampStatementPageIdentifiers.NICK_NAME_ASTRK) and \
+            self.find_element(*AddCampStatementPageIdentifiers.STATEMENT_ASTRK)
+
+    def enter_nick_name(self, nickname):
+        self.find_element(*AddCampStatementPageIdentifiers.NICK_NAME).send_keys(nickname)
+
+    def enter_camp_statement(self, statement):
+        self.find_element(*AddCampStatementPageIdentifiers.STATEMENT).send_keys(statement)
+
+    def enter_note(self, note):
+        self.find_element(*AddCampStatementPageIdentifiers.NOTE).send_keys(note)
+
+    def click_submit_statement_button(self):
+        """
+        This function clicks the Submit Update Button
+        :return:
+        """
+        self.find_element(*AddCampStatementPageIdentifiers.SUBMIT_STATEMENT).click()
+
+    def submit_statement(self, nickname, statement, note):
+        self.enter_nick_name(nickname)
+        self.enter_camp_statement(statement)
+        self.enter_note(note)
+        self.click_submit_statement_button()
+
+    def submit_statement_with_blank_nick_name(self, statement, note):
+        self.submit_statement('', statement, note)
+        return self.find_element(*AddCampStatementPageIdentifiers.ERROR_NICK_NAME).text
+
+    def submit_statement_with_blank_statement(self, nick_name, note):
+        self.submit_statement(nick_name, '', note)
+        return self.find_element(*AddCampStatementPageIdentifiers.ERROR_STATEMENT).text
+
+    def submit_statement_with_valid_data(self, nick_name, statement, note):
+        self.submit_statement(nick_name, statement, note)
+        return self
+
+    def add_camp_statement_page_should_have_add_new_nick_name_link_for_new_users(self):
+        return self.find_element(*AddCampStatementPageIdentifiers.ADDNEWNICKNAME).text
+
+

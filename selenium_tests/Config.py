@@ -26,9 +26,10 @@ else:
     print("Unknown OS")
     exit(1)
 
-DEFAULT_USER = "rupali.chavan9860@gmail.com"
-#DEFAULT_USER = "canonizer_automation_user@yopmail.com"
-DEFAULT_PASS = "rupali@12345"
+#DEFAULT_USER = "rupali.chavan9860@gmail.com"
+#DEFAULT_PASS = "rupali@12345"
+DEFAULT_USER = "r_cano_user@yopmail.com"
+DEFAULT_PASS = "Rupali@12345"
 DEFAULT_INVALID_USER = "invaliduser@gmail.com"
 DEFAULT_INVALID_PASSWORD = "invalid_password"
 
