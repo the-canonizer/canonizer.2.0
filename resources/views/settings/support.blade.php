@@ -95,6 +95,10 @@
 
                        ?>
 					   @foreach($topicSupport as $k=>$support)
+					   <?php 
+					   		
+                            $camp = \App\Model\Camp::getLiveCamp($support->topic_num,$support->camp_num);
+					   ?>
 					  
                        <div class="col-sm-12">
                             <div id="positions_{{ $support->support_id }}" class="SpCmpBDY support-sorter-element ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
@@ -110,7 +114,7 @@
                                 
 							<input type="hidden" name="camp[{{$support->camp->camp_num}}]" value="{{ $support->camp->camp_num }}">
 							<input type="hidden" name="delegated[{{$support->camp->camp_num}}]" value="{{ $support->delegate_nick_name_id }}">
-                            <b><span class="support_order"> {{ $support->support_order }} </span> . {{ $support->camp->camp_name }} </b><br/>
+                            <b><span class="support_order"> {{ $support->support_order }} </span> . {{ $camp->camp_name }} </b><br/>
                              
                         
 							<?php if(isset($topic->topic_num) && $topic->topic_num==$supportedTopic->topic_num) $lastsupportOrder++;
@@ -290,11 +294,11 @@
                        
                     </div>
                      @if(!Session::has('warning'))
-                    <button type="submit" id="submit" class="btn btn-login">Submit</button>
+                    <button type="submit" id="submit_support" class="btn btn-login">Submit</button>
 				    <a  class="btn btn-login" href="<?php echo url('topic/'.$topic->topic_num.'/'.session('campnum'));?>">Cancel</a>
 				    @else
 					<div style="display:none">	
-					<button type="submit" id="submit" class="btn btn-login"></button>	
+					<button type="submit" id="submit_support" class="btn btn-login"></button>	
 					</div>
 					@endif
                     
@@ -319,7 +323,7 @@
 				
 				$('#confirm_support').val('1');
 				
-				$( "#submit" ).trigger( "click" );
+				$( "#submit_support" ).trigger( "click" );
 				
 			})	
         })

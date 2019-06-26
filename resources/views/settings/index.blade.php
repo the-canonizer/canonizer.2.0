@@ -84,7 +84,7 @@
 							@endif
 							
 							<div style="text-align:center; width:90%">
-							<button type="submit" id="submit" class="btn btn-login">
+							<button type="submit" id="verify_phone_email" class="btn btn-login">
 							@if(Session::has('otpsent'))
 							Confirm
 						    @else
@@ -277,7 +277,7 @@
 							</div>
                         </div>
                        
-                        <button type="submit" id="submit" class="btn btn-login">Update</button>
+                        <button type="submit" id="update_profile" class="btn btn-login">Update</button>
                     </form>  
         </div>
     </div>   

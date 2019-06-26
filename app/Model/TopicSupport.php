@@ -24,7 +24,7 @@ class TopicSupport extends Model {
 	public function nickname() {
         return $this->hasOne('App\Model\Nickname', 'id', 'nick_name_id');
     }
-	public function camp() {
+	public function camp() { 
         return $this->hasOne('App\Model\Camp', 'camp_num', 'camp_num');
     }
 	public function topic() {

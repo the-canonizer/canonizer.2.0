@@ -90,14 +90,14 @@
            
             <div class="form-group">
                 <label for="">Edit summary (Briefly describe your changes)</label>
-                <textarea class="form-control" rows="4" name="note" id="note"> </textarea>
+                <textarea class="form-control" rows="4" name="note" id="note">{{$topic->note}} </textarea>
 				@if ($errors->has('note')) <p class="help-block">{{ $errors->first('note') }}</p> @endif
             </div>
             <?php } ?>
             <?php if($objection=="objection") { ?>
             <button type="submit" id="submit-objection" class="btn btn-login">Submit Objection</button>
              <?php } else {?>
-            <button type="submit" id="submit" class="btn btn-login">Submit Update<?php } ?></button>
+            <button type="submit" id="submit_update" class="btn btn-login">Submit Update<?php } ?></button>
         </form>
     </div>
  </div>   
@@ -123,7 +123,7 @@
         }
         selectNamespace();
         
-        $('#submit').click(function(e) {
+        $('#submit_update').click(function(e) {
            // e.preventDefault();
            var valid = true;
            var message = "";

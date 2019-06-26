@@ -80,7 +80,7 @@
                         </div> 
                     </div>
                     
-                    <button type="submit" id="submit_create" class="btn btn-login">Create</button>
+                    <button type="submit" id="create_nickname" class="btn btn-login">Create</button>
                     <!--button type="submit" id="submit_cancel" class="btn btn-default">Cancel</button-->
                 </form>  
         </div>

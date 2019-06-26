@@ -38,7 +38,9 @@
                		<div class="row column{{ $data->topic_num }}">
 					   <?php $topicSupport = $data->topic->Getsupports($data->topic_num,$userNickname);?>
 					   @foreach($topicSupport as $k=>$support)
-                        <?php if($support->delegate_nick_name_id == 0) { ?>
+                        <?php if($support->delegate_nick_name_id == 0) {
+                            $camp = \App\Model\Camp::getLiveCamp($support->topic_num,$support->camp_num);
+                         ?>
 					   <div id="positions_{{ $support->support_id }}" class="SpCmpBDY support-sorter-element ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
 					     <form onsubmit="return confirm('Do you really want to delete this support ?');" action="{{ route('settings.support.delete')}}" id="support-{{$support->support_id}}" method="post">
 						    <input type="hidden" name="_token" value="{{ csrf_token() }}">
@@ -49,7 +51,7 @@
 						  <button type="submit" id="submit_{{ $support->support_id }}" class="btn-sptclose" title="Remove Support"><i class="fa fa-close"></i></button>
 						 </form>
 						
-					     <b><span class="support_order">{{ $support->support_order }}</span> . <a style="text-decoration: underline; color: blue;" href="/topic/{{ $data->topic_num }}-{{ $title }}/{{ $support->camp->camp_num }}"> {{ $support->camp->camp_name }}  </a> <br/>
+					     <b><span class="support_order">{{ $support->support_order }}</span> . <a style="text-decoration: underline; color: blue;" href="/topic/{{ $data->topic_num }}-{{ $title }}/{{ $support->camp->camp_num }}"> {{ $camp->camp_name }}  </a> <br/>
 					   	 </b>
                        </div>
 						<?php } else { 

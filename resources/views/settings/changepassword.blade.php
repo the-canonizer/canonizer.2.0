@@ -48,7 +48,7 @@
                         </div>
                     </div>
                     
-                    <button type="submit" id="submit_create" class="btn btn-login">Save</button>
+                    <button type="submit" id="change_password" class="btn btn-login">Save</button>
                     <!--button type="submit" id="submit_cancel" class="btn btn-default">Cancel</button-->
                 </form>  
         </div>

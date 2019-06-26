@@ -102,7 +102,7 @@
             
             <div class="form-group">
                 <label for="">Edit summary (Briefly describe your changes) </label>
-                <textarea class="form-control" rows="4" name="note" id="note">{{ old('note')}}</textarea>
+                <textarea class="form-control" rows="4" name="note" id="note">{{ $camp->note}}</textarea>
                 @if ($errors->has('note')) <p class="help-block">{{ $errors->first('note') }}</p> @endif
             </div>   
             <div class="form-group">
@@ -122,7 +122,7 @@
                 </select>    
 			</div> 			
             <?php } ?>
-            <button type="submit" id="submit" class="btn btn-login">
+            <button type="submit" id="submit_update_camp" class="btn btn-login">
 			<?php if($objection=="objection") { ?> Submit Objection <?php } else {?>
 			Submit Update <?php } ?>
 			</button> 
@@ -149,7 +149,7 @@
                 </div>
                   </div>
                   <div class="modal-footer">
-                      <button type="submit" id="submit" class="btn btn-login">Submit Update</button>
+                      <button type="submit" id="submit_camp_update_from_preview" class="btn btn-login">Submit Update</button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                   </div>
                 </div>

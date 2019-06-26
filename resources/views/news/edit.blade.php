@@ -46,7 +46,7 @@
                     
 
                 </div>
-                <button type="submit" id="submit" class="btn btn-login">Submit</button>
+                <button type="submit" id="edit_news" class="btn btn-login">Submit</button>
                 <a href="{{ url('topic/' . $topic . '/' . $campnum)}}" class="btn btn-default">Cancel</a>
             </form>
         </div>

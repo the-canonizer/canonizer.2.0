@@ -61,16 +61,14 @@
             <h5>List of supported camps</h5>
             @if(count($supportedCamps) > 0)
 			   @foreach($supportedCamps as $supports)
-               <?php
-
-                ?>
+               
                 <ul>
-                    <li><a href="{{ (array_key_exists('link',$supports)  && isset($supports['link'])) ? $supports['link'] : '' }}">{{$supports['camp_name']}}</a></li>
+                    <li><a href="{{ (array_key_exists('link',$supports)  && isset($supports['link'])) ? $supports['link'] : '' }}">{{ (array_key_exists('camp_name',$supports)  && isset($supports['camp_name'])) ? $supports['camp_name'] : ''}}</a></li>
                     <ul>
                         @if(isset($supports['array']))
                         @foreach($supports['array'] as $support_order)
                             @foreach($support_order as $support)
-                                <li><a href="{{ (array_key_exists('link',$support)  && isset($support['link'])) ? $support['link'] : ''  }}">{{$support['camp_name']}}</a></li>
+                                <li><a href="{{ (array_key_exists('link',$support)  && isset($support['link'])) ? $support['link'] : ''  }}">{{(array_key_exists('camp_name',$support)  && isset($support['camp_name'])) ? $support['camp_name'] : ''}}</a></li>
                             @endforeach
                         @endforeach
                         @endif

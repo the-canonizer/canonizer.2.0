@@ -956,6 +956,7 @@ class TopicController extends Controller {
                 ChangeAgreeLog::where('topic_num', '=', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('change_id', '=', $changeID)->where('change_for', '=', $data['change_for'])->delete();
             }
 		  }	
+          Session::flash('success', "Your agreement to statement submitted successfully");
         } else if (isset($data['change_for']) && $data['change_for'] == 'camp') {
             $camp = Camp::where('id', $changeID)->first();
 			if(isset($camp)) {
@@ -970,6 +971,7 @@ class TopicController extends Controller {
                 ChangeAgreeLog::where('topic_num', '=', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('change_id', '=', $changeID)->where('change_for', '=', $data['change_for'])->delete();
             }
 			}	
+            Session::flash('success', "Your agreement to camp submitted successfully");
         } else if (isset($data['change_for']) && $data['change_for'] == 'topic') {
             $topic = Topic::where('id', $changeID)->first();
 			if(isset($topic)) { 
@@ -984,10 +986,11 @@ class TopicController extends Controller {
                 ChangeAgreeLog::where('topic_num', '=', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('change_id', '=', $changeID)->where('change_for', '=', $data['change_for'])->delete();
             }
 		  }	
+          Session::flash('success', "Your agreement to topic submitted successfully");
         }
 
 
-        Session::flash('success', "Your agreement to statement submitted successfully");
+        
         return back();
     }
 

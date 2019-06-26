@@ -42,7 +42,7 @@
                         @endforeach
                         </select>
                     </div>
-                    <button type="submit" id="submit" class="btn btn-login">Confirm Support</button>
+                    <button type="submit" id="confirm_support" class="btn btn-login">Confirm Support</button>
                     
                 </form>  
         </div>
