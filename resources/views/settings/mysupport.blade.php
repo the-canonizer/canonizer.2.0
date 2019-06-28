@@ -49,7 +49,7 @@
 						  <button type="submit" id="submit_{{ $support->support_id }}" class="btn-sptclose" title="Remove Support"><i class="fa fa-close"></i></button>
 						 </form>
 						
-					     <b><span class="support_order">{{ $support->support_order }}</span> . <a style="text-decoration: underline; color: blue;" href="/topic/{{ $data->topic_num }}-{{ $title }}/"> {{ }}  </a> <br/>
+					     <b><span class="support_order">{{ $support->support_order }}</span> . <a style="text-decoration: underline; color: blue;" href="/topic/{{ $data->topic_num }}-{{ $title }}/"> ddd </a> <br/>
 					   	 </b>
                        </div>
 						<?php } else { 
