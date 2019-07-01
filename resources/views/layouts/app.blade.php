@@ -247,9 +247,11 @@
 									
 									<div><input readonly type="text" id="asofdate" name="asofdate" value=""/></div>
 								    <script>
+                                        <?php if(session('asofdateDefault')!=null && session('asofdateDefault')!='') { ?>
 									var date = new Date(<?= strtotime(session('asofdateDefault')) ?> * 1000).toLocaleString();
 									
 									$('#asofdate').val(date);
+                                   <?php } ?>
 									</script>
 								</form>
                                 </li>

@@ -5,7 +5,7 @@
 	 <?php if($objection=="objection") { ?> 
 	Object to this proposed update
 	 <?php } else { ?>
-	Topic update
+	Topic Update
 	 <?php } ?>
 	</h1>
 </div> 

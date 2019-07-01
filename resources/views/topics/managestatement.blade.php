@@ -12,7 +12,7 @@
 	 <?php if($objection=="objection") { ?> 
 	Object to this proposed update
 	 <?php } else { ?>
-	Statement update
+	Statement Update
 	 <?php } ?>
 	</h1>
 </div> 
