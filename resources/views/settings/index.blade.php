@@ -83,14 +83,12 @@
                             </div>
 							@endif
 							
-							<div style="text-align:center; width:90%">
-							<button type="submit" id="verify_phone_email" class="btn btn-login">
+							<div style="text-align:center; width:90%">							
 							@if(Session::has('otpsent'))
-							Confirm
+							<button type="submit" id="confirm_phone_email" class="btn btn-login">Confirm</button>
 						    @else
-							Verify
-                            @endif 						
-							</button>
+							<button type="submit" id="verify_phone_email" class="btn btn-login">Verify</button>
+                            @endif 	
 							</div>
 					</div>
 					</form>

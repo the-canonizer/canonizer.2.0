@@ -1313,3 +1313,18 @@ a.rgWT {
 .content ul li.news-list a:hover{
     color:#0000ff;
 }
+
+.videopodcast_div h3 {
+    width: 100%;
+    float: left;
+}
+.videopodcast_div span {
+    width: 100%;
+    float: left;
+}
+
+.videopodcast_div iframe, .videopodcast_div object, .videopodcast_div video {
+    width: 100%;
+    float: left;
+    max-height: 266px;
+}

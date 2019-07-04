@@ -112,7 +112,7 @@
                     <ul class="uppermenu">
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url('/')}}">
-                                <span class="nav-link-text {{ ($route=='index') ? 'menu-active':''}}">Canonizer Main</span>
+                            <span class="nav-link-text {{ ($route=='index') ? 'menu-active':''}}">Canonizer Main Page</span>
                             </a>
                         </li>
 
