@@ -67,7 +67,7 @@
                 @if ($errors->has('note')) <p class="help-block">{{ $errors->first('note') }}</p> @endif
             </div>    
 
-            <button type="submit" id="create_topic" class="btn btn-login">Create Topic</button>
+            <button type="submit" id="submit" class="btn btn-login">Create Topic</button>
         </form>
     </div>
  </div>   
@@ -93,7 +93,7 @@
         }
         selectNamespace();
         
-        $('#create_topic').click(function(e) {
+        $('#submit').click(function(e) {
            // e.preventDefault();
            var valid = true;
            var message = "";

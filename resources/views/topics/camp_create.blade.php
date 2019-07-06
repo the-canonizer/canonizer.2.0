@@ -94,7 +94,7 @@
                 </select>            
 			</div>  			
 
-            <button type="submit" id="create_camp" class="btn btn-login">Create Camp</button>
+            <button type="submit" id="submit" class="btn btn-login">Create Camp</button>
         </form>
 </div>
 </div>

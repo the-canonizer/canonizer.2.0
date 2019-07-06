@@ -22,7 +22,7 @@
             @if ($errors->has('otp')) <p class="help-block">{{ $errors->first('otp') }}</p> @endif
         </div>
 
-        <button type="submit" id="verify_otp" class="btn btn-login">Submit</button>
+        <button type="submit" id="submit" class="btn btn-login">Submit</button>
     </form>
  </div>
 

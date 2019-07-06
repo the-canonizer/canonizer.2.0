@@ -97,7 +97,7 @@
             <?php if($objection=="objection") { ?>
             <button type="submit" id="submit-objection" class="btn btn-login">Submit Objection</button>
              <?php } else {?>
-            <button type="submit" id="submit_update" class="btn btn-login">Submit Update<?php } ?></button>
+            <button type="submit" id="submit" class="btn btn-login">Submit Update<?php } ?></button>
         </form>
     </div>
  </div>   
@@ -123,7 +123,7 @@
         }
         selectNamespace();
         
-        $('#submit_update').click(function(e) {
+        $('#submit').click(function(e) {
            // e.preventDefault();
            var valid = true;
            var message = "";

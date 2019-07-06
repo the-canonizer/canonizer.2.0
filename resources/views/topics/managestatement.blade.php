@@ -84,7 +84,7 @@
                 @if ($errors->has('note')) <p class="help-block">{{ $errors->first('note') }}</p> @endif
             </div> 
 			<?php } ?>
-            <button type="submit" id="submit_objection" class="btn btn-login">
+            <button type="submit" id="submit" class="btn btn-login">
 			<?php if($objection=="objection") { ?> 
 			   Submit Objection <?php } else { ?>
 			   Submit Update <?php } ?> 
@@ -104,7 +104,7 @@
                   </div>
                   <div class="modal-body" id="pre_statement"> </div>
                   <div class="modal-footer">
-                      <button type="submit" id="submit_statement_update" class="btn btn-login">Submit Update</button>
+                      <button type="submit" id="submit" class="btn btn-login">Submit Update</button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                   </div>
                 </div>

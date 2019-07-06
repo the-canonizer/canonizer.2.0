@@ -41,7 +41,7 @@
                 <input type="checkbox" name="available_for_child" value="1">Available for child camps
             </div>
             
-            <button type="submit" id="create_news" class="btn btn-login">Create News</button>
+            <button type="submit" id="submit" class="btn btn-login">Create News</button>
             <a href="{{ url('topic/' . $topic . '/' . $campnum)}}" class="btn btn-default">Cancel</a>
         </form>
     </div>
@@ -66,7 +66,7 @@
         }
         selectNamespace();
         
-        $('#create_news').click(function(e) {
+        $('#submit').click(function(e) {
            // e.preventDefault();
            var valid = true;
            var message = "";

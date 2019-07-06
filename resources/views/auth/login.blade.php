@@ -24,7 +24,7 @@
             <input type="checkbox" name="remember" class="form-control remember-me" id="remember"> Remember Me
             <a href="{{ url('/forgetpassword') }}" class="pull-right">Forgot Password</a>
         </div>
-        <button type="submit" id="login" class="btn btn-login">Log in</button>
+        <button type="submit" id="submit" class="btn btn-login">Log in</button>
     </form>
  </div>
  <div class="col-sm-2 margin-btm-2"></div>
