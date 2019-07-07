@@ -31,13 +31,12 @@
         <div class="Lcolor-Pnl">
               <div class="col-sm-12">
                   <div class="col-sm-6">
-                        <h3>Canonized list for
+                        <h3>Canonized list for </h3>
                         <select onchange="changeNamespace(this)" id="namespace">
                             @foreach($namespaces as $namespace)
                                 <option data-namespace="{{ $namespace->label }}" value="{{ $namespace->id }}" {{ $namespace->id == session('defaultNamespaceId') ? 'selected' : ''}}>{{$namespace->label}}</option>
                             @endforeach
                         </select>
-                      </h3>
                     <div class="content">
                      <div class="row">
                         @if(count($topics))
