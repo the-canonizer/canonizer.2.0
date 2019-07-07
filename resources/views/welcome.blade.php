@@ -29,50 +29,59 @@
             </div>
         </div>
         <div class="Lcolor-Pnl">
-              <div class="col-sm-12">
-                  <div class="col-sm-6">
-                        <h3>Canonized list for </h3>
-                        <select onchange="changeNamespace(this)" id="namespace">
-                            @foreach($namespaces as $namespace)
-                                <option data-namespace="{{ $namespace->label }}" value="{{ $namespace->id }}" {{ $namespace->id == session('defaultNamespaceId') ? 'selected' : ''}}>{{$namespace->label}}</option>
-                            @endforeach
-                        </select>
-                    <div class="content">
-                     <div class="row">
-                        @if(count($topics))
-                          <div class="tree col-sm-12">
-                                <ul class="mainouter" id="load-data">
-                                  <?php $createCamp = 1; ?>
+          <div class="row">
+            <div class="col-sm-6">
+                  <h3>Canonized list for
+                  <select onchange="changeNamespace(this)" id="namespace">
+                      @foreach($namespaces as $namespace)
+                          <option data-namespace="{{ $namespace->label }}" value="{{ $namespace->id }}" {{ $namespace->id == session('defaultNamespaceId') ? 'selected' : ''}}>{{$namespace->label}}</option>
+                      @endforeach
 
-                                   @foreach($topics as $k=>$topic)
-                                   <?php
-                                   $as_of_time = time();
-                                    if(isset($_REQUEST['asof']) && $_REQUEST['asof']=='date'){
-                                        $as_of_time = strtotime($_REQUEST['asofdate']);
-                                    }
 
-                                   ?>
-                                     {!! $topic->campTreeHtml($createCamp) !!}
-                                     <?php $createCamp = 0;?>
-                                   @endforeach
-                                  <a id="btn-more" class="remove-row" data-id="{{ $topic->id }}"></a>
+                  </select>
+              </h3>
+              <div class="content">
+               <div class="row">
+                  @if(count($topics))
+                    <div class="tree col-sm-12">
+                          <ul class="mainouter" id="load-data">
+                            <?php $createCamp = 1; ?>
 
-                                </ul>
-                                <button style="background: blue;color: white; cursor:pointer" name="load_more" id="loadtopic">Load All Topics</button>
-                            </div>
-                            @else
-                               <h6 style="margin-left:30px;"> No topic available.</h6>
-                            @endif
+                             @foreach($topics as $k=>$topic)
+                             <?php
+                             $as_of_time = time();
+                              if(isset($_REQUEST['asof']) && $_REQUEST['asof']=='date'){
+                                  $as_of_time = strtotime($_REQUEST['asofdate']);
+                              }
+
+                             ?>
+                               {!! $topic->campTreeHtml($createCamp) !!}
+                               <?php $createCamp = 0;?>
+                             @endforeach
+                            <a id="btn-more" class="remove-row" data-id="{{ $topic->id }}"></a>
+
+                          </ul>
+                          <button style="background: blue;color: white; cursor:pointer" name="load_more" id="loadtopic">Load All Topics</button>
                       </div>
-                    </div>
-                  </div>
-                  <div class="col-md-6">
-                    <div class="row videopodcast_div">
-                      {!!$videopodcast->html_content!!}                    
-                    </div>                      
-                  </div>
+                      @else
+                         <h6 style="margin-left:30px;"> No topic available.</h6>
+                      @endif
+                </div>
               </div>
+
             </div>
+            <div class="col-md-6">
+              <div class="row videopodcast_div">
+                {!!$videopodcast->html_content!!}
+                
+              </div>
+                  
+            </div>
+          </div>
+            
+
+        </div>
+    </div>
     <!-- /.container-fluid-->
 </div>  <!-- /.right-whitePnl-->
 
