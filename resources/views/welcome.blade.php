@@ -78,9 +78,8 @@
                   
             </div>
           </div>
-            
-
         </div>
+        <!-- Lcolor-pnl -- >
     </div>
     <!-- /.container-fluid-->
 </div>  <!-- /.right-whitePnl-->
