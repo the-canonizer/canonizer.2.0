@@ -71,7 +71,11 @@
 
             </div>
             <div class="col-md-6">
-                  {!!$videopodcast->html_content!!}
+              <div class="row videopodcast_div">
+                {!!$videopodcast->html_content!!}
+                
+              </div>
+                  
             </div>
           </div>
             

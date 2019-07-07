@@ -46,7 +46,7 @@
             <input type="password" name="password_confirmation" class="form-control" id="pwd_confirm">
            
         </div>
-        <button type="submit" id="create_account" class="btn btn-login">Create your account</button>
+        <button type="submit" id="submit" class="btn btn-login">Create your account</button>
     </form>
 </div> 
 <div class="col-sm-2 margin-btm-2"></div>

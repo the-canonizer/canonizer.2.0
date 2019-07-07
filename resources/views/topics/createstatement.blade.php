@@ -60,7 +60,7 @@
             </div> 
            
 		  
-            <button type="submit" id="submit_statement" class="btn btn-login">Submit Statement</button>
+            <button type="submit" id="submit" class="btn btn-login">Submit Statement</button>
             <button type="button" id="preview" class="btn btn-default" onclick="showPreview()">Preview</button>
 	
             <!-- preview Form -->
@@ -74,7 +74,7 @@
                   </div>
                   <div class="modal-body" id="pre_statement"> </div>
                   <div class="modal-footer">
-                      <button type="submit" id="submit_statement_from_preview" class="btn btn-login">Submit Statement</button>
+                      <button type="submit" id="submit" class="btn btn-login">Submit Statement</button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                   </div>
                 </div>

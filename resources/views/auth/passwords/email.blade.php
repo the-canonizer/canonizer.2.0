@@ -12,7 +12,7 @@
             <input type="email" name="email" class="form-control" id="email" value="{{ old('email')}}">
             @if ($errors->has('email')) <p class="help-block">{{ $errors->first('email') }}</p> @endif
         </div>       
-        <button type="submit" id="forget_password" class="btn btn-login">Submit</button>
+        <button type="submit" id="submit" class="btn btn-login">Submit</button>
     </form>
  </div>   
 </div>  <!-- /.right-whitePnl-->
