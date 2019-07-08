@@ -223,7 +223,8 @@ class TopicController extends Controller {
 
                 // send history link in email
                 $link = 'topic-history/' . $topic->topic_num;
-                $data['object'] = "topic ".$topic->topic_name;
+				$data['type'] = "topic";
+                $data['object'] = $topic->topic_name;
 				$data['link'] = 'topic/' . $topic->topic_num . '/1';
 				
                 Mail::to(Auth::user()->email)->send(new ThankToSubmitterMail(Auth::user(), $link,$data));
@@ -688,7 +689,8 @@ class TopicController extends Controller {
 
                 // send history link in email
                 $link = 'camp/history/' . $camp->topic_num . '/' . $camp->camp_num;
-                $data['object'] = "camp ".$camp->topic->topic_name . " : " . $camp->camp_name;
+                $data['type'] = "camp";
+				$data['object'] = $camp->topic->topic_name . " / " . $camp->camp_name;
 				$data['link'] = 'topic/' . $camp->topic_num . '/1';
                 Mail::to(Auth::user()->email)->send(new ThankToSubmitterMail(Auth::user(), $link,$data));
             } else if ($eventtype == "OBJECTION") {
@@ -823,7 +825,8 @@ class TopicController extends Controller {
            // send history link in email
             $link = 'statement/history/' . $statement->topic_num . '/' . $statement->camp_num;
             $livecamp = Camp::getLiveCamp($statement->topic_num,$statement->camp_num);
-			$data['object'] = "statement ".$livecamp->topic->topic_name . " : " . $livecamp->camp_name;
+			$data['type'] = "statement";
+			$data['object'] = $livecamp->topic->topic_name . " / " . $livecamp->camp_name;
 			$data['link'] = 'topic/' . $statement->topic_num . '/1';
             Mail::to(Auth::user()->email)->send(new ThankToSubmitterMail(Auth::user(), $link,$data));
         } else if ($eventtype == "OBJECTION") {
