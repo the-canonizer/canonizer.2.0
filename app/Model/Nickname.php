@@ -83,7 +83,7 @@ class Nickname extends Model {
             if ($rs->delegate_nick_name_id) {
                 
             } else if ($camp_num == 1) {
-                $supports[$topic_num]['camp_name'] = ($rs->title == "") ? $rs->camp_name : $rs->title;
+                $supports[$topic_num]['camp_name'] = ($rs->camp_name != "") ? $rs->camp_name : $rs->title;
 
                 $supports[$topic_num]['link'] = url('camp/history/' . $topic_num . '/' . $camp_num);
             } else {
