@@ -1028,7 +1028,7 @@ class TopicController extends Controller {
 
             $directSupporter = Support::getDirectSupporter($camp->topic_num, $camp->camp_num);
             $link = 'topic/' . $camp->topic_num . '/' . $camp->camp_num . '?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $camp->go_live_time);
-            $data['object'] = "camp ".$camp->topic->topic_name . ' : ' . $camp->camp_name;
+            $data['object'] = $camp->topic->topic_name . ' : ' . $camp->camp_name;
             $data['type'] = 'camp';
             $data['go_live_time'] = $camp->go_live_time;
 			$data['note'] = $camp->note;
@@ -1047,7 +1047,7 @@ class TopicController extends Controller {
             $directSupporter = Support::getDirectSupporter($topic->topic_num);
 
             $link = 'topic/' . $topic->topic_num . '/' . $topic->camp_num . '?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $topic->go_live_time);
-            $data['object'] = "topic ".$topic->topic_name;
+            $data['object'] = $topic->topic_name;
             $data['go_live_time'] = $topic->go_live_time;
             $data['type'] = 'topic';
 			$data['note'] = $topic->note;
