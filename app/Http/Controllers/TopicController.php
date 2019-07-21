@@ -227,7 +227,7 @@ class TopicController extends Controller {
                 $data['object'] = $topic->topic_name;
 				$data['link'] = 'topic/' . $topic->topic_num . '/1';
 				
-                Mail::to(Auth::user()->email)->send(new ThankToSubmitterMail(Auth::user(), $link,$data));
+                Mail::to(Auth::user()->email)->bcc(config('app.admin_bcc'))->send(new ThankToSubmitterMail(Auth::user(), $link,$data));
             } else if ($eventtype == "OBJECTION") {
 
                 $user = Nickname::getUserByNickName($all['submitter']);
@@ -245,7 +245,7 @@ class TopicController extends Controller {
                 $data['subject'] = $data['nick_name'] . " has objected to your proposed change.";
 
                 $receiver = (config('app.env') == "production") ? $user->email : config('app.admin_email');
-                Mail::to($receiver)->send(new ObjectionToSubmitterMail($user, $link, $data));
+                Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new ObjectionToSubmitterMail($user, $link, $data));
             } else if ($eventtype == "UPDATE") {
 
                 $directSupporter = Support::getDirectSupporter($topic->topic_num);
@@ -692,7 +692,7 @@ class TopicController extends Controller {
                 $data['type'] = "camp";
 				$data['object'] = $camp->topic->topic_name . " / " . $camp->camp_name;
 				$data['link'] = 'topic/' . $camp->topic_num . '/1';
-                Mail::to(Auth::user()->email)->send(new ThankToSubmitterMail(Auth::user(), $link,$data));
+                Mail::to(Auth::user()->email)->bcc(config('app.admin_bcc'))->send(new ThankToSubmitterMail(Auth::user(), $link,$data));
             } else if ($eventtype == "OBJECTION") {
 
                 $user = Nickname::getUserByNickName($all['submitter']);
@@ -706,7 +706,7 @@ class TopicController extends Controller {
                 $data['subject'] = $data['nick_name'] . " has objected to your proposed change.";
                 $data['type'] = 'camp';
                 $receiver = (config('app.env') == "production") ? $user->email : config('app.admin_email');
-                Mail::to($receiver)->send(new ObjectionToSubmitterMail($user, $link, $data));
+                Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new ObjectionToSubmitterMail($user, $link, $data));
             } else if ($eventtype == "UPDATE") {
 
                 $directSupporter = Support::getDirectSupporter($camp->topic_num, $camp->camp_num);
@@ -828,7 +828,7 @@ class TopicController extends Controller {
 			$data['type'] = "statement";
 			$data['object'] = $livecamp->topic->topic_name . " / " . $livecamp->camp_name;
 			$data['link'] = 'topic/' . $statement->topic_num . '/1';
-            Mail::to(Auth::user()->email)->send(new ThankToSubmitterMail(Auth::user(), $link,$data));
+            Mail::to(Auth::user()->email)->bcc(config('app.admin_bcc'))->send(new ThankToSubmitterMail(Auth::user(), $link,$data));
         } else if ($eventtype == "OBJECTION") {
 
             $user = Nickname::getUserByNickName($all['submitter']);
@@ -842,7 +842,7 @@ class TopicController extends Controller {
             $data['subject'] = $data['nick_name'] . " has objected to your proposed change.";
 
             $receiver = (config('app.env') == "production") ? $user->email : config('app.admin_email');
-            Mail::to($receiver)->send(new ObjectionToSubmitterMail($user, $link, $data));
+            Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new ObjectionToSubmitterMail($user, $link, $data));
         } else if ($eventtype == "UPDATE") {
 
             $directSupporter = Support::getDirectSupporter($statement->topic_num, $statement->camp_num);
@@ -1066,7 +1066,7 @@ class TopicController extends Controller {
         foreach ($directSupporter as $supporter) {
             $user = Nickname::getUserByNickName($supporter->nick_name_id);
             $receiver = (config('app.env') == "production") ? $user->email : config('app.admin_email');
-            Mail::to($receiver)->send(new PurposedToSupportersMail($user, $link, $data));
+            Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new PurposedToSupportersMail($user, $link, $data));
         }
         return;
     }
