@@ -51,7 +51,7 @@
 						  <button type="submit" id="submit_{{ $support->support_id }}" class="btn-sptclose" title="Remove Support"><i class="fa fa-close"></i></button>
 						 </form>
 						
-					     <b><span class="support_order">{{ $support->support_order }}</span> . <a style="text-decoration: underline; color: blue;" href="/topic/{{ $data->topic_num }}-{{ $title }}/{{ isset($support->camp->camp_num) ? $support->camp->camp_num : '1' }}"> {{ $camp->camp_name }}  </a> <br/>
+					     <b><span class="support_order">{{ $support->support_order }}</span> . <a style="text-decoration: underline; color: blue;" href="/topic/{{ $data->topic_num }}-{{ $title }}/{{ isset($support->camp->camp_num) ? $support->camp->camp_num : '1' }}"> hh </a> <br/>
 					   	 </b>
                        </div>
 						<?php } else { 
