@@ -17,6 +17,7 @@ return [
 	'support_email' => env('APP_SUPPORT_EMAIL', 'support@canonizer.com'),
 	'email_signature' => env('APP_EMAIL_SIGNATURE', 'The Canonizer Team'),
 	'admin_email' => env('ADMIN_EMAIL', 'gautamv16@gmail.com'),
+	'admin_bcc' => env('ADMIN_BCC', 'brent.allsop@canonizer.com'),
 
     /*
     |--------------------------------------------------------------------------

@@ -166,7 +166,7 @@ class SettingsController extends Controller {
 			
 			$user->update();
 			Session::flash('otpsent', "A 6 digit code has been sent on your phone number for verification.");
-			Mail::to($receiver)->send(new PhoneOTPMail($user, $result));
+			Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new PhoneOTPMail($user, $result));
 		  }	
 		}	
 		
@@ -420,7 +420,7 @@ class SettingsController extends Controller {
 
                 $receiver = (config('app.env') == "production") ? $parentUser->email : config('app.admin_email');
 
-                Mail::to($receiver)->send(new NewDelegatedSupporterMail($parentUser, $link, $result));
+                Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new NewDelegatedSupporterMail($parentUser, $link, $result));
                 /* end of email */
             }
             Session::flash('success', "Your support update has been submitted successfully.");
