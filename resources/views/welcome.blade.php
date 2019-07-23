@@ -71,7 +71,7 @@
 
             </div>
             <div class="col-sm-6">
-              <div class="row videopodcast_div">
+              <div class="videopodcast_div">
                 {!!$videopodcast->html_content!!}
                 
               </div>

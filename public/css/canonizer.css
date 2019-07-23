@@ -1328,3 +1328,8 @@ a.rgWT {
     float: left;
     max-height: 266px;
 }
+.videopodcast_div{
+	height: 399px;
+    overflow-y: auto;
+    background-color: #f0efef;
+}
