@@ -225,8 +225,7 @@ class TopicController extends Controller {
                 $link = 'topic-history/' . $topic->topic_num;
 				$data['type'] = "topic";
                 $data['object'] = $topic->topic_name;
-				$data['link'] = 'topic/' . $topic->topic_num . '/1';
-				
+				$data['link'] = 'topic/' . $topic->topic_num . '/1';				
                 Mail::to(Auth::user()->email)->bcc(config('app.admin_bcc'))->send(new ThankToSubmitterMail(Auth::user(), $link,$data));
             } else if ($eventtype == "OBJECTION") {
 
@@ -245,7 +244,7 @@ class TopicController extends Controller {
                 $data['subject'] = $data['nick_name'] . " has objected to your proposed change.";
 
                 $receiver = (config('app.env') == "production") ? $user->email : config('app.admin_email');
-                Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new ObjectionToSubmitterMail($user, $link, $data));
+                 Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new ObjectionToSubmitterMail($user, $link, $data));
             } else if ($eventtype == "UPDATE") {
 
                 $directSupporter = Support::getDirectSupporter($topic->topic_num);
@@ -326,7 +325,7 @@ class TopicController extends Controller {
         session()->forget("topic-support-nickname-{$topicnum}");
         session()->forget("topic-support-tree-{$topicnum}");
         if (count($camp) > 0) {
-        $parentcamp = Camp::campNameWithAncestors($camp, '');
+        $parentcamp = Camp::campNameWithAncestors($camp, '',$topic->topic_name);
         } else {
 			
 		 $parentcamp = "N/A";	
@@ -842,7 +841,7 @@ class TopicController extends Controller {
             $data['subject'] = $data['nick_name'] . " has objected to your proposed change.";
 
             $receiver = (config('app.env') == "production") ? $user->email : config('app.admin_email');
-            Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new ObjectionToSubmitterMail($user, $link, $data));
+         Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new ObjectionToSubmitterMail($user, $link, $data));
         } else if ($eventtype == "UPDATE") {
 
             $directSupporter = Support::getDirectSupporter($statement->topic_num, $statement->camp_num);
