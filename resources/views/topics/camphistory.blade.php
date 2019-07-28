@@ -112,16 +112,16 @@
                             <div>
                                 <b>Camp Name :</b> {{ $data->camp_name }} <br/>
 								 @if(!empty($pCamp))<b>Parent Camp: </b>{{$pCamp->camp_name }}<br>@endif
-                                <b>Keyword :</b> {{ $data->key_words }} <br/>
+                                <b>Keywords :</b> {{ $data->key_words }} <br/>
                                 <b>Edit summary :</b> {{ $data->note }} <br/>
 
                                 <b>Camp About URL :</b> {{ $data->camp_about_url }} <br/>
-                                <b>Submitter Nickname :</b> {{ isset($data->submitternickname->nick_name) ? $data->submitternickname->nick_name : 'N/A' }} <br/>
+                                <b>Submitter Nick Name :</b> {{ isset($data->submitternickname->nick_name) ? $data->submitternickname->nick_name : 'N/A' }} <br/>
                                 <b>Submitted on :</b> {{ to_local_time($data->submit_time) }} <br/>
                                 <b>Go live Time :</b> {{ to_local_time($data->go_live_time)}}<br/>
                                 @if($data->objector_nick_id !=null)
                                 <b>Object Reason :</b> {{ $data->object_reason}} <br/>	
-                                <b>Objector Nickname :</b> {{ $data->objectornickname->nick_name }} <br/> 			  
+                                <b>Objector Nick Name :</b> {{ $data->objectornickname->nick_name }} <br/> 			  
                                 @endif 	 				 
                             </div>    
                             <div class="CmpHistoryPnl-footer">
@@ -154,8 +154,8 @@
                                     <div class="grace-period-note"><b>Note: </b>This countdown timer is the grace period in which you can make minor changes to your camp before other direct supporters are notified.</div>
                                    <div style="float: right"> 
                                        <div class="timer-dial" id="countdowntimer<?php echo $data->id ;?>"></div>
-                                      <a href="<?php echo url('manage/camp/'.$data->id.'-update');?>" class="btn btn-historysmt">Update Camp</a>
-                                      <a href="javascript:void(0)" onclick="notifyAndCloseTimer('<?php echo $data->id ;?>')"class="btn btn-historysmt">Stop</a>
+                                      <a href="<?php echo url('manage/camp/'.$data->id.'-update');?>" class="btn btn-historysmt">Edit Change</a>
+                                      <a href="javascript:void(0)" onclick="notifyAndCloseTimer('<?php echo $data->id ;?>')"class="btn btn-historysmt">Commit Change</a>
                                    </div>
                                 </div>
                                 @endif

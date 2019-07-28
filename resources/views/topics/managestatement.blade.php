@@ -12,7 +12,7 @@
 	 <?php if($objection=="objection") { ?> 
 	Object to this proposed update
 	 <?php } else { ?>
-	Statement update
+	Statement Update
 	 <?php } ?>
 	</h1>
 </div> 
@@ -80,7 +80,7 @@
             <?php }  else { ?>  
 			 <div class="form-group">
                 <label for="title">Edit summary (Briefly describe your changes)</label>
-                 <textarea class="form-control" id="note" rows="4" name="note">{{ old('note')}}</textarea>
+                 <textarea class="form-control" id="note" rows="4" name="note">{{ $statement->note}}</textarea>
                 @if ($errors->has('note')) <p class="help-block">{{ $errors->first('note') }}</p> @endif
             </div> 
 			<?php } ?>

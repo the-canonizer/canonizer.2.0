@@ -23,7 +23,6 @@ Route::group(['prefix' => 'admin', 'middleware' => 'adminauth'], function () {
     Route::post('/namespace/create', 'Admin\ManageController@postCreateNamespace');
     Route::get('/namespace/edit/{id}', 'Admin\ManageController@getUpdateNamespace');
     Route::post('/namespace/edit/{id}', 'Admin\ManageController@postUpdateNamespace');
-
     Route::get('/namespace-requests', 'Admin\ManageController@getNamespaceRequests');
     Route::get('/users', 'Admin\UserController@getIndex');
     Route::get('/users/edit/{id}', 'Admin\UserController@getEdit');
@@ -37,6 +36,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'adminauth'], function () {
     Route::post('/template/store', ['as'=>'template.store', 'uses'=>'Admin\TemplateController@store']);
     Route::get('/sendmail', ['as'=>'sendmail', 'uses'=>'Admin\UserController@getSendmail']);
     Route::post('/sendmail', ['as'=>'sendmail', 'uses'=>'Admin\UserController@postSendmail']);
+    Route::get('/videopodcast', ['as'=>'videopodcast', 'uses'=>'Admin\VideoController@index']);
+    Route::post('/videopodcast', ['as'=>'videopodcast.store', 'uses'=>'Admin\VideoController@store']);
 });
 
 Route::get('/home', ['as' => 'home', 'uses' => 'HomeController@index']);

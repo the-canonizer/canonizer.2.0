@@ -124,7 +124,7 @@ class NotifyUserForChangeSubmit extends Command {
         foreach ($directSupporter as $supporter) {
             $user = Nickname::getUserByNickName($supporter->nick_name_id);
             $receiver = (config('app.env') == "production") ? $user->email : config('app.admin_email');
-            Mail::to($receiver)->send(new PurposedToSupportersMail($user, $link, $data));
+            Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new PurposedToSupportersMail($user, $link, $data));
         }
         return;
     }

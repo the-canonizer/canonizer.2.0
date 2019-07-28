@@ -112,7 +112,7 @@
                     <ul class="uppermenu">
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url('/')}}">
-                                <span class="nav-link-text {{ ($route=='index') ? 'menu-active':''}}">Canonizer Main</span>
+                            <span class="nav-link-text {{ ($route=='index') ? 'menu-active':''}}">Canonizer Main Page</span>
                             </a>
                         </li>
 
@@ -247,9 +247,11 @@
 									
 									<div><input readonly type="text" id="asofdate" name="asofdate" value=""/></div>
 								    <script>
+                                        <?php if(session('asofdateDefault')!=null && session('asofdateDefault')!='') { ?>
 									var date = new Date(<?= strtotime(session('asofdateDefault')) ?> * 1000).toLocaleString();
 									
 									$('#asofdate').val(date);
+                                   <?php } ?>
 									</script>
 								</form>
                                 </li>

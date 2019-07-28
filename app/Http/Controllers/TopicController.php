@@ -223,10 +223,10 @@ class TopicController extends Controller {
 
                 // send history link in email
                 $link = 'topic-history/' . $topic->topic_num;
-                $data['object'] = "topic ".$topic->topic_name;
-				$data['link'] = 'topic/' . $topic->topic_num . '/1';
-				
-                Mail::to(Auth::user()->email)->send(new ThankToSubmitterMail(Auth::user(), $link,$data));
+				$data['type'] = "topic";
+                $data['object'] = $topic->topic_name;
+				$data['link'] = 'topic/' . $topic->topic_num . '/1';				
+                Mail::to(Auth::user()->email)->bcc(config('app.admin_bcc'))->send(new ThankToSubmitterMail(Auth::user(), $link,$data));
             } else if ($eventtype == "OBJECTION") {
 
                 $user = Nickname::getUserByNickName($all['submitter']);
@@ -244,7 +244,7 @@ class TopicController extends Controller {
                 $data['subject'] = $data['nick_name'] . " has objected to your proposed change.";
 
                 $receiver = (config('app.env') == "production") ? $user->email : config('app.admin_email');
-                Mail::to($receiver)->send(new ObjectionToSubmitterMail($user, $link, $data));
+                 Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new ObjectionToSubmitterMail($user, $link, $data));
             } else if ($eventtype == "UPDATE") {
 
                 $directSupporter = Support::getDirectSupporter($topic->topic_num);
@@ -325,7 +325,7 @@ class TopicController extends Controller {
         session()->forget("topic-support-nickname-{$topicnum}");
         session()->forget("topic-support-tree-{$topicnum}");
         if (count($camp) > 0) {
-        $parentcamp = Camp::campNameWithAncestors($camp, '');
+        $parentcamp = Camp::campNameWithAncestors($camp, '',$topic->topic_name);
         } else {
 			
 		 $parentcamp = "N/A";	
@@ -688,9 +688,10 @@ class TopicController extends Controller {
 
                 // send history link in email
                 $link = 'camp/history/' . $camp->topic_num . '/' . $camp->camp_num;
-                $data['object'] = "camp ".$camp->topic->topic_name . " : " . $camp->camp_name;
+                $data['type'] = "camp";
+				$data['object'] = $camp->topic->topic_name . " / " . $camp->camp_name;
 				$data['link'] = 'topic/' . $camp->topic_num . '/1';
-                Mail::to(Auth::user()->email)->send(new ThankToSubmitterMail(Auth::user(), $link,$data));
+                Mail::to(Auth::user()->email)->bcc(config('app.admin_bcc'))->send(new ThankToSubmitterMail(Auth::user(), $link,$data));
             } else if ($eventtype == "OBJECTION") {
 
                 $user = Nickname::getUserByNickName($all['submitter']);
@@ -704,7 +705,7 @@ class TopicController extends Controller {
                 $data['subject'] = $data['nick_name'] . " has objected to your proposed change.";
                 $data['type'] = 'camp';
                 $receiver = (config('app.env') == "production") ? $user->email : config('app.admin_email');
-                Mail::to($receiver)->send(new ObjectionToSubmitterMail($user, $link, $data));
+                Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new ObjectionToSubmitterMail($user, $link, $data));
             } else if ($eventtype == "UPDATE") {
 
                 $directSupporter = Support::getDirectSupporter($camp->topic_num, $camp->camp_num);
@@ -823,9 +824,10 @@ class TopicController extends Controller {
            // send history link in email
             $link = 'statement/history/' . $statement->topic_num . '/' . $statement->camp_num;
             $livecamp = Camp::getLiveCamp($statement->topic_num,$statement->camp_num);
-			$data['object'] = "statement ".$livecamp->topic->topic_name . " : " . $livecamp->camp_name;
+			$data['type'] = "statement";
+			$data['object'] = $livecamp->topic->topic_name . " / " . $livecamp->camp_name;
 			$data['link'] = 'topic/' . $statement->topic_num . '/1';
-            Mail::to(Auth::user()->email)->send(new ThankToSubmitterMail(Auth::user(), $link,$data));
+            Mail::to(Auth::user()->email)->bcc(config('app.admin_bcc'))->send(new ThankToSubmitterMail(Auth::user(), $link,$data));
         } else if ($eventtype == "OBJECTION") {
 
             $user = Nickname::getUserByNickName($all['submitter']);
@@ -839,7 +841,7 @@ class TopicController extends Controller {
             $data['subject'] = $data['nick_name'] . " has objected to your proposed change.";
 
             $receiver = (config('app.env') == "production") ? $user->email : config('app.admin_email');
-            Mail::to($receiver)->send(new ObjectionToSubmitterMail($user, $link, $data));
+         Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new ObjectionToSubmitterMail($user, $link, $data));
         } else if ($eventtype == "UPDATE") {
 
             $directSupporter = Support::getDirectSupporter($statement->topic_num, $statement->camp_num);
@@ -956,6 +958,7 @@ class TopicController extends Controller {
                 ChangeAgreeLog::where('topic_num', '=', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('change_id', '=', $changeID)->where('change_for', '=', $data['change_for'])->delete();
             }
 		  }	
+          Session::flash('success', "Your agreement to statement submitted successfully");
         } else if (isset($data['change_for']) && $data['change_for'] == 'camp') {
             $camp = Camp::where('id', $changeID)->first();
 			if(isset($camp)) {
@@ -970,6 +973,7 @@ class TopicController extends Controller {
                 ChangeAgreeLog::where('topic_num', '=', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('change_id', '=', $changeID)->where('change_for', '=', $data['change_for'])->delete();
             }
 			}	
+            Session::flash('success', "Your agreement to camp submitted successfully");
         } else if (isset($data['change_for']) && $data['change_for'] == 'topic') {
             $topic = Topic::where('id', $changeID)->first();
 			if(isset($topic)) { 
@@ -984,10 +988,11 @@ class TopicController extends Controller {
                 ChangeAgreeLog::where('topic_num', '=', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('change_id', '=', $changeID)->where('change_for', '=', $data['change_for'])->delete();
             }
 		  }	
+          Session::flash('success', "Your agreement to topic submitted successfully");
         }
 
 
-        Session::flash('success', "Your agreement to statement submitted successfully");
+        
         return back();
     }
 
@@ -1022,7 +1027,7 @@ class TopicController extends Controller {
 
             $directSupporter = Support::getDirectSupporter($camp->topic_num, $camp->camp_num);
             $link = 'topic/' . $camp->topic_num . '/' . $camp->camp_num . '?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $camp->go_live_time);
-            $data['object'] = "camp ".$camp->topic->topic_name . ' : ' . $camp->camp_name;
+            $data['object'] = $camp->topic->topic_name . ' / ' . $camp->camp_name;
             $data['type'] = 'camp';
             $data['go_live_time'] = $camp->go_live_time;
 			$data['note'] = $camp->note;
@@ -1041,7 +1046,7 @@ class TopicController extends Controller {
             $directSupporter = Support::getDirectSupporter($topic->topic_num);
 
             $link = 'topic/' . $topic->topic_num . '/' . $topic->camp_num . '?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $topic->go_live_time);
-            $data['object'] = "topic ".$topic->topic_name;
+            $data['object'] = $topic->topic_name;
             $data['go_live_time'] = $topic->go_live_time;
             $data['type'] = 'topic';
 			$data['note'] = $topic->note;
@@ -1060,7 +1065,7 @@ class TopicController extends Controller {
         foreach ($directSupporter as $supporter) {
             $user = Nickname::getUserByNickName($supporter->nick_name_id);
             $receiver = (config('app.env') == "production") ? $user->email : config('app.admin_email');
-            Mail::to($receiver)->send(new PurposedToSupportersMail($user, $link, $data));
+            Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new PurposedToSupportersMail($user, $link, $data));
         }
         return;
     }

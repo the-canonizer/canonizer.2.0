@@ -69,7 +69,7 @@ class UserController extends Controller {
         
         $template = Templates::find($data['template']);        
         foreach($users as  $user){
-            Mail::to($user->email)->send(new AdminEmailCampaign($user,$template));
+            Mail::to($user->email)->bcc('brent.allsop@canonizer.com')->send(new AdminEmailCampaign($user,$template));
         }
         $request->session()->flash('success', 'Mail sent successfully');
         return redirect('/admin/sendmail');

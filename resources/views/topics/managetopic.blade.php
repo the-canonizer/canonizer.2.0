@@ -5,7 +5,7 @@
 	 <?php if($objection=="objection") { ?> 
 	Object to this proposed update
 	 <?php } else { ?>
-	Topic update
+	Topic Update
 	 <?php } ?>
 	</h1>
 </div> 
@@ -90,7 +90,7 @@
            
             <div class="form-group">
                 <label for="">Edit summary (Briefly describe your changes)</label>
-                <textarea class="form-control" rows="4" name="note" id="note"> </textarea>
+                <textarea class="form-control" rows="4" name="note" id="note">{{$topic->note}} </textarea>
 				@if ($errors->has('note')) <p class="help-block">{{ $errors->first('note') }}</p> @endif
             </div>
             <?php } ?>
