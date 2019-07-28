@@ -1328,6 +1328,7 @@ a.rgWT {
     float: left;
     max-height: 266px;
 }
+
 @media (min-width:576px){
 .col-sm-6.sameHeight{
 	flex: 1;
@@ -1336,4 +1337,9 @@ a.rgWT {
     margin: 15px;
     padding: 0px;
 }
+}
+.videopodcast_div{
+	height: 399px;
+    overflow-y: auto;
+    background-color: #f0efef;
 }
