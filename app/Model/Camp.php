@@ -282,17 +282,20 @@ class Camp extends Model {
                             ->where('camp.go_live_time', '<=', $as_of_time)
                             ->whereRaw('topic.go_live_time in (select max(topic.go_live_time) from topic where topic.topic_num=topic.topic_num and topic.objector_nick_id is null and topic.go_live_time <=' . $as_of_time . ' group by topic.topic_num)')
                             //->whereRaw('topic.go_live_time','DESC')					 
-                            ->latest('support')->get()->unique('topic_num')->take($limit)->sortBy('topic.topic_name');
+                            ->latest('support')->get()->unique('topic_num')->take($limit); //->sortBy('topic.topic_name');
+
         } else {
 
             if ((isset($filter['asof']) && $filter['asof'] == "review") || session('asofDefault')=="review") {
 
-                return self::where('camp_name', '=', 'Agreement')->join('topic', 'topic.topic_num', '=', 'camp.topic_num')->whereIn('namespace_id', explode(',', session('defaultNamespaceId')))->latest('camp.submit_time')->get()->take($limit)->sortBy('topic.topic_name');
+
+                return self::where('camp_name', '=', 'Agreement')->join('topic', 'topic.topic_num', '=', 'camp.topic_num')->whereIn('namespace_id', explode(',', session('defaultNamespaceId')))->latest('camp.submit_time')->get()->take($limit); //->sortBy('topic.topic_name');
             } else if (isset($filter['asof']) && $filter['asof'] == "bydate") {
                 $asofdate = strtotime(date('Y-m-d H:i:s', strtotime($filter['asofdate'])));
 
 
-                return self::where('camp_name', '=', 'Agreement')->join('topic', 'topic.topic_num', '=', 'camp.topic_num')->whereIn('namespace_id', explode(',', session('defaultNamespaceId')))->where('topic.objector_nick_id', '=', NULL)->where('camp.go_live_time', '<=', $asofdate)->latest('camp.submit_time')->get()->take($limit)->sortBy('topic.topic_name');
+                return self::where('camp_name', '=', 'Agreement')->join('topic', 'topic.topic_num', '=', 'camp.topic_num')->whereIn('namespace_id', explode(',', session('defaultNamespaceId')))->where('topic.objector_nick_id', '=', NULL)->where('camp.go_live_time', '<=', $asofdate)->latest('camp.submit_time')->get()->take($limit); //->sortBy('topic.topic_name');
+
             }
         }
     }

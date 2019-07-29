@@ -30,7 +30,7 @@
         </div>
         <div class="Lcolor-Pnl">
           <div class="row">
-            <div class="col-sm-6">
+            <div class="col-sm-6 sameHeight">
                   <h3>Canonized list for
                 <select onchange="changeNamespace(this)" id="namespace">
                     @foreach($namespaces as $namespace)
@@ -70,10 +70,10 @@
             </div>
 
             </div>
-            <div class="col-sm-6">
-              <div class="row videopodcast_div">
+            <div class="col-sm-6 sameHeight">
+              <div class="videopodcast_div">
                 {!!$videopodcast->html_content!!}
-                
+
               </div>
                   
             </div>
