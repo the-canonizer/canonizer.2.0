@@ -38,6 +38,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'adminauth'], function () {
     Route::post('/sendmail', ['as'=>'sendmail', 'uses'=>'Admin\UserController@postSendmail']);
     Route::get('/videopodcast', ['as'=>'videopodcast', 'uses'=>'Admin\VideoController@index']);
     Route::post('/videopodcast', ['as'=>'videopodcast.store', 'uses'=>'Admin\VideoController@store']);
+    Route::post('/copydatabase', ['as'=>'videopodcast.copydatabase', 'uses'=>'Admin\ActionController@copydatabase']);
+    Route::post('/copyfiles', ['as'=>'videopodcast.copyfiles', 'uses'=>'Admin\ActionController@copyfiles']);
 });
 
 Route::get('/home', ['as' => 'home', 'uses' => 'HomeController@index']);
