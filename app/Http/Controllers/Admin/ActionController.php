@@ -93,14 +93,13 @@ class ActionController extends Controller
 
 	public function copyfiles(){
 
-			
+			echo "not working yet"; die;
 			if(is_dir("files")){
 					rename("files","files1");	
-			}
+			  }
 
-			$src = "https://canonizer.com/files/";
-			$dest = "files";
-			$command = "wget -r -np  $src -P files/";
+			$src = "https://staging.canonizer.com/files/";
+			$command = "wget  -r -np -R 'index.html*'  $src";
 			try{
 				exec($command,$output=array(),$worked);
 			}catch(\Exception $e){
