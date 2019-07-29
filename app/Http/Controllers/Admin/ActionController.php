@@ -98,7 +98,7 @@ class ActionController extends Controller
 					rename("files","files1");	
 			}
 
-			$src = "https://staging.canonizer.com/files/";
+			$src = "https://canonizer.com/files/";
 			$dest = "files";
 			$command = "wget -r -np  $src -P files/";
 			try{
