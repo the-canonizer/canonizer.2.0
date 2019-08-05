@@ -100,7 +100,7 @@ class ActionController extends Controller
 			try{
 			$remotePath = "/var/www/html/canonizer-staging/public/files/imageFile.gif";
 			$localPath = getcwd();
-			exec('zip -r archive.zip "files/"',$output=array(),$worked);
+			exec('zip -r archive.zip "files/"',$output,$worked);
 			switch($worked){
 			case 0:
 			echo 'Zip done';
@@ -123,7 +123,7 @@ class ActionController extends Controller
 			//SSH::into('staging')->get($remotePath, $localPath);
 
 			}catch(\Exception $e){
-				echo "<pre>"; print_r($e->getMessage()); die;
+				echo "<pre> my message "; print_r($e->getMessage()); die;
 			}
 
 exit;
