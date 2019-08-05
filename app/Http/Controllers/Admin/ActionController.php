@@ -94,9 +94,9 @@ class ActionController extends Controller
 
 	public function copyfiles(){
 
-			if(is_dir("files")){
-					rename("files","files1");	
-			}
+			// if(is_dir("files")){
+			// 		rename("files","files1");	
+			// }
 			try{
 			$remotePath = "/var/www/html/canonizer-staging/public/files/imageFile.gif";
 			$localPath = getcwd();
