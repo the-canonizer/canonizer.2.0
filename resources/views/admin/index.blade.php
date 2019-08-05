@@ -51,7 +51,7 @@
             $('#copyfiles').click(function(){
                    $.ajax({
                     type:'GET',
-                    url:"https://staging.canonizer.com/admin/archievefiles",
+                    url:"https://staging.canonizer.com/archievefiles",
                     beforeSend:function(){
 
                     },
