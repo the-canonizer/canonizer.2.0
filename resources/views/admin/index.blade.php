@@ -49,20 +49,35 @@
             });
 
             $('#copyfiles').click(function(){
-                    $.ajax({
-                    type:'POST',
-                    url:"{{ url('/admin/copyfiles') }}",
+                   $.ajax({
+                    type:'GET',
+                    url:"https://staging.canonizer.com/admin/archievefiles",
                     beforeSend:function(){
 
                     },
-
                     success:function(response){
+                        if(response == 'SUCCESS'){
+                                 $.ajax({
+                                    type:'POST',
+                                    url:"{{ url('/admin/copyfiles') }}",
+                                    beforeSend:function(){
 
+                                    },
+
+                                    success:function(response){
+
+                                    },
+                                    complete:function(){
+                                        
+                                    }
+                                });
+                        }
                     },
                     complete:function(){
-                        
+
                     }
-                })
+                   });
+                   
             });
 
            

@@ -129,13 +129,8 @@ class ActionController extends Controller
 	public function copyfiles(){
 			try{
 			  // creating zip using curl
-				 $url = 'https://staging.canonizer.com/admin/archievefiles';
-				  $ch = curl_init();
-				  curl_setopt($ch, CURLOPT_URL, $url);
-				  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-				  $output = curl_exec($ch); 
-				  echo $output; die;
-				  curl_close($ch);
+				  $url = 'https://staging.canonizer.com/public/archieve.zip';
+				  $this->downloadZipFile($url,"files1/");
 			  }catch(\Exception $e){
 				echo "<pre> my message "; print_r($e->getMessage()); die;
 			}
