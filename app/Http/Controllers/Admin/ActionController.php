@@ -92,37 +92,51 @@ class ActionController extends Controller
             
 	}
 
-	public function copyfiles(){
-
-			// if(is_dir("files")){
-			// 		rename("files","files1");	
-			// }
-			try{
-			$remotePath = "/var/www/html/canonizer-staging/public/files/imageFile.gif";
-			$localPath = getcwd();
-			exec('zip -r archive.zip "files/"',$output,$worked);
-			switch($worked){
-			case 0:
-			echo 'Zip done';
-			break;
-			case 1:
-			echo 'An error occurred in creating zip';
-			break;
-			case 2:
-			echo 'An export error has occurred';
-			break;
+	public function archievefiles(){
+		try{
+			if(function_exists('exec')){
+				exec('zip -r archive.zip "files/"',$output,$worked);
+			}else{
+				echo "ERROR";
 			}
-			//SSH::getGateway()->get($remotePath,$localPath);
-			//SSH::getGateway()->getConnection()->chdir("/var/www/html/canonizer-staging/public");
-			//SSH::getGateway()->getConnection()->run('zip -r filename.zip files/');
-		//	echo SSH::getGateway()->getConnection()->chdir("/var/www/html/canonizer-staging/public");
-			//echo SSH::getGateway()->getConnection()->pwd();
-			 die;
-			//$localPath = getcwd();
-			//echo $localPath."__".$remotePath; die;
-			//SSH::into('staging')->get($remotePath, $localPath);
+			
+			if($worked == 0){
+				echo "SUCCESS";
+			}else{
+				echo "ERROR";
+			}
+			exit;
+		}catch(\Exception $e){
+				echo "<pre> my message "; print_r($e->getMessage()); die;
+			}
+}
+	public function downloadZipFile($url, $filepath){
+     		 $ch = curl_init($url);
+		     curl_setopt($ch, CURLOPT_HEADER, 1);
+		     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		     curl_setopt($ch, CURLOPT_BINARYTRANSFER, 1);
+		     curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 0);
+		     $raw_file_data = curl_exec($ch);
 
-			}catch(\Exception $e){
+		     if(curl_errno($ch)){
+		        echo 'error:' . curl_error($ch);
+		     }
+		     curl_close($ch);
+
+		     file_put_contents($filepath, $raw_file_data);
+		     return (filesize($filepath) > 0)? true : false;
+		 }
+	public function copyfiles(){
+			try{
+			  // creating zip using curl
+				 $url = 'https://staging.canonizer.com/admin/archievefiles';
+				  $ch = curl_init();
+				  curl_setopt($ch, CURLOPT_URL, $url);
+				  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+				  $output = curl_exec($ch); 
+				  echo $output; die;
+				  curl_close($ch);
+			  }catch(\Exception $e){
 				echo "<pre> my message "; print_r($e->getMessage()); die;
 			}
 
