@@ -5,6 +5,7 @@ namespace App\Http\Controllers\admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use DB;
+use SSH;
 
 class ActionController extends Controller
 {
@@ -93,31 +94,59 @@ class ActionController extends Controller
 
 	public function copyfiles(){
 
-			echo "not working yet"; die;
 			if(is_dir("files")){
 					rename("files","files1");	
-			  }
-
-			$src = "https://staging.canonizer.com/files/";
-			$command = "wget  -r -np -R 'index.html*'  $src";
-			try{
-				exec($command,$output=array(),$worked);
-			}catch(\Exception $e){
-				echo "<pre>"; print_r($e->getMessage()); die;
 			}
-		
-
+			try{
+			$remotePath = "/var/www/html/canonizer-staging/public/files/imageFile.gif";
+			$localPath = getcwd();
+			exec('zip -r archive.zip "files/"',$output=array(),$worked);
 			switch($worked){
 			case 0:
-			echo 'Copy Pase Worked';
+			echo 'Zip done';
 			break;
 			case 1:
-			echo 'An error occurred Copying data';
+			echo 'An error occurred in creating zip';
 			break;
 			case 2:
 			echo 'An export error has occurred';
 			break;
 			}
+			//SSH::getGateway()->get($remotePath,$localPath);
+			//SSH::getGateway()->getConnection()->chdir("/var/www/html/canonizer-staging/public");
+			//SSH::getGateway()->getConnection()->run('zip -r filename.zip files/');
+		//	echo SSH::getGateway()->getConnection()->chdir("/var/www/html/canonizer-staging/public");
+			//echo SSH::getGateway()->getConnection()->pwd();
+			 die;
+			//$localPath = getcwd();
+			//echo $localPath."__".$remotePath; die;
+			//SSH::into('staging')->get($remotePath, $localPath);
+
+			}catch(\Exception $e){
+				echo "<pre>"; print_r($e->getMessage()); die;
+			}
+
+exit;
+		 //   $command = 'g:\software\wget\wget  -r  http://staging.canonizer.com/files';
+			// try{
+			// 	exec($command,$output=array(),$worked);
+			// }catch(\Exception $e){
+			// 	echo "<pre>"; print_r($e->getMessage()); die;
+			// }
+			
+			//exit;
+
+			// switch($worked){
+			// case 0:
+			// echo 'Copy Pase Worked';
+			// break;
+			// case 1:
+			// echo 'An error occurred Copying data';
+			// break;
+			// case 2:
+			// echo 'An export error has occurred';
+			// break;
+			// }
 	}
 
 }
