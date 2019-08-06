@@ -46,7 +46,6 @@ class CanonizerCreateNewTopicPage(Page):
         self.enter_nick_name(nickname)
         self.enter_topic_name(topic_name)
         self.enter_namespace(namespace)
-        #self.enter_other_namespace_name(other_namespace_name)
         self.enter_note(note)
         self.click_create_topic_button()
 
@@ -58,9 +57,9 @@ class CanonizerCreateNewTopicPage(Page):
         self.create_topic(nickname, '', namespace, note)
         return self.find_element(*CreateNewTopicPageIdentifiers.ERROR_TOPIC_NAME).text
 
-    def create_topic_with_blank_other_namespace_name(self, nickname, topic_name, namespace, note):
-        self.create_topic(nickname, topic_name, namespace, '', note)
-        return self.find_element(*CreateNewTopicPageIdentifiers.ERROR_NOTE).text
+    def create_topic_with_blank_spaces_topic_name(self, nickname, topic_name, namespace, note):
+        self.create_topic(nickname, topic_name, namespace, note)
+        return self.find_element(*CreateNewTopicPageIdentifiers.ERROR_TOPIC_NAME).text
 
     def create_new_topic_page_should_have_add_new_nick_name_link_for_new_users(self):
         return self.find_element(*CreateNewTopicPageIdentifiers.ADDNEWNICKNAME).text

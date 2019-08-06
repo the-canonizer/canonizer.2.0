@@ -1,5 +1,5 @@
 from CanonizerBase import Page
-from Identifiers import AccountSettingsIdentifiers, LogoutIdentifiers, AccountSettingsChangePasswordIdentifiers, AddAndManageNickNamesIdentifiers, AccountSettingsManageProfileInfoIdentifiers, MySupportsPageIdentifiers
+from Identifiers import AccountSettingsIdentifiers, LogoutIdentifiers, AccountSettingsChangePasswordIdentifiers, AddAndManageNickNamesIdentifiers, AccountSettingsManageProfileInfoIdentifiers, MySupportsPageIdentifiers, HomePageIdentifiers
 
 
 class CanonizerAccountSettingsPage(Page):
@@ -208,7 +208,7 @@ class CanonizerAccountSettingsNickNamesPage(Page):
         self.create(nick_name)
         return self.find_element(*AddAndManageNickNamesIdentifiers.ERROR_NICK_NAME).text
 
-    def create_with_max_nick_name(self, nick_name):
+    def create_with_blank_spaces_nick_name(self, nick_name):
         self.create(nick_name)
         return self.find_element(*AddAndManageNickNamesIdentifiers.ERROR_NICK_NAME).text
 
@@ -236,6 +236,34 @@ class AccountSettingsMySupportsPage(Page):
 
         self.hover(*MySupportsPageIdentifiers.CAMP_NAME)
         self.find_element(*MySupportsPageIdentifiers.CAMP_NAME).click()
+        return AccountSettingsMySupportsPage(self.driver)
+
+    def check_topic_create_new_camp_page_from_my_supports_loaded(self):
+        """
+        This function verifies if the canonizer help page loads properly.
+        :return:
+        """
+
+        self.hover(*MySupportsPageIdentifiers.TOPIC_NAME)
+        self.find_element(*MySupportsPageIdentifiers.TOPIC_NAME).click()
+
+        self.hover(*HomePageIdentifiers.CREATE_NEW_CAMP)
+        self.find_element(*HomePageIdentifiers.CREATE_NEW_CAMP).click()
+
+        return AccountSettingsMySupportsPage(self.driver)
+
+    def check_camp_create_new_camp_page_from_my_supports_loaded(self):
+        """
+        This function verifies if the canonizer help page loads properly.
+        :return:
+        """
+
+        self.hover(*MySupportsPageIdentifiers.CAMP_NAME)
+        self.find_element(*MySupportsPageIdentifiers.CAMP_NAME).click()
+
+        self.hover(*HomePageIdentifiers.CREATE_NEW_CAMP)
+        self.find_element(*HomePageIdentifiers.CREATE_NEW_CAMP).click()
+
         return AccountSettingsMySupportsPage(self.driver)
 
 
@@ -319,7 +347,8 @@ class AccountSettingsManageProfileInfoPage(Page):
         return \
             self.find_element(*AccountSettingsManageProfileInfoIdentifiers.FIRST_NAME_ASTRK) and \
             self.find_element(*AccountSettingsManageProfileInfoIdentifiers.LAST_NAME_ASTRK) and \
-            self.find_element(*AccountSettingsManageProfileInfoIdentifiers.COUNTRY_ASTRK)
+            self.find_element(*AccountSettingsManageProfileInfoIdentifiers.COUNTRY_ASTRK) and \
+            self.find_element(*AccountSettingsManageProfileInfoIdentifiers.PHONE_NUMBER_ASTRK)
 
     def update_profile_with_blank_first_name(self, middle_name, last_name, email, language, dob, address_line1, address_line2, city, state, country, zip_code):
         self.find_element(*AccountSettingsManageProfileInfoIdentifiers.FIRST_NAME).clear()
@@ -335,7 +364,6 @@ class AccountSettingsManageProfileInfoPage(Page):
         self.find_element(*AccountSettingsManageProfileInfoIdentifiers.PHONE_NUMBER).clear()
         self.verify_phone_number('')
         return self.find_element(*AccountSettingsManageProfileInfoIdentifiers.ERROR_PHONE_NUMBER).text
-
 
 
 

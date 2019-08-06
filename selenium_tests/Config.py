@@ -26,10 +26,10 @@ else:
     print("Unknown OS")
     exit(1)
 
-#DEFAULT_USER = "rupali.chavan9860@gmail.com"
-#DEFAULT_PASS = "rupali@12345"
-DEFAULT_USER = "r_cano_user@yopmail.com"
-DEFAULT_PASS = "Rupali@12345"
+DEFAULT_USER = "rupali.chavan9860@gmail.com"
+DEFAULT_PASS = "rupali@12345"
+#DEFAULT_USER = "r_cano_user@yopmail.com"
+#DEFAULT_PASS = "Rupali@12345"
 DEFAULT_INVALID_USER = "invaliduser@gmail.com"
 DEFAULT_INVALID_PASSWORD = "invalid_password"
 
@@ -52,12 +52,15 @@ DEFAULT_NICK_NAME = ""
 DEFAULT_TOPIC_NAME = ""
 DEFAULT_NAMESPACE = ""
 DEFAULT_NOTE = ""
-DUPLICATE_TOPIC_NAME = "26/10/2018"
+DUPLICATE_TOPIC_NAME = "Theories of Consciousness"
 
 # Change Password Configuration Parameters
 DEFAULT_CURRENT_PASSWORD = "Rupali@12345"
 DEFAULT_NEW_PASSWORD = "Test@12345"
 DEFAULT_CONFIRM_PASSWORD = "Test@12345"
+
+# Add New Nick Name Configuration Parameters
+DEF_NICK_NAME = "Rupali C"
 
 
 

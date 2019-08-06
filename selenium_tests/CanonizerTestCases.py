@@ -38,10 +38,10 @@ testCases = {
     26: [critical, 'In Create New Topic page, When user click on "Create New Topic", user should see Create New Topic page'],
     27: [critical, 'In Create New Topic page, When user doesn\'t put Nick name,user should see error message'],
     28: [critical, 'In Create New Topic page, When user doesn\'t put Topic name,user should see error message'],
-    29: [critical, 'In Create New Topic page, When user doesn\'t put Note,user should see error message'],
+    29: [critical, 'In Create New Topic page, When user put blank spaces in topic name,user should see error message'],
     30: [low, 'On Create New Topic Page, All Mandatory Fields are marked with * Sign'],
     31: [moderate, 'In Create New Topic page, When user enter duplicate Nick name,user should see error message'],
-    32: [moderate, 'In Create New Topic page, When user Nick name more than 30 chars,user should see error message'],
+    32: [low, 'When user goes click on Create New Topic without logging in, Login Page page should be loaded'],
     33: [critical, 'In log out page, user should see home page'],
     34: [critical, 'In Account Settings page, When user click on "Account Settings" ,user should see Account Settings page'],
     35: [critical, 'In Account Settings page, When user click on "Manage Profile Info" subtab,user should see Profile page'],
@@ -69,7 +69,7 @@ testCases = {
     57: [critical, 'On Nick Names Page, All Mandatory Fields are marked with * Sign'],
     58: [critical, 'On Nick Names Page, When user doesn\'t put Nick Name , user must see Error Message'],
     59: [critical, 'On Nick Names Page, When user put duplicate Nick Name , user must see Error Message'],
-    60: [critical, 'On Nick Names Page, When user put Nick Name more than 50 characters, user must see Error Message'],
+    60: [critical, 'On Nick Names Page, When user put blank spaces in Nick Name, user must see Error Message'],
     61: [critical, 'On Nick Names Page, When user put valid Nick Name,User should see success message'],
     62: [critical, 'On Manage Profile Info Page, All Mandatory Fields are marked with * Sign'],
     63: [critical, 'On Manage Profile Info Page, When user doesn\'t put First Name , user must see Error Message'],
@@ -185,9 +185,13 @@ testCases = {
     173: [low, 'On Add Camp Statement page, When user doesn\'t put Nick Name, user must see Error Message'],
     174: [low, 'On Add Camp Statement page, When user doesn\'t put Statement, user must see Error Message'],
     175: [low, 'On Add Camp Statement, Add New Nick Name link should present for users who doesn\'t have nick name yet'],
-    176: [moderate, 'In User Registration Page, When user put blank spaces in  First Name, user must see Error Message']
-
-
+    176: [moderate, 'In User Registration Page, When user put blank spaces in  First Name, user must see Error Message'],
+    177: [moderate, 'In My Supports page, When user click on Topic name->Create New Camp, user should redirect to respective page'],
+    178: [moderate, 'In My Supports page, When user click on Camp name->Create New Camp, user should redirect to respective page'],
+    179: [moderate, 'In My Supports page, When user click on Camp name->Create New Camp, user should redirect to respective page'],
+    180: [moderate, 'With login check disallow: /settings in https://canonizer.com/robots.txt'],
+    181: [moderate, 'Without Login check disallow: /settings in https://canonizer.com/robots.txt'],
+    182: [low, 'When user goes click on Upload File without logging in, Login Page page should be loaded']
 }
 
 

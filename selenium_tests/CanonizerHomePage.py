@@ -63,6 +63,13 @@ class CanonizerHomePage(Page):
         """
         return True if self.find_element(*HomePageIdentifiers.WHATISCANONIZERHEADING) else False
 
+    def robots_txt_page_should_have_disallow_settings(self):
+        """
+
+        :return:
+        """
+
+        return self.find_element(*HomePageIdentifiers.TURNOFFSETTINGS).text
 
 class WhatIsCanonizerPage(Page):
     def join_or_support_camp_without_user_registration(self):
@@ -89,6 +96,34 @@ class CanonizerAlgorithmInformation(Page):
         self.find_element(*AlgorithmInformationIdentifiers.ALGORITHM_INFORMATION).click()
         return CanonizerAlgorithmInformation(self.driver)
 
+    def check_from_algo_info_topic_loaded(self):
+        """
+        This function verifies if the canonizer help page loads properly.
+        :return:
+        """
+        self.hover(*AlgorithmInformationIdentifiers.ALGORITHM_INFORMATION)
+        self.find_element(*AlgorithmInformationIdentifiers.ALGORITHM_INFORMATION).click()
+
+        self.hover(*AlgorithmInformationIdentifiers.MIND_EXPERTS)
+        self.find_element(*AlgorithmInformationIdentifiers.MIND_EXPERTS).click()
+
+        self.hover(*AlgorithmInformationIdentifiers.MIND_EXPERTS_TOPIC)
+        self.find_element(*AlgorithmInformationIdentifiers.MIND_EXPERTS_TOPIC).click()
+
+        #self.hover(*HomePageIdentifiers.CREATE_NEW_CAMP)
+        #self.find_element(*HomePageIdentifiers.CREATE_NEW_CAMP).click()
+
+        return CanonizerAlgorithmInformation(self.driver)
+
+    def check_camp_create_new_camp_page_from_algo_info_loaded(self):
+        """
+        This function verifies if the canonizer help page loads properly.
+        :return:
+        """
+        self.hover(*HomePageIdentifiers.CREATE_NEW_CAMP)
+        self.find_element(*HomePageIdentifiers.CREATE_NEW_CAMP).click()
+
+        return CanonizerAlgorithmInformation(self.driver)
 
 class CanonizerAsOfFilters(Page):
     def check_include_review_filter_applied(self):

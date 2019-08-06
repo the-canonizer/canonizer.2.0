@@ -23,9 +23,12 @@ class HomePageIdentifiers(object):
     WHATISCANONIZERHEADING = (By.XPATH, '//*[@id="exampleAccordion"]/ul[1]/li[1]/a/span')
     LOADALLTOPICS   = (By.ID, 'loadtopic')
     CREATE_NEW_CAMP = (By.XPATH, '//*[@id="exampleAccordion"]/ul[1]/li[4]/a/span')
-    UPLOADFILE = (By.XPATH, '//*[@id="exampleAccordion"]/ul[1]/li[5]/a/span')
-    WHITE_PAPER = (By.XPATH, '//*[@id="exampleAccordion"]/ul[1]/li[7]/a/span')
-    BLOG = (By.XPATH, '//*[@id="exampleAccordion"]/ul[1]/li[8]/a/span')
+    UPLOADFILE = (By.XPATH, '//*[@id="exampleAccordion"]/ul[1]/li[4]/a/span')
+    #UPLOADFILE = (By.XPATH, '//*[@id="exampleAccordion"]/ul[1]/li[5]/a/span')
+    WHITE_PAPER = (By.XPATH, '//*[@id="exampleAccordion"]/ul[1]/li[6]/a/span')
+    #WHITE_PAPER = (By.XPATH, '//*[@id="exampleAccordion"]/ul[1]/li[7]/a/span')
+    BLOG = (By.XPATH, '//*[@id="exampleAccordion"]/ul[1]/li[7]/a/span')
+    #BLOG = (By.XPATH, '//*[@id="exampleAccordion"]/ul[1]/li[8]/a/span')
     GOOGLESEARCH = (By.ID, 'sbi')
     GOOGLESEARCHSUBMIT = (By.ID, 'sbb')
     # Broken URL XPATH
@@ -35,6 +38,7 @@ class HomePageIdentifiers(object):
     BROKENURL_4 = (By.XPATH, '//*[@id="rso"]/div/div/div[4]/div/div/div[1]/a')
     BROKENURL_5 = (By.XPATH, '//*[@id="rso"]/div/div/div[5]/div/div/div[1]/a')
     TURNOFFSETTINGS = (By.XPATH, '/html/body/pre')
+
 
 
 class LoginPageIdentifiers(object):
@@ -251,7 +255,8 @@ class AccountSettingsManageProfileInfoIdentifiers(object):
     UPDATE = (By.ID, 'submit')
     PHONE_NUMBER = (By.ID, 'phone_number')
     ERROR_PHONE_NUMBER = (By.XPATH, '//*[@id="myTabContent"]/form[1]/div/div[1]/div/p')
-    VERIFY = (By.XPATH, '//*[@id="submit"]')
+    VERIFY = (By.ID, 'verify_phone_email')
+    PHONE_NUMBER_ASTRK = (By.XPATH, '//*[@id="myTabContent"]/form[1]/div/div[1]/label/span')
 
 
 class AlgorithmInformationIdentifiers(object):
@@ -259,6 +264,8 @@ class AlgorithmInformationIdentifiers(object):
         Class to hold the Algorithm Information Page Identifiers
     """
     ALGORITHM_INFORMATION = (By.XPATH, '//*[@id="canoalgo"]/li[1]/a/span')
+    MIND_EXPERTS = (By.XPATH, '//*[@id="tree_53_1_11"]/div/a')
+    MIND_EXPERTS_TOPIC = (By.XPATH, '//*[@id="camp_statement"]/a[2]')
 
 
 class BrowseTopicsIdentifiers(object):
@@ -410,7 +417,7 @@ class EditNewsPageIdentifiers(object):
     DISPLAY_TEXT = (By.ID, 'display_text')
     LINK = (By.ID, 'link')
     CANCEL = (By.XPATH, '//*[@id="topicForm"]/a')
-    DISPLAY_TEXT_ASTRK = (By.XPATH, '//*[@id="sortable"]/div/div[1]/label/span')
+    DISPLAY_TEXT_ASTRK = (By.XPATH, '//*[@id="sortable"]/div/div[1]/lasubmitbel/span')
     LINK_ASTRK = (By.XPATH, '//*[@id="sortable"]/div/div[2]/label/span')
     SUBMIT = (By.ID, 'submit')
     ERROR_DISPLAY_TEXT = (By.XPATH, '//*[@id="sortable"]/div[1]/div[1]/p')
@@ -422,7 +429,7 @@ class MySupportsPageIdentifiers(object):
     """
     Class to hold the My Supports Page Identifiers
     """
-    TOPIC_NAME = (By.XPATH, '/html/body/div/div[2]/div/div/div/div/div[1]/b/a')
+    TOPIC_NAME = (By.XPATH, '/html/body/div/div[2]/div/div/div/div/div[21]/b/a')
     CAMP_NAME = (By.XPATH, '//*[@id="positions_2585"]/b/a')
 
 
