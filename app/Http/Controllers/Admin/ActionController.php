@@ -93,7 +93,7 @@ class ActionController extends Controller
 	}
 
 	public function archievefiles(){
-		try{
+		try{ echo "exec  exists"; die;
 			if(function_exists('exec')){
 				echo "exec function exists"; die;
 				exec('zip -r archive.zip "files/"',$output,$worked);
