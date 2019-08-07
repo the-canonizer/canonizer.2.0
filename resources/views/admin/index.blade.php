@@ -42,11 +42,7 @@
     </div>
     <script>
          $(document).ready(function () {
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
+            
 
             $('#copyfiles').click(function(){
                    $.ajax({
@@ -80,10 +76,13 @@
                    
             });
 
-           
+          
             $('#copydatabase').click(function(){
                 $.ajax({
                     type:'POST',
+                     headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
                     url:" {{url('/admin/copydatabase') }} ",
                     beforeSend:function(){
 
