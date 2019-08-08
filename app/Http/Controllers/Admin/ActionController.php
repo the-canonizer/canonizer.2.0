@@ -131,10 +131,9 @@ class ActionController extends Controller
 	public function copyfiles(){
 			ini_set('max_execution_time', 0);
 			try{
-				  $url = 'https://staging.canonizer.com/archive.zip';
+				  $url = 'https://canonizer.com/archive.zip';
 				  $flag = copy($url,"files1.zip");
-				  if($flag){
-				  	$file = "files1.zip";				  	
+				  if($flag){			  	
 				  	exec('unzip -r files1.zip "files1/"',$output,$worked);
 				  	switch($worked){
 						case 0:
