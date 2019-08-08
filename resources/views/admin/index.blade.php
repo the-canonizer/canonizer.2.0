@@ -50,7 +50,7 @@
             $('#copyfiles').click(function(){
                    $.ajax({
                     type:'GET',
-                    url:"https://staging.canonizer.com/archievefiles",
+                    url:"https://canonizer.com/archievefiles",
                     beforeSend:function(){
 
                     },
@@ -67,7 +67,16 @@
                                     },
 
                                     success:function(response){
+                                         $.ajax({
+                                            type:'GET',
+                                            url:"https://canonizer.com/removearchievefiles",
+                                            beforeSend:function(){
 
+                                            },
+                                            success:function(){
+
+                                            }
+                                         });
                                     },
                                     complete:function(){
                                         
