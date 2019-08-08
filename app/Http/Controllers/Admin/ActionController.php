@@ -112,16 +112,36 @@ class ActionController extends Controller
 			}
 	}
 	
+	public function removearchievefiles(){
+		try{
+			if(function_exists('exec')){
+				exec('rm -rf archive.zip',$output,$worked);
+			}else{
+				echo "ERROR";
+			}
+			
+			if($worked == 0){
+				echo "SUCCESS";
+			}else{
+				echo "ERROR";
+			}
+			exit;
+		}catch(\Exception $e){
+				echo "<pre> my message "; print_r($e->getMessage()); die;
+			}
+	}
+	
 	public function copyfiles(){
 			ini_set('max_execution_time', 0);
 			try{
 				  $url = 'https://canonizer.com/archive.zip';
 				  $flag = copy($url,"files1.zip");
-				  if($flag){			  	
-				  	exec('unzip -r files1.zip "files1/"',$output,$worked);
+				  if($flag){
+				  	exec('unzip -o  files1.zip',$output,$worked);
 				  	switch($worked){
 						case 0:
 						echo 'Copy Pase Worked';
+						exec('rm -rf files1.zip',$output,$worked);
 						break;
 						case 1:
 						echo 'An error occurred Copying data';
