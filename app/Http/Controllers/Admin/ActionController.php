@@ -95,7 +95,6 @@ class ActionController extends Controller
 
 	public function archievefiles(){
 		try{
-			echo "SUCCESS";; die;
 			if(function_exists('exec')){
 				exec('zip -r archive.zip "files/"',$output,$worked);
 			}else{
