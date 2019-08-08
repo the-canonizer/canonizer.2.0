@@ -110,7 +110,7 @@ class ActionController extends Controller
 		}catch(\Exception $e){
 				echo "<pre> my message "; print_r($e->getMessage()); die;
 			}
-}
+	}
 	
 	public function copyfiles(){
 			ini_set('max_execution_time', 0);
@@ -137,7 +137,7 @@ class ActionController extends Controller
 				echo "<pre> my message "; print_r($e->getMessage()); die;
 			}
 
-exit;
+			exit;
 		
 			
 	}
