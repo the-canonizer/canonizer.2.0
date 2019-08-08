@@ -40,7 +40,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'adminauth'], function () {
     Route::get('/videopodcast', ['as'=>'videopodcast', 'uses'=>'Admin\VideoController@index']);
     Route::post('/videopodcast', ['as'=>'videopodcast.store', 'uses'=>'Admin\VideoController@store']);
     Route::post('/copydatabase', ['as'=>'copydatabase', 'uses'=>'Admin\ActionController@copydatabase']);
-    Route::post('/copyfiles', ['as'=>'copyfiles', 'uses'=>'Admin\ActionController@copyfiles']);
+    Route::get('/copyfiles', ['as'=>'copyfiles', 'uses'=>'Admin\ActionController@copyfiles']);
 });
 
 Route::get('/home', ['as' => 'home', 'uses' => 'HomeController@index']);

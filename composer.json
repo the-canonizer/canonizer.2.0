@@ -9,8 +9,7 @@
         "doctrine/dbal": "v2.5.13",
         "laravel/framework": "5.4.36",
         "laravel/tinker": "~1.0",
-        "laravelcollective/html": "^5.4.0",
-        "laravelcollective/remote": "^5.2.0"
+        "laravelcollective/html": "^5.4.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

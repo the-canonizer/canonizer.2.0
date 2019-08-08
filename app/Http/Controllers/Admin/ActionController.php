@@ -5,7 +5,8 @@ namespace App\Http\Controllers\admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use DB;
-use SSH;
+use ZipArchive;
+use Illuminate\Support\Facades\Storage;
 
 class ActionController extends Controller
 {
@@ -94,6 +95,7 @@ class ActionController extends Controller
 
 	public function archievefiles(){
 		try{
+			echo "SUCCESS";; die;
 			if(function_exists('exec')){
 				exec('zip -r archive.zip "files/"',$output,$worked);
 			}else{
@@ -113,11 +115,12 @@ class ActionController extends Controller
 	public function downloadZipFile($url, $filepath){
      		 $ch = curl_init($url);
 		     curl_setopt($ch, CURLOPT_HEADER, 1);
-		     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+			 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 		     curl_setopt($ch, CURLOPT_BINARYTRANSFER, 1);
 		     curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 0);
 		     $raw_file_data = curl_exec($ch);
-
+		     var_dump($raw_file_data);
 		     if(curl_errno($ch)){
 		        echo 'error:' . curl_error($ch);
 		     }
@@ -127,35 +130,34 @@ class ActionController extends Controller
 		     return (filesize($filepath) > 0)? true : false;
 		 }
 	public function copyfiles(){
+			ini_set('max_execution_time', 0);
 			try{
-			  // creating zip using curl
-				  $url = 'https://staging.canonizer.com/public/archieve.zip';
-				  $this->downloadZipFile($url,"files1/");
+				  $url = 'https://staging.canonizer.com/archive.zip';
+				  $flag = copy($url,"files1.zip");
+				  if($flag){
+				  	$file = "files1.zip";				  	
+				  	exec('unzip -r files1.zip "files1/"',$output,$worked);
+				  	switch($worked){
+						case 0:
+						echo 'Copy Pase Worked';
+						break;
+						case 1:
+						echo 'An error occurred Copying data';
+						break;
+						case 2:
+						echo 'An export error has occurred';
+						break;
+						}
+				  }
+				 
+
 			  }catch(\Exception $e){
 				echo "<pre> my message "; print_r($e->getMessage()); die;
 			}
 
 exit;
-		 //   $command = 'g:\software\wget\wget  -r  http://staging.canonizer.com/files';
-			// try{
-			// 	exec($command,$output=array(),$worked);
-			// }catch(\Exception $e){
-			// 	echo "<pre>"; print_r($e->getMessage()); die;
-			// }
+		
 			
-			//exit;
-
-			// switch($worked){
-			// case 0:
-			// echo 'Copy Pase Worked';
-			// break;
-			// case 1:
-			// echo 'An error occurred Copying data';
-			// break;
-			// case 2:
-			// echo 'An export error has occurred';
-			// break;
-			// }
 	}
 
 }
