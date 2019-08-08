@@ -33,5 +33,74 @@
                 </div>
             </div>
 		</div>
+        <div class="col-md-4 panel-warning">
+             <button id="copydatabase" class="btn btn-primary">Copy Production Database To Staging</button>
+        </div>
+        <div class="col-md-4 panel-warning">
+            <button id="copyfiles" class="btn btn-primary">Copy Production Files To Staging</button>
+         </div>
     </div>
+    <script>
+         $(document).ready(function () {
+            
+
+            $('#copyfiles').click(function(){
+                   $.ajax({
+                    type:'GET',
+                    url:"https://staging.canonizer.com/archievefiles",
+                    beforeSend:function(){
+
+                    },
+                    success:function(response){
+                        if(response == 'SUCCESS'){
+                                 $.ajax({
+                                    type:'POST',
+                                     headers: {
+                                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                    },
+                                    url:"{{ url('/admin/copyfiles') }}",
+                                    beforeSend:function(){
+
+                                    },
+
+                                    success:function(response){
+
+                                    },
+                                    complete:function(){
+                                        
+                                    }
+                                });
+                        }
+                    },
+                    complete:function(){
+
+                    }
+                   });
+                   
+            });
+
+          
+            $('#copydatabase').click(function(){
+                $.ajax({
+                    type:'POST',
+                     headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                    url:" {{url('/admin/copydatabase') }} ",
+                    beforeSend:function(){
+
+                    },
+
+                    success:function(response){
+
+                    },
+                    complete:function(){
+
+                    }
+                })
+            });
+
+         });
+
+    </script>
 @endsection

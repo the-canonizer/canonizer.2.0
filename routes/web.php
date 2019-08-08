@@ -17,6 +17,7 @@ if (version_compare(PHP_VERSION, '7.2.0', '>=')) {
 
 Route::get('/admin/login', 'Admin\LoginController@getLogin');
 Route::post('/admin/login', 'Admin\LoginController@postLogin');
+Route::get('/archievefiles', 'Admin\ActionController@archievefiles');
 Route::group(['prefix' => 'admin', 'middleware' => 'adminauth'], function () {
     Route::get('/', 'Admin\ManageController@getIndex');
     Route::get('/namespace/create', 'Admin\ManageController@getCreateNamespace');
@@ -38,6 +39,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'adminauth'], function () {
     Route::post('/sendmail', ['as'=>'sendmail', 'uses'=>'Admin\UserController@postSendmail']);
     Route::get('/videopodcast', ['as'=>'videopodcast', 'uses'=>'Admin\VideoController@index']);
     Route::post('/videopodcast', ['as'=>'videopodcast.store', 'uses'=>'Admin\VideoController@store']);
+    Route::post('/copydatabase', ['as'=>'copydatabase', 'uses'=>'Admin\ActionController@copydatabase']);
+    Route::get('/copyfiles', ['as'=>'copyfiles', 'uses'=>'Admin\ActionController@copyfiles']);
 });
 
 Route::get('/home', ['as' => 'home', 'uses' => 'HomeController@index']);
