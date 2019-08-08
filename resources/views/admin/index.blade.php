@@ -33,12 +33,15 @@
                 </div>
             </div>
 		</div>
-        <div class="col-md-4 panel-warning">
+        @if (env('APP_ENV')!='Production')
+       <div class="col-md-4 panel-warning">
              <button id="copydatabase" class="btn btn-primary">Copy Production Database To Staging</button>
         </div>
         <div class="col-md-4 panel-warning">
             <button id="copyfiles" class="btn btn-primary">Copy Production Files To Staging</button>
          </div>
+        @endif
+        
     </div>
     <script>
          $(document).ready(function () {
