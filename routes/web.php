@@ -41,6 +41,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'adminauth'], function () {
 });
 
 Route::get('/home', ['as' => 'home', 'uses' => 'HomeController@index']);
+Route::get('/privacypolicy', ['as' => 'privacypolicy', 'uses' => 'HomeController@privacypolicy']);
+Route::get('/termservice', ['as' => 'termservice', 'uses' => 'HomeController@termservice']);
 Route::get('browse', ['as' => 'browse', 'uses' => 'HomeController@browse']);
 Route::get('supportmigration', ['as' => 'supportmigration', 'uses' => 'HomeController@supportmigration']);
 

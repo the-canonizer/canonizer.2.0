@@ -6,7 +6,8 @@
                 <small>Copyright owned by the volunteers contributing to the system and its contents (2006 - {{ date('Y')}})</small>
                 <small>Comments and Questions: support@canonizer.com</small>
 				<small>Pattent: US 8,160,970 B2</small>
-                <small>Version - Canonizer 2.0</small>
+                <small><a href="{{url('termservice')}}">Terms & Services</a></small>
+                <small><a href="{{url('privacypolicy')}}">Privacy Policy</a></small>
             </div>
         </div>
     </div>
