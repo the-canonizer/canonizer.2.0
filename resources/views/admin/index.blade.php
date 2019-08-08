@@ -67,7 +67,16 @@
                                     },
 
                                     success:function(response){
+                                         $.ajax({
+                                            type:'GET',
+                                            url:"https://canonizer.com/removearchievefiles",
+                                            beforeSend:function(){
 
+                                            },
+                                            success:function(){
+
+                                            }
+                                         });
                                     },
                                     complete:function(){
                                         
