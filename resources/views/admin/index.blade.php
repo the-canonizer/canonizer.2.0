@@ -1,6 +1,6 @@
 @extends('admin.app')
 @section('content')
-    <div class="row">
+ <div class="row">
         <div class="col-md-4 panel-warning">
             <div class="content-box-header panel-heading">
                 <div class="panel-title ">Total Live Topics</div>
@@ -43,6 +43,12 @@
         @endif
         
     </div>
+
+    <div id="loader_div" class="modal" style="display: none">
+    <div class="center">
+        <img alt="" src="/img/ajax-loader.gif" />
+        </div>
+    </div>
     <script>
          $(document).ready(function () {
             
@@ -52,7 +58,7 @@
                     type:'GET',
                     url:"https://canonizer.com/archievefiles",
                     beforeSend:function(){
-
+                        $('#loader_div').show();
                     },
                     success:function(response){
                         if(response == 'SUCCESS'){
@@ -74,7 +80,7 @@
 
                                             },
                                             success:function(){
-
+                                                 $('#loader_div').hide();
                                             }
                                          });
                                     },
@@ -82,6 +88,9 @@
                                         
                                     }
                                 });
+                        }else{
+                             $('#loader_div').hide();
+
                         }
                     },
                     complete:function(){
@@ -100,11 +109,11 @@
                         },
                     url:" {{url('/admin/copydatabase') }} ",
                     beforeSend:function(){
-
+                        $('#loader_div').show();
                     },
 
                     success:function(response){
-
+                        $('#loader_div').hide();
                     },
                     complete:function(){
 

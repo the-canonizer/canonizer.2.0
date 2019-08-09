@@ -667,3 +667,30 @@ body {
     color: red;
     padding: 5px 2px;
 }
+.modal
+    {
+        position: fixed;
+        z-index: 999;
+        height: 100%;
+        width: 100%;
+        top: 0;
+        left: 0;
+        background-color: Black;
+        filter: alpha(opacity=60);
+        opacity: 0.6;
+        -moz-opacity: 0.8;
+    }
+    .center
+    {
+        z-index: 1000;
+        margin: 300px auto;
+        padding: 10px;
+        width: 130px;
+        opacity: 1;
+        -moz-opacity: 1;
+    }
+    .center img
+    {
+        height: 40px;
+        width: 40px;
+    }
