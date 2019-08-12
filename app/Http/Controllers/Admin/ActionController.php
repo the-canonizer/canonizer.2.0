@@ -13,7 +13,6 @@ class ActionController extends Controller
   
    public function copydatabase(){
    		ini_set('max_execution_time', 0);
-   		echo "Success"; die;
    		$dbhost = 'canoniser-db.czjgaatug9jz.us-east-2.rds.amazonaws.com';
 		$dbuser = 'dbinstanceuser';
 		$dbpass = '!C+4niZ3rDB!2329#';
