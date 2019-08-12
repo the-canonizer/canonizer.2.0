@@ -174,4 +174,13 @@ class HomeController extends Controller {
         session(['defaultNamespaceId' => $namespace->id]);
     }
 
+    public function termservice(){
+            return view('termservice');
+
+    }
+
+    public function privacypolicy(){
+            return view('privacypolicy');
+    }
+
 }
