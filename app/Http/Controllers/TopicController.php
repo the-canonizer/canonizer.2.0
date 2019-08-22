@@ -578,7 +578,7 @@ class TopicController extends Controller {
         $currentTime = time();
         $validator = Validator::make($request->all(), [
                     'nick_name' => 'required',
-                    'camp_name' => 'required|max:30'
+                    'camp_name' => 'required|max:30|regex:/^[a-zA-Z0-9\s]+$/'
                    // 'note' => 'required',
         ]);
 		session(['filter'=>'removed']);
@@ -587,7 +587,7 @@ class TopicController extends Controller {
             $objection = 1;
             $validator = Validator::make($request->all(), [
                         'nick_name' => 'required',
-                        'camp_name' => 'required|max:30',
+                        'camp_name' => 'required|max:30|regex:/^[a-zA-Z0-9\s]+$/',
                         'objection_reason' => 'required|max:100',
             ]);
         }
