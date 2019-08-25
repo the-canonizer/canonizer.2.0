@@ -165,7 +165,7 @@ class Camp extends Model {
     }
 
     public function scopeCampNameWithAncestors($query, $camp, $campname = '',$title = '') {
-        $as_of_time = time();
+         $as_of_time = time();
         if (isset($_REQUEST['asof']) && $_REQUEST['asof'] == 'bydate') {
             $as_of_time = strtotime($_REQUEST['asofdate']);
         }
@@ -187,9 +187,9 @@ class Camp extends Model {
 				$url = url('topic/' . $camp->topic_num .'-'.$title. '/' . $camp->camp_num);
                 $campname = "<a href='" . $url . "'>" . $camp->camp_name . '</a>';
             }
+
             if (isset($camp) && $camp->parent_camp_num) {
-
-
+                
                 $pcamp = Camp::where('topic_num', $camp->topic_num)
                                 ->where('camp_num', $camp->parent_camp_num)
                                 // ->where('camp_name', '!=', 'Agreement')  
@@ -198,7 +198,7 @@ class Camp extends Model {
                                 ->where('go_live_time', '<=', $as_of_time)
                                 ->orderBy('submit_time', 'DESC')->first();
 
-                return self::campNameWithAncestors($pcamp, $campname);
+                return self::campNameWithAncestors($pcamp, $campname,$title);
             }
         }
         return $campname;

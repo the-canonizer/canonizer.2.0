@@ -313,13 +313,14 @@ class TopicController extends Controller {
 
         $topicnumArray = explode("-", $id);
         $topicnum = $topicnumArray[0];
+        
 
         if(session('campnum')) {
 			session()->forget('campnum');
 			return redirect()->refresh();
 		}
         $topic = Camp::getAgreementTopic($topicnum, $_REQUEST);
-
+        
         $camp = Camp::getLiveCamp($topicnum, $parentcampnum);
         session()->forget("topic-support-{$topicnum}");
         session()->forget("topic-support-nickname-{$topicnum}");
@@ -377,7 +378,7 @@ class TopicController extends Controller {
 
         $camp = Camp::getLiveCamp($topicnum, $parentcampnum);
 
-        $parentcamp = Camp::campNameWithAncestors($camp, '');
+        $parentcamp = Camp::campNameWithAncestors($camp, '',$topic->topic_name);
         
 		$parentcampsData = Camp::getAllParentCamp($topicnum);
 
@@ -407,7 +408,7 @@ class TopicController extends Controller {
 
         $topic = Camp::getAgreementTopic($camp->topic_num);
 
-        $parentcamp = Camp::campNameWithAncestors($camp, '');
+        $parentcamp = Camp::campNameWithAncestors($camp, '',$topic->topic_name);
 
         $parentcampsData = Camp::getAllParentCamp($camp->topic_num);
 
@@ -443,7 +444,7 @@ class TopicController extends Controller {
 
         $parentcampnum = isset($camp->parent_camp_num) ? $camp->parent_camp_num : 0;
 
-        $parentcamp = Camp::campNameWithAncestors($camp, '');
+        $parentcamp = Camp::campNameWithAncestors($camp, '',$topic->topic_name);
 
         $nickNames = Nickname::topicNicknameUsed($statement->topic_num);
 
@@ -466,7 +467,7 @@ class TopicController extends Controller {
 
         $parentcampnum = isset($camp->parent_camp_num) ? $camp->parent_camp_num : 0;
 
-        $parentcamp = Camp::campNameWithAncestors($camp, '');
+        $parentcamp = Camp::campNameWithAncestors($camp, '',$topic->topic_name);
 
         $nickNames = Nickname::topicNicknameUsed($topic_num);
 
@@ -481,12 +482,13 @@ class TopicController extends Controller {
      */
     public function camp_history($id, $campnum) {
 
+
         $topicnumArray = explode("-", $id);
         $topicnum = $topicnumArray[0];
 
         $topic = Camp::getAgreementTopic($topicnum);
         $onecamp = Camp::getLiveCamp($topicnum, $campnum);
-        $parentcamp = (count($onecamp)) ? Camp::campNameWithAncestors($onecamp, '') : "n/a";
+        $parentcamp = (count($onecamp)) ? Camp::campNameWithAncestors($onecamp, '',$topic->topic_name) : "n/a";
         $camps = Camp::getCampHistory($topicnum, $campnum);
 
         $parentcampnum = (isset($onecamp->parent_camp_num)) ? $onecamp->parent_camp_num : 0;
@@ -499,7 +501,6 @@ class TopicController extends Controller {
 
         //if(!count($onecamp)) return back();
         $wiky = new Wiky;
-
         return view('topics.camphistory', compact('topic', 'camps', 'parentcampnum', 'onecamp', 'parentcamp', 'wiky', 'ifIamSupporter'));
     }
 
@@ -516,7 +517,7 @@ class TopicController extends Controller {
 
         $topic = Camp::getAgreementTopic($topicnum);
         $onecamp = Camp::getLiveCamp($topicnum, $campnum);
-        $parentcamp = Camp::campNameWithAncestors($onecamp, '');
+        $parentcamp = Camp::campNameWithAncestors($onecamp, '',$topic->topic_name);
 
         if (!count($onecamp))
             return back();
