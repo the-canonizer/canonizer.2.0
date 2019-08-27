@@ -172,19 +172,28 @@ class Camp extends Model {
         if (!empty($camp)) {
             if ($campname != '') {
                 if($title==''){
-                    $title      = preg_replace('/[^A-Za-z0-9\-]/', '-', $camp->camp_name);
+                    $titleAppend      = preg_replace('/[^A-Za-z0-9\-]/', '-', $camp->camp_name);
                 }else{
-                     $title      = preg_replace('/[^A-Za-z0-9\-]/', '-', $title);
+                    if($camp->parent_camp_num){
+                            $titleAppend      = preg_replace('/[^A-Za-z0-9\-]/', '-', $camp->camp_name);
+                    }else {
+                       $titleAppend      = preg_replace('/[^A-Za-z0-9\-]/', '-', $title); 
+                    }
+                     
                 }				
-                $url = url('topic/' . $camp->topic_num . '-'.$title.'/' . $camp->camp_num);
+                $url = url('topic/' . $camp->topic_num . '-'.$titleAppend.'/' . $camp->camp_num);
                 $campname = "<a href='" . $url . "'>" . $camp->camp_name . '</a> / ' . $campname;
             } else {
                 if($title ==''){
-                        $title      = preg_replace('/[^A-Za-z0-9\-]/', '-', $camp->camp_name);
+                        $titleAppend      = preg_replace('/[^A-Za-z0-9\-]/', '-', $camp->camp_name);
                 }else{
-                     $title      = preg_replace('/[^A-Za-z0-9\-]/', '-', $title);
+                    if($camp->parent_camp_num){
+                            $titleAppend      = preg_replace('/[^A-Za-z0-9\-]/', '-', $camp->camp_name);
+                    }else {
+                       $titleAppend      = preg_replace('/[^A-Za-z0-9\-]/', '-', $title); 
+                    }
                 }
-				$url = url('topic/' . $camp->topic_num .'-'.$title. '/' . $camp->camp_num);
+				$url = url('topic/' . $camp->topic_num .'-'.$titleAppend. '/' . $camp->camp_num);
                 $campname = "<a href='" . $url . "'>" . $camp->camp_name . '</a>';
             }
 
