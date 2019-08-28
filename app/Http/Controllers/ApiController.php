@@ -63,7 +63,7 @@ class ApiController extends Controller {
 		
 		$topic      = Camp::getAgreementTopic($topicnum);
         $camp       = Camp::getLiveCamp($topicnum,$parentcampnum);
-        $parentcamp = Camp::campNameWithAncestors($camp,'');
+        $parentcamp = Camp::campNameWithAncestors($camp,'',$topic->topic_name);
         
 		$wiky=new Wiky;
 		

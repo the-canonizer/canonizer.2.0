@@ -119,7 +119,6 @@ class CThreadsController extends Controller
         }
 
         $topic = getArray($topicid, $topicname, $campnum);
-
         $camp  = Camp::getLiveCamp($topicid,$campnum);
 
         //dd($partcipateFlag);
@@ -138,7 +137,7 @@ class CThreadsController extends Controller
 											 ->where('objector_nick_id','=',NULL)
                                              ->latest('submit_time')
                                              ->first()->topic_name,
-                'parentcamp'       => Camp::campNameWithAncestors($camp,''),
+                'parentcamp'       => Camp::campNameWithAncestors($camp,'',$topicname),
                 'participateFlag'  => $partcipateFlag
             ],
             compact('threads')
@@ -201,7 +200,7 @@ class CThreadsController extends Controller
             'threads.create',
             $topic,
             [
-                'parentcamp'    => Camp::campNameWithAncestors($camp,''),
+                'parentcamp'    => Camp::campNameWithAncestors($camp,'',$topicname),
                 'userNicknames'   => $userNicknames
 
             ],

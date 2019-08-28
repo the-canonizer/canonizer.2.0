@@ -226,9 +226,10 @@ class SettingsController extends Controller {
             $encode = General::canon_encode($id);
 
             $topic = Camp::where('topic_num', $topicnum)->where('camp_name', '=', 'Agreement')->latest('submit_time')->first();
+            $topicData = Camp::getAgreementTopic($topicnum);
             //$camp = Camp::where('topic_num',$topicnum)->where('camp_num','=', $campnum)->latest('submit_time','objector')->get();
             $onecamp = Camp::where('topic_num', $topicnum)->where('camp_num', '=', $campnum)->where('go_live_time', '<=', $as_of_time)->latest('submit_time')->first();
-            $campWithParents = Camp::campNameWithAncestors($onecamp, '');
+            $campWithParents = Camp::campNameWithAncestors($onecamp, '',$topicData->topic_name);
 
             if (!count($onecamp)) {
                 return back();
@@ -291,7 +292,7 @@ class SettingsController extends Controller {
                             ->whereIn('nick_name_id', $userNickname)
                             ->whereRaw("(start <= " . $as_of_time . ") and ((end = 0) or (end >= " . $as_of_time . "))")
                             ->groupBy('topic_num')->orderBy('start', 'DESC')->first();
-
+            
             return view('settings.support', ['parentSupport' => $parentSupport, 'childSupport' => $childSupport, 'userNickname' => $userNickname, 'supportedTopic' => $supportedTopic, 'topic' => $topic, 'nicknames' => $nicknames, 'camp' => $onecamp, 'parentcamp' => $campWithParents, 'delegate_nick_name_id' => $delegate_nick_name_id]);
         } else {
             $id = Auth::user()->id;
