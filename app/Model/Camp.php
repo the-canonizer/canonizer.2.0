@@ -595,6 +595,7 @@ class Camp extends Model {
         $html = '<ul>';
 		$action = Route::getCurrentRoute()->getActionMethod();
         $onecamp =  self::getLiveCamp($this->topic_num, $activeCamp);
+        
         if ($currentCamp == $activeCamp && $action != "index") { 
             $html = '<ul><li class="create-new-li"><span><a href="' . route('camp.create', [$this->topic_num."-".preg_replace('/[^A-Za-z0-9\-]/', '-', ($onecamp->parent_camp_num) ? $onecamp->camp_name :$this->topic_name ), $currentCamp]) . '">&lt;Start new supporting camp here&gt;</a></span></li>';
         }
