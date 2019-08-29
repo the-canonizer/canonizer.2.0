@@ -53,7 +53,7 @@ class ActionController extends Controller
 		$query = "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME =  '$dbname'";
         $db = DB::select($query);
         $link = mysqli_connect($dbhost, $dbuser, $dbpass);
-         $mysql =  (PHP_OS_FAMILY =='Windows') ? exec("where mysql") : exec("which mysql");
+         $mysql =  (stristr(PHP_OS, 'WIN')) ? exec("where mysql") : exec("which mysql");
         $command = "$mysql -P $dbport -h $dbhost -u$dbuser -p$dbpass  $dbname < $file"; 
         if(empty($db)){
         	$sql = "CREATE DATABASE IF NOT EXISTS $dbname";
