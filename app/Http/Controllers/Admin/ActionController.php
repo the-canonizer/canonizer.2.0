@@ -23,7 +23,8 @@ class ActionController extends Controller
 			  $mysqldump =  (stristr(PHP_OS, 'WIN')) ? exec("where mysqldump") : exec("which mysqldump");
    			try{
 				 $command = "$mysqldump -P $dbport -h $dbhost -u$dbuser -p$dbpass $dbname > $dbexportPath"; 
-				exec($command,$output=array(),$worked);
+				 $output=array();
+				exec($command,$output,$worked);
 			}catch(\Exception $e){
 					echo "<pre>"; print_r($e->getMessage()); die;
 			}
@@ -57,7 +58,8 @@ class ActionController extends Controller
         if(empty($db)){
         	$sql = "CREATE DATABASE IF NOT EXISTS $dbname";
 			if (mysqli_query($link,$sql)) {
-			   exec($command,$output = array(), $worked);
+				$output = array();
+			   exec($command,$output, $worked);
 			} else {
 			    echo 'Error dropping database: ' . mysqli_error($link) . "\n";
 			}
@@ -70,7 +72,8 @@ class ActionController extends Controller
 			if (mysqli_query($link,$sql)) {
 				$sql1 = "CREATE DATABASE IF NOT EXISTS $dbname";
 				if (mysqli_query($link,$sql1)) {
-				   exec($command,$output = array(), $worked);
+					$output = array();
+				   exec($command,$output, $worked);
 				} else {
 				    echo 'Error dropping database: ' . mysqli_error($link) . "\n";
 				}
