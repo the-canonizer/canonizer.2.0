@@ -20,6 +20,7 @@ class ActionController extends Controller
 		$dbport = '3306';
 		$dbexportPath = "$dbname.sql";
 		if(function_exists('exec')) {
+			
 			  $mysqldump =  (stristr(PHP_OS, 'WIN')) ? exec("where mysqldump") : exec("which mysqldump");
    			try{
 				 $command = "$mysqldump -P $dbport -h $dbhost -u$dbuser -p$dbpass $dbname > $dbexportPath"; 
