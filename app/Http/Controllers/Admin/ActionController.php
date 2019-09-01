@@ -13,10 +13,15 @@ class ActionController extends Controller
   
    public function copydatabase(){
    		ini_set('max_execution_time', 0);
-   		$dbhost = 'canoniser-db.czjgaatug9jz.us-east-2.rds.amazonaws.com';
+  //  		$dbhost = 'canoniser-db.czjgaatug9jz.us-east-2.rds.amazonaws.com';
+		// $dbuser = 'dbinstanceuser';
+		// $dbpass = '!C+4niZ3rDB!2329#';
+		// $dbname = 'production';
+		// $dbport = '3306';
+		$dbhost = 'canoniser-db.czjgaatug9jz.us-east-2.rds.amazonaws.com';
 		$dbuser = 'dbinstanceuser';
 		$dbpass = '!C+4niZ3rDB!2329#';
-		$dbname = 'production';
+		$dbname = 'staging';
 		$dbport = '3306';
 		$dbexportPath = "$dbname.sql";
 		if(function_exists('exec')) {
@@ -45,10 +50,15 @@ class ActionController extends Controller
 	}
 
 	public function importDatabase($file){
-		$dbhost = 'canoniser-db.czjgaatug9jz.us-east-2.rds.amazonaws.com';
-		$dbuser = 'dbinstanceuser';
-		$dbpass = '!C+4niZ3rDB!2329#';
-		$dbname = 'staging';
+		// $dbhost = 'canoniser-db.czjgaatug9jz.us-east-2.rds.amazonaws.com';
+		// $dbuser = 'dbinstanceuser';
+		// $dbpass = '!C+4niZ3rDB!2329#';
+		// $dbname = 'staging';
+		// $dbport = '3306';
+		$dbhost = 'localhost';
+		$dbuser = 'root';
+		$dbpass = '';
+		$dbname = 'canonizer';
 		$dbport = '3306';
 		$query = "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME =  '$dbname'";
         $db = DB::select($query);

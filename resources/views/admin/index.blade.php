@@ -81,6 +81,7 @@
                                             },
                                             success:function(){
                                                  $('#loader_div').hide();
+                                                 alert('Files are copied successfully.');
                                             }
                                          });
                                     },
@@ -114,6 +115,7 @@
 
                     success:function(response){
                         $('#loader_div').hide();
+                        alert('Database copied and imported successfully.');
                     },
                     complete:function(){
 
