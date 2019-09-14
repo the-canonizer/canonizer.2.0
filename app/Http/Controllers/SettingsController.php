@@ -415,7 +415,7 @@ class SettingsController extends Controller {
 				$camp = Camp::where('topic_num', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('go_live_time', '<=', time())->latest('submit_time')->first();
             
                 $result['nick_name'] = $nickName->nick_name;
-				$result['object'] = $topic->topic_name ." : ".$camp->camp_name;
+				$result['object'] = $topic->topic_name ." / ".$camp->camp_name;
                 $result['subject'] = $nickName->nick_name . " has just delegated their support to you.";
                 $link = 'topic/' . $data['topic_num'] . '/' . $data['camp_num'];
 

@@ -143,7 +143,7 @@
                             @if($isagreeFlag && $ifIamSupporter && Auth::user()->id != $submitterUserID)
                             <div class="CmpHistoryPnl-footer">
                                 <div>
-                                    <input {{ (isset($isAgreed) && $isAgreed) ? 'checked' : '' }} {{ (isset($isAgreed) && $isAgreed) ? 'disabled' : '' }} class="agree-to-change" type="checkbox" name="agree" value="" onchange="agreeToChannge(this,'{{ $data->id}}')"> I agree with this change</form>
+                                    <input {{ (isset($isAgreed) && $isAgreed) ? 'checked' : '' }} {{ (isset($isAgreed) && $isAgreed) ? 'disabled' : '' }} class="agree-to-change" type="checkbox" name="agree" value="" onchange="agreeToChannge(this,'{{ $data->id}}')"> I agree with this camp change</form>
                                 </div>
                             </div>
                             @endif

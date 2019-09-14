@@ -698,7 +698,7 @@ class TopicController extends Controller {
                 $user = Nickname::getUserByNickName($all['submitter']);
                 $livecamp = Camp::getLiveCamp($camp->topic_num,$camp->camp_num);
                 $link = 'topic/' . $camp->topic_num . '/1';
-                $data['object'] = $camp->topic->topic_name . " : " . $livecamp->camp_name;
+                $data['object'] = $camp->topic->topic_name . " / " . $livecamp->camp_name;
                 $nickName = Nickname::getNickName($all['nick_name']);
 
                 $data['nick_name'] = $nickName->nick_name;
@@ -712,7 +712,7 @@ class TopicController extends Controller {
                 $directSupporter = Support::getDirectSupporter($camp->topic_num, $camp->camp_num);
 
                 $link = 'topic/' . $camp->topic_num . '/' . $camp->camp_num . '?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $camp->go_live_time);
-                $data['object'] = $camp->topic->topic_name . ' : ' . $camp->camp_name;
+                $data['object'] = $camp->topic->topic_name . ' / ' . $camp->camp_name;
                 $data['type'] = 'camp';
                 $data['go_live_time'] = $camp->go_live_time;
                 $nickName = Nickname::getNickName($all['nick_name']);

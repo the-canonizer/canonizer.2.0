@@ -281,9 +281,9 @@
     </div>
     <script>
         function topFunction() {
-    document.body.scrollTop = 0;
-    document.documentElement.scrollTop = 0;
-}
+            document.body.scrollTop = 0;
+            document.documentElement.scrollTop = 0;
+        }
 
 function restrictTextField(e,limitlength){
     var charLength = $(e.target).val().length;
