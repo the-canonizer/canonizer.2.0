@@ -10,6 +10,10 @@
             <header class="App-header"><img src="logo.png" class="App-logo" alt="logo">
                 <h1 class="App-title">Welcome to Login with MetaMask Demo</h1>
             </header>
+            <div id="enable_metamask">
+                    <p>Please Enable your metamask first.</p>
+                    <button class="Login-button Login-mm" onClick="enableMetamask()">Enable MetaMask</button>
+             </div>
             <div class="App-intro" id="login_div" style="display:none;">
                 <div>
                     <p>Please select your login method.<br>For the purpose of this demo, only MetaMask login is implemented.</p>
@@ -35,23 +39,44 @@
 </body>
 <script>
     var accountsData = [];
+    var isMetamaskLocked = false;
     var isLoggedIn = localStorage.getItem('userLoggedIn') || false;
-    if(isInstalled()){
-        if(isLoggedIn){
+    if(isInstalled()){ 
+        if(isLoggedIn){ 
             web3.eth.getAccounts(function(err, accounts){
                 var publicAddress = accounts[0];
-                    document.getElementById('userAddress').innerHTML  = publicAddress;
-                    web3.eth.getBalance(publicAddress,function(err,balance){ 
-                        document.getElementById('userBalance').innerHTML  = balance.c.toString(10);
-                });
+                if(typeof(publicAddress) !='undefined'){
+                        document.getElementById('userAddress').innerHTML  = publicAddress;
+                        web3.eth.getBalance(publicAddress,function(err,balance){ 
+                            document.getElementById('userBalance').innerHTML  = balance.c.toString(10);
+                        });
+                }
+                   
             });
+                    document.getElementById('enable_metamask').style.display = 'none';
+                    document.getElementById('login_div').style.display =(isLoggedIn) ? 'none': 'block';
+                    document.getElementById('download_metamask').style.display = 'none';        
+                    document.getElementById('account_detail').style.display = (isLoggedIn) ? 'block': 'none';
+        }else{ 
+            isLocked().then(function(r){
+                if(isMetamaskLocked){
+                    document.getElementById('enable_metamask').style.display ='block';
+                    document.getElementById('login_div').style.display = 'none';
+                    document.getElementById('download_metamask').style.display = 'none';        
+                    document.getElementById('account_detail').style.display = 'none';
+                }else{
+                    document.getElementById('enable_metamask').style.display = 'none';
+                    document.getElementById('login_div').style.display =(isLoggedIn) ? 'none': 'block';
+                    document.getElementById('download_metamask').style.display = 'none';        
+                    document.getElementById('account_detail').style.display = (isLoggedIn) ? 'block': 'none';
+                }
+            })
             
         }
-        document.getElementById('login_div').style.display =(isLoggedIn) ? 'none': 'block';
-        document.getElementById('download_metamask').style.display = 'none';        
-        document.getElementById('account_detail').style.display = (isLoggedIn) ? 'block': 'none';
+       
     }else{
         document.getElementById('login_div').style.display = 'none';
+        document.getElementById('enable_metamask').style.display = 'none';
         document.getElementById('account_detail').style.display = 'none';
         document.getElementById('download_metamask').style.display = 'block';
         
@@ -62,7 +87,14 @@
     }
 
     
-
+    function enableMetamask(){
+        enableEther().then(function(r){
+                document.getElementById('enable_metamask').style.display = 'none';
+                document.getElementById('login_div').style.display =(isLoggedIn) ? 'none': 'block';
+                document.getElementById('download_metamask').style.display = 'none';        
+                document.getElementById('account_detail').style.display = (isLoggedIn) ? 'block': 'none';
+        })
+    }
     
     function isInstalled() {
             if (typeof web3 !== 'undefined'){
@@ -73,21 +105,27 @@
             return false;
     }
 
-    function isLocked() {
-            web3.eth.getAccounts(function(err, accounts){
+    async function isLocked() {
+            return new Promise((resolve,reject)=>{
+                web3.eth.getAccounts(function(err, accounts){
                 if (err != null) {
                     console.log(err)
-                    return true;
+                    isMetamaskLocked =  true;
+                    resolve(true);
                 }
                 else if (accounts.length === 0) {
                     console.log('MetaMask is locked');
-                    return true;
+                    isMetamaskLocked =  true;
+                    resolve(true);
                 }
                 else {
                     accountsData = accounts;
                     console.log('MetaMask is unlocked')
-                    return false;
+                    isMetamaskLocked = false;
+                    resolve(false);
                 }
+            });
+            
             });
     }
    function logout(){
@@ -95,12 +133,6 @@
        window.location.reload();
    }
    function loginMetamask() {
-               
-           if(isLocked()){
-                enableEther().then(function(r){
-                    console.log('r',r);
-                })
-           }else{
                 var publicAddress = web3.eth.accounts[0];
                 var msg = web3.sha3('0x879a053d4800c6354e76c7985a865d2922c82fb5b3f4577b2fe08b998954f2e0');             
                 var params = [msg,publicAddress];
@@ -118,6 +150,7 @@
                                 console.log('balance',balance);                                
                             document.getElementById('userBalance').innerHTML  = balance.c.toString(10);
                             });
+                            document.getElementById('enable_metamask').style.display = 'none';
                             document.getElementById('login_div').style.display = 'none';
                             document.getElementById('account_detail').style.display = 'block';
                             document.getElementById('download_metamask').style.display = 'none';
@@ -125,7 +158,6 @@
                     })
                 });
            
-           }
        
     }
 

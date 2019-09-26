@@ -834,7 +834,7 @@ class TopicController extends Controller {
             $user = Nickname::getUserByNickName($all['submitter']);
 
             $link = 'topic/' . $statement->topic_num . '/1';
-            $data['object'] = "#" . $statement->id;
+            $data['object'] = $statement->statement;
             $nickName = Nickname::getNickName($all['nick_name']);
             $data['type'] = 'statement';
             $data['nick_name'] = $nickName->nick_name;
