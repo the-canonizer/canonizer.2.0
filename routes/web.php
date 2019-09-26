@@ -14,7 +14,7 @@
 if (version_compare(PHP_VERSION, '7.2.0', '>=')) {
     error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
 }
-
+Route::get('/blockchain', 'HomeController@blockchain');
 Route::get('/admin/login', 'Admin\LoginController@getLogin');
 Route::post('/admin/login', 'Admin\LoginController@postLogin');
 Route::get('/archievefiles', 'Admin\ActionController@archievefiles');
