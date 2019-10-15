@@ -69,6 +69,14 @@
     if(isInstalled()){ 
         if(isLoggedIn){ 
             web3.eth.getAccounts(function(err, accounts){
+                if(err != null){
+                    localStorage.removeItem('userLoggedIn');
+                    isMetamaskLocked = true;
+                    document.getElementById('enable_metamask').style.display ='block';
+                    document.getElementById('login_div').style.display = 'none';
+                    document.getElementById('download_metamask').style.display = 'none';        
+                    document.getElementById('account_detail').style.display = 'none';
+                }
                 if(accounts.length == 0){
                     localStorage.removeItem('userLoggedIn');
                     isMetamaskLocked = true;
@@ -76,8 +84,6 @@
                     document.getElementById('login_div').style.display = 'none';
                     document.getElementById('download_metamask').style.display = 'none';        
                     document.getElementById('account_detail').style.display = 'none';
-                }else{
-
                 }
                 var publicAddress = accounts[0];
                 if(typeof(publicAddress) !='undefined'){
@@ -86,14 +92,15 @@
                             document.getElementById('userBalance').innerHTML  = web3.fromWei(balance, "ether") + " ETH";
                         });
                 }
-                   
-            });
-            if(!isMetamaskLocked){
+                if(!isMetamaskLocked){
                     document.getElementById('enable_metamask').style.display = 'none';
                     document.getElementById('login_div').style.display =(isLoggedIn) ? 'none': 'block';
                     document.getElementById('download_metamask').style.display = 'none';        
                     document.getElementById('account_detail').style.display = (isLoggedIn) ? 'block': 'none';
-            }
+                }
+                   
+            });
+            
             
         }else{ 
             isLocked().then(function(r){
