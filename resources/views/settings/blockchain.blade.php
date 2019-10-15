@@ -72,6 +72,7 @@
                 if(err != null){
                     localStorage.removeItem('userLoggedIn');
                     isMetamaskLocked = true;
+                    isLoggedIn = false;
                     document.getElementById('enable_metamask').style.display ='block';
                     document.getElementById('login_div').style.display = 'none';
                     document.getElementById('download_metamask').style.display = 'none';        
@@ -80,6 +81,7 @@
                 if(accounts.length == 0){
                     localStorage.removeItem('userLoggedIn');
                     isMetamaskLocked = true;
+                    isLoggedIn = false;
                     document.getElementById('enable_metamask').style.display ='block';
                     document.getElementById('login_div').style.display = 'none';
                     document.getElementById('download_metamask').style.display = 'none';        
