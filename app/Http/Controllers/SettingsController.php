@@ -542,4 +542,13 @@ class SettingsController extends Controller {
         }
     }
 
+
+    function blockchain(){
+        if(Auth::check()){
+            $user = Auth::user();
+            
+        }
+        return view('settings.blockchain');
+    }
+
 }

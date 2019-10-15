@@ -14,7 +14,7 @@
 if (version_compare(PHP_VERSION, '7.2.0', '>=')) {
     error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
 }
-Route::get('/blockchain', 'HomeController@blockchain');
+
 Route::get('/admin/login', 'Admin\LoginController@getLogin');
 Route::post('/admin/login', 'Admin\LoginController@postLogin');
 Route::get('/archievefiles', 'Admin\ActionController@archievefiles');
@@ -109,6 +109,7 @@ Route::group([ 'middleware' => 'auth'], function() {
     //change password
      Route::get('settings/changepassword', [ 'as' => 'settings.changepassword', 'uses' => 'SettingsController@getChangePassword']);
      Route::post('settings/changepassword', [ 'as' => 'settings.changepassword.save', 'uses' => 'SettingsController@postChangePassword']);
+     Route::get('settings/blockchain', [ 'as' => 'settings.blockchain', 'uses' => 'SettingsController@blockchain']);
     Route::post('statement/agreetochange', 'TopicController@statement_agreetochange');
     Route::post('graceperiod/notify_change', 'TopicController@notify_change');
     

@@ -41,9 +41,6 @@ class HomeController extends Controller {
         return view('welcome', ['topics' => $topics, 'namespaces' => $namespaces,'videopodcast'=>$videopodcast]);
     }
 
-    function blockchain(){
-        return view('blockchain');
-    }
     public function loadtopic(Request $request) {
 
         $output = '';
