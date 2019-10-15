@@ -182,7 +182,7 @@
                             localStorage.setItem('userLoggedIn',true);
                             document.getElementById('userAddress').innerHTML  = publicAddress;
                              web3.eth.getBalance(publicAddress,function(err,balance){
-                                 document.getElementById('userBalance').innerHTML  = balance.c.toString(10);
+                                 document.getElementById('userBalance').innerHTML  = web3.fromWei(balance, "ether") + " ETH"
                             });
                             document.getElementById('enable_metamask').style.display = 'none';
                             document.getElementById('login_div').style.display = 'none';
