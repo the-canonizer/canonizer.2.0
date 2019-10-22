@@ -841,7 +841,7 @@ class TopicController extends Controller {
             $data['forum_link'] = 'forum/' . $statement->topic_num . '-statement/' . $statement->camp_num . '/threads';
             $data['subject'] = $data['nick_name'] . " has objected to your proposed change.";
 
-            $receiver = (config('app.env') == "production") ? $user->email : config('app.admin_email');
+            $receiver = config('app.admin_email');//(config('app.env') == "production") ? $user->email : config('app.admin_email');
          Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new ObjectionToSubmitterMail($user, $link, $data));
         } else if ($eventtype == "UPDATE") {
 
