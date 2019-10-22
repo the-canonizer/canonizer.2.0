@@ -832,11 +832,11 @@ class TopicController extends Controller {
         } else if ($eventtype == "OBJECTION") {
 
             $user = Nickname::getUserByNickName($all['submitter']);
-
+            $livecamp = Camp::getLiveCamp($statement->topic_num,$statement->camp_num);
             $link = 'topic/' . $statement->topic_num . '/1';
             $data['object'] = $statement->statement;
             $nickName = Nickname::getNickName($all['nick_name']);
-            $data['type'] = 'statement';
+            $data['type'] = "Camp (".$livecamp->topic->topic_name . " / " . $livecamp->camp_name.') statement';
             $data['nick_name'] = $nickName->nick_name;
             $data['forum_link'] = 'forum/' . $statement->topic_num . '-statement/' . $statement->camp_num . '/threads';
             $data['subject'] = $data['nick_name'] . " has objected to your proposed change.";
