@@ -35,8 +35,11 @@ class ManageController extends Controller {
 		$slug = str_slug($data['name']);
 		if(isset($data['parent_id']) && $data['parent_id'] !=0 ){
 			if($namespace = Namespaces::find($data['parent_id'])){
-				$slug = $namespace->label.'/'.$slug;
+				$slug = $namespace->label.$slug.'/';
 			}
+		}
+		if($slug[0] != '/' || $slug[strlen($slug) - 1] != '/'){
+			$slug = "/".$slug."/";
 		}
 		$data['label'] = $slug;
 		$namespace = Namespaces::create($data);
@@ -62,6 +65,9 @@ class ManageController extends Controller {
 			if($namespace = Namespaces::find($data['parent_id'])){
 				$slug = $namespace->label.'/'.$slug;
 			}
+		}
+		if($slug[0] != '/' || $slug[strlen($slug) - 1] != '/'){
+			$slug = "/".$slug."/";
 		}
 		$data['label'] = $slug;
 
