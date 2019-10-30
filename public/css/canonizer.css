@@ -1342,7 +1342,7 @@ a.rgWT {
 }
 }
 .videopodcast_div{
-	height: 399px;
-    overflow-y: auto;
+	/*height: 399px;
+    overflow-y: auto;*/
     background-color: #f0efef;
 }

@@ -36,7 +36,7 @@ class HomeController extends Controller {
         }
 		//session()->flush();
         $namespaces = Namespaces::all();
-        $topics = Camp::getAllAgreementTopic(10, $_REQUEST);
+        $topics = Camp::getAllAgreementTopic(config('app.front_page_limit'), $_REQUEST);
         $videopodcast = VideoPodcast::all()->first();
         return view('welcome', ['topics' => $topics, 'namespaces' => $namespaces,'videopodcast'=>$videopodcast]);
     }
