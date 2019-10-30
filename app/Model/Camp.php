@@ -238,7 +238,7 @@ class Camp extends Model {
             $query->whereIn('topic.submitter_nick_id', $nicknameIds);
         }
 
-        return $query->orderBy('topic.namespace', 'ASC')->orderBy('topic.topic_name', 'ASC')->orderBy('topic.go_live_time', 'DESC')->groupBy('topic_num')->get();
+        return $query->orderBy('namespace.label', 'ASC')->orderBy('topic.topic_name', 'ASC')->orderBy('topic.go_live_time', 'DESC')->groupBy('topic_num')->get();
     }
 
     public static function getAgreementTopic($topicnum, $filter = array()) {
