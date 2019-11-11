@@ -551,4 +551,8 @@ class SettingsController extends Controller {
         return view('settings.blockchain');
     }
 
+    function saveaddress(Request $request){
+            echo "<pre>"; print_r($request->all()); die;
+    }
+
 }
