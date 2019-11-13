@@ -18,6 +18,7 @@ use Cookie;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\NewDelegatedSupporterMail;
 use App\Mail\PhoneOTPMail;
+use App\Model\EtherAddresses;
 use Hash;
 
 class SettingsController extends Controller {
@@ -546,13 +547,52 @@ class SettingsController extends Controller {
     function blockchain(){
         if(Auth::check()){
             $user = Auth::user();
-            
         }
-        return view('settings.blockchain');
+        $addresses = EtherAddresses::where('user_id','=',$user->id)->get();
+        return view('settings.blockchain',['addresses'=>$addresses]);
     }
 
-    function saveaddress(Request $request){
-            echo "<pre>"; print_r($request->all()); die;
+    function postSaveEtherAddress(Request $request){
+          $id = Auth::user()->id;
+          if($id){
+                $messages = [
+                'name.required' => 'The name field is required.',
+                'address.required' => 'The address field is required.',
+                'balance.required' => 'The balance field is required.',
+            ];
+
+
+            $validator = Validator::make($request->all(), [
+                        'name' => 'required',
+                        'address' => 'required',
+                        'balance' => 'required',
+                            ], $messages);
+
+            if ($validator->fails()) {
+                return redirect()->back()
+                                ->withErrors($validator)
+                                ->withInput();
+            }
+
+            $data = $request->only(['name','address','balance']);
+            try{
+                $address = new EtherAddresses();
+                $address->user_id = $id;
+                $address->name =$data['name'];
+                $address->address = $data['address'];
+                $address->balance = $data['balance'];
+                $address->save();                
+                 Session::flash('success', "Ether Address saved successfully.");
+                return redirect()->back();
+            }catch(Exception $e){
+                Session::flash('error', "Error saving in ehter address.");
+                return redirect()->back();
+            }
+          }else{
+                return redirect()->route('login');
+          }
+            
+          
     }
 
 }

@@ -110,6 +110,7 @@ Route::group([ 'middleware' => 'auth'], function() {
      Route::get('settings/changepassword', [ 'as' => 'settings.changepassword', 'uses' => 'SettingsController@getChangePassword']);
      Route::post('settings/changepassword', [ 'as' => 'settings.changepassword.save', 'uses' => 'SettingsController@postChangePassword']);
      Route::get('settings/blockchain', [ 'as' => 'settings.blockchain', 'uses' => 'SettingsController@blockchain']);
+     Route::post('settings/save-ether-address', [ 'as' => 'settings.save-ether-address', 'uses' => 'SettingsController@postSaveEtherAddress']);
     Route::post('statement/agreetochange', 'TopicController@statement_agreetochange');
     Route::post('graceperiod/notify_change', 'TopicController@notify_change');
     
