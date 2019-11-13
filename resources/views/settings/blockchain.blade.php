@@ -123,8 +123,11 @@
     var isMetamaskLocked = false;
     var isLoggedIn = localStorage.getItem('userLoggedIn') || false;
     var dbAddresses ={};
-     <?php if(count($addresses) > 0){
-        $i = 0;
+    var addressLenth = <?php echo count($addresses); ?>;
+     <?php 
+     $i = 0;
+     if(count($addresses) > 0){
+        
         foreach($addresses as $k => $addr){
                 $i = $i+1;
              ?>
@@ -171,7 +174,12 @@
                                 dbAddresses[publicAddress] = { name:'',address:publicAddress,balance:acBalance};
                                 html = html + "<td>"+web3.fromWei(balance, "ether") + " ETH"+"</td>";
                                 html = html + "<td><button class='btn btn-primary btn-xs' onClick=editAddress('"+publicAddress+"')>Edit</button></td></tr>";
-                                $('#userAddresses').append(html);
+                                if(addressLenth){
+                                        $('#userAddresses').append(html);
+                                }else{
+                                    $('#userAddresses').html(html);
+                                }   
+                                
                             });
                         }
                      $('#savedAddress').show();
@@ -294,7 +302,11 @@
                                         dbAddresses[publicAddress] = { name:'',address:publicAddress,balance:acBalance};
                                     html = html + "<td>"+web3.fromWei(balance, "ether") + " ETH"+"</td>";
                                     html = html + "<td><button class='btn btn-primary btn-xs' onClick=editAddress('"+publicAddress+"')>Edit</button></td><</tr>";
-                                     $('#userAddresses').append(html);
+                                     if(addressLenth){
+                                        $('#userAddresses').append(html);
+                                    }else{
+                                        $('#userAddresses').html(html);
+                                    }   
                                 });
                              }
                              $('#savedAddress').show();                          
