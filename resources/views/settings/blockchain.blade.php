@@ -29,7 +29,9 @@
                 <li class="active"><a class="" href="{{ route('settings.blockchain')}}">Metamask Account</a></li>
                 
             </ul>
-             <div id="savedAddress" style="display:none;">
+             
+            <div id="myTabContent" class="add-nickname-section" style="margin-top:20px;">
+                <div id="savedAddress">
                <table class="table">
                <thead class="thead-default">
                 <tr>
@@ -40,14 +42,30 @@
                     <th>Action</th>
                 </tr>                                        
              </thead>
-                                   
+                @if(count($addresses) > 0)                   
                <tbody id="userAddresses">
-                  
+                    @foreach($addresses as $key=>$addr)
+                        <tr>
+                            <td>{{$key+1}}</td>
+                            <td>{{$addr->name}}</td>
+                            <td>{{$addr->address}}</td>
+                            <td>{{$addr->balance}} ETH</td>
+                            <td>
+                                <button class="btn btn-xs btn-primary" onClick=editAddress('<?php echo $addr->address; ?>')>Edit</button>
+                            </td>
+                        </tr>
+                    @endforeach
                   </tbody>
+                  @else
+                    <tbody id="userAddresses">
+                        <tr>
+                            <td colspan="2"> No data found</td>
+                        </tr>
+                    </tbody>
+                  @endif
                </table>
 
              </div>
-            <div id="myTabContent" class="add-nickname-section" style="margin-top:20px;">
                  <div id="create_address" style="display:none;">
                     <h5>Update Address</h5>
                     <form action="{{ route('settings.save-ether-address')}}" method="post">
@@ -71,6 +89,7 @@
                     </div>
                     
                     <button type="submit" id="submit_create" class="btn btn-login">Save</button>
+                    <div  id="cencel_create" onClick="cancelCreate()"  style="cursor:pointer;" class="btn btn-login">Cancel</div>
                 </form>
                  </div>
                      <div id="root" class="row">
@@ -105,7 +124,10 @@
     var isLoggedIn = localStorage.getItem('userLoggedIn') || false;
     var dbAddresses ={};
      <?php if(count($addresses) > 0){
-        foreach($addresses as $k => $addr){ ?>
+        $i = 0;
+        foreach($addresses as $k => $addr){
+                $i = $i+1;
+             ?>
             dbAddresses['<?php echo $addr->address; ?>'] = {};
             var data = {
                 name:'<?php echo $addr->name; ?>',
@@ -115,6 +137,7 @@
             dbAddresses['<?php echo $addr->address; ?>'] = data;
        <?php }
      }?>
+     var key = <?php echo $i; ?>;
     if(isInstalled()){ 
         if(isLoggedIn){ 
             web3.eth.getAccounts(function(err, accounts){
@@ -124,7 +147,7 @@
                     isLoggedIn = false;
                     $('#enable_metamask').show();
                     $('#login_div').hide();
-                    $('#download_metamask').hide();  
+                    $('#download_metamask').hide();                     
                     $('#savedAddress').hide();
                 }
                 if(accounts.length == 0){ 
@@ -133,35 +156,31 @@
                     isLoggedIn = false;
                     $('#enable_metamask').show();
                     $('#login_div').hide();
-                    $('#download_metamask').hide(); 
+                    $('#download_metamask').hide();                     
                     $('#savedAddress').hide();
                 }
                 var publicAddress = accounts[0];
                 if(typeof(publicAddress) !='undefined'){
-
-                     var html = "";
-                     var sr = 1;
-                     var name = typeof(dbAddresses[publicAddress]) !='undefined' ?  dbAddresses[publicAddress].name: ""; 
-                     html = html + "<tr><td>"+sr+"</td><td>"+name+"</td><td>"+publicAddress+"</td>";
-                     web3.eth.getBalance(publicAddress,function(err,balance){
-                        var acBalance = web3.fromWei(balance, "ether")+"";
                         if(typeof(dbAddresses[publicAddress]) =='undefined') {
+                             var html = "";
+                             var sr = key + 1;
+                             var name = ""; 
+                             html = html + "<tr><td>"+sr+"</td><td>"+name+"</td><td>"+publicAddress+"</td>";
+                             web3.eth.getBalance(publicAddress,function(err,balance){
+                                var acBalance = web3.fromWei(balance, "ether")+"";
                                 dbAddresses[publicAddress] = { name:'',address:publicAddress,balance:acBalance};
+                                html = html + "<td>"+web3.fromWei(balance, "ether") + " ETH"+"</td>";
+                                html = html + "<td><button class='btn btn-primary btn-xs' onClick=editAddress('"+publicAddress+"')>Edit</button></td></tr>";
+                                $('#userAddresses').append(html);
+                            });
                         }
-
-                        html = html + "<td>"+web3.fromWei(balance, "ether") + " ETH"+"</td>";
-                        html = html + "<td><button class='btn btn-success btn-xs' onClick=editAddress('"+publicAddress+"')>Edit</button></td></tr>";
-                        $('#userAddresses').append(html);
-                        $('#savedAddress').show();
-                    });
-                     
-                        
-                }
+                     $('#savedAddress').show();
+                   }
                 if(!isMetamaskLocked){ 
                     $('#enable_metamask').hide();
                     (isLoggedIn) ? $('#login_div').hide(): $('#login_div').show();
-                    $('#download_metamask').hide();    
-                    $('#savedAddress').show();   
+                    $('#download_metamask').hide(); 
+                    $('#savedAddress').show();
                 }
                    
             });
@@ -172,13 +191,13 @@
                 if(isMetamaskLocked){ 
                     $('#enable_metamask').show();
                     $('#login_div').hide();
-                    $('#download_metamask').hide(); 
+                    $('#download_metamask').hide();                    
                     $('#savedAddress').hide();
                 }else{
                     $('#enable_metamask').hide();
                     (isLoggedIn) ? $('#login_div').hide() : $('#login_div').show();
-                    $('#download_metamask').hide();  
-                    $('#savedAddress').hide();      
+                    $('#download_metamask').hide(); 
+                    $('#savedAddress').show();
                 }
             })
             
@@ -201,8 +220,8 @@
         enableEther().then(function(r){
                 $('#enable_metamask').hide();
                  (isLoggedIn) ? $('#login_div').hide(): $('#login_div').show();
-                $('#download_metamask').hide();    
-                $('#savedAddress').hide();   
+                $('#download_metamask').hide();
+                $('#savedAddress').hide();
         })
     }
     
@@ -243,8 +262,13 @@
         $('#address').val(dbAddresses[address].address);
         $('#balance').val(dbAddresses[address].balance);
         $("#create_address").show();
+   }
 
-
+   function cancelCreate(){
+         $("#name").val("");
+        $('#address').val("");
+        $('#balance').val("");
+        $("#create_address").hide();
    }
    function loginMetamask() {
                 var publicAddress = web3.eth.accounts[0];
@@ -257,23 +281,23 @@
                     publicAddress,
                 },function(err,result){
                     web3.personal.ecRecover(msg, result.result, function(error, signing_address) {
-                        var sr = 1;
-                        var html =  "";
-                        var name = typeof(dbAddresses[publicAddress])!='undefined' ? dbAddresses[publicAddress].name: '';
-                        if(signing_address == publicAddress){
+                         if(signing_address == publicAddress){
                             localStorage.setItem('userLoggedIn',true);
-                            html = html + "<tr><td>"+sr+"</td><td>"+name+"</td><td>"+publicAddress+"</td>";
-                            web3.eth.getBalance(publicAddress,function(err,balance){
-                                var acBalance = web3.fromWei(balance, "ether")+"";
-                                if(typeof(dbAddresses[publicAddress]) =='undefined') {
-                                    dbAddresses[publicAddress] = { name:'',address:publicAddress,balance:acBalance};
-                                }
-                                html = html + "<td>"+web3.fromWei(balance, "ether") + " ETH"+"</td>";
-                                html = html + "<td><button class='btn btn-success btn-xs' onClick=editAddress('"+publicAddress+"')>Edit</button></td><</tr>";
-                                 $('#userAddresses').append(html);   
-                                 $('#savedAddress').show();
-                            });
-                                                      
+                            var sr = key + 1;
+                            var html =  "";
+                            var name = typeof(dbAddresses[publicAddress])!='undefined' ? dbAddresses[publicAddress].name: '';
+                           
+                             if(typeof(dbAddresses[publicAddress]) =='undefined') {
+                                html = html + "<tr><td>"+sr+"</td><td>"+name+"</td><td>"+publicAddress+"</td>";
+                                web3.eth.getBalance(publicAddress,function(err,balance){
+                                    var acBalance = web3.fromWei(balance, "ether")+"";
+                                        dbAddresses[publicAddress] = { name:'',address:publicAddress,balance:acBalance};
+                                    html = html + "<td>"+web3.fromWei(balance, "ether") + " ETH"+"</td>";
+                                    html = html + "<td><button class='btn btn-primary btn-xs' onClick=editAddress('"+publicAddress+"')>Edit</button></td><</tr>";
+                                     $('#userAddresses').append(html);
+                                });
+                             }
+                             $('#savedAddress').show();                          
                             $('#enable_metamask').hide();
                             $('#login_div').hide();
                             $('#download_metamask').hide();
