@@ -47,7 +47,7 @@
            
         </div>
 
-        <!--  <div class="form-group">
+        {{-- <!-- <div class="form-group">
             <label for="captcha">Captcha</label>
                 {!! captcha_image_html('ContactCaptcha') !!}
                 <input class="form-control" type="text" id="CaptchaCode" name="CaptchaCode" style="margin-top:5px;">
@@ -58,7 +58,7 @@
                         {{ $errors->first('CaptchaCode') }}
                     </p>
                 @endif
-        </div> -->
+        </div> --> --}}
 
         <button type="submit" id="submit" class="btn btn-login">Create your account</button>
     </form>
