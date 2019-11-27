@@ -55,9 +55,9 @@ class RegisterController extends Controller
     {
         $message = [
             'password.regex'=>'Password must be atleast 8 characters, including atleast one digit, one lower case letter and one special character(@,# !,$..)',
-            'first_name.regex' => 'First name should not contain any url',
-            'middle_name.regex' => 'Middle name should not contain any url',
-            'last_name.regex' => 'Last name should not contain any url'
+            'first_name.regex' => 'First name must be in letters only',
+            'middle_name.regex' => 'Middle name must be in letters only',
+            'last_name.regex' => 'Last name must be in letters only'
         ];
         return Validator::make($data, [
             'first_name' => 'required|regex:/^[a-zA-Z ]*$/|string|max:100',
