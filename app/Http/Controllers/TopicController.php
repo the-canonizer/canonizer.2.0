@@ -1010,7 +1010,7 @@ class TopicController extends Controller {
 
             $link = 'topic/' . $statement->topic_num . '/' . $statement->camp_num . '?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $statement->go_live_time);
             $livecamp = Camp::getLiveCamp($statement->topic_num,$statement->camp_num);
-            $data['object'] = " for camp" . $livecamp->camp_name;
+            $data['object'] = " for camp " . $livecamp->camp_name;
             $data['go_live_time'] = $statement->go_live_time;
             $data['type'] = 'statement';
 			$data['note'] = $statement->note;

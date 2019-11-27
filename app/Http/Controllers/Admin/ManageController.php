@@ -6,6 +6,7 @@ use App\Model\Namespaces;
 use Illuminate\Http\Request;
 use App\Model\NamespaceRequest;
 use DB;
+use Validator;
 use App\Model\Topic;
 
 class ManageController extends Controller {
@@ -28,7 +29,18 @@ class ManageController extends Controller {
 
 	public function postCreateNamespace(Request $request){
 		$data = $request->only(['name','parent_id']);
-
+		 $validatorArray = [  'name' => 'required',
+		 	'name' =>'unique:namespace'
+		  ];
+         $message = [
+         	'name.required' => 'Namespace field is required.',
+         	'name.unique' => 'Namespace must be unique.',
+         ];
+         $validator = Validator::make($request->only(['name']), $validatorArray, $message);
+         if ($validator->fails()) {  
+            return back()->withErrors($validator->errors())->withInput($request->all());
+        }
+        $data['name'] = str_slug($data['name']);
 		$requestId = $request->input('request_id');
 		$namespaceRequest = NamespaceRequest::find($requestId);
 		
@@ -48,7 +60,7 @@ class ManageController extends Controller {
 			$namespaceRequest->save();
 			Topic::where('topic_num',$namespaceRequest->topic_num)->update(array('namespace_id'=>$namespace->id));
 		}
-		return redirect('/admin');
+		return redirect('/admin/namespace');
 	}
 
 	public function getUpdateNamespace(Request $request,$id){
@@ -61,6 +73,7 @@ class ManageController extends Controller {
 		
 		$data = $request->only(['name','parent_id']);
 		$slug = str_slug($data['name']);
+		$oldNamespace = Namespaces::find($id);
 		if(isset($data['parent_id']) && $data['parent_id'] !=0 ){
 			if($namespace = Namespaces::find($data['parent_id'])){
 				$slug = $namespace->label.'/'.$slug;
@@ -70,14 +83,32 @@ class ManageController extends Controller {
 			$slug = "/".$slug."/";
 		}
 		$data['label'] = $slug;
+		if($oldNamespace->name != $data['name']){
+			$validatorArray = [  'name' => 'required',
+		 	'name' =>'unique:namespace'
+		  ];
 
-		$oldNamespace = Namespaces::find($id);
+		}else{
+			$validatorArray = [  'name' => 'required'
+		  ];
+		}
+		
+         $message = [
+         	'name.required' => 'Namespace field is required.',
+         	'name.unique' => 'Namespace must be unique.',
+         ];
+         $validator = Validator::make($request->only(['name']), $validatorArray, $message);
+         if ($validator->fails()) {  
+            return back()->withErrors($validator->errors())->withInput($request->all());
+        }
+        $data['name'] = str_slug($data['name']);
+		
 		$oldNamespace->name = $data['name'];
 		$oldNamespace->parent_id = isset($data['parent_id']) ? $data['parent_id'] : 0;
 		$oldNamespace->label = $data['label'];
 		$oldNamespace->save();
 
-		return redirect('/admin');
+		return redirect('/admin/namespace');
 	}
 
 	public function getNamespaceRequests(){
@@ -85,5 +116,14 @@ class ManageController extends Controller {
 		$namespacesrequest = NamespaceRequest::orderBy('created_at','DESC')->paginate(10);
 		
 		return view('admin.namespace-requests',compact('namespacesrequest'));
+	}
+
+	public function logout(){
+
+		$this->guard('admin')->logout();
+
+        $request->session()->invalidate();
+
+        return redirect('/admin');
 	}
 }

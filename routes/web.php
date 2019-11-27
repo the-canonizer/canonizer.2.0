@@ -120,6 +120,7 @@ Route::group([ 'middleware' => 'auth'], function() {
     Route::get('/editnews/{topicnum}/{campnum}',['as'=>'newsfeed.edit','uses'=>'NewsFeedController@edit']);
      Route::post('/newsfeed/update',['as'=>'newsfeed.update','uses'=>'NewsFeedController@update']);
      
+     
 });
 
 Route::get('topic.asp/{id}', [ 'as' => 'topic', 'uses' => 'TopicController@show']);

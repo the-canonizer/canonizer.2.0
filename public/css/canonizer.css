@@ -1346,3 +1346,13 @@ a.rgWT {
     overflow-y: auto;*/
     background-color: #f0efef;
 }
+#ContactCaptcha_SoundLink{
+    position: relative;
+    top: -57px;
+    right: -255px;
+}
+#ContactCaptcha_ReloadLink{
+    position: relative;
+    top: -54px;
+    right: -255px;
+}

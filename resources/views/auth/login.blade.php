@@ -5,7 +5,7 @@
 </div>       	
 <div class="right-whitePnl">
 <div class="col-sm-5 margin-btm-2">
-    <form action="{{ url('/login')}}" method="post">
+    <form id="login_form" action="{{ url('/login')}}" method="post">
         <input type="hidden" name="_token" value="{{ csrf_token() }}">
         <div class="form-group">
             <label for="firstname">Email <span style="color:red">*</span></label>
@@ -24,7 +24,8 @@
             <input type="checkbox" name="remember" class="form-control remember-me" id="remember"> Remember Me
             <a href="{{ url('/forgetpassword') }}" class="pull-right">Forgot Password</a>
         </div>
-        <button type="submit" id="submit" class="btn btn-login">Log in</button>
+        <button type="submit" id="submit" onclick="submitForm(this)"  class="btn btn-login">Log in</button>
+        <div id="loggingin" style="display:none;" class="btn btn-login">Logging in..</div>
     </form>
  </div>
  <div class="col-sm-2 margin-btm-2"></div>
@@ -34,8 +35,14 @@
 </div>  <!-- /.right-whitePnl-->
 <script>
     window.onload = function() {
-  var input = document.getElementById("email").focus();
-}
+      var input = document.getElementById("email").focus();
+    }
+
+    function submitForm(btn){
+        $('#submit').hide();
+        $('#loggingin').show();
+        return true;
+    }
 
     </script>
 @endsection

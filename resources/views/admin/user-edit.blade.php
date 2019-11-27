@@ -16,20 +16,23 @@
                                     <div class="row">
                                         <div class="col-md-4">
 										<div class="form-group">
-											<label>First Name</label>
+											<label>First Name (Limit 100 Chars)<span style="color:red">*</span></label>
 											<input name="first_name"  class="form-control" value="{{ $user->first_name }}" placeholder="First name" type="text">
+											@if ($errors->has('first_name')) <p class="help-block">{{ $errors->first('first_name') }}</p> @endif
 										</div>
                                         </div>
                                         <div class="col-md-4">
 										<div class="form-group">
 											<label>Middle Name</label>
 											<input name="middle_name"  class="form-control" value="{{ $user->middle_name }}" placeholder="Middle name" type="text">
+											@if ($errors->has('middle_name')) <p class="help-block">{{ $errors->first('middle_name') }}</p> @endif
 										</div>
                                         </div>
                                         <div class="col-md-4">
 										<div class="form-group">
-											<label>Last Name</label>
+											<label>Last Name  (Limit 100 Chars)<span style="color:red">*</span></label>
 											<input name="last_name"  class="form-control" value="{{ $user->last_name }}" placeholder="Last name" type="text">
+											@if ($errors->has('last_name')) <p class="help-block">{{ $errors->first('last_name') }}</p> @endif
 										</div>
                                         </div>
 										</div>

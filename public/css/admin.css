@@ -13,6 +13,11 @@ body {
     margin-top: 30px;
 }
 
+.page-content {
+    min-height: calc(100vh - 155px);
+    width:100%;
+}
+
 /* Footer */
 
 footer{
@@ -694,3 +699,8 @@ body {
         height: 40px;
         width: 40px;
     }
+
+    .help-block{
+    color: red;
+    font-size: 13px;
+}
