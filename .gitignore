@@ -1,4 +1,5 @@
 storage/
+vendor/
 .env
 composer.lock
 /nbproject/private/
