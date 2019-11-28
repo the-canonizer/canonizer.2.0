@@ -58,7 +58,7 @@
                         {{ $errors->first('CaptchaCode') }}
                     </p>
                 @endif
-        </div>}}
+        </div>--}}
 
         <button type="submit" id="submit" class="btn btn-login">Create your account</button>
     </form>
