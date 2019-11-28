@@ -62,9 +62,10 @@ footer .copy{
 }
 
 .header .logo h1{
-    font-size:30px;
-    margin:0px;
-    padding:10px 0px;
+    font-size: 30px;
+    margin: 0px -176px;
+    padding: 10px 0px;
+    text-align: left;
 }
 
 .header .logo h1 a{
@@ -703,4 +704,13 @@ body {
     .help-block{
     color: red;
     font-size: 13px;
+}
+
+div.adminuser{
+    float: right;
+    text-align: right;
+    right: -166px;
+    top: 10px;
+    font-size: 14px;
+        color: #FFF;
 }

@@ -24,12 +24,18 @@
 <div class="header">
 	     <div class="container">
 	        <div class="row">
-	           <div class="col-md-5">
+	           <div class="col-md-9">
 	              <!-- Logo -->
 	              <div class="logo">
 	                 <h1><a href="#">Canonizer Admin</a></h1>
 	              </div>
 	           </div>
+               <div class="col-md-3 adminuser">
+                    @if(Auth::check())
+                        <span class="brsr-name">{{ Auth::user()->first_name . ' ' . Auth::user()->last_name}}</span>
+
+                    @endif
+               </div>
 	        </div>
 	     </div>
 	</div>
