@@ -11,20 +11,21 @@
 								 
                     <fieldset>
                         <div class="form-group">
-                            <label>Email </label>
+                            <label>Email <span style="color:red">*</span></label>
                             <input name="email" class="form-control" placeholder="Email" value="" type="text">
                              @if ($errors->has('email')) <p class="help-block">{{ $errors->first('email') }}</p> @endif
                         </div>
                         <div class="form-group">
-                            <label>Password</label>
+                            <label>Password <span style="color:red">*</span></label>
                            <input name="password" class="form-control" placeholder="Password" value="" type="password">
                             @if ($errors->has('password')) <p class="help-block">{{ $errors->first('password') }}</p> @endif
                         </div>
                     </fieldset>
                     <div>
-                        <button class="btn btn-primary">
+                        <button id="submit" onClick="submitForm(this)" class="btn btn-primary">
                             Login
                         </button>
+                        <div id="loggingin" class="btn btn-primary" style="display:none;">Logging in ..</div>
                     </div>
                     
                 </form>
@@ -33,3 +34,12 @@
             </div>
         </div>
     </div>
+
+    <script>
+        
+        function submitForm(btn){
+        $('#submit').hide();
+        $('#loggingin').show();
+        return true;
+    }
+    </script>

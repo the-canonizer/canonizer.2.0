@@ -57,9 +57,9 @@
 									</tr>
 								</table>
                                 <input type="hidden" name="search_param" value="all" id="search_param">
-                                <input type="text" class="form-control search" name="q" id="sbi" placeholder="Search for...">
+                                <input type="text" class="form-control search" name="q" id="sbi" placeholder="Google Search for...">
 
-									<input type="submit" name="sa" value="Google Search" id="sbb"></input>
+									<input type="submit" name="sa" value="Search" id="sbb"></input>
 									<input type="hidden" name="client" value="pub-6646446076038181"></input>
 									<input type="hidden" name="forid" value="1"></input>
 									<input type="hidden" name="ie" value="ISO-8859-1"></input>

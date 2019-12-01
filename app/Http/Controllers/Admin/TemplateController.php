@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Model\Templates;
+use Validator;
 
 class TemplateController extends Controller
 {
@@ -38,6 +39,20 @@ class TemplateController extends Controller
     public function store(Request $request)
     {
         $data = $request->only('name','subject','body','status');
+         $validatorArray = [ 
+          'name' => 'required',
+          'subject' => 'required',
+          'body' => 'required'
+          ];
+         $message = [
+            'name.required' => 'Name field is required.',
+            'subject.required' => 'Subject field is required.',
+            'body.required' => 'Body field is required.',
+         ];
+         $validator = Validator::make($request->only(['name','subject','body']), $validatorArray, $message);
+         if ($validator->fails()) {  
+            return back()->withErrors($validator->errors())->withInput($request->all());
+        }
         $template = new Templates();
         $template->name = $data['name'];
         $template->subject = $data['subject'];
@@ -85,6 +100,20 @@ class TemplateController extends Controller
     {
         if($id){
             $data = $request->only('name','subject','body','status');
+             $validatorArray = [ 
+              'name' => 'required',
+              'subject' => 'required',
+              'body' => 'required'
+              ];
+             $message = [
+                'name.required' => 'Name field is required.',
+                'subject.required' => 'Subject field is required.',
+                'body.required' => 'Body field is required.',
+             ];
+             $validator = Validator::make($request->only(['name','subject','body']), $validatorArray, $message);
+             if ($validator->fails()) {  
+                return back()->withErrors($validator->errors())->withInput($request->all());
+            }
             $template = Templates::find($id);
             $template->name = $data['name'];
             $template->subject = $data['subject'];

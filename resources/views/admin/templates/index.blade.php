@@ -11,7 +11,7 @@
         
         
         <div class="content-box-header panel-heading">
-            <div class="panel-title ">Email Templates</div>
+            <div class="panel-title ">Templates</div>
             <div class="panel-options">
                     <a href="{{ url('/admin/template/create') }}" data-rel="collapse"><i class="fa fa-plus"></i> Create Template</a>
             </div>
@@ -20,9 +20,9 @@
         <div class="content-box-large box-with-header">
             <table class="table table-row">
                 <tr>
-                    <th>Name</th>
-                    <th>Subject</th>
-                    <th>body</th>
+                    <th>Template Name</th>
+                    <th>Template Subject</th>
+                    <th>Template body</th>
                     <th>Status</th>
                     <th>Action</th>
                 </tr>

@@ -22,7 +22,7 @@
         <div class="well">
             <ul class="nav prfl_ul">
                 <li class=""><a class="" href="{{ route('settings')}}">Manage Profile Info</a></li>
-                <li><a class="" href="{{ route('settings.nickname')}}" >Add & Manage Nick Names</a></li>
+                <li><a class="" href="{{ route('settings.nickname')}}" >Manage Nick Names</a></li>
                 <li class=""><a class="" href="{{ route('settings.support')}}" >My Supports</a></li>
                 <li><a class="" href="{{ route('settings.algo-preferences')}}">Default Algorithm</a></li>
                 <li><a class="" href="{{ route('settings.changepassword')}}">Change Password</a></li>

@@ -46,6 +46,20 @@
             <input type="password" name="password_confirmation" class="form-control" id="pwd_confirm">
            
         </div>
+
+         <div class="form-group">
+            <label for="captcha">Captcha</label>
+                {!! captcha_image_html('ContactCaptcha') !!}
+                <input class="form-control" type="text" id="CaptchaCode" name="CaptchaCode" style="margin-top:5px;">
+
+
+                @if ($errors->has('CaptchaCode'))
+                    <p class="help-block">
+                        {{ $errors->first('CaptchaCode') }}
+                    </p>
+                @endif
+        </div>
+
         <button type="submit" id="submit" class="btn btn-login">Create your account</button>
     </form>
 </div> 

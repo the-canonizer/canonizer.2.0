@@ -6,17 +6,20 @@
 <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
 <fieldset>
     <div class="form-group">
-        <label>Template Name</label>
+        <label>Template Name <span style="color:red">*</span></label>
         {{ Form::text('name', old('name'),['class'=>'form-control']) }}
+         @if ($errors->has('name')) <p class="help-block">{{ $errors->first('name') }}</p> @endif
     </div>
     <div class="form-group">
-        <label>Template Subject</label>
+        <label>Template Subject <span style="color:red">*</span></label>
         {{ Form::text('subject', old('subject'),['class'=>'form-control']) }}
+         @if ($errors->has('subject')) <p class="help-block">{{ $errors->first('subject') }}</p> @endif
     </div>
 
     <div class="form-group">
-        <label>Template Body</label>
+        <label>Template Body <span style="color:red">*</span></label>
         {{ Form::textarea('body', old('body'),['class'=>'form-control','id'=>'body']) }}
+         @if ($errors->has('body')) <p class="help-block">{{ $errors->first('body') }}</p> @endif
     </div>
 
     <div class="form-group">

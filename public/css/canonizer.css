@@ -913,8 +913,11 @@ h1.page-title{
     margin-bottom: 25px;
 }
 .prfl_ul li{
-    padding: 5px 15px;
+    padding: 5px 10px;
     line-height: 25px;
+}
+.prfl_ul li a {
+    font-size: 13px;
 }
 .prfl_ul li.active{
     border-radius: 4px 4px 0px 0px;
@@ -1345,4 +1348,14 @@ a.rgWT {
 	/*height: 399px;
     overflow-y: auto;*/
     background-color: #f0efef;
+}
+#ContactCaptcha_SoundLink{
+    position: relative;
+    top: -57px;
+    right: -255px;
+}
+#ContactCaptcha_ReloadLink{
+    position: relative;
+    top: -54px;
+    right: -255px;
 }
