@@ -6,7 +6,7 @@
                 <div class="panel-title ">Namespace Requests</div>
                 
                 <div class="panel-options">
-                    <a href="{{ url('/admin/namespace/create') }}" data-rel="collapse"><i class="fa fa-plus"></i> Add Namespace</a>
+                    <a href="{{ url('/admin/namespace/create') }}" data-rel="collapse"><i class="fa fa-plus"></i> Create Namespace</a>
                 </div>
             </div>
             <div class="content-box-large box-with-header">

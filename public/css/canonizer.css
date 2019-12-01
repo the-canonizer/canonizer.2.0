@@ -913,8 +913,11 @@ h1.page-title{
     margin-bottom: 25px;
 }
 .prfl_ul li{
-    padding: 5px 15px;
+    padding: 5px 10px;
     line-height: 25px;
+}
+.prfl_ul li a {
+    font-size: 13px;
 }
 .prfl_ul li.active{
     border-radius: 4px 4px 0px 0px;

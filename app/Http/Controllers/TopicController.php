@@ -1010,9 +1010,9 @@ class TopicController extends Controller {
 
             $link = 'topic/' . $statement->topic_num . '/' . $statement->camp_num . '?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $statement->go_live_time);
             $livecamp = Camp::getLiveCamp($statement->topic_num,$statement->camp_num);
-            $data['object'] = " for camp " . $livecamp->camp_name;
+            $data['object'] = " " . $livecamp->camp_name;
             $data['go_live_time'] = $statement->go_live_time;
-            $data['type'] = 'statement';
+            $data['type'] = 'statement : for camp ';
 			$data['note'] = $statement->note;
             $nickName = Nickname::getNickName($statement->submitter_nick_id);
 
@@ -1029,7 +1029,7 @@ class TopicController extends Controller {
             $directSupporter = Support::getDirectSupporter($camp->topic_num, $camp->camp_num);
             $link = 'topic/' . $camp->topic_num . '/' . $camp->camp_num . '?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $camp->go_live_time);
             $data['object'] = $camp->topic->topic_name . ' / ' . $camp->camp_name;
-            $data['type'] = 'camp';
+            $data['type'] = 'camp : ';
             $data['go_live_time'] = $camp->go_live_time;
 			$data['note'] = $camp->note;
             $nickName = Nickname::getNickName($camp->submitter_nick_id);
@@ -1049,7 +1049,7 @@ class TopicController extends Controller {
             $link = 'topic/' . $topic->topic_num . '/' . $topic->camp_num . '?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $topic->go_live_time);
             $data['object'] = $topic->topic_name;
             $data['go_live_time'] = $topic->go_live_time;
-            $data['type'] = 'topic';
+            $data['type'] = 'topic : ';
 			$data['note'] = $topic->note;
             $nickName = Nickname::getNickName($topic->submitter_nick_id);
 
