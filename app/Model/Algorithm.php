@@ -23,7 +23,11 @@ class Algorithm{
             'mormon'=>'Mormon',
             'uu'=>'Universal Unitarian',
             'atheist'=>'Atheist',
-            'transhumanist'=>'Transhumanist'
+            'transhumanist'=>'Transhumanist',
+			'united_utah'=>'United Utah',
+			'republican'=>'Republican',
+			'democrat'=>'Democrat',
+			
         );
     }
 	
@@ -31,7 +35,7 @@ class Algorithm{
     @return all the available algorithm key values
     */
     public static function getKeyList(){
-        return array('blind_popularity','mind_experts','computer_science_experts','PhD','christian','secular','mormon','uu','atheist','transhumanist'
+        return array('blind_popularity','mind_experts','computer_science_experts','PhD','christian','secular','mormon','uu','atheist','transhumanist','united_utah','republican','democrat'
         );
     }
     
@@ -147,6 +151,27 @@ class Algorithm{
 						   '(topic_num = 55 and camp_num = 14) or ' .
 						   '(topic_num = 55 and camp_num = 15) or ' .
 						   '(topic_num = 55 and camp_num = 17)';
+        return self::camp_count($nick_name_id,$condition);
+    }
+	
+	// United Utah Party Algorithm using related topic and camp
+	
+	public static function united_utah($nick_name_id){
+        $condition = '(topic_num = 231 and camp_num = 2)';
+        return self::camp_count($nick_name_id,$condition);
+    }
+	
+	// Republican Algorithm using related topic and camp
+	 
+	public static function republican($nick_name_id){
+        $condition = '(topic_num = 231 and camp_num = 3)';
+        return self::camp_count($nick_name_id,$condition);
+    }
+	
+	// Democrat Algorithm using related topic and camp
+	
+	public static function democrat($nick_name_id){
+        $condition = '(topic_num = 231 and camp_num = 4)';
         return self::camp_count($nick_name_id,$condition);
     }
 
