@@ -43,7 +43,7 @@ class Algorithm{
         Returns camp_count
         @nick_name_id , $condition
     */
-    public static function camp_count($nick_name_id,$condition, $political=false){
+    public static function camp_count($nick_name_id,$condition, $political=false,$topicnum=0,$campnum=0){
     
         $as_of_time = time();
         $cacheWithTime = false; 
@@ -67,7 +67,7 @@ class Algorithm{
             $result = Cache::remember("$sql", 1, function () use($sql,$sql2) {
                 return DB::select("$sql $sql2");
             });
-		 if($political==true) {						
+		 if($political==true && $topicnum==231 && ($campnum==2 ||  $campnum==3 || $campnum==4) ) {						
                       	
 			if($result[0]->support_order==1)
 				$total = $result[0]->countTotal / 2;
@@ -175,21 +175,21 @@ class Algorithm{
 	
 	public static function united_utah($nick_name_id){
         $condition = '(topic_num = 231 and camp_num = 2)';
-        return self::camp_count($nick_name_id,$condition,true);
+        return self::camp_count($nick_name_id,$condition,true,231,2);
     }
 	
 	// Republican Algorithm using related topic and camp
 	 
 	public static function republican($nick_name_id){
         $condition = '(topic_num = 231 and camp_num = 3)';
-        return self::camp_count($nick_name_id,$condition,true);
+        return self::camp_count($nick_name_id,$condition,true,231,3);
     }
 	
 	// Democrat Algorithm using related topic and camp
 	
 	public static function democrat($nick_name_id){
         $condition = '(topic_num = 231 and camp_num = 4)';
-        return self::camp_count($nick_name_id,$condition,true);
+        return self::camp_count($nick_name_id,$condition,true,231,4);
     }
 
     public static function camp_tree_count($topicnum,$nick_name_id){
