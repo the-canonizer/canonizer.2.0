@@ -581,7 +581,9 @@ class Camp extends Model {
                     $multiSupport = false;
                     if ($nickNameSupports->count() > 1) {
                         $multiSupport = true;
-                        $supportCountTotal += round($supportPoint / (2 ** ($currentCampSupport->support_order)), 2);
+						
+						$supportCountTotal += round($supportPoint / (2 ** ($currentCampSupport->support_order)), 2);
+						
                     } else if ($nickNameSupports->count() == 1) {
                         $supportCountTotal += $supportPoint;
                     }
