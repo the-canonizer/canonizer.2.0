@@ -1008,11 +1008,12 @@ class TopicController extends Controller {
             $statement->update();
             $directSupporter = Support::getDirectSupporter($statement->topic_num, $statement->camp_num);
 
-            $link = 'topic/' . $statement->topic_num . '/' . $statement->camp_num . '?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $statement->go_live_time);
+            $link = 'statement/history/' . $id . '/' . $statement->camp_num . '?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $statement->go_live_time);
             $livecamp = Camp::getLiveCamp($statement->topic_num,$statement->camp_num);
             $data['object'] = " " . $livecamp->camp_name;
             $data['go_live_time'] = $statement->go_live_time;
             $data['type'] = 'statement : for camp ';
+            $data['typeobject'] = 'statement';
 			$data['note'] = $statement->note;
             $nickName = Nickname::getNickName($statement->submitter_nick_id);
 
@@ -1027,9 +1028,10 @@ class TopicController extends Controller {
             $camp->update();
 
             $directSupporter = Support::getDirectSupporter($camp->topic_num, $camp->camp_num);
-            $link = 'topic/' . $camp->topic_num . '/' . $camp->camp_num . '?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $camp->go_live_time);
+            $link = 'camp/history/' . $id . '/' . $camp->camp_num . '?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $camp->go_live_time);
             $data['object'] = $camp->topic->topic_name . ' / ' . $camp->camp_name;
             $data['type'] = 'camp : ';
+            $data['typeobject'] = 'camp';
             $data['go_live_time'] = $camp->go_live_time;
 			$data['note'] = $camp->note;
             $nickName = Nickname::getNickName($camp->submitter_nick_id);
@@ -1046,10 +1048,12 @@ class TopicController extends Controller {
             $topic->update();
             $directSupporter = Support::getDirectSupporter($topic->topic_num);
 
-            $link = 'topic/' . $topic->topic_num . '/' . $topic->camp_num . '?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $topic->go_live_time);
+           // $link = 'topic/' . $topic->topic_num . '/' . $topic->camp_num . '?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $topic->go_live_time);
+            $link = 'topic-history/' . $id;
             $data['object'] = $topic->topic_name;
             $data['go_live_time'] = $topic->go_live_time;
             $data['type'] = 'topic : ';
+            $data['typeobject'] = 'topic';
 			$data['note'] = $topic->note;
             $nickName = Nickname::getNickName($topic->submitter_nick_id);
 

@@ -71,22 +71,21 @@ class ManageController extends Controller {
 		
 		$data = $request->only(['name','parent_id']);
 
-		$slug = str_slug($data['name']);
+		$slug = (isset($data['name']) && $data['name'] != '' && $data['name']!=null) ? str_slug($data['name']) : '';
 		$oldNamespace = Namespaces::find($id);
 		if(isset($data['parent_id']) && $data['parent_id'] !=0 ){
 			if($namespace = Namespaces::find($data['parent_id'])){
 				$slug = $namespace->label.'/'.$slug;
 			}
 		}
-		if($slug[0] != '/' || $slug[strlen($slug) - 1] != '/'){
+		if(isset($slug[0]) && $slug[0] != '/' || $slug[strlen($slug) - 1] != '/'){
 			$slug = "/".$slug."/";
 		}
 		$data['label'] = $slug;
 		if($oldNamespace->name != $data['name']){
 			$validatorArray = [  'name' => 'required|unique:namespace'];
 		}else{
-			$validatorArray = [  'name' => 'required'
-		  ];
+			$validatorArray = [  'name' => 'required'];
 		}
 		
          $message = [

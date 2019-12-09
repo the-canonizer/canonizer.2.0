@@ -3,7 +3,7 @@
     <div class="row">
         <div class="col-md-12 panel-warning">
             <div class="content-box-header panel-heading">
-                <div class="panel-title ">Add Namespace</div>
+                <div class="panel-title ">Create Namespace</div>
                 
                 
             </div>

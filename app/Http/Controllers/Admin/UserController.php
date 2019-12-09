@@ -30,9 +30,9 @@ class UserController extends Controller {
     {
         $message = [];
         return Validator::make($data, [
-            'first_name' => 'required|string|max:100',
-            'last_name' => 'required|string|max:100',
-            'middle_name' => 'max:100',
+            'first_name' => 'required|regex:/^[a-zA-Z ]*$/|string|max:100',
+            'last_name' => 'required|regex:/^[a-zA-Z ]*$/|string|max:100',
+            'middle_name' => 'regex:/^[a-zA-Z ]*$/|max:100',
            ],$message);
     }
 
