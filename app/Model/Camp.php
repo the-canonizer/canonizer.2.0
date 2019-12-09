@@ -559,7 +559,6 @@ class Camp extends Model {
         if (isset($_REQUEST['asof']) && $_REQUEST['asof'] == 'bydate') {
             $as_of_time = strtotime($_REQUEST['asofdate']);
         }
-
         $supportCountTotal = 0;
         try {
             foreach (session("topic-support-nickname-$topicnum") as $supported) {
@@ -572,12 +571,19 @@ class Camp extends Model {
                 $currentCampSupport = $nickNameSupports->filter(function ($item) use($campnum) {
                             return $item->camp_num == $campnum; /* Current camp support */
                         })->first();
-
-                if ($currentCampSupport) {
+               
+			   /*The canonizer value should be the same as their value supporting that camp. 
+				   1 if they only support one party, 
+				   0.5 for their first, if they support 2, 
+				   0.25 after and half, again, for each one after that. */
+                
+				if ($currentCampSupport) {
                     $multiSupport = false;
                     if ($nickNameSupports->count() > 1) {
                         $multiSupport = true;
-                        $supportCountTotal += round($supportPoint / (2 ** ($currentCampSupport->support_order)), 2);
+						
+						$supportCountTotal += round($supportPoint / (2 ** ($currentCampSupport->support_order)), 2);
+						
                     } else if ($nickNameSupports->count() == 1) {
                         $supportCountTotal += $supportPoint;
                     }

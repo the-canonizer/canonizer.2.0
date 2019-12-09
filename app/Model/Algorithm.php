@@ -23,7 +23,11 @@ class Algorithm{
             'mormon'=>'Mormon',
             'uu'=>'Universal Unitarian',
             'atheist'=>'Atheist',
-            'transhumanist'=>'Transhumanist'
+            'transhumanist'=>'Transhumanist',
+			'united_utah'=>'United Utah',
+			'republican'=>'Republican',
+			'democrat'=>'Democrat',
+			
         );
     }
 	
@@ -31,7 +35,7 @@ class Algorithm{
     @return all the available algorithm key values
     */
     public static function getKeyList(){
-        return array('blind_popularity','mind_experts','computer_science_experts','PhD','christian','secular','mormon','uu','atheist','transhumanist'
+        return array('blind_popularity','mind_experts','computer_science_experts','PhD','christian','secular','mormon','uu','atheist','transhumanist','united_utah','republican','democrat'
         );
     }
     
@@ -39,7 +43,7 @@ class Algorithm{
         Returns camp_count
         @nick_name_id , $condition
     */
-    public static function camp_count($nick_name_id,$condition){
+    public static function camp_count($nick_name_id,$condition, $political=false,$topicnum=0,$campnum=0){
     
         $as_of_time = time();
         $cacheWithTime = false; 
@@ -49,8 +53,8 @@ class Algorithm{
                 $cacheWithTime = true;
             }
         }
-
-        $sql = "select count(*) as countTotal from support where nick_name_id = $nick_name_id and (" .$condition.")";
+  
+        $sql = "select count(*) as countTotal,support_order from support where nick_name_id = $nick_name_id and (" .$condition.")";
         $sql2 ="and ((start < $as_of_time) and ((end = 0) or (end > $as_of_time)))
          ";
         /* Cache applied to avoid repeated queries in recursion */
@@ -63,7 +67,24 @@ class Algorithm{
             $result = Cache::remember("$sql", 1, function () use($sql,$sql2) {
                 return DB::select("$sql $sql2");
             });
-            return isset($result[0]->countTotal) ? $result[0]->countTotal : 0;
+		 if($political==true && $topicnum==231 && ($campnum==2 ||  $campnum==3 || $campnum==4) ) {						
+                      	
+			if($result[0]->support_order==1)
+				$total = $result[0]->countTotal / 2;
+			else if($result[0]->support_order==2)
+				$total = $result[0]->countTotal / 4;
+			else if($result[0]->support_order==3)
+				$total = $result[0]->countTotal / 6;
+			else if($result[0]->support_order==4)
+				$total = $result[0]->countTotal / 8;
+			else $total = $result[0]->countTotal;
+			
+		 } else {
+			$total = $result[0]->countTotal; 
+		 }	
+			
+			
+            return isset($result[0]->countTotal) ? $total : 0;
         }
     }
 
@@ -148,6 +169,27 @@ class Algorithm{
 						   '(topic_num = 55 and camp_num = 15) or ' .
 						   '(topic_num = 55 and camp_num = 17)';
         return self::camp_count($nick_name_id,$condition);
+    }
+	
+	// United Utah Party Algorithm using related topic and camp
+	
+	public static function united_utah($nick_name_id){
+        $condition = '(topic_num = 231 and camp_num = 2)';
+        return self::camp_count($nick_name_id,$condition,true,231,2);
+    }
+	
+	// Republican Algorithm using related topic and camp
+	 
+	public static function republican($nick_name_id){
+        $condition = '(topic_num = 231 and camp_num = 3)';
+        return self::camp_count($nick_name_id,$condition,true,231,3);
+    }
+	
+	// Democrat Algorithm using related topic and camp
+	
+	public static function democrat($nick_name_id){
+        $condition = '(topic_num = 231 and camp_num = 4)';
+        return self::camp_count($nick_name_id,$condition,true,231,4);
     }
 
     public static function camp_tree_count($topicnum,$nick_name_id){

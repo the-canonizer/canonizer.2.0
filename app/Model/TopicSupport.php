@@ -108,12 +108,18 @@ class TopicSupport extends Model {
             $array[$support->nick_name_id]['children'] = [];
 
             $multiSupport = false;
+			// echo $currentCampSupport->support_order;
 			if($currentCampSupport){
 				if($nickNameSupports->count() > 1){
                     $multiSupport = true;
+					
 					$array[$support->nick_name_id]['score']=round($supportPoint / (2 ** ($currentCampSupport->support_order)),2);
+						
 				}else if($nickNameSupports->count() == 1){
-					$array[$support->nick_name_id]['score']=$supportPoint;
+					
+					
+					 $array[$support->nick_name_id]['score']=$supportPoint;
+					
 				}
 			
             
