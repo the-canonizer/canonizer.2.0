@@ -29,6 +29,7 @@ class ManageController extends Controller {
 
 	public function postCreateNamespace(Request $request){
 		$data = $request->only(['name','parent_id']);
+		$data['name'] = str_slug($data['name']);
 		 $validatorArray = [  'name' => 'required|unique:namespace'];
          $message = [
          	'name.required' => 'Namespace field is required.',
@@ -82,6 +83,7 @@ class ManageController extends Controller {
 			$slug = "/".$slug."/";
 		}
 		$data['label'] = $slug;
+		$data['name'] = str_slug($data['name']);
 		if($oldNamespace->name != $data['name']){
 			$validatorArray = [  'name' => 'required|unique:namespace'];
 		}else{
@@ -96,7 +98,7 @@ class ManageController extends Controller {
          if ($validator->fails()) {  
             return back()->withErrors($validator->errors())->withInput($request->all());
         }
-        $data['name'] = str_slug($data['name']);
+      
 		
 		$oldNamespace->name = $data['name'];
 		$oldNamespace->parent_id = isset($data['parent_id']) ? $data['parent_id'] : 0;

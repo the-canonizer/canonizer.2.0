@@ -69,7 +69,7 @@ class TopicController extends Controller {
     public function store(Request $request) {
         $all = $request->all();
          $validatorArray = ['topic_name' => 'required|max:30',
-            'namespace' => 'required',
+            'namespace' => 'required|unique',
             'create_namespace' => 'required_if:namespace,other|max:100',
             'nick_name' => 'required'
             //'note' => 'required'
@@ -84,7 +84,8 @@ class TopicController extends Controller {
                              ->first();
         $message = [
             'create_namespace.required_if' => 'The Other Namespace Name field is required when namespace is other.',
-            'create_namespace.max' => 'The Other Namespace Name may not be greater than 100 characters.'
+            'create_namespace.max' => 'The Other Namespace Name may not be greater than 100 characters.',
+            'namespace.unique' => 'Namespace Namemust be unique.'
         ];
 
         $objection = '';

@@ -105,11 +105,11 @@ class TemplateController extends Controller
               'subject' => 'required',
               'body' => 'required'
               ];
-             $message = [
-                'name.required' => 'Name field is required.',
-                'subject.required' => 'Subject field is required.',
-                'body.required' => 'Body field is required.',
-             ];
+               $message = [
+                    'name.required' => 'Template Name field is required.',
+                    'subject.required' => 'Template Subject field is required.',
+                    'body.required' => 'Template Body field is required.',
+                 ];
              $validator = Validator::make($request->only(['name','subject','body']), $validatorArray, $message);
              if ($validator->fails()) {  
                 return back()->withErrors($validator->errors())->withInput($request->all());
