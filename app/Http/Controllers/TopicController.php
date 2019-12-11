@@ -69,7 +69,7 @@ class TopicController extends Controller {
     public function store(Request $request) {
         $all = $request->all();
          $validatorArray = ['topic_name' => 'required|max:30',
-            'namespace' => 'required|unique',
+            'namespace' => 'required|unique:namespace',
             'create_namespace' => 'required_if:namespace,other|max:100',
             'nick_name' => 'required'
             //'note' => 'required'
