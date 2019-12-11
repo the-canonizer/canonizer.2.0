@@ -235,7 +235,8 @@ class TopicController extends Controller {
                              ->where('topic.objector_nick_id',"=",null)
                              ->latest('topic.submit_time')
                              ->first();
-                $link = 'topic/' . $topic->topic_num . '/1';
+                //$link = 'topic/' . $topic->topic_num . '/1';
+                $link = 'topic-history/' . $topic->topic_num;             
                 $data['object'] = $liveTopic->topic_name;
                 $nickName = Nickname::getNickName($all['nick_name']);
                 $data['type'] = 'topic';
@@ -248,8 +249,8 @@ class TopicController extends Controller {
             } else if ($eventtype == "UPDATE") {
 
                 $directSupporter = Support::getDirectSupporter($topic->topic_num);
-
-                $link = 'topic/' . $topic->topic_num . '/' . $topic->camp_num . '?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $topic->go_live_time);
+                $link = 'topic-history/' . $topic->topic_num;
+                // $link = 'topic/' . $topic->topic_num . '/' . $topic->camp_num . '?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $topic->go_live_time);
                 $data['object'] = $topic->topic_name;
                 $data['go_live_time'] = $topic->go_live_time;
                 $data['type'] = 'topic';
@@ -697,7 +698,8 @@ class TopicController extends Controller {
 
                 $user = Nickname::getUserByNickName($all['submitter']);
                 $livecamp = Camp::getLiveCamp($camp->topic_num,$camp->camp_num);
-                $link = 'topic/' . $camp->topic_num . '/1';
+                $link = 'camp/history/' . $camp->topic_num . '/' . $camp->camp_num;
+                // $link = 'topic/' . $camp->topic_num . '/1';
                 $data['object'] = $camp->topic->topic_name . " / " . $livecamp->camp_name;
                 $nickName = Nickname::getNickName($all['nick_name']);
 
@@ -710,8 +712,8 @@ class TopicController extends Controller {
             } else if ($eventtype == "UPDATE") {
 
                 $directSupporter = Support::getDirectSupporter($camp->topic_num, $camp->camp_num);
-
-                $link = 'topic/' . $camp->topic_num . '/' . $camp->camp_num . '?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $camp->go_live_time);
+                $link = 'camp/history/' . $camp->topic_num . '/' . $camp->camp_num;
+                // $link = 'topic/' . $camp->topic_num . '/' . $camp->camp_num . '?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $camp->go_live_time);
                 $data['object'] = $camp->topic->topic_name . ' / ' . $camp->camp_name;
                 $data['type'] = 'camp';
                 $data['go_live_time'] = $camp->go_live_time;
@@ -833,7 +835,8 @@ class TopicController extends Controller {
 
             $user = Nickname::getUserByNickName($all['submitter']);
             $livecamp = Camp::getLiveCamp($statement->topic_num,$statement->camp_num);
-            $link = 'topic/' . $statement->topic_num . '/1';
+            //$link = 'topic/' . $statement->topic_num . '/1';
+            $link = 'statement/history/' . $statement->topic_num . '/' . $statement->camp_num;
             $data['object'] = $statement->statement;
             $nickName = Nickname::getNickName($all['nick_name']);
             $data['type'] = "Camp (".$livecamp->topic->topic_name . " / " . $livecamp->camp_name.') statement';
@@ -846,8 +849,8 @@ class TopicController extends Controller {
         } else if ($eventtype == "UPDATE") {
 
             $directSupporter = Support::getDirectSupporter($statement->topic_num, $statement->camp_num);
-
-            $link = 'topic/' . $statement->topic_num . '/' . $statement->camp_num . '?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $statement->go_live_time);
+             $link = 'statement/history/' . $statement->topic_num . '/' . $statement->camp_num;
+            //$link = 'topic/' . $statement->topic_num . '/' . $statement->camp_num . '?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $statement->go_live_time);
             $data['object'] = "#" . $statement->id;
             $data['go_live_time'] = $statement->go_live_time;
             $data['type'] = 'statement';
