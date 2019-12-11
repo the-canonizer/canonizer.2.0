@@ -1011,7 +1011,8 @@ class TopicController extends Controller {
             $statement->update();
             $directSupporter = Support::getDirectSupporter($statement->topic_num, $statement->camp_num);
 
-            $link = 'statement/history/' . $id . '/' . $statement->camp_num . '?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $statement->go_live_time);
+           // $link = 'statement/history/' . $id . '/' . $statement->camp_num . '?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $statement->go_live_time);
+            $link = 'statement/history/' . $statement->topic_num . '/' . $statement->camp_num;
             $livecamp = Camp::getLiveCamp($statement->topic_num,$statement->camp_num);
             $data['object'] = " " . $livecamp->camp_name;
             $data['go_live_time'] = $statement->go_live_time;
@@ -1031,7 +1032,8 @@ class TopicController extends Controller {
             $camp->update();
 
             $directSupporter = Support::getDirectSupporter($camp->topic_num, $camp->camp_num);
-            $link = 'camp/history/' . $id . '/' . $camp->camp_num . '?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $camp->go_live_time);
+            //$link = 'camp/history/' . $id . '/' . $camp->camp_num . '?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $camp->go_live_time);
+            $link = 'camp/history/' . $camp->topic_num . '/' . $camp->camp_num;
             $data['object'] = $camp->topic->topic_name . ' / ' . $camp->camp_name;
             $data['type'] = 'camp : ';
             $data['typeobject'] = 'camp';
@@ -1052,7 +1054,7 @@ class TopicController extends Controller {
             $directSupporter = Support::getDirectSupporter($topic->topic_num);
 
            // $link = 'topic/' . $topic->topic_num . '/' . $topic->camp_num . '?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $topic->go_live_time);
-            $link = 'topic-history/' . $id;
+            $link = 'topic-history/' . $topic->topic_num;
             $data['object'] = $topic->topic_name;
             $data['go_live_time'] = $topic->go_live_time;
             $data['type'] = 'topic : ';
