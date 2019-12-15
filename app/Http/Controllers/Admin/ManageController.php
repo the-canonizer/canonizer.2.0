@@ -79,7 +79,7 @@ class ManageController extends Controller {
 				$slug = $namespace->label.'/'.$slug;
 			}
 		}
-		if((isset($slug[0]) && $slug[0] != '/'z) || (!empty($slug) && $slug[strlen($slug) - 1] != '/')){
+		if((isset($slug[0]) && $slug[0] != '/') || (!empty($slug) && $slug[strlen($slug) - 1] != '/')){
 			$slug = "/".$slug."/";
 		}
 		$data['label'] = $slug;
