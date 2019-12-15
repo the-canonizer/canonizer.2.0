@@ -821,7 +821,6 @@ class TopicController extends Controller {
                 $statement->submitter_nick_id = $all['nick_name'];
             }
         } 
-
         $statement->save();
         if ($eventtype == "CREATE") {
            // send history link in email

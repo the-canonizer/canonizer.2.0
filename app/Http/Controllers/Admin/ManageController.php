@@ -84,7 +84,8 @@ class ManageController extends Controller {
 		}
 		$data['label'] = $slug;
 		$data['name'] = str_slug($data['name']);
-		if($oldNamespace->name != $data['name']){
+		
+		if(strtolower($oldNamespace->name) != strtolower($data['name'])){
 			$validatorArray = [  'name' => 'required|unique:namespace'];
 		}else{
 			$validatorArray = [  'name' => 'required'];
