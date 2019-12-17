@@ -798,7 +798,8 @@ class TopicController extends Controller {
             $ifIamSingleSupporter = Support::ifIamSingleSupporter($all['topic_num'], $all['camp_num'], $nickNames);
 
             if (!$ifIamSingleSupporter) {
-                $statement->go_live_time = strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
+               // $statement->go_live_time = strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
+                $statement->go_live_time = strtotime(date('Y-m-d H:i:s', strtotime('+1 days')));
                 $message = "Statement submitted successfully.";
                 $go_live_time = $statement->go_live_time;
             }
@@ -1066,7 +1067,7 @@ class TopicController extends Controller {
             $data['subject'] = "Proposed change to " . $topic->topic_name . " submitted";
 
             $this->mailSupporters($directSupporter, $link, $data);         //mail supporters   
-            return response()->json(['id' => $topic->id, 'message' => 'Your change to topic has been submitted to your supporters.']);
+           return response()->json(['id' => $topic->id, 'message' => 'Your change to topic has been submitted to your supporters.']);
         }
     }
 
