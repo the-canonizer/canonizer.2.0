@@ -825,12 +825,26 @@ class TopicController extends Controller {
         $statement->save();
         if ($eventtype == "CREATE") {
            // send history link in email
+            $dataObject = [];
             $link = 'statement/history/' . $statement->topic_num . '/' . $statement->camp_num;
             $livecamp = Camp::getLiveCamp($statement->topic_num,$statement->camp_num);
 			$data['type'] = "statement";
 			$data['object'] = $livecamp->topic->topic_name . " / " . $livecamp->camp_name;
 			$data['link'] = 'topic/' . $statement->topic_num . '/1';
             Mail::to(Auth::user()->email)->bcc(config('app.admin_bcc'))->send(new ThankToSubmitterMail(Auth::user(), $link,$data));
+            // mail to direct supporters on new statement creation
+            $directSupporter = Support::getDirectSupporter($statement->topic_num, $statement->camp_num);
+            $dataObject['object'] = " " . $livecamp->camp_name;
+            $dataObject['go_live_time'] = $statement->go_live_time;
+            $dataObject['type'] = 'statement : for camp ';
+            $dataObject['typeobject'] = 'statement';
+            $dataObject['note'] = $statement->note;
+            $nickName = Nickname::getNickName($statement->submitter_nick_id);
+
+            $dataObject['nick_name'] = $nickName->nick_name;
+            $dataObject['forum_link'] = 'forum/' . $statement->topic_num . '-statement/' . $statement->camp_num . '/threads';
+            $dataObject['subject'] = "Proposed change to statement for camp " . $livecamp->camp_name . " submitted";
+            $this->mailSupporters($directSupporter,$link,$dataObject);
         } else if ($eventtype == "OBJECTION") {
 
             $user = Nickname::getUserByNickName($all['submitter']);
@@ -1074,7 +1088,7 @@ class TopicController extends Controller {
     private function mailSupporters($directSupporter, $link, $data) {
         foreach ($directSupporter as $supporter) {
             $user = Nickname::getUserByNickName($supporter->nick_name_id);
-            $receiver = (config('app.env') == "production") ? $user->email : config('app.admin_email');
+            $receiver = "neeraj0710thakur@gmail.com";//(config('app.env') == "production") ? $user->email : config('app.admin_email');
             Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new PurposedToSupportersMail($user, $link, $data));
         }
         return;

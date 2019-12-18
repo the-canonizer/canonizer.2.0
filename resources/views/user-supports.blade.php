@@ -17,6 +17,8 @@
         <?php $user = $nickName->getUser();
             $privateFlags = explode(',',$user->private_flags);
             $supportedCamps = $nickName->getSupportCampList();
+            $camp_num = app('request')->input('campnum');
+            $topic_num = app('request')->input('topicnum');
          ?>
          <address class="user-address">
          @if(!in_array('last_name',$privateFlags) || !in_array('first_name',$privateFlags))
@@ -60,15 +62,19 @@
             <div class="content">	  
             <h5>List of supported camps</h5>
             @if(count($supportedCamps) > 0)
-			   @foreach($supportedCamps as $supports)
-               
+			   @foreach($supportedCamps as $key=>$supports)
+               <?php
+                                $topic = \App\Model\Topic::where('topic_num','=',$key)->get();
+                                $topic_name = isset($topic[0]) ? $topic[0]->topic_name:'';
+                            ?>
                 <ul>
-                    <li><a href="{{ (array_key_exists('link',$supports)  && isset($supports['link'])) ? $supports['link'] : '' }}">{{ (array_key_exists('camp_name',$supports)  && isset($supports['camp_name'])) ? $supports['camp_name'] : ''}}</a></li>
+                    <li><a href="{{ (array_key_exists('link',$supports)  && isset($supports['link'])) ? $supports['link'] : '' }}">{{ (array_key_exists('camp_name',$supports)  && isset($supports['camp_name'])) ? ($topic_name!='')? $topic_name:$supports['camp_name'] : ''}}</a></li>
                     <ul>
                         @if(isset($supports['array']))
                         @foreach($supports['array'] as $support_order)
                             @foreach($support_order as $support)
-                                <li><a href="{{ (array_key_exists('link',$support)  && isset($support['link'])) ? $support['link'] : ''  }}">{{(array_key_exists('camp_name',$support)  && isset($support['camp_name'])) ? $support['camp_name'] : ''}}</a></li>
+                                <li id="camp_{{$key}}_{{$support['camp_num']}}">
+                                    <a href="{{ (array_key_exists('link',$support)  && isset($support['link'])) ? $support['link'] : ''  }}" style="{{ ($support['camp_num'] == $camp_num && $key == $topic_num) ? 'font-weight:bold; font-size:16px;' : '' }}">{{(array_key_exists('camp_name',$support)  && isset($support['camp_name'])) ? $support['camp_name'] : ''}}</a></li>
                             @endforeach
                         @endforeach
                         @endif
@@ -87,6 +93,9 @@
     <!-- /.container-fluid-->
 </div>  <!-- /.right-whitePnl-->
 <script>
+var camp_num = '<?php echo $camp_num; ?>';
+var topic_num = '<?php echo $topic_num; ?>';
+window.scrollTo("camp_"+topic_num+"_"+camp_num);
 function submitForm(element){
     $(element).parents('form').submit();
 }

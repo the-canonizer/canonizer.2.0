@@ -85,9 +85,9 @@ class Nickname extends Model {
             } else if ($camp_num == 1) {
                 $supports[$topic_num]['camp_name'] = ($rs->camp_name != "") ? $rs->camp_name : $rs->title;
 
-                $supports[$topic_num]['link'] = url('camp/history/' . $topic_num . '/' . $camp_num);
+                $supports[$topic_num]['link'] = url('topic/' . $topic_id . '/' . $camp_num);
             } else {
-                $supports[$topic_num]['array'][$rs->support_order][] = ['camp_name' => $rs->camp_name, 'camp_num' => $camp_num, 'link' => url('camp/history/' . $topic_num . '/' . $camp_num)];
+                $supports[$topic_num]['array'][$rs->support_order][] = ['camp_name' => $rs->camp_name, 'camp_num' => $camp_num, 'link' => url('topic/' . $topic_id . '/' . $camp_num)];
             }
         }
 
