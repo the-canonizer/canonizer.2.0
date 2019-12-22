@@ -95,7 +95,7 @@ class ManageController extends Controller {
          	'name.required' => 'Namespace field is required.',
          	'name.unique' => 'Namespace must be unique.',
          ];
-         $validator = Validator::make($request->only(['name']), $validatorArray, $message);
+         $validator = Validator::make($request->only($data['name']), $validatorArray, $message);
          if ($validator->fails()) {  
             return back()->withErrors($validator->errors())->withInput($request->all());
         }

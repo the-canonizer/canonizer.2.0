@@ -127,7 +127,9 @@
                             <div class="CmpHistoryPnl-footer">
                                
         <?php if ($currentTime < $data->go_live_time && $currentTime >= $data->submit_time) { ?> 
+                                 @if($isagreeFlag && $ifIamSupporter && Auth::user()->id != $submitterUserID)
                                     <a id="object" class="btn btn-historysmt" href="<?php echo url('manage/camp/' . $data->id . '-objection'); ?>">Object</a>
+                                 @endif
                                 <?php } ?>
                                 <a id="update" class="btn btn-historysmt" href="<?php echo url('manage/camp/' . $data->id); ?>">Submit Camp Update Based On This</a>				  
                                  <a id="version" class="btn btn-historysmt" href="<?php echo url('topic/' . $data->topic_num . '/' . $data->camp_num . '?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $data->go_live_time)); ?>">View This Version</a>
