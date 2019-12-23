@@ -1088,7 +1088,7 @@ class TopicController extends Controller {
     private function mailSupporters($directSupporter, $link, $data) {
         foreach ($directSupporter as $supporter) {
             $user = Nickname::getUserByNickName($supporter->nick_name_id);
-            $receiver = "neeraj0710thakur@gmail.com";//(config('app.env') == "production") ? $user->email : config('app.admin_email');
+            $receiver = (config('app.env') == "production") ? $user->email : config('app.admin_email');
             Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new PurposedToSupportersMail($user, $link, $data));
         }
         return;
