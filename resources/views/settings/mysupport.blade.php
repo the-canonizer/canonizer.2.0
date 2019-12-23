@@ -36,7 +36,7 @@
                  @foreach($supportedTopic as $data)
                  <?php $title      = preg_replace('/[^A-Za-z0-9\-]/', '-', $data->topic->topic_name);	?>
                        <div class="SpCmpHd"><b>For Topic : <a href="/topic/{{ $data->topic->topic_num }}-{{ $title }}/1">{{ $data->topic->topic_name}} </a> </b></div>
-               		<div class="row column{{ $data->topic_num }}">
+               		<div class="row column{{ $data->topic_num }}" style="padding:10px 15px;">
 					   <?php $topicSupport = $data->topic->Getsupports($data->topic_num,$userNickname);?>
 					   @foreach($topicSupport as $k=>$support)
                         <?php if($support->delegate_nick_name_id == 0) {
