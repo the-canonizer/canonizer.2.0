@@ -18,6 +18,10 @@ body {
     width:100%;
 }
 
+li.disabled > span {
+    margin-right: 15px;
+    margin-left: 10px;
+}
 /* Footer */
 
 footer{

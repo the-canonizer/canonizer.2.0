@@ -26,9 +26,9 @@ class LoginController extends Controller {
                 return redirect()->back()->withErrors($validator);
             }
 
-            
+           
             if (Auth::attempt($data))
-            {
+            {  
                 return redirect()->intended('/admin');
             }
             return redirect()->back()->withErrors(['password'=>'Credentials not matched']);

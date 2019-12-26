@@ -6,7 +6,7 @@
                 <div class="panel-title ">Total Live Topics</div>
                 
                 <div class="panel-options">
-                    <i class="fa fa-hand-o-right"></i> 12
+                    <i class="fa fa-hand-o-right"></i> {{$topics}}
                 </div>
             </div>
 			<br/><br/>
@@ -19,7 +19,7 @@
                 <div class="panel-title ">Total Live Camps</div>
                 
                 <div class="panel-options">
-                    <i class="fa fa-hand-o-right"></i> 12
+                    <i class="fa fa-hand-o-right"></i> {{$camps}}
                 </div>
             </div>
 		</div>
@@ -29,7 +29,7 @@
                 <div class="panel-title ">Total Active Persons</div>
                 
                 <div class="panel-options">
-                    <i class="fa fa-hand-o-right"></i> 12
+                    <i class="fa fa-hand-o-right"></i> {{$users}}
                 </div>
             </div>
 		</div>

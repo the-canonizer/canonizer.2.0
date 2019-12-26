@@ -40,8 +40,8 @@ class TemplateController extends Controller
     {
         $data = $request->only('name','subject','body','status');
          $validatorArray = [ 
-          'name' => 'required',
-          'subject' => 'required',
+          'name' => 'required|unique:templates|max:100',
+          'subject' => 'required|unique:templates|max:100',
           'body' => 'required'
           ];
          $message = [
@@ -100,12 +100,19 @@ class TemplateController extends Controller
     {
         if($id){
             $data = $request->only('name','subject','body','status');
-             $validatorArray = [ 
-              'name' => 'required',
-              'subject' => 'required',
-              'body' => 'required'
-              ];
-               $message = [
+             $template = Templates::find($id);
+              $validatorArray = [ 
+                  'name' => 'required|max:100',
+                  'subject' => 'required|max:100',
+                  'body' => 'required'
+                  ];
+             if($template->name != $data['name']){
+                 $validatorArray['name'] = 'required|unique:templates|max:100';
+             }
+             if($template->subject != $data['subject']){
+                $validatorArray['subject'] = 'required|unique:templates|max:100';
+             }
+              $message = [
                     'name.required' => 'Template Name field is required.',
                     'subject.required' => 'Template Subject field is required.',
                     'body.required' => 'Template Body field is required.',

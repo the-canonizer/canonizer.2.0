@@ -13,7 +13,12 @@ class ManageController extends Controller {
 
 	public function getIndex(){
 		$namespaces = Namespaces::paginate(10);
-		return view('admin.index',compact('namespaces'));
+		$users = \App\User::where('status','=',1)->count();
+		$camps = \App\Model\Camp::where('objector_nick_id', '=', NULL)->where('go_live_time', '<=', time())->count();
+		$topics = \App\Model\Topic::where('objector_nick_id', '=', NULL)
+                            ->where('go_live_time', '<=', time())->count();
+		
+		return view('admin.index',compact('namespaces','users','camps','topics'));
 	}
 	public function namespace(){
 		$namespaces = Namespaces::paginate(10);
@@ -30,10 +35,11 @@ class ManageController extends Controller {
 	public function postCreateNamespace(Request $request){
 		$data = $request->only(['name','parent_id']);
 		$data['name'] = str_slug($data['name']);
-		 $validatorArray = [  'name' => 'required|unique:namespace'];
+		 $validatorArray = [  'name' => 'required|unique:namespace|max:100'];
          $message = [
          	'name.required' => 'Namespace field is required.',
          	'name.unique' => 'Namespace must be unique.',
+         	'name.max' => 'Namespace Name may not be greater than 100 characters.'
          ];
          $validator = Validator::make($data, $validatorArray, $message);
          if ($validator->fails()) {  
@@ -86,16 +92,16 @@ class ManageController extends Controller {
 		$data['name'] = str_slug($data['name']);
 		
 		if(strtolower($oldNamespace->name) != strtolower($data['name'])){
-			$validatorArray = [  'name' => 'required|unique:namespace'];
+			$validatorArray = [  'name' => 'required|unique:namespace|max:100'];
 		}else{
-			$validatorArray = [  'name' => 'required'];
+			$validatorArray = [  'name' => 'required|max:100'];
 		}
-		
-         $message = [
+	  $message = [
          	'name.required' => 'Namespace field is required.',
          	'name.unique' => 'Namespace must be unique.',
+         	'name.max' => 'Namespace Name may not be greater than 100 characters.'
          ];
-         $validator = Validator::make($request->only($data['name']), $validatorArray, $message);
+         $validator = Validator::make($data, $validatorArray, $message);
          if ($validator->fails()) {  
             return back()->withErrors($validator->errors())->withInput($request->all());
         }

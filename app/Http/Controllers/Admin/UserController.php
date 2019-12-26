@@ -33,12 +33,21 @@ class UserController extends Controller {
             'first_name' => 'required|regex:/^[a-zA-Z ]*$/|string|max:100',
             'last_name' => 'required|regex:/^[a-zA-Z ]*$/|string|max:100',
             'middle_name' => 'nullable|regex:/^[a-zA-Z ]*$/|max:100',
+            'address_1' =>'max:500',
+            'address_2'=>'max:500',
+            'city'=>'max:50',
+            'state'=>'max:50',
+            'postal_code'=>'max:10',
+            'country'=>'max:20'
            ],$message);
     }
 
     public function postUpdate(Request $request, $id) {
         $data = $request->only(['first_name', 'middle_name', 'last_name', 'address_1', 'address_2', 'city', 'state', 'postal_code', 'country']);
-        $this->validator($data)->validate();
+        $validator = $this->validator($data);
+        if($validator->fails()){
+            return back()->withErrors($validator->errors())->withInput($request->all());
+        }
         User::where('id', $id)->update($data);
         return redirect('/admin/users');
     }

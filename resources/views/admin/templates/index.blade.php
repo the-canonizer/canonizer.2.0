@@ -4,7 +4,7 @@
     <div class="col-md-12 panel-warning">
         @if(session()->has('success'))
             <div class="alert alert-success alert-dismissible"> 
-                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <a href="#" class="close" data-dismiss="alert" aria-label="close" onclick="closeAlert(this)">&times;</a>
                 {!! session('success') !!}
             </div>
         @endif
@@ -35,7 +35,7 @@
                     <td>{{ ($template->status == 1) ? 'Active' : 'Inactive' }}</td>
                     <td>
                         <a href="{{ url('/admin/template/edit/'.$template->id) }}"><i class="fa fa-edit"></i>&nbsp;&nbsp;Edit</a>
-                        &nbsp;&nbsp;<a href="{{ url('/admin/template/delete/'.$template->id) }}"><i class="fa fa-trash"></i>&nbsp;&nbsp;Delete</a>
+                        &nbsp;&nbsp;<a href="javascript:void(0)" onClick='deleteTemplate("{{$template->id }}")'><i class="fa fa-trash"></i>&nbsp;&nbsp;Delete</a>
                     </td>
                 </tr>
                 @endforeach
@@ -48,4 +48,20 @@
         </div>
     </div>
 </div>
+<script>
+   function deleteTemplate(template_id){
+     var delete_url = "<?php echo url('/admin/template/delete') ?>/"+template_id
+       var check = confirm("Are you sure to delete this template?");
+        if(check == true){
+            window.location.href = delete_url;
+        }else{
+            console.log('no')
+        }
+    }
+
+   function closeAlert(e){
+      $(e).parents('div.alert').remove();
+   }
+
+</script>
 @endsection
