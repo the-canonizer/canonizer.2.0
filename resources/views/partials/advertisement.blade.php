@@ -1,6 +1,6 @@
 <div class="right-addsense">
    
-	<script type="text/javascript">
+	<script async type="text/javascript">
 	  
             google_ad_client = "pub-6646446076038181";
             //120x600, right bar
@@ -9,6 +9,6 @@
             google_ad_height = 600;
             //-->
 	</script>
-          <script type="text/javascript" src="//pagead2.googlesyndication.com/pagead/show_ads.js"></script>
+          <script async  type="text/javascript" src="//pagead2.googlesyndication.com/pagead/show_ads.js"></script>
             
 </div> 
