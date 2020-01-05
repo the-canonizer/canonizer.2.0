@@ -79,5 +79,15 @@
             
          </div>
       </footer>
+<script>
+    
+    function restrictTextField(e,limitlength){
+    var charLength = $(e.target).val().length;
+     if (charLength >= limitlength  && e.keyCode !== 46 && e.keyCode !== 8 ) {
+           e.preventDefault();
+           $(e.target).val($(e.target).val().substring(0,limitlength));
+    }
+}
+</script>
 </body>
 </html>

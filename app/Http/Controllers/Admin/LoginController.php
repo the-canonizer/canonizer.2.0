@@ -26,6 +26,11 @@ class LoginController extends Controller {
                 return redirect()->back()->withErrors($validator);
             }
 
+            $user = User::where('email','=',$data['email'])->get();
+
+            if(isset($user[0]) && $user[0]->type != 'admin'){
+                return redirect()->back()->withErrors(['password'=>'User does not have admin access!']);
+            }
            
             if (Auth::attempt($data))
             {  

@@ -18,9 +18,9 @@
 								  
 									<fieldset>
 										<div class="form-group">
-											<label>Namespace Name <span style="color:red">*</span></label>
+											<label>Namespace Name ( Limit 100 Chars ) <span style="color:red">*</span></label>
 											
-											<input name="name" value="{{ $namespaceRequest ? $namespaceRequest->name : '' }}" class="form-control" placeholder="Namespace name" type="text">
+											<input name="name" onkeydown="restrictTextField(event,100)" value="{{ $namespaceRequest ? $namespaceRequest->name : '' }}" class="form-control" placeholder="Namespace name" type="text">
 											 @if ($errors->has('name')) <p class="help-block">{{ $errors->first('name') }}</p> @endif
 										</div>
 										<div class="form-group">

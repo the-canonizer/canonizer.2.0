@@ -19,8 +19,10 @@ body {
 }
 
 li.disabled > span {
-    margin-right: 15px;
-    margin-left: 10px;
+    padding:15px;
+}
+li.active > span {
+    padding:15px;
 }
 /* Footer */
 

@@ -71,6 +71,7 @@
                     <li><a href="{{ (array_key_exists('link',$supports)  && isset($supports['link'])) ? $supports['link'] : '' }}">{{ (array_key_exists('camp_name',$supports)  && isset($supports['camp_name'])) ? ($topic_name!='')? $topic_name:$supports['camp_name'] : ''}}</a></li>
                     <ul>
                         @if(isset($supports['array']))
+                        <?php ksort($supports['array']); ?>
                         @foreach($supports['array'] as $support_order)
                             @foreach($support_order as $support)
                                 <li id="camp_{{$key}}_{{$support['camp_num']}}">

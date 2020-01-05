@@ -81,7 +81,7 @@ Route::get('topic-history/{id}', 'TopicController@topic_history');
 Route::get('api/v1/getcampoutline/{topic_num}/{camp_num}', 'ApiController@getcampoutline');
 Route::get('user/supports/{user_id}', 'TopicController@usersupports');
 
-Route::group([ 'middleware' => 'auth'], function() {
+Route::group([ 'middleware' => ['auth']], function() {
     Route::resource('topic', 'TopicController');
     Route::get('camp/create/{topicnum}/{campnum}', [ 'as' => 'camp.create', 'uses' => 'TopicController@create_camp']);
 	Route::get('create/topic', [ 'as' => 'topic.create', 'uses' => 'TopicController@create']);
