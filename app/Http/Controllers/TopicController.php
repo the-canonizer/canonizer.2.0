@@ -931,8 +931,11 @@ class TopicController extends Controller {
     public function usersupports(Request $request, $id) {
 
         $nickName = Nickname::find($id);
+        $topic_num = $request->get('topicnum'); 
         $namespaces = Namespaces::all();
-        return view('user-supports', compact('nickName', 'namespaces'));
+        $topicData = Topic::where('topic_num',$topic_num)->latest('submit_time')->get();
+        $namespace_id = (isset($topicData[0])) ? $topicData[0]->namespace_id: $request->get('namespace');
+        return view('user-supports', compact('nickName', 'namespaces','namespace_id'));
     }
 
     public function preview_statement(Request $request) {
