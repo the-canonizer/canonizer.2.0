@@ -51,6 +51,8 @@
 			<div class="pull-left">Nick Name : {{ $nickName->nick_name}} </div>
             <div class="pull-right col-md-4">
             <form>
+                <input type="hidden" name="campnum" value="{{$camp_num}}" />
+                <input type="hidden" name="topicnum" value="{{$topic_num}}" />
                 <select onchange="submitForm(this)" name="namespace" id="namespace" class="namespace-select">
                     @foreach($namespaces as $namespace)
                         <option data-namespace="{{ $namespace->label }}" value="{{ $namespace->id }}" {{ isset($_REQUEST['namespace']) && $namespace->id == $_REQUEST['namespace'] ? 'selected' : ''}}>{{$namespace->label}}</option>
@@ -64,11 +66,17 @@
             @if(count($supportedCamps) > 0)
 			   @foreach($supportedCamps as $key=>$supports)
                <?php
-                                $topic = \App\Model\Topic::where('topic_num','=',$key)->get();
+
+                                $topic = \App\Model\Topic::where('topic_num','=',$key)->latest('submit_time')->get();
                                 $topic_name = isset($topic[0]) ? $topic[0]->topic_name:'';
+                                $topic_name_space_id = isset($topic[0]) ? $topic[0]->namespace_id:1;
+                                $request_namesapce = isset($_REQUEST['namespace']) ? $_REQUEST['namespace'] :'1';
+                                if($topic_name_space_id !='' && $topic_name_space_id != $request_namesapce){
+                                    continue;
+                                }
                             ?>
                 <ul>
-                    <li><a href="{{ (array_key_exists('link',$supports)  && isset($supports['link'])) ? $supports['link'] : '' }}">{{ (array_key_exists('camp_name',$supports)  && isset($supports['camp_name'])) ? ($topic_name!='')? $topic_name:$supports['camp_name'] : ''}}</a></li>
+                    <li id="camp_{{$key}}_{{$camp_num}}"><a href="{{ (array_key_exists('link',$supports)  && isset($supports['link'])) ? $supports['link'] : '' }}">{{ (array_key_exists('camp_name',$supports)  && isset($supports['camp_name'])) ? ($topic_name!='')? $topic_name:$supports['camp_name'] : ''}}</a></li>
                     <ul>
                         @if(isset($supports['array']))
                         <?php ksort($supports['array']); ?>
