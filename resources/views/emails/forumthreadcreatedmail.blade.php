@@ -1,5 +1,5 @@
 @component('mail::message')
-Hi Canonizer User,
+Hi {{ $user->first_name }} {{ $user->last_name }}, <br/>
 
 <p>
     {{ $data['nick_name']->nick_name }} has created the new thread
@@ -9,6 +9,7 @@ Hi Canonizer User,
 
 <p>Camp Name: <a href="{{ url('/').'/'.$data['camp_url'] }}"> {{ $data['camp_name'] }} </a></p>
 
+<h4>Note:</h4>
 <p>
     If you do not wish to receive these notifications, you can either
     delegate your support to some other camp supporter in the topic, or
@@ -17,5 +18,5 @@ Hi Canonizer User,
 </p>
 
 <p>  Sincerely, </p>
-<p> The Canonizer Team </p>
+<p> {{ config('app.email_signature') }}</p>
 @endcomponent

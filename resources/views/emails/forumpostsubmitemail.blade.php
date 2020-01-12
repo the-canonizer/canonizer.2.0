@@ -1,5 +1,5 @@
 @component('mail::message')
-<p>Hi Canonizer User,</p>
+<p>Hi  {{ $user->first_name }} {{ $user->last_name }}, </p>
 
 <p>
     {{ $data['nick_name']->nick_name }} has made the following post to the Camp
@@ -23,5 +23,5 @@
 </p>
 
 <p>  Sincerely, </p>
-<p> The Canonizer Team </p>
+<p> {{ config('app.email_signature') }}</p>
 @endcomponent
