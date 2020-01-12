@@ -33,15 +33,19 @@ class Support extends Model {
     }
     
 	public static function ifIamSingleSupporter($topic_num,$camp_num=0,$userNicknames) {
-	 
-	   $othersupports = self::where('topic_num',$topic_num)->whereNotIn('nick_name_id',$userNicknames)->where('end','=',0)->orderBy('support_order','ASC')->get();
-	   
-	   $othersupports->filter(function($item) use($camp_num){
+	   $othersupports = [];
+      if($camp_num != 0){
+        $othersupports = self::where('topic_num',$topic_num)->where('camp_num',$camp_num)->whereNotIn('nick_name_id',$userNicknames)->where('end','=',0)->orderBy('support_order','ASC')->get();
+      }else{
+        $othersupports = self::where('topic_num',$topic_num)->whereNotIn('nick_name_id',$userNicknames)->where('end','=',0)->orderBy('support_order','ASC')->get();
+      }
+    
+      $othersupports->filter(function($item) use($camp_num){
 			if($camp_num){
 				return $item->camp_num == $camp_num;
 			}
 		});
-		
+       
 		return count($othersupports) ? 0 : 1 ;
 	   
 	}	

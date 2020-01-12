@@ -798,7 +798,6 @@ class TopicController extends Controller {
             $nickNames = Nickname::personNicknameArray();
 
             $ifIamSingleSupporter = Support::ifIamSingleSupporter($all['topic_num'], $all['camp_num'], $nickNames);
-
             if (!$ifIamSingleSupporter) {
                // $statement->go_live_time = strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
                 $statement->go_live_time = strtotime(date('Y-m-d H:i:s', strtotime('+'.config('app.go_live_day_limit').' days')));

@@ -40,7 +40,7 @@
                                 <label for="phone_number">Phone Number <span style="color:red;">*</span></label>
 								</br>
                                 <div style="width:300px;float:left">
-								<input type="number" onkeydown="restrictTextField(event,10)" name="phone_number" class="form-control" id="phone_number" value="{{ old('phone_number',$user->phone_number)}}">
+								<input type="text" onkeydown="restrictTextField(event,10);" onkeyup="onlyNumbers(event);" name="phone_number" class="form-control" id="phone_number" value="{{ old('phone_number',$user->phone_number)}}">
 								@if ($errors->has('phone_number')) <p class="help-block">{{ $errors->first('phone_number') }}</p> @endif
 								
 								</div>
@@ -79,7 +79,7 @@
 							<div class="col-sm-6 margin-btm-1">
                                 <label for="verify_code">Verify Code :</label>
                                 
-								<input type="number" name="verify_code" class="form-control" id="verify_code" value="">
+								<input type="text" onkeydown="restrictTextField(event,10);" onkeyup="onlyNumbers(event);" name="verify_code" class="form-control" id="verify_code" value="">
 															
                             </div>
 							@endif
@@ -291,6 +291,15 @@
 				maxDate: 0
             });
         })
+        function onlyNumbers(e){
+        	var regex = /^[0-9]+$/;
+        	var value_length = ($(e.target).val()).length;
+        	if( !regex.test($(e.target).val()) ) {
+  				e.preventDefault();
+  				$(e.target).val($(e.target).val().substring(0,value_length-1));
+  			}
+
+        }
     </script>
 
 

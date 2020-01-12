@@ -260,7 +260,7 @@
 					 
         @if(isset($topic))
          <div id="myTabContent" class="add-nickname-section">  
-                 <h5>Nick Name To Support {!! $parentcamp !!} </h5>
+                 <h5>Nick Name To Support Above Camps </h5>
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
 					<input type="hidden" id="topic_num" name="topic_num" value="{{ $topic->topic_num }}">
 					<input type="hidden" id="delegate_nick_name_id" name="delegate_nick_name_id" value="{{ $delegate_nick_name_id }}">

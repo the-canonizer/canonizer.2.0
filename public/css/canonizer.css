@@ -1062,7 +1062,7 @@ ul.mainouter li .tp-title {
     border-radius:3px;
     position:relative;
 }
-.support_camp{
+.support_camp,.delegate_support{
     margin-left:15px!important;
 }
 .btn-sptclose{
