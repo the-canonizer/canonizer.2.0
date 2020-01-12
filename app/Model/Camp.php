@@ -320,8 +320,7 @@ class Camp extends Model {
                             //->where('topic.objector_nick_id', '=', NULL)
                             ->where('camp.objector_nick_id', '=', NULL)
                             ->whereIn('namespace_id', explode(',', session('defaultNamespaceId', 1)))
-                            ->where('topic.go_live_time', '<=', time())
-                            ->latest('support')->take(10000)->offset(18)->get()->unique('topic_num');
+                            ->where('topic.go_live_time', '<=', time())->latest('camp.submit_time')->take(10000)->offset(18)->get()->unique('topic_num');
         } else {
 
             if ((isset($filter['asof']) && $filter['asof'] == "review") || session('asofDefault')=="review") {

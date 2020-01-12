@@ -14,8 +14,8 @@
                                   <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
 									<fieldset>
 										<div class="form-group">
-											<label>Namespace Name <span style="color:red">*</span></label>
-											<input name="name" class="form-control" placeholder="Namespace name" value="{{ $namespace->name }}" type="text">
+											<label>Namespace Name ( Limit 100 Chars ) <span style="color:red">*</span></label>
+											<input name="name" onkeydown="restrictTextField(event,100)" class="form-control" placeholder="Namespace name" value="{{ $namespace->name }}" type="text">
 											 @if ($errors->has('name')) <p class="help-block">{{ $errors->first('name') }}</p> @endif
 										</div>
 										<div class="form-group">

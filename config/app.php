@@ -19,6 +19,8 @@ return [
 	'admin_email' => env('ADMIN_EMAIL', 'gautamv16@gmail.com'),
 	'admin_bcc' => env('ADMIN_BCC', 'brent.allsop@canonizer.com'),
     'front_page_limit'=>env('FRONT_PAGE_LIMIT', '30'),
+    'go_live_day_limit'=>1,
+    'go_live_text' => 'one day / 24 hours',
 
     /*
     |--------------------------------------------------------------------------

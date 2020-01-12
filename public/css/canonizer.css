@@ -26,6 +26,9 @@ body.fixed-nav {
     min-height: calc(100vh - 56px);
     padding:2rem 1rem 0px;
 }
+ul.support-tree li {
+    list-style-type: none;
+}
 .scroll-to-top {
     position: fixed;
     right: 15px;

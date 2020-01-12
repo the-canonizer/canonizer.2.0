@@ -132,6 +132,23 @@ class TopicSupport extends Model {
         
     }
 
+    public static function getSupportNumber($topicnum,$campnum,$supports){
+        $i = 0;
+        if($supports && sizeof($supports) > 0){
+            foreach($supports as $key => $spp){
+                if(isset($spp['array'])){
+                    foreach($spp['array'] as $support_order){
+                        foreach($support_order as $support){
+                            $i++;
+                            if($campnum == $support['camp_num'])
+                                break;
+                            } 
+                    }                            
+                }
+            }
+        }
+        return $i;
+    }
     public static function buildTree($topicnum,$campnum,$traversedTreeArray,$parentNode=false){
         
         $html= "";
@@ -139,12 +156,15 @@ class TopicSupport extends Model {
             $nickName = Nickname::where('id',$array['index'])->first();
             $topicData = Topic::where('topic_num',$topicnum)->latest('submit_time')->get();
             $namespace_id = (isset($topicData[0])) ? $topicData[0]->namespace_id:1;
+            $supports = $nickName->getSupportCampList();
+            $support_number = self::getSupportNumber($topicnum,$campnum,$supports);
+           // echo "<pre>"; print_r($supports);
              if($parentNode){
-                $html.= "<li class='main-parent'><a href='".route('user_supports',$nickName->id)."?topicnum=".$topicnum."&campnum=".$campnum."&namespace=".$namespace_id."#camp_".$topicnum."_".$campnum."'>{$nickName->nick_name}</a><div class='badge'>".round($array['score'],2)."</div>";
+                $html.= "<li class='main-parent'><a href='".route('user_supports',$nickName->id)."?topicnum=".$topicnum."&campnum=".$campnum."&namespace=".$namespace_id."#camp_".$topicnum."_".$campnum."'>{$support_number}:{$nickName->nick_name}</a><div class='badge'>".round($array['score'],2)."</div>";
                 $html.='<a href="'.url('support/'.$topicnum.'/'.$campnum.'-'.$array['index']).'" class="btn btn-info">Delegate Your Support</a>';
             
             }else{
-                $html.= "<li><a href='".route('user_supports',$nickName->id)."?topicnum=".$topicnum."&campnum=".$campnum."&namespace=".$namespace_id."#camp_".$topicnum."_".$campnum."'>{$nickName->nick_name}</a><div class='badge'>".round($array['score'],2)."</div> ";
+                $html.= "<li><a href='".route('user_supports',$nickName->id)."?topicnum=".$topicnum."&campnum=".$campnum."&namespace=".$namespace_id."#camp_".$topicnum."_".$campnum."'>{$support_number}:{$nickName->nick_name}</a><div class='badge'>".round($array['score'],2)."</div> ";
                 $html.='<a href="'.url('support/'.$topicnum.'/'.$campnum.'-'.$array['index']).'" class="btn btn-info">Delegate Your Support</a>';
             }
             $html.="<ul>";
@@ -197,18 +217,19 @@ class TopicSupport extends Model {
            $as_of_time = strtotime($_REQUEST['asofdate']);
 		}
         if(!session("topic-support-tree-$topicnum")){
-            session(["topic-support-tree-$topicnum"=>Support::where('topic_num','=',$topicnum)
+            $data = Support::where('topic_num','=',$topicnum)
             //->where('delegate_nick_name_id',$delegateNickId)
             ->whereRaw("(start <= $as_of_time) and ((end = 0) or (end >= $as_of_time))")
             //->where('camp_num',$campnum)
             ->orderBy('start','DESC')
             ->select(['support_order','camp_num','topic_num','nick_name_id','delegate_nick_name_id'])
             //->select(['support_order','camp_num'])
-            ->get()]);
+            ->get();
+            session(["topic-support-tree-$topicnum"=>$data]);
         }
        
         $traversedSupportCountTreeArray = self::sortTraversedSupportCountTreeArray(self::sumTranversedArraySupportCount(self::traverseTree($algorithm,$topicnum,$campnum)));
-        return self::buildTree($topicnum,$campnum,$traversedSupportCountTreeArray,true);
+         return self::buildTree($topicnum,$campnum,$traversedSupportCountTreeArray,true);
     }
 
    

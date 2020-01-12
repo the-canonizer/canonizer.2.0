@@ -1,5 +1,5 @@
 @component('mail::message')
-Hi Canonizer User
+Hi Canonizer User,
 
 <p>
     {{ $data['nick_name']->nick_name }} has created the new thread

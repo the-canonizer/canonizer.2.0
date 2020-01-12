@@ -141,7 +141,8 @@ class TopicController extends Controller {
                 $ifIamSingleSupporter = Support::ifIamSingleSupporter($all['topic_num'], 0, $nickNames);
 
                 if (!$ifIamSingleSupporter) {
-                    $topic->go_live_time = strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
+                    //$topic->go_live_time = strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
+                    $topic->go_live_time = strtotime(date('Y-m-d H:i:s', strtotime('+'.config('app.go_live_day_limit').' days')));
                     $go_live_time = $topic->go_live_time;
                     $message = "Topic change submitted successfully.";
                 }
@@ -652,7 +653,8 @@ class TopicController extends Controller {
             $ifIamSingleSupporter = Support::ifIamSingleSupporter($all['topic_num'], $all['camp_num'], $nickNames);
            
             if (!$ifIamSingleSupporter) {
-                $camp->go_live_time = strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
+              //  $camp->go_live_time = strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
+                $camp->go_live_time = strtotime(date('Y-m-d H:i:s', strtotime('+'.config('app.go_live_day_limit').' days')));
                 $message = "Camp change submitted successfully.";
                 $go_live_time = $camp->go_live_time;
             }
@@ -799,7 +801,7 @@ class TopicController extends Controller {
 
             if (!$ifIamSingleSupporter) {
                // $statement->go_live_time = strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
-                $statement->go_live_time = strtotime(date('Y-m-d H:i:s', strtotime('+1 days')));
+                $statement->go_live_time = strtotime(date('Y-m-d H:i:s', strtotime('+'.config('app.go_live_day_limit').' days')));
                 $message = "Statement submitted successfully.";
                 $go_live_time = $statement->go_live_time;
             }
@@ -934,7 +936,10 @@ class TopicController extends Controller {
         $topic_num = $request->get('topicnum'); 
         $namespaces = Namespaces::all();
         $topicData = Topic::where('topic_num',$topic_num)->latest('submit_time')->get();
-        $namespace_id = (isset($topicData[0])) ? $topicData[0]->namespace_id: $request->get('namespace');
+        $namespace_id = ($request->get('namespace')  != '' && $request->get('namespace') != null) ?  $request->get('namespace') : 0;
+        if($namespace_id == 0 && isset($topicData[0])){
+            $namespace_id  = $topicData[0]->namespace_id ;
+        } 
         return view('user-supports', compact('nickName', 'namespaces','namespace_id'));
     }
 
