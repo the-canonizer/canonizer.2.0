@@ -133,7 +133,7 @@ class TopicSupport extends Model {
     }
 
     public static function getSupportNumber($topicnum,$campnum,$supports){
-        $i = 0;
+        $i = 1;
         if($supports && sizeof($supports) > 0){
             foreach($supports as $key => $spp){
                 if(isset($spp['array']) && $key == $topicnum){
@@ -147,9 +147,7 @@ class TopicSupport extends Model {
                 }
             }
         }
-        if($i == 0){
-            $i = '';
-        }
+        
         return $i;
     }
     public static function buildTree($topicnum,$campnum,$traversedTreeArray,$parentNode=false){
