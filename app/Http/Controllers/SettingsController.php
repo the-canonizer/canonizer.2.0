@@ -129,10 +129,11 @@ class SettingsController extends Controller {
         if(array_key_exists("verify_code",$input)){
             $validateArr['verify_code'] = 'required|digits:6';
         }
+
         $validator = Validator::make($request->all(),$validateArr , $messages);
         if ($validator->fails()) {
             $verify_codeValidation = Validator::make($request->only('verify_code'),$validateArr , $messages);
-            if($verify_codeValidation->fails()){
+            if($verify_codeValidation->fails() && array_key_exists('verify_code', $validateArr)){
                 Session::flash('otpsent', "Verify code is required.");
             } 
             return redirect()->back()
