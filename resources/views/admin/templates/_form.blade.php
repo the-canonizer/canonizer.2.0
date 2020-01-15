@@ -6,13 +6,13 @@
 <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
 <fieldset>
     <div class="form-group">
-        <label>Template Name <span style="color:red">*</span></label>
-        {{ Form::text('name', old('name'),['class'=>'form-control']) }}
+        <label>Template Name ( Limit 100 Chars ) <span style="color:red">*</span></label>
+        {{ Form::text('name', old('name'),['class'=>'form-control','onkeydown' => "restrictTextField(event,100)"]) }}
          @if ($errors->has('name')) <p class="help-block">{{ $errors->first('name') }}</p> @endif
     </div>
     <div class="form-group">
-        <label>Template Subject <span style="color:red">*</span></label>
-        {{ Form::text('subject', old('subject'),['class'=>'form-control']) }}
+        <label>Template Subject ( Limit 100 Chars ) <span style="color:red">*</span></label>
+        {{ Form::text('subject', old('subject'),['class'=>'form-control','onkeydown' => "restrictTextField(event,100)"]) }}
          @if ($errors->has('subject')) <p class="help-block">{{ $errors->first('subject') }}</p> @endif
     </div>
 
