@@ -73,11 +73,16 @@
 							
 							@if(Session::has('otpsent'))
 							<div class="alert alert-danger" style="width: 80%;margin-left: 10%;text-align: center">
-								<strong>Verification : </strong>{{ Session::get('otpsent')}}   
+								@if ($errors->has('verify_code')) 
+									<strong>Verification : </strong>{{ $errors->first('verify_code') }}
+								@else 
+									<strong>Verification : </strong>{{ Session::get('otpsent')}} 
+								@endif
+								  
 							</div>
 							<br/> 
 							<div class="col-sm-6 margin-btm-1">
-                                <label for="verify_code">Verify Code :</label>
+                                <label for="verify_code">Verify Code<span style="color:red;">*</span> :</label>
                                 
 								<input type="text" onkeydown="restrictTextField(event,10);" onkeyup="onlyNumbers(event);" name="verify_code" class="form-control" id="verify_code" value="">
 															

@@ -122,14 +122,19 @@ class SettingsController extends Controller {
             'phone_number.required' => 'Phone number is required.'
             
         ];
-
-
-        $validator = Validator::make($request->all(), [
-                    'phone_number' => 'required|max:10',
-                   
-                        ], $messages);
-
+        $validateArr = [
+                    'phone_number' => 'required|digits:10',  
+                    'mobile_carrier' => 'required',                 
+                        ];
+        if(array_key_exists("verify_code",$input)){
+            $validateArr['verify_code'] = 'required|digits:6';
+        }
+        $validator = Validator::make($request->all(),$validateArr , $messages);
         if ($validator->fails()) {
+            $verify_codeValidation = Validator::make($request->only('verify_code'),$validateArr , $messages);
+            if($verify_codeValidation->fails()){
+                Session::flash('otpsent', "Verify code is required.");
+            } 
             return redirect()->back()
                             ->withErrors($validator)
                             ->withInput();
@@ -153,21 +158,20 @@ class SettingsController extends Controller {
 					Session::flash('otpsent', "Invalid verification code.");
 				}
 				
-			}
-			else {
-			$six_digit_random_number = mt_rand(100000, 999999);
-			$result['otp'] = $six_digit_random_number;
-            $result['subject'] = "Canonizer verification code";
-           
-            $receiver = $input['phone_number']."@".$input['mobile_carrier'];
+			}else {
+    			$six_digit_random_number = mt_rand(100000, 999999);
+    			$result['otp'] = $six_digit_random_number;
+                $result['subject'] = "Canonizer verification code";
+               
+                $receiver = $input['phone_number']."@".$input['mobile_carrier'];
 
-			$user->phone_number = $input['phone_number'];
-			$user->mobile_carrier = $input['mobile_carrier'];
-			$user->otp = $six_digit_random_number;
-			
-			$user->update();
-			Session::flash('otpsent', "A 6 digit code has been sent on your phone number for verification.");
-			Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new PhoneOTPMail($user, $result));
+    			$user->phone_number = $input['phone_number'];
+    			$user->mobile_carrier = $input['mobile_carrier'];
+    			$user->otp = $six_digit_random_number;
+    			
+    			$user->update();
+    			Session::flash('otpsent', "A 6 digit code has been sent on your phone number for verification.");
+    			Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new PhoneOTPMail($user, $result));
 		  }	
 		}	
 		
