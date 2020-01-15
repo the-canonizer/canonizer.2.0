@@ -136,7 +136,7 @@ class TopicSupport extends Model {
         $i = 0;
         if($supports && sizeof($supports) > 0){
             foreach($supports as $key => $spp){
-                if(isset($spp['array'])){
+                if(isset($spp['array']) && $key == $topicnum){
                     foreach($spp['array'] as $support_order){
                         foreach($support_order as $support){
                             $i++;
@@ -146,6 +146,9 @@ class TopicSupport extends Model {
                     }                            
                 }
             }
+        }
+        if($i == 0){
+            $i = '';
         }
         return $i;
     }
@@ -158,13 +161,14 @@ class TopicSupport extends Model {
             $namespace_id = (isset($topicData[0])) ? $topicData[0]->namespace_id:1;
             $supports = $nickName->getSupportCampList();
             $support_number = self::getSupportNumber($topicnum,$campnum,$supports);
+            $support_txt = ($support_number) ? $support_number.":": '';
            // echo "<pre>"; print_r($supports);
              if($parentNode){
-                $html.= "<li class='main-parent'><a href='".route('user_supports',$nickName->id)."?topicnum=".$topicnum."&campnum=".$campnum."&namespace=".$namespace_id."#camp_".$topicnum."_".$campnum."'>{$support_number}:{$nickName->nick_name}</a><div class='badge'>".round($array['score'],2)."</div>";
+                $html.= "<li class='main-parent'><a href='".route('user_supports',$nickName->id)."?topicnum=".$topicnum."&campnum=".$campnum."&namespace=".$namespace_id."#camp_".$topicnum."_".$campnum."'>{$support_txt}{$nickName->nick_name}</a><div class='badge'>".round($array['score'],2)."</div>";
                 $html.='<a href="'.url('support/'.$topicnum.'/'.$campnum.'-'.$array['index']).'" class="btn btn-info">Delegate Your Support</a>';
             
             }else{
-                $html.= "<li><a href='".route('user_supports',$nickName->id)."?topicnum=".$topicnum."&campnum=".$campnum."&namespace=".$namespace_id."#camp_".$topicnum."_".$campnum."'>{$support_number}:{$nickName->nick_name}</a><div class='badge'>".round($array['score'],2)."</div> ";
+                $html.= "<li><a href='".route('user_supports',$nickName->id)."?topicnum=".$topicnum."&campnum=".$campnum."&namespace=".$namespace_id."#camp_".$topicnum."_".$campnum."'>{$support_txt}{$nickName->nick_name}</a><div class='badge'>".round($array['score'],2)."</div> ";
                 $html.='<a href="'.url('support/'.$topicnum.'/'.$campnum.'-'.$array['index']).'" class="btn btn-info">Delegate Your Support</a>';
             }
             $html.="<ul>";
