@@ -82,9 +82,9 @@
 							</div>
 							<br/> 
 							<div class="col-sm-6 margin-btm-1">
-                                <label for="verify_code">Verify Code<span style="color:red;">*</span> :</label>
+                                <label for="verify_code">Verify Code <span style="color:red;">*</span> </label>
                                 
-								<input type="text" onkeydown="restrictTextField(event,10);" onkeyup="onlyNumbers(event);" name="verify_code" class="form-control" id="verify_code" value="">
+								<input type="text" onkeydown="restrictTextField(event,6);" onkeyup="onlyNumbers(event);" name="verify_code" class="form-control" id="verify_code" value="">
 															
                             </div>
 							@endif
