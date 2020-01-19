@@ -137,16 +137,13 @@ class TopicSupport extends Model {
         
         if($supports && sizeof($supports) > 0){
             foreach($supports as $key => $spp){
-                echo "test--".$key."--".$topicnum."<br/>";
                   if(isset($spp['array']) && $key == $topicnum){
                     ksort($spp['array']);
                     foreach($spp['array'] as $k => $support_order){
-                        echo "test1--".$k."--".$campnum."<br/>";
                         foreach($support_order as $support){
-                            echo "in order--".$k."--".$campnum."--".$support['camp_num']."<br/>";
                           if($campnum == $support['camp_num']){
                                  $i = $k;
-                                    break;
+                                  break;
                                 }
                             } 
                     }                            
