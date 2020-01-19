@@ -141,8 +141,8 @@ class TopicSupport extends Model {
                     ksort($spp['array']);
                     foreach($spp['array'] as $k => $support_order){
                         foreach($support_order as $support){
+                            echo $k."--".$campnum."--".$support['camp_num'];
                           if($campnum == $support['camp_num']){
-                               echo $k;
                                  $i = $k;
                                     break;
                                 }
