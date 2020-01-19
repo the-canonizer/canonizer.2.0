@@ -73,6 +73,29 @@
                         $grace_second = date('s',strtotime($intervalTime));
                         $submitterUserID = App\Model\Nickname::getUserIDByNickName($data->submitter_nick_id);
                         $pCamp = App\Model\Camp::getLiveCamp($topic->topic_num,$data->parent_camp_num);
+                         $nickName = \App\Model\Nickname::find($data->submitter_nick_id);
+                            $supported_camp = $nickName->getSupportCampList();
+                            $ifSupportingThisCamp = 0;
+                            if(sizeof($supported_camp) > 0){ 
+                                 foreach ($supported_camp as $key => $value) {
+                                     if($key == $data->topic_num){
+                                        if(isset($value['array'])){
+                                          foreach($value['array'] as $i => $supportData ){
+                                              foreach($supportData as $j => $support){
+                                                   if($support['camp_num'] == $data->camp_num){
+                                                     $ifSupportingThisCamp = 1;
+                                                      break;
+                                                    }
+                                                  }
+                                              }
+                                          }else{
+                                            $ifSupportingThisCamp = 1;
+                                            break;
+                                          }
+                                     }                
+                                }
+                            }
+                           
                        if ($data->objector_nick_id !== NULL)
                             $bgcolor = "rgba(255, 0, 0, 0.5);"; //red
                         else if ($currentTime < $data->go_live_time && $currentTime >= $data->submit_time) {
@@ -126,7 +149,7 @@
                             </div>    
                             <div class="CmpHistoryPnl-footer">
                                
-        <?php if ($currentTime < $data->go_live_time && $currentTime >= $data->submit_time) { ?> 
+        <?php if ($currentTime < $data->go_live_time && $currentTime >= $data->submit_time && $ifSupportingThisCamp) { ?> 
                                  @if($isagreeFlag && $ifIamSupporter && Auth::user()->id != $submitterUserID)
                                     <a id="object" class="btn btn-historysmt" href="<?php echo url('manage/camp/' . $data->id . '-objection'); ?>">Object</a>
                                  @endif

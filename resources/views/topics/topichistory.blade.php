@@ -70,6 +70,17 @@
                 $currentLive = 0;
                 $currentTime = time();
                 foreach ($topics as $key => $data) {
+                    $nickName = \App\Model\Nickname::find($data->submitter_nick_id);
+                    $supported_camp = $nickName->getSupportCampList();
+                    $ifSupportingThisTopic = false;
+                    if(sizeof($supported_camp) > 0){ 
+                         foreach ($supported_camp as $key => $value) {
+                             if($key == $data->topic_num){
+                                $ifSupportingThisTopic = true;
+                                break;
+                             }                
+                        }
+                    }
                     $isagreeFlag = false;
                     $isGraceFlag = false;
                     $submittime = $data->submit_time;
@@ -130,7 +141,7 @@
                             @endif 	 				 
                         </div>    
                         <div class="CmpHistoryPnl-footer">
-        <?php if ($currentTime < $data->go_live_time && $currentTime >= $data->submit_time) { ?>
+        <?php if ($currentTime < $data->go_live_time && $currentTime >= $data->submit_time && $ifSupportingThisTopic) { ?>
                                 <a id="object" class="btn btn-historysmt" href="<?php echo url('manage/topic/' . $data->id . '-objection'); ?>">Object</a>
                             <?php } ?>  
                             <a id="update" class="btn btn-historysmt" href="<?php echo url('manage/topic/' . $data->id); ?>">Submit Topic Update Based On This</a>				  

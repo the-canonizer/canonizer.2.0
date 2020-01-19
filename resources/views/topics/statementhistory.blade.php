@@ -59,17 +59,39 @@
                                                 
 			         foreach($statement as $key=>$data) { 
 						   $isagreeFlag = false;
-                                                   $isGraceFlag = false;
-                                                  
-                                                    $submittime = $data->submit_time;
-                                                    $starttime = time();
-                                                    $endtime = $submittime + 60*60;
-                                                    $interval = $endtime - $starttime;
-                                                    $intervalTime = date('H:i:s',$interval);
-                                                    $grace_hour = date('H',strtotime($intervalTime));
-                                                    $grace_minute = date('i',strtotime($intervalTime));
-                                                    $grace_second = date('s',strtotime($intervalTime));
-                                                    $submitterUserID = App\Model\Nickname::getUserIDByNickName($data->submitter_nick_id);
+               $isGraceFlag = false;
+                $nickName = \App\Model\Nickname::find($data->submitter_nick_id);
+                $supported_camp = $nickName->getSupportCampList();
+                $ifSupportingThisCamp = false;
+                if(sizeof($supported_camp) > 0){ 
+                     foreach ($supported_camp as $key => $value) {
+                         if($key == $data->topic_num){
+                            if(isset($value['array'])){
+                              foreach($value['array'] as $i => $supportData ){
+                                  foreach($supportData as $j => $support){
+                                       if($support['camp_num'] == $data->camp_num){
+                                          $ifSupportingThisCamp = true;
+                                          break;
+                                        }
+                                      }
+                                  }
+                              }else{
+                                $ifSupportingThisCamp = true;
+                                break;
+                              }
+                         }                
+                    }
+                }
+                
+                $submittime = $data->submit_time;
+                $starttime = time();
+                $endtime = $submittime + 60*60;
+                $interval = $endtime - $starttime;
+                $intervalTime = date('H:i:s',$interval);
+                $grace_hour = date('H',strtotime($intervalTime));
+                $grace_minute = date('i',strtotime($intervalTime));
+                $grace_second = date('s',strtotime($intervalTime));
+                $submitterUserID = App\Model\Nickname::getUserIDByNickName($data->submitter_nick_id);
                                                    
 						   if($data->objector_nick_id !== NULL)
 							   $bgcolor ="rgba(255, 0, 0, 0.5);"; //red
@@ -141,7 +163,7 @@
                   @endif 
 				  
 				 <div class="CmpHistoryPnl-footer">
-				  <?php if($currentTime < $data->go_live_time && $currentTime >= $data->submit_time) { ?>
+				  <?php if($currentTime < $data->go_live_time && $currentTime >= $data->submit_time && $ifSupportingThisCamp) { ?>
 				    <a id="object" class="btn btn-historysmt" href="<?php echo url('manage/statement/'.$data->id.'-objection');?>">Object</a>
 				  <?php } ?>	
 					<a id="update" class="btn btn-historysmt" href="<?php echo url('manage/statement/'.$data->id);?>">Submit Statement Update Based On This</a>
