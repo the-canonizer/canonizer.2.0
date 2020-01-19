@@ -500,7 +500,6 @@ class Camp extends Model {
         $onecamp = self::getLiveCamp($topic_num, $camp_num);
 
         $childCamps = array_unique(self::getAllChildCamps($onecamp));
-        //print_r($childCamps); die;
         $mysupports = Support::where('topic_num', $topic_num)->whereIn('camp_num', $childCamps)->whereIn('nick_name_id', $userNicknames)->where('end', '=', 0)->orderBy('support_order', 'ASC')->get();
 
         /* if($confirm_support && count($mysupports)) {
@@ -706,7 +705,7 @@ class Camp extends Model {
                         ->whereRaw('go_live_time in (select max(go_live_time) from camp where topic_num=' . $this->topic_num . ' and objector_nick_id is null and go_live_time < "' . time() . '" group by camp_num)')
                         ->where('go_live_time', '<=', time())
                         ->groupBy('camp_num')
-                        ->orderBy('submit_time', 'desc')
+                        ->latest('submit_time')
                         ->get()]);
         } else {
             
@@ -718,7 +717,7 @@ class Camp extends Model {
                             ->where('camp_name', '!=', 'Agreement')
 							->where('objector_nick_id', '=', NULL)
                             ->whereRaw('go_live_time in (select max(go_live_time) from camp where topic_num=' . $this->topic_num . ' and objector_nick_id is null group by camp_num)')
-                            ->orderBy('submit_time', 'desc')
+                            ->latest('submit_time')
                             ->groupBy('camp_num')
                             ->get()]);
             } else if (isset($_REQUEST['asof']) && $_REQUEST['asof'] == "bydate") {
@@ -731,7 +730,7 @@ class Camp extends Model {
                             ->where('objector_nick_id', '=', NULL)
                             ->whereRaw('go_live_time in (select max(go_live_time) from camp where topic_num=' . $this->topic_num . ' and objector_nick_id is null group by camp_num)')
                             ->where('go_live_time', '<=', $asofdate)
-                            ->orderBy('submit_time', 'DESC')
+                            ->latest('submit_time')
                             ->groupBy('camp_num')
                             ->get()]);
 							
