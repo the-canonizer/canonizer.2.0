@@ -59,14 +59,16 @@
 						  $delegatedNickDetail  = $delegatedNick->getNickName($support->delegate_nick_name_id);
                           $nickName = \App\Model\Nickname::find($support->delegate_nick_name_id);
                           $supported_camp = $nickName->getSupportCampList();
-                          $supported_camp_list = $nickName->getSupportCampListNames($supported_camp)
+                          $supported_camp_list = $nickName->getSupportCampListNames($supported_camp,$data->topic_num)
 						 ?>
 						 <div id="positions" class="SpCmpBDY delegate_support support-sorter-element ui-widget">
 					   
 						  Support delegated to {{$delegatedNickDetail->nick_name }}
                           
 						</div>
-                        <span style="font-size:10px; width:100%; float:left;"><b>Supported camp list</b> :{{$supported_camp_list}}</span>
+              <?php if($supported_camp_list != '' && $supported_camp_list!= null){ ?>
+                  <span style="font-size:10px; width:100%; float:left;"><b>Supported camp list</b> : {!!$supported_camp_list !!}</span>
+              <?php } ?>
 						 <?php
 						 break;
 						 } ?>

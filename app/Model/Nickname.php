@@ -46,22 +46,26 @@ class Nickname extends Model {
         return $userNickname;
     }
 
-    public function getSupportCampListNames($supported_camp = []){
-        $supported_array_list = [];
-        $k = 0;
+    public function getSupportCampListNames($supported_camp = [],$topic_num){
+        
+        $returnHtml = '';
         if(sizeof($supported_camp) > 0){
             foreach ($supported_camp as $key => $value) {
-                if(isset($value['array'])){
+                 if($key == $topic_num){
+                     $h = 1;
+                    if(isset($value['array'])){
                     foreach($value['array'] as $i => $supportData ){
                         foreach($supportData as $j => $support){
-                           $supported_array_list[$k] = $support['camp_name'];
-                           $k++;
+                               
+                              $returnHtml.=  ($h++).': <span><a href="'.$support['link'].'">'.$support['camp_name'].'</a></span>;'; 
+                              
+                            }
                         }
                     }
-                }
+               }                
             }
-        }
-      return join(",",$supported_array_list);                 
+        }       
+      return $returnHtml;                  
     }
     public function getSupportCampList() {
 
