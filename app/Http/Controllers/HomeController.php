@@ -47,10 +47,15 @@ class HomeController extends Controller {
         $id = $request->id;
         $topics = Camp::getAllLoadMoreTopic($request->offset, $_REQUEST, $id);
 
-
+                                
 
         foreach ($topics as $k => $topicdata) {
-
+            $topic = \App\Model\Topic::where('topic_num','=',$topicdata->topic_num)->latest('submit_time')->get();
+            $topic_name_space_id = isset($topic[0]) ? $topic[0]->namespace_id:1;
+            $request_namesapce = session('defaultNamespaceId', 1);
+            if($topic_name_space_id !='' && $topic_name_space_id != $request_namesapce){
+                continue;
+            }
             $output .= $topicdata->campTreeHtml();
         }
         ($output != '') ? $output .= '<a id="btn-more" class="remove-row" data-id="' . $topicdata->id . '"></a>' : '';

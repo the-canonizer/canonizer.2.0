@@ -48,7 +48,14 @@
                       <?php $createCamp = 1; ?>
 
                        @foreach($topics as $k=>$topic)
+
                        <?php
+                        $topicData = \App\Model\Topic::where('topic_num','=',$topicdata->topic_num)->latest('submit_time')->get();
+                        $topic_name_space_id = isset($topicData[0]) ? $topicData[0]->namespace_id:1;
+                        $request_namesapce = session('defaultNamespaceId', 1);
+                        if($topic_name_space_id !='' && $topic_name_space_id != $request_namesapce){
+                            continue;
+                        }
                        $as_of_time = time();
                         if(isset($_REQUEST['asof']) && $_REQUEST['asof']=='date'){
                             $as_of_time = strtotime($_REQUEST['asofdate']);
