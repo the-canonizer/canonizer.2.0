@@ -320,17 +320,17 @@ class Camp extends Model {
                             //->where('topic.objector_nick_id', '=', NULL)
                             ->where('camp.objector_nick_id', '=', NULL)
                             ->whereIn('namespace_id', explode(',', session('defaultNamespaceId', 1)))
-                            ->where('topic.go_live_time', '<=', time())->latest('camp.submit_time')->take(10000)->offset(18)->get()->unique('topic_num');
+                            ->where('topic.go_live_time', '<=', time())->latest('topic.submit_time')->take(10000)->offset(18)->get()->unique('topic_num');
         } else {
 
             if ((isset($filter['asof']) && $filter['asof'] == "review") || session('asofDefault')=="review") {
 
-                return self::where('camp_name', '=', 'Agreement')->join('topic', 'topic.topic_num', '=', 'camp.topic_num')->whereIn('namespace_id', explode(',', session('defaultNamespaceId')))->latest('camp.submit_time')->take(10)->offset($offset)->get();
+                return self::where('camp_name', '=', 'Agreement')->join('topic', 'topic.topic_num', '=', 'camp.topic_num')->whereIn('namespace_id', explode(',', session('defaultNamespaceId')))->latest('topic.submit_time')->take(10)->offset($offset)->get();
             } else if (isset($filter['asof']) && $filter['asof'] == "bydate") {
 
                 $asofdate = strtotime(date('Y-m-d H:i:s', strtotime($filter['asofdate'])));
 
-                return self::where('camp_name', '=', 'Agreement')->join('topic', 'topic.topic_num', '=', 'camp.topic_num')->where('topic.objector_nick_id', '=', NULL)->whereIn('namespace_id', explode(',', session('defaultNamespaceId')))->where('camp.go_live_time', '<=', $asofdate)->latest('camp.submit_time')->take(10)->offset($offset)->get();
+                return self::where('camp_name', '=', 'Agreement')->join('topic', 'topic.topic_num', '=', 'camp.topic_num')->where('topic.objector_nick_id', '=', NULL)->whereIn('namespace_id', explode(',', session('defaultNamespaceId')))->where('camp.go_live_time', '<=', $asofdate)->latest('topic.submit_time')->take(10)->offset($offset)->get();
             }
         }
     }
