@@ -163,8 +163,7 @@ class TopicSupport extends Model {
             $nickName = Nickname::where('id',$array['index'])->first();
             $topicData = Topic::where('topic_num',$topicnum)->latest('submit_time')->get();
             $namespace_id = (isset($topicData[0])) ? $topicData[0]->namespace_id:1;
-            $supports = $nickName->getSupportCampList();
-            echo "<pre>"; print_r($namespace_id); die;
+            $supports = $nickName->getSupportCampList($namespace_id);
             $support_number = self::getSupportNumber($topicnum,$campnum,$supports);
             $support_txt = ($support_number) ? $support_number.":": '';
              if($parentNode){

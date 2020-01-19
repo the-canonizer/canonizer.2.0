@@ -67,7 +67,7 @@ class Nickname extends Model {
         }       
       return $returnHtml;                  
     }
-    public function getSupportCampList() {
+    public function getSupportCampList($namespace = 1) {
 
         $as_of_time = time();
         $as_of_clause = '';
