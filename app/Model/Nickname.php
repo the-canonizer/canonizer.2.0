@@ -72,7 +72,7 @@ class Nickname extends Model {
         $as_of_time = time();
         $as_of_clause = '';
 
-        $namespace = isset($_REQUEST['namespace']) ? $_REQUEST['namespace'] : 1;
+        $namespace = isset($_REQUEST['namespace']) ? $_REQUEST['namespace'] : $namespace;
 
         if (isset($_REQUEST['asof']) && $_REQUEST['asof'] == 'review') {
             
