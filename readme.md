@@ -85,6 +85,11 @@ git push origin dev-jackson
 
 Thats it!
 
+## Robots Setting
+There are two files in in public directory ,robots.txt  and robots-production.txt.
+Copy the content of robots-production.txt file in robots.txt file and remove the 
+robots-production.txt file to enable robots file.
+
 ## Contributing
 
 Thank you for considering contributing to the Canonizer! 
