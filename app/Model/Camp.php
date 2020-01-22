@@ -298,8 +298,20 @@ class Camp extends Model {
             if ((isset($filter['asof']) && $filter['asof'] == "review") || session('asofDefault')=="review") {
 
 
-                return self::where('camp_name', '=', 'Agreement')->join('topic', 'topic.topic_num', '=', 'camp.topic_num')->whereIn('namespace_id', explode(',', session('defaultNamespaceId')))->latest('camp.submit_time')->get()->take($limit); //->sortBy('topic.topic_name');
-            } else if (isset($filter['asof']) && $filter['asof'] == "bydate") {
+               // return self::where('camp_name', '=', 'Agreement')->join('topic', 'topic.topic_num', '=', 'camp.topic_num')->whereIn('namespace_id', explode(',', session('defaultNamespaceId')))->latest('camp.submit_time')->get()->take($limit); //->sortBy('topic.topic_name');
+              return self::select(DB::raw('(select count(topic_support.id) from topic_support where topic_support.topic_num=camp.topic_num) as support, camp.*'))
+                            ->join('topic', 'topic.topic_num', '=', 'camp.topic_num')
+                            ->where('camp_name', '=', 'Agreement')
+                            ->where('topic.objector_nick_id', '=', NULL)
+                            ->whereIn('namespace_id', explode(',', session('defaultNamespaceId', 1)))
+                            //->where('camp.go_live_time', '<=', $as_of_time)
+                            ->whereRaw('topic.go_live_time in (select max(topic.go_live_time) from topic where topic.topic_num=topic.topic_num and topic.objector_nick_id is null group by topic.topic_num)')
+                            //->whereRaw('topic.go_live_time','DESC')					 
+                            ->latest('support')->get()->unique('topic_num')->take($limit); //->sortBy('topic.topic_name');
+
+       
+			
+			} else if (isset($filter['asof']) && $filter['asof'] == "bydate") {
                 $asofdate = strtotime(date('Y-m-d H:i:s', strtotime($filter['asofdate'])));
 
 
