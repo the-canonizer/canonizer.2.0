@@ -56,9 +56,11 @@
 					   	 </b>
                        </div>
 						<?php } else { 
-						  $delegatedNickDetail  = $delegatedNick->getNickName($support->delegate_nick_name_id);
+                           $topic = \App\Model\Topic::where('topic_num','=',$data->topic_num)->latest('submit_time')->get();
+                           $topic_name_space_id = isset($topic[0]) ? $topic[0]->namespace_id:1;
+                          $delegatedNickDetail  = $delegatedNick->getNickName($support->delegate_nick_name_id);
                           $nickName = \App\Model\Nickname::find($support->delegate_nick_name_id);
-                          $supported_camp = $nickName->getSupportCampList();
+                          $supported_camp = $nickName->getSupportCampList($topic_name_space_id);
                           $supported_camp_list = $nickName->getSupportCampListNames($supported_camp,$data->topic_num)
 						 ?>
 						 <div id="positions" class="SpCmpBDY delegate_support support-sorter-element ui-widget">
