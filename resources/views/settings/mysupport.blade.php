@@ -61,6 +61,7 @@
                           $delegatedNickDetail  = $delegatedNick->getNickName($support->delegate_nick_name_id);
                           $nickName = \App\Model\Nickname::find($support->delegate_nick_name_id);
                           $supported_camp = $nickName->getSupportCampList($topic_name_space_id);
+                          echo "<pre>".$data->topic_num; print_r($supported_camp); die;
                           $supported_camp_list = $nickName->getSupportCampListNames($supported_camp,$data->topic_num)
 						 ?>
 						 <div id="positions" class="SpCmpBDY delegate_support support-sorter-element ui-widget">
