@@ -134,9 +134,9 @@ class TopicSupport extends Model {
 
     public static function getSupportNumber($topicnum,$campnum,$supports){
         $i = 0;
-        
         if($supports && sizeof($supports) > 0){
             foreach($supports as $key => $spp){
+                $j = 0;
                   if(isset($spp['array']) && $key == $topicnum){
                     ksort($spp['array']);
                     foreach($spp['array'] as $k => $support_order){
@@ -147,6 +147,9 @@ class TopicSupport extends Model {
                                 }
                             } 
                     }                            
+                }else{
+                    $j++;
+                    $i = $j;
                 }
             }
         }
