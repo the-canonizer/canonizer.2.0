@@ -55,7 +55,7 @@ class Nickname extends Model {
                     if(isset($value['array'])){
                     foreach($value['array'] as $i => $supportData ){
                         foreach($supportData as $j => $support){
-                              $returnHtml.=  ($h++).': <span><a href="'.$support['link'].'">'.$support['camp_name'].'</a></span>;'; 
+                              $returnHtml.=  ($i).': <span><a href="'.$support['link'].'">'.$support['camp_name'].'</a></span>;'; 
                             }
                         }
                     }else{

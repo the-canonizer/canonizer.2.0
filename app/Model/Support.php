@@ -39,7 +39,6 @@ class Support extends Model {
       }else{
         $othersupports = self::where('topic_num',$topic_num)->whereNotIn('nick_name_id',$userNicknames)->where('end','=',0)->orderBy('support_order','ASC')->get();
       }
-    
       $othersupports->filter(function($item) use($camp_num){
 			if($camp_num){
 				return $item->camp_num == $camp_num;
@@ -64,7 +63,6 @@ class Support extends Model {
         
         public static function ifIamSupporter($topinum,$campnum,$nickNames){
             $support = self::where('topic_num','=',$topinum)->where('camp_num','=',$campnum)->whereIn('nick_name_id',$nickNames)->where('delegate_nick_name_id',0)->where('end','=',0)->first();
-            //echo "<pre>"; print_r($support); exit;
             return count($support) ? $support->nick_name_id : 0 ;
         }
         

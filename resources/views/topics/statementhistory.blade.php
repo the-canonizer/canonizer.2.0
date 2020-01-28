@@ -60,9 +60,17 @@
 			         foreach($statement as $key=>$data) { 
 						   $isagreeFlag = false;
                $isGraceFlag = false;
-                $nickName = \App\Model\Nickname::find($data->submitter_nick_id);
-                $supported_camp = $nickName->getSupportCampList();
-                $ifSupportingThisCamp = false;
+
+                $nickNamesData = \App\Model\Nickname::personNicknameArray();
+                $supported_camps = [];
+                if(sizeof($nickNamesData) > 0){
+                  foreach ($nickNamesData as $key => $value) {
+                       $nickName = \App\Model\Nickname::find($value);
+                       $supported_camp = $nickName->getSupportCampList();
+                       $supported_camps = array_merge($supported_camps,$supported_camp);
+                  }
+                }
+               $ifSupportingThisCamp = 0;
                 if(sizeof($supported_camp) > 0){ 
                      foreach ($supported_camp as $key => $value) {
                          if($key == $data->topic_num){
@@ -70,13 +78,13 @@
                               foreach($value['array'] as $i => $supportData ){
                                   foreach($supportData as $j => $support){
                                        if($support['camp_num'] == $data->camp_num){
-                                          $ifSupportingThisCamp = true;
+                                          $ifSupportingThisCamp = 1;
                                           break;
                                         }
                                       }
                                   }
                               }else{
-                                $ifSupportingThisCamp = true;
+                                $ifSupportingThisCamp = 1;
                                 break;
                               }
                          }                

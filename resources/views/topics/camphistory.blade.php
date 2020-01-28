@@ -76,7 +76,8 @@
                          $nickName = \App\Model\Nickname::find($data->submitter_nick_id);
                             $supported_camp = $nickName->getSupportCampList();
                             $ifSupportingThisCamp = 0;
-                            if(sizeof($supported_camp) > 0){ 
+                            if(sizeof($supported_camp) > 0){
+                                $flag = false; 
                                  foreach ($supported_camp as $key => $value) {
                                      if($key == $data->topic_num){
                                         if(isset($value['array'])){
