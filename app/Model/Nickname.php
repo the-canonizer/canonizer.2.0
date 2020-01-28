@@ -53,6 +53,7 @@ class Nickname extends Model {
                  if($key == $topic_num){
                     $h = 1;
                     if(isset($value['array'])){
+                        ksort($value['array']);
                     foreach($value['array'] as $i => $supportData ){
                         foreach($supportData as $j => $support){
                               $returnHtml.=  ($i).': <span><a href="'.$support['link'].'">'.$support['camp_name'].'</a></span>;'; 
