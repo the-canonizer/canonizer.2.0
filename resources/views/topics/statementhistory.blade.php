@@ -70,7 +70,7 @@
                        $supported_camps = array_merge($supported_camps,$supported_camp);
                   }
                 }
-               $ifSupportingThisCamp = 0;
+               $ifSupportingThisCampOrChild = 0;
                 if(sizeof($supported_camp) > 0){ 
                      foreach ($supported_camp as $key => $value) {
                          if($key == $data->topic_num){
@@ -78,18 +78,37 @@
                               foreach($value['array'] as $i => $supportData ){
                                   foreach($supportData as $j => $support){
                                        if($support['camp_num'] == $data->camp_num){
-                                          $ifSupportingThisCamp = 1;
+                                          $ifSupportingThisCampOrChild = 1;
                                           break;
                                         }
                                       }
                                   }
                               }else{
-                                $ifSupportingThisCamp = 1;
+                                $ifSupportingThisCampOrChild = 1;
                                 break;
                               }
                          }                
                     }
                 }
+
+                if(!$ifSupportingThisCampOrChild){
+                  $camp = \App\Model\Camp::where('camp_num','=',$data->camp_num)->where('topic_num','=',$data->topic_num)->get();
+                  $allChildren = \App\Model\Camp::getAllChildCamps($camp[0]);
+                  if(sizeof($allChildren) > 0 ){
+                  foreach($allChildren as $campnum){
+                      $support = \App\Model\Support::where('topic_num',$data->topic_num)->where('camp_num',$campnum)->whereIn('nick_name_id',$nickNamesData)->where('end','=',0)->orderBy('support_order','ASC')->get();
+                         if(sizeof($support) > 0){
+                              $ifSupportingThisCampOrChild = 1;
+                              if(!$ifIamSupporter){
+                                $ifIamSupporter = $support[0]->nick_name_id;
+                              }
+                              break;
+                          }
+                      }
+                  }
+                }
+
+
                 
                 $submittime = $data->submit_time;
                 $starttime = time();
@@ -171,7 +190,7 @@
                   @endif 
 				  
 				 <div class="CmpHistoryPnl-footer">
-				  <?php if($currentTime < $data->go_live_time && $currentTime >= $data->submit_time && $ifSupportingThisCamp) { ?>
+				  <?php if($currentTime < $data->go_live_time && $currentTime >= $data->submit_time && $ifSupportingThisCampOrChild) { ?>
 				    <a id="object" class="btn btn-historysmt" href="<?php echo url('manage/statement/'.$data->id.'-objection');?>">Object</a>
 				  <?php } ?>	
 					<a id="update" class="btn btn-historysmt" href="<?php echo url('manage/statement/'.$data->id);?>">Submit Statement Update Based On This</a>
