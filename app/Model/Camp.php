@@ -322,7 +322,7 @@ class Camp extends Model {
     public static function getAllLoadMoreTopic($offset = 10, $filter = array(), $id) {
          $as_of_time = time();
 		 
-        if (!isset($filter['asof']) || (isset($filter['asof']) && $filter['asof'] == "default")) { echo "ggg"; die;
+        if (!isset($filter['asof']) || (isset($filter['asof']) && $filter['asof'] == "default")) { 
             return self::select(DB::raw('(select count(topic_support.id) from topic_support where topic_support.topic_num=camp.topic_num) as support, camp.*'))
                             ->join('topic', 'topic.topic_num', '=', 'camp.topic_num')
                             ->where('camp_name', '=', 'Agreement')
@@ -336,7 +336,7 @@ class Camp extends Model {
                           //  ->where('topic.go_live_time', '<=', time())->latest('camp.submit_time')->offset($offset)->take(10000)->get()->unique('topic_num');
 
         } else {
-             print_r($filter); die;
+             
             if ((isset($filter['asof']) && $filter['asof'] == "review") || session('asofDefault')=="review") {
 
             return self::where('camp_name', '=', 'Agreement')->join('topic', 'topic.topic_num', '=', 'camp.topic_num')->whereIn('namespace_id', explode(',', session('defaultNamespaceId')))->latest('camp.submit_time')->offset($offset)->take(10000)->offset($offset)->get();
