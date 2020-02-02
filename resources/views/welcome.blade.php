@@ -94,7 +94,7 @@
 
 <script>
 var request = false;
-var offset = 42;
+var offset = '<?php echo config('app.front_page_limit'); ?>';
    $('#loadtopic').click(function(e){
        var id = $('#btn-more').data('id');
        var queryString = "{!! Request::getQueryString() !!}";

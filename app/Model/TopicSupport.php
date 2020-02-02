@@ -134,23 +134,30 @@ class TopicSupport extends Model {
 
     public static function getSupportNumber($topicnum,$campnum,$supports){
         $i = 0;
-        
+        $flag = false;
         if($supports && sizeof($supports) > 0){
             foreach($supports as $key => $spp){
+                $j = 0;
                   if(isset($spp['array']) && $key == $topicnum){
                     ksort($spp['array']);
                     foreach($spp['array'] as $k => $support_order){
                         foreach($support_order as $support){
                           if($campnum == $support['camp_num']){
                                  $i = $k;
+                                 $flag = true;
                                   break;
                                 }
                             } 
+                    }
+                    if($flag){
+                        break;
                     }                            
+                }else{
+                    $j++;
+                    $i = $j;
                 }
             }
         }
-        
         return $i;
     }
     public static function buildTree($topicnum,$campnum,$traversedTreeArray,$parentNode=false){

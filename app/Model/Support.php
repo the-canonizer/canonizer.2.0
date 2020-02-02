@@ -34,19 +34,44 @@ class Support extends Model {
     
 	public static function ifIamSingleSupporter($topic_num,$camp_num=0,$userNicknames) {
 	   $othersupports = [];
-      if($camp_num != 0){
+       $supportFlag = 1;
+       if($camp_num != 0){
         $othersupports = self::where('topic_num',$topic_num)->where('camp_num',$camp_num)->whereNotIn('nick_name_id',$userNicknames)->where('end','=',0)->orderBy('support_order','ASC')->get();
-      }else{
-        $othersupports = self::where('topic_num',$topic_num)->whereNotIn('nick_name_id',$userNicknames)->where('end','=',0)->orderBy('support_order','ASC')->get();
-      }
-    
-      $othersupports->filter(function($item) use($camp_num){
-			if($camp_num){
-				return $item->camp_num == $camp_num;
-			}
-		});
+        }else{
+            $othersupports = self::where('topic_num',$topic_num)->whereNotIn('nick_name_id',$userNicknames)->where('end','=',0)->orderBy('support_order','ASC')->get();
+        }
+
+
+       $othersupports->filter(function($item) use($camp_num){
+            if($camp_num){
+                return $item->camp_num == $camp_num;
+            }
+        });
        
-		return count($othersupports) ? 0 : 1 ;
+        if(count($othersupports) > 0){
+                $supportFlag = 0;
+        }else{
+            if($camp_num != 0){
+                $camp = Camp::where('camp_num','=',$camp_num)->where('topic_num','=',$topic_num)->get();
+                $allChildren = Camp::getAllChildCamps($camp[0]);
+                if(sizeof($allChildren) > 0 ){
+                foreach($allChildren as $campnum){
+                    $support = self::where('topic_num',$topic_num)->where('camp_num',$campnum)->whereNotIn('nick_name_id',$userNicknames)->where('end','=',0)->orderBy('support_order','ASC')->get();
+                      if(sizeof($support) > 0){
+                            $supportFlag = 0;
+                            break;
+                        }
+                    }
+                }
+            }else{
+                $support = self::where('topic_num',$topic_num)->whereNotIn('nick_name_id',$userNicknames)->where('end','=',0)->orderBy('support_order','ASC')->get();
+                      if(sizeof($support) > 0){
+                            $supportFlag = 0;
+                        }
+            }
+            
+        }
+		return  $supportFlag;
 	   
 	}	
 	
@@ -64,17 +89,36 @@ class Support extends Model {
         
         public static function ifIamSupporter($topinum,$campnum,$nickNames){
             $support = self::where('topic_num','=',$topinum)->where('camp_num','=',$campnum)->whereIn('nick_name_id',$nickNames)->where('delegate_nick_name_id',0)->where('end','=',0)->first();
-            //echo "<pre>"; print_r($support); exit;
             return count($support) ? $support->nick_name_id : 0 ;
         }
         
         public static function getAllSupporters($topic,$camp,$excludeNickID){
+            $nickNametoExclude = [$excludeNickID];
            $support = self::where('topic_num','=',$topic)->where('camp_num','=',$camp)
                     ->where('end','=',0)
                     ->where('nick_name_id','!=',$excludeNickID)
                     ->where('delegate_nick_name_id',0)->groupBy('nick_name_id')->get(); 
-           
-           return count($support);
+            $camp = Camp::where('camp_num','=',$camp)->where('topic_num','=',$topic)->get();
+            $allChildren = Camp::getAllChildCamps($camp[0]);
+            $supportCount = 0;
+            $nickNamesData = \App\Model\Nickname::personNicknameArray();
+            if(sizeof($support) > 0 || count($support) >0){
+                foreach($support as $sp){
+                    array_push( $nickNametoExclude, $sp->nick_name_id);
+                }
+            }
+          if(sizeof($allChildren) > 0 ){
+            foreach($allChildren as $campnum){
+                $supportData = self::where('topic_num',$topic)->where('camp_num',$campnum)->whereNotIn('nick_name_id',$nickNametoExclude)->where('end','=',0)->orderBy('support_order','ASC')->get();
+               if(count($supportData) > 0){
+                        foreach($supportData as $sp){
+                            array_push( $nickNametoExclude, $sp->nick_name_id);
+                        }
+                        $supportCount = $supportCount + count($supportData);
+                    }
+                }
+            }
+           return count($support)+$supportCount;
            
         }
 }

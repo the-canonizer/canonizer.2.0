@@ -968,7 +968,7 @@ class TopicController extends Controller {
             $log->change_id = $data['topic_id'];
             $changeID = $data['topic_id'];
         }
-        $log->save();
+         $log->save();
         if (isset($data['change_for']) && $data['change_for'] == 'statement') {
             $statement = Statement::where('id', $data['statement'])->first();
 		   if(isset($statement)) {	

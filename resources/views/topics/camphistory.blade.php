@@ -73,11 +73,19 @@
                         $grace_second = date('s',strtotime($intervalTime));
                         $submitterUserID = App\Model\Nickname::getUserIDByNickName($data->submitter_nick_id);
                         $pCamp = App\Model\Camp::getLiveCamp($topic->topic_num,$data->parent_camp_num);
-                         $nickName = \App\Model\Nickname::find($data->submitter_nick_id);
-                            $supported_camp = $nickName->getSupportCampList();
+                         $nickNamesData = \App\Model\Nickname::personNicknameArray();
+                            $supported_camps = [];
+                            if(sizeof($nickNamesData) > 0){
+                              foreach ($nickNamesData as $key => $value) {
+                                   $nickName = \App\Model\Nickname::find($value);
+                                   $supported_camp = $nickName->getSupportCampList();
+                                   $supported_camps = array_merge($supported_camps,$supported_camp);
+                              }
+                            }
                             $ifSupportingThisCamp = 0;
-                            if(sizeof($supported_camp) > 0){ 
-                                 foreach ($supported_camp as $key => $value) {
+                            if(sizeof($supported_camps) > 0){
+                                $flag = false; 
+                                 foreach ($supported_camps as $key => $value) {
                                      if($key == $data->topic_num){
                                         if(isset($value['array'])){
                                           foreach($value['array'] as $i => $supportData ){
@@ -95,6 +103,23 @@
                                      }                
                                 }
                             }
+                           
+                         if(!$ifSupportingThisCamp){
+                          $camp = \App\Model\Camp::where('camp_num','=',$data->camp_num)->where('topic_num','=',$data->topic_num)->get();
+                          $allChildren = \App\Model\Camp::getAllChildCamps($camp[0]);
+                          if(sizeof($allChildren) > 0 ){
+                          foreach($allChildren as $campnum){
+                              $support = \App\Model\Support::where('topic_num',$data->topic_num)->where('camp_num',$campnum)->whereIn('nick_name_id',$nickNamesData)->where('end','=',0)->orderBy('support_order','ASC')->get();
+                                 if(sizeof($support) > 0){
+                                      $ifSupportingThisCamp = 1;
+                                      if(!$ifIamSupporter){
+                                        $ifIamSupporter = $support[0]->nick_name_id;
+                                      }
+                                      break;
+                                  }
+                              }
+                          }
+                        }
                            
                        if ($data->objector_nick_id !== NULL)
                             $bgcolor = "rgba(255, 0, 0, 0.5);"; //red

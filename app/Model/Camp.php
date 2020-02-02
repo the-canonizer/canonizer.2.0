@@ -237,7 +237,6 @@ class Camp extends Model {
         if(isset($_REQUEST['my']) && $_REQUEST['my'] == 1){
             $query->whereIn('topic.submitter_nick_id', $nicknameIds);
         }
-
         return $query->orderBy('namespace.label', 'ASC')->orderBy('topic.topic_name', 'ASC')->orderBy('topic.go_live_time', 'DESC')->groupBy('topic_num')->get();
     }
 
@@ -280,9 +279,9 @@ class Camp extends Model {
     public static function getAllAgreementTopic($limit = 10, $filter = array()) {
 
         $as_of_time = time();
+        
 
         if (!isset($filter['asof']) || (isset($filter['asof']) && $filter['asof'] == "default")) {
-
             return self::select(DB::raw('(select count(topic_support.id) from topic_support where topic_support.topic_num=camp.topic_num) as support, camp.*'))
                             ->join('topic', 'topic.topic_num', '=', 'camp.topic_num')
                             ->where('camp_name', '=', 'Agreement')
@@ -290,8 +289,7 @@ class Camp extends Model {
                             ->whereIn('namespace_id', explode(',', session('defaultNamespaceId', 1)))
                             ->where('camp.go_live_time', '<=', $as_of_time)
                             ->whereRaw('topic.go_live_time in (select max(topic.go_live_time) from topic where topic.topic_num=topic.topic_num and topic.objector_nick_id is null and topic.go_live_time <=' . $as_of_time . ' group by topic.topic_num)')
-                            //->whereRaw('topic.go_live_time','DESC')					 
-                            ->latest('support')->get()->unique('topic_num')->take($limit); //->sortBy('topic.topic_name');
+                            ->latest('support')->take($limit)->get()->unique('topic_num'); //->sortBy('topic.topic_name');
 
         } else {
 
@@ -307,7 +305,7 @@ class Camp extends Model {
                             //->where('camp.go_live_time', '<=', $as_of_time)
                             ->whereRaw('topic.go_live_time in (select max(topic.go_live_time) from topic where topic.topic_num=topic.topic_num and topic.objector_nick_id is null group by topic.topic_num)')
                             //->whereRaw('topic.go_live_time','DESC')					 
-                            ->latest('support')->get()->unique('topic_num')->take($limit); //->sortBy('topic.topic_name');
+                            ->latest('support')->take($limit)->get()->unique('topic_num'); //->sortBy('topic.topic_name');
 
        
 			
@@ -315,7 +313,7 @@ class Camp extends Model {
                 $asofdate = strtotime(date('Y-m-d H:i:s', strtotime($filter['asofdate'])));
 
 
-                return self::where('camp_name', '=', 'Agreement')->join('topic', 'topic.topic_num', '=', 'camp.topic_num')->whereIn('namespace_id', explode(',', session('defaultNamespaceId')))->where('topic.objector_nick_id', '=', NULL)->where('camp.go_live_time', '<=', $asofdate)->latest('camp.submit_time')->get()->take($limit); //->sortBy('topic.topic_name');
+                return self::where('camp_name', '=', 'Agreement')->join('topic', 'topic.topic_num', '=', 'camp.topic_num')->whereIn('namespace_id', explode(',', session('defaultNamespaceId')))->where('topic.objector_nick_id', '=', NULL)->where('camp.go_live_time', '<=', $asofdate)->latest('camp.submit_time')->take($limit)->get()->unique('topic_num'); //->sortBy('topic.topic_name');
 
             }
         }
@@ -324,7 +322,6 @@ class Camp extends Model {
     public static function getAllLoadMoreTopic($offset = 10, $filter = array(), $id) {
          $as_of_time = time();
         if (!isset($filter['asof']) || (isset($filter['asof']) && $filter['asof'] == "default")) {
-
             return self::select(DB::raw('(select count(topic_support.id) from topic_support where topic_support.topic_num=camp.topic_num) as support, camp.*'))
                             ->join('topic', 'topic.topic_num', '=', 'camp.topic_num')
                             ->where('camp_name', '=', 'Agreement')
@@ -334,16 +331,19 @@ class Camp extends Model {
                             ->whereRaw('topic.go_live_time in (select max(topic.go_live_time) from topic where topic.topic_num=topic.topic_num and topic.objector_nick_id is null and topic.go_live_time <=' . $as_of_time . ' group by topic.topic_num)')
                            
                             ->where('topic.go_live_time', '<=', time())->latest('camp.submit_time')->take(10000)->offset(18)->get()->unique('topic_num');
+
+                          //  ->where('topic.go_live_time', '<=', time())->latest('camp.submit_time')->offset($offset)->take(10000)->get()->unique('topic_num');
+
         } else {
 
             if ((isset($filter['asof']) && $filter['asof'] == "review") || session('asofDefault')=="review") {
 
-                return self::where('camp_name', '=', 'Agreement')->join('topic', 'topic.topic_num', '=', 'camp.topic_num')->whereIn('namespace_id', explode(',', session('defaultNamespaceId')))->latest('camp.submit_time')->take(10)->offset($offset)->get();
+            return self::where('camp_name', '=', 'Agreement')->join('topic', 'topic.topic_num', '=', 'camp.topic_num')->whereIn('namespace_id', explode(',', session('defaultNamespaceId')))->latest('camp.submit_time')->offset($offset)->take(10000)->offset($offset)->get();
             } else if (isset($filter['asof']) && $filter['asof'] == "bydate") {
 
                 $asofdate = strtotime(date('Y-m-d H:i:s', strtotime($filter['asofdate'])));
 
-                return self::where('camp_name', '=', 'Agreement')->join('topic', 'topic.topic_num', '=', 'camp.topic_num')->where('topic.objector_nick_id', '=', NULL)->whereIn('namespace_id', explode(',', session('defaultNamespaceId')))->where('camp.go_live_time', '<=', $asofdate)->latest('camp.submit_time')->take(10)->offset($offset)->get();
+                return self::where('camp_name', '=', 'Agreement')->join('topic', 'topic.topic_num', '=', 'camp.topic_num')->where('topic.objector_nick_id', '=', NULL)->whereIn('namespace_id', explode(',', session('defaultNamespaceId')))->where('camp.go_live_time', '<=', $asofdate)->latest('camp.submit_time')->offset($offset)->take(10000)->get();
             }
         }
     }
