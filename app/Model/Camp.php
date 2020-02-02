@@ -321,6 +321,7 @@ class Camp extends Model {
 
     public static function getAllLoadMoreTopic($offset = 10, $filter = array(), $id) {
          $as_of_time = time();
+		 print_r($filter); die;
         if (!isset($filter['asof']) || (isset($filter['asof']) && $filter['asof'] == "default")) { echo "ggg"; die;
             return self::select(DB::raw('(select count(topic_support.id) from topic_support where topic_support.topic_num=camp.topic_num) as support, camp.*'))
                             ->join('topic', 'topic.topic_num', '=', 'camp.topic_num')
