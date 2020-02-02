@@ -347,8 +347,8 @@ class Camp extends Model {
 				       ->join('topic', 'topic.topic_num', '=', 'camp.topic_num')
 					   ->where('topic.objector_nick_id', '=', NULL)
 					   ->whereIn('namespace_id', explode(',', session('defaultNamespaceId', 1)))
-					   ->where('camp.go_live_time', '<=', $asofdate)
-					   ->whereRaw('topic.go_live_time in (select max(topic.go_live_time) from topic where topic.topic_num=topic.topic_num and topic.objector_nick_id is null and topic.go_live_time <=' . $asofdate . ' group by topic.topic_num)')
+					   //->where('camp.go_live_time', '<=', $asofdate)
+					   //->whereRaw('topic.go_live_time in (select max(topic.go_live_time) from topic where topic.topic_num=topic.topic_num and topic.objector_nick_id is null and topic.go_live_time <=' . $asofdate . ' group by topic.topic_num)')
                            
 					   ->latest('camp.submit_time')->offset($offset)->take(10000)->get()->unique('topic_num');
             }
