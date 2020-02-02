@@ -93,6 +93,7 @@ class Support extends Model {
         }
         
         public static function getAllSupporters($topic,$camp,$excludeNickID){
+            $nickNametoExclude = [$excludeNickID];
            $support = self::where('topic_num','=',$topic)->where('camp_num','=',$camp)
                     ->where('end','=',0)
                     ->where('nick_name_id','!=',$excludeNickID)
@@ -101,11 +102,18 @@ class Support extends Model {
             $allChildren = Camp::getAllChildCamps($camp[0]);
             $supportCount = 0;
             $nickNamesData = \App\Model\Nickname::personNicknameArray();
-           if(sizeof($allChildren) > 0 ){
+            if(sizeof($support) > 0 || count($support) >0){
+                foreach($support as $sp){
+                    array_push( $nickNametoExclude, $sp->nick_name_id);
+                }
+            }
+          if(sizeof($allChildren) > 0 ){
             foreach($allChildren as $campnum){
-                $supportData = self::where('topic_num',$topic)->where('camp_num',$campnum)->where('nick_name_id','!=',$excludeNickID)->where('end','=',0)->orderBy('support_order','ASC')->get();
-                echo "<pre>".$excludeNickID.count($supportData); 
-                  if(count($supportData) > 0){
+                $supportData = self::where('topic_num',$topic)->where('camp_num',$campnum)->whereNotIn('nick_name_id',$nickNametoExclude)->where('end','=',0)->orderBy('support_order','ASC')->get();
+               if(count($supportData) > 0){
+                        foreach($supportData as $sp){
+                            array_push( $nickNametoExclude, $sp->nick_name_id);
+                        }
                         $supportCount = $supportCount + count($supportData);
                     }
                 }
