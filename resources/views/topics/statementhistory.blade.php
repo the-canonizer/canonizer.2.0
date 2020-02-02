@@ -52,6 +52,7 @@
     <div class="col-sm-12 margin-btm-2">
               
 			   <?php 
+          $supported_camps = [];
 			        if(!empty($statement)) { 
 			            $currentLive = 0; 
 				          $currentTime = time();
@@ -62,7 +63,7 @@
                $isGraceFlag = false;
 
                 $nickNamesData = \App\Model\Nickname::personNicknameArray();
-                $supported_camps = [];
+                
                 if(sizeof($nickNamesData) > 0){
                   foreach ($nickNamesData as $key => $value) {
                        $nickName = \App\Model\Nickname::find($value);
