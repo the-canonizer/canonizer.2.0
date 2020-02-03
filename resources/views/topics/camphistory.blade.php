@@ -83,7 +83,7 @@
                               }
                             }
                             $ifSupportingThisCamp = 0;
-                            if(sizeof($supported_camps) > 0){
+                            if(isset($supported_camps) && sizeof($supported_camps) > 0){
                                 $flag = false; 
                                  foreach ($supported_camps as $key => $value) {
                                      if($key == $data->topic_num){

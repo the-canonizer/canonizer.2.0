@@ -71,8 +71,8 @@
                   }
                 }
                $ifSupportingThisCampOrChild = 0;
-                if(isset($supported_camp) && sizeof($supported_camp) > 0){ 
-                     foreach ($supported_camp as $key => $value) {
+                if(isset($supported_camps) && sizeof($supported_camps) > 0){ 
+                     foreach ($supported_camps as $key => $value) {
                          if($key == $data->topic_num){
                             if(isset($value['array'])){
                               foreach($value['array'] as $i => $supportData ){

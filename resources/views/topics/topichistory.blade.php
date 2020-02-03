@@ -77,7 +77,7 @@
                       foreach ($nickNamesData as $key => $value) {
                            $nickName = \App\Model\Nickname::find($value);
                            $supported_camps = $nickName->getSupportCampList();
-                           if(sizeof($supported_camps) > 0){
+                           if(isset($supported_camps) && sizeof($supported_camps) > 0){
                                  foreach ($supported_camps as $key => $value) {
                                      if($key == $data->topic_num){
                                              $ifSupportingThisTopic = 1;
