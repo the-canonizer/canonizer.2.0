@@ -71,29 +71,9 @@
                 $currentTime = time();
                 foreach ($topics as $key => $data) {
                     $nickNamesData = \App\Model\Nickname::personNicknameArray();
-                    $supported_camps = [];                    
-                    $ifSupportingThisTopic = 0;
-                    if(sizeof($nickNamesData) > 0){
-                      foreach ($nickNamesData as $key => $value) {
-                           $nickName = \App\Model\Nickname::find($value);
-                           $supported_camps = $nickName->getSupportCampList();
-                           if(isset($supported_camps) && sizeof($supported_camps) > 0){
-                                 foreach ($supported_camps as $key => $value) {
-                                     if($key == $data->topic_num){
-                                             $ifSupportingThisTopic = 1;
-                                            break;
-                                     }                
-                                }
-                            }
-                            if($ifSupportingThisTopic){
-                                break;
-                            }
-                      }
-                    }
                      $support = \App\Model\Support::where('topic_num',$data->topic_num)->whereIn('nick_name_id',$nickNamesData)->where('end','=',0)->orderBy('support_order','ASC')->get();
                              if(sizeof($support) > 0){
-                                  $ifSupportingThisCamp = 1;
-                                  if(!$ifIamSupporter){
+                                 if(!$ifIamSupporter){
                                     $ifIamSupporter = $support[0]->nick_name_id;
                                   }
                               }
@@ -157,7 +137,7 @@
                             @endif 	 				 
                         </div>    
                         <div class="CmpHistoryPnl-footer">
-        <?php if ($currentTime < $data->go_live_time && $currentTime >= $data->submit_time && $ifSupportingThisTopic) { ?>
+        <?php if ($currentTime < $data->go_live_time && $currentTime >= $data->submit_time) { ?>
                                 <a id="object" class="btn btn-historysmt" href="<?php echo url('manage/topic/' . $data->id . '-objection'); ?>">Object</a>
                             <?php } ?>  
                             <a id="update" class="btn btn-historysmt" href="<?php echo url('manage/topic/' . $data->id); ?>">Submit Topic Update Based On This</a>				  
