@@ -137,7 +137,7 @@
                             @endif 	 				 
                         </div>    
                         <div class="CmpHistoryPnl-footer">
-        <?php if ($currentTime < $data->go_live_time && $currentTime >= $data->submit_time) { ?>
+        <?php if ($currentTime < $data->go_live_time && $currentTime >= $data->submit_time && $ifIamSupporter) { ?>
                                 <a id="object" class="btn btn-historysmt" href="<?php echo url('manage/topic/' . $data->id . '-objection'); ?>">Object</a>
                             <?php } ?>  
                             <a id="update" class="btn btn-historysmt" href="<?php echo url('manage/topic/' . $data->id); ?>">Submit Topic Update Based On This</a>				  

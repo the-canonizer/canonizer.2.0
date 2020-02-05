@@ -111,7 +111,6 @@
                           foreach($allChildren as $campnum){
                               $support = \App\Model\Support::where('topic_num',$data->topic_num)->where('camp_num',$campnum)->whereIn('nick_name_id',$nickNamesData)->where('end','=',0)->orderBy('support_order','ASC')->get();
                                  if(sizeof($support) > 0){
-                                      $ifSupportingThisCamp = 1;
                                       if(!$ifIamSupporter){
                                         $ifIamSupporter = $support[0]->nick_name_id;
                                       }
@@ -174,7 +173,7 @@
                             </div>    
                             <div class="CmpHistoryPnl-footer">
                                
-        <?php if ($currentTime < $data->go_live_time && $currentTime >= $data->submit_time && $ifSupportingThisCamp) { ?> 
+        <?php if ($currentTime < $data->go_live_time && $currentTime >= $data->submit_time && $ifIamSupporter) { ?> 
                                 {{--@if($isagreeFlag && $ifIamSupporter && Auth::user()->id != $submitterUserID) --}} 
                                     <a id="object" class="btn btn-historysmt" href="<?php echo url('manage/camp/' . $data->id . '-objection'); ?>">Object</a>
                               {{-- @endif --}}

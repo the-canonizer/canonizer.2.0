@@ -190,7 +190,7 @@
                   @endif 
 				  
 				 <div class="CmpHistoryPnl-footer">
-				  <?php if($currentTime < $data->go_live_time && $currentTime >= $data->submit_time && $ifSupportingThisCampOrChild) { ?>
+				  <?php if($currentTime < $data->go_live_time && $currentTime >= $data->submit_time && $ifIamSupporter) { ?>
             <a id="object" class="btn btn-historysmt" href="<?php echo url('manage/statement/'.$data->id.'-objection');?>">Object</a>
           <?php } ?>	
 					<a id="update" class="btn btn-historysmt" href="<?php echo url('manage/statement/'.$data->id);?>">Submit Statement Update Based On This</a>
