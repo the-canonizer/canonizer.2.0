@@ -71,12 +71,17 @@
                 $currentTime = time();
                 foreach ($topics as $key => $data) {
                     $nickNamesData = \App\Model\Nickname::personNicknameArray();
-                     $support = \App\Model\Support::where('topic_num',$data->topic_num)->whereIn('nick_name_id',$nickNamesData)->where('end','=',0)->orderBy('support_order','ASC')->get();
-                             if(sizeof($support) > 0){
-                                 if(!$ifIamSupporter){
-                                    $ifIamSupporter = $support[0]->nick_name_id;
-                                  }
-                              }
+                    if($submit_time){
+                      $support = \App\Model\Support::where('topic_num',$data->topic_num)->whereIn('nick_name_id',$nickNamesData)->where('end','=',0)->where('start','<=',$submit_time)->orderBy('support_order','ASC')->get();
+                    }else{
+                      $support = \App\Model\Support::where('topic_num',$data->topic_num)->whereIn('nick_name_id',$nickNamesData)->where('end','=',0)->orderBy('support_order','ASC')->get();
+                    }
+                     
+                     if(sizeof($support) > 0){
+                         if(!$ifIamSupporter){
+                            $ifIamSupporter = $support[0]->nick_name_id;
+                          }
+                      }
                     $isagreeFlag = false;
                     $isGraceFlag = false;
                     $submittime = $data->submit_time;

@@ -109,7 +109,12 @@
                           $allChildren = \App\Model\Camp::getAllChildCamps($camp[0]);
                           if(sizeof($allChildren) > 0 ){
                           foreach($allChildren as $campnum){
-                              $support = \App\Model\Support::where('topic_num',$data->topic_num)->where('camp_num',$campnum)->whereIn('nick_name_id',$nickNamesData)->where('end','=',0)->orderBy('support_order','ASC')->get();
+                              if($submit_time){
+                                  $support = \App\Model\Support::where('topic_num',$data->topic_num)->where('camp_num',$campnum)->whereIn('nick_name_id',$nickNamesData)->where('end','=',0)->where('start','<=',$submit_time)->orderBy('support_order','ASC')->get();
+                              }else{
+                                $support = \App\Model\Support::where('topic_num',$data->topic_num)->where('camp_num',$campnum)->whereIn('nick_name_id',$nickNamesData)->where('end','=',0)->orderBy('support_order','ASC')->get();
+                              }
+                              
                                  if(sizeof($support) > 0){
                                       if(!$ifIamSupporter){
                                         $ifIamSupporter = $support[0]->nick_name_id;
