@@ -14,7 +14,7 @@
 
 <div class="page-titlePnl">
     <h1 class="page-title">Canonizer Main Page</h1>
-    <small>( This is a free open source prototype being developed by volunteers. <br>
+    <small>( This is a free <a href="https://github.com/the-canonizer/canonizer.2.0" target="_blank">open source</a> prototype being developed by volunteers. <br>
         Please be patient with what we have so far and/or be willing to help. )</small>
 </div>
 <div class="right-whitePnl">
