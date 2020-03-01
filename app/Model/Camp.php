@@ -811,4 +811,24 @@ class Camp extends Model {
         return $html;
     }
 
+    public static function getCampSubscription($topicnum,$campnum,$userid=null){
+        if($userid){
+              $onecamp = self::getLiveCamp($topicnum, $campnum);
+              $child_camps = self::getAllChildCamps($onecamp);
+              $camp_subscription = \App\Model\CampSubscription::where('user_id','=',$userid)->where('camp_num','=',$campnum)->where('topic_num','=',$topicnum)->where('subscription_start','<=',strtotime(date('Y-m-d H:i:s')))->where('subscription_end','=',null)->orWhere('subscription_end','>=',strtotime(date('Y-m-d H:i:s')))->get();
+                $flag = sizeof($camp_subscription) > 0  || 0;
+                 if(!$flag && sizeof($child_camps) > 0 ){
+                    $camp_subs_child = \App\Model\CampSubscription::where('user_id','=',$userid)->whereIn('camp_num',$child_camps)->where('topic_num','=',$topicnum)->where('subscription_start','<=',strtotime(date('Y-m-d H:i:s')))->where('subscription_end','=',null)->orWhere('subscription_end','>=',strtotime(date('Y-m-d H:i:s')))->get();
+                    $flag = ($camp_subs_child && sizeof($camp_subs_child) > 0 );
+                    if($flag){
+                        $flag =2;
+                    }
+                  }
+                return $flag;
+        }else{
+            return 0;
+        }
+
+    }
+
 }

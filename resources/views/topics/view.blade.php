@@ -13,6 +13,14 @@
 </div>
 @endif
 
+<div id="camp_subscription_notify"  style="display:none;" class="alert alert-success">
+    <div calss="row">
+                <strong>Success!</strong> <span id="subscription_msg" >
+                    You have successfully subscribed to this camp.
+                </span>
+        </div>       
+</div>
+
 <?php if(count($topic) > 0 ) { ?>
 
 <div class="camp top-head">
@@ -52,7 +60,13 @@
             indicates the camp page you are currently on and the statement below
             is for that camp."><i class="fa fa-question"></i></a>
              <a class="pull-right news-feed" href="{{ url('/addnews/' . $id . '/' . $parentcampnum)}}">Add News</a>
-			 <a style="float: right;font-size: medium; margin-right: 20px; margin-top: 5px;"><input type="checkbox" name="subscribe"/> Subscribe</a>
+             <?php if(Auth::user()->id && $camp_subscriptions == 1){  ?>
+                <a style="float: right;font-size: medium; margin-right: 20px; margin-top: 5px;"><input id="camp_subscription" type="checkbox" name="subscribe" checked="checked" /> Subscribe</a>
+            <?php }else if(Auth::user()->id && $camp_subscriptions == 2){ ?> 
+                <a style="float: right;font-size: medium; margin-right: 20px; margin-top: 5px;"><input disabled="true" id="camp_subscription" type="checkbox" name="subscribe" checked="checked" /> Subscribe</a>
+            <?php }else if(Auth::user()->id){ ?>
+                <a style="float: right;font-size: medium; margin-right: 20px; margin-top: 5px;"><input id="camp_subscription" type="checkbox" name="subscribe" /> Subscribe</a>
+            <?php } ?>
             
             </h3>
 			
@@ -228,6 +242,26 @@ if(type=="statement") {
         scrollTop: $("#statement").offset().top
     }, 2000);
 }	
+
+$('#camp_subscription').click(function(){
+    var isChecked = $(this).prop('checked');
+    var userId = <?php echo Auth::user()->id; ?>;
+    var topic_num = <?php echo $topic->topic_num; ?>;
+    var camp_num = <?php echo $parentcampnum; ?>;
+    $.ajax({
+        type:'POST',
+        url:"{{ route('camp.subscription')}}",
+        data:{userid:userId,camp_num:camp_num,topic_num:topic_num,checked:isChecked, _token:"{{csrf_token()}}"},
+        success:function(res){
+            console.log('res',res);
+            $('#subscription_msg').html(res.messgae);
+          $('#camp_subscription_notify').show().fadeOut(5000);
+
+      }
+    })
+
+})
+
 </script>	
 @endsection
 	

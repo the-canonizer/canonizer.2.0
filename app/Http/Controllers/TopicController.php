@@ -324,6 +324,7 @@ class TopicController extends Controller {
         $topicData = Topic::where('topic_num','=',$topicnum)->get();
         $topic = Camp::getAgreementTopic($topicnum, $_REQUEST);
         $camp = Camp::getLiveCamp($topicnum, $parentcampnum);
+        $camp_subscriptions = Camp::getCampSubscription($topicnum,$parentcampnum,Auth::user()->id);
         session()->forget("topic-support-{$topicnum}");
         session()->forget("topic-support-nickname-{$topicnum}");
         session()->forget("topic-support-tree-{$topicnum}");
@@ -362,7 +363,7 @@ class TopicController extends Controller {
             $editFlag = false;
         }
 
-        return view('topics.view', compact('topic', 'parentcampnum', 'parentcamp', 'camp', 'wiky', 'id','news','editFlag','topicData'));
+        return view('topics.view', compact('topic', 'parentcampnum','camp_subscriptions', 'parentcamp', 'camp', 'wiky', 'id','news','editFlag','topicData'));
     }
 
     /**
@@ -1097,6 +1098,33 @@ class TopicController extends Controller {
             Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new PurposedToSupportersMail($user, $link, $data));
         }
         return;
+    }
+
+
+    public function add_camp_subscription(Request $request){
+        try{
+
+            $all = $request->all();
+             $camp_subscription = new \App\Model\CampSubscription();
+             $camp_subscription->user_id = $all['userid'];
+             $camp_subscription->topic_num = $all['topic_num'];
+             $camp_subscription->camp_num = $all['camp_num'];
+             if($all['checked'] == 'true'){
+                $camp_subscription->subscription_start = strtotime(date('Y-m-d H:i:s'));
+                $msg = "You have successfully subscribed to this camp.";
+             }else{
+                $camp_subscription->subscription_end = strtotime(date('Y-m-d H:i:s'));
+                $msg = "You have successfully unsubscribed from this camp.";
+             }
+             $camp_subscription->save();
+             return response()->json(['result' => "Success", 'message' =>$msg ]);
+        
+        }catch(\Exception $e){
+             return response()->json(['result' => "Error", 'message' => 'Error in subscring the camp.']);
+        
+        }
+         
+         
     }
 
 }
