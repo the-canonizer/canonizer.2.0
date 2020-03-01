@@ -429,19 +429,18 @@ class Camp extends Model {
         $camparray = [];
         if ($camp) {
             $key = $camp->topic_num . '-' . $camp->camp_num . '-' . $camp->parent_camp_num;
-
-            if (in_array($key, Camp::$chilcampArray)) {
+           if (in_array($key, Camp::$chilcampArray)) {
                 return [];/** Skip repeated recursions* */
             }
             Camp::$chilcampArray[] = $key;
             $camparray[] = $camp->camp_num;
 
             $childCamps = Camp::where('topic_num', $camp->topic_num)->where('parent_camp_num', $camp->camp_num)->groupBy('camp_num')->orderBy('submit_time', 'desc')->get();
-
             foreach ($childCamps as $child) {
                 $camparray = array_merge($camparray, self::getAllChildCamps($child));
             }
         }
+
         return $camparray;
     }
 
@@ -468,7 +467,6 @@ class Camp extends Model {
                 $this->getAllChild($child->topic_num, $child->camp_num, $parentcamp, $campArray);
             }
         }
-        //echo "<pre>"; print_r($_SESSION['childs']); die;
         if (isset($_SESSION['childs'][$lastparent]))
             $result = array_unique($_SESSION['childs'][$lastparent]);
 
@@ -815,7 +813,7 @@ class Camp extends Model {
         if($userid){
               $onecamp = self::getLiveCamp($topicnum, $campnum);
               $child_camps = self::getAllChildCamps($onecamp);
-              $camp_subscription = \App\Model\CampSubscription::where('user_id','=',$userid)->where('camp_num','=',$campnum)->where('topic_num','=',$topicnum)->where('subscription_start','<=',strtotime(date('Y-m-d H:i:s')))->where('subscription_end','=',null)->orWhere('subscription_end','>=',strtotime(date('Y-m-d H:i:s')))->get();
+               $camp_subscription = \App\Model\CampSubscription::where('user_id','=',$userid)->where('camp_num','=',$campnum)->where('topic_num','=',$topicnum)->where('subscription_start','<=',strtotime(date('Y-m-d H:i:s')))->where('subscription_end','=',null)->orWhere('subscription_end','>=',strtotime(date('Y-m-d H:i:s')))->get();
                 $flag = sizeof($camp_subscription) > 0  || 0;
                  if(!$flag && sizeof($child_camps) > 0 ){
                     $camp_subs_child = \App\Model\CampSubscription::where('user_id','=',$userid)->whereIn('camp_num',$child_camps)->where('topic_num','=',$topicnum)->where('subscription_start','<=',strtotime(date('Y-m-d H:i:s')))->where('subscription_end','=',null)->orWhere('subscription_end','>=',strtotime(date('Y-m-d H:i:s')))->get();
@@ -830,5 +828,6 @@ class Camp extends Model {
         }
 
     }
+
 
 }

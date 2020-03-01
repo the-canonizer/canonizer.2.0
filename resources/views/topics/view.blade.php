@@ -62,8 +62,8 @@
              <a class="pull-right news-feed" href="{{ url('/addnews/' . $id . '/' . $parentcampnum)}}">Add News</a>
              <?php if(Auth::user()->id && $camp_subscriptions == 1){  ?>
                 <a style="float: right;font-size: medium; margin-right: 20px; margin-top: 5px;"><input id="camp_subscription" type="checkbox" name="subscribe" checked="checked" /> Subscribe</a>
-            <?php }else if(Auth::user()->id && $camp_subscriptions == 2){ ?> 
-                <a style="float: right;font-size: medium; margin-right: 20px; margin-top: 5px;"><input disabled="true" id="camp_subscription" type="checkbox" name="subscribe" checked="checked" /> Subscribe</a>
+            <?php }else if(Auth::user()->id && $camp_subscriptions == 2){  ?> 
+                <a title="You are subscribed to a child camp" style="float: right;font-size: medium; margin-right: 20px; margin-top: 5px;"><input disabled="true" id="camp_subscription" type="checkbox" name="subscribe" checked="checked" /> Subscribe</a>
             <?php }else if(Auth::user()->id){ ?>
                 <a style="float: right;font-size: medium; margin-right: 20px; margin-top: 5px;"><input id="camp_subscription" type="checkbox" name="subscribe" /> Subscribe</a>
             <?php } ?>
