@@ -201,15 +201,21 @@ change camps with them."><i class="fa fa-question"></i></a>
 </div>  <!-- /.right-whitePnl-->
 
 <?php } else { ?>
+<div class="right-whitePnl">
+    <div class="container-fluid">
  <div class="Scolor-Pnl">
-            <h3>Topic does not have any record for selected date.
-            </h3>
+
+        <form name="as_of" id="as_of_form" method="GET">
+         <input type="hidden" id="filter" name="filter" value="{{ isset($_REQUEST['filter']) && !empty($_REQUEST['filter']) ? $_REQUEST['filter'] : '0.001' }}"/>
+           <input type="hidden" name="_token" value="{{ csrf_token() }}">
+           <input hidden type="text" id="asofdatenew" name="asofdate" value="<?php echo date('Y/m/d',$topicData[0]->submit_time); ?>"/>
+            <h3>The Topic was first created on <a href="javascript:void();" onClick="$('#as_of_form').submit()"><?php echo date('m/d/Y',$topicData[0]->submit_time);?></a></h3>
+        </form>
             
+    </div>
 </div>
-<br/>
-<br/>
-<br/>
-<br/>
+          
+</div>
 <?php } ?>
 <script>
 

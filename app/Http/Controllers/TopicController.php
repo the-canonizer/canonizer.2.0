@@ -321,8 +321,8 @@ class TopicController extends Controller {
 			session()->forget('campnum');
 			return redirect()->refresh();
 		}
+        $topicData = Topic::where('topic_num','=',$topicnum)->get();
         $topic = Camp::getAgreementTopic($topicnum, $_REQUEST);
-        
         $camp = Camp::getLiveCamp($topicnum, $parentcampnum);
         session()->forget("topic-support-{$topicnum}");
         session()->forget("topic-support-nickname-{$topicnum}");
@@ -362,7 +362,7 @@ class TopicController extends Controller {
             $editFlag = false;
         }
 
-        return view('topics.view', compact('topic', 'parentcampnum', 'parentcamp', 'camp', 'wiky', 'id','news','editFlag'));
+        return view('topics.view', compact('topic', 'parentcampnum', 'parentcamp', 'camp', 'wiky', 'id','news','editFlag','topicData'));
     }
 
     /**
