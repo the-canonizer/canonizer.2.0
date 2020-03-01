@@ -71,32 +71,17 @@
                 $currentTime = time();
                 foreach ($topics as $key => $data) {
                     $nickNamesData = \App\Model\Nickname::personNicknameArray();
-                    $supported_camps = [];                    
-                    $ifSupportingThisTopic = 0;
-                    if(sizeof($nickNamesData) > 0){
-                      foreach ($nickNamesData as $key => $value) {
-                           $nickName = \App\Model\Nickname::find($value);
-                           $supported_camps = $nickName->getSupportCampList();
-                           if(sizeof($supported_camps) > 0){
-                                 foreach ($supported_camps as $key => $value) {
-                                     if($key == $data->topic_num){
-                                             $ifSupportingThisTopic = 1;
-                                            break;
-                                     }                
-                                }
-                            }
-                            if($ifSupportingThisTopic){
-                                break;
-                            }
-                      }
+                    if($submit_time){
+                      $support = \App\Model\Support::where('topic_num',$data->topic_num)->whereIn('nick_name_id',$nickNamesData)->where('end','=',0)->where('start','<=',$submit_time)->orderBy('support_order','ASC')->get();
+                    }else{
+                      $support = \App\Model\Support::where('topic_num',$data->topic_num)->whereIn('nick_name_id',$nickNamesData)->where('end','=',0)->orderBy('support_order','ASC')->get();
                     }
-                     $support = \App\Model\Support::where('topic_num',$data->topic_num)->whereIn('nick_name_id',$nickNamesData)->where('end','=',0)->orderBy('support_order','ASC')->get();
-                             if(sizeof($support) > 0){
-                                  $ifSupportingThisCamp = 1;
-                                  if(!$ifIamSupporter){
-                                    $ifIamSupporter = $support[0]->nick_name_id;
-                                  }
-                              }
+                     
+                     if(sizeof($support) > 0){
+                         if(!$ifIamSupporter){
+                            $ifIamSupporter = $support[0]->nick_name_id;
+                          }
+                      }
                     $isagreeFlag = false;
                     $isGraceFlag = false;
                     $submittime = $data->submit_time;
@@ -157,7 +142,7 @@
                             @endif 	 				 
                         </div>    
                         <div class="CmpHistoryPnl-footer">
-        <?php if ($currentTime < $data->go_live_time && $currentTime >= $data->submit_time && $ifSupportingThisTopic) { ?>
+        <?php if ($currentTime < $data->go_live_time && $currentTime >= $data->submit_time && $ifIamSupporter) { ?>
                                 <a id="object" class="btn btn-historysmt" href="<?php echo url('manage/topic/' . $data->id . '-objection'); ?>">Object</a>
                             <?php } ?>  
                             <a id="update" class="btn btn-historysmt" href="<?php echo url('manage/topic/' . $data->id); ?>">Submit Topic Update Based On This</a>				  

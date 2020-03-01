@@ -104,7 +104,7 @@
 <script>
 var camp_num = '<?php echo $camp_num; ?>';
 var topic_num = '<?php echo $topic_num; ?>';
-window.scrollTo("camp_"+topic_num+"_"+camp_num);
+window.scrollTo($("#camp_"+topic_num+"_"+camp_num));
 function submitForm(element){
     $(element).parents('form').submit();
 }

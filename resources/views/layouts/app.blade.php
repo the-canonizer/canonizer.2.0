@@ -31,8 +31,7 @@
 
 
     </head>
-    <body>
-
+     <body>
         @section('sidebar')
         <nav class="navbar navbar-expand-lg" id="mainNav">
             <a class="navbar-brand" href="{{ url('/') }}">

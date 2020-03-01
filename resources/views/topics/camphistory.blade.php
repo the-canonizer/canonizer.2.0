@@ -83,7 +83,7 @@
                               }
                             }
                             $ifSupportingThisCamp = 0;
-                            if(sizeof($supported_camps) > 0){
+                            if(isset($supported_camps) && sizeof($supported_camps) > 0){
                                 $flag = false; 
                                  foreach ($supported_camps as $key => $value) {
                                      if($key == $data->topic_num){
@@ -109,9 +109,13 @@
                           $allChildren = \App\Model\Camp::getAllChildCamps($camp[0]);
                           if(sizeof($allChildren) > 0 ){
                           foreach($allChildren as $campnum){
-                              $support = \App\Model\Support::where('topic_num',$data->topic_num)->where('camp_num',$campnum)->whereIn('nick_name_id',$nickNamesData)->where('end','=',0)->orderBy('support_order','ASC')->get();
+                              if($submit_time){
+                                  $support = \App\Model\Support::where('topic_num',$data->topic_num)->where('camp_num',$campnum)->whereIn('nick_name_id',$nickNamesData)->where('end','=',0)->where('start','<=',$submit_time)->orderBy('support_order','ASC')->get();
+                              }else{
+                                $support = \App\Model\Support::where('topic_num',$data->topic_num)->where('camp_num',$campnum)->whereIn('nick_name_id',$nickNamesData)->where('end','=',0)->orderBy('support_order','ASC')->get();
+                              }
+                              
                                  if(sizeof($support) > 0){
-                                      $ifSupportingThisCamp = 1;
                                       if(!$ifIamSupporter){
                                         $ifIamSupporter = $support[0]->nick_name_id;
                                       }
@@ -174,10 +178,10 @@
                             </div>    
                             <div class="CmpHistoryPnl-footer">
                                
-        <?php if ($currentTime < $data->go_live_time && $currentTime >= $data->submit_time && $ifSupportingThisCamp) { ?> 
-                                 @if($isagreeFlag && $ifIamSupporter && Auth::user()->id != $submitterUserID)
+        <?php if ($currentTime < $data->go_live_time && $currentTime >= $data->submit_time && $ifIamSupporter) { ?> 
+                                {{--@if($isagreeFlag && $ifIamSupporter && Auth::user()->id != $submitterUserID) --}} 
                                     <a id="object" class="btn btn-historysmt" href="<?php echo url('manage/camp/' . $data->id . '-objection'); ?>">Object</a>
-                                 @endif
+                              {{-- @endif --}}
                                 <?php } ?>
                                 <a id="update" class="btn btn-historysmt" href="<?php echo url('manage/camp/' . $data->id); ?>">Submit Camp Update Based On This</a>				  
                                  <a id="version" class="btn btn-historysmt" href="<?php echo url('topic/' . $data->topic_num . '/' . $data->camp_num . '?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $data->go_live_time)); ?>">View This Version</a>

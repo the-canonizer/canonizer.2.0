@@ -87,8 +87,13 @@ class Support extends Model {
                         ->get();
 	}
         
-        public static function ifIamSupporter($topinum,$campnum,$nickNames){
-            $support = self::where('topic_num','=',$topinum)->where('camp_num','=',$campnum)->whereIn('nick_name_id',$nickNames)->where('delegate_nick_name_id',0)->where('end','=',0)->first();
+        public static function ifIamSupporter($topinum,$campnum,$nickNames,$submit_time = null){
+            if($submit_time){
+                $support = self::where('topic_num','=',$topinum)->where('camp_num','=',$campnum)->whereIn('nick_name_id',$nickNames)->where('delegate_nick_name_id',0)->where('end','=',0)->where('start','<=',$submit_time)->first();
+            }else{
+                $support = self::where('topic_num','=',$topinum)->where('camp_num','=',$campnum)->whereIn('nick_name_id',$nickNames)->where('delegate_nick_name_id',0)->where('end','=',0)->first();
+            }
+            
             return count($support) ? $support->nick_name_id : 0 ;
         }
         
