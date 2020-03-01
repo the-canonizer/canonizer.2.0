@@ -198,7 +198,7 @@
                                         <option value="{{ $key }}" {{ session('defaultAlgo') == $key ? 'selected' : ''}}>{{$value}}</option>
                                     @endforeach
                                     </select>
-									<a href="<?php echo url('topic/53-Canonized-Canonizer-Algorithms/2') ?>"><span>Algorithm Information</span></a>
+									<a href="<?php echo url('topic/53-Canonizer-Algorithms/1') ?>"><span>Algorithm Information</span></a>
                                 </li>
 
                                 <li>
