@@ -67,7 +67,7 @@
 			   @foreach($supportedCamps as $key=>$supports)
                <?php
 
-                                $topic = \App\Model\Topic::where('topic_num','=',$key)->latest('submit_time')->get();
+                                $topic = \App\Model\Topic::where('topic_num','=',$key)->where('go_live_time', '<=', time())->latest('submit_time')->get();
                                 $topic_name = isset($topic[0]) ? $topic[0]->topic_name:'';
                                 $topic_name_space_id = isset($topic[0]) ? $topic[0]->namespace_id:1;
                                 $request_namesapce = isset($_REQUEST['namespace']) ? $_REQUEST['namespace'] :'1';

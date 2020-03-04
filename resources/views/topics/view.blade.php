@@ -62,8 +62,11 @@
              <a class="pull-right news-feed" href="{{ url('/addnews/' . $id . '/' . $parentcampnum)}}">Add News</a>
              <?php if(Auth::user()->id && $camp_subscriptions == 1){  ?>
                 <a style="float: right;font-size: medium; margin-right: 20px; margin-top: 5px;"><input id="camp_subscription" type="checkbox" name="subscribe" checked="checked" /> Subscribe</a>
-            <?php }else if(Auth::user()->id && $camp_subscriptions == 2){  ?> 
-                <a title="You are subscribed to a child camp" style="float: right;font-size: medium; margin-right: 20px; margin-top: 5px;"><input disabled="true" id="camp_subscription" type="checkbox" name="subscribe" checked="checked" /> Subscribe</a>
+            <?php }else if(Auth::user()->id && $camp_subscriptions == 2){ 
+                 $title = preg_replace('/[^A-Za-z0-9\-]/', '-', $subscribedCamp->topic->topic_name);
+                 $topic_id = $subscribedCamp->topic_num . "-" . $title;
+             ?> 
+                <a href="{{ url('topic/'.$topic_id.'/'.$subscribedCamp->camp_num)}}"  data-toggle="tooltip" data-placement="top" title="You are subscribed to  {{$subscribedCamp->camp_name}} camp" style="float: right;font-size: medium; margin-right: 20px; margin-top: 5px;"><input disabled="true" id="camp_subscription" type="checkbox" name="subscribe" checked="checked" /> Subscribe</a>
             <?php }else if(Auth::user()->id){ ?>
                 <a style="float: right;font-size: medium; margin-right: 20px; margin-top: 5px;"><input id="camp_subscription" type="checkbox" name="subscribe" /> Subscribe</a>
             <?php } ?>
@@ -218,21 +221,18 @@ change camps with them."><i class="fa fa-question"></i></a>
 </div>  <!-- /.right-whitePnl-->
 
 <?php } else { ?>
-<div class="right-whitePnl">
+    <div class="right-whitePnl">
     <div class="container-fluid">
- <div class="Scolor-Pnl">
-
-        <form name="as_of" id="as_of_form" method="GET">
-         <input type="hidden" id="filter" name="filter" value="{{ isset($_REQUEST['filter']) && !empty($_REQUEST['filter']) ? $_REQUEST['filter'] : '0.001' }}"/>
-           <input type="hidden" name="_token" value="{{ csrf_token() }}">
-           <input hidden type="text" id="asofdatenew" name="asofdate" value="<?php echo date('Y/m/d',$topicData[0]->submit_time); ?>"/>
-            <h3>The Topic was first created on <a href="javascript:void();" onClick="$('#as_of_form').submit()"><?php echo date('m/d/Y',$topicData[0]->submit_time);?></a></h3>
-        </form>
-            
+            <div class="Scolor-Pnl">
+                <form name="as_of" id="as_of_form" method="GET">
+                 <input type="hidden" id="filter" name="filter" value="{{ isset($_REQUEST['filter']) && !empty($_REQUEST['filter']) ? $_REQUEST['filter'] : '0.001' }}"/>
+                   <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                   <input hidden type="text" id="asofdatenew" name="asofdate" value="<?php echo date('Y/m/d',$topicData[0]->submit_time); ?>"/>
+                    <h3>The Topic was first created on <a href="javascript:void();" onClick="$('#as_of_form').submit()"><?php echo date('m/d/Y',(count($topicData) > 0) ? $topicData[0]->submit_time:'');?></a></h3>
+                </form>            
+            </div>
+    </div>              
     </div>
-</div>
-          
-</div>
 <?php } ?>
 <script>
 

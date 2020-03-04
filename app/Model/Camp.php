@@ -810,22 +810,75 @@ class Camp extends Model {
     }
 
     public static function getCampSubscription($topicnum,$campnum,$userid=null){
+        $returnArr = array('flag'=>0,'camp'=>[]);
         if($userid){
-              $onecamp = self::getLiveCamp($topicnum, $campnum);
-              $child_camps = self::getAllChildCamps($onecamp);
                $camp_subscription = \App\Model\CampSubscription::where('user_id','=',$userid)->where('camp_num','=',$campnum)->where('topic_num','=',$topicnum)->where('subscription_start','<=',strtotime(date('Y-m-d H:i:s')))->where('subscription_end','=',null)->orWhere('subscription_end','>=',strtotime(date('Y-m-d H:i:s')))->get();
                 $flag = sizeof($camp_subscription) > 0  || 0;
-                 if(!$flag && sizeof($child_camps) > 0 ){
-                    $camp_subs_child = \App\Model\CampSubscription::where('user_id','=',$userid)->whereIn('camp_num',$child_camps)->where('topic_num','=',$topicnum)->where('subscription_start','<=',strtotime(date('Y-m-d H:i:s')))->where('subscription_end','=',null)->orWhere('subscription_end','>=',strtotime(date('Y-m-d H:i:s')))->get();
-                    $flag = ($camp_subs_child && sizeof($camp_subs_child) > 0 );
-                    if($flag){
-                        $flag =2;
+                 if(!$flag){
+                    $onecamp = self::getLiveCamp($topicnum, $campnum);
+                    $childCampData = $onecamp->campChild($topicnum,$campnum);
+                    $child_camps = [];
+                    if(count($childCampData) > 0){
+                        foreach($childCampData as $key=>$child){
+                            $child_camps[$key] = $child->camp_num;
+                        }
                     }
+
+                    if(count($child_camps) > 0){
+                        $camp_subs_child = \App\Model\CampSubscription::where('user_id','=',$userid)->whereIn('camp_num',$child_camps)->where('topic_num','=',$topicnum)->where('subscription_start','<=',strtotime(date('Y-m-d H:i:s')))->where('subscription_end','=',null)->orWhere('subscription_end','>=',strtotime(date('Y-m-d H:i:s')))->get();
+                        $flag = ($camp_subs_child && sizeof($camp_subs_child) > 0 );
+                        if($flag){
+                            $flag =2;
+                        }
+                      foreach($child_camps as $camp){
+                        $camp_subscription = \App\Model\CampSubscription::where('user_id','=',$userid)->where('camp_num','=',$camp)->where('topic_num','=',$topicnum)->where('subscription_start','<=',strtotime(date('Y-m-d H:i:s')))->where('subscription_end','=',null)->orWhere('subscription_end','>=',strtotime(date('Y-m-d H:i:s')))->get();
+                        if(sizeof($camp_subscription) > 0){
+                            $onecamp = self::getLiveCamp($topicnum, $camp);
+                            $returnArr = array('flag'=>$flag,'camp'=>$onecamp);
+                            break;
+                        }
+                      }
+                    }
+                  }else{
+                    $onecamp = self::getLiveCamp($topicnum, $campnum);
+                    $returnArr = array('flag'=>$flag,'camp'=>$onecamp);
                   }
-                return $flag;
+                return $returnArr;
         }else{
-            return 0;
+            return $returnArr;
         }
+    }
+
+
+
+    public static function getCampSubscribers($topic_num,$camp_num){
+        $users_data = [];
+        $users = \App\Model\CampSubscription::select('user_id')->where('topic_num','=',$topic_num)
+                ->where('camp_num','=',$camp_num)->get();
+        if(count($users)){
+            foreach($users as $user){
+                array_push($users_data, $user->user_id);
+            }
+        }
+        $onecamp = self::getLiveCamp($topic_num, $camp_num);
+        $childCampData = $onecamp->campChild($topic_num,$camp_num);
+        $child_camps = [];
+        if(count($childCampData) > 0){
+            foreach($childCampData as $key=>$child){
+                $child_camps[$key] = $child->camp_num;
+            }
+        }
+
+        if(count($child_camps) > 0){
+            $usersData = \App\Model\CampSubscription::select('user_id')->where('topic_num','=',$topic_num)
+                ->whereIn('camp_num',$child_camps)->get(); 
+           if(count($usersData)){
+            foreach($usersData as $user){
+                array_push($users_data, $user->user_id);
+                }
+            }
+        }
+        return $users_data;
 
     }
 

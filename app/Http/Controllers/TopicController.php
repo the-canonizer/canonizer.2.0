@@ -321,10 +321,16 @@ class TopicController extends Controller {
 			session()->forget('campnum');
 			return redirect()->refresh();
 		}
-        $topicData = Topic::where('topic_num','=',$topicnum)->get();
+        $topicData = [];
         $topic = Camp::getAgreementTopic($topicnum, $_REQUEST);
+        if(!(isset($topic) && count($topic) > 0)){
+              $topicData = Topic::where('topic_num','=',$topicnum)->get();
+        }
         $camp = Camp::getLiveCamp($topicnum, $parentcampnum);
-        $camp_subscriptions = Camp::getCampSubscription($topicnum,$parentcampnum,Auth::user()->id);
+        $camp_subscriptionsData = Camp::getCampSubscription($topicnum,$parentcampnum,Auth::user()->id);
+        $camp_subscriptions = $camp_subscriptionsData['flag'];
+        $subscribedCamp = $camp_subscriptionsData['camp'];
+
         session()->forget("topic-support-{$topicnum}");
         session()->forget("topic-support-nickname-{$topicnum}");
         session()->forget("topic-support-tree-{$topicnum}");
@@ -363,7 +369,7 @@ class TopicController extends Controller {
             $editFlag = false;
         }
 
-        return view('topics.view', compact('topic', 'parentcampnum','camp_subscriptions', 'parentcamp', 'camp', 'wiky', 'id','news','editFlag','topicData'));
+        return view('topics.view', compact('topic', 'parentcampnum','camp_subscriptions','subscribedCamp', 'parentcamp', 'camp', 'wiky', 'id','news','editFlag','topicData'));
     }
 
     /**
@@ -1030,8 +1036,8 @@ class TopicController extends Controller {
             $statement->grace_period = 0;
             $statement->update();
             $directSupporter = Support::getDirectSupporter($statement->topic_num, $statement->camp_num);
-
-           // $link = 'statement/history/' . $id . '/' . $statement->camp_num . '?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $statement->go_live_time);
+            $subscribers = Camp::getCampSubscribers($statement->topic_num, $statement->camp_num);
+            // $link = 'statement/history/' . $id . '/' . $statement->camp_num . '?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $statement->go_live_time);
             $link = 'statement/history/' . $statement->topic_num . '/' . $statement->camp_num;
             $livecamp = Camp::getLiveCamp($statement->topic_num,$statement->camp_num);
             $data['object'] = " " . $livecamp->camp_name;
@@ -1045,6 +1051,7 @@ class TopicController extends Controller {
             $data['forum_link'] = 'forum/' . $statement->topic_num . '-statement/' . $statement->camp_num . '/threads';
             $data['subject'] = "Proposed change to statement for camp " . $livecamp->camp_name . " submitted";
             $this->mailSupporters($directSupporter, $link, $data);       //mail supporters
+            $this->mailSubscribers($subscribers, $link, $data);         // mail subscribers
             return response()->json(['id' => $statement->id, 'message' => 'Your change to statement has been submitted to your supporters.']);
         } else if ($type == 'camp') {
             $camp = Camp::where('id', '=', $id)->first();
@@ -1052,6 +1059,7 @@ class TopicController extends Controller {
             $camp->update();
 
             $directSupporter = Support::getDirectSupporter($camp->topic_num, $camp->camp_num);
+            $subscribers = Camp::getCampSubscribers($camp->topic_num, $camp->camp_num);
             //$link = 'camp/history/' . $id . '/' . $camp->camp_num . '?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $camp->go_live_time);
             $link = 'camp/history/' . $camp->topic_num . '/' . $camp->camp_num;
             $data['object'] = $camp->topic->topic_name . ' / ' . $camp->camp_name;
@@ -1065,13 +1073,14 @@ class TopicController extends Controller {
             $data['forum_link'] = 'forum/' . $camp->topic_num . '-' . $camp->camp_name . '/' . $camp->camp_num . '/threads';
             $data['subject'] = "Proposed change to " . $camp->camp_name . " submitted";
 
-            $this->mailSupporters($directSupporter, $link, $data);         //mail supporters   
+            $this->mailSupporters($directSupporter, $link, $data);         //mail supporters             
+            $this->mailSubscribers($subscribers, $link, $data);         // mail subscribers  
             return response()->json(['id' => $camp->id, 'message' => 'Your change to camp has been submitted to your supporters.']);
         } else if ($type == 'topic') {
             $topic = Topic::where('id', '=', $id)->first();
             $topic->grace_period = 0;
             $topic->update();
-            $directSupporter = Support::getDirectSupporter($topic->topic_num);
+            $directSupporter = Support::getDirectSupporter($topic->topic_num);          
 
            // $link = 'topic/' . $topic->topic_num . '/' . $topic->camp_num . '?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $topic->go_live_time);
             $link = 'topic-history/' . $topic->topic_num;
@@ -1094,6 +1103,14 @@ class TopicController extends Controller {
     private function mailSupporters($directSupporter, $link, $data) {
         foreach ($directSupporter as $supporter) {
             $user = Nickname::getUserByNickName($supporter->nick_name_id);
+            $receiver = (config('app.env') == "production") ? $user->email : config('app.admin_email');
+            Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new PurposedToSupportersMail($user, $link, $data));
+        }
+        return;
+    }
+    private function mailSubscribers($subscribers, $link, $data) {
+        foreach ($subscribers as $user) {
+            $user = \App\User::find($user);
             $receiver = (config('app.env') == "production") ? $user->email : config('app.admin_email');
             Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new PurposedToSupportersMail($user, $link, $data));
         }
