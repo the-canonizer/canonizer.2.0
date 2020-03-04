@@ -82,8 +82,28 @@
                         <?php ksort($supports['array']); ?>
                         @foreach($supports['array'] as $support_order)
                             @foreach($support_order as $support)
+
+                            <?php 
+                            if(isset($support['delegate_nick_name_id']) && $support['delegate_nick_name_id'] !=0){ 
+
+                                    $topic = \App\Model\Topic::where('topic_num','=',$key)->latest('submit_time')->get();
+                                    $delegatedNick = new \App\Model\Nickname();
+                                    $topic_name_space_id = isset($topic[0]) ? $topic[0]->namespace_id:1;
+                                    $delegatedNickDetail  = $delegatedNick->getNickName($support['delegate_nick_name_id']);
+                                    $nickName = \App\Model\Nickname::find($support['delegate_nick_name_id']);
+                                    $supported_camp = $nickName->getSupportCampList($topic_name_space_id);
+                                    $supported_camp_list = $nickName->getSupportCampListNames($supported_camp,$key)
+                                ?>
+                                <li>
+                                    Support delegated to {{$delegatedNickDetail->nick_name }}
+                                    <?php if($supported_camp_list != '' && $supported_camp_list!= null){ ?>
+                                      <span style="font-size:10px; width:100%; float:left;"><b>Supported camp list</b> : {!!$supported_camp_list !!}</span>
+                                  <?php } ?>
+                                </li>
+                            <?php } else{ ?>    
                                 <li id="camp_{{$key}}_{{$support['camp_num']}}">
                                     <a href="{{ (array_key_exists('link',$support)  && isset($support['link'])) ? $support['link'] : ''  }}" style="{{ ($support['camp_num'] == $camp_num && $key == $topic_num) ? 'font-weight:bold; font-size:16px;' : '' }}">{{(array_key_exists('camp_name',$support)  && isset($support['camp_name'])) ? $support['camp_name'] : ''}}</a></li>
+                            <?php } ?>
                             @endforeach
                         @endforeach
                         @endif
