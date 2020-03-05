@@ -34,6 +34,6 @@ class PurposedToSupportersMail extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.purposedtosupporters')->subject($this->data['subject']);
+        return $this->markdown('emails.purposedtosupporters')->subject(config('app.mail_env').$this->data['subject']);
     }
 }

@@ -32,6 +32,6 @@ class WelcomeMail extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.signup_welcome')->subject('Welcome to Canonizer.com');
+        return $this->markdown('emails.signup_welcome')->subject(config('app.mail_env').'Welcome to Canonizer.com');
     }
 }

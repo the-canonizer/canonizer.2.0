@@ -32,6 +32,6 @@ class RecoverAccountMail extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.recoveraccount')->subject('Welcome to Canonizer.com 2.0 System');
+        return $this->markdown('emails.recoveraccount')->subject(config('app.mail_env').'Welcome to Canonizer.com 2.0 System');
     }
 }
