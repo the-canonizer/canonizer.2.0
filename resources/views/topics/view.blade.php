@@ -15,9 +15,7 @@
 
 <div id="camp_subscription_notify"  style="display:none;" class="alert alert-success">
     <div calss="row">
-                <strong>Success!</strong> <span id="subscription_msg" >
-                    You have successfully subscribed to this camp.
-                </span>
+                <strong>Success!</strong> <span id="subscription_msg" ></span>
         </div>       
 </div>
 
@@ -60,6 +58,7 @@ if(isset($topic) && count($topic) > 0 ) { ?>
             page which can contain a statement of belief.  The green line
             indicates the camp page you are currently on and the statement below
             is for that camp."><i class="fa fa-question"></i></a>
+            <input type="hidden" id="subs_id" value="<?php echo ($camp_subscription_data && count($camp_subscription_data) > 0) ? $camp_subscription_data[0]->id: null; ?>" />
              <a class="pull-right news-feed" href="{{ url('/addnews/' . $id . '/' . $parentcampnum)}}">Add News</a>
              <?php if(Auth::user()->id && $camp_subscriptions == 1){  ?>
                 <a style="float: right;font-size: medium; margin-right: 20px; margin-top: 5px;"><input id="camp_subscription" type="checkbox" name="subscribe" checked="checked" /> Subscribe</a>
@@ -249,16 +248,16 @@ $('#camp_subscription').click(function(){
     var userId = <?php echo Auth::user()->id; ?>;
     var topic_num = <?php echo $topic->topic_num; ?>;
     var camp_num = <?php echo $parentcampnum; ?>;
+    var subscrip_id = $("#subs_id").val();
     $.ajax({
         type:'POST',
         url:"{{ route('camp.subscription')}}",
-        data:{userid:userId,camp_num:camp_num,topic_num:topic_num,checked:isChecked, _token:"{{csrf_token()}}"},
+        data:{id:subscrip_id,userid:userId,camp_num:camp_num,topic_num:topic_num,checked:isChecked, _token:"{{csrf_token()}}"},
         success:function(res){
-            console.log('res',res);
-            $('#subscription_msg').html(res.messgae);
+          $('#subscription_msg').html(res.message);
           $('#camp_subscription_notify').show().fadeOut(5000);
-
-      }
+          $("#subs_id").val(res.id);
+        }
     })
 
 })

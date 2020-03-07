@@ -810,7 +810,7 @@ class Camp extends Model {
     }
 
     public static function getCampSubscription($topicnum,$campnum,$userid=null){
-        $returnArr = array('flag'=>0,'camp'=>[]);
+        $returnArr = array('flag'=>0,'camp'=>[],'camp_subscription_data'=>[]);
         if($userid){
                $camp_subscription = \App\Model\CampSubscription::where('user_id','=',$userid)->where('camp_num','=',$campnum)->where('topic_num','=',$topicnum)->where('subscription_start','<=',strtotime(date('Y-m-d H:i:s')))->where('subscription_end','=',null)->orWhere('subscription_end','>=',strtotime(date('Y-m-d H:i:s')))->get();
                 $flag = sizeof($camp_subscription) > 0  || 0;
@@ -838,14 +838,14 @@ class Camp extends Model {
                         $camp_subscription = \App\Model\CampSubscription::where('user_id','=',$userid)->where('camp_num','=',$camp)->where('topic_num','=',$topicnum)->where('subscription_start','<=',strtotime(date('Y-m-d H:i:s')))->where('subscription_end','=',null)->orWhere('subscription_end','>=',strtotime(date('Y-m-d H:i:s')))->get();
                         if(sizeof($camp_subscription) > 0){
                             $onecamp = self::getLiveCamp($topicnum, $camp);
-                            $returnArr = array('flag'=>$flag,'camp'=>$onecamp);
+                            $returnArr = array('flag'=>$flag,'camp'=>$onecamp,'camp_subscription_data'=>$camp_subscription);
                             break;
                         }
                       }
                     }
                   }else{
                     $onecamp = self::getLiveCamp($topicnum, $campnum);
-                    $returnArr = array('flag'=>$flag,'camp'=>$onecamp);
+                    $returnArr = array('flag'=>$flag,'camp'=>$onecamp,'camp_subscription_data'=>$camp_subscription);
                   }
                 return $returnArr;
         }else{

@@ -330,7 +330,7 @@ class TopicController extends Controller {
         $camp_subscriptionsData = Camp::getCampSubscription($topicnum,$parentcampnum,Auth::user()->id);
         $camp_subscriptions = $camp_subscriptionsData['flag'];
         $subscribedCamp = $camp_subscriptionsData['camp'];
-
+        $camp_subscription_data = $camp_subscriptionsData['camp_subscription_data'];
         session()->forget("topic-support-{$topicnum}");
         session()->forget("topic-support-nickname-{$topicnum}");
         session()->forget("topic-support-tree-{$topicnum}");
@@ -369,7 +369,7 @@ class TopicController extends Controller {
             $editFlag = false;
         }
 
-        return view('topics.view', compact('topic', 'parentcampnum','camp_subscriptions','subscribedCamp', 'parentcamp', 'camp', 'wiky', 'id','news','editFlag','topicData'));
+        return view('topics.view', compact('topic', 'parentcampnum','camp_subscriptions','camp_subscription_data','subscribedCamp', 'parentcamp', 'camp', 'wiky', 'id','news','editFlag','topicData'));
     }
 
     /**
@@ -1122,19 +1122,26 @@ class TopicController extends Controller {
         try{
 
             $all = $request->all();
-             $camp_subscription = new \App\Model\CampSubscription();
-             $camp_subscription->user_id = $all['userid'];
-             $camp_subscription->topic_num = $all['topic_num'];
-             $camp_subscription->camp_num = $all['camp_num'];
+             $id = isset($all['id']) ? $all['id'] : null;
              if($all['checked'] == 'true'){
-                $camp_subscription->subscription_start = strtotime(date('Y-m-d H:i:s'));
+                $camp_subscription = new \App\Model\CampSubscription();
+                 $camp_subscription->user_id = $all['userid'];
+                 $camp_subscription->topic_num = $all['topic_num'];
+                 $camp_subscription->camp_num = $all['camp_num'];
+                 $camp_subscription->subscription_start = strtotime(date('Y-m-d H:i:s'));
                 $msg = "You have successfully subscribed to this camp.";
              }else{
-                $camp_subscription->subscription_end = strtotime(date('Y-m-d H:i:s'));
+                if($id){
+                    $camp_subs_data = \App\Model\CampSubscription::where('id','=',$id)->get();
+                    $camp_subscription = $camp_subs_data[0];
+                    $camp_subscription->subscription_end = strtotime(date('Y-m-d H:i:s'));
+                }
+                
                 $msg = "You have successfully unsubscribed from this camp.";
              }
              $camp_subscription->save();
-             return response()->json(['result' => "Success", 'message' =>$msg ]);
+             $returnId = ($id) ? null : $camp_subscription->id;
+             return response()->json(['result' => "Success", 'message' =>$msg ,'id'=>$returnId]);
         
         }catch(\Exception $e){
              return response()->json(['result' => "Error", 'message' => 'Error in subscring the camp.']);
