@@ -816,7 +816,11 @@ class Camp extends Model {
                 $flag = sizeof($camp_subscription) > 0  || 0;
                  if(!$flag){
                     $onecamp = self::getLiveCamp($topicnum, $campnum);
-                    $childCampData = $onecamp->campChild($topicnum,$campnum);
+                    $childCampData = [];
+                    if($onecamp){
+                         $childCampData = $onecamp->campChild($topicnum,$campnum);
+                    }
+                   
                     $child_camps = [];
                     if(count($childCampData) > 0){
                         foreach($childCampData as $key=>$child){
