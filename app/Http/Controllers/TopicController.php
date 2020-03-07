@@ -315,7 +315,11 @@ class TopicController extends Controller {
 
         $topicnumArray = explode("-", $id);
         $topicnum = $topicnumArray[0];
-        
+        if(Auth::user() && Auth::user()->id){
+            $userid = Auth::user()->id;
+        }else{
+            $userid = null;
+        }
 
         if(session('campnum')) {
 			session()->forget('campnum');
@@ -327,7 +331,7 @@ class TopicController extends Controller {
               $topicData = Topic::where('topic_num','=',$topicnum)->get();
         }
         $camp = Camp::getLiveCamp($topicnum, $parentcampnum);
-        $camp_subscriptionsData = Camp::getCampSubscription($topicnum,$parentcampnum,Auth::user()->id);
+        $camp_subscriptionsData = Camp::getCampSubscription($topicnum,$parentcampnum,$userid);
         $camp_subscriptions = $camp_subscriptionsData['flag'];
         $subscribedCamp = $camp_subscriptionsData['camp'];
         $camp_subscription_data = $camp_subscriptionsData['camp_subscription_data'];
