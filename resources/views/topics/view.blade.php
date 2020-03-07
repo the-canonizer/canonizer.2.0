@@ -21,7 +21,9 @@
         </div>       
 </div>
 
-<?php if(isset($topic) && count($topic) > 0 ) { ?>
+<?php if(isset($topic) && count($topic) > 0 ) {
+   echo "i m here"; print_r($topic); 
+ ?>
 
 <div class="camp top-head">
     <h3><b>Topic:</b> {{ $topic->topic_name}}</h3>
