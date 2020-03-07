@@ -228,7 +228,7 @@ change camps with them."><i class="fa fa-question"></i></a>
                  <input type="hidden" id="filter" name="filter" value="{{ isset($_REQUEST['filter']) && !empty($_REQUEST['filter']) ? $_REQUEST['filter'] : '0.001' }}"/>
                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
                    <input hidden type="text" id="asofdatenew" name="asofdate" value="<?php echo date('Y/m/d',$topicData[0]->submit_time); ?>"/>
-                    <h3>The Topic was first created on <a href="javascript:void();" onClick="$('#as_of_form').submit()"><?php echo date('m/d/Y',(count($topicData) > 0) ? $topicData[0]->submit_time:'');?></a></h3>
+                    <h3>The Topic was first created on <a href="javascript:void();" onClick="$('#as_of_form').submit()"><?php //echo date('m/d/Y',(count($topicData) > 0) ? $topicData[0]->submit_time:'');?></a></h3>
                 </form>            
             </div>
     </div>              
