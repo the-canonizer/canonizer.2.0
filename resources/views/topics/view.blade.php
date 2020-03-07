@@ -21,8 +21,10 @@
         </div>       
 </div>
 
-<?php if(isset($topic) && count($topic) > 0 ) {
-   echo "i m here"; print_r($topic); 
+<?php 
+echo "i m here"; print_r($topic); 
+if(isset($topic) && count($topic) > 0 ) {
+
  ?>
 
 <div class="camp top-head">
