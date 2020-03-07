@@ -321,11 +321,12 @@ class TopicController extends Controller {
 			session()->forget('campnum');
 			return redirect()->refresh();
 		}
-        $topicData = [];
+        //$topicData = [];
         $topic = Camp::getAgreementTopic($topicnum, $_REQUEST);
-        if(!(isset($topic) && count($topic) > 0)){
+        //if(!(isset($topic) && count($topic) > 0)){
               $topicData = Topic::where('topic_num','=',$topicnum)->get();
-        }
+        //}
+
         $camp = Camp::getLiveCamp($topicnum, $parentcampnum);
         $camp_subscriptionsData = Camp::getCampSubscription($topicnum,$parentcampnum,Auth::user()->id);
         $camp_subscriptions = $camp_subscriptionsData['flag'];
