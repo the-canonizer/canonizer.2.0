@@ -22,10 +22,7 @@
 </div>
 
 <?php 
-echo "i m here"; print_r($topic); 
-if(isset($topic) && count($topic) > 0 ) {
-
- ?>
+if(isset($topic) && count($topic) > 0 ) { ?>
 
 <div class="camp top-head">
     <h3><b>Topic:</b> {{ $topic->topic_name}}</h3>
@@ -246,7 +243,7 @@ if(type=="statement") {
         scrollTop: $("#statement").offset().top
     }, 2000);
 }	
-
+<?php if(isset($topic) && count($topic) > 0) { ?>
 $('#camp_subscription').click(function(){
     var isChecked = $(this).prop('checked');
     var userId = <?php echo Auth::user()->id; ?>;
@@ -265,6 +262,7 @@ $('#camp_subscription').click(function(){
     })
 
 })
+<?php } ?>
 
 </script>	
 @endsection
