@@ -84,6 +84,7 @@
                             @foreach($support_order as $support)
 
                             <?php 
+                            echo "<pre>"; print_r($support);
                             if(isset($support['delegate_nick_name_id']) && $support['delegate_nick_name_id'] !=0){ 
 
                                     $topic = \App\Model\Topic::where('topic_num','=',$key)->latest('submit_time')->get();
