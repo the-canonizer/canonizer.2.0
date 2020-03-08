@@ -88,7 +88,7 @@
 
                       ?>
                       <ul>
-                          <li>
+                          <li style="list-style:none;">
                                     Support delegated to {{$delegatedNickDetail->nick_name }}
                                     <?php if($supported_camp_list != '' && $supported_camp_list!= null){ ?>
                                       <span style="font-size:10px; width:100%; float:left;"><b>Supported camp list</b> : {!!$supported_camp_list !!}</span>
@@ -114,7 +114,7 @@
                                     $supported_camp = $nickName->getSupportCampList($topic_name_space_id);
                                     $supported_camp_list = $nickName->getSupportCampListNames($supported_camp,$key)
                                 ?>
-                                <li>
+                                <li style="list-style:none;">
                                     Support delegated to {{$delegatedNickDetail->nick_name }}
                                     <?php if($supported_camp_list != '' && $supported_camp_list!= null){ ?>
                                       <span style="font-size:10px; width:100%; float:left;"><b>Supported camp list</b> : {!!$supported_camp_list !!}</span>
