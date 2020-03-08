@@ -103,11 +103,13 @@ class Nickname extends Model {
             $title = preg_replace('/[^A-Za-z0-9\-]/', '-', $rs->camp_name);
             $topic_id = $topic_num . "-" . $title;
             if ($rs->delegate_nick_name_id && $camp_num != 1 ) {
-
                 $supports[$topic_num]['array'][$rs->support_order][] = ['camp_name' => $rs->camp_name, 'camp_num' => $camp_num, 'link' => url('topic/' . $topic_id . '/' . $camp_num),'delegate_nick_name_id'=>$rs->delegate_nick_name_id];
             } else if ($camp_num == 1) {
                 $supports[$topic_num]['camp_name'] = ($rs->camp_name != "") ? $rs->camp_name : $rs->title;
                 $supports[$topic_num]['link'] = url('topic/' . $topic_id . '/' . $camp_num);
+                if($rs->delegate_nick_name_id){
+                    $supports[$topic_num]['delegate_nick_name_id'] = $rs->delegate_nick_name_id;
+                }
             } else {
                 $supports[$topic_num]['array'][$rs->support_order][] = ['camp_name' => $rs->camp_name, 'camp_num' => $camp_num, 'link' => url('topic/' . $topic_id . '/' . $camp_num)];
             }
