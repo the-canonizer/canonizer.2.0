@@ -66,7 +66,7 @@
             @if(count($supportedCamps) > 0)
 			   @foreach($supportedCamps as $key=>$supports)
                <?php
-
+               echo "<pre>Topic"; print_r($supports);
                                 $topic = \App\Model\Topic::where('topic_num','=',$key)->where('go_live_time', '<=', time())->latest('submit_time')->get();
                                 $topic_name = isset($topic[0]) ? $topic[0]->topic_name:'';
                                 $topic_name_space_id = isset($topic[0]) ? $topic[0]->namespace_id:1;
