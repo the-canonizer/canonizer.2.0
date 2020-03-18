@@ -194,6 +194,7 @@
 
                             </div> 	
 
+                            @if(Auth::check())
                             @if($isagreeFlag && $ifIamSupporter && Auth::user()->id != $submitterUserID)
                             <div class="CmpHistoryPnl-footer">
                                 <div>
@@ -202,7 +203,7 @@
                             </div>
                             @endif
                             
-                             @if(Auth::check())
+                             
                                 @if(Auth::user()->id == $submitterUserID && $isGraceFlag &&  $data->grace_period && $interval > 0)
                                 <div class="CmpHistoryPnl-footer" id="countdowntimer_block<?php echo $data->id ;?>">
                                     <div class="grace-period-note"><b>Note: </b>This countdown timer is the grace period in which you can make minor changes to your camp before other direct supporters are notified.</div>

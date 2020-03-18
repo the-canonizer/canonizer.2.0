@@ -844,6 +844,8 @@ class TopicController extends Controller {
             Mail::to(Auth::user()->email)->bcc(config('app.admin_bcc'))->send(new ThankToSubmitterMail(Auth::user(), $link,$data));
             // mail to direct supporters on new statement creation
             $directSupporter = Support::getDirectSupporter($statement->topic_num, $statement->camp_num);
+            $subscribers = Camp::getCampSubscribers($statement->topic_num, $statement->camp_num);
+           
             $dataObject['object'] = " " . $livecamp->camp_name;
             $dataObject['go_live_time'] = $statement->go_live_time;
             $dataObject['type'] = 'statement : for camp ';
@@ -855,6 +857,7 @@ class TopicController extends Controller {
             $dataObject['forum_link'] = 'forum/' . $statement->topic_num . '-statement/' . $statement->camp_num . '/threads';
             $dataObject['subject'] = "Proposed change to statement for camp " . $livecamp->camp_name . " submitted";
             $this->mailSupporters($directSupporter,$link,$dataObject);
+            $this->mailSubscribers($subscribers, $link, $dataObject); 
         } else if ($eventtype == "OBJECTION") {
 
             $user = Nickname::getUserByNickName($all['submitter']);

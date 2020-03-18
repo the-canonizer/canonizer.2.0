@@ -207,16 +207,16 @@
                    //$('#version').attr('href',href);
                </script>
 				 </div>
-                                @if($isagreeFlag && $ifIamSupporter && Auth::user()->id != $submitterUserID)
+                                 @if(Auth::check())
+                                 @if($isagreeFlag && $ifIamSupporter && Auth::user()->id != $submitterUserID)
                                 <div class="CmpHistoryPnl-footer">
                                     <div>
                                        <input {{ (isset($isAgreed) && $isAgreed) ? 'checked' : '' }} {{ (isset($isAgreed) && $isAgreed) ? 'disabled' : '' }} class="agree-to-change" type="checkbox" name="agree" value="" onchange="agreeToChannge(this,'{{ $data->id}}')"> I agree with this statement change</form>
                                     </div>
                                 </div>
                                 @endif
-                                
-                                @if(Auth::check())
-                                    @if(Auth::user()->id == $submitterUserID && $isGraceFlag && $data->grace_period && $interval > 0)
+
+                                  @if(Auth::user()->id == $submitterUserID && $isGraceFlag && $data->grace_period && $interval > 0)
                                     <div class="CmpHistoryPnl-footer" id="countdowntimer_block<?php echo $data->id ;?>">
                                         <div class="grace-period-note"><b>Note: </b>This countdown timer is the grace period in which you can make minor changes to your statement before other direct supporters are notified.</div>
                                         <div style="float: right" > 
