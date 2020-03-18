@@ -27,11 +27,13 @@ class Nickname extends Model {
     }
 
     public static function personNickname() {
-
+         if (Auth::check()) {
         $userid = Auth::user()->id;
         $encode = General::canon_encode($userid);
 
         return DB::table('nick_name')->select('id', 'nick_name')->where('owner_code', $encode)->orderBy('nick_name', 'ASC')->get();
+       }
+       return [];
     }
 
     public static function personNicknameArray() {
@@ -40,7 +42,6 @@ class Nickname extends Model {
         $nicknames = self::personNickname();
 
         foreach ($nicknames as $nickname) {
-
             $userNickname[] = $nickname->id;
         }
         return $userNickname;
