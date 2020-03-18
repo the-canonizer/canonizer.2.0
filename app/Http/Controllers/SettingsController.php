@@ -424,10 +424,12 @@ class SettingsController extends Controller {
 				$result['object'] = $topic->topic_name ." / ".$camp->camp_name;
                 $result['subject'] = $nickName->nick_name . " has just delegated their support to you.";
                 $link = 'topic/' . $data['topic_num'] . '/' . $data['camp_num'];
-
+                $subscribers = Camp::getCampSubscribers($data['topic_num'], $data['camp_num']);
                 $receiver = (config('app.env') == "production") ? $parentUser->email : config('app.admin_email');
-
                 Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new NewDelegatedSupporterMail($parentUser, $link, $result));
+                $result['subject'] = $nickName->nick_name . " has just delegated their support to ".$parentUser->first_name." ".$parentUser->last_name;
+                $result['delegated_user'] = $parentUser->first_name." ".$parentUser->last_name;
+                $this->mailSubscribers($subscribers, $link, $result); 
                 /* end of email */
             }
             Session::flash('success', "Your support update has been submitted successfully.");
@@ -436,6 +438,15 @@ class SettingsController extends Controller {
         } else {
             return redirect()->route('login');
         }
+    }
+
+    private function mailSubscribers($subscribers, $link, $data) {
+        foreach ($subscribers as $user) {
+            $user = \App\User::find($user);
+            $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email :  config('app.admin_email');
+            Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new NewDelegatedSupporterMail($user, $link, $data));
+        }
+        return;
     }
 
     public function delete_support(Request $request) {

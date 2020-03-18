@@ -1,7 +1,7 @@
 @component('mail::message')
  Hi {{ $user->first_name }} {{ $user->last_name }},<br/>
  <p>
- {{ $data['nick_name']}} has just delegated their support to you in this topic: <b>{{ $data['object']}}</b>
+ {{ $data['nick_name']}} has just delegated their support to {{(isset($data['delegated_user']))? $data['delegated_user'] :'you'}} in this topic: <b>{{ $data['object']}}</b>
 
  </p>
 @component('mail::button', ['url' => url('/') . '/' . $link])

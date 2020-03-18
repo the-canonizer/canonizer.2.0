@@ -245,7 +245,7 @@ class TopicController extends Controller {
                 $data['forum_link'] = 'forum/' . $topic->topic_num . '-' . $liveTopic->topic_name . '/1/threads';
                 $data['subject'] = $data['nick_name'] . " has objected to your proposed change.";
 
-                $receiver = (config('app.env') == "production") ? $user->email : config('app.admin_email');
+                $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
                  Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new ObjectionToSubmitterMail($user, $link, $data));
             } else if ($eventtype == "UPDATE") {
 
@@ -718,7 +718,7 @@ class TopicController extends Controller {
                 $data['forum_link'] = 'forum/' . $camp->topic_num . '-' . $camp->camp_name . '/' . $camp->camp_num . '/threads';
                 $data['subject'] = $data['nick_name'] . " has objected to your proposed change.";
                 $data['type'] = 'camp';
-                $receiver = (config('app.env') == "production") ? $user->email : config('app.admin_email');
+                $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
                 Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new ObjectionToSubmitterMail($user, $link, $data));
             } else if ($eventtype == "UPDATE") {
 
@@ -871,7 +871,7 @@ class TopicController extends Controller {
             $data['forum_link'] = 'forum/' . $statement->topic_num . '-statement/' . $statement->camp_num . '/threads';
             $data['subject'] = $data['nick_name'] . " has objected to your proposed change.";
 
-            $receiver = (config('app.env') == "production") ? $user->email : config('app.admin_email');
+            $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
          Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new ObjectionToSubmitterMail($user, $link, $data));
         } else if ($eventtype == "UPDATE") {
 
@@ -1110,7 +1110,7 @@ class TopicController extends Controller {
     private function mailSupporters($directSupporter, $link, $data) {
         foreach ($directSupporter as $supporter) {
             $user = Nickname::getUserByNickName($supporter->nick_name_id);
-            $receiver = (config('app.env') == "production") ? $user->email : config('app.admin_email');
+            $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
             Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new PurposedToSupportersMail($user, $link, $data));
         }
         return;
@@ -1118,7 +1118,7 @@ class TopicController extends Controller {
     private function mailSubscribers($subscribers, $link, $data) {
         foreach ($subscribers as $user) {
             $user = \App\User::find($user);
-            $receiver = (config('app.env') == "production") ? $user->email : config('app.admin_email');
+            $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
             Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new PurposedToSupportersMail($user, $link, $data));
         }
         return;
