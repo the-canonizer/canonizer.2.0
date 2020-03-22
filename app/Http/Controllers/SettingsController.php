@@ -474,7 +474,7 @@ class SettingsController extends Controller {
             $directSupporter = Support::getDirectSupporter($data['topic_num'], $data['camp_num']);
             $result['support_added'] = 1;
             $this->mailSubscribers($subscribers, $link, $result); 
-            $this->mailDirectSupporters($directSupporter, $link, $data);
+            $this->mailDirectSupporters($directSupporter, $link, $result);
             
     }
 
@@ -491,7 +491,7 @@ class SettingsController extends Controller {
             $directSupporter = Support::getDirectSupporter($data['topic_num'], $data['camp_num']);
             $result['support_deleted'] = 1;
             $this->mailSubscribers($subscribers, $link, $result); 
-            $this->mailDirectSupporters($directSupporter, $link, $data);
+            $this->mailDirectSupporters($directSupporter, $link, $result);
             
     }
 
