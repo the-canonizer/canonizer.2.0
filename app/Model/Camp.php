@@ -834,10 +834,13 @@ class Camp extends Model {
                         if($flag){
                             $flag =2;
                         }
+                        echo "<pre>"; print_r($camp_subscription);
                       foreach($child_camps as $camp){
                         $camp_subscription = \App\Model\CampSubscription::where('user_id','=',$userid)->where('camp_num','=',$camp)->where('topic_num','=',$topicnum)->where('subscription_start','<=',strtotime(date('Y-m-d H:i:s')))->where('subscription_end','=',null)->orWhere('subscription_end','>=',strtotime(date('Y-m-d H:i:s')))->get();
+                        echo "<pre>"; print_r($camp_subscription);
                         if(sizeof($camp_subscription) > 0){
                             $onecamp = self::getLiveCamp($topicnum, $camp);
+                            echo "<pre>"; print_r($onecamp); die;
                             $returnArr = array('flag'=>$flag,'camp'=>$onecamp,'camp_subscription_data'=>$camp_subscription);
                             break;
                         }
