@@ -407,11 +407,14 @@ class SettingsController extends Controller {
                 session()->forget("topic-support-nickname-{$topic_num}");
                 session()->forget("topic-support-tree-{$topic_num}");
             }
+            
 		   }	
             if($last_camp == $data['camp_num']){
                 Session::flash('confirm',"samecamp");
             }
-            /* Send delegated support email to the direct supporter and all parent */
+            /* send support added mail to all supporter and subscribers */
+            $this->emailForSupportAdded($data);
+            /* Send delegated support email to the direct supporter and all parent  and to subscriber*/
             if (isset($data['delegate_nick_name_id']) && $data['delegate_nick_name_id'] != 0) {
                 $parentUser = Nickname::getUserByNickName($data['delegate_nick_name_id']);
 
@@ -449,19 +452,63 @@ class SettingsController extends Controller {
         return;
     }
 
+    private function mailDirectSupporters($directSupporter, $link, $data) {
+        foreach ($directSupporter as $supporter) {
+            $user = Nickname::getUserByNickName($supporter->nick_name_id);
+            $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
+            Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new NewDelegatedSupporterMail($user, $link, $data));
+        }
+        return;
+    }
+
+    private function emailForSupportAdded($data){
+            $nickName = Nickname::getNickName($data['nick_name']);
+            $topic = Camp::getAgreementTopic($data['topic_num']);
+            $camp = Camp::where('topic_num', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('go_live_time', '<=', time())->latest('submit_time')->first();
+        
+            $result['nick_name'] = $nickName->nick_name;
+            $result['object'] = $topic->topic_name ." / ".$camp->camp_name;
+            $result['subject'] = $nickName->nick_name . " has added the support to $camp->camp_name.";
+            $link = 'topic/' . $data['topic_num'] . '/' . $data['camp_num'];
+            $subscribers = Camp::getCampSubscribers($data['topic_num'], $data['camp_num']);
+            $directSupporter = Support::getDirectSupporter($data['topic_num'], $data['camp_num']);
+            $result['support_added'] = 1;
+            $this->mailSubscribers($subscribers, $link, $result); 
+            $this->mailDirectSupporters($directSupporter, $link, $data);
+            
+    }
+
+    private function emailForSupportDeleted($data){
+            $nickName = Nickname::getNickName($data['nick_name']);
+            $topic = Camp::getAgreementTopic($data['topic_num']);
+            $camp = Camp::where('topic_num', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('go_live_time', '<=', time())->latest('submit_time')->first();
+        
+            $result['nick_name'] = $nickName->nick_name;
+            $result['object'] = $topic->topic_name ." / ".$camp->camp_name;
+            $result['subject'] = $nickName->nick_name . " has added the support to $camp->camp_name.";
+            $link = 'topic/' . $data['topic_num'] . '/' . $data['camp_num'];
+            $subscribers = Camp::getCampSubscribers($data['topic_num'], $data['camp_num']);
+            $directSupporter = Support::getDirectSupporter($data['topic_num'], $data['camp_num']);
+            $result['support_deleted'] = 1;
+            $this->mailSubscribers($subscribers, $link, $result); 
+            $this->mailDirectSupporters($directSupporter, $link, $data);
+            
+    }
+
     public function delete_support(Request $request) {
 
         $id = Auth::user()->id;
         $input = $request->all();
-
         $support_id = (isset($input['support_id'])) ? $input['support_id'] : 0;
         $topic_num = (isset($input['topic_num'])) ? $input['topic_num'] : 0;
-        $nick_name_id = (isset($input['topic_num'])) ? $input['topic_num'] : 0;
+        $nick_name_id = (isset($input['nick_name_id'])) ? $input['nick_name_id'] : 0;
 
         if ($id && $support_id && $topic_num) {
             $as_of_time = time();
             $currentSupport = Support::where('support_id', $support_id);
             $currentSupportRec = $currentSupport->first();
+            $input['camp_num'] = $currentSupportRec->camp_num;
+            $input['nick_name_id'] = $currentSupportRec->nick_name_id;
             $currentSupportOrder = $currentSupportRec->support_order;
             $remaingSupportWithHighOrder = Support::where('topic_num', $topic_num)
                     //->where('delegate_nick_name_id',0)
@@ -486,6 +533,8 @@ class SettingsController extends Controller {
             } else {
                 Session::flash('error', "Your support has not been removed.");
             }
+            /* send support added mail to all supporter and subscribers */
+            $this->emailForSupportDeleted($input);
             return redirect()->back();
         }
         Session::flash('error', "Invalid access.");
