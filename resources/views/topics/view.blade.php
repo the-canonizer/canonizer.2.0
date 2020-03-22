@@ -62,8 +62,7 @@ if(isset($topic) && count($topic) > 0 ) { ?>
              <a class="pull-right news-feed" href="{{ url('/addnews/' . $id . '/' . $parentcampnum)}}">Add News</a>
              <?php if(Auth::check() && Auth::user()->id && $camp_subscriptions == 1){  ?>
                 <a style="float: right;font-size: medium; margin-right: 20px; margin-top: 5px;"><input id="camp_subscription" type="checkbox" name="subscribe" checked="checked" /> Subscribe</a>
-            <?php }else if(Auth::check() && Auth::user()->id && $camp_subscriptions == 2){ 
-                  echo "<pre>"; print_r($subscribedCamp); die;
+            <?php }else if(Auth::check() && Auth::user()->id && isset($subscribedCamp) && $subscribedCamp->topic_num  && $camp_subscriptions == 2){ 
                  $title = preg_replace('/[^A-Za-z0-9\-]/', '-', $subscribedCamp->topic->topic_name);
                  $topic_id = $subscribedCamp->topic_num . "-" . $title;
              ?> 

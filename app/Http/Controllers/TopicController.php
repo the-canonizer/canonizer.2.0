@@ -335,7 +335,6 @@ class TopicController extends Controller {
         $camp_subscriptions = $camp_subscriptionsData['flag'];
         $subscribedCamp = $camp_subscriptionsData['camp'];
         $camp_subscription_data = $camp_subscriptionsData['camp_subscription_data'];
-        die;
         session()->forget("topic-support-{$topicnum}");
         session()->forget("topic-support-nickname-{$topicnum}");
         session()->forget("topic-support-tree-{$topicnum}");
