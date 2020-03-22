@@ -9,7 +9,7 @@
                     var scriptTag = document.createElement('script');
                     scriptTag.setAttribute('src', '//pagead2.googlesyndication.com/pagead/show_ads.js');
                     scriptTag.setAttribute('type', 'text/javascript');
-                    scriptTag.setAttribute('async', 'async');
+                    //scriptTag.setAttribute('async', 'async');
                     document.getElementById('google_ads').appendChild(scriptTag);
             };
            
