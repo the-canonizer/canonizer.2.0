@@ -462,6 +462,7 @@ class SettingsController extends Controller {
     }
 
     private function emailForSupportAdded($data){
+            echo "<pre>"; print_r($data); die;
             $nickName = Nickname::getUserByNickName($data['nick_name']);
             $topic = Camp::getAgreementTopic($data['topic_num']);
             $camp = Camp::where('topic_num', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('go_live_time', '<=', time())->latest('submit_time')->first();
