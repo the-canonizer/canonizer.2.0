@@ -63,7 +63,7 @@ if(isset($topic) && count($topic) > 0 ) { ?>
              <?php if(Auth::check() && Auth::user()->id && $camp_subscriptions == 1){  ?>
                 <a style="float: right;font-size: medium; margin-right: 20px; margin-top: 5px;"><input id="camp_subscription" type="checkbox" name="subscribe" checked="checked" /> Subscribe</a>
             <?php }else if(Auth::check() && Auth::user()->id && $camp_subscriptions == 2){ 
-                 $title = preg_replace('/[^A-Za-z0-9\-]/', '-', $subscribedCamp->topic->topic_name);
+                 $title = ;//preg_replace('/[^A-Za-z0-9\-]/', '-', $subscribedCamp->topic->topic_name);
                  $topic_id = $subscribedCamp->topic_num . "-" . $title;
              ?> 
                 <a href="{{ url('topic/'.$topic_id.'/'.$subscribedCamp->camp_num)}}"  data-toggle="tooltip" data-placement="top" title="You are subscribed to  {{$subscribedCamp->camp_name}} camp" style="float: right;font-size: medium; margin-right: 20px; margin-top: 5px;"><input disabled="true" id="camp_subscription" type="checkbox" name="subscribe" checked="checked" /> Subscribe</a>
