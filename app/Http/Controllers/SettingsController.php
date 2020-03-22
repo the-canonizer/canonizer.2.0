@@ -462,7 +462,7 @@ class SettingsController extends Controller {
     }
 
     private function emailForSupportAdded($data){
-            $nickName = Nickname::getUserByNickName($data['nick_name_id']);
+            $nickName = Nickname::getUserByNickName($data['nick_name']);
             $topic = Camp::getAgreementTopic($data['topic_num']);
             $camp = Camp::where('topic_num', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('go_live_time', '<=', time())->latest('submit_time')->first();
         
@@ -479,7 +479,7 @@ class SettingsController extends Controller {
     }
 
     private function emailForSupportDeleted($data){
-            $nickName = Nickname::getNickName($data['nick_name']);
+            $nickName = Nickname::getNickName($data['nick_name_id']);
             $topic = Camp::getAgreementTopic($data['topic_num']);
             $camp = Camp::where('topic_num', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('go_live_time', '<=', time())->latest('submit_time')->first();
         
