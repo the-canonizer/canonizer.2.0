@@ -265,7 +265,7 @@
 
         <div class="content-wrapper">
             @yield('content')
-        <div class="homeADDright">
+        <div id="google_ads" class="homeADDright">
 			@include('partials.advertisement')
 		</div>
             <!-- footer -->
