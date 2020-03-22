@@ -1119,6 +1119,7 @@ class TopicController extends Controller {
         foreach ($subscribers as $user) {
             $user = \App\User::find($user);
             $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
+            $data['subscriber'] = 1;
             Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new PurposedToSupportersMail($user, $link, $data));
         }
         return;
