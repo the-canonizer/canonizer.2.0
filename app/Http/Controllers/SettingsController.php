@@ -485,7 +485,7 @@ class SettingsController extends Controller {
         
             $result['nick_name'] = $nickName->nick_name;
             $result['object'] = $topic->topic_name ." / ".$camp->camp_name;
-            $result['subject'] = $nickName->nick_name . " has added the support to $camp->camp_name.";
+            $result['subject'] = $nickName->nick_name . " has removed his support from $camp->camp_name.";
             $link = 'topic/' . $data['topic_num'] . '/' . $data['camp_num'];
             $subscribers = Camp::getCampSubscribers($data['topic_num'], $data['camp_num']);
             $directSupporter = Support::getDirectSupporter($data['topic_num'], $data['camp_num']);
