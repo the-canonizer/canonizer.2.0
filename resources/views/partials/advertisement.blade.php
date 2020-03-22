@@ -10,7 +10,7 @@
                     scriptTag.setAttribute('src', '//pagead2.googlesyndication.com/pagead/show_ads.js');
                     scriptTag.setAttribute('type', 'text/javascript');
                     scriptTag.setAttribute('async', 'async');
-                    document.getELementById('google_ads').appendChild(scriptTag);
+                    document.getElementById('google_ads').appendChild(scriptTag);
                    // document.body.appendChild(scriptTag);
                 }
                 window.addEventListener("load", loadGoogleAds);
