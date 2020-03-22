@@ -834,7 +834,7 @@ class Camp extends Model {
                         if($flag){
                             $flag =2;
                         }
-                        echo "<pre>ddddd"; print_r($camp_subscription);
+                        echo "<pre>ddddd"; print_r($camp_subs_child);
                       foreach($child_camps as $camp){
                         $camp_subscription = \App\Model\CampSubscription::where('user_id','=',$userid)->where('camp_num','=',$camp)->where('topic_num','=',$topicnum)->where('subscription_start','<=',strtotime(date('Y-m-d H:i:s')))->where('subscription_end','=',null)->orWhere('subscription_end','>=',strtotime(date('Y-m-d H:i:s')))->get();
                         echo "<pre>fffff"; print_r($camp_subscription);
