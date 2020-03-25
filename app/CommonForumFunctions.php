@@ -47,20 +47,24 @@ class CommonForumFunctions
             $subscribers = Camp::getCampSubscribers($topicid, $camp_id);
             foreach ($directSupporter as $supporter) {
                 $user = CommonForumFunctions::getUserFromNickId($supporter->nick_name_id);
-                $bcc_email[] = CommonForumFunctions::getReceiver($user->email);
+                $bcc_user_email = CommonForumFunctions::getReceiver($user->email);
                 $userExist[] = $user->id;
+                Mail::bcc($bcc_user_email)->send(new ForumPostSubmittedMail($user, $link, $data));
             }
-            foreach($subscribers as $sub){
-                if(!in_array($sub,$userExist)){
-                    $userSub = \App\User::find($sub);
-                    $subscriber_bcc_email[] = CommonForumFunctions::getReceiver($userSub->email);
+            if($subscribers && count($subscribers) > 0){
+               $data['subscriber'] = 1;
+                foreach($subscribers as $sub){
+                    if(!in_array($sub,$userExist)){
+                        $userSub = \App\User::find($sub);
+                        $bcc_user_email = CommonForumFunctions::getReceiver($userSub->email);
+                        Mail::bcc($bcc_user_email)->send(new ForumPostSubmittedMail($userSub, $link, $data))
+                    }
                 }
             }
+            
         }
 
-        Mail::bcc($bcc_email)->send(new ForumPostSubmittedMail($user, $link, $data));
-        $data['subscriber'] = 1;
-        Mail::bcc($subscriber_bcc_email)->send(new ForumPostSubmittedMail($user, $link, $data));
+        //Mail::bcc($bcc_email)->send(new ForumPostSubmittedMail($user, $link, $data));
         return;
     }
 
@@ -95,21 +99,27 @@ class CommonForumFunctions
 
             foreach ($directSupporter as $supporter) {
                 $user = CommonForumFunctions::getUserFromNickId($supporter->nick_name_id);
-                $bcc_email[] = CommonForumFunctions::getReceiver($user->email);
+                $bcc_user_email = CommonForumFunctions::getReceiver($user->email);
                 $userExist[] = $user->id;
+                Mail::bcc($bcc_user_email)->send(new ForumThreadCreatedMail($user, $link, $data));
             }
-
-            foreach($subscribers as $sub){
-                if(!in_array($sub,$userExist)){
-                    $userSub = \App\User::find($sub);
-                    $subscriber_bcc_email[] = CommonForumFunctions::getReceiver($userSub->email);
-                }
+            if($subscribers && count($subscribers) > 0){
+                    $data['subscriber'] = 1;
+                    foreach($subscribers as $sub){
+                        if(!in_array($sub,$userExist)){
+                            $userSub = \App\User::find($sub);
+                            $bcc_user_email = CommonForumFunctions::getReceiver($userSub->email);
+                            
+                            Mail::bcc($bcc_user_email)->send(new ForumThreadCreatedMail($userSub, $link, $data));
+                        }
+                    }
             }
+            
         }
 
-        Mail::bcc($bcc_email)->send(new ForumThreadCreatedMail($user, $link, $data));
-        $data['subscriber'] = 1;
-        Mail::bcc($subscriber_bcc_email)->send(new ForumThreadCreatedMail($user, $link, $data));
+        // Mail::bcc($bcc_email)->send(new ForumThreadCreatedMail($user, $link, $data));
+        // $data['subscriber'] = 1;
+        // Mail::bcc($subscriber_bcc_email)->send(new ForumThreadCreatedMail($user, $link, $data));
 
         return;
     }
