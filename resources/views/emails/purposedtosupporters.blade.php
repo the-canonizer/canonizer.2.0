@@ -6,10 +6,19 @@
 <p>Edit summary : {{ $data['note'] }}</p>
 </p>
 
+@if(isset($data['subscriber']) && $data['subscriber'] == 1)
+<p>
+If you do not wish to receive these notifications, you can unscribe from the camp.  We request that all subscribers of a camp continue to receive and take some responsibility for the camp.
+
+</p>
+@else
+
 <p>
 If you do not wish to receive these notifications, you can either delegate your support to some other camp supporter in the topic, or remove your support from the camp.  We request that all direct supporters of a camp continue to receive and take some responsibility for the camp.
 
 </p>
+
+@endif
 
 Sincerely,<br>
 {{ config('app.email_signature') }}
