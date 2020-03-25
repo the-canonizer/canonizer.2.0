@@ -38,17 +38,13 @@ class CommonForumFunctions
         $data['post'] = $post;
         $data['camp_name'] = $camp_name;
         $data['thread'] = CThread::where('id', $threadId)->latest()->get();
-        $data['subject'] = $topic_name." / ".$camp_name. " / ". $data['thread'][0]->title.
-                            " post submitted.";
+        $data['subject'] = $topic_name." / ".$camp_name. " / ". $data['thread'][0]->title." post submitted.";
         $data['camp_url'] = "topic/".$topicid."-".$topic_name_encoded."/".$campnum."?";
-
         $data['nick_name'] = CommonForumFunctions::getForumNickName($nick_id);
-
         foreach ($subCampIds as $camp_id) {
             $userExist = [];
             $directSupporter = CommonForumFunctions::getDirectCampSupporter($topicid, $camp_id);
             $subscribers = Camp::getCampSubscribers($topicid, $camp_id);
-
             foreach ($directSupporter as $supporter) {
                 $user = CommonForumFunctions::getUserFromNickId($supporter->nick_name_id);
                 $bcc_email[] = CommonForumFunctions::getReceiver($user->email);
@@ -60,13 +56,11 @@ class CommonForumFunctions
                     $subscriber_bcc_email[] = CommonForumFunctions::getReceiver($userSub->email);
                 }
             }
-
         }
 
         Mail::bcc($bcc_email)->send(new ForumPostSubmittedMail($user, $link, $data));
         $data['subscriber'] = 1;
         Mail::bcc($subscriber_bcc_email)->send(new ForumPostSubmittedMail($user, $link, $data));
-
         return;
     }
 

@@ -503,7 +503,8 @@ class SettingsController extends Controller {
     }
 
     private function emailForSupportAdded($data){
-            $nickName = Nickname::getUserByNickName($data['nick_name']);
+            $parentUser = Nickname::getUserByNickName($data['nick_name']);
+            $nickName = Nickname::getNickName($data['nick_name']);
             $topic = Camp::getAgreementTopic($data['topic_num']);
             $camp = Camp::where('topic_num', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('go_live_time', '<=', time())->latest('submit_time')->first();
         
@@ -515,8 +516,6 @@ class SettingsController extends Controller {
             $directSupporter = Support::getDirectSupporter($data['topic_num'], $data['camp_num']);
             $result['support_added'] = 1;
             $this->mailSubscribersAndSupporters($directSupporter,$subscribers, $link, $result);
-            //$this->mailSubscribers($subscribers, $link, $result); 
-            //$this->mailDirectSupporters($directSupporter, $link, $result);
             
     }
 
@@ -532,10 +531,7 @@ class SettingsController extends Controller {
             $subscribers = Camp::getCampSubscribers($data['topic_num'], $data['camp_num']);
             $directSupporter = Support::getDirectSupporter($data['topic_num'], $data['camp_num']);
             $result['support_deleted'] = 1;
-            $this->mailSubscribersAndSupporters($directSupporter,$subscribers, $link, $result);
-           // $this->mailSubscribers($subscribers, $link, $result); 
-            //$this->mailDirectSupporters($directSupporter, $link, $result);
-            
+            $this->mailSubscribersAndSupporters($directSupporter,$subscribers, $link, $result);            
     }
 
     public function delete_support(Request $request) {
