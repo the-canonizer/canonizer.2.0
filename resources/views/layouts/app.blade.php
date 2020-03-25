@@ -298,12 +298,13 @@ function restrictTextField(e,limitlength){
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
-
+            var currentYear = new Date().getFullYear();
+            var yearRange = (currentYear - 2006);
             $("#asofdate").datepicker({
                 changeMonth: true,
                 changeYear: true,
 				dateFormat: 'yy/mm/dd',
-                yearRange: "-100:+10"
+                yearRange: "-"+yearRange+":+10"
             });
 
 			$(".asofdate, #asofdate").change(function(){
