@@ -304,7 +304,7 @@ function restrictTextField(e,limitlength){
                 changeMonth: true,
                 changeYear: true,
 				dateFormat: 'yy/mm/dd',
-                yearRange: "-"+yearRange+":+10"
+                yearRange: "-"+yearRange+":+0"
             });
 
 			$(".asofdate, #asofdate").change(function(){
