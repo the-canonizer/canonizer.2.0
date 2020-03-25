@@ -1125,7 +1125,7 @@ class TopicController extends Controller {
                $data['also_subscriber'] = 0; 
             }
             $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
-            Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new PurposedToSupportersMail($user, $link, $data));
+            Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new PurposedToSupportersMail($user, $link, $dataObject));
         }
         unset($data['also_subscriber']); 
         foreach ($subscribers as $user) {
@@ -1133,7 +1133,7 @@ class TopicController extends Controller {
             if(!in_array($user->id, $alreadyMailed)){
                 $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
                 $data['subscriber'] = 1;
-                Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new PurposedToSupportersMail($user, $link, $data));
+                Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new PurposedToSupportersMail($user, $link, $dataObject));
             }
             
         }
