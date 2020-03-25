@@ -140,6 +140,18 @@ class Camp extends Model {
         return $statement;
     }
 
+
+    public static function checkifSubscriber($subscribers,$user){
+        $flag = false;
+        foreach($subscribers as $sub){
+            if($sub == $user->id){
+                $flag = true;
+                break;
+            }
+        }
+        return $flag;
+    }
+
     public function scopeGetSupportedNicknames($query, $topicnum, $campnum = null) {
         $query = TopicSupport::where('topic_num', '=', $topicnum)
                 ->groupBy('nick_name_id');

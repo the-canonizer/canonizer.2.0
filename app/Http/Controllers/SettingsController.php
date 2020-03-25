@@ -428,11 +428,21 @@ class SettingsController extends Controller {
                 $result['subject'] = $nickName->nick_name . " has just delegated their support to you.";
                 $link = 'topic/' . $data['topic_num'] . '/' . $data['camp_num'];
                 $subscribers = Camp::getCampSubscribers($data['topic_num'], $data['camp_num']);
+                $alreadyMailed = [];
+                $i=0;
+                $checkifAlsoSubscriber = Camp::checkifSubscriber($subscribers,$parentUser);
+                if($checkifAlsoSubscriber){
+                    $alreadyMailed[$i] = $parentUser->id;
+                    $result['subscriber'] = 1;
+                }else{
+                  $result['subscriber'] = 0;  
+                }
                 $receiver = (config('app.env') == "production") ? $parentUser->email : config('app.admin_email');
                 Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new NewDelegatedSupporterMail($parentUser, $link, $result));
                 $result['subject'] = $nickName->nick_name . " has just delegated their support to ".$parentUser->first_name." ".$parentUser->last_name;
+                unset($result['subscriber']);
                 $result['delegated_user'] = $parentUser->first_name." ".$parentUser->last_name;
-                $this->mailSubscribers($subscribers, $link, $result); 
+                $this->mailSubscribers($subscribers, $link, $result,$alreadyMailed); 
                 /* end of email */
             }
             Session::flash('success', "Your support update has been submitted successfully.");
@@ -443,11 +453,42 @@ class SettingsController extends Controller {
         }
     }
 
-    private function mailSubscribers($subscribers, $link, $data) {
+     private function mailSubscribersAndSupporters($directSupporter,$subscribers,$link, $dataObject){
+        $alreadyMailed = [];
+        $i=0;
+        foreach ($directSupporter as $supporter) {
+            $user = Nickname::getUserByNickName($supporter->nick_name_id);
+            $checkifAlsoSubscriber = Camp::checkifSubscriber($subscribers,$user);
+            if($checkifAlsoSubscriber){
+                $data['also_subscriber'] = 1;
+                $alreadyMailed[$i] = $user->id;
+                $i= $i+1;
+            }else{
+               $data['also_subscriber'] = 0; 
+            }
+            $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
+            Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new NewDelegatedSupporterMail($user, $link, $dataObject));
+        }
+        unset($data['also_subscriber']); 
         foreach ($subscribers as $user) {
             $user = \App\User::find($user);
-            $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email :  config('app.admin_email');
-            Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new NewDelegatedSupporterMail($user, $link, $data));
+            if(!in_array($user->id, $alreadyMailed)){
+                $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
+                $data['subscriber'] = 1;
+                Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new NewDelegatedSupporterMail($user, $link, $dataObject));
+            }
+            
+        }
+        return;
+    }
+
+    private function mailSubscribers($subscribers, $link, $data,$alreadyMailed) {
+        foreach ($subscribers as $user) {
+            $user = \App\User::find($user);
+            if(!in_array($user->id, $alreadyMailed)){
+                $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email :  config('app.admin_email');
+                 Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new NewDelegatedSupporterMail($user, $link, $data));
+            }            
         }
         return;
     }
@@ -473,8 +514,9 @@ class SettingsController extends Controller {
             $subscribers = Camp::getCampSubscribers($data['topic_num'], $data['camp_num']);
             $directSupporter = Support::getDirectSupporter($data['topic_num'], $data['camp_num']);
             $result['support_added'] = 1;
-            $this->mailSubscribers($subscribers, $link, $result); 
-            $this->mailDirectSupporters($directSupporter, $link, $result);
+            $this->mailSubscribersAndSupporters($directSupporter,$subscribers, $link, $result);
+            //$this->mailSubscribers($subscribers, $link, $result); 
+            //$this->mailDirectSupporters($directSupporter, $link, $result);
             
     }
 
@@ -490,8 +532,9 @@ class SettingsController extends Controller {
             $subscribers = Camp::getCampSubscribers($data['topic_num'], $data['camp_num']);
             $directSupporter = Support::getDirectSupporter($data['topic_num'], $data['camp_num']);
             $result['support_deleted'] = 1;
-            $this->mailSubscribers($subscribers, $link, $result); 
-            $this->mailDirectSupporters($directSupporter, $link, $result);
+            $this->mailSubscribersAndSupporters($directSupporter,$subscribers, $link, $result);
+           // $this->mailSubscribers($subscribers, $link, $result); 
+            //$this->mailDirectSupporters($directSupporter, $link, $result);
             
     }
 

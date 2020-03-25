@@ -856,9 +856,11 @@ class TopicController extends Controller {
             $dataObject['nick_name'] = $nickName->nick_name;
             $dataObject['forum_link'] = 'forum/' . $statement->topic_num . '-statement/' . $statement->camp_num . '/threads';
             $dataObject['subject'] = "Proposed change to statement for camp " . $livecamp->camp_name . " submitted";
-            $this->mailSupporters($directSupporter,$link,$dataObject);
-            $this->mailSubscribers($subscribers, $link, $dataObject); 
-        } else if ($eventtype == "OBJECTION") {
+            //$this->mailSupporters($directSupporter,$link,$dataObject);
+            //$this->mailSubscribers($subscribers, $link, $dataObject); 
+            $this->mailSubscribersAndSupporters($directSupporter,$subscribers,$link, $dataObject);
+
+         } else if ($eventtype == "OBJECTION") {
 
             $user = Nickname::getUserByNickName($all['submitter']);
             $livecamp = Camp::getLiveCamp($statement->topic_num,$statement->camp_num);
@@ -1057,8 +1059,9 @@ class TopicController extends Controller {
             $data['nick_name'] = $nickName->nick_name;
             $data['forum_link'] = 'forum/' . $statement->topic_num . '-statement/' . $statement->camp_num . '/threads';
             $data['subject'] = "Proposed change to statement for camp " . $livecamp->camp_name . " submitted";
-            $this->mailSupporters($directSupporter, $link, $data);       //mail supporters
-            $this->mailSubscribers($subscribers, $link, $data);         // mail subscribers
+            //$this->mailSupporters($directSupporter, $link, $data);       //mail supporters
+            //$this->mailSubscribers($subscribers, $link, $data);         // mail subscribers            
+            $this->mailSubscribersAndSupporters($directSupporter,$subscribers,$link, $dataObject);
             return response()->json(['id' => $statement->id, 'message' => 'Your change to statement has been submitted to your supporters.']);
         } else if ($type == 'camp') {
             $camp = Camp::where('id', '=', $id)->first();
@@ -1080,8 +1083,9 @@ class TopicController extends Controller {
             $data['forum_link'] = 'forum/' . $camp->topic_num . '-' . $camp->camp_name . '/' . $camp->camp_num . '/threads';
             $data['subject'] = "Proposed change to " . $camp->camp_name . " submitted";
 
-            $this->mailSupporters($directSupporter, $link, $data);         //mail supporters             
-            $this->mailSubscribers($subscribers, $link, $data);         // mail subscribers  
+            //$this->mailSupporters($directSupporter, $link, $data);         //mail supporters             
+            //$this->mailSubscribers($subscribers, $link, $data);         // mail subscribers            
+            $this->mailSubscribersAndSupporters($directSupporter,$subscribers,$link, $dataObject);  
             return response()->json(['id' => $camp->id, 'message' => 'Your change to camp has been submitted to your supporters.']);
         } else if ($type == 'topic') {
             $topic = Topic::where('id', '=', $id)->first();
@@ -1105,6 +1109,35 @@ class TopicController extends Controller {
             $this->mailSupporters($directSupporter, $link, $data);         //mail supporters   
            return response()->json(['id' => $topic->id, 'message' => 'Your change to topic has been submitted to your supporters.']);
         }
+    }
+
+    private function mailSubscribersAndSupporters($directSupporter,$subscribers,$link, $dataObject){
+        $alreadyMailed = [];
+        $i=0;
+        foreach ($directSupporter as $supporter) {
+            $user = Nickname::getUserByNickName($supporter->nick_name_id);
+            $checkifAlsoSubscriber = Camp::checkifSubscriber($subscribers,$user);
+            if($checkifAlsoSubscriber){
+                $data['also_subscriber'] = 1;
+                $alreadyMailed[$i] = $user->id;
+                $i= $i+1;
+            }else{
+               $data['also_subscriber'] = 0; 
+            }
+            $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
+            Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new PurposedToSupportersMail($user, $link, $data));
+        }
+        unset($data['also_subscriber']); 
+        foreach ($subscribers as $user) {
+            $user = \App\User::find($user);
+            if(!in_array($user->id, $alreadyMailed)){
+                $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
+                $data['subscriber'] = 1;
+                Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new PurposedToSupportersMail($user, $link, $data));
+            }
+            
+        }
+        return;
     }
 
     private function mailSupporters($directSupporter, $link, $data) {
