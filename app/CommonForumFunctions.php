@@ -26,8 +26,8 @@ class CommonForumFunctions
      */
     public static function sendEmailToSupportersForumPost($topicid, $campnum, $link, $post, $threadId, $nick_id, $topic_name_encoded)
     {
-        $bcc_email;
-        $subscriber_bcc_email;
+        $bcc_email = [];
+        $subscriber_bcc_email = [];
 
         $camp  = CommonForumFunctions::getForumLiveCamp($topicid, $campnum);
         $subCampIds = CommonForumFunctions::getForumAllChildCamps($camp);
@@ -45,7 +45,7 @@ class CommonForumFunctions
         $data['nick_name'] = CommonForumFunctions::getForumNickName($nick_id);
 
         foreach ($subCampIds as $camp_id) {
-            $userExist;
+            $userExist = [];
             $directSupporter = CommonForumFunctions::getDirectCampSupporter($topicid, $camp_id);
             $subscribers = Camp::getCampSubscribers($topicid, $camp_id);
 
@@ -78,8 +78,8 @@ class CommonForumFunctions
      */
     public static function sendEmailToSupportersForumThread($topicid, $campnum, $link, $thread_title, $nick_id, $topic_name_encoded)
     {
-        $bcc_email;        
-        $subscriber_bcc_email;
+        $bcc_email = [];        
+        $subscriber_bcc_email = [];
         $camp  = CommonForumFunctions::getForumLiveCamp($topicid, $campnum);
         $subCampIds = CommonForumFunctions::getForumAllChildCamps($camp);
         $topic_name = CommonForumFunctions::getTopicName($topicid);
@@ -95,7 +95,7 @@ class CommonForumFunctions
         $data['thread_title'] = $thread_title;
 
         foreach ($subCampIds as $camp_id) {            
-            $userExist;
+            $userExist = [];
             $directSupporter = CommonForumFunctions::getDirectCampSupporter($topicid, $camp_id);
             $subscribers = Camp::getCampSubscribers($topicid, $camp_id);
 
@@ -112,7 +112,7 @@ class CommonForumFunctions
                 }
             }
         }
-        
+
         Mail::bcc($bcc_email)->send(new ForumThreadCreatedMail($user, $link, $data));
         $data['subscriber'] = 1;
         Mail::bcc($subscriber_bcc_email)->send(new ForumThreadCreatedMail($user, $link, $data));
