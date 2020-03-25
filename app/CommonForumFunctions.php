@@ -78,8 +78,8 @@ class CommonForumFunctions
      */
     public static function sendEmailToSupportersForumThread($topicid, $campnum, $link, $thread_title, $nick_id, $topic_name_encoded)
     {
-        $bcc_email;
-
+        $bcc_email;        
+        $subscriber_bcc_email;
         $camp  = CommonForumFunctions::getForumLiveCamp($topicid, $campnum);
         $subCampIds = CommonForumFunctions::getForumAllChildCamps($camp);
         $topic_name = CommonForumFunctions::getTopicName($topicid);
@@ -94,16 +94,28 @@ class CommonForumFunctions
 
         $data['thread_title'] = $thread_title;
 
-        foreach ($subCampIds as $camp_id) {
+        foreach ($subCampIds as $camp_id) {            
+            $userExist;
             $directSupporter = CommonForumFunctions::getDirectCampSupporter($topicid, $camp_id);
+            $subscribers = Camp::getCampSubscribers($topicid, $camp_id);
 
             foreach ($directSupporter as $supporter) {
                 $user = CommonForumFunctions::getUserFromNickId($supporter->nick_name_id);
                 $bcc_email[] = CommonForumFunctions::getReceiver($user->email);
+                $userExist[] = $user->id;
+            }
+
+            foreach($subscribers as $sub){
+                if(!in_array($sub,$userExist)){
+                    $userSub = \App\User::find($sub);
+                    $subscriber_bcc_email[] = CommonForumFunctions::getReceiver($userSub->email);
+                }
             }
         }
 
         Mail::bcc($bcc_email)->send(new ForumThreadCreatedMail($user, $link, $data));
+        $data['subscriber'] = 1;
+        Mail::bcc($subscriber_bcc_email)->send(new ForumThreadCreatedMail($user, $link, $data));
 
         return;
     }

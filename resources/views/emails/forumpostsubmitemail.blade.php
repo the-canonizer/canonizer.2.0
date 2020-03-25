@@ -17,9 +17,8 @@
 <h4>Note:</h4>
 @if(isset($data['subscriber']) && $data['subscriber'] == 1)
 <p>
-    If you do not wish to receive these notifications, you can eitherunsubscribe from the camp.
-     We request that all subscriber of a
-    camp continue to receive and take some responsibility for the camp.
+    If you do not wish to receive these notifications, you can unsubscribe from the camp.
+     We request that all subscriber of a camp continue to receive and take some responsibility for the camp.
 </p>
 @else
  <p>
