@@ -846,7 +846,7 @@ class TopicController extends Controller {
             $directSupporter = Support::getDirectSupporter($statement->topic_num, $statement->camp_num);
             $subscribers = Camp::getCampSubscribers($statement->topic_num, $statement->camp_num);
            
-            $dataObject['object'] = " " . $livecamp->camp_name;
+            $dataObject['object'] = $livecamp->topic->topic_name . " / " . $livecamp->camp_name;;
             $dataObject['go_live_time'] = $statement->go_live_time;
             $dataObject['type'] = 'statement : for camp ';
             $dataObject['typeobject'] = 'statement';
@@ -855,7 +855,7 @@ class TopicController extends Controller {
 
             $dataObject['nick_name'] = $nickName->nick_name;
             $dataObject['forum_link'] = 'forum/' . $statement->topic_num . '-statement/' . $statement->camp_num . '/threads';
-            $dataObject['subject'] = "Proposed change to statement for camp " . $livecamp->camp_name . " submitted";
+            $dataObject['subject'] = "Proposed change to statement for camp " . $livecamp->topic->topic_name . " / " . $livecamp->camp_name. " submitted";
             //$this->mailSupporters($directSupporter,$link,$dataObject);
             //$this->mailSubscribers($subscribers, $link, $dataObject); 
             $this->mailSubscribersAndSupporters($directSupporter,$subscribers,$link, $dataObject);
@@ -1049,7 +1049,7 @@ class TopicController extends Controller {
             // $link = 'statement/history/' . $id . '/' . $statement->camp_num . '?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $statement->go_live_time);
             $link = 'statement/history/' . $statement->topic_num . '/' . $statement->camp_num;
             $livecamp = Camp::getLiveCamp($statement->topic_num,$statement->camp_num);
-            $data['object'] = " " . $livecamp->camp_name;
+            $data['object'] = $livecamp->topic->topic_name . " / " . $livecamp->camp_name;;
             $data['go_live_time'] = $statement->go_live_time;
             $data['type'] = 'statement : for camp ';
             $data['typeobject'] = 'statement';
@@ -1058,10 +1058,10 @@ class TopicController extends Controller {
 
             $data['nick_name'] = $nickName->nick_name;
             $data['forum_link'] = 'forum/' . $statement->topic_num . '-statement/' . $statement->camp_num . '/threads';
-            $data['subject'] = "Proposed change to statement for camp " . $livecamp->camp_name . " submitted";
+            $data['subject'] = "Proposed change to statement for camp " . $livecamp->topic->topic_name . " / " . $livecamp->camp_name. " submitted";
             //$this->mailSupporters($directSupporter, $link, $data);       //mail supporters
             //$this->mailSubscribers($subscribers, $link, $data);         // mail subscribers            
-            $this->mailSubscribersAndSupporters($directSupporter,$subscribers,$link, $dataObject);
+            $this->mailSubscribersAndSupporters($directSupporter,$subscribers,$link, $data);
             return response()->json(['id' => $statement->id, 'message' => 'Your change to statement has been submitted to your supporters.']);
         } else if ($type == 'camp') {
             $camp = Camp::where('id', '=', $id)->first();
@@ -1085,7 +1085,7 @@ class TopicController extends Controller {
 
             //$this->mailSupporters($directSupporter, $link, $data);         //mail supporters             
             //$this->mailSubscribers($subscribers, $link, $data);         // mail subscribers            
-            $this->mailSubscribersAndSupporters($directSupporter,$subscribers,$link, $dataObject);  
+            $this->mailSubscribersAndSupporters($directSupporter,$subscribers,$link, $data);  
             return response()->json(['id' => $camp->id, 'message' => 'Your change to camp has been submitted to your supporters.']);
         } else if ($type == 'topic') {
             $topic = Topic::where('id', '=', $id)->first();
@@ -1132,7 +1132,7 @@ class TopicController extends Controller {
             $user = \App\User::find($user);
             if(!in_array($user->id, $alreadyMailed)){
                 $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
-                $data['subscriber'] = 1;
+                $dataObject['subscriber'] = 1;
                 Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new PurposedToSupportersMail($user, $link, $dataObject));
             }
             

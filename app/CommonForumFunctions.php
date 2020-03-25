@@ -112,7 +112,7 @@ class CommonForumFunctions
                 }
             }
         }
-
+        
         Mail::bcc($bcc_email)->send(new ForumThreadCreatedMail($user, $link, $data));
         $data['subscriber'] = 1;
         Mail::bcc($subscriber_bcc_email)->send(new ForumThreadCreatedMail($user, $link, $data));
