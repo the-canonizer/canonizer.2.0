@@ -57,7 +57,7 @@ class CommonForumFunctions
                     if(!in_array($sub,$userExist)){
                         $userSub = \App\User::find($sub);
                         $bcc_user_email = CommonForumFunctions::getReceiver($userSub->email);
-                        Mail::bcc($bcc_user_email)->send(new ForumPostSubmittedMail($userSub, $link, $data))
+                        Mail::bcc($bcc_user_email)->send(new ForumPostSubmittedMail($userSub, $link, $data));
                     }
                 }
             }
