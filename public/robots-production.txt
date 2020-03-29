@@ -1,4 +1,4 @@
-User-agent: Googlebot 
+User-agent: * 
 Allow:https://canonizer.com
 Allow:/topic/*
 Allow:/forum/*
@@ -7,6 +7,6 @@ Allow:/video/*
 Allow:/*.js
 Allow:/*.css
 
-User-agent: Googlebot 
+User-agent: * 
 Disallow: /
 

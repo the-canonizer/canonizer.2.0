@@ -241,15 +241,15 @@
 									</div>
 									<div class="radio radio-primary">
 										<input type="radio" <?php echo (session('asofDefault')=="bydate") ? "checked='checked'" : '';?> class="asofdate" name="asof"id="radio3" value="bydate">
-										<label for="radio3">as of (yy/mm/dd)</label>
+										<!-- <label for="radio3">as of (yy/mm/dd)</label> -->
+                                        <label for="radio3">as of date</label>
 									</div>
 									
 									<div><input readonly type="text" id="asofdate" name="asofdate" value=""/></div>
 								    <script>
-                                        <?php if(session('asofdateDefault')!=null && session('asofdateDefault')!='') { ?>
-									var date = new Date(<?= strtotime(session('asofdateDefault')) ?> * 1000).toLocaleString();
-									
-									$('#asofdate').val(date);
+                                        <?php if(session('asofdateDefault')!=null && session('asofdateDefault')!='' && (session('asofDefault')!='' && session('asofDefault') == 'bydate')) { ?>
+    									var date = new Date(<?= strtotime(session('asofdateDefault')) ?> * 1000).toLocaleString();
+    									$('#asofdate').val(date);
                                    <?php } ?>
 									</script>
 								</form>

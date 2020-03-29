@@ -8,7 +8,7 @@
 
 @if(isset($data['subscriber']) && $data['subscriber'] == 1)
 <p>
-If you do not wish to receive these notifications, you can unscribe from the camp.  We request that all subscribers of a camp continue to receive and take some responsibility for the camp.
+If you do not wish to receive these notifications, you can unsubscribe from the camp.  We request that all subscribers of a camp continue to receive and take some responsibility for the camp.
 
 </p>
 @else
