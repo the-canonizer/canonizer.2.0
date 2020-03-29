@@ -327,7 +327,6 @@ class TopicController extends Controller {
 		}
         $topicData = [];
         $topic = Camp::getAgreementTopic($topicnum, $_REQUEST);
-        echo "<pre>"; print_r($topic); die;
          if(!(isset($topic) && count($topic) > 0)){
               $topicData = Topic::where('topic_num','=',$topicnum)->get();
         }
@@ -339,7 +338,7 @@ class TopicController extends Controller {
         session()->forget("topic-support-{$topicnum}");
         session()->forget("topic-support-nickname-{$topicnum}");
         session()->forget("topic-support-tree-{$topicnum}");
-        if (count($camp) > 0) {
+        if (count($camp) > 0 && count($topic) > 0) {
           $parentcamp = Camp::campNameWithAncestors($camp, '',$topic->topic_name);
         } else {
 			
