@@ -328,7 +328,7 @@ class Camp extends Model {
        
 			
 			} else if ((isset($filter['asof']) && $filter['asof'] == "bydate") || (session()->has('asofDefault') && session('asofDefault') == 'bydate') ) {
-                echo "<pre>"; print_r($filter); die;
+               // echo "<pre>"; print_r($filter); die;
                 if(isset($filter['asof']) && $filter['asof'] == "bydate"){                    
                   $asofdate = strtotime(date('Y-m-d H:i:s', strtotime($filter['asofdate']))); 
                  }else if(session('asofdateDefault')!=''){    
