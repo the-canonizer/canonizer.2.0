@@ -474,7 +474,7 @@ class SettingsController extends Controller {
         unset($dataObject['also_subscriber']); 
         foreach ($subscribers as $user) {
             $user = \App\User::find($user);
-            if(!in_array($user->id, $alreadyMailed)){
+            if(!in_array($user->id, $alreadyMailed,TRUE)){
                 $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
                 $dataObject['subscriber'] = 1;
                 Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new NewDelegatedSupporterMail($user, $link, $dataObject));
@@ -487,7 +487,7 @@ class SettingsController extends Controller {
     private function mailSubscribers($subscribers, $link, $data,$alreadyMailed) {
         foreach ($subscribers as $user) {
             $user = \App\User::find($user);
-            if(!in_array($user->id, $alreadyMailed)){
+            if(!in_array($user->id, $alreadyMailed,TRUE)){
                 $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email :  config('app.admin_email');
                  Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new NewDelegatedSupporterMail($user, $link, $data));
             }            

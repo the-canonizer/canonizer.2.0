@@ -1130,7 +1130,7 @@ class TopicController extends Controller {
         unset($dataObject['also_subscriber']); 
         foreach ($subscribers as $user) {
             $user = \App\User::find($user);
-            if(!in_array($user->id, $alreadyMailed)){
+            if(!in_array($user->id, $alreadyMailed,TRUE)){
                 $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
                 $dataObject['subscriber'] = 1;
                 Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new PurposedToSupportersMail($user, $link, $dataObject));
