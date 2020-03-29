@@ -101,7 +101,7 @@ class CommonForumFunctions
                 $user = CommonForumFunctions::getUserFromNickId($supporter->nick_name_id);
                 $bcc_user_email = CommonForumFunctions::getReceiver($user->email);
                 $userExist[] = $user->id;
-                //Mail::bcc($bcc_user_email)->send(new ForumThreadCreatedMail($user, $link, $data));
+                Mail::bcc($bcc_user_email)->send(new ForumThreadCreatedMail($user, $link, $data));
             }
             if($subscribers && count($subscribers) > 0){
                     $data['subscriber'] = 1;
@@ -109,11 +109,10 @@ class CommonForumFunctions
                         if(!in_array($sub,$userExist,TRUE)){
                             $userSub = \App\User::find($sub);
                             $bcc_user_email = CommonForumFunctions::getReceiver($userSub->email);                            
-                           // Mail::bcc($bcc_user_email)->send(new ForumThreadCreatedMail($userSub, $link, $data));
+                            Mail::bcc($bcc_user_email)->send(new ForumThreadCreatedMail($userSub, $link, $data));
                         }
                     }
             }
-            die;
             
         }
 
