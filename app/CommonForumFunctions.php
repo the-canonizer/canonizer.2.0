@@ -104,17 +104,20 @@ class CommonForumFunctions
                 //Mail::bcc($bcc_user_email)->send(new ForumThreadCreatedMail($user, $link, $data));
             }
             echo "<pre>"; print_r($userExist);
-            print_r($subscribers); print_r($directSupporter); die;
+            print_r($subscribers); print_r($directSupporter); 
             if($subscribers && count($subscribers) > 0){
                     $data['subscriber'] = 1;
                     foreach($subscribers as $sub){
+                        echo (!in_array($sub,$userExist));
+                        echo $sub;
                         if(!in_array($sub,$userExist)){
                             $userSub = \App\User::find($sub);
                             $bcc_user_email = CommonForumFunctions::getReceiver($userSub->email);                            
-                            Mail::bcc($bcc_user_email)->send(new ForumThreadCreatedMail($userSub, $link, $data));
+                           // Mail::bcc($bcc_user_email)->send(new ForumThreadCreatedMail($userSub, $link, $data));
                         }
                     }
             }
+            die;
             
         }
 
