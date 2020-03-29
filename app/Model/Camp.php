@@ -335,7 +335,7 @@ class Camp extends Model {
 
                 $asofdate = strtotime(date('Y-m-d H:i:s', strtotime($filter['asofdate'])));   
                 }
-
+                echo $asofdate; 
 
                 return self::where('camp_name', '=', 'Agreement')->join('topic', 'topic.topic_num', '=', 'camp.topic_num')->whereIn('namespace_id', explode(',', session('defaultNamespaceId')))->where('topic.objector_nick_id', '=', NULL)->where('camp.go_live_time', '<=', $asofdate)->latest('camp.submit_time')->take($limit)->get()->unique('topic_num'); //->sortBy('topic.topic_name');
 
