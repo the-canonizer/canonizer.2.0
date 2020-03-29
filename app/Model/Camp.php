@@ -328,15 +328,13 @@ class Camp extends Model {
        
 			
 			} else if ((isset($filter['asof']) && $filter['asof'] == "bydate") || (session()->has('asofDefault') && session('asofDefault') == 'bydate') ) {
-               // echo "<pre>"; print_r($filter); die;
-                if(isset($filter['asof']) && $filter['asof'] == "bydate"){                    
+                 if(isset($filter['asof']) && $filter['asof'] == "bydate"){                    
                   $asofdate = strtotime(date('Y-m-d H:i:s', strtotime($filter['asofdate']))); 
                  }else if(session('asofdateDefault')!=''){    
                      $asofdate = strtotime(date('Y-m-d H:i:s', strtotime(session('asofdateDefault'))));
                  }
 
-
-                return self::where('camp_name', '=', 'Agreement')->join('topic', 'topic.topic_num', '=', 'camp.topic_num')->whereIn('namespace_id', explode(',', session('defaultNamespaceId')))->where('topic.objector_nick_id', '=', NULL)->where('camp.go_live_time', '<=', $asofdate)->latest('camp.submit_time')->take($limit)->get()->unique('topic_num'); //->sortBy('topic.topic_name');
+                return self::where('camp_name', '=', 'Agreement')->join('topic', 'topic.topic_num', '=', 'camp.topic_num')->whereIn('namespace_id', explode(',', session('defaultNamespaceId',1)))->where('topic.objector_nick_id', '=', NULL)->where('camp.go_live_time', '<=', $asofdate)->latest('camp.submit_time')->take($limit)->get()->unique('topic_num'); //->sortBy('topic.topic_name');
 
             }
         }
@@ -361,7 +359,7 @@ class Camp extends Model {
 
             if ((isset($filter['asof']) && $filter['asof'] == "review") || session('asofDefault')=="review") {
 
-            return self::where('camp_name', '=', 'Agreement')->join('topic', 'topic.topic_num', '=', 'camp.topic_num')->whereIn('namespace_id', explode(',', session('defaultNamespaceId')))->latest('camp.submit_time')->offset($offset)->take(10000)->offset($offset)->get();
+            return self::where('camp_name', '=', 'Agreement')->join('topic', 'topic.topic_num', '=', 'camp.topic_num')->whereIn('namespace_id', explode(',', session('defaultNamespaceId',1)))->latest('camp.submit_time')->offset($offset)->take(10000)->offset($offset)->get();
             } else if ((isset($filter['asof']) && $filter['asof'] == "bydate") || (session()->has('asofDefault') && session('asofDefault') == 'bydate')) {
 
                 if(isset($filter['asof']) && $filter['asof'] == "bydate"){
