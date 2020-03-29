@@ -29,6 +29,8 @@ class CommonForumFunctions
         $bcc_email = [];
         $subscriber_bcc_email = [];
 
+        $bcc_user = [];
+        $sub_bcc_user = [];
         $camp  = CommonForumFunctions::getForumLiveCamp($topicid, $campnum);
         $subCampIds = CommonForumFunctions::getForumAllChildCamps($camp);
 
@@ -47,23 +49,37 @@ class CommonForumFunctions
             $subscribers = Camp::getCampSubscribers($topicid, $camp_id);
             foreach ($directSupporter as $supporter) {
                 $user = CommonForumFunctions::getUserFromNickId($supporter->nick_name_id);
-                $bcc_user_email = CommonForumFunctions::getReceiver($user->email);
                 $userExist[] = $user->id;
-                Mail::bcc($bcc_user_email)->send(new ForumPostSubmittedMail($user, $link, $data));
+                $bcc_user[] = $user; 
+
             }
             if($subscribers && count($subscribers) > 0){
                $data['subscriber'] = 1;
                 foreach($subscribers as $sub){
                     if(!in_array($sub,$userExist,TRUE)){
                         $userSub = \App\User::find($sub);
-                        $subscriber_bcc_email = CommonForumFunctions::getReceiver($userSub->email);
-                        Mail::bcc($subscriber_bcc_email)->send(new ForumPostSubmittedMail($userSub, $link, $data));
+                        $sub_bcc_user[] = $userSub; 
                     }
                 }
             }            
         }
 
-        //Mail::bcc($bcc_email)->send(new ForumPostSubmittedMail($user, $link, $data));
+        if(isset($bcc_user) && count($bcc_user) > 0){
+            foreach($bcc_user as $user){
+                $bcc_user_email = CommonForumFunctions::getReceiver($user->email);
+                Mail::bcc($bcc_email)->send(new ForumThreadCreatedMail($user, $link, $data));    
+            }
+            
+        }
+
+        if(isset($sub_bcc_user) && count($sub_bcc_user) > 0){
+            $data['subscriber'] = 1;
+            foreach($sub_bcc_user as $userSub){
+                $subscriber_bcc_email = CommonForumFunctions::getReceiver($userSub->email);
+                Mail::bcc($subscriber_bcc_email)->send(new ForumThreadCreatedMail($userSub, $link, $data));    
+            }
+        }
+
         return;
     }
 
@@ -77,6 +93,8 @@ class CommonForumFunctions
     {
         $bcc_email = [];        
         $subscriber_bcc_email = [];
+        $bcc_user = [];
+        $sub_bcc_user = [];
         $camp  = CommonForumFunctions::getForumLiveCamp($topicid, $campnum);
         $subCampIds = CommonForumFunctions::getForumAllChildCamps($camp);
         $topic_name = CommonForumFunctions::getTopicName($topicid);
@@ -91,33 +109,41 @@ class CommonForumFunctions
 
         $data['thread_title'] = $thread_title;
 
-        foreach ($subCampIds as $camp_id) {            
+         foreach ($subCampIds as $camp_id) {            
             $userExist = [];
             $directSupporter = CommonForumFunctions::getDirectCampSupporter($topicid, $camp_id);
             $subscribers = Camp::getCampSubscribers($topicid, $camp_id);
-
-            foreach ($directSupporter as $supporter) {
+             foreach ($directSupporter as $supporter) {
                 $user = CommonForumFunctions::getUserFromNickId($supporter->nick_name_id);
-                $bcc_user_email = CommonForumFunctions::getReceiver($user->email);
+                $bcc_user[] = $user;
                 $userExist[] = $user->id;
-                Mail::bcc($bcc_user_email)->send(new ForumThreadCreatedMail($user, $link, $data));
             }
             if($subscribers && count($subscribers) > 0){
                     $data['subscriber'] = 1;
                     foreach($subscribers as $sub){
                         if(!in_array($sub,$userExist,TRUE)){
                             $userSub = \App\User::find($sub);
-                            $subscriber_bcc_email = CommonForumFunctions::getReceiver($userSub->email);                            
-                            Mail::bcc($subscriber_bcc_email)->send(new ForumThreadCreatedMail($userSub, $link, $data));
+                            $sub_bcc_user[] = $userSub;                   
                         }
                     }
+            }
+        }
+
+        if(isset($bcc_user) && count($bcc_user) > 0){
+            foreach($bcc_user as $user){
+                $bcc_user_email = CommonForumFunctions::getReceiver($user->email);
+                Mail::bcc($bcc_email)->send(new ForumThreadCreatedMail($user, $link, $data));    
             }
             
         }
 
-        // Mail::bcc($bcc_email)->send(new ForumThreadCreatedMail($user, $link, $data));
-        // $data['subscriber'] = 1;
-        // Mail::bcc($subscriber_bcc_email)->send(new ForumThreadCreatedMail($user, $link, $data));
+        if(isset($sub_bcc_user) && count($sub_bcc_user) > 0){
+            $data['subscriber'] = 1;
+            foreach($sub_bcc_user as $userSub){
+                $subscriber_bcc_email = CommonForumFunctions::getReceiver($userSub->email);
+                Mail::bcc($subscriber_bcc_email)->send(new ForumThreadCreatedMail($userSub, $link, $data));    
+            }
+        }
 
         return;
     }

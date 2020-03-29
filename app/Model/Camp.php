@@ -902,7 +902,11 @@ class Camp extends Model {
             }
         }
         $onecamp = self::getLiveCamp($topic_num, $camp_num);
-        $childCampData = $onecamp->campChild($topic_num,$camp_num);
+
+        $childCampData = [];
+        if(isset($onecamp) && isset($onecamp->camp_name){
+             $childCampData = $onecamp->campChild($topic_num,$camp_num);   
+        }
         $child_camps = [];
         if(count($childCampData) > 0){
             foreach($childCampData as $key=>$child){
