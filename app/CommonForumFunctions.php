@@ -101,15 +101,16 @@ class CommonForumFunctions
                 $user = CommonForumFunctions::getUserFromNickId($supporter->nick_name_id);
                 $bcc_user_email = CommonForumFunctions::getReceiver($user->email);
                 $userExist[] = $user->id;
-                Mail::bcc($bcc_user_email)->send(new ForumThreadCreatedMail($user, $link, $data));
+                //Mail::bcc($bcc_user_email)->send(new ForumThreadCreatedMail($user, $link, $data));
             }
+            echo "<pre>"; print_r($userExist);
+            print_r($subscribers); print_r($directSupporter); die;
             if($subscribers && count($subscribers) > 0){
                     $data['subscriber'] = 1;
                     foreach($subscribers as $sub){
                         if(!in_array($sub,$userExist)){
                             $userSub = \App\User::find($sub);
-                            $bcc_user_email = CommonForumFunctions::getReceiver($userSub->email);
-                            
+                            $bcc_user_email = CommonForumFunctions::getReceiver($userSub->email);                            
                             Mail::bcc($bcc_user_email)->send(new ForumThreadCreatedMail($userSub, $link, $data));
                         }
                     }
