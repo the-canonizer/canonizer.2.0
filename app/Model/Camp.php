@@ -309,7 +309,6 @@ class Camp extends Model {
                             ->latest('support')->take($limit)->get()->unique('topic_num'); //->sortBy('topic.topic_name');
 
         } else {
-
             if ((isset($filter['asof']) && $filter['asof'] == "review") || session('asofDefault')=="review") {
 
 
@@ -328,14 +327,12 @@ class Camp extends Model {
 			
 			} else if ((isset($filter['asof']) && $filter['asof'] == "bydate") || (session()->has('asofDefault') && session('asofDefault') == 'bydate') ) {
 
-                if(session('asofdateDefault')!=''){
+                if($filter['asofdate']!=''){                    
+                  $asofdate = strtotime(date('Y-m-d H:i:s', strtotime($filter['asofdate']))); 
+                 }else if(session('asofdateDefault')!=''){    
+                     $asofdate = strtotime(date('Y-m-d H:i:s', strtotime(session('asofdateDefault'))));
+                 }
 
-                $asofdate = strtotime(date('Y-m-d H:i:s', strtotime(session('asofdateDefault'))));
-                }else{
-
-                $asofdate = strtotime(date('Y-m-d H:i:s', strtotime($filter['asofdate'])));   
-                }
-                echo $asofdate; 
 
                 return self::where('camp_name', '=', 'Agreement')->join('topic', 'topic.topic_num', '=', 'camp.topic_num')->whereIn('namespace_id', explode(',', session('defaultNamespaceId')))->where('topic.objector_nick_id', '=', NULL)->where('camp.go_live_time', '<=', $asofdate)->latest('camp.submit_time')->take($limit)->get()->unique('topic_num'); //->sortBy('topic.topic_name');
 
