@@ -108,7 +108,7 @@ class CommonForumFunctions
             if($subscribers && count($subscribers) > 0){
                     $data['subscriber'] = 1;
                     foreach($subscribers as $sub){
-                        echo (!in_array($sub,$userExist));
+                        echo "checl:".in_array($sub,$userExist);
                         echo $sub;
                         if(!in_array($sub,$userExist)){
                             $userSub = \App\User::find($sub);
