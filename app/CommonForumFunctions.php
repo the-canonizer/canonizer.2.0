@@ -67,7 +67,7 @@ class CommonForumFunctions
         if(isset($bcc_user) && count($bcc_user) > 0){
             foreach($bcc_user as $user){
                 $bcc_user_email = CommonForumFunctions::getReceiver($user->email);
-                Mail::bcc($bcc_email)->send(new ForumThreadCreatedMail($user, $link, $data));    
+                Mail::bcc($bcc_email)->send(new ForumPostSubmittedMail($user, $link, $data));    
             }
             
         }
@@ -76,7 +76,7 @@ class CommonForumFunctions
             $data['subscriber'] = 1;
             foreach($sub_bcc_user as $userSub){
                 $subscriber_bcc_email = CommonForumFunctions::getReceiver($userSub->email);
-                Mail::bcc($subscriber_bcc_email)->send(new ForumThreadCreatedMail($userSub, $link, $data));    
+                Mail::bcc($subscriber_bcc_email)->send(new ForumPostSubmittedMail($userSub, $link, $data));    
             }
         }
 
