@@ -56,12 +56,11 @@ class CommonForumFunctions
                 foreach($subscribers as $sub){
                     if(!in_array($sub,$userExist,TRUE)){
                         $userSub = \App\User::find($sub);
-                        $bcc_user_email = CommonForumFunctions::getReceiver($userSub->email);
-                        Mail::bcc($bcc_user_email)->send(new ForumPostSubmittedMail($userSub, $link, $data));
+                        $subscriber_bcc_email = CommonForumFunctions::getReceiver($userSub->email);
+                        Mail::bcc($subscriber_bcc_email)->send(new ForumPostSubmittedMail($userSub, $link, $data));
                     }
                 }
-            }
-            
+            }            
         }
 
         //Mail::bcc($bcc_email)->send(new ForumPostSubmittedMail($user, $link, $data));
@@ -108,8 +107,8 @@ class CommonForumFunctions
                     foreach($subscribers as $sub){
                         if(!in_array($sub,$userExist,TRUE)){
                             $userSub = \App\User::find($sub);
-                            $bcc_user_email = CommonForumFunctions::getReceiver($userSub->email);                            
-                            Mail::bcc($bcc_user_email)->send(new ForumThreadCreatedMail($userSub, $link, $data));
+                            $subscriber_bcc_email = CommonForumFunctions::getReceiver($userSub->email);                            
+                            Mail::bcc($subscriber_bcc_email)->send(new ForumThreadCreatedMail($userSub, $link, $data));
                         }
                     }
             }
