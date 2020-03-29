@@ -726,9 +726,6 @@ class Camp extends Model {
     }
 
     public function campTree($algorithm, $activeAcamp = null, $supportCampCount = 0, $needSelected = 0) {
-        //return '';
-        //session()->flush();//dd(1);
-       // echo "<pre>"; print_r(session()->all()); die;
         $as_of_time = time();
         if ((isset($_REQUEST['asof']) && $_REQUEST['asof'] == 'bydate')) {
             $as_of_time = strtotime($_REQUEST['asofdate']);
@@ -749,7 +746,6 @@ class Camp extends Model {
 
         if (!session("topic-support-{$this->topic_num}")) {
             session(["topic-support-{$this->topic_num}" => Support::where('topic_num', '=', $this->topic_num)
-                        //->where('nick_name_id',$supported->nick_name_id)
                         ->whereRaw("(start <= $as_of_time) and ((end = 0) or (end > $as_of_time))")
                         ->orderBy('start', 'DESC')
                         ->select(['support_order', 'camp_num', 'nick_name_id', 'delegate_nick_name_id', 'topic_num'])
@@ -758,7 +754,6 @@ class Camp extends Model {
 
         if ((!isset($_REQUEST['asof']) && !(session()->has('asofDefault'))) || (isset($_REQUEST['asof']) && $_REQUEST['asof'] == "default") || (session()->has('asofDefault') && session('asofDefault') == 'default')) {
                 session(["topic-child-{$this->topic_num}" => self::where('topic_num', '=', $this->topic_num)
-                        //->where('parent_camp_num', '=', $parentcamp)
                         ->where('camp_name', '!=', 'Agreement')
                         ->where('objector_nick_id', '=', NULL)
                         ->whereRaw('go_live_time in (select max(go_live_time) from camp where topic_num=' . $this->topic_num . ' and objector_nick_id is null and go_live_time < "' . time() . '" group by camp_num)')
@@ -772,7 +767,6 @@ class Camp extends Model {
             
             
                 session(["topic-child-{$this->topic_num}" => self::where('topic_num', '=', $this->topic_num)
-                            //->where('parent_camp_num', '=', $parentcamp)
                             ->where('camp_name', '!=', 'Agreement')
 							->where('objector_nick_id', '=', NULL)
                             ->whereRaw('go_live_time in (select max(go_live_time) from camp where topic_num=' . $this->topic_num . ' and objector_nick_id is null group by camp_num)')
@@ -800,11 +794,11 @@ class Camp extends Model {
             }
         }
 
-
-        $title = preg_replace('/[^A-Za-z0-9\-]/', '-', $this->topic->topic_name);
+        $topic_name = (isset($this->topic) && isset($this->topic->topic_name)) ? $this->topic->topic_name: '';
+        $title = preg_replace('/[^A-Za-z0-9\-]/', '-', $topic_name);
         $topic_id = $this->topic_num . "-" . $title;
         $tree = [];
-        $tree[$this->camp_num]['title'] = $this->topic->topic_name;
+        $tree[$this->camp_num]['title'] = $topic_name;
         $tree[$this->camp_num]['link'] = url('topic/' . $topic_id . '/' . $this->camp_num.'#statement');
         $tree[$this->camp_num]['score'] = $this->getCamptSupportCount($algorithm, $this->topic_num, $this->camp_num);
         $tree[$this->camp_num]['children'] = $this->traverseCampTree($algorithm, $this->topic_num, $this->camp_num);

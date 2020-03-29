@@ -385,6 +385,8 @@ class SettingsController extends Controller {
                     $singleSupport->end = time();
                     $singleSupport->save();
                 }
+                /* send support deleted mail to all supporter and subscribers */
+            $this->emailForSupportDeleted($data);
             }
             //echo "<pre>"; print_r($data); die;
             $last_camp =  $data['camp_num'];			   
@@ -407,13 +409,13 @@ class SettingsController extends Controller {
                 session()->forget("topic-support-nickname-{$topic_num}");
                 session()->forget("topic-support-tree-{$topic_num}");
             }
-            
+            /* send support added mail to all supporter and subscribers */
+            $this->emailForSupportAdded($data);
 		   }	
             if($last_camp == $data['camp_num']){
                 Session::flash('confirm',"samecamp");
             }
-            /* send support added mail to all supporter and subscribers */
-            $this->emailForSupportAdded($data);
+            
             /* Send delegated support email to the direct supporter and all parent  and to subscriber*/
             if (isset($data['delegate_nick_name_id']) && $data['delegate_nick_name_id'] != 0) {
                 $parentUser = Nickname::getUserByNickName($data['delegate_nick_name_id']);
@@ -510,7 +512,7 @@ class SettingsController extends Controller {
         
             $result['nick_name'] = $nickName->nick_name;
             $result['object'] = $topic->topic_name ." / ".$camp->camp_name;
-            $result['subject'] = $nickName->nick_name . " has added the support to ".$result['object'].".";
+            $result['subject'] = $nickName->nick_name . " has added their support to ".$result['object'].".";
             $link = 'topic/' . $data['topic_num'] . '/' . $data['camp_num'];
             $subscribers = Camp::getCampSubscribers($data['topic_num'], $data['camp_num']);
             $directSupporter = Support::getDirectSupporter($data['topic_num'], $data['camp_num']);
@@ -526,7 +528,7 @@ class SettingsController extends Controller {
         
             $result['nick_name'] = $nickName->nick_name;
             $result['object'] = $topic->topic_name ." / ".$camp->camp_name;
-            $result['subject'] = $nickName->nick_name . " has removed his support from ".$result['object'].".";
+            $result['subject'] = $nickName->nick_name . " has removed their support from ".$result['object'].".";
             $link = 'topic/' . $data['topic_num'] . '/' . $data['camp_num'];
             $subscribers = Camp::getCampSubscribers($data['topic_num'], $data['camp_num']);
             $directSupporter = Support::getDirectSupporter($data['topic_num'], $data['camp_num']);

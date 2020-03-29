@@ -732,7 +732,7 @@ class TopicController extends Controller {
 
                 $data['nick_name'] = $nickName->nick_name;
                 $data['forum_link'] = 'forum/' . $camp->topic_num . '-' . $camp->camp_name . '/' . $camp->camp_num . '/threads';
-                $data['subject'] = "Proposed change to " . $camp->camp_name . " submitted";
+                $data['subject'] = "Proposed change to " . $camp->topic->topic_name . ' / ' . $camp->camp_name . " submitted";
 
                 /* foreach ($directSupporter as $supporter) {
 
@@ -1081,7 +1081,7 @@ class TopicController extends Controller {
 
             $data['nick_name'] = $nickName->nick_name;
             $data['forum_link'] = 'forum/' . $camp->topic_num . '-' . $camp->camp_name . '/' . $camp->camp_num . '/threads';
-            $data['subject'] = "Proposed change to " . $camp->camp_name . " submitted";
+            $data['subject'] = "Proposed change to " . $camp->topic->topic_name . ' / ' . $camp->camp_name . " submitted";
 
             //$this->mailSupporters($directSupporter, $link, $data);         //mail supporters             
             //$this->mailSubscribers($subscribers, $link, $data);         // mail subscribers            
