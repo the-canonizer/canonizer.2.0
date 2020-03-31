@@ -323,6 +323,7 @@ class SettingsController extends Controller {
 
     public function add_support(Request $request) {
         $id = Auth::user()->id;
+         $alreadyMailed = [];
         if ($id) {
             $messages = [
                 'nick_name.required' => 'The nick name field is required.',
@@ -430,15 +431,7 @@ class SettingsController extends Controller {
                 $result['subject'] = $nickName->nick_name . " has just delegated their support to you.";
                 $link = 'topic/' . $data['topic_num'] . '/' . $data['camp_num'];
                 $subscribers = Camp::getCampSubscribers($data['topic_num'], $data['camp_num']);
-                $alreadyMailed = [];
-                $i=0;
-                $checkifAlsoSubscriber = Camp::checkifSubscriber($subscribers,$parentUser);
-                if($checkifAlsoSubscriber){
-                    $alreadyMailed[$i] = $parentUser->id;
-                    $result['subscriber'] = 1;
-                }else{
-                  $result['subscriber'] = 0;  
-                }
+                $alreadyMailed[] = $parentUser->id;
                 $receiver = (config('app.env') == "production") ? $parentUser->email : config('app.admin_email');
                 Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new NewDelegatedSupporterMail($parentUser, $link, $result));
                 $result['subject'] = $nickName->nick_name . " has just delegated their support to ".$parentUser->first_name." ".$parentUser->last_name;
@@ -457,21 +450,12 @@ class SettingsController extends Controller {
 
      private function mailSubscribersAndSupporters($directSupporter,$subscribers,$link, $dataObject){
         $alreadyMailed = [];
-        $i=0;
         foreach ($directSupporter as $supporter) {
-            $user = Nickname::getUserByNickName($supporter->nick_name_id);
-            $checkifAlsoSubscriber = Camp::checkifSubscriber($subscribers,$user);
-            if($checkifAlsoSubscriber){
-                $dataObject['also_subscriber'] = 1;
-                $alreadyMailed[$i] = $user->id;
-                $i= $i+1;
-            }else{
-               $dataObject['also_subscriber'] = 0; 
-            }
-            $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
-            Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new NewDelegatedSupporterMail($user, $link, $dataObject));
+          $user = Nickname::getUserByNickName($supporter->nick_name_id);
+          $alreadyMailed[] = $user->id;
+          $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
+           Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new NewDelegatedSupporterMail($user, $link, $dataObject));
         }
-        unset($dataObject['also_subscriber']); 
         foreach ($subscribers as $user) {
             $user = \App\User::find($user);
             if(!in_array($user->id, $alreadyMailed,TRUE)){

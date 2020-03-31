@@ -1114,18 +1114,11 @@ class TopicController extends Controller {
         $alreadyMailed = [];
         $i=0;
         foreach ($directSupporter as $supporter) {
-            $user = Nickname::getUserByNickName($supporter->nick_name_id);
-            $checkifAlsoSubscriber = Camp::checkifSubscriber($subscribers,$user);
-            if($checkifAlsoSubscriber){
-                $data['also_subscriber'] = 1;
-                $alreadyMailed[] = $user->id;
-            }else{
-               $data['also_subscriber'] = 0; 
-            }
+         $user = Nickname::getUserByNickName($supporter->nick_name_id);
+         $alreadyMailed[] = $user->id;
          $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
-            Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new PurposedToSupportersMail($user, $link, $dataObject));
+         Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new PurposedToSupportersMail($user, $link, $dataObject));
         }
-        unset($dataObject['also_subscriber']); 
         foreach ($subscribers as $usr) {
             $userSub = \App\User::find($usr);
             if(!in_array($userSub->id, $alreadyMailed,TRUE)){
