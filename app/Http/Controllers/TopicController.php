@@ -1059,9 +1059,7 @@ class TopicController extends Controller {
             $data['nick_name'] = $nickName->nick_name;
             $data['forum_link'] = 'forum/' . $statement->topic_num . '-statement/' . $statement->camp_num . '/threads';
             $data['subject'] = "Proposed change to statement for camp " . $livecamp->topic->topic_name . " / " . $livecamp->camp_name. " submitted";
-            //$this->mailSupporters($directSupporter, $link, $data);       //mail supporters
-            //$this->mailSubscribers($subscribers, $link, $data);         // mail subscribers            
-            $this->mailSubscribersAndSupporters($directSupporter,$subscribers,$link, $data);
+           $this->mailSubscribersAndSupporters($directSupporter,$subscribers,$link, $data);
             return response()->json(['id' => $statement->id, 'message' => 'Your change to statement has been submitted to your supporters.']);
         } else if ($type == 'camp') {
             $camp = Camp::where('id', '=', $id)->first();
@@ -1092,7 +1090,7 @@ class TopicController extends Controller {
             $topic->grace_period = 0;
             $topic->update();
             $directSupporter = Support::getDirectSupporter($topic->topic_num);          
-
+            $subscribers = Camp::getCampSubscribers($camp->topic_num, 1);
            // $link = 'topic/' . $topic->topic_num . '/' . $topic->camp_num . '?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $topic->go_live_time);
             $link = 'topic-history/' . $topic->topic_num;
             $data['object'] = $topic->topic_name;
@@ -1106,7 +1104,8 @@ class TopicController extends Controller {
             $data['forum_link'] = 'forum/' . $topic->topic_num . '-' . $topic->topic_name . '/1/threads';
             $data['subject'] = "Proposed change to " . $topic->topic_name . " submitted";
 
-            $this->mailSupporters($directSupporter, $link, $data);         //mail supporters   
+           // $this->mailSupporters($directSupporter, $link, $data);         //mail supporters  
+             $this->mailSubscribersAndSupporters($directSupporter,$subscribers,$link, $data);  
            return response()->json(['id' => $topic->id, 'message' => 'Your change to topic has been submitted to your supporters.']);
         }
     }
@@ -1119,21 +1118,20 @@ class TopicController extends Controller {
             $checkifAlsoSubscriber = Camp::checkifSubscriber($subscribers,$user);
             if($checkifAlsoSubscriber){
                 $data['also_subscriber'] = 1;
-                $alreadyMailed[$i] = $user->id;
-                $i= $i+1;
+                $alreadyMailed[] = $user->id;
             }else{
                $data['also_subscriber'] = 0; 
             }
-            $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
+         $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
             Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new PurposedToSupportersMail($user, $link, $dataObject));
         }
         unset($dataObject['also_subscriber']); 
-        foreach ($subscribers as $user) {
-            $user = \App\User::find($user);
-            if(!in_array($user->id, $alreadyMailed,TRUE)){
-                $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
+        foreach ($subscribers as $usr) {
+            $userSub = \App\User::find($usr);
+            if(!in_array($userSub->id, $alreadyMailed,TRUE)){
+                $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $userSub->email : config('app.admin_email');
                 $dataObject['subscriber'] = 1;
-                Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new PurposedToSupportersMail($user, $link, $dataObject));
+                Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new PurposedToSupportersMail($userSub, $link, $dataObject));
             }
             
         }

@@ -522,7 +522,7 @@ class SettingsController extends Controller {
     }
 
     private function emailForSupportDeleted($data){
-            $nickName = Nickname::getNickName($data['nick_name_id']);
+            $nickName = Nickname::getNickName($data['nick_name']);
             $topic = Camp::getAgreementTopic($data['topic_num']);
             $camp = Camp::where('topic_num', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('go_live_time', '<=', time())->latest('submit_time')->first();
         
@@ -549,7 +549,7 @@ class SettingsController extends Controller {
             $currentSupport = Support::where('support_id', $support_id);
             $currentSupportRec = $currentSupport->first();
             $input['camp_num'] = $currentSupportRec->camp_num;
-            $input['nick_name_id'] = $currentSupportRec->nick_name_id;
+            $input['nick_name'] = $currentSupportRec->nick_name_id;
             $currentSupportOrder = $currentSupportRec->support_order;
             $remaingSupportWithHighOrder = Support::where('topic_num', $topic_num)
                     //->where('delegate_nick_name_id',0)
