@@ -10,9 +10,9 @@
                     
                    if ($currentLive != 1 && $currentTime >= $data->go_live_time && $data->objector_nick_id == NULL) {
                         $currentLive = 1;
-                      $topicBreadName = $data->topic_name; 
-					  $topicNum = $data->topic_num;
-					  $urltitle      = $topicNum."-".preg_replace('/[^A-Za-z0-9\-]/', '-', $data->topic_name);
+                       $topicBreadName = $data->topic_name; 
+					             $topicNum = $data->topic_num;
+					             $urltitle      = $topicNum."-".preg_replace('/[^A-Za-z0-9\-]/', '-', $data->topic_name);
                     } 
 				}	
                     ?>
@@ -120,7 +120,14 @@
                                    }
                                  });
                            </script>
-                       <?php }} 
+                       <?php }else{  ?>
+                          <script>
+                               $(function(){
+                                   notifyAndCloseTimer('<?php echo $data->id ;?>'); 
+                                 });
+                           </script>
+
+                         <?php }} 
                     } else if ($currentLive != 1 && $currentTime >= $data->go_live_time) {
                         $currentLive = 1;
                         $bgcolor = "rgba(0, 128, 0, 0.5);"; // green
