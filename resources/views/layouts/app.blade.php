@@ -315,8 +315,13 @@ function restrictTextField(e,limitlength){
                          $('#as_of').submit();
                 }
             });
+             <?php if(session('asofdateDefault')!=null && session('asofdateDefault')!='') { ?>
+                    $("#asofdate").datepicker("setDate",new Date($('#asofdate').val()));
 
-            $("#asofdate").datepicker("setDate",new Date($('#asofdate').val()));
+             <?php } if(session('asofDefault')!=null && session('asofDefault') !='bydate'){ ?>
+                    $("#asofdate").prop('disabled','disabled');
+              <?php } ?>
+            
             $(".asofdate, #asofdate").change(function(){
 				// Do something interesting here
 				 var value = $('#asofdate').val();
@@ -325,6 +330,7 @@ function restrictTextField(e,limitlength){
 					 $('#asofdate').focus();
                     return false;
 				 }else if(value !='' && bydate == 'bydate'){
+                     $("#asofdate").removeAttr('disabled');
                      return false;
                  }else if(bydate!='bydate'){
                     $('#asofdate').prop('disabled','disabled');
