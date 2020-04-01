@@ -415,7 +415,6 @@ class TopicController extends Controller {
         $id = $paramArray[0];
         $objection = (isset($paramArray[1]) && $paramArray[1] == 'objection') ? $paramArray[1] : null;
         $campupdate = (isset($paramArray[1]) && $paramArray[1] == 'update') ? $paramArray[1] : null;
-
         $camp = Camp::where('id', $id)->first();
 
         if (!count($camp))
@@ -799,8 +798,7 @@ class TopicController extends Controller {
         $message = "Statement submitted successfully.";
 
         if (isset($all['camp_num'])) {
-			
-            
+			 $eventtype = "UPDATE";
             $statement->camp_num = $all['camp_num'];
             $statement->submitter_nick_id = $all['nick_name'];
 
@@ -856,8 +854,6 @@ class TopicController extends Controller {
             $dataObject['nick_name'] = $nickName->nick_name;
             $dataObject['forum_link'] = 'forum/' . $statement->topic_num . '-statement/' . $statement->camp_num . '/threads';
             $dataObject['subject'] = "Proposed change to statement for camp " . $livecamp->topic->topic_name . " / " . $livecamp->camp_name. " submitted";
-            //$this->mailSupporters($directSupporter,$link,$dataObject);
-            //$this->mailSubscribers($subscribers, $link, $dataObject); 
             $this->mailSubscribersAndSupporters($directSupporter,$subscribers,$link, $dataObject);
 
          } else if ($eventtype == "OBJECTION") {
@@ -889,14 +885,6 @@ class TopicController extends Controller {
             $data['forum_link'] = 'forum/' . $statement->topic_num . '-statement/' . $statement->camp_num . '/threads';
             $data['subject'] = "Proposed change to camp statement #" . $statement->id . " submitted";
 
-            /* foreach ($directSupporter as $supporter) {
-
-              $user = Nickname::getUserByNickName($supporter->nick_name_id);
-
-
-              $receiver = (config('app.env') == "production") ? $user->email : config('app.admin_email');
-              Mail::to($receiver)->send(new PurposedToSupportersMail($user, $link, $data));
-              } */
         }
 
 
@@ -1126,7 +1114,7 @@ class TopicController extends Controller {
                 $alreadyMailed[] = $userSub->id;
                 $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $userSub->email : config('app.admin_email');
                 $dataObject['subscriber'] = 1;
-                Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new PurposedToSupportersMail($userSub, $link, $dataObject));
+              Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new PurposedToSupportersMail($userSub, $link, $dataObject));
             }
             
         }
