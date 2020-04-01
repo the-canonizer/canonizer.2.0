@@ -225,7 +225,7 @@ change camps with them."><i class="fa fa-question"></i></a>
     <div class="container-fluid">
             <div class="Scolor-Pnl">
                 <form name="as_of" id="as_of_form" method="GET">
-                 <input type="hidden" id="filter" name="filter" value="{{ isset($_REQUEST['filter']) && !empty($_REQUEST['filter']) ? $_REQUEST['filter'] : '0.00' }}"/>
+                 <!-- <input type="hidden" id="filter" name="filter" value="{{ isset($_REQUEST['filter']) && !empty($_REQUEST['filter']) ? $_REQUEST['filter'] : '0.00' }}"/> -->
                    <input type="hidden" name="_token" value="{{ csrf_token() }}">                   
                    <input type="hidden"  name="asof"  value="bydate">
                    <input hidden type="text" id="asofdatenew" name="asofdate" value="<?php echo $topicData[0]->go_live_time; ?>"/>
