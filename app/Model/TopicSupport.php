@@ -224,9 +224,16 @@ class TopicSupport extends Model {
     public static function topicSupportTree($algorithm,$topicnum,$campnum){
         
         $as_of_time = time();
-		if(isset($_REQUEST['asof']) && $_REQUEST['asof']=='bydate'){
-           $as_of_time = strtotime($_REQUEST['asofdate']);
-		}
+        if ((isset($_REQUEST['asof']) && $_REQUEST['asof'] == 'bydate') || (session()->has('asofDefault') && session('asofDefault') == 'bydate' && !isset($_REQUEST['asof']))) {
+            if(isset($_REQUEST['asof']) && $_REQUEST['asof'] == "bydate"){
+                 $as_of_time = strtotime(date('Y-m-d H:i:s', strtotime($_REQUEST['asofdate'])));
+            }else if(session('asofDefault') == 'bydate' && !isset($_REQUEST['asof'])){
+                $as_of_time = strtotime(session('asofdateDefault'));
+             }
+        }
+		// if(isset($_REQUEST['asof']) && $_REQUEST['asof']=='bydate'){
+  //          $as_of_time = strtotime($_REQUEST['asofdate']);
+		// }
         if(!session("topic-support-tree-$topicnum")){
             $data = Support::where('topic_num','=',$topicnum)
             //->where('delegate_nick_name_id',$delegateNickId)

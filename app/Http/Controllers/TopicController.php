@@ -40,12 +40,15 @@ class TopicController extends Controller {
     public function __construct() {
         parent::__construct();
         //$this->middleware('auth'); //->except('logout');
-		if(isset($_REQUEST['asof']) && $_REQUEST['asof'] !='') {
-		  session(['asofDefault'=>$_REQUEST['asof']]);
-		}
-		if(isset($_REQUEST['asofdate']) && $_REQUEST['asofdate']) {
-		  session(['asofdateDefault'=>$_REQUEST['asofdate']]);
-		}
+		if(isset($_REQUEST['asof']) && $_REQUEST['asof']!=''){
+               // session(['asofDefault'=>$_REQUEST['asof']]);
+                session()->put('asofDefault',$_REQUEST['asof']);
+            }
+            if(isset($_REQUEST['asofdate']) && $_REQUEST['asofdate']!=''){
+              //  session(['asofdateDefault'=>$_REQUEST['asofdate']]);
+                session()->put('asofdateDefault',$_REQUEST['asofdate']);
+            }
+            session()->save();
 		
     }
 
@@ -471,9 +474,6 @@ class TopicController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function create_statement($topic_num, $camp_num) {
-
-
-
         $topic = Camp::getAgreementTopic($topic_num);
 
         $camp = Camp::getLiveCamp($topic_num, $camp_num);
@@ -1091,7 +1091,7 @@ class TopicController extends Controller {
             $topic->update();
             $directSupporter = Support::getDirectSupporter($topic->topic_num);          
             $subscribers = Camp::getCampSubscribers($camp->topic_num, 1);
-           // $link = 'topic/' . $topic->topic_num . '/' . $topic->camp_num . '?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $topic->go_live_time);
+             // $link = 'topic/' . $topic->topic_num . '/' . $topic->camp_num . '?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $topic->go_live_time);
             $link = 'topic-history/' . $topic->topic_num;
             $data['object'] = $topic->topic_name;
             $data['go_live_time'] = $topic->go_live_time;

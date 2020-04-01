@@ -116,7 +116,8 @@
                                  });
 
                                  function timeisUp() {
-                                     notifyAndCloseTimer('<?php echo $data->id ;?>');                                                                                                                              }
+                                     notifyAndCloseTimer('<?php echo $data->id ;?>');                                                
+                                   }
                                  });
                            </script>
                        <?php }} 

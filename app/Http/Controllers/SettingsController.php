@@ -420,12 +420,10 @@ class SettingsController extends Controller {
             /* Send delegated support email to the direct supporter and all parent  and to subscriber*/
             if (isset($data['delegate_nick_name_id']) && $data['delegate_nick_name_id'] != 0) {
                 $parentUser = Nickname::getUserByNickName($data['delegate_nick_name_id']);
-
                 $nickName = Nickname::getNickName($data['nick_name']);
                // $topic = Camp::where('topic_num', $data['topic_num'])->where('camp_name', '=', 'Agreement')->latest('submit_time')->first();
                 $topic = Camp::getAgreementTopic($data['topic_num']);
-				$camp = Camp::where('topic_num', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('go_live_time', '<=', time())->latest('submit_time')->first();
-            
+				$camp = Camp::where('topic_num', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('go_live_time', '<=', time())->latest('submit_time')->first();            
                 $result['nick_name'] = $nickName->nick_name;
 				$result['object'] = $topic->topic_name ." / ".$camp->camp_name;
                 $result['subject'] = $nickName->nick_name . " has just delegated their support to you.";

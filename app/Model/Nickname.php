@@ -77,9 +77,15 @@ class Nickname extends Model {
 
         if (isset($_REQUEST['asof']) && $_REQUEST['asof'] == 'review') {
             
-        } else if (isset($_REQUEST['asof']) && $_REQUEST['asof'] == 'bydate') {
-            $as_of_time = strtotime(date('Y-m-d H:i:s', strtotime($_REQUEST['asofdate'])));
-            $as_of_clause = "and go_live_time < $as_of_time";
+        } else if ((isset($_REQUEST['asof']) && $_REQUEST['asof'] == 'bydate') || (session()->has('asofDefault') && session('asofDefault') == 'bydate' && !isset($_REQUEST['asof']))) {
+            if(isset($_REQUEST['asof']) && $_REQUEST['asof'] == "bydate"){
+                 $as_of_time = strtotime(date('Y-m-d H:i:s', strtotime($_REQUEST['asofdate'])));
+                $as_of_clause = "and go_live_time < $as_of_time";   
+            }else if(session('asofDefault') == 'bydate' && !isset($_REQUEST['asof'])){
+                $as_of_time = strtotime(session('asofdateDefault'));
+                $as_of_clause = "and go_live_time < $as_of_time";
+            }
+            
         } else {
             $as_of_clause = 'and go_live_time < ' . $as_of_time;
         }

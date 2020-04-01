@@ -165,11 +165,10 @@
 
                     list($controller, $action) = explode('@', $controllerAction);
 
-					$visibleRoutes = array("index","show");
+					$visibleRoutes = array("index","show","browse");
 
 					if(in_array($route,$visibleRoutes) && $controller != "CThreadsController" && $controller != "SettingsController") { ?>
-                    <ul class="lowermneu canoalgo">
-
+                    
 					<!-- set algorithm as per request -->
 					<?php
 
@@ -185,7 +184,12 @@
                     if(isset($_REQUEST['asofdate']) && $_REQUEST['asofdate']) {
                       session(['asofdateDefault'=>$_REQUEST['asofdate']]);
                     }
-					?>
+
+                    $visibleRoutes = array("index","show");
+                    if(in_array($route,$visibleRoutes) && $controller != "CThreadsController" && $controller != "SettingsController") {
+					?> 
+                        <ul class="lowermneu canoalgo">
+
                         <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Components">
                             <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#canoalgo">
                                 <span class="nav-link-text">Canonizer</span>
@@ -220,7 +224,9 @@
                                 </li>
                             </ul>
                         </li>
+
                     </ul>
+                      <?php } ?>
                     <ul class="lowermneu asof">
                         <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Components">
                             <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#asof">
@@ -240,16 +246,16 @@
 										<label for="radio2">default</label>
 									</div>
 									<div class="radio radio-primary">
-										<input type="radio" <?php echo (session('asofDefault')=="bydate") ? "checked='checked'" : '';?> class="asofdate" name="asof"id="radio3" value="bydate">
+										<input type="radio" <?php echo (session('asofDefault')=="bydate") ? "checked='checked'" : '';?> class="asofdate" name="asof" id="radio3" value="bydate">
 										<!-- <label for="radio3">as of (yy/mm/dd)</label> -->
                                         <label for="radio3">as of date</label>
 									</div>
 									
 									<div><input readonly type="text" id="asofdate" name="asofdate" value=""/></div>
 								    <script>
-                                        <?php if(session('asofdateDefault')!=null && session('asofdateDefault')!='' && (session('asofDefault')!='' && session('asofDefault') == 'bydate')) { ?>
+                                        <?php if(session('asofdateDefault')!=null && session('asofdateDefault')!='') { ?>
     									var date = new Date(<?= strtotime(session('asofdateDefault')) ?> * 1000).toLocaleString();
-    									$('#asofdate').val(date);
+                                       $('#asofdate').val(date);
                                    <?php } ?>
 									</script>
 								</form>
@@ -304,19 +310,25 @@ function restrictTextField(e,limitlength){
                 changeMonth: true,
                 changeYear: true,
 				dateFormat: 'yy/mm/dd',
-                yearRange: "-"+yearRange+":+0"
+                yearRange: "-"+yearRange+":+0",
+                onSelect: function () {
+                         $('#as_of').submit();
+                }
             });
 
-			$(".asofdate, #asofdate").change(function(){
+            $("#asofdate").datepicker("setDate",new Date($('#asofdate').val()));
+            $(".asofdate, #asofdate").change(function(){
 				// Do something interesting here
 				 var value = $('#asofdate').val();
-
-				 var bydate = $("input[name='asof']:checked"). val();
-
-				 if(value=="" && bydate == 'bydate') {
+                 var bydate = $("input[name='asof']:checked"). val();  
+                 if(value=="" && bydate == 'bydate') {
 					 $('#asofdate').focus();
-				  return false;
-				 }
+                    return false;
+				 }else if(value !='' && bydate == 'bydate'){
+                     return false;
+                 }else if(bydate!='bydate'){
+                    $('#asofdate').prop('disabled','disabled');
+                 }
 				 $('#as_of').submit();
 			});
 
