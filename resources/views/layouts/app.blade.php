@@ -306,7 +306,9 @@ function restrictTextField(e,limitlength){
             });
             var currentYear = new Date().getFullYear();
             var yearRange = (currentYear - 2006);
+            var newDate = new Date($('#asofdate').val());
             $("#asofdate").datepicker({
+                defaultDate:newDate,
                 changeMonth: true,
                 changeYear: true,
 				dateFormat: 'yy/mm/dd',
@@ -315,10 +317,7 @@ function restrictTextField(e,limitlength){
                          $('#as_of').submit();
                 }
             });
-             <?php if(session('asofdateDefault')!=null && session('asofdateDefault')!='') { ?>
-                    $("#asofdate").datepicker("setDate",new Date($('#asofdate').val()));
-
-             <?php } if(session('asofDefault')!=null && session('asofDefault') !='bydate'){ ?>
+             <?php    if(session('asofDefault')!=null && session('asofDefault') !='bydate'){ ?>
                     $("#asofdate").prop('disabled','disabled');
               <?php } ?>
             
