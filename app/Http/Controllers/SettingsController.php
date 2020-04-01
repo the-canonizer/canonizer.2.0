@@ -454,12 +454,13 @@ class SettingsController extends Controller {
           $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
            Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new NewDelegatedSupporterMail($user, $link, $dataObject));
         }
-        foreach ($subscribers as $user) {
-            $user = \App\User::find($user);
-            if(!in_array($user->id, $alreadyMailed,TRUE)){
-                $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
+        foreach ($subscribers as $usr) {
+            $userSub = \App\User::find($usr);
+            if(!in_array($userSub->id, $alreadyMailed,TRUE)){
+                $alreadyMailed[] = $userSub->id;
+                $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $userSub->email : config('app.admin_email');
                 $dataObject['subscriber'] = 1;
-                Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new NewDelegatedSupporterMail($user, $link, $dataObject));
+                Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new NewDelegatedSupporterMail($userSub, $link, $dataObject));
             }
             
         }
