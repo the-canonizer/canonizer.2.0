@@ -52,7 +52,6 @@ class CommonForumFunctions
                 $bcc_user[] = $user; 
             }
             if($subscribers && count($subscribers) > 0){
-               $data['subscriber'] = 1;
                 foreach($subscribers as $sub){
                     if(!in_array($sub,$userExist,TRUE)){
                         $userSub = \App\User::find($sub);
