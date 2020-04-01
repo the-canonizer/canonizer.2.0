@@ -448,13 +448,13 @@ class SettingsController extends Controller {
 
      private function mailSubscribersAndSupporters($directSupporter,$subscribers,$link, $dataObject){
         $alreadyMailed = [];
-        foreach ($directSupporter as $supporter) {
+        foreach (array_unique($directSupporter) as $supporter) {
           $user = Nickname::getUserByNickName($supporter->nick_name_id);
           $alreadyMailed[] = $user->id;
           $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
            Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new NewDelegatedSupporterMail($user, $link, $dataObject));
         }
-        foreach ($subscribers as $user) {
+        foreach (array_unique($subscribers) as $user) {
             $user = \App\User::find($user);
             if(!in_array($user->id, $alreadyMailed,TRUE)){
                 $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');

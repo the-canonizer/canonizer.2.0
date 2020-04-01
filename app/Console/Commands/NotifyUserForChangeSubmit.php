@@ -145,13 +145,13 @@ class NotifyUserForChangeSubmit extends Command {
     public static function mailSubscribersAndSupporters($directSupporter,$subscribers,$link, $dataObject){
         $alreadyMailed = [];
         $i=0;
-        foreach ($directSupporter as $supporter) {
+        foreach (array_unique($directSupporter) as $supporter) {
          $user = Nickname::getUserByNickName($supporter->nick_name_id);
          $alreadyMailed[] = $user->id;
          $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
          Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new PurposedToSupportersMail($user, $link, $dataObject));
         }
-        foreach ($subscribers as $usr) {
+        foreach (array_unique($subscribers) as $usr) {
             $userSub = \App\User::find($usr);
             if(!in_array($userSub->id, $alreadyMailed,TRUE)){
                 $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $userSub->email : config('app.admin_email');
