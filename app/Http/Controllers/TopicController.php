@@ -1113,17 +1113,15 @@ class TopicController extends Controller {
     private function mailSubscribersAndSupporters($directSupporter,$subscribers,$link, $dataObject){
         $alreadyMailed = [];
         $i=0;
-        if(isset($directSupporter) && count($directSupporter)){
-            foreach (array_unique($directSupporter) as $supporter) {
-             $user = Nickname::getUserByNickName($supporter->nick_name_id);
-             $alreadyMailed[] = $user->id;
-             $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
-             Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new PurposedToSupportersMail($user, $link, $dataObject));
-            }
+        //echo "<pre>"; print_r($directSupporter); print_r($subscribers); die;
+        foreach ($directSupporter as $supporter) {
+         $user = Nickname::getUserByNickName($supporter->nick_name_id);
+         $alreadyMailed[] = $user->id;
+         $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
+         Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new PurposedToSupportersMail($user, $link, $dataObject));
         }
         
-        if(isset($subscribers) && count($subscribers)){
-                foreach (array_unique($subscribers) as $usr) {
+        foreach ($subscribers as $usr) {
             $userSub = \App\User::find($usr);
             if(!in_array($userSub->id, $alreadyMailed,TRUE)){
                 $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $userSub->email : config('app.admin_email');
@@ -1132,9 +1130,7 @@ class TopicController extends Controller {
             }
             
         }
-
-        }
-    return;
+        return;
     }
 
     private function mailSupporters($directSupporter, $link, $data) {

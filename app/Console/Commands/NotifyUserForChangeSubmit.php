@@ -145,28 +145,21 @@ class NotifyUserForChangeSubmit extends Command {
     public static function mailSubscribersAndSupporters($directSupporter,$subscribers,$link, $dataObject){
         $alreadyMailed = [];
         $i=0;
-        if(isset($directSupporter) && count($directSupporter) > 0){
-            foreach (array_unique($directSupporter) as $supporter) {
-             $user = Nickname::getUserByNickName($supporter->nick_name_id);
-             $alreadyMailed[] = $user->id;
-             $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
-             Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new PurposedToSupportersMail($user, $link, $dataObject));
-            }   
+        foreach ($directSupporter as $supporter) {
+         $user = Nickname::getUserByNickName($supporter->nick_name_id);
+         $alreadyMailed[] = $user->id;
+         $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
+         Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new PurposedToSupportersMail($user, $link, $dataObject));
         }
-
-        if(isset($subscribers) && count($subscribers) > 0){
-            foreach (array_unique($subscribers) as $usr) {
+        foreach ($subscribers as $usr) {
             $userSub = \App\User::find($usr);
             if(!in_array($userSub->id, $alreadyMailed,TRUE)){
                 $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $userSub->email : config('app.admin_email');
                 $dataObject['subscriber'] = 1;
                 Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new PurposedToSupportersMail($userSub, $link, $dataObject));
-                }
-                
             }
+            
         }
-        
-        
         return;
     }
 
