@@ -120,14 +120,7 @@
                                    }
                                  });
                            </script>
-                       <?php }else{  ?>
-                          <script>
-                               $(function(){
-                                   notifyAndCloseTimer('<?php echo $data->id ;?>'); 
-                                 });
-                           </script>
-
-                         <?php }} 
+                       <?php }} 
                     } else if ($currentLive != 1 && $currentTime >= $data->go_live_time) {
                         $currentLive = 1;
                         $bgcolor = "rgba(0, 128, 0, 0.5);"; // green
