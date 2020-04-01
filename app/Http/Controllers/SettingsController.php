@@ -448,21 +448,26 @@ class SettingsController extends Controller {
 
      private function mailSubscribersAndSupporters($directSupporter,$subscribers,$link, $dataObject){
         $alreadyMailed = [];
-        foreach (array_unique($directSupporter) as $supporter) {
-          $user = Nickname::getUserByNickName($supporter->nick_name_id);
-          $alreadyMailed[] = $user->id;
-          $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
-           Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new NewDelegatedSupporterMail($user, $link, $dataObject));
+        if(isset($directSupporter) && count($directSupporter)>0){
+                foreach (array_unique($directSupporter) as $supporter) {
+                  $user = Nickname::getUserByNickName($supporter->nick_name_id);
+                  $alreadyMailed[] = $user->id;
+                  $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
+                   Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new NewDelegatedSupporterMail($user, $link, $dataObject));
+                }
         }
-        foreach (array_unique($subscribers) as $user) {
+        if(isset($subscribers) && count($subscribers) > 0){
+                foreach (array_unique($subscribers) as $user) {
             $user = \App\User::find($user);
             if(!in_array($user->id, $alreadyMailed,TRUE)){
                 $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
                 $dataObject['subscriber'] = 1;
-                Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new NewDelegatedSupporterMail($user, $link, $dataObject));
+                    Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new NewDelegatedSupporterMail($user, $link, $dataObject));
+                }
+                
             }
-            
         }
+        
         return;
     }
 
