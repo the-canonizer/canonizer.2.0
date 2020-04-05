@@ -428,14 +428,14 @@ class SettingsController extends Controller {
 				$result['object'] = $topic->topic_name ." / ".$camp->camp_name;
                 $result['subject'] = $nickName->nick_name . " has just delegated their support to you.";
                 $link = 'topic/' . $data['topic_num'] . '/' . $data['camp_num'];
-                $subscribers = Camp::getCampSubscribers($data['topic_num'], $data['camp_num']);
-                $alreadyMailed[] = $parentUser->id;
                 $receiver = (config('app.env') == "production") ? $parentUser->email : config('app.admin_email');
                 Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new NewDelegatedSupporterMail($parentUser, $link, $result));
                 $result['subject'] = $nickName->nick_name . " has just delegated their support to ".$parentUser->first_name." ".$parentUser->last_name;
-                unset($result['subscriber']);
                 $result['delegated_user'] = $parentUser->first_name." ".$parentUser->last_name;
-                $this->mailSubscribers($subscribers, $link, $result,$alreadyMailed); 
+                $subscribers = Camp::getCampSubscribers($data['topic_num'], $data['camp_num']);
+                $directSupporter = Support::getDirectSupporter($data['topic_num'], $data['camp_num']);
+                $this->mailSubscribersAndSupporters($directSupporter,$subscribers, $link, $result);
+                //$this->mailSubscribers($subscribers, $link, $result,$alreadyMailed); 
                 /* end of email */
             }
             Session::flash('success', "Your support update has been submitted successfully.");
