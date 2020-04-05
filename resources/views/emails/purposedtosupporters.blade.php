@@ -10,14 +10,14 @@
 <h4>You are receiving this e-mail because:</h4>
 <p>
 	<ul>
-	<li>You are subscribed to <a href="{{ url('/').'/'.$data['camp_url'] }}"> {{ $data['camp_name'] }} </a></li>
+	<li>You are subscribed to <a href="{{ url('/') . '/' . $link }}">{{ $data['object']}} </a></li>
 </ul>
 </p>
 @else
 	<h4>You are receiving this e-mail because:</h4>
 	<p>
 		<ul>
-			<li>You are directly supporting <a href="{{ url('/').'/'.$data['camp_url'] }}"> {{ $data['camp_name'] }} </a></li>
+			<li>You are directly supporting <a href="{{ url('/') . '/' . $link }}">{{ $data['object']}} </a></li>
 		</ul>
 	</p>
  <h4>Note:</h4>
