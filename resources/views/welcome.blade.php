@@ -45,18 +45,28 @@
          @if(count($topics))
           <div class="tree col-sm-12">
                     <ul class="mainouter" id="load-data">
-                      <?php $createCamp = 1; ?>
-
+                      <?php $createCamp = 1;
+                       $as_of_time = time();
+                        if (isset($_REQUEST['asof']) && $_REQUEST['asof'] == 'bydate') {
+                            $as_of_time = strtotime($_REQUEST['asofdate']);
+                        }else if(session()->has('asofDefault') && session('asofDefault') == 'bydate' && !isset($_REQUEST['asof'])){
+                            $as_of_time = strtotime(session('asofdateDefault'));
+                        }
+                        ?>
                        @foreach($topics as $k=>$topic)
 
                        <?php
-                        $topicData = \App\Model\Topic::where('topic_num','=',$topic->topic_num)->latest('submit_time')->get();
+                        $topicData = \App\Model\Topic::where('topic_num','=',$topic->topic_num)->where('go_live_time', '<=', $as_of_time)->latest('submit_time')->get();
                         $topic_name_space_id = isset($topicData[0]) ? $topicData[0]->namespace_id:1;
+                        $topic_name = isset($topicData[0]) ? $topicData[0]->topic_name:'';
                         $request_namesapce = session('defaultNamespaceId', 1); 
                         if($topic_name_space_id !='' && $topic_name_space_id != $request_namesapce){
                             continue;
+                        }else if(isset($topic_name) && trim($topic_name) ==''){
+                          continue;
                         }
-                       $as_of_time = time();
+                        
+                        $as_of_time = time();
                         if(isset($_REQUEST['asof']) && $_REQUEST['asof']=='date'){
                             $as_of_time = strtotime($_REQUEST['asofdate']);
                         }
