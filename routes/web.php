@@ -64,6 +64,10 @@ Route::post('register/verify-otp', 'Auth\RegisterController@postVerifyOtp');
 //Route::post('login','Auth\LoginController@login');
 Route::get('login', [ 'as' => 'login', 'uses' => 'Auth\LoginController@showLoginForm']);
 Route::post('login', [ 'as' => 'login', 'uses' => 'Auth\LoginController@login']);
+// social login url 
+Route::get('login/{provider}', 'SocialController@redirect');
+Route::get('login/{provider}/callback','SocialController@Callback');
+
 
 
 Route::get('forgetpassword', 'Auth\ForgotPasswordController@showLinkRequestForm');

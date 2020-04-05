@@ -26,6 +26,21 @@
         </div>
         <button type="submit" id="submit" onclick="submitForm(this)"  class="btn btn-login">Log in</button>
         <div id="loggingin" style="display:none;" class="btn btn-login">Logging in..</div>
+        <div class="form-group row">
+            <div class="col-md-6 offset-md-4">
+                <a href="{{ url('/login/google') }}" class="btn btn-success btn-google-plus"> Google</a>                 
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-6 offset-md-4">
+                <a href="{{ url('/login/facebook') }}" class="btn btn-success btn-google-plus"> Facebook</a>                 
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-6 offset-md-4">
+                <a href="{{ url('/login/twitter') }}" class="btn btn-success btn-google-plus"> Twitter</a>                 
+            </div>
+        </div>
     </form>
  </div>
  <div class="col-sm-2 margin-btm-2"></div>
