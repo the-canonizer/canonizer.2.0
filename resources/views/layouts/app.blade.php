@@ -330,7 +330,7 @@ function restrictTextField(e,limitlength){
                     return false;
 				 }else if(value !='' && bydate == 'bydate'){
                      $("#asofdate").removeAttr('disabled');
-                     return false;
+                     //return false;
                  }else if(bydate!='bydate'){
                     $('#asofdate').prop('disabled','disabled');
                  }
