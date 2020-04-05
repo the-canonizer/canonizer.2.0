@@ -9,19 +9,24 @@ Hi {{ $user->first_name }} {{ $user->last_name }}, <br/>
 
 <p>Camp Name: <a href="{{ url('/').'/'.$data['camp_url'] }}"> {{ $data['camp_name'] }} </a></p>
 
-<h4>Note:</h4>
 @if(isset($data['subscriber']) && $data['subscriber'] == 1)
+<h4>You are receiving this e-mail because:</h4>
 <p>
-    If you do not wish to receive these notifications, you can unsubscribe from the camp.
-     We request that all subscriber of a camp continue to receive and take some responsibility for the camp.
+	<ul>
+	<li>You are subscribed to <a href="{{ url('/').'/'.$data['camp_url'] }}"> {{ $data['camp_name'] }} </a></li>
+</ul>
 </p>
 @else
-<p>
-    If you do not wish to receive these notifications, you can either
-    delegate your support to some other camp supporter in the topic, or
-    remove your support from the camp.  We request that all direct supporters of a
-    camp continue to receive and take some responsibility for the camp.
-</p>
+	<h4>You are receiving this e-mail because:</h4>
+	<p>
+		<ul>
+			<li>You are directly supporting <a href="{{ url('/').'/'.$data['camp_url'] }}"> {{ $data['camp_name'] }} </a></li>
+		</ul>
+	</p>
+	<h4>Note:</h4>
+	<p>
+	 We request that all <b>direct</b> supporters of a camp continue to receive notifications and take responsibility for the camp. You can avoid being notified by <b>delegating</b> your support to someone else.
+	</p>
 @endif
 
 <p>  Sincerely, </p>
