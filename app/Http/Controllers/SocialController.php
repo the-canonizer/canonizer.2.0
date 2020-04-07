@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Socialite;
 use App\User;
+use App\Model\SocialUser;
 use Auth;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\WelcomeMail;
@@ -17,7 +18,8 @@ class SocialController extends Controller
     {
 
      return Socialite::driver($provider)->redirect();
-    }
+    
+   }
 
     public function Callback($provider)
 	{
@@ -26,25 +28,40 @@ class SocialController extends Controller
        }else{
        		$userSocial =   Socialite::driver($provider)->stateless()->user();
        }
-        $users       =   User::where(['email' => $userSocial->getEmail()])->first();
-		if($users){
-		            Auth::login($users);
-		            return redirect('/');
-		        }else{
-					$user = User::create([
-		                'first_name'          => $userSocial->getName(),
-		                'email'         => $userSocial->getEmail(),
-		                'provider_id'   => $userSocial->getId(),
-		                'provider'      => $provider,
-		            ]);
-		             $link = 'topic/132-Help/1';	
-		              if(isset($user) && isset($user->email) && $user->email!=='')	{
-		              		Mail::to($user->email)->bcc(config('app.admin_bcc'))->send(new WelcomeMail($user,$link));
-		              }
-				        
-				        
-				        Auth::guard()->login($user);
-		         return redirect()->route('home');
-		 }
+       $social_user = SocialUser::where(['social_email' => $userSocial->getEmail(),'provider'=>$provider,'provider_id'=>$userSocial->getId()])->first();
+        if($social_user){
+        	$users       =   User::where(['id' => $social_user->user_id])->first();
+        	Auth::login($users);
+		    return redirect('/');
+        }else{
+        		$users  =  User::where(['email' => $userSocial->getEmail()])->first();
+				if($users){
+						$socialUser = SocialUser::create([
+			                'user_id'       => $users->id,
+			                'social_email'  => $userSocial->getEmail(),
+			                'provider_id'   => $userSocial->getId(),
+			                'provider'      => $provider,
+			            ]);
+			            Auth::login($users);
+			            return redirect('/');
+			        }else{
+			        	$authCode = mt_rand(100000, 999999);
+						$user = User::create([
+			                'first_name'    => $userSocial->getName(),
+			                'email'         => $userSocial->getEmail(),
+			                'otp'			=> $authCode
+			            ]);
+			            $socialUser = SocialUser::create([
+			                'user_id'       => $users->id,
+			                'social_email'  => $userSocial->getEmail(),
+			                'provider_id'   => $userSocial->getId(),
+			                'provider'      => $provider,
+			            ]);
+			             //otp email
+				       Mail::to($user->email)->bcc(config('app.admin_bcc'))->send(new OtpVerificationMail($user));
+				       return redirect()->route('register.otp', ['user' => base64_encode($user->email)]);
+			 }
+        }
+        
 	}
 }

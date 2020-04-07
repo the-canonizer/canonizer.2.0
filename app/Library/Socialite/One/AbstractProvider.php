@@ -2,12 +2,12 @@
 
 namespace App\Library\Socialite\One;
 
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use InvalidArgumentException;
-use Illuminate\Http\RedirectResponse;
-use League\OAuth1\Client\Server\Server;
-use League\OAuth1\Client\Credentials\TokenCredentials;
 use App\Library\Socialite\Contracts\Provider as ProviderContract;
+use League\OAuth1\Client\Credentials\TokenCredentials;
+use League\OAuth1\Client\Server\Server;
 
 abstract class AbstractProvider implements ProviderContract
 {
@@ -62,8 +62,9 @@ abstract class AbstractProvider implements ProviderContract
     /**
      * Get the User instance for the authenticated user.
      *
-     * @throws \InvalidArgumentException
      * @return \Laravel\Socialite\One\User
+     *
+     * @throws \InvalidArgumentException
      */
     public function user()
     {

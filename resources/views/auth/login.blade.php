@@ -26,27 +26,33 @@
         </div>
         <button type="submit" id="submit" onclick="submitForm(this)"  class="btn btn-login">Log in</button>
         <div id="loggingin" style="display:none;" class="btn btn-login">Logging in..</div>
-        <div class="form-group row">
-            <div class="col-md-6 offset-md-4">
-                <a href="{{ url('/login/google') }}" class="btn btn-success btn-google-plus"> Google</a>                 
-            </div>
-        </div>
-        <div class="form-group row">
-            <div class="col-md-6 offset-md-4">
-                <a href="{{ url('/login/facebook') }}" class="btn btn-success btn-google-plus"> Facebook</a>                 
-            </div>
-        </div>
-        <div class="form-group row">
-            <div class="col-md-6 offset-md-4">
-                <a href="{{ url('/login/twitter') }}" class="btn btn-success btn-google-plus"> Twitter</a>                 
-            </div>
-        </div>
     </form>
  </div>
  <div class="col-sm-2 margin-btm-2"></div>
  <div class="col-sm-5 margin-btm-2 lg-signup">
            <div >Don't have an account? <a href="{{ url('/register') }}">Signup Now</a></div>
      </div>
+ <div class="col-sm-12 margin-btm-2 ">
+    <p>Login or Signup with social accounts.</p>
+     <div class="form-group row">
+            <div class="col-md-2">
+                <a href="{{ url('/login/google') }}" class="btn google btn-google-plus"><i class="fa fa-google fa-fw">
+          </i> Google+</a>                 
+            </div>
+            <div class="col-md-2">
+                <a href="{{ url('/login/facebook') }}" class="btn fb btn-facebook"> <i class="fa fa-facebook fa-fw"></i> Facebook</a>                 
+            </div>
+            <div class="col-md-2">
+                <a href="{{ url('/login/twitter') }}" class="btn twitter btn-twitter"><i class="fa fa-twitter fa-fw"></i> Twitter</a>
+            </div>
+            <div class="col-md-2">
+                <a href="{{ url('/login/github') }}" class="btn github btn-github"><i class="fa fa-github fa-fw"></i> GitHub</a>
+            </div>
+            <div class="col-md-2">
+                <a href="{{ url('/login/linkedin') }}" class="btn linkedin btn-linkedin"><i class="fa fa-github fa-fw"></i> Linkedin</a>
+            </div>
+        </div>
+ </div>
 </div>  <!-- /.right-whitePnl-->
 <script>
     window.onload = function() {
