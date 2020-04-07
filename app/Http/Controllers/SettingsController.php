@@ -409,9 +409,7 @@ class SettingsController extends Controller {
                 session()->forget("topic-support-{$topic_num}");
                 session()->forget("topic-support-nickname-{$topic_num}");
                 session()->forget("topic-support-tree-{$topic_num}");
-            }
-            /* send support added mail to all supporter and subscribers */
-            $this->emailForSupportAdded($data);
+            }            
 		   }	
             if($last_camp == $data['camp_num']){
                 Session::flash('confirm',"samecamp");
@@ -437,6 +435,9 @@ class SettingsController extends Controller {
                 $this->mailSubscribersAndSupporters($directSupporter,$subscribers, $link, $result);
                 //$this->mailSubscribers($subscribers, $link, $result,$alreadyMailed); 
                 /* end of email */
+            }else{
+                /* send support added mail to all supporter and subscribers */
+                $this->emailForSupportAdded($data);
             }
             Session::flash('success', "Your support update has been submitted successfully.");
             // return redirect('support/' . $data['topic_num'] . '/' . $data['camp_num']);
