@@ -458,7 +458,7 @@ class SettingsController extends Controller {
          $topic_name_space_id = isset($topic[0]) ? $topic[0]->namespace_id:1;
          $nickName = \App\Model\Nickname::find($supporter->nick_name_id);
          $supported_camp = $nickName->getSupportCampList($topic_name_space_id);
-         $supported_camp_list = $nickName->getSupportCampListNames($supported_camp,$dataObject['topic_num']);
+         $supported_camp_list = $nickName->getSupportCampListNamesEmail($supported_camp,$dataObject['topic_num']);
          $dataObject['support_list'] = $supported_camp_list; 
          
           $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');

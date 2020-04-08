@@ -54,7 +54,7 @@ class CommonForumFunctions
                  $topic_name_space_id = isset($topic[0]) ? $topic[0]->namespace_id:1;
                  $nickName = \App\Model\Nickname::find($supporter->nick_name_id);
                  $supported_camp = $nickName->getSupportCampList($topic_name_space_id);
-                 $supported_camp_list = $nickName->getSupportCampListNames($supported_camp,$topicid);
+                 $supported_camp_list = $nickName->getSupportCampListNamesEmail($supported_camp,$topicid);
                  $support_list[$user->id]=$supported_camp_list;
                 $userExist[] = $user->id;
                 $bcc_user[] = $user; 
@@ -133,7 +133,7 @@ class CommonForumFunctions
                  $topic_name_space_id = isset($topic[0]) ? $topic[0]->namespace_id:1;
                  $nickName = \App\Model\Nickname::find($supporter->nick_name_id);
                  $supported_camp = $nickName->getSupportCampList($topic_name_space_id);
-                 $supported_camp_list = $nickName->getSupportCampListNames($supported_camp,$topicid);
+                 $supported_camp_list = $nickName->getSupportCampListNamesEmail($supported_camp,$topicid);
                  $support_list[$user->id]=$supported_camp_list;
                 
                 $bcc_user[] = $user;
@@ -157,7 +157,7 @@ class CommonForumFunctions
          if(isset($bcc_user) && count($bcc_user) > 0){
             foreach($bcc_user as $user){
                 $bcc_email = CommonForumFunctions::getReceiver($user->email);
-                
+
                 $data['support_list'] = $support_list[$user->id];
                 Mail::bcc($bcc_email)->send(new ForumThreadCreatedMail($user, $link, $data));    
             }

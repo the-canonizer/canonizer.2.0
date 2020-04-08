@@ -11,7 +11,9 @@
 
 	<ul>
 	@if(isset($data['support_list']) && $data['support_list']!='')
-			<li>You are subscribed to {!!$data['support_list']!!}</li>
+		@foreach($data['support_list'] as $support)
+		 	<li>You are subscribed to {!!$support!!}</li>
+		 @endforeach
 	@else
 		<li>You are subscribed to <a href="{{ url('/') . '/' . $link }}">{{ $data['object']}} </a></li>
 	@endif	
@@ -22,7 +24,10 @@
 	<h4>You are receiving this e-mail because:</h4>
 		<ul>
 			@if(isset($data['support_list']) && $data['support_list']!='')
-			<li>You are directly supporting {!!$data['support_list']!!}</li>
+			 @foreach($data['support_list'] as $support)
+			 	<li>You are directly supporting {!!$support!!}</li>
+			 @endforeach
+			
 			@else
 			<li>You are directly supporting <a href="{{ url('/') . '/' . $link }}">{{ $data['object']}} </a></li>
 			@endif

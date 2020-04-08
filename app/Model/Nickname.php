@@ -68,6 +68,27 @@ class Nickname extends Model {
         }       
       return $returnHtml;                  
     }
+    public function getSupportCampListNamesEmail($supported_camp = [],$topic_num){
+        $returnHtml = [];
+        if(sizeof($supported_camp) > 0){
+            foreach ($supported_camp as $key => $value) {
+                 if($key == $topic_num){
+                    $h = 1;
+                    if(isset($value['array'])){
+                        ksort($value['array']);
+                    foreach($value['array'] as $i => $supportData ){
+                        foreach($supportData as $j => $support){
+                              $returnHtml[]=  '<a href="'.$support['link'].'">'.$support['camp_name'].'</a>'; 
+                            }
+                        }
+                    }else{
+                       $returnHtml[] =  '<a href="'.$value['link'].'">'.$value['camp_name'].'</a>'; 
+                    }
+               }                
+            }
+        }       
+      return $returnHtml;                  
+    }
     public function getSupportCampList($namespace = 1) {
 
         $as_of_time = time();
