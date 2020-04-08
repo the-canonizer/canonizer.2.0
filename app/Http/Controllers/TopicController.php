@@ -653,7 +653,7 @@ class TopicController extends Controller {
 
         $eventtype = "CREATE";
         if (isset($all['camp_num'])) {
-            $eventtype = "UPDATE";
+            //$eventtype = "UPDATE";
             $camp->camp_num = $all['camp_num'];
             $camp->submitter_nick_id = $all['nick_name'];
 
@@ -802,8 +802,7 @@ class TopicController extends Controller {
         $message = "Statement submitted successfully.";
 
         if (isset($all['camp_num'])) {
-			 $eventtype = "UPDATE";
-            $statement->camp_num = $all['camp_num'];
+		    $statement->camp_num = $all['camp_num'];
             $statement->submitter_nick_id = $all['nick_name'];
 
             $nickNames = Nickname::personNicknameArray();
@@ -847,8 +846,8 @@ class TopicController extends Controller {
             // mail to direct supporters on new statement creation
             $directSupporter = Support::getDirectSupporter($statement->topic_num, $statement->camp_num);
             $subscribers = Camp::getCampSubscribers($statement->topic_num, $statement->camp_num);
-           
-            $dataObject['object'] = $livecamp->topic->topic_name . " / " . $livecamp->camp_name;;
+            $dataObject['topic_num'] = $statement->topic_num;
+            $dataObject['object'] = $livecamp->topic->topic_name . " / " . $livecamp->camp_name;
             $dataObject['go_live_time'] = $statement->go_live_time;
             $dataObject['type'] = 'statement : for camp ';
             $dataObject['typeobject'] = 'statement';
