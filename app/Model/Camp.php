@@ -904,7 +904,7 @@ class Camp extends Model {
                 $topic = self::getLiveCamp($subs->topic_num,$subs->camp_num);
                 $title = preg_replace('/[^A-Za-z0-9\-]/', '-', ($topic->title != '') ? $topic->title : $topic->camp_name);
                 $topic_id =$subs->topic_num . "-" . $title;
-                $link = url('topic/' . $topic_id . '/' . $camp_num);
+                $link = url('topic/' . $topic_id . '/' . $subs->camp_num);
                 $list[]= '<a href="'.$link.'">'.$topic->camp_name.'</a>';
             }
         }
