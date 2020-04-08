@@ -14,12 +14,20 @@ Hi {{ $user->first_name }} {{ $user->last_name }}, <br/>
 <h4>You are receiving this e-mail because:</h4>
 
 	<ul>
-	<li>You are subscribed to <a href="{{ url('/').'/'.$data['camp_url'] }}"> {{ $data['camp_name'] }} </a></li>
+	@if(isset($data['support_list']) && $data['support_list']!='')
+			<li>You are subscribed to {!!$data['support_list']!!}</li>
+		@else
+			<li>You are subscribed to <a href="{{ url('/').'/'.$data['camp_url'] }}"> {{ $data['camp_name'] }} </a></li>
+		@endif	
 </ul>
 @else
 	<h4>You are receiving this e-mail because:</h4>
 		<ul>
+			@if(isset($data['support_list']) && $data['support_list']!='')
+			<li>You are directly supporting {!!$data['support_list']!!}</li>
+			@else
 			<li>You are directly supporting <a href="{{ url('/').'/'.$data['camp_url'] }}"> {{ $data['camp_name'] }} </a></li>
+			@endif
 		</ul>
 	<h4>Note:</h4>
 	<p>

@@ -31,6 +31,8 @@ class CommonForumFunctions
         $userExist = [];
         $bcc_user = [];
         $sub_bcc_user = [];
+        $support_list = [];
+        $subscribe_list = [];
         $camp  = CommonForumFunctions::getForumLiveCamp($topicid, $campnum);
         $subCampIds = CommonForumFunctions::getForumAllChildCamps($camp);
 
@@ -48,6 +50,12 @@ class CommonForumFunctions
             $subscribers = Camp::getCampSubscribers($topicid, $camp_id);
             foreach ($directSupporter as $supporter) {
                 $user = CommonForumFunctions::getUserFromNickId($supporter->nick_name_id);
+                $topic = \App\Model\Topic::where('topic_num','=',$topicid)->latest('submit_time')->get();
+                 $topic_name_space_id = isset($topic[0]) ? $topic[0]->namespace_id:1;
+                 $nickName = \App\Model\Nickname::find($supporter->nick_name_id);
+                 $supported_camp = $nickName->getSupportCampList($topic_name_space_id);
+                 $supported_camp_list = $nickName->getSupportCampListNames($supported_camp,$topicid);
+                 $support_list[$user->id]=$supported_camp_list;
                 $userExist[] = $user->id;
                 $bcc_user[] = $user; 
             }
@@ -55,6 +63,8 @@ class CommonForumFunctions
                 foreach($subscribers as $sub){
                     if(!in_array($sub,$userExist,TRUE)){
                         $userSub = \App\User::find($sub);
+                        $subscriptions_list = Camp::getSubscriptionList($userSub->id,$topicid);
+                        $subscribe_list[$userSub->id] = $subscriptions_list;                
                         $sub_bcc_user[] = $userSub; 
                     }
                 }
@@ -68,6 +78,7 @@ class CommonForumFunctions
         if(isset($bcc_user) && count($bcc_user) > 0){
             foreach($bcc_user as $user){
                 $bcc_email = CommonForumFunctions::getReceiver($user->email);
+                $data['support_list'] = $support_list[$user->id];
                 Mail::bcc($bcc_email)->send(new ForumPostSubmittedMail($user, $link, $data));    
             }
             
@@ -77,6 +88,7 @@ class CommonForumFunctions
             $data['subscriber'] = 1;
             foreach($filtered_sub_user as $userSub){
                 $subscriber_bcc_email = CommonForumFunctions::getReceiver($userSub->email);
+                $data['support_list'] = $subscribe_list[$userSub->id];
                 Mail::bcc($subscriber_bcc_email)->send(new ForumPostSubmittedMail($userSub, $link, $data));    
             }
         }
@@ -117,6 +129,13 @@ class CommonForumFunctions
             $i = 0;
              foreach ($directSupporter as $supporter) {
                 $user = CommonForumFunctions::getUserFromNickId($supporter->nick_name_id);
+                $topic = \App\Model\Topic::where('topic_num','=',$topicid)->latest('submit_time')->get();
+                 $topic_name_space_id = isset($topic[0]) ? $topic[0]->namespace_id:1;
+                 $nickName = \App\Model\Nickname::find($supporter->nick_name_id);
+                 $supported_camp = $nickName->getSupportCampList($topic_name_space_id);
+                 $supported_camp_list = $nickName->getSupportCampListNames($supported_camp,$topicid);
+                 $support_list[$user->id]=$supported_camp_list;
+                
                 $bcc_user[] = $user;
                 $userExist[] = $user->id;
             }
@@ -124,6 +143,8 @@ class CommonForumFunctions
                    foreach($subscribers as $sub){
                         if(!in_array($sub,$userExist,TRUE)){
                             $userSub = \App\User::find($sub);
+                            $subscriptions_list = Camp::getSubscriptionList($userSub->id,$topicid);
+                             $subscribe_list[$userSub->id] = $subscriptions_list;                
                             $sub_bcc_user[] = $userSub;                   
                         }
                     }
@@ -136,6 +157,8 @@ class CommonForumFunctions
          if(isset($bcc_user) && count($bcc_user) > 0){
             foreach($bcc_user as $user){
                 $bcc_email = CommonForumFunctions::getReceiver($user->email);
+                
+                $data['support_list'] = $support_list[$user->id];
                 Mail::bcc($bcc_email)->send(new ForumThreadCreatedMail($user, $link, $data));    
             }
         }
@@ -143,7 +166,9 @@ class CommonForumFunctions
         if(isset($filtered_sub_user) && count($filtered_sub_user) > 0){
             $data['subscriber'] = 1;
             foreach($filtered_sub_user as $userSub){
-                $subscriber_bcc_email = CommonForumFunctions::getReceiver($userSub->email);
+                $subscriber_bcc_email = CommonForumFunctions::getReceiver($userSub->email); 
+                 $data['support_list'] = $subscribe_list[$userSub->id];
+              
                 Mail::bcc($subscriber_bcc_email)->send(new ForumThreadCreatedMail($userSub, $link, $data));    
             }
         }

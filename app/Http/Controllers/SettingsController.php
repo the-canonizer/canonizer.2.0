@@ -421,7 +421,9 @@ class SettingsController extends Controller {
                 $nickName = Nickname::getNickName($data['nick_name']);
                // $topic = Camp::where('topic_num', $data['topic_num'])->where('camp_name', '=', 'Agreement')->latest('submit_time')->first();
                 $topic = Camp::getAgreementTopic($data['topic_num']);
-				$camp = Camp::where('topic_num', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('go_live_time', '<=', time())->latest('submit_time')->first();            
+				$camp = Camp::where('topic_num', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('go_live_time', '<=', time())->latest('submit_time')->first();
+                $result['topic_num'] = $data['topic_num'];
+                $result['camp_num'] = $data['camp_num'];            
                 $result['nick_name'] = $nickName->nick_name;
 				$result['object'] = $topic->topic_name ." / ".$camp->camp_name;
                 $result['subject'] = $nickName->nick_name . " has just delegated their support to you.";
@@ -452,6 +454,13 @@ class SettingsController extends Controller {
         foreach ($directSupporter as $supporter) {
           $user = Nickname::getUserByNickName($supporter->nick_name_id);
           $alreadyMailed[] = $user->id;
+          $topic = \App\Model\Topic::where('topic_num','=',$dataObject['topic_num'])->latest('submit_time')->get();
+         $topic_name_space_id = isset($topic[0]) ? $topic[0]->namespace_id:1;
+         $nickName = \App\Model\Nickname::find($supporter->nick_name_id);
+         $supported_camp = $nickName->getSupportCampList($topic_name_space_id);
+         $supported_camp_list = $nickName->getSupportCampListNames($supported_camp,$dataObject['topic_num']);
+         $dataObject['support_list'] = $supported_camp_list; 
+         
           $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
            Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new NewDelegatedSupporterMail($user, $link, $dataObject));
         }
@@ -459,6 +468,9 @@ class SettingsController extends Controller {
             $userSub = \App\User::find($usr);
             if(!in_array($userSub->id, $alreadyMailed,TRUE)){
                 $alreadyMailed[] = $userSub->id;
+                $subscriptions_list = Camp::getSubscriptionList($userSub->id,$dataObject['topic_num']);
+                $dataObject['support_list'] = $subscriptions_list; 
+               
                 $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $userSub->email : config('app.admin_email');
                 $dataObject['subscriber'] = 1;
                 Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new NewDelegatedSupporterMail($userSub, $link, $dataObject));
@@ -494,6 +506,8 @@ class SettingsController extends Controller {
             $topic = Camp::getAgreementTopic($data['topic_num']);
             $camp = Camp::where('topic_num', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('go_live_time', '<=', time())->latest('submit_time')->first();
         
+            $result['topic_num'] = $data['topic_num'];
+            $result['camp_num'] = $data['camp_num'];
             $result['nick_name'] = $nickName->nick_name;
             $result['object'] = $topic->topic_name ." / ".$camp->camp_name;
             $result['subject'] = $nickName->nick_name . " has added their support to ".$result['object'].".";
@@ -509,7 +523,9 @@ class SettingsController extends Controller {
             $nickName = Nickname::getNickName($data['nick_name']);
             $topic = Camp::getAgreementTopic($data['topic_num']);
             $camp = Camp::where('topic_num', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('go_live_time', '<=', time())->latest('submit_time')->first();
-        
+
+            $result['topic_num'] = $data['topic_num'];
+            $result['camp_num'] = $data['camp_num'];
             $result['nick_name'] = $nickName->nick_name;
             $result['object'] = $topic->topic_name ." / ".$camp->camp_name;
             $result['subject'] = $nickName->nick_name . " has removed their support from ".$result['object'].".";
@@ -534,6 +550,7 @@ class SettingsController extends Controller {
             $currentSupportRec = $currentSupport->first();
             $input['camp_num'] = $currentSupportRec->camp_num;
             $input['nick_name'] = $currentSupportRec->nick_name_id;
+            $input['topic_num'] = $topic_num;
             $currentSupportOrder = $currentSupportRec->support_order;
             $remaingSupportWithHighOrder = Support::where('topic_num', $topic_num)
                     //->where('delegate_nick_name_id',0)
