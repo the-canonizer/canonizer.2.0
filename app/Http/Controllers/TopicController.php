@@ -390,13 +390,12 @@ class TopicController extends Controller {
         $topicnumArray = explode("-", $topicnum);
         $topicnum = $topicnumArray[0];
 		
-		$topic = Camp::getAgreementTopic($topicnum);
-
-        $camp = Camp::getLiveCamp($topicnum, $parentcampnum);
-
+		$topic = Camp::getAgreementTopic($topicnum,['nofilter'=>true]);
+         $camp = Camp::getLiveCamp($topicnum, $parentcampnum,['nofilter'=>true]);
+       
         $parentcamp = Camp::campNameWithAncestors($camp, '',$topic->topic_name);
         
-		$parentcampsData = Camp::getAllParentCamp($topicnum);
+		$parentcampsData = Camp::getAllParentCamp($topicnum,['nofilter'=>true]);
 
         $nickNames = Nickname::topicNicknameUsed($topicnum);
         $allNicknames = Nickname::orderBy('nick_name', 'ASC')->get();

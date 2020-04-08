@@ -282,6 +282,9 @@ class Camp extends Model {
                 }else if(session('asofDefault') == 'bydate' && !isset($filter['asof'])){
                     $asofdate = strtotime(session('asofdateDefault'));
                 }
+                if(isset($filter['nofilter']) && $filter['nofilter']){
+                    $asofdate  = time();
+                }
                 return self::select('topic.topic_name', 'camp.*', 'namespace.name as namespace_name','namespace.label')
                                 ->join('topic', 'topic.topic_num', '=', 'camp.topic_num')
                                 ->join('namespace', 'topic.namespace_id', '=', 'namespace.id')
@@ -401,6 +404,9 @@ class Camp extends Model {
                 }else if(session()->has('asofdateDefault') && session('asofdateDefault') && !isset($_REQUEST['asof'])){
                     $asofdate = strtotime(session('asofdateDefault'));
                 }
+                if(isset($filter['nofilter']) && $filter['nofilter']){
+                    $asofdate  = time();
+                }
                 return self::where('topic_num', $topicnum)
                                 ->where('camp_num', '=', $campnum)
                                 ->where('objector_nick_id', '=', NULL)
@@ -410,7 +416,7 @@ class Camp extends Model {
         }
     }
 
-    public static function getAllParentCamp($topicnum) {
+    public static function getAllParentCamp($topicnum,$filter=array()) {
         if ((isset($_REQUEST['asof']) && $_REQUEST['asof'] == "bydate") || (session()->has('asofDefault') && session('asofDefault') == 'bydate') && !isset($_REQUEST['asof'])) {
             if(isset($_REQUEST['asof']) && $_REQUEST['asof'] == "bydate"){
                 $asofdate = strtotime(date('Y-m-d H:i:s', strtotime($_REQUEST['asofdate'])));
@@ -422,6 +428,9 @@ class Camp extends Model {
 
             $asofdate = time();
         }
+        if(isset($filter['nofilter']) && $filter['nofilter']){
+                    $asofdate  = time();
+                }
         return self::where('topic_num', $topicnum)
                         ->where('objector_nick_id', '=', NULL)
                         ->where('go_live_time', '<=', $asofdate)
