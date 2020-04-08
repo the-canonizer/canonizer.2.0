@@ -14,7 +14,7 @@ Hi {{ $user->first_name }} {{ $user->last_name }}, <br/>
 <h4>You are receiving this e-mail because:</h4>
 
 	<ul>
-	@if(isset($data['support_list']) && $data['support_list']!='')
+	@if(isset($data['support_list']) && count($data['support_list']) > 0)
 			@foreach($data['support_list'] as $support)
 		 	<li>You are subscribed to {!!$support!!}</li>
 		 @endforeach
@@ -25,7 +25,7 @@ Hi {{ $user->first_name }} {{ $user->last_name }}, <br/>
 @else
 	<h4>You are receiving this e-mail because:</h4>
 		<ul>
-			@if(isset($data['support_list']) && $data['support_list']!='')
+			@if(isset($data['support_list']) && count($data['support_list']) > 0)
 			@foreach($data['support_list'] as $support)
 			 	<li>You are directly supporting {!!$support!!}</li>
 			 @endforeach

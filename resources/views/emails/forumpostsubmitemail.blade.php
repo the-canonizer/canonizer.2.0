@@ -18,7 +18,7 @@
 @if(isset($data['subscriber']) && $data['subscriber'] == 1)
 <h4>You are receiving this e-mail because:</h4>
 	<ul>
-		@if(isset($data['support_list']) && $data['support_list']!='')
+		@if(isset($data['support_list']) && count($data['support_list']) > 0)
 			@foreach($data['support_list'] as $support)
 		 	<li>You are subscribed to {!!$support!!}</li>
 		 @endforeach
@@ -30,7 +30,7 @@
 @else
 	<h4>You are receiving this e-mail because:</h4>
 		<ul>
-			@if(isset($data['support_list']) && $data['support_list']!='')
+			@if(isset($data['support_list']) && count($data['support_list']) > 0)
 			@foreach($data['support_list'] as $support)
 			 	<li>You are directly supporting {!!$support!!}</li>
 			 @endforeach
