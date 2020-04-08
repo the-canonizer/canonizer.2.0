@@ -58,6 +58,8 @@ class TopicController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function create() {
+        session()->forget('asofDefault');
+        session()->forget('asofdateDefault');
         $namespaces = Namespaces::all();
         $nickNames = Nickname::personNickname();
         return view('topics.create', compact('namespaces', 'nickNames'));
@@ -386,7 +388,8 @@ class TopicController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function create_camp(Request $request, $topicnum, $parentcampnum) {
-
+        session()->forget('asofDefault');
+        session()->forget('asofdateDefault');
         $topicnumArray = explode("-", $topicnum);
         $topicnum = $topicnumArray[0];
 		
@@ -700,7 +703,9 @@ class TopicController extends Controller {
                 // send history link in email
                 $link = 'camp/history/' . $camp->topic_num . '/' . $camp->camp_num;
                 $data['type'] = "camp";
-				$data['object'] = $camp->topic->topic_name . " / " . $camp->camp_name;
+
+                $livecamp = Camp::getLiveCamp($camp->topic_num,$camp->camp_num);
+				$data['object'] = $livecamp->topic->topic_name . " / " . $camp->camp_name;
 				$data['link'] = 'topic/' . $camp->topic_num . '/1';
                 Mail::to(Auth::user()->email)->bcc(config('app.admin_bcc'))->send(new ThankToSubmitterMail(Auth::user(), $link,$data));
             } else if ($eventtype == "OBJECTION") {
@@ -1042,7 +1047,7 @@ class TopicController extends Controller {
             $data['typeobject'] = 'statement';
 			$data['note'] = $statement->note;
             $nickName = Nickname::getNickName($statement->submitter_nick_id);
-
+            $data['topic_num'] = $statement->topic_num;
             $data['nick_name'] = $nickName->nick_name;
             $data['forum_link'] = 'forum/' . $statement->topic_num . '-statement/' . $statement->camp_num . '/threads';
             $data['subject'] = "Proposed change to statement for camp " . $livecamp->topic->topic_name . " / " . $livecamp->camp_name. " submitted";
@@ -1063,7 +1068,7 @@ class TopicController extends Controller {
             $data['go_live_time'] = $camp->go_live_time;
 			$data['note'] = $camp->note;
             $nickName = Nickname::getNickName($camp->submitter_nick_id);
-
+            $data['topic_num'] = $camp->topic_num;
             $data['nick_name'] = $nickName->nick_name;
             $data['forum_link'] = 'forum/' . $camp->topic_num . '-' . $camp->camp_name . '/' . $camp->camp_num . '/threads';
             $data['subject'] = "Proposed change to " . $camp->topic->topic_name . ' / ' . $camp->camp_name . " submitted";
@@ -1086,7 +1091,7 @@ class TopicController extends Controller {
             $data['typeobject'] = 'topic';
 			$data['note'] = $topic->note;
             $nickName = Nickname::getNickName($topic->submitter_nick_id);
-
+            $data['topic_num'] = $topic->topic_num;
             $data['nick_name'] = $nickName->nick_name;
             $data['forum_link'] = 'forum/' . $topic->topic_num . '-' . $topic->topic_name . '/1/threads';
             $data['subject'] = "Proposed change to " . $topic->topic_name . " submitted";
@@ -1100,9 +1105,16 @@ class TopicController extends Controller {
     private function mailSubscribersAndSupporters($directSupporter,$subscribers,$link, $dataObject){
         $alreadyMailed = [];
         $i=0;
+
         foreach ($directSupporter as $supporter) {
          $user = Nickname::getUserByNickName($supporter->nick_name_id);
          $alreadyMailed[] = $user->id;
+         $topic = \App\Model\Topic::where('topic_num','=',$dataObject['topic_num'])->latest('submit_time')->get();
+         $topic_name_space_id = isset($topic[0]) ? $topic[0]->namespace_id:1;
+         $nickName = \App\Model\Nickname::find($supporter->nick_name_id);
+         $supported_camp = $nickName->getSupportCampList($topic_name_space_id);
+         $supported_camp_list = $nickName->getSupportCampListNames($supported_camp,$dataObject['topic_num']);
+         $dataObject['support_list'] = $supported_camp_list; 
          $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
          Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new PurposedToSupportersMail($user, $link, $dataObject));
         }
@@ -1111,6 +1123,8 @@ class TopicController extends Controller {
             $userSub = \App\User::find($usr);
             if(!in_array($userSub->id, $alreadyMailed,TRUE)){
                 $alreadyMailed[] = $userSub->id;
+                $subscriptions_list = Camp::getSubscriptionList($userSub->id,$dataObject['topic_num']);
+                $dataObject['support_list'] = $subscriptions_list; 
                 $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $userSub->email : config('app.admin_email');
                 $dataObject['subscriber'] = 1;
               Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new PurposedToSupportersMail($userSub, $link, $dataObject));

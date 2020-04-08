@@ -895,7 +895,22 @@ class Camp extends Model {
         }
     }
 
-
+    public static function getSubscriptionList($userid,$topic_num){
+        $list = '';
+        $subscriptions = \App\Model\CampSubscription::where('user_id','=',$userid)->where('topic_num','=',$topic_num)->where('subscription_start','<=',strtotime(date('Y-m-d H:i:s')))->where('subscription_end','=',null)->orWhere('subscription_end','>=',strtotime(date('Y-m-d H:i:s')))->get();
+        if(isset($subscriptions ) && count($subscriptions ) > 0){
+            $i=1;
+            foreach($subscriptions as $subs){
+                $topic = self::getLiveCamp($subs->topic_num,$subs->camp_num);
+                $title = preg_replace('/[^A-Za-z0-9\-]/', '-', ($topic->title != '') ? $topic->title : $topic->camp_name);
+                $topic_id =$subs->topic_num . "-" . $title;
+                $link = url('topic/' . $topic_id . '/' . $camp_num);
+                $list.=  ($i).': <span><a href="'.$support['link'].'">'.$support['camp_name'].'</a></span>;';
+                $i++;
+            }
+        }
+        return $list;
+    }
 
     public static function getCampSubscribers($topic_num,$camp_num){
         $users_data = [];
