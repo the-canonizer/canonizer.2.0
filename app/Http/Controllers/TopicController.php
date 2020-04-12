@@ -1098,7 +1098,7 @@ class TopicController extends Controller {
             $topic->grace_period = 0;
             $topic->update();
             $directSupporter = Support::getDirectSupporter($topic->topic_num);          
-            $subscribers = Camp::getCampSubscribers($camp->topic_num, 1);
+            $subscribers = Camp::getCampSubscribers($topic->topic_num, 1);
              // $link = 'topic/' . $topic->topic_num . '/' . $topic->camp_num . '?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $topic->go_live_time);
             $link = 'topic-history/' . $topic->topic_num;
             $data['object'] = $topic->topic_name;
