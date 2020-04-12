@@ -59,7 +59,6 @@ class TopicController extends Controller {
      */
     public function create() {
         session()->forget('asofDefault');
-        session()->forget('asofdateDefault');
         $namespaces = Namespaces::all();
         $nickNames = Nickname::personNickname();
         return view('topics.create', compact('namespaces', 'nickNames'));
@@ -393,7 +392,6 @@ class TopicController extends Controller {
      */
     public function create_camp(Request $request, $topicnum, $parentcampnum) {
         session()->forget('asofDefault');
-        session()->forget('asofdateDefault');
         $topicnumArray = explode("-", $topicnum);
         $topicnum = $topicnumArray[0];
 		
