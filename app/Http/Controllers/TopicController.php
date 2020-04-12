@@ -452,7 +452,6 @@ class TopicController extends Controller {
         $statementupdate = (isset($paramArray[1]) && $paramArray[1] == 'update') ? $paramArray[1] : null;
 
         $statement = Statement::where('id', $id)->first();
-        //echo "<pre>"; print_r($statement); exit;
 
         if (!count($statement))
             return back();

@@ -83,6 +83,7 @@ class Camp extends Model {
             }
         });
 
+
         /* if($campnum !=null)
           $query->where('camp_num', '=', $campnum);
 
@@ -784,13 +785,11 @@ class Camp extends Model {
                     $asofdate = strtotime(session('asofdateDefault'));
                 }
                
-
-
                 session(["topic-child-{$this->topic_num}" => self::where('topic_num', '=', $this->topic_num)
                             ->where('camp_name', '!=', 'Agreement')
                             ->where('objector_nick_id', '=', NULL)
-                            ->whereRaw('go_live_time in (select max(go_live_time) from camp where topic_num=' . $this->topic_num . ' and objector_nick_id is null group by camp_num)')
-                            ->where('go_live_time', '<=', $asofdate)
+                            ->whereRaw('go_live_time in (select max(go_live_time) from camp where topic_num=' . $this->topic_num . ' and objector_nick_id is null and go_live_time <= '.$asofdate.' group by camp_num)')
+                            //->where('go_live_time', '<=', $asofdate)
                             ->orderBy('submit_time', 'DESC')
                             ->groupBy('camp_num')
                             ->get()]);
