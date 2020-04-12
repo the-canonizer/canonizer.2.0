@@ -336,6 +336,10 @@ class TopicController extends Controller {
               $topicData = Topic::where('topic_num','=',$topicnum)->get();
         }
         $camp = Camp::getLiveCamp($topicnum, $parentcampnum);
+        if(!(isset($camp) && count($camp) > 0)){
+              $campData = Camp::where('topic_num','=',$topicnum)
+                            ->where('camp_num', '=', $parentcampnum)->get();
+        }
         $camp_subscriptionsData = Camp::getCampSubscription($topicnum,$parentcampnum,$userid);
         $camp_subscriptions = $camp_subscriptionsData['flag'];
         $subscribedCamp = $camp_subscriptionsData['camp'];
@@ -377,8 +381,8 @@ class TopicController extends Controller {
                         ->orderBy('order_id', 'ASC')->get();
             $editFlag = false;
         }
-
-        return view('topics.view', compact('topic', 'parentcampnum','camp_subscriptions','camp_subscription_data','subscribedCamp', 'parentcamp', 'camp', 'wiky', 'id','news','editFlag','topicData'));
+        
+        return view('topics.view', compact('topic', 'parentcampnum','camp_subscriptions','camp_subscription_data','subscribedCamp', 'parentcamp', 'camp', 'wiky', 'id','news','editFlag','topicData','campData'));
     }
 
     /**
@@ -653,7 +657,7 @@ class TopicController extends Controller {
 
         $eventtype = "CREATE";
         if (isset($all['camp_num'])) {
-            //$eventtype = "UPDATE";
+            $eventtype = "UPDATE";
             $camp->camp_num = $all['camp_num'];
             $camp->submitter_nick_id = $all['nick_name'];
 
