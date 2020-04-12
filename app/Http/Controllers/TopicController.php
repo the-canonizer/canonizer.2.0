@@ -806,6 +806,7 @@ class TopicController extends Controller {
         $message = "Statement submitted successfully.";
 
         if (isset($all['camp_num'])) {
+            $eventtype = "UPDATE";
 		    $statement->camp_num = $all['camp_num'];
             $statement->submitter_nick_id = $all['nick_name'];
 
