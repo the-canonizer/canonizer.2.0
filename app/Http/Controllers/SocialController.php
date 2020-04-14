@@ -28,7 +28,16 @@ class SocialController extends Controller
        }else{
        		$userSocial =   Socialite::driver($provider)->stateless()->user();
        }
-       $social_user = SocialUser::where(['social_email' => $userSocial->getEmail(),'provider'=>$provider,'provider_id'=>$userSocial->getId()])->first();
+       if (Auth::check()) {
+    		$socialUser = SocialUser::create([
+                'user_id'       => Auth::user()->id,
+                'social_email'  => $userSocial->getEmail(),
+                'provider_id'   => $userSocial->getId(),
+                'provider'      => $provider,
+            ]);
+            return redirect()->route('settings.sociallinks');
+    	}else{
+    		$social_user = SocialUser::where(['social_email' => $userSocial->getEmail(),'provider'=>$provider,'provider_id'=>$userSocial->getId()])->first();
         if($social_user){
         	$users       =   User::where(['id' => $social_user->user_id])->first();
         	Auth::login($users);
@@ -45,23 +54,27 @@ class SocialController extends Controller
 			            Auth::login($users);
 			            return redirect('/');
 			        }else{
-			        	$authCode = mt_rand(100000, 999999);
-						$user = User::create([
-			                'first_name'    => $userSocial->getName(),
-			                'email'         => $userSocial->getEmail(),
-			                'otp'			=> $authCode
-			            ]);
-			            $socialUser = SocialUser::create([
-			                'user_id'       => $users->id,
-			                'social_email'  => $userSocial->getEmail(),
-			                'provider_id'   => $userSocial->getId(),
-			                'provider'      => $provider,
-			            ]);
-			             //otp email
-				       Mail::to($user->email)->bcc(config('app.admin_bcc'))->send(new OtpVerificationMail($user));
-				       return redirect()->route('register.otp', ['user' => base64_encode($user->email)]);
-			 }
-        }
+			        	
+			        		$authCode = mt_rand(100000, 999999);
+							$user = User::create([
+				                'first_name'    => $userSocial->getName(),
+				                'email'         => $userSocial->getEmail(),
+				                'otp'			=> $authCode
+				            ]);
+				            $socialUser = SocialUser::create([
+				                'user_id'       => $users->id,
+				                'social_email'  => $userSocial->getEmail(),
+				                'provider_id'   => $userSocial->getId(),
+				                'provider'      => $provider,
+				            ]);
+				             //otp email
+					       Mail::to($user->email)->bcc(config('app.admin_bcc'))->send(new OtpVerificationMail($user));
+					       return redirect()->route('register.otp', ['user' => base64_encode($user->email)]);
+			        	
+			 	}
+        	}
+    	}
+        
         
 	}
 }

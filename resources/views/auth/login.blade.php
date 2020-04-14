@@ -49,7 +49,7 @@
                 <a href="{{ url('/login/github') }}" class="btn github btn-github"><i class="fa fa-github fa-fw"></i> GitHub</a>
             </div>
             <div class="col-md-2">
-                <a href="{{ url('/login/linkedin') }}" class="btn linkedin btn-linkedin"><i class="fa fa-github fa-fw"></i> Linkedin</a>
+                <a href="{{ url('/login/linkedin') }}" class="btn linkedin btn-linkedin"><i class="fa fa-linkedin fa-fw"></i> Linkedin</a>
             </div>
         </div>
  </div>

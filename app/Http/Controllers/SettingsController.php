@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\NewDelegatedSupporterMail;
 use App\Mail\PhoneOTPMail;
 use App\Model\EtherAddresses;
+use App\Model\SocialUser;
 use Hash;
 
 class SettingsController extends Controller {
@@ -632,7 +633,43 @@ class SettingsController extends Controller {
         }
     }
 
-
+    private function link_exists($provider,$data){
+        $returnArr = [];
+        foreach ($data as $key => $value) {
+            if($value->provider == $provider){
+                $returnArr = $value;
+            }
+        }
+        return $returnArr;
+    }
+    function sociallinks(){
+        if(Auth::check()){
+            $providers = ['google','facebook','github','twitter','linkedin'];
+            $user = Auth::user();
+            $socialdata = []; 
+            $social_data = SocialUser::where('user_id','=',$user->id)->get();
+            if(count($social_data) > 0){
+                foreach($providers as $key=>$d){
+                    $data_exist = $this->link_exists($d,$social_data);
+                    if($data_exist && isset($data_exist->provider)){
+                         $socialdata[$d]=$data_exist;   
+                    }else{
+                         $socialdata[$d]=['provider'=>$d];   
+                    }
+                }
+            }else{
+                
+                foreach($providers as $key=>$d){
+                    $socialdata[$d]=['provider'=>$d];   
+                } 
+            }
+            return view('settings.sociallinks',['sociallinks'=>$socialdata,'providers'=>$providers]);
+        }else{
+            return redirect()->route('login');
+        }
+        
+        
+    }
     function blockchain(){
         if(Auth::check()){
             $user = Auth::user();

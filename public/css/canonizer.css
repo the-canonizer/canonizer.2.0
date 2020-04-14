@@ -1364,23 +1364,23 @@ a.rgWT {
 }
 .fb {
   background-color: #3B5998;
-  color: white;
+  color: white!important;
 }
 
 .twitter {
   background-color: #55ACEE;
-  color: white;
+  color: white!important;
 }
 
 .google {
   background-color: #dd4b39;
-  color: white;
+  color: white!important;
 }
 .github{
    background-color: #24292E;
-  color: white; 
+  color: white!important; 
 }
 .linkedin{
    background-color: #003F67;
-  color: white; 
+  color: white!important; 
 }
