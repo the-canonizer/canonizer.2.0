@@ -30,6 +30,7 @@ class CommonForumFunctions
         $subscriber_bcc_email = [];
         $userExist = [];
         $bcc_user = [];
+        $supporter_and_subscriber=[];
         $sub_bcc_user = [];
         $support_list = [];
         $subscribe_list = [];
@@ -56,6 +57,11 @@ class CommonForumFunctions
                  $supported_camp = $nickName->getSupportCampList($topic_name_space_id);
                  $supported_camp_list = $nickName->getSupportCampListNamesEmail($supported_camp,$topicid);
                  $support_list[$user->id]=$supported_camp_list;
+                 $ifalsoSubscriber = Camp::checkifSubscriber($subscribers,$user);
+                 if($ifalsoSubscriber){
+                    $support_list_data = Camp::getSubscriptionList($user->id,$topicid); 
+                    $supporter_and_subscriber[$user->id]=['also_subscriber'=>1,'sub_support_list'=>$support_list_data];     
+                 }
                 $userExist[] = $user->id;
                 $bcc_user[] = $user; 
             }
@@ -79,6 +85,11 @@ class CommonForumFunctions
             foreach($bcc_user as $user){
                 $bcc_email = CommonForumFunctions::getReceiver($user->email);
                 $data['support_list'] = $support_list[$user->id];
+                if(isset($supporter_and_subscriber[$user->id]) && isset($supporter_and_subscriber[$user->id]['also_subscriber']) && $supporter_and_subscriber[$user->id]['also_subscriber']){
+                    $data['also_subscriber']= $supporter_and_subscriber[$user->id]['also_subscriber'];
+                    $data['sub_support_list'] = $supporter_and_subscriber[$user->id]['sub_support_list'];
+                }
+                
                 Mail::bcc($bcc_email)->send(new ForumPostSubmittedMail($user, $link, $data));    
             }
             
@@ -135,7 +146,11 @@ class CommonForumFunctions
                  $supported_camp = $nickName->getSupportCampList($topic_name_space_id);
                  $supported_camp_list = $nickName->getSupportCampListNamesEmail($supported_camp,$topicid);
                  $support_list[$user->id]=$supported_camp_list;
-                
+                 $ifalsoSubscriber = Camp::checkifSubscriber($subscribers,$user);
+                 if($ifalsoSubscriber){
+                    $support_list_data = Camp::getSubscriptionList($userSub->id,$dataObject['topic_num']); 
+                    $supporter_and_subscriber[$user->id]=['also_subscriber'=>1,'sub_support_list'=>$support_list_data];     
+                 }
                 $bcc_user[] = $user;
                 $userExist[] = $user->id;
             }
@@ -159,6 +174,10 @@ class CommonForumFunctions
                 $bcc_email = CommonForumFunctions::getReceiver($user->email);
 
                 $data['support_list'] = $support_list[$user->id];
+                if(isset($supporter_and_subscriber[$user->id]) && isset($supporter_and_subscriber[$user->id]['also_subscriber']) && $supporter_and_subscriber[$user->id]['also_subscriber']){
+                    $data['also_subscriber']= $supporter_and_subscriber[$user->id]['also_subscriber'];
+                    $data['sub_support_list'] = $supporter_and_subscriber[$user->id]['sub_support_list'];
+                }
                 Mail::bcc($bcc_email)->send(new ForumThreadCreatedMail($user, $link, $data));    
             }
         }

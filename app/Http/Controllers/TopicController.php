@@ -1128,6 +1128,12 @@ class TopicController extends Controller {
          $supported_camp = $nickName->getSupportCampList($topic_name_space_id);
          $supported_camp_list = $nickName->getSupportCampListNamesEmail($supported_camp,$dataObject['topic_num']);
          $dataObject['support_list'] = $supported_camp_list; 
+          $ifalsoSubscriber = Camp::checkifSubscriber($subscribers,$user);
+          if($ifalsoSubscriber){
+            $dataObject['also_subscriber'] = 1;
+            $data['sub_support_list'] = Camp::getSubscriptionList($user->id,$dataObject['topic_num']);      
+         }
+         
          $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
          Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new PurposedToSupportersMail($user, $link, $dataObject));
         }

@@ -39,6 +39,12 @@
 			<li>You are directly supporting <a href="{{ url('/').'/'.$data['camp_url'] }}"> {{ $data['camp_name'] }} </a></li>
 			@endif
 			
+			@if(isset($data['also_subscriber']) && $data['also_subscriber'] == 1 && isset($data['sub_support_list']) && count($data['sub_support_list']) > 0)
+			@foreach($data['sub_support_list'] as $support)
+			 	<li>You are subscribed to {!!$support!!}</li>
+			 @endforeach
+			@endif
+
 		</ul>
 
 	<h4>Note:</h4>
