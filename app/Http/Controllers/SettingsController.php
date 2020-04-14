@@ -463,7 +463,7 @@ class SettingsController extends Controller {
           $ifalsoSubscriber = Camp::checkifSubscriber($subscribers,$user);
           if($ifalsoSubscriber){
             $dataObject['also_subscriber'] = 1;
-            $data['sub_support_list'] = Camp::getSubscriptionList($user->id,$dataObject['topic_num']);      
+            $dataObject['sub_support_list'] = Camp::getSubscriptionList($user->id,$dataObject['topic_num']);      
          }
          
           $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
