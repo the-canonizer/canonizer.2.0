@@ -21,18 +21,22 @@ use App\Mail\PhoneOTPMail;
 use App\Model\EtherAddresses;
 use Hash;
 
-class SettingsController extends Controller {
+class SettingsController extends Controller
+{
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
     }
 
-    public function index() {
+    public function index()
+    {
         $user = User::find(Auth::user()->id);
         return view('settings.index', ['user' => $user]);
     }
 
-    public function profile_update(Request $request) {
+    public function profile_update(Request $request)
+    {
         $input = $request->all();
         $id = (isset($_GET['id'])) ? $_GET['id'] : '';
         $private_flags = array();
@@ -46,16 +50,16 @@ class SettingsController extends Controller {
 
 
         $validator = Validator::make($request->all(), [
-                    'first_name' => 'required|regex:/^[a-zA-Z ]*$/|string|max:100',
-                    'last_name' => 'required|regex:/^[a-zA-Z ]*$/|string|max:100',
-                    'middle_name' => 'nullable|regex:/^[a-zA-Z ]*$/|max:100',
-                    'country' => 'required',
-                        ], $messages);
+            'first_name' => 'required|regex:/^[a-zA-Z ]*$/|string|max:100',
+            'last_name' => 'required|regex:/^[a-zA-Z ]*$/|string|max:100',
+            'middle_name' => 'nullable|regex:/^[a-zA-Z ]*$/|max:100',
+            'country' => 'required',
+        ], $messages);
 
         if ($validator->fails()) {
             return redirect()->back()
-                            ->withErrors($validator)
-                            ->withInput();
+                ->withErrors($validator)
+                ->withInput();
         }
         if ($id) {
             $user = User::find($id);
@@ -102,7 +106,8 @@ class SettingsController extends Controller {
         }
     }
 
-    public function nickname() {
+    public function nickname()
+    {
         $id = Auth::user()->id;
         $encode = General::canon_encode($id);
 
@@ -112,7 +117,8 @@ class SettingsController extends Controller {
         $nicknames = Nickname::where('owner_code', '=', $encode)->get();
         return view('settings.nickname', ['nicknames' => $nicknames, 'user' => $user]);
     }
-    public function phone_verify(Request $request) {
+    public function phone_verify(Request $request)
+    {
         $input = $request->all();
         $id = (isset($_GET['id'])) ? $_GET['id'] : '';
         $private_flags = array();
@@ -120,66 +126,66 @@ class SettingsController extends Controller {
 
         $messages = [
             'phone_number.required' => 'Phone number is required.'
-            
+
         ];
         $validateArr = [
-                    'phone_number' => 'required|digits:10',  
-                    'mobile_carrier' => 'required',                 
-                        ];
-        if(array_key_exists("verify_code",$input)){
+            'phone_number' => 'required|digits:10',
+            'mobile_carrier' => 'required',
+        ];
+        if (array_key_exists("verify_code", $input)) {
             $validateArr['verify_code'] = 'required|digits:6';
         }
 
-        $validator = Validator::make($request->all(),$validateArr , $messages);
+        $validator = Validator::make($request->all(), $validateArr, $messages);
         if ($validator->fails()) {
-            $verify_codeValidation = Validator::make($request->only('verify_code'),$validateArr , $messages);
-            if($verify_codeValidation->fails() && array_key_exists('verify_code', $validateArr)){
+            $verify_codeValidation = Validator::make($request->only('verify_code'), $validateArr, $messages);
+            if ($verify_codeValidation->fails() && array_key_exists('verify_code', $validateArr)) {
                 Session::flash('otpsent', "Verify code is required.");
-            } 
+            }
             return redirect()->back()
-                            ->withErrors($validator)
-                            ->withInput();
+                ->withErrors($validator)
+                ->withInput();
         }
-		
-		if ($id) {
-            $user = User::find($id);
-			
-			if(isset($input['verify_code']) && $input['verify_code'] !="") {
-				
-				if($user->otp==trim($input['verify_code'])) {
-					
-					Session::flash('success', "Your phone number has been verified successfully.");
-					$user->mobile_verified = 1;
-			
-			        $user->update();
-				} else {
-					$user->mobile_verified = 0;
-			
-			        $user->update();
-					Session::flash('otpsent', "Invalid verification code.");
-				}
-				
-			}else {
-    			$six_digit_random_number = mt_rand(100000, 999999);
-    			$result['otp'] = $six_digit_random_number;
-                $result['subject'] = "Canonizer verification code";
-               
-                $receiver = $input['phone_number']."@".$input['mobile_carrier'];
 
-    			$user->phone_number = $input['phone_number'];
-    			$user->mobile_carrier = $input['mobile_carrier'];
-    			$user->otp = $six_digit_random_number;
-    			
-    			$user->update();
-    			Session::flash('otpsent', "A 6 digit code has been sent on your phone number for verification.");
-    			Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new PhoneOTPMail($user, $result));
-		  }	
-		}	
-		
-		
+        if ($id) {
+            $user = User::find($id);
+
+            if (isset($input['verify_code']) && $input['verify_code'] != "") {
+
+                if ($user->otp == trim($input['verify_code'])) {
+
+                    Session::flash('success', "Your phone number has been verified successfully.");
+                    $user->mobile_verified = 1;
+
+                    $user->update();
+                } else {
+                    $user->mobile_verified = 0;
+
+                    $user->update();
+                    Session::flash('otpsent', "Invalid verification code.");
+                }
+            } else {
+                $six_digit_random_number = mt_rand(100000, 999999);
+                $result['otp'] = $six_digit_random_number;
+                $result['subject'] = "Canonizer verification code";
+
+                $receiver = $input['phone_number'] . "@" . $input['mobile_carrier'];
+
+                $user->phone_number = $input['phone_number'];
+                $user->mobile_carrier = $input['mobile_carrier'];
+                $user->otp = $six_digit_random_number;
+
+                $user->update();
+                Session::flash('otpsent', "A 6 digit code has been sent on your phone number for verification.");
+                Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new PhoneOTPMail($user, $result));
+            }
+        }
+
+
         return redirect()->back();
-	}	
-    public function add_nickname(Request $request) {
+    }
+    public function add_nickname(Request $request)
+    {
         $id = Auth::user()->id;
         if ($id) {
             $messages = [
@@ -189,14 +195,14 @@ class SettingsController extends Controller {
 
 
             $validator = Validator::make($request->all(), [
-                        'nick_name' => 'required|unique:nick_name|max:50',
-                        'private' => 'required',
-                            ], $messages);
+                'nick_name' => 'required|unique:nick_name|max:50',
+                'private' => 'required',
+            ], $messages);
 
             if ($validator->fails()) {
                 return redirect()->back()
-                                ->withErrors($validator)
-                                ->withInput();
+                    ->withErrors($validator)
+                    ->withInput();
             }
 
 
@@ -215,7 +221,8 @@ class SettingsController extends Controller {
         }
     }
 
-    public function support($id = null, $campnums = null) {
+    public function support($id = null, $campnums = null)
+    {
 
         $as_of_time = time();
         if (isset($id)) {
@@ -224,8 +231,8 @@ class SettingsController extends Controller {
             // get deligated nickname if exist
             $campnumArray = explode("-", $campnums);
             $campnum = $campnumArray[0];
-			session(['campnum'=>$campnum]);
-		
+            session(['campnum' => $campnum]);
+
             $delegate_nick_name_id = (isset($campnumArray[1])) ? $campnumArray[1] : 0;
 
             $id = Auth::user()->id;
@@ -235,7 +242,7 @@ class SettingsController extends Controller {
             $topicData = Camp::getAgreementTopic($topicnum);
             //$camp = Camp::where('topic_num',$topicnum)->where('camp_num','=', $campnum)->latest('submit_time','objector')->get();
             $onecamp = Camp::where('topic_num', $topicnum)->where('camp_num', '=', $campnum)->where('go_live_time', '<=', $as_of_time)->latest('submit_time')->first();
-            $campWithParents = Camp::campNameWithAncestors($onecamp, '',$topicData->topic_name);
+            $campWithParents = Camp::campNameWithAncestors($onecamp, '', $topicData->topic_name);
 
             if (!count($onecamp)) {
                 return back();
@@ -258,16 +265,16 @@ class SettingsController extends Controller {
             if ($parentSupport === "notlive") {
                 Session::flash('warning', "You cant submit your support to this camp as its not live yet.");
                 //return redirect()->back();
-            }else if ($parentSupport) { 
+            } else if ($parentSupport) {
                 if (count($parentSupport) == 1) {
                     foreach ($parentSupport as $parent)
-                    if ($parent->camp_num == $campnum) {
-                        //Session::flash('warning', "You are already supporting this camp. You cant submit support again.");
-                        Session::flash('confirm', 'samecamp');
-                    } else {
-                        Session::flash('warning', 'The following  camp are parent camp to "' . $onecamp->camp_name . '" and will be removed if you commit this support.');
-                        Session::flash('confirm', 1);
-                    }
+                        if ($parent->camp_num == $campnum) {
+                            //Session::flash('warning', "You are already supporting this camp. You cant submit support again.");
+                            Session::flash('confirm', 'samecamp');
+                        } else {
+                            Session::flash('warning', 'The following  camp are parent camp to "' . $onecamp->camp_name . '" and will be removed if you commit this support.');
+                            Session::flash('confirm', 1);
+                        }
                 } else {
                     Session::flash('warning', 'The following  camps are parent camps to "' . $onecamp->camp_name . '" and will be removed if you commit this support.');
                     Session::flash('confirm', 1);
@@ -276,18 +283,18 @@ class SettingsController extends Controller {
             }
 
             $childSupport = Camp::validateChildsupport($topicnum, $campnum, $userNickname, $confirm_support);
-           
-            if ($childSupport) { 
+
+            if ($childSupport) {
                 if (count($childSupport) == 1) {
                     foreach ($childSupport as $child)
-                    if ($child->camp_num == $campnum) { 
-                        //Session::flash('warning', "You are already supporting this camp. You cant submit support again.");
-                        Session::flash('confirm', 'samecamp');
-                    }else {
-                        Session::flash('warning', 'The following  camp are child camp to "' . $onecamp->camp_name . '" and will be removed if you commit this support.');
-                        Session::flash('confirm', 1);
-                    }
-                }else {
+                        if ($child->camp_num == $campnum) {
+                            //Session::flash('warning', "You are already supporting this camp. You cant submit support again.");
+                            Session::flash('confirm', 'samecamp');
+                        } else {
+                            Session::flash('warning', 'The following  camp are child camp to "' . $onecamp->camp_name . '" and will be removed if you commit this support.');
+                            Session::flash('confirm', 1);
+                        }
+                } else {
                     Session::flash('warning', 'The following  camps are child camps to "' . $onecamp->camp_name . '" and will be removed if you commit this support.');
 
                     Session::flash('confirm', 1);
@@ -295,17 +302,17 @@ class SettingsController extends Controller {
                 //return redirect()->back();
             }
             $supportedTopic = Support::where('topic_num', $topicnum)
-                            ->whereIn('nick_name_id', $userNickname)
-                            ->whereRaw("(start <= " . $as_of_time . ") and ((end = 0) or (end >= " . $as_of_time . "))")
-                            ->groupBy('topic_num')->orderBy('start', 'DESC')->first();
-            
+                ->whereIn('nick_name_id', $userNickname)
+                ->whereRaw("(start <= " . $as_of_time . ") and ((end = 0) or (end >= " . $as_of_time . "))")
+                ->groupBy('topic_num')->orderBy('start', 'DESC')->first();
+
             return view('settings.support', ['parentSupport' => $parentSupport, 'childSupport' => $childSupport, 'userNickname' => $userNickname, 'supportedTopic' => $supportedTopic, 'topic' => $topic, 'nicknames' => $nicknames, 'camp' => $onecamp, 'parentcamp' => $campWithParents, 'delegate_nick_name_id' => $delegate_nick_name_id]);
         } else {
             $id = Auth::user()->id;
             $encode = General::canon_encode($id);
 
             $nicknames = Nickname::where('owner_code', '=', $encode)->get();
-			$delegatedNick = new Nickname();
+            $delegatedNick = new Nickname();
             $userNickname = array();
             foreach ($nicknames as $nickname) {
 
@@ -314,16 +321,17 @@ class SettingsController extends Controller {
 
 
             $supportedTopic = Support::whereIn('nick_name_id', $userNickname)
-                            ->whereRaw("(start < $as_of_time) and ((end = 0) or (end > $as_of_time))")
-                            ->groupBy('topic_num')->orderBy('start', 'DESC')->get();
+                ->whereRaw("(start < $as_of_time) and ((end = 0) or (end > $as_of_time))")
+                ->groupBy('topic_num')->orderBy('start', 'DESC')->get();
 
-            return view('settings.mysupport', ['delegatedNick'=>$delegatedNick,'userNickname' => $userNickname, 'supportedTopic' => $supportedTopic, 'nicknames' => $nicknames]);
+            return view('settings.mysupport', ['delegatedNick' => $delegatedNick, 'userNickname' => $userNickname, 'supportedTopic' => $supportedTopic, 'nicknames' => $nicknames]);
         }
     }
 
-    public function add_support(Request $request) {
+    public function add_support(Request $request)
+    {
         $id = Auth::user()->id;
-         $alreadyMailed = [];
+        $alreadyMailed = [];
         if ($id) {
             $messages = [
                 'nick_name.required' => 'The nick name field is required.',
@@ -331,13 +339,13 @@ class SettingsController extends Controller {
 
 
             $validator = Validator::make($request->all(), [
-                        'nick_name' => 'required',
-                            ], $messages);
+                'nick_name' => 'required',
+            ], $messages);
 
             if ($validator->fails()) {
                 return redirect()->back()
-                                ->withErrors($validator)
-                                ->withInput();
+                    ->withErrors($validator)
+                    ->withInput();
             }
             /*
               $input = $request->all();
@@ -390,113 +398,114 @@ class SettingsController extends Controller {
                 $this->emailForSupportDeleted($data);
             }
             //echo "<pre>"; print_r($data); die;
-            $last_camp =  $data['camp_num'];			   
-           if(isset($data['support_order'])) { 
-		    foreach ($data['support_order'] as $camp_num => $support_order) {
-                $last_camp = $camp_num;
-                $supportTopic = new Support();
-                $supportTopic->topic_num = $topic_num;
-                $supportTopic->nick_name_id = $data['nick_name'];
-                $supportTopic->delegate_nick_name_id = $data['delegate_nick_name_id'];
-                $supportTopic->start = time();
-                $supportTopic->camp_num = $camp_num;
+            $last_camp =  $data['camp_num'];
+            if (isset($data['support_order'])) {
+                foreach ($data['support_order'] as $camp_num => $support_order) {
+                    $last_camp = $camp_num;
+                    $supportTopic = new Support();
+                    $supportTopic->topic_num = $topic_num;
+                    $supportTopic->nick_name_id = $data['nick_name'];
+                    $supportTopic->delegate_nick_name_id = $data['delegate_nick_name_id'];
+                    $supportTopic->start = time();
+                    $supportTopic->camp_num = $camp_num;
 
-                $supportTopic->support_order = $support_order;
-                $supportTopic->save();
+                    $supportTopic->support_order = $support_order;
+                    $supportTopic->save();
 
-                /* clear the existing session for the topic to get updated support count */
+                    /* clear the existing session for the topic to get updated support count */
 
-                session()->forget("topic-support-{$topic_num}");
-                session()->forget("topic-support-nickname-{$topic_num}");
-                session()->forget("topic-support-tree-{$topic_num}");
-
-            }   
-            /* send support added mail to all supporter and subscribers */
-                $this->emailForSupportAdded($data);         
-		   }	
-            if($last_camp == $data['camp_num']){
-                Session::flash('confirm',"samecamp");
+                    session()->forget("topic-support-{$topic_num}");
+                    session()->forget("topic-support-nickname-{$topic_num}");
+                    session()->forget("topic-support-tree-{$topic_num}");
+                }
+                /* send support added mail to all supporter and subscribers */
+                $this->emailForSupportAdded($data);
             }
-            
+            if ($last_camp == $data['camp_num']) {
+                Session::flash('confirm', "samecamp");
+            }
+
             /* Send delegated support email to the direct supporter and all parent  and to subscriber*/
             if (isset($data['delegate_nick_name_id']) && $data['delegate_nick_name_id'] != 0) {
                 $parentUser = Nickname::getUserByNickName($data['delegate_nick_name_id']);
                 $nickName = Nickname::getNickName($data['nick_name']);
-               // $topic = Camp::where('topic_num', $data['topic_num'])->where('camp_name', '=', 'Agreement')->latest('submit_time')->first();
+                // $topic = Camp::where('topic_num', $data['topic_num'])->where('camp_name', '=', 'Agreement')->latest('submit_time')->first();
                 $topic = Camp::getAgreementTopic($data['topic_num']);
-				$camp = Camp::where('topic_num', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('go_live_time', '<=', time())->latest('submit_time')->first();
+                $camp = Camp::where('topic_num', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('go_live_time', '<=', time())->latest('submit_time')->first();
                 $result['topic_num'] = $data['topic_num'];
-                $result['camp_num'] = $data['camp_num'];            
+                $result['camp_num'] = $data['camp_num'];
                 $result['nick_name'] = $nickName->nick_name;
-				$result['object'] = $topic->topic_name ." / ".$camp->camp_name;
+                $result['object'] = $topic->topic_name . " / " . $camp->camp_name;
                 $result['subject'] = $nickName->nick_name . " has just delegated their support to you.";
                 $link = 'topic/' . $data['topic_num'] . '/' . $data['camp_num'];
                 $receiver = (config('app.env') == "production") ? $parentUser->email : config('app.admin_email');
                 Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new NewDelegatedSupporterMail($parentUser, $link, $result));
-                $result['subject'] = $nickName->nick_name . " has just delegated their support to ".$parentUser->first_name." ".$parentUser->last_name;
-                $result['delegated_user'] = $parentUser->first_name." ".$parentUser->last_name;
+                $result['subject'] = $nickName->nick_name . " has just delegated their support to " . $parentUser->first_name . " " . $parentUser->last_name;
+                $result['delegated_user'] = $parentUser->first_name . " " . $parentUser->last_name;
                 $subscribers = Camp::getCampSubscribers($data['topic_num'], $data['camp_num']);
                 $directSupporter = Support::getDirectSupporter($data['topic_num'], $data['camp_num']);
-                $this->mailSubscribersAndSupporters($directSupporter,$subscribers, $link, $result);
+                $this->mailSubscribersAndSupporters($directSupporter, $subscribers, $link, $result);
                 //$this->mailSubscribers($subscribers, $link, $result,$alreadyMailed); 
                 /* end of email */
             }
             Session::flash('success', "Your support update has been submitted successfully.");
             // return redirect('support/' . $data['topic_num'] . '/' . $data['camp_num']);
-              return redirect('topic/' . $data['topic_num'] . '/' . session('campnum'));
+            return redirect('topic/' . $data['topic_num'] . '/' . session('campnum'));
         } else {
             return redirect()->route('login');
         }
     }
 
-     private function mailSubscribersAndSupporters($directSupporter,$subscribers,$link, $dataObject){
+    private function mailSubscribersAndSupporters($directSupporter, $subscribers, $link, $dataObject)
+    {
         $alreadyMailed = [];
         foreach ($directSupporter as $supporter) {
-          $user = Nickname::getUserByNickName($supporter->nick_name_id);
-          $alreadyMailed[] = $user->id;
-          $topic = \App\Model\Topic::where('topic_num','=',$dataObject['topic_num'])->latest('submit_time')->get();
-         $topic_name_space_id = isset($topic[0]) ? $topic[0]->namespace_id:1;
-         $nickName = \App\Model\Nickname::find($supporter->nick_name_id);
-         $supported_camp = $nickName->getSupportCampList($topic_name_space_id);
-         $supported_camp_list = $nickName->getSupportCampListNamesEmail($supported_camp,$dataObject['topic_num']);
-         $dataObject['support_list'] = $supported_camp_list; 
-          $ifalsoSubscriber = Camp::checkifSubscriber($subscribers,$user);
-          if($ifalsoSubscriber){
-            $dataObject['also_subscriber'] = 1;
-            $dataObject['sub_support_list'] = Camp::getSubscriptionList($user->id,$dataObject['topic_num']);      
-         }
-         
-          $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
-           Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new NewDelegatedSupporterMail($user, $link, $dataObject));
+            $user = Nickname::getUserByNickName($supporter->nick_name_id);
+            $alreadyMailed[] = $user->id;
+            $topic = \App\Model\Topic::where('topic_num', '=', $dataObject['topic_num'])->latest('submit_time')->get();
+            $topic_name_space_id = isset($topic[0]) ? $topic[0]->namespace_id : 1;
+            $nickName = \App\Model\Nickname::find($supporter->nick_name_id);
+            $supported_camp = $nickName->getSupportCampList($topic_name_space_id);
+            $supported_camp_list = $nickName->getSupportCampListNamesEmail($supported_camp, $dataObject['topic_num']);
+            $dataObject['support_list'] = $supported_camp_list;
+            $ifalsoSubscriber = Camp::checkifSubscriber($subscribers, $user);
+            if ($ifalsoSubscriber) {
+                $dataObject['also_subscriber'] = 1;
+                $dataObject['sub_support_list'] = Camp::getSubscriptionList($user->id, $dataObject['topic_num']);
+            }
+
+            $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
+            Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new NewDelegatedSupporterMail($user, $link, $dataObject));
         }
         foreach ($subscribers as $usr) {
             $userSub = \App\User::find($usr);
-            if(!in_array($userSub->id, $alreadyMailed,TRUE)){
+            if (!in_array($userSub->id, $alreadyMailed, TRUE)) {
                 $alreadyMailed[] = $userSub->id;
-                $subscriptions_list = Camp::getSubscriptionList($userSub->id,$dataObject['topic_num']);
-                $dataObject['support_list'] = $subscriptions_list; 
-               
+                $subscriptions_list = Camp::getSubscriptionList($userSub->id, $dataObject['topic_num']);
+                $dataObject['support_list'] = $subscriptions_list;
+
                 $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $userSub->email : config('app.admin_email');
                 $dataObject['subscriber'] = 1;
                 Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new NewDelegatedSupporterMail($userSub, $link, $dataObject));
             }
-            
         }
         return;
     }
 
-    private function mailSubscribers($subscribers, $link, $data,$alreadyMailed) {
+    private function mailSubscribers($subscribers, $link, $data, $alreadyMailed)
+    {
         foreach ($subscribers as $user) {
             $user = \App\User::find($user);
-            if(!in_array($user->id, $alreadyMailed,TRUE)){
-                $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email :  config('app.admin_email');
-                 Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new NewDelegatedSupporterMail($user, $link, $data));
-            }            
+            if (!in_array($user->id, $alreadyMailed, TRUE)) {
+                $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
+                Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new NewDelegatedSupporterMail($user, $link, $data));
+            }
         }
         return;
     }
 
-    private function mailDirectSupporters($directSupporter, $link, $data) {
+    private function mailDirectSupporters($directSupporter, $link, $data)
+    {
         foreach ($directSupporter as $supporter) {
             $user = Nickname::getUserByNickName($supporter->nick_name_id);
             $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
@@ -505,43 +514,45 @@ class SettingsController extends Controller {
         return;
     }
 
-    private function emailForSupportAdded($data){
-            $parentUser = Nickname::getUserByNickName($data['nick_name']);
-            $nickName = Nickname::getNickName($data['nick_name']);
-            $topic = Camp::getAgreementTopic($data['topic_num']);
-            $camp = Camp::where('topic_num', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('go_live_time', '<=', time())->latest('submit_time')->first();
-        
-            $result['topic_num'] = $data['topic_num'];
-            $result['camp_num'] = $data['camp_num'];
-            $result['nick_name'] = $nickName->nick_name;
-            $result['object'] = $topic->topic_name ." / ".$camp->camp_name;
-            $result['subject'] = $nickName->nick_name . " has added their support to ".$result['object'].".";
-            $link = 'topic/' . $data['topic_num'] . '/' . $data['camp_num'];
-            $subscribers = Camp::getCampSubscribers($data['topic_num'], $data['camp_num']);
-            $directSupporter = Support::getDirectSupporter($data['topic_num'], $data['camp_num']);
-            $result['support_added'] = 1;
-            $this->mailSubscribersAndSupporters($directSupporter,$subscribers, $link, $result);
-            
+    private function emailForSupportAdded($data)
+    {
+        $parentUser = Nickname::getUserByNickName($data['nick_name']);
+        $nickName = Nickname::getNickName($data['nick_name']);
+        $topic = Camp::getAgreementTopic($data['topic_num']);
+        $camp = Camp::where('topic_num', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('go_live_time', '<=', time())->latest('submit_time')->first();
+
+        $result['topic_num'] = $data['topic_num'];
+        $result['camp_num'] = $data['camp_num'];
+        $result['nick_name'] = $nickName->nick_name;
+        $result['object'] = $topic->topic_name . " / " . $camp->camp_name;
+        $result['subject'] = $nickName->nick_name . " has added their support to " . $result['object'] . ".";
+        $link = 'topic/' . $data['topic_num'] . '/' . $data['camp_num'];
+        $subscribers = Camp::getCampSubscribers($data['topic_num'], $data['camp_num']);
+        $directSupporter = Support::getDirectSupporter($data['topic_num'], $data['camp_num']);
+        $result['support_added'] = 1;
+        $this->mailSubscribersAndSupporters($directSupporter, $subscribers, $link, $result);
     }
 
-    private function emailForSupportDeleted($data){
-            $nickName = Nickname::getNickName($data['nick_name']);
-            $topic = Camp::getAgreementTopic($data['topic_num']);
-            $camp = Camp::where('topic_num', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('go_live_time', '<=', time())->latest('submit_time')->first();
+    private function emailForSupportDeleted($data)
+    {
+        $nickName = Nickname::getNickName($data['nick_name']);
+        $topic = Camp::getAgreementTopic($data['topic_num']);
+        $camp = Camp::where('topic_num', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('go_live_time', '<=', time())->latest('submit_time')->first();
 
-            $result['topic_num'] = $data['topic_num'];
-            $result['camp_num'] = $data['camp_num'];
-            $result['nick_name'] = $nickName->nick_name;
-            $result['object'] = $topic->topic_name ." / ".$camp->camp_name;
-            $result['subject'] = $nickName->nick_name . " has removed their support from ".$result['object'].".";
-            $link = 'topic/' . $data['topic_num'] . '/' . $data['camp_num'];
-            $subscribers = Camp::getCampSubscribers($data['topic_num'], $data['camp_num']);
-            $directSupporter = Support::getDirectSupporter($data['topic_num'], $data['camp_num']);
-            $result['support_deleted'] = 1;
-            $this->mailSubscribersAndSupporters($directSupporter,$subscribers, $link, $result);            
+        $result['topic_num'] = $data['topic_num'];
+        $result['camp_num'] = $data['camp_num'];
+        $result['nick_name'] = $nickName->nick_name;
+        $result['object'] = $topic->topic_name . " / " . $camp->camp_name;
+        $result['subject'] = $nickName->nick_name . " has removed their support from " . $result['object'] . ".";
+        $link = 'topic/' . $data['topic_num'] . '/' . $data['camp_num'];
+        $subscribers = Camp::getCampSubscribers($data['topic_num'], $data['camp_num']);
+        $directSupporter = Support::getDirectSupporter($data['topic_num'], $data['camp_num']);
+        $result['support_deleted'] = 1;
+        $this->mailSubscribersAndSupporters($directSupporter, $subscribers, $link, $result);
     }
 
-    public function delete_support(Request $request) {
+    public function delete_support(Request $request)
+    {
 
         $id = Auth::user()->id;
         $input = $request->all();
@@ -558,12 +569,12 @@ class SettingsController extends Controller {
             $input['topic_num'] = $topic_num;
             $currentSupportOrder = $currentSupportRec->support_order;
             $remaingSupportWithHighOrder = Support::where('topic_num', $topic_num)
-                    //->where('delegate_nick_name_id',0)
-                    ->whereIn('nick_name_id', [$currentSupportRec->nick_name_id])
-                    ->whereRaw("(start < $as_of_time) and ((end = 0) or (end > $as_of_time))")
-                    ->where('support_order', '>', $currentSupportRec->support_order)
-                    ->orderBy('support_order', 'ASC')
-                    ->get();
+                //->where('delegate_nick_name_id',0)
+                ->whereIn('nick_name_id', [$currentSupportRec->nick_name_id])
+                ->whereRaw("(start < $as_of_time) and ((end = 0) or (end > $as_of_time))")
+                ->where('support_order', '>', $currentSupportRec->support_order)
+                ->orderBy('support_order', 'ASC')
+                ->get();
 
             if ($currentSupport->update(array('end' => time()))) {
                 foreach ($remaingSupportWithHighOrder as $support) {
@@ -588,12 +599,14 @@ class SettingsController extends Controller {
         return redirect()->back();
     }
 
-    public function algo(Request $request) {
+    public function algo(Request $request)
+    {
         $user = User::find(Auth::user()->id);
         return view('settings.preferences', compact('user'));
     }
 
-    public function postAlgo(Request $request) {
+    public function postAlgo(Request $request)
+    {
         $user = User::find(Auth::user()->id);
         $user->default_algo = $request->input('default_algo');
         $user->save();
@@ -603,7 +616,8 @@ class SettingsController extends Controller {
         return redirect()->back();
     }
 
-    public function supportReorder(Request $request) {
+    public function supportReorder(Request $request)
+    {
 
         $data = $request->only(['positions', 'topicnum']);
         if (isset($data['positions']) && !empty($data['positions'])) {
@@ -617,27 +631,29 @@ class SettingsController extends Controller {
         }
     }
 
-    public function getChangePassword() {
+    public function getChangePassword()
+    {
         return view('settings.changepassword', compact('user'));
     }
 
-    public function postChangePassword(Request $request) {
+    public function postChangePassword(Request $request)
+    {
         if (Auth::check()) {
             $id = Auth::user()->id;
             $user = User::where('id', '=', $id)->first();
             $message = [
                 'new_password.regex' => 'Password must be atleast 8 characters, including atleast one digit, one lower case letter and one special character(@,# !,$..)',
-				'current_password.required' => 'The current password field is required.'
+                'current_password.required' => 'The current password field is required.'
             ];
             $validator = Validator::make($request->all(), [
-                        'current_password' => 'required',
-                        'new_password' => ['required', 'regex:/^(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^\w\s]).{8,}$/', 'different:current_password'],
-                        'confirm_password' => 'required|same:new_password'
-                            ], $message);
+                'current_password' => 'required',
+                'new_password' => ['required', 'regex:/^(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^\w\s]).{8,}$/', 'different:current_password'],
+                'confirm_password' => 'required|same:new_password'
+            ], $message);
             if ($validator->fails()) {
                 return redirect()->back()
-                                ->withErrors($validator) // send back all errors to the login form
-                                ->withInput();
+                    ->withErrors($validator) // send back all errors to the login form
+                    ->withInput();
             }
 
             if (!Hash::check($request->get('current_password'), $user->password)) {
@@ -650,24 +666,26 @@ class SettingsController extends Controller {
             $user->save();
 
             Auth::logout();
-			session(['url.intended' => '/home']);
+            session(['url.intended' => '/home']);
             return redirect()->route('login');
         }
     }
 
 
-    function blockchain(){
-        if(Auth::check()){
+    function blockchain()
+    {
+        if (Auth::check()) {
             $user = Auth::user();
         }
-        $addresses = EtherAddresses::where('user_id','=',$user->id)->get();
-        return view('settings.blockchain',['addresses'=>$addresses]);
+        $addresses = EtherAddresses::where('user_id', '=', $user->id)->get();
+        return view('settings.blockchain', ['addresses' => $addresses]);
     }
 
-    function postSaveEtherAddress(Request $request){
-          $id = Auth::user()->id;
-          if($id){
-                $messages = [
+    function postSaveEtherAddress(Request $request)
+    {
+        $id = Auth::user()->id;
+        if ($id) {
+            $messages = [
                 'name.required' => 'The name field is required.',
                 'address.required' => 'The address field is required.',
                 'balance.required' => 'The balance field is required.',
@@ -675,36 +693,33 @@ class SettingsController extends Controller {
 
 
             $validator = Validator::make($request->all(), [
-                        'name' => 'required',
-                        'address' => 'required',
-                        'balance' => 'required',
-                            ], $messages);
+                'name' => 'required',
+                'address' => 'required|unique:ether_address',
+                'balance' => 'required',
+            ], $messages);
 
             if ($validator->fails()) {
                 return redirect()->back()
-                                ->withErrors($validator)
-                                ->withInput();
+                    ->withErrors($validator)
+                    ->withInput();
             }
 
-            $data = $request->only(['name','address','balance']);
-            try{
+            $data = $request->only(['name', 'address', 'balance']);
+            try {
                 $address = new EtherAddresses();
                 $address->user_id = $id;
-                $address->name =$data['name'];
+                $address->name = $data['name'];
                 $address->address = $data['address'];
                 $address->balance = $data['balance'];
-                $address->save();                
-                 Session::flash('success', "Ether Address saved successfully.");
+                $address->save();
+                Session::flash('success', "Ether Address saved successfully.");
                 return redirect()->back();
-            }catch(Exception $e){
+            } catch (Exception $e) {
                 Session::flash('error', "Error saving in ehter address.");
                 return redirect()->back();
             }
-          }else{
-                return redirect()->route('login');
-          }
-            
-          
+        } else {
+            return redirect()->route('login');
+        }
     }
-
 }
