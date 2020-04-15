@@ -46,30 +46,34 @@ class CommonForumFunctions
         $data['subject'] = $topic_name." / ".$camp_name. " / ". $data['thread'][0]->title." post submitted.";
         $data['camp_url'] = "topic/".$topicid."-".$topic_name_encoded."/".$campnum."?";
         $data['nick_name'] = CommonForumFunctions::getForumNickName($nick_id);
+        
         foreach ($subCampIds as $camp_id) {
             $directSupporter = CommonForumFunctions::getDirectCampSupporter($topicid, $camp_id);
             $subscribers = Camp::getCampSubscribers($topicid, $camp_id);
+        
             foreach ($directSupporter as $supporter) {
                 $user = CommonForumFunctions::getUserFromNickId($supporter->nick_name_id);
                 $topic = \App\Model\Topic::where('topic_num','=',$topicid)->latest('submit_time')->get();
-                 $topic_name_space_id = isset($topic[0]) ? $topic[0]->namespace_id:1;
-                 $nickName = \App\Model\Nickname::find($supporter->nick_name_id);
-                 $supported_camp = $nickName->getSupportCampList($topic_name_space_id);
-                 $supported_camp_list = $nickName->getSupportCampListNamesEmail($supported_camp,$topicid);
-                 $support_list[$user->id]=$supported_camp_list;
-                 $ifalsoSubscriber = Camp::checkifSubscriber($subscribers,$user);
-                 if($ifalsoSubscriber){
+                $topic_name_space_id = isset($topic[0]) ? $topic[0]->namespace_id:1;
+                $nickName = \App\Model\Nickname::find($supporter->nick_name_id);
+                $supported_camp = $nickName->getSupportCampList($topic_name_space_id);
+                $supported_camp_list = $nickName->getSupportCampListNamesEmail($supported_camp,$topicid);
+                $support_list[$user->id]=$supported_camp_list;
+                $ifalsoSubscriber = Camp::checkifSubscriber($subscribers,$user);
+                
+                if($ifalsoSubscriber){
                     $support_list_data = Camp::getSubscriptionList($user->id,$topicid); 
                     $supporter_and_subscriber[$user->id]=['also_subscriber'=>1,'sub_support_list'=>$support_list_data];     
                  }
                 $userExist[] = $user->id;
                 $bcc_user[] = $user; 
             }
+            
             if($subscribers && count($subscribers) > 0){
-                foreach($subscribers as $sub){
-                    if(!in_array($sub,$userExist,TRUE)){
+                foreach( $subscribers as $sub ){
+                    if( !in_array($sub,$userExist,TRUE) ) {
                         $userSub = \App\User::find($sub);
-                        $subscriptions_list = Camp::getSubscriptionList($userSub->id,$topicid);
+                        $subscriptions_list = Camp::getSubscriptionList( $userSub->id, $topicid );
                         $subscribe_list[$userSub->id] = $subscriptions_list;                
                         $sub_bcc_user[] = $userSub; 
                     }
@@ -81,7 +85,7 @@ class CommonForumFunctions
             return !in_array($e->id, $userExist);
         }));
 
-        if(isset($bcc_user) && count($bcc_user) > 0){
+        if( isset($bcc_user) && count($bcc_user) > 0 ){
             foreach($bcc_user as $user){
                 $bcc_email = CommonForumFunctions::getReceiver($user->email);
                 $data['support_list'] = $support_list[$user->id];
@@ -138,43 +142,51 @@ class CommonForumFunctions
             $directSupporter = CommonForumFunctions::getDirectCampSupporter($topicid, $camp_id);
             $subscribers = Camp::getCampSubscribers($topicid, $camp_id);
             $i = 0;
-             foreach ($directSupporter as $supporter) {
+            foreach ($directSupporter as $supporter) {
                 $user = CommonForumFunctions::getUserFromNickId($supporter->nick_name_id);
                 $topic = \App\Model\Topic::where('topic_num','=',$topicid)->latest('submit_time')->get();
-                 $topic_name_space_id = isset($topic[0]) ? $topic[0]->namespace_id:1;
-                 $nickName = \App\Model\Nickname::find($supporter->nick_name_id);
-                 $supported_camp = $nickName->getSupportCampList($topic_name_space_id);
-                 $supported_camp_list = $nickName->getSupportCampListNamesEmail($supported_camp,$topicid);
-                 $support_list[$user->id]=$supported_camp_list;
-                 $ifalsoSubscriber = Camp::checkifSubscriber($subscribers,$user);
-                 if($ifalsoSubscriber){
+                $topic_name_space_id = isset($topic[0]) ? $topic[0]->namespace_id:1;
+                $nickName = \App\Model\Nickname::find($supporter->nick_name_id);
+                $supported_camp = $nickName->getSupportCampList($topic_name_space_id);
+                $supported_camp_list = $nickName->getSupportCampListNamesEmail($supported_camp,$topicid);
+                $support_list[$user->id]=$supported_camp_list;
+                $ifalsoSubscriber = Camp::checkifSubscriber($subscribers,$user);
+                
+                if($ifalsoSubscriber){
                     $support_list_data = Camp::getSubscriptionList($userSub->id,$dataObject['topic_num']); 
                     $supporter_and_subscriber[$user->id]=['also_subscriber'=>1,'sub_support_list'=>$support_list_data];     
                  }
-                $bcc_user[] = $user;
+                
+                 $bcc_user[] = $user;
                 $userExist[] = $user->id;
             }
+            
             if($subscribers && count($subscribers) > 0){
-                   foreach($subscribers as $sub){
-                        if(!in_array($sub,$userExist,TRUE)){
-                            $userSub = \App\User::find($sub);
-                            $subscriptions_list = Camp::getSubscriptionList($userSub->id,$topicid);
-                             $subscribe_list[$userSub->id] = $subscriptions_list;                
-                            $sub_bcc_user[] = $userSub;                   
-                        }
+                foreach($subscribers as $sub){
+                    if(!in_array($sub,$userExist,TRUE)){
+                        $userSub = \App\User::find($sub);
+                        $subscriptions_list = Camp::getSubscriptionList($userSub->id,$topicid);
+                            $subscribe_list[$userSub->id] = $subscriptions_list;                
+                        $sub_bcc_user[] = $userSub;                   
                     }
+                }
             }
         }
 
         $filtered_sub_user = array_unique(array_filter($sub_bcc_user,function($e) use($userExist){
             return !in_array($e->id, $userExist);
         }));
-         if(isset($bcc_user) && count($bcc_user) > 0){
+
+        if(isset($bcc_user) && count($bcc_user) > 0){
             foreach($bcc_user as $user){
                 $bcc_email = CommonForumFunctions::getReceiver($user->email);
 
                 $data['support_list'] = $support_list[$user->id];
-                if(isset($supporter_and_subscriber[$user->id]) && isset($supporter_and_subscriber[$user->id]['also_subscriber']) && $supporter_and_subscriber[$user->id]['also_subscriber']){
+                
+                if(isset($supporter_and_subscriber[$user->id]) 
+                   && isset($supporter_and_subscriber[$user->id]['also_subscriber']) 
+                   && $supporter_and_subscriber[$user->id]['also_subscriber'] )
+                {
                     $data['also_subscriber']= $supporter_and_subscriber[$user->id]['also_subscriber'];
                     $data['sub_support_list'] = $supporter_and_subscriber[$user->id]['sub_support_list'];
                 }
@@ -278,10 +290,12 @@ class CommonForumFunctions
      */
     public static function getCampName($topicid, $campnum)
     {
-        return Camp::where('camp_num', $campnum)->
-                     where('topic_num', $topicid)->
-                     orderBy('go_live_time', 'desc')->
-                     first()->camp_name;
+        return Camp::where('camp_num', $campnum)
+          ->where('topic_num', $topicid)
+          ->where('objector_nick_id', NULL)
+          ->where('go_live_time', '<=', time())
+          ->latest('submit_time')
+          ->first()->camp_name; 
     }
 }
 
