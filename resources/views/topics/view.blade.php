@@ -59,7 +59,7 @@
                     <ul class="mainouter">
                     <?php 
 					    session(['supportCountTotal'=>0]);
-                        $title      = preg_replace('/[^A-Za-z0-9\-]/', '-', $topic->title);						  
+                        $title      = preg_replace('/[^A-Za-z0-9\-]/', '-', $topic->topic_name);						  
                         $topic_id  = $topic->topic_num."-".$title;
 						 ?>
                      {!! $topic->campTreeHtml($parentcampnum,1,true) !!} 
@@ -212,9 +212,13 @@ change camps with them."><i class="fa fa-question"></i></a>
 <br/>
 <?php } ?>
 <script>
+
+var type = window.location.hash.substr(1);
+if(type=="statement") {
   $('html, body').animate({
         scrollTop: $("#statement").offset().top
     }, 2000);
+}	
 </script>	
 @endsection
 	

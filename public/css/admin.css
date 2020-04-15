@@ -13,6 +13,11 @@ body {
     margin-top: 30px;
 }
 
+.page-content {
+    min-height: calc(100vh - 155px);
+    width:100%;
+}
+
 /* Footer */
 
 footer{
@@ -57,9 +62,10 @@ footer .copy{
 }
 
 .header .logo h1{
-    font-size:30px;
-    margin:0px;
-    padding:10px 0px;
+    font-size: 30px;
+    margin: 0px -176px;
+    padding: 10px 0px;
+    text-align: left;
 }
 
 .header .logo h1 a{
@@ -666,4 +672,45 @@ body {
 .lbl-error{
     color: red;
     padding: 5px 2px;
+}
+.modal
+    {
+        position: fixed;
+        z-index: 999;
+        height: 100%;
+        width: 100%;
+        top: 0;
+        left: 0;
+        background-color: Black;
+        filter: alpha(opacity=60);
+        opacity: 0.6;
+        -moz-opacity: 0.8;
+    }
+    .center
+    {
+        z-index: 1000;
+        margin: 300px auto;
+        padding: 10px;
+        width: 130px;
+        opacity: 1;
+        -moz-opacity: 1;
+    }
+    .center img
+    {
+        height: 40px;
+        width: 40px;
+    }
+
+    .help-block{
+    color: red;
+    font-size: 13px;
+}
+
+div.adminuser{
+    float: right;
+    text-align: right;
+    right: -166px;
+    top: 10px;
+    font-size: 14px;
+        color: #FFF;
 }

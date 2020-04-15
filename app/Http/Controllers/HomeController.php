@@ -8,6 +8,7 @@ use App\Model\Camp;
 use App\Model\Support;
 use App\Model\TopicSupport;
 use App\Model\SupportInstance;
+use App\VideoPodcast;
 use DB;
 use App\Model\Namespaces;
 use Auth;
@@ -35,9 +36,9 @@ class HomeController extends Controller {
         }
 		//session()->flush();
         $namespaces = Namespaces::all();
-        $topics = Camp::getAllAgreementTopic(10, $_REQUEST);
-
-        return view('welcome', ['topics' => $topics, 'namespaces' => $namespaces]);
+        $topics = Camp::getAllAgreementTopic(config('app.front_page_limit'), $_REQUEST);
+        $videopodcast = VideoPodcast::all()->first();
+        return view('welcome', ['topics' => $topics, 'namespaces' => $namespaces,'videopodcast'=>$videopodcast]);
     }
 
     public function loadtopic(Request $request) {
@@ -171,6 +172,15 @@ class HomeController extends Controller {
         $namespace = Namespaces::find($request->input('namespace'));
 
         session(['defaultNamespaceId' => $namespace->id]);
+    }
+
+    public function termservice(){
+            return view('termservice');
+
+    }
+
+    public function privacypolicy(){
+            return view('privacypolicy');
     }
 
 }

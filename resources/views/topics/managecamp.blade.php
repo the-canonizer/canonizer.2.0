@@ -12,7 +12,7 @@
 	 <?php if($objection=="objection") { ?> 
 	Object to this proposed update
 	 <?php } else { ?>
-	Camp update
+	Camp Update
 	 <?php } ?>
 	</h1>
 </div> 
@@ -81,15 +81,15 @@
              </div> 
             
              <div class="form-group">
-                <label for="camp_name">Camp Name ( Limit 30 Char ) <span style="color:red">*</span></label>
-                <input type="text" maxlength="30" name="camp_name" <?php if($camp->camp_name=="Agreement") echo "readonly";?> class="form-control" id="camp_name" value="{{ $camp->camp_name}}">
+                <label for="camp_name">Camp Name ( Limit 30 Chars ) <span style="color:red">*</span></label>
+                <input type="text" maxlength="30" onkeydown="restrictTextField(event,30)" name="camp_name" <?php if($camp->camp_name=="Agreement") echo "readonly";?> class="form-control" id="camp_name" value="{{ $camp->camp_name}}">
                  @if ($errors->has('camp_name')) <p class="help-block">{{ $errors->first('camp_name') }}</p> @endif
              </div> 
              		
             <?php if($objection=="objection") { ?>
             <div class="form-group">
-                <label for="topic name">Your Objection Reason <span style="color:red">*</span></label>
-                <input type="text" name="objection_reason" class="form-control" id="objection_reason" value="">
+                <label for="topic name">Your Objection Reason ( Limit 100 Chars ) <span style="color:red">*</span></label>
+                <input type="text" name="objection_reason" onkeydown="restrictTextField(event,100)" class="form-control" id="objection_reason" value="">
 				@if ($errors->has('objection_reason')) <p class="help-block">{{ $errors->first('objection_reason') }}</p> @endif
             </div> 				
             <?php } else { ?>
@@ -102,7 +102,7 @@
             
             <div class="form-group">
                 <label for="">Edit summary (Briefly describe your changes) </label>
-                <textarea class="form-control" rows="4" name="note" id="note">{{ old('note')}}</textarea>
+                <textarea class="form-control" rows="4" name="note" id="note"></textarea>
                 @if ($errors->has('note')) <p class="help-block">{{ $errors->first('note') }}</p> @endif
             </div>   
             <div class="form-group">

@@ -113,3 +113,41 @@ ALTER TABLE `news_feed`
   
   
 ALTER TABLE `person` ADD `phone_number` VARCHAR(10) NULL AFTER `country`, ADD `mobile_carrier` VARCHAR(50) NULL AFTER `phone_number`, ADD `mobile_verified` INT NOT NULL DEFAULT '0' AFTER `mobile_carrier`;  
+
+
+-- 1-july 2019-- video podcast---
+
+CREATE TABLE `videopodcast` (
+  `id` int(11) NOT NULL,
+  `html_content` longtext,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `videopodcast`
+--
+
+INSERT INTO `videopodcast` (`id`, `html_content`, `created_at`, `updated_at`) VALUES
+(1, '<h3>Video Podcast</h3>\r\n<div style=\"background-color: #f0efef;padding: .75rem 1rem;font-size: 15px;margin-bottom: 2rem;float: left; width: 100%;\">\r\n<span style=\"color:#0000ff; font-size:15px\">Episode 1 of 4</span>\r\n<object height=\"275\" width=\"480\" data=\"https://www.youtube.com/embed/tgbNymZ7vqY\"\"></object>\r\n<div>', '2019-06-19 18:29:23', '2019-06-19 18:29:50');
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `videopodcast`
+--
+ALTER TABLE `videopodcast`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `videopodcast`
+--
+ALTER TABLE `videopodcast`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+COMMIT;

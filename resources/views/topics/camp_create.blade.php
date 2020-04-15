@@ -59,8 +59,8 @@
 				 
              </div> 
              <div class="form-group">
-                <label for="camp_name">Camp Name ( Limit 30 Char ) <span style="color:red">*</span></label>
-                <input type="text" name="camp_name" class="form-control" maxlength="30" id="camp_name" value="{{ old('camp_name')}}">
+                <label for="camp_name">Camp Name ( Limit 30 Chars ) <span style="color:red">*</span></label>
+                <input type="text" onkeydown="restrictTextField(event,30)" name="camp_name" class="form-control" maxlength="30" id="camp_name" value="{{ old('camp_name')}}">
                  @if ($errors->has('camp_name')) <p class="help-block">{{ $errors->first('camp_name') }}</p> @endif
              </div> 
            

@@ -24,22 +24,25 @@
         <div class="well">
             <ul class="nav prfl_ul">
                 <li><a class="" href="{{ route('settings')}}">Manage Profile Info</a></li>
-                <li class=""><a class="" href="{{ route('settings.nickname')}}" >Add & Manage Nick Names</a></li>
+                <li class=""><a class="" href="{{ route('settings.nickname')}}" >Manage Nick Names</a></li>
 				<li class="active"><a class="" href="{{ route('settings.support')}}" >My Supports</a></li>
                 <li><a class="" href="{{ route('settings.algo-preferences')}}">Default Algorithm</a></li>
                 <li><a class="" href="{{ route('settings.changepassword')}}">Change Password</a></li>
+                <li><a class="" href="{{ route('settings.blockchain')}}">Metamask Account</a></li>
             </ul>
          <div class="SupportCmp">
 		        <p style="margin-left: 15px;color:red">Note : To change support order of camp, drag & drop the camp box on your choice position. </p>
                 @if(count($supportedTopic))
                  @foreach($supportedTopic as $data)
-
-                       <div class="SpCmpHd"><b>For Topic : <a href="/topic/{{ $data->topic->topic_num }}-{{ $data->topic->topic_name}}/">{{ $data->topic->topic_name}} </a> </b></div>
+                 <?php $title      = preg_replace('/[^A-Za-z0-9\-]/', '-', $data->topic->topic_name);	?>
+                       <div class="SpCmpHd"><b>For Topic : <a href="/topic/{{ $data->topic->topic_num }}-{{ $title }}/1">{{ $data->topic->topic_name}} </a> </b></div>
                		<div class="row column{{ $data->topic_num }}">
 					   <?php $topicSupport = $data->topic->Getsupports($data->topic_num,$userNickname);?>
 					   @foreach($topicSupport as $k=>$support)
-
-					   <div id="positions_{{ $support->support_id }}" class="SpCmpBDY support-sorter-element ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
+                        <?php if($support->delegate_nick_name_id == 0) {
+                            $camp = \App\Model\Camp::getLiveCamp($support->topic_num,$support->camp_num);
+                         ?>
+					   <div id="positions_{{ $support->support_id }}" class="SpCmpBDY support_camp support-sorter-element ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
 					     <form onsubmit="return confirm('Do you really want to delete this support ?');" action="{{ route('settings.support.delete')}}" id="support-{{$support->support_id}}" method="post">
 						    <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
@@ -48,9 +51,20 @@
 							<input type="hidden" id= "nick_name_id_{{ $support->support_id }}" name="nick_name_id" value="{{ $support->nick_name_id }}">
 						  <button type="submit" id="submit_{{ $support->support_id }}" class="btn-sptclose" title="Remove Support"><i class="fa fa-close"></i></button>
 						 </form>
-					     <b><span class="support_order">{{ $support->support_order }}</span> . <a style="text-decoration: underline; color: blue;" href="/topic/{{ $data->topic_num }}-{{ $data->topic->topic_name }}/{{ $support->camp->camp_num }}"> {{ $support->camp->camp_name }}  </a> <br/>
+						
+					     <b><span class="support_order">{{ $support->support_order }}</span> . <a style="text-decoration: underline; color: blue;" href="/topic/{{ $data->topic_num }}-{{ $title }}/{{ isset($support->camp->camp_num) ? $support->camp->camp_num : '1' }}"> {{ isset($camp->camp_name) ? $camp->camp_name : '' }}  </a> <br/>
 					   	 </b>
                        </div>
+						<?php } else { 
+						  $delegatedNickDetail  = $delegatedNick->getNickName($support->delegate_nick_name_id);
+						 ?>
+						 <div id="positions" class="SpCmpBDY support-sorter-element ui-widget">
+					   
+						  Support delegated to {{$delegatedNickDetail->nick_name }}
+						</div>
+						 <?php
+						 break;
+						 } ?>
 					   @endforeach
                     </div>
                     <script>

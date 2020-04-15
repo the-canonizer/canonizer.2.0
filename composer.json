@@ -6,6 +6,7 @@
     "type": "project",
     "require": {
         "php": ">=5.6.4",
+        "captcha-com/laravel-captcha": "4.*",
         "doctrine/dbal": "v2.5.13",
         "laravel/framework": "5.4.36",
         "laravel/tinker": "~1.0",
@@ -16,7 +17,7 @@
         "laravel/dusk": "^1.0",
         "mockery/mockery": "0.9.*",
         "phpunit/phpunit": "~5.7"
-    },
+    }, 
     "autoload": {
         "classmap": [
             "database"

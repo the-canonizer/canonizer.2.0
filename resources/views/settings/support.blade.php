@@ -73,7 +73,7 @@
         <div class="well">
             <ul class="nav prfl_ul">
                 <li><a class="" href="{{ route('settings')}}">Manage Profile Info</a></li>
-                <li class=""><a class="" href="{{ route('settings.nickname')}}" >Add & Manage Nick Names</a></li>
+                <li class=""><a class="" href="{{ route('settings.nickname')}}" >Manage Nick Names</a></li>
 				<li class="active"><a class="" href="{{ route('settings.support')}}" >My Supports</a></li>
                 <li><a class="" href="{{ route('settings.algo-preferences')}}">Default Algorithm</a></li>
             </ul>
@@ -95,6 +95,10 @@
 
                        ?>
 					   @foreach($topicSupport as $k=>$support)
+					   <?php 
+					   		
+                            $camp = \App\Model\Camp::getLiveCamp($support->topic_num,$support->camp_num);
+					   ?>
 					  
                        <div class="col-sm-12">
                             <div id="positions_{{ $support->support_id }}" class="SpCmpBDY support-sorter-element ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
@@ -110,7 +114,7 @@
                                 
 							<input type="hidden" name="camp[{{$support->camp->camp_num}}]" value="{{ $support->camp->camp_num }}">
 							<input type="hidden" name="delegated[{{$support->camp->camp_num}}]" value="{{ $support->delegate_nick_name_id }}">
-                            <b><span class="support_order"> {{ $support->support_order }} </span> . {{ $support->camp->camp_name }} </b><br/>
+                            <b><span class="support_order"> {{ $support->support_order }} </span> . {{ $camp->camp_name }} </b><br/>
                              
                         
 							<?php if(isset($topic->topic_num) && $topic->topic_num==$supportedTopic->topic_num) $lastsupportOrder++;

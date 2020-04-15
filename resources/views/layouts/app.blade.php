@@ -57,9 +57,9 @@
 									</tr>
 								</table>
                                 <input type="hidden" name="search_param" value="all" id="search_param">
-                                <input type="text" class="form-control search" name="q" id="sbi" placeholder="Search for...">
+                                <input type="text" class="form-control search" name="q" id="sbi" placeholder="Google Search for...">
 
-									<input type="submit" name="sa" value="Google Search" id="sbb"></input>
+									<input type="submit" name="sa" value="Search" id="sbb"></input>
 									<input type="hidden" name="client" value="pub-6646446076038181"></input>
 									<input type="hidden" name="forid" value="1"></input>
 									<input type="hidden" name="ie" value="ISO-8859-1"></input>
@@ -101,7 +101,7 @@
                         $id = null;
                     }
                 }
-                 $campNum = (isset($parameters['campnum']) && $parameters['campnum']) ? $parameters['campnum'] : null;
+                 $campNum = (isset($parameters['campnum']) && $parameters['campnum']) ? $parameters['campnum'] : 1;
                  $campUrl = "/camp/create";
                 if($id!=null && $campNum !=null){
                     $campUrl = "/camp/create/$id/$campNum";
@@ -112,7 +112,7 @@
                     <ul class="uppermenu">
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url('/')}}">
-                                <span class="nav-link-text {{ ($route=='index') ? 'menu-active':''}}">Canonizer Main</span>
+                            <span class="nav-link-text {{ ($route=='index') ? 'menu-active':''}}">Canonizer Main Page</span>
                             </a>
                         </li>
 
@@ -129,15 +129,15 @@
                             </a>
                         </li>
 
-						<?php if($route=='show' and strpos(Request::fullUrl(), 'forum' ) == 0 ) { ?>
-
+						<?php if($route=='show' and strpos(Request::fullUrl(), 'forum' ) == 0 ) { 
+                        if($id!=null && $campNum !=null){ ?>
 						<li class="nav-item">
                             <a class="nav-link" href='{{ url("$campUrl")}}'>
 
                                 <span class="nav-link-text">Create New Camp</span>
                             </a>
                         </li>
-						<?php } ?>
+						<?php } } ?>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url('/upload') }}">
                                 <span class="nav-link-text {{ ($route=='getUpload') ? 'menu-active':''}}">Upload File</span>
@@ -203,8 +203,21 @@
                                 </li>
 
                                 <li>
-
-                                    <div class="filter">Filter < <input onkeypress="changeFilterOnEnter(this,event)" onblur="changeFilter(this)" type="number" value="{{ isset($_REQUEST['filter']) && !empty($_REQUEST['filter']) ? $_REQUEST['filter'] : '0.001' }}"/></div>
+                                 <?php
+								 $filter = '0.001';
+								 if(session('filter')==="removed") {
+					
+								   $filter = '0.00';	
+								 }
+								 if(isset($_REQUEST['filter']) && !empty($_REQUEST['filter'])) {
+									
+                                    $filter = $_REQUEST['filter'];										
+									session()->forget('filter');
+								 } else if(session('filter')!="removed") {
+									$filter = (isset($_SESSION['filterchange'])) ? $_SESSION['filterchange'] : '0.001';	 
+								 }
+								 ?>
+                                    <div class="filter">Filter < <input onkeypress="changeFilterOnEnter(this,event)" onblur="changeFilter(this)" type="number" value="{{ $filter }}"/></div>
                                 </li>
                             </ul>
                         </li>
@@ -234,9 +247,11 @@
 									
 									<div><input readonly type="text" id="asofdate" name="asofdate" value=""/></div>
 								    <script>
+                                        <?php if(session('asofdateDefault')!=null && session('asofdateDefault')!='') { ?>
 									var date = new Date(<?= strtotime(session('asofdateDefault')) ?> * 1000).toLocaleString();
 									
 									$('#asofdate').val(date);
+                                   <?php } ?>
 									</script>
 								</form>
                                 </li>
@@ -266,8 +281,16 @@
     </div>
     <script>
         function topFunction() {
-    document.body.scrollTop = 0;
-    document.documentElement.scrollTop = 0;
+            document.body.scrollTop = 0;
+            document.documentElement.scrollTop = 0;
+        }
+
+function restrictTextField(e,limitlength){
+    var charLength = $(e.target).val().length;
+     if (charLength >= limitlength  && e.keyCode !== 46 && e.keyCode !== 8 ) {
+           e.preventDefault();
+           $(e.target).val($(e.target).val().substring(0,limitlength));
+    }
 }
         $(document).ready(function () {
 

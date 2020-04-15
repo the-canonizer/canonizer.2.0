@@ -11,6 +11,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-         $this->call(NameSpaceSeeder::class);
+    	$seeder = ["NameSpaceSeeder","VideopodcastSeeder"];
+    	foreach($seeder as $seed){
+         $this->call($seed);
+    	}
     }
 }

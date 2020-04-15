@@ -22,12 +22,23 @@ class UserController extends Controller {
         if (!$user) {
             return redirect('/admin/users');
         }
+
         return view('admin.user-edit', compact('user'));
+    }
+
+    protected function validator(array $data)
+    {
+        $message = [];
+        return Validator::make($data, [
+            'first_name' => 'required|string|max:100',
+            'last_name' => 'required|string|max:100',
+            'middle_name' => 'max:100',
+           ],$message);
     }
 
     public function postUpdate(Request $request, $id) {
         $data = $request->only(['first_name', 'middle_name', 'last_name', 'address_1', 'address_2', 'city', 'state', 'postal_code', 'country']);
-
+        $this->validator($data)->validate();
         User::where('id', $id)->update($data);
         return redirect('/admin/users');
     }
@@ -69,7 +80,7 @@ class UserController extends Controller {
         
         $template = Templates::find($data['template']);        
         foreach($users as  $user){
-            Mail::to($user->email)->send(new AdminEmailCampaign($user,$template));
+            Mail::to($user->email)->bcc('brent.allsop@canonizer.com')->send(new AdminEmailCampaign($user,$template));
         }
         $request->session()->flash('success', 'Mail sent successfully');
         return redirect('/admin/sendmail');

@@ -17,6 +17,7 @@ class Controller extends BaseController
     public function __construct()
     {   
         //dd(Auth::user());
+		
         /*@session_start();
         $_SESSION['defaultAlgo'] = 'blind_popularity';
         dd($_SESSION['defaultAlgo']);*/

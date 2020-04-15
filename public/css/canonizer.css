@@ -913,8 +913,11 @@ h1.page-title{
     margin-bottom: 25px;
 }
 .prfl_ul li{
-    padding: 5px 15px;
+    padding: 5px 10px;
     line-height: 25px;
+}
+.prfl_ul li a {
+    font-size: 13px;
 }
 .prfl_ul li.active{
     border-radius: 4px 4px 0px 0px;
@@ -988,7 +991,7 @@ ul.mainouter li .tp-title {
 }
 .CmpHistoryPnl-footer{
     display: inline-block;
-    width: 104.6%;
+    width: 103.6%;
     padding: 10px 20px;
     margin: 15px 0px -20px -20px;
     background-color: rgba(204, 204, 204, 0.51);
@@ -1055,6 +1058,9 @@ ul.mainouter li .tp-title {
     font-size:15px;
     border-radius:3px;
     position:relative;
+}
+.support_camp{
+    margin-left:15px!important;
 }
 .btn-sptclose{
     position: absolute;
@@ -1312,4 +1318,44 @@ a.rgWT {
 }
 .content ul li.news-list a:hover{
     color:#0000ff;
+}
+
+.videopodcast_div h3 {
+    width: 100%;
+    float: left;
+}
+.videopodcast_div span {
+    width: 100%;
+    float: left;
+}
+
+.videopodcast_div iframe, .videopodcast_div object, .videopodcast_div video {
+    width: 100%;
+    float: left;
+    max-height: 266px;
+}
+
+@media (min-width:576px){
+.col-sm-6.sameHeight{
+	flex: 1;
+    max-width: 50%;
+    background: #f0efef;
+    margin: 15px;
+    padding: 0px;
+}
+}
+.videopodcast_div{
+	/*height: 399px;
+    overflow-y: auto;*/
+    background-color: #f0efef;
+}
+#ContactCaptcha_SoundLink{
+    position: relative;
+    top: -57px;
+    right: -255px;
+}
+#ContactCaptcha_ReloadLink{
+    position: relative;
+    top: -54px;
+    right: -255px;
 }

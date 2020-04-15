@@ -5,6 +5,8 @@ use DB;
 use Illuminate\Support\Facades\Cache;
 use App\Model\Camp;
 use App\Model\Support;
+use App\Model\EtherAddresses;
+use App\Model\Nickname;
 use Illuminate\Database\Eloquent\Collection;
 
 class Algorithm{
@@ -23,7 +25,11 @@ class Algorithm{
             'mormon'=>'Mormon',
             'uu'=>'Universal Unitarian',
             'atheist'=>'Atheist',
-            'transhumanist'=>'Transhumanist'
+            'transhumanist'=>'Transhumanist',
+			'united_utah'=>'United Utah',
+			'republican'=>'Republican',
+			'democrat'=>'Democrat',
+			'ether' => 'Ethereum'
         );
     }
 	
@@ -31,7 +37,7 @@ class Algorithm{
     @return all the available algorithm key values
     */
     public static function getKeyList(){
-        return array('blind_popularity','mind_experts','computer_science_experts','PhD','christian','secular','mormon','uu','atheist','transhumanist'
+        return array('blind_popularity','mind_experts','computer_science_experts','PhD','christian','secular','mormon','uu','atheist','transhumanist','united_utah','republican','democrat', 'ether'
         );
     }
     
@@ -65,6 +71,55 @@ class Algorithm{
             });
             return isset($result[0]->countTotal) ? $result[0]->countTotal : 0;
         }
+    }
+
+    public static function ether($nick_name_id) {
+        $user_id = Nickname::getUserIDByNickName($nick_name_id);
+        $ethers = EtherAddresses::where('user_id', '=', $user_id)->get();
+        
+        $total_ethers = 0;
+        
+        $api_key = '0d4a2732eca64e71a1be52c3a750aaa4';                      // Project Key
+        $ether_url = 'https://mainnet.infura.io/v3/' + $api_key;            // Ether Url
+
+        foreach ($ethers as $ether) {                                       // If users has multiple addresses
+
+            $curl = curl_init();
+
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => "https://mainnet.infura.io/v3/0d4a2732eca64e71a1be52c3a750aaa4",
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => "",
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 30,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => "POST",
+                CURLOPT_POSTFIELDS => "{\"jsonrpc\":\"2.0\",\"method\":\"eth_getBalance\",\"params\": [\"$ether->address\", \"latest\"],\"id\":1}",
+                CURLOPT_HTTPHEADER => array(
+                  "Accept-Encoding: gzip, deflate",
+                  "Cache-Control: no-cache",
+                  "Connection: keep-alive",
+                  "Content-Type: application/json",
+                  "Host: mainnet.infura.io"
+                ),
+              ));
+
+            $curl_response = curl_exec($curl);
+            $err = curl_error($curl);
+
+            curl_close($curl);
+
+            if ($err) {
+                return 0;
+            } 
+            else {
+                $curl_result_obj = json_decode($curl_response);
+                $balance = $curl_result_obj->result;
+                $total_ethers += (hexdec($balance)/1000000000000000000);       // Convert Ether to Wei
+            }
+        }
+        
+        return $total_ethers;
     }
 
     public static function blind_popularity($nick_name_id = null){
@@ -147,6 +202,27 @@ class Algorithm{
 						   '(topic_num = 55 and camp_num = 14) or ' .
 						   '(topic_num = 55 and camp_num = 15) or ' .
 						   '(topic_num = 55 and camp_num = 17)';
+        return self::camp_count($nick_name_id,$condition);
+    }
+	
+	// United Utah Party Algorithm using related topic and camp
+	
+	public static function united_utah($nick_name_id){
+        $condition = '(topic_num = 231 and camp_num = 2)';
+        return self::camp_count($nick_name_id,$condition);
+    }
+	
+	// Republican Algorithm using related topic and camp
+	 
+	public static function republican($nick_name_id){
+        $condition = '(topic_num = 231 and camp_num = 3)';
+        return self::camp_count($nick_name_id,$condition);
+    }
+	
+	// Democrat Algorithm using related topic and camp
+	
+	public static function democrat($nick_name_id){
+        $condition = '(topic_num = 231 and camp_num = 4)';
         return self::camp_count($nick_name_id,$condition);
     }
 

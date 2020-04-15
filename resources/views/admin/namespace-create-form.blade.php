@@ -3,7 +3,7 @@
     <div class="row">
         <div class="col-md-12 panel-warning">
             <div class="content-box-header panel-heading">
-                <div class="panel-title ">Create Namespace</div>
+                <div class="panel-title ">Add Namespace</div>
                 
                 
             </div>
@@ -18,9 +18,10 @@
 								  
 									<fieldset>
 										<div class="form-group">
-											<label>Namespace Name</label>
+											<label>Namespace Name <span style="color:red">*</span></label>
 											
 											<input name="name" value="{{ $namespaceRequest ? $namespaceRequest->name : '' }}" class="form-control" placeholder="Namespace name" type="text">
+											 @if ($errors->has('name')) <p class="help-block">{{ $errors->first('name') }}</p> @endif
 										</div>
 										<div class="form-group">
 											<label>Parent Namespace</label>

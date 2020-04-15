@@ -12,7 +12,7 @@
 	 <?php if($objection=="objection") { ?> 
 	Object to this proposed update
 	 <?php } else { ?>
-	Statement update
+	Statement Update
 	 <?php } ?>
 	</h1>
 </div> 
@@ -73,14 +73,14 @@
 		   
             <?php if($objection=="objection") { ?> 
             <div class="form-group">
-                <label for="topic name">Your Objection Reason <span style="color:red">*</span></label>
-                <input type="text" name="objection_reason" class="form-control" id="objection_reason" value="">
+                <label for="topic name">Your Objection Reason ( Limit 100 Chars ) <span style="color:red">*</span></label>
+                <input type="text" name="objection_reason" onkeydown="restrictTextField(event,100)" class="form-control" id="objection_reason" value="">
 				@if ($errors->has('objection_reason')) <p class="help-block">{{ $errors->first('objection_reason') }}</p> @endif
             </div> 
             <?php }  else { ?>  
 			 <div class="form-group">
                 <label for="title">Edit summary (Briefly describe your changes)</label>
-                 <textarea class="form-control" id="note" rows="4" name="note">{{ old('note')}}</textarea>
+                 <textarea class="form-control" id="note" rows="4" name="note"></textarea>
                 @if ($errors->has('note')) <p class="help-block">{{ $errors->first('note') }}</p> @endif
             </div> 
 			<?php } ?>

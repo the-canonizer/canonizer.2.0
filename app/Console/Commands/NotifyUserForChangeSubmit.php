@@ -69,14 +69,15 @@ class NotifyUserForChangeSubmit extends Command {
                 $directSupporter = Support::getDirectSupporter($statement->topic_num, $statement->camp_num);
 
                 $link = 'topic/' . $statement->topic_num . '/' . $statement->camp_num . '?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $statement->go_live_time);
-                $data['object'] = "#" . $statement->id;
+                $livecamp = Camp::getLiveCamp($statement->topic_num,$statement->camp_num);
+                $data['object'] = " for camp" . $livecamp->camp_name;
                 $data['go_live_time'] = $statement->go_live_time;
                 $data['type'] = 'statement';
                 $nickName = Nickname::getNickName($statement->submitter_nick_id);
 
                 $data['nick_name'] = $nickName->nick_name;
                 $data['forum_link'] = 'forum/' . $statement->topic_num . '-statement/' . $statement->camp_num . '/threads';
-                $data['subject'] = "Proposed change to camp statement #" . $statement->id . " submitted";
+                $data['subject'] = "Proposed change to statement for camp " . $livecamp->camp_name . " submitted";
                 self::mailSupporters($directSupporter, $link, $data);       //mail supporters
                 echo " \n Your change to statement #' .$statement->id. 'has been submitted to your supporters \n";
             } else if ($type == 'camp') {
@@ -123,7 +124,7 @@ class NotifyUserForChangeSubmit extends Command {
         foreach ($directSupporter as $supporter) {
             $user = Nickname::getUserByNickName($supporter->nick_name_id);
             $receiver = (config('app.env') == "production") ? $user->email : config('app.admin_email');
-            Mail::to($receiver)->send(new PurposedToSupportersMail($user, $link, $data));
+            Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new PurposedToSupportersMail($user, $link, $data));
         }
         return;
     }

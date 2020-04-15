@@ -8,32 +8,32 @@
     <form action="{{ url('/register')}}" method="post">
         <input type="hidden" name="_token" value="{{ csrf_token() }}">
         <div class="form-group">
-            <label for="firstname">First Name <span style="color:red">*</span></label>
-            <input type="text" name="first_name" class="form-control" id="firstname" value="{{ old('first_name')}}">
+            <label for="firstname">First Name (Limit 100 Chars)<span style="color:red">*</span></label>
+            <input type="text" name="first_name" onkeydown="restrictTextField(event,100)" class="form-control" id="firstname" value="{{ old('first_name')}}">
             @if ($errors->has('first_name')) <p class="help-block">{{ $errors->first('first_name') }}</p> @endif
         </div>
         
         <div class="form-group">
-            <label>Middle Name </label>
-            <input type="text" name="middle_name" class="form-control" id="middle_name" value="{{ old('middle_name')}}">
+            <label>Middle Name (Limit 100 Chars)</label>
+            <input type="text" name="middle_name" onkeydown="restrictTextField(event,100)" class="form-control" id="middle_name" value="{{ old('middle_name')}}">
             @if ($errors->has('middle_name')) <p class="help-block">{{ $errors->first('middle_name') }}</p> @endif
         </div>
         
         <div class="form-group">
-            <label>Last Name <span style="color:red">*</span></label>
-            <input type="text" name="last_name" class="form-control" id="lastname" value="{{ old('last_name')}}">
+            <label>Last Name (Limit 100 Chars)<span style="color:red">*</span></label>
+            <input type="text" name="last_name" onkeydown="restrictTextField(event,100)" class="form-control" id="lastname" value="{{ old('last_name')}}">
             @if ($errors->has('last_name')) <p class="help-block">{{ $errors->first('last_name') }}</p> @endif
         </div>
 
         <div class="form-group">
-            <label>Email <span style="color:red">*</span></label>
-            <input type="email" name="email" class="form-control" id="email" value="{{ old('email')}}">
+            <label>Email (Limit 255 Chars)<span style="color:red">*</span></label>
+            <input type="email" name="email" onkeydown="restrictTextField(event,255)" class="form-control" id="email" value="{{ old('email')}}">
             @if ($errors->has('email')) <p class="help-block">{{ $errors->first('email') }}</p> @endif
         </div>
         <div class="form-group">
             <label for="pwd">Password <span style="color:red">*</span> 
                 <div class="pass_info"><i class="fa fa-info-circle" aria-hidden="true"></i>
-                    <ul class="ps_tooltp"><li>Password must be atleast 8 characters</li><li>Must have atleast one digit</li><li>Must have atleast one special character(@,# !,$..)</li></ul>
+                    <ul class="ps_tooltp"><li>Password must be atleast 8 characters</li><li>Must have atleast one lower case letter</li><li>Must have atleast one digit</li><li>Must have atleast one special character(@,# !,$..)</li></ul>
                 </div>
             </label>
             <input type="password" name="password" class="form-control" id="password">
@@ -46,6 +46,20 @@
             <input type="password" name="password_confirmation" class="form-control" id="pwd_confirm">
            
         </div>
+
+         <div class="form-group">
+            <label for="captcha">Captcha</label>
+                {!! captcha_image_html('ContactCaptcha') !!}
+                <input class="form-control" type="text" id="CaptchaCode" name="CaptchaCode" style="margin-top:5px;">
+
+
+                @if ($errors->has('CaptchaCode'))
+                    <p class="help-block">
+                        {{ $errors->first('CaptchaCode') }}
+                    </p>
+                @endif
+        </div>
+
         <button type="submit" id="submit" class="btn btn-login">Create your account</button>
     </form>
 </div> 

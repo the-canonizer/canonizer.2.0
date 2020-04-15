@@ -3,10 +3,10 @@
     <div class="row">
         <div class="col-md-12 panel-warning">
             <div class="content-box-header panel-heading">
-                <div class="panel-title ">Namespaces</div>
+                <div class="panel-title ">Namespace</div>
                 
                 <div class="panel-options">
-                    <a href="{{ url('/admin/namespace/create') }}" data-rel="collapse"><i class="fa fa-plus"></i> Add Namespace</a>
+                    <a href="{{ url('/admin/namespace/create') }}" data-rel="collapse"><i class="fa fa-plus"></i> Create Namespace</a>
                 </div>
             </div>
             <div class="content-box-large box-with-header">

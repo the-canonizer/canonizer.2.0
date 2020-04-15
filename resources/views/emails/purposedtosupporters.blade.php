@@ -2,7 +2,7 @@
  Hi {{ $user->first_name }} {{ $user->last_name }},<br/>
 <p>
  
-{{ $data['nick_name'] }} has proposed a change to this {{$data['type']}} <a href="{{ url('/') . '/' . $link }}">{{ $data['object']}} </a> which you currently directly support.  If no supporters of this {{$data['type']}} object to this change, it will go live in one week.
+{{ $data['nick_name'] }} has proposed a change to this {{$data['type']}}<a href="{{ url('/') . '/' . $link }}">{{ $data['object']}} </a> which you currently directly support.  If no supporters of this {{$data['type']}} object to this change, it will go live in one week.
 <p>Edit summary : {{ $data['note'] }}</p>
 </p>
 

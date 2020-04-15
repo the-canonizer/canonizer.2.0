@@ -24,10 +24,11 @@
         <div class="well">
             <ul class="nav prfl_ul">
                 <li><a class="" href="{{ route('settings')}}">Manage Profile Info</a></li>
-                <li class="active"><a class="" href="{{ route('settings.nickname')}}" >Add & Manage Nick Names</a></li>
+                <li class="active"><a class="" href="{{ route('settings.nickname')}}" >Manage Nick Names</a></li>
 				<li class=""><a class="" href="{{ route('settings.support')}}" >My Supports</a></li>
                 <li><a class="" href="{{ route('settings.algo-preferences')}}">Default Algorithm</a></li>
                 <li><a class="" href="{{ route('settings.changepassword')}}">Change Password</a></li>
+                <li><a class="" href="{{ route('settings.blockchain')}}">Metamask Account</a></li>
             </ul>
 
          <!-- exsisting Nick Names -->
@@ -66,8 +67,8 @@
                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
                     <div class="row">
                         <div class="col-sm-6 margin-btm-1">
-                            <label for="nick_name">Nick Name <span style="color:red">*</span></label>
-                            <input type="text" name="nick_name" class="form-control" id="nick_name" value="{{ old('nick_name')}}">
+                            <label for="nick_name">Nick Name (Limit 50 Chars) <span style="color:red">*</span></label>
+                            <input type="text" onkeydown="restrictTextField(event,50)" name="nick_name" class="form-control" id="nick_name" value="{{ old('nick_name')}}">
                             @if ($errors->has('nick_name')) <p class="help-block">{{ $errors->first('nick_name') }}</p> @endif
                         </div>
                         <div class="col-sm-6 margin-btm-1">

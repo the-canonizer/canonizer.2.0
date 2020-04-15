@@ -17,13 +17,14 @@ if (version_compare(PHP_VERSION, '7.2.0', '>=')) {
 
 Route::get('/admin/login', 'Admin\LoginController@getLogin');
 Route::post('/admin/login', 'Admin\LoginController@postLogin');
+Route::get('/archievefiles', 'Admin\ActionController@archievefiles');
+Route::get('/removearchievefiles', 'Admin\ActionController@removearchievefiles');
 Route::group(['prefix' => 'admin', 'middleware' => 'adminauth'], function () {
     Route::get('/', 'Admin\ManageController@getIndex');
     Route::get('/namespace/create', 'Admin\ManageController@getCreateNamespace');
     Route::post('/namespace/create', 'Admin\ManageController@postCreateNamespace');
     Route::get('/namespace/edit/{id}', 'Admin\ManageController@getUpdateNamespace');
     Route::post('/namespace/edit/{id}', 'Admin\ManageController@postUpdateNamespace');
-
     Route::get('/namespace-requests', 'Admin\ManageController@getNamespaceRequests');
     Route::get('/users', 'Admin\UserController@getIndex');
     Route::get('/users/edit/{id}', 'Admin\UserController@getEdit');
@@ -37,9 +38,15 @@ Route::group(['prefix' => 'admin', 'middleware' => 'adminauth'], function () {
     Route::post('/template/store', ['as'=>'template.store', 'uses'=>'Admin\TemplateController@store']);
     Route::get('/sendmail', ['as'=>'sendmail', 'uses'=>'Admin\UserController@getSendmail']);
     Route::post('/sendmail', ['as'=>'sendmail', 'uses'=>'Admin\UserController@postSendmail']);
+    Route::get('/videopodcast', ['as'=>'videopodcast', 'uses'=>'Admin\VideoController@index']);
+    Route::post('/videopodcast', ['as'=>'videopodcast.store', 'uses'=>'Admin\VideoController@store']);
+    Route::post('/copydatabase', ['as'=>'copydatabase', 'uses'=>'Admin\ActionController@copydatabase']);
+    Route::post('/copyfiles', ['as'=>'copyfiles', 'uses'=>'Admin\ActionController@copyfiles']);
 });
 
 Route::get('/home', ['as' => 'home', 'uses' => 'HomeController@index']);
+Route::get('/privacypolicy', ['as' => 'privacypolicy', 'uses' => 'HomeController@privacypolicy']);
+Route::get('/termservice', ['as' => 'termservice', 'uses' => 'HomeController@termservice']);
 Route::get('browse', ['as' => 'browse', 'uses' => 'HomeController@browse']);
 Route::get('supportmigration', ['as' => 'supportmigration', 'uses' => 'HomeController@supportmigration']);
 
@@ -102,6 +109,8 @@ Route::group([ 'middleware' => 'auth'], function() {
     //change password
      Route::get('settings/changepassword', [ 'as' => 'settings.changepassword', 'uses' => 'SettingsController@getChangePassword']);
      Route::post('settings/changepassword', [ 'as' => 'settings.changepassword.save', 'uses' => 'SettingsController@postChangePassword']);
+     Route::get('settings/blockchain', [ 'as' => 'settings.blockchain', 'uses' => 'SettingsController@blockchain']);
+     Route::post('settings/save-ether-address', [ 'as' => 'settings.save-ether-address', 'uses' => 'SettingsController@postSaveEtherAddress']);
     Route::post('statement/agreetochange', 'TopicController@statement_agreetochange');
     Route::post('graceperiod/notify_change', 'TopicController@notify_change');
     
@@ -110,6 +119,7 @@ Route::group([ 'middleware' => 'auth'], function() {
     Route::post('/newsfeed/save',['as'=>'newsfeed.save','uses'=>'NewsFeedController@store']);
     Route::get('/editnews/{topicnum}/{campnum}',['as'=>'newsfeed.edit','uses'=>'NewsFeedController@edit']);
      Route::post('/newsfeed/update',['as'=>'newsfeed.update','uses'=>'NewsFeedController@update']);
+     
      
 });
 
@@ -145,3 +155,7 @@ if (env('APP_DEBUG')) {
     Route::get('/{params?}', 'HomeController@index')->where('params', '(.*)');
 }
 Route::get('user/supports/{user_id}', 'TopicController@usersupports')->name('user_supports');
+
+Route::get('/topic/notifysupporter',function(){
+    \Artisan::call('notify:supporters');
+});

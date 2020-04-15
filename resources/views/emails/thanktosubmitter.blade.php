@@ -1,6 +1,11 @@
 @component('mail::message')
- Hi {{ $user->first_name }} {{ $user->last_name }},<br/>
- <p>Thank you for your submittal to Canonizer.com.</p>
+Hi {{ $user->first_name }} {{ $user->last_name }},<br/>
+ 
+<p>You proposed a change for {{ $data['type']}} : <b>{{ $data['object']}}</b> @component('mail::button', ['url' => url('/') . '/' . $data['link']])
+Click Here To View
+@endcomponent</p>
+
+<p>Thank you for your submittal to Canonizer.com.</p>
      
 @component('mail::button', ['url' => url('/') . '/' . $link])
 Click Here To View History

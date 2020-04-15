@@ -9,7 +9,7 @@
             </div>
         @endif         
         <div class="content-box-header panel-heading">
-            <div class="panel-title ">Send Emails</div>
+            <div class="panel-title ">Send Email</div>
         </div>
         <div class="content-box-large box-with-header">
 
@@ -18,7 +18,7 @@
                     <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
                     <fieldset>
                         <div class="form-group">
-                            <label>Select Email Template</label>
+                            <label>Select Email Template <span style="color:red">*</span></label>
                             <select name="template" class="form-control">
                                 <option value="">Choose Template</option>
                                 @foreach($templates as $template)
