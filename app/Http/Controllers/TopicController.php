@@ -740,13 +740,13 @@ class TopicController extends Controller {
                 $data['subject'] = "Proposed change to " . $camp->topic->topic_name . ' / ' . $camp->camp_name . " submitted";
 
                 $nickNames = Nickname::personNicknameArray();
-                $ifIamSingleSupporter = Support::ifIamSingleSupporter($all['topic_num'], $all['camp_num'], $nickNames);
-                if($ifIamSingleSupporter){
-                    $subscribers = Camp::getCampSubscribers($camp->topic_num, $camp->camp_num);
-                    if(isset($subscribers) && count($subscribers) > 0){
-                        $this->mailSubscribers($subscribers, $link, $data);
-                    }
-                }
+                // $ifIamSingleSupporter = Support::ifIamSingleSupporter($all['topic_num'], $all['camp_num'], $nickNames);
+                // if($ifIamSingleSupporter){
+                //     $subscribers = Camp::getCampSubscribers($camp->topic_num, $camp->camp_num);
+                //     if(isset($subscribers) && count($subscribers) > 0){
+                //         $this->mailSubscribers($subscribers, $link, $data);
+                //     }
+                // }
                 
             }
             Session::flash('success', $message);
@@ -895,13 +895,13 @@ class TopicController extends Controller {
             $dataObject['forum_link'] = 'forum/' . $statement->topic_num . '-statement/' . $statement->camp_num . '/threads';
             $dataObject['subject'] = "Proposed change to statement for camp " . $livecamp->topic->topic_name . " / " . $livecamp->camp_name. " submitted";
             $nickNames = Nickname::personNicknameArray();
-            $ifIamSingleSupporter = Support::ifIamSingleSupporter($all['topic_num'], $all['camp_num'], $nickNames);
-            if($ifIamSingleSupporter){
-                $subscribers = Camp::getCampSubscribers($statement->topic_num, $statement->camp_num);
-                if(isset($subscribers) && count($subscribers) > 0){
-                    $this->mailSubscribers($subscribers, $link, $dataObject);
-                }
-            }
+            // $ifIamSingleSupporter = Support::ifIamSingleSupporter($all['topic_num'], $all['camp_num'], $nickNames);
+            // if($ifIamSingleSupporter){
+            //     $subscribers = Camp::getCampSubscribers($statement->topic_num, $statement->camp_num);
+            //     if(isset($subscribers) && count($subscribers) > 0){
+            //         $this->mailSubscribers($subscribers, $link, $dataObject);
+            //     }
+            // }
         }
 
 

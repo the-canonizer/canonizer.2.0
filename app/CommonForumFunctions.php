@@ -148,7 +148,7 @@ class CommonForumFunctions
                  $support_list[$user->id]=$supported_camp_list;
                  $ifalsoSubscriber = Camp::checkifSubscriber($subscribers,$user);
                  if($ifalsoSubscriber){
-                    $support_list_data = Camp::getSubscriptionList($userSub->id,$dataObject['topic_num']); 
+                    $support_list_data = Camp::getSubscriptionList($userSub->id,$topicid); 
                     $supporter_and_subscriber[$user->id]=['also_subscriber'=>1,'sub_support_list'=>$support_list_data];     
                  }
                 $bcc_user[] = $user;
