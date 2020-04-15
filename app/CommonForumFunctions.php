@@ -26,7 +26,7 @@ class CommonForumFunctions
      */
     public static function sendEmailToSupportersForumPost($topicid, $campnum, $link, $post, $threadId, $nick_id, $topic_name_encoded)
     {
-        $bcc_email;
+        $bcc_email = '';
 
         $camp  = CommonForumFunctions::getForumLiveCamp($topicid, $campnum);
         $subCampIds = CommonForumFunctions::getForumAllChildCamps($camp);
@@ -165,11 +165,10 @@ class CommonForumFunctions
      */
     public static function getTopicName($topicid)
     {
-        return Topic::where('topic_num', $topicid)->
-                      orderBy('go_live_time', 'desc')->
-                      first()->topic_name;
+        return Topic::where('topic_num', $topicid)
+            ->orderBy('go_live_time', 'desc')
+            ->first()->topic_name;
     }
-
 
     /**
      * [getCampName description]
@@ -179,10 +178,12 @@ class CommonForumFunctions
      */
     public static function getCampName($topicid, $campnum)
     {
-        return Camp::where('camp_num', $campnum)->
-                     where('topic_num', $topicid)->
-                     orderBy('go_live_time', 'desc')->
-                     first()->camp_name;
+        return Camp::where('camp_num', $campnum)
+            ->where('topic_num', $topicid)
+            ->where('objector_nick_id', NULL)
+            ->where('go_live_time', '<=', time())
+            ->latest('submit_time')
+            ->first()->camp_name; 
     }
 }
 
