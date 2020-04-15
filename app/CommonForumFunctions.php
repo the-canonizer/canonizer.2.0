@@ -145,6 +145,7 @@ class CommonForumFunctions
             foreach ($directSupporter as $supporter) {
                 $user = CommonForumFunctions::getUserFromNickId($supporter->nick_name_id);
                 $topic = \App\Model\Topic::where('topic_num','=',$topicid)->latest('submit_time')->get();
+
                 $topic_name_space_id = isset($topic[0]) ? $topic[0]->namespace_id:1;
                 $nickName = \App\Model\Nickname::find($supporter->nick_name_id);
                 $supported_camp = $nickName->getSupportCampList($topic_name_space_id);
@@ -154,6 +155,16 @@ class CommonForumFunctions
                 
                 if($ifalsoSubscriber){
                     $support_list_data = Camp::getSubscriptionList($userSub->id,$dataObject['topic_num']); 
+
+                 $topic_name_space_id = isset($topic[0]) ? $topic[0]->namespace_id:1;
+                 $nickName = \App\Model\Nickname::find($supporter->nick_name_id);
+                 $supported_camp = $nickName->getSupportCampList($topic_name_space_id);
+                 $supported_camp_list = $nickName->getSupportCampListNamesEmail($supported_camp,$topicid);
+                 $support_list[$user->id]=$supported_camp_list;
+                 $ifalsoSubscriber = Camp::checkifSubscriber($subscribers,$user);
+                 if($ifalsoSubscriber){
+                    $support_list_data = Camp::getSubscriptionList($user->id,$topicid); 
+
                     $supporter_and_subscriber[$user->id]=['also_subscriber'=>1,'sub_support_list'=>$support_list_data];     
                  }
                 
