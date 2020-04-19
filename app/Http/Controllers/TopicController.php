@@ -253,7 +253,7 @@ class TopicController extends Controller {
                  Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new ObjectionToSubmitterMail($user, $link, $data));
             } else if ($eventtype == "UPDATE") {
 
-                $directSupporter = Support::getDirectSupporter($topic->topic_num);
+                $directSupporter = Support::getAllDirectSupporters($topic->topic_num);
                 $link = 'topic-history/' . $topic->topic_num;
                 // $link = 'topic/' . $topic->topic_num . '/' . $topic->camp_num . '?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $topic->go_live_time);
                 $data['object'] = $topic->topic_name;
@@ -726,7 +726,7 @@ class TopicController extends Controller {
                 Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new ObjectionToSubmitterMail($user, $link, $data));
             } else if ($eventtype == "UPDATE") {
 
-                $directSupporter = Support::getDirectSupporter($camp->topic_num, $camp->camp_num);
+                $directSupporter = Support::getAllDirectSupporters($camp->topic_num, $camp->camp_num);
                 $link = 'camp/history/' . $camp->topic_num . '/' . $camp->camp_num;
                 $data['object'] = $camp->topic->topic_name . ' / ' . $camp->camp_name;
                 $data['type'] = 'camp : ';
@@ -848,7 +848,7 @@ class TopicController extends Controller {
 			$data['link'] = 'topic/' . $statement->topic_num . '/1';
             Mail::to(Auth::user()->email)->bcc(config('app.admin_bcc'))->send(new ThankToSubmitterMail(Auth::user(), $link,$data));
             // mail to direct supporters on new statement creation
-            $directSupporter = Support::getDirectSupporter($statement->topic_num, $statement->camp_num);
+            $directSupporter = Support::getAllDirectSupporters($statement->topic_num, $statement->camp_num);
             $subscribers = Camp::getCampSubscribers($statement->topic_num, $statement->camp_num);
             $dataObject['topic_num'] = $statement->topic_num;
             $dataObject['object'] = $livecamp->topic->topic_name . " / " . $livecamp->camp_name;
@@ -880,7 +880,7 @@ class TopicController extends Controller {
          Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new ObjectionToSubmitterMail($user, $link, $data));
         } else if ($eventtype == "UPDATE") {
 
-            $directSupporter = Support::getDirectSupporter($statement->topic_num, $statement->camp_num);
+            $directSupporter = Support::getAllDirectSupporters($statement->topic_num, $statement->camp_num);
              $link = 'statement/history/' . $statement->topic_num . '/' . $statement->camp_num;
              $livecamp = Camp::getLiveCamp($statement->topic_num,$statement->camp_num);
              //$link = 'topic/' . $statement->topic_num . '/' . $statement->camp_num . '?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $statement->go_live_time);
@@ -1049,7 +1049,7 @@ class TopicController extends Controller {
             $statement = Statement::where('id', '=', $id)->first();
             $statement->grace_period = 0;
             $statement->update();
-            $directSupporter = Support::getDirectSupporter($statement->topic_num, $statement->camp_num);
+            $directSupporter = Support::getAllDirectSupporters($statement->topic_num, $statement->camp_num);
             $subscribers = Camp::getCampSubscribers($statement->topic_num, $statement->camp_num);
             // $link = 'statement/history/' . $id . '/' . $statement->camp_num . '?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $statement->go_live_time);
             $link = 'statement/history/' . $statement->topic_num . '/' . $statement->camp_num;
@@ -1071,7 +1071,7 @@ class TopicController extends Controller {
             $camp->grace_period = 0;
             $camp->update();
 
-            $directSupporter = Support::getDirectSupporter($camp->topic_num, $camp->camp_num);
+            $directSupporter = Support::getAllDirectSupporters($camp->topic_num, $camp->camp_num);
             $subscribers = Camp::getCampSubscribers($camp->topic_num, $camp->camp_num);
             //$link = 'camp/history/' . $id . '/' . $camp->camp_num . '?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $camp->go_live_time);
             $link = 'camp/history/' . $camp->topic_num . '/' . $camp->camp_num;
@@ -1094,7 +1094,7 @@ class TopicController extends Controller {
             $topic = Topic::where('id', '=', $id)->first();
             $topic->grace_period = 0;
             $topic->update();
-            $directSupporter = Support::getDirectSupporter($topic->topic_num);          
+            $directSupporter = Support::getAllDirectSupporters($topic->topic_num);          
             $subscribers = Camp::getCampSubscribers($topic->topic_num, 1);
              // $link = 'topic/' . $topic->topic_num . '/' . $topic->camp_num . '?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $topic->go_live_time);
             $link = 'topic-history/' . $topic->topic_num;

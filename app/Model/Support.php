@@ -74,7 +74,20 @@ class Support extends Model {
 		return  $supportFlag;
 	   
 	}	
-	
+	public static function getAllDirectSupporters($topic_num,$camp_num=1){
+        $camp  = Camp::getLiveCamp($topic_num, $camp_num);
+        $subCampIds = array_unique(Camp::getAllChildCamps($camp));
+        $directSupporter = [];
+        $alreadyExists = [];
+        foreach ($subCampIds as $camp_id) {            
+            $data = self::getDirectSupporter($topic_num, $camp_id);
+            if(!in_array($data[0]->nick_name_id, $alreadyExists,TRUE)){
+                $directSupporter[] = $data[0];
+                $alreadyExists[] = $data[0]->nick_name_id;
+            }
+        }
+        return $directSupporter;
+    }
 	public static function getDirectSupporter($topic_num,$camp_num=1) {
 		$as_of_time = time();
 		return Support::where('topic_num','=',$topic_num)

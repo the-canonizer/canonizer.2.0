@@ -436,7 +436,7 @@ class SettingsController extends Controller {
                 $result['subject'] = $nickName->nick_name . " has just delegated their support to ".$parentUser->first_name." ".$parentUser->last_name;
                 $result['delegated_user'] = $parentUser->first_name." ".$parentUser->last_name;
                 $subscribers = Camp::getCampSubscribers($data['topic_num'], $data['camp_num']);
-                $directSupporter = Support::getDirectSupporter($data['topic_num'], $data['camp_num']);
+                $directSupporter = Support::getAllDirectSupporters($data['topic_num'], $data['camp_num']);
                 $this->mailSubscribersAndSupporters($directSupporter,$subscribers, $link, $result);
                 //$this->mailSubscribers($subscribers, $link, $result,$alreadyMailed); 
                 /* end of email */
@@ -518,7 +518,7 @@ class SettingsController extends Controller {
             $result['subject'] = $nickName->nick_name . " has added their support to ".$result['object'].".";
             $link = 'topic/' . $data['topic_num'] . '/' . $data['camp_num'];
             $subscribers = Camp::getCampSubscribers($data['topic_num'], $data['camp_num']);
-            $directSupporter = Support::getDirectSupporter($data['topic_num'], $data['camp_num']);
+            $directSupporter = Support::getAllDirectSupporters($data['topic_num'], $data['camp_num']);
             $result['support_added'] = 1;
             $this->mailSubscribersAndSupporters($directSupporter,$subscribers, $link, $result);
             
@@ -536,7 +536,7 @@ class SettingsController extends Controller {
             $result['subject'] = $nickName->nick_name . " has removed their support from ".$result['object'].".";
             $link = 'topic/' . $data['topic_num'] . '/' . $data['camp_num'];
             $subscribers = Camp::getCampSubscribers($data['topic_num'], $data['camp_num']);
-            $directSupporter = Support::getDirectSupporter($data['topic_num'], $data['camp_num']);
+            $directSupporter = Support::getAllDirectSupporters($data['topic_num'], $data['camp_num']);
             $result['support_deleted'] = 1;
             $this->mailSubscribersAndSupporters($directSupporter,$subscribers, $link, $result);            
     }
