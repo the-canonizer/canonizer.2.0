@@ -76,13 +76,13 @@ class CommonForumFunctions
                 }
             }            
         }
-
+        $filtered_bcc_user = array_unique($bcc_user);
         $filtered_sub_user = array_unique(array_filter($sub_bcc_user,function($e) use($userExist){
             return !in_array($e->id, $userExist);
         }));
 
-        if(isset($bcc_user) && count($bcc_user) > 0){
-            foreach($bcc_user as $user){
+        if(isset($filtered_bcc_user) && count($filtered_bcc_user) > 0){
+            foreach($filtered_bcc_user as $user){
                 $bcc_email = CommonForumFunctions::getReceiver($user->email);
                 $data['support_list'] = $support_list[$user->id];
                 if(isset($supporter_and_subscriber[$user->id]) && isset($supporter_and_subscriber[$user->id]['also_subscriber']) && $supporter_and_subscriber[$user->id]['also_subscriber']){
@@ -165,12 +165,14 @@ class CommonForumFunctions
                     }
             }
         }
-
+        $filtered_bcc_user = array_unique($bcc_user);
         $filtered_sub_user = array_unique(array_filter($sub_bcc_user,function($e) use($userExist){
             return !in_array($e->id, $userExist);
         }));
-         if(isset($bcc_user) && count($bcc_user) > 0){
-            foreach($bcc_user as $user){
+
+         if(isset($filtered_bcc_user) && count($filtered_bcc_user) > 0){
+
+            foreach($filtered_bcc_user as $user){
                 $bcc_email = CommonForumFunctions::getReceiver($user->email);
 
                 $data['support_list'] = $support_list[$user->id];
