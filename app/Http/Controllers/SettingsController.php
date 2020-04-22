@@ -459,9 +459,8 @@ class SettingsController extends Controller
     private function mailSubscribersAndSupporters($directSupporter, $subscribers, $link, $dataObject)
     {
         $alreadyMailed = [];
-        $supportData = $dataObject;
-        $subscriberData = $dataObject;
         foreach ($directSupporter as $supporter) {
+             $supportData = $dataObject;
             $user = Nickname::getUserByNickName($supporter->nick_name_id);
             $alreadyMailed[] = $user->id;
             $topic = \App\Model\Topic::where('topic_num', '=', $supportData['topic_num'])->latest('submit_time')->get();
@@ -469,7 +468,7 @@ class SettingsController extends Controller
             $nickName = \App\Model\Nickname::find($supporter->nick_name_id);
             $supported_camp = $nickName->getSupportCampList($topic_name_space_id);
             $supported_camp_list = $nickName->getSupportCampListNamesEmail($supported_camp, $supportData['topic_num']);
-            $supportData['support_list'] = $supported_camp_list;
+             $supportData['support_list'] = $supported_camp_list;
             $ifalsoSubscriber = Camp::checkifSubscriber($subscribers, $user);
             if ($ifalsoSubscriber) {
                 $supportData['also_subscriber'] = 1;
@@ -477,17 +476,18 @@ class SettingsController extends Controller
             }
 
             $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
+
             Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new NewDelegatedSupporterMail($user, $link, $supportData));
         }
         
         foreach ($subscribers as $usr) {
+            $subscriberData = $dataObject;
             $userSub = \App\User::find($usr);
             if (!in_array($userSub->id, $alreadyMailed, TRUE)) {
                 $alreadyMailed[] = $userSub->id;
                 $subscriptions_list = Camp::getSubscriptionList($userSub->id, $subscriberData['topic_num']);
                 $subscriberData['support_list'] = $subscriptions_list;
-
-                $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $userSub->email : config('app.admin_email');
+               $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $userSub->email : config('app.admin_email');
                 $subscriberData['subscriber'] = 1;
                 Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new NewDelegatedSupporterMail($userSub, $link, $subscriberData));
             }

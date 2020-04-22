@@ -1118,9 +1118,8 @@ class TopicController extends Controller {
     private function mailSubscribersAndSupporters($directSupporter,$subscribers,$link, $dataObject){
         $alreadyMailed = [];
         $i=0;
+        foreach ($directSupporter as $supporter) {            
         $supportData = $dataObject;
-        $subscriberData = $dataObject;
-        foreach ($directSupporter as $supporter) {
          $user = Nickname::getUserByNickName($supporter->nick_name_id);
          $alreadyMailed[] = $user->id;
          $topic = \App\Model\Topic::where('topic_num','=',$supportData['topic_num'])->latest('submit_time')->get();
@@ -1139,7 +1138,8 @@ class TopicController extends Controller {
          Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new PurposedToSupportersMail($user, $link, $supportData));
         }
 
-        foreach ($subscribers as $usr) {
+        foreach ($subscribers as $usr) {            
+            $subscriberData = $dataObject;
             $userSub = \App\User::find($usr);
             if(!in_array($userSub->id, $alreadyMailed,TRUE)){
                 $alreadyMailed[] = $userSub->id;
