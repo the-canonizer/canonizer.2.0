@@ -946,5 +946,9 @@ class Camp extends Model {
 
     }
 
+    public static function clearChildCampArray(){
+        self::$chilcampArray=[];
+    }
+
 
 }

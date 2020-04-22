@@ -459,10 +459,8 @@ class SettingsController extends Controller
     private function mailSubscribersAndSupporters($directSupporter, $subscribers, $link, $dataObject)
     {
         $alreadyMailed = [];
-        $supportData=[];
-        $subscriberData = [];
         foreach ($directSupporter as $supporter) {
-            $supportData = $dataObject;
+             $supportData = $dataObject;
             $user = Nickname::getUserByNickName($supporter->nick_name_id);
             $alreadyMailed[] = $user->id;
             $topic = \App\Model\Topic::where('topic_num', '=', $supportData['topic_num'])->latest('submit_time')->get();

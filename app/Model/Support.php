@@ -77,6 +77,7 @@ class Support extends Model {
 	public static function getAllDirectSupporters($topic_num,$camp_num=1){
         $camp  = Camp::getLiveCamp($topic_num, $camp_num);
         $subCampIds = array_unique(Camp::getAllChildCamps($camp));
+        Camp::clearChildCampArray();
         $directSupporter = [];
         $alreadyExists = [];
         foreach ($subCampIds as $camp_id) {            
