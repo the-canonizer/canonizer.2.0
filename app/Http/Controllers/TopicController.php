@@ -1118,35 +1118,36 @@ class TopicController extends Controller {
     private function mailSubscribersAndSupporters($directSupporter,$subscribers,$link, $dataObject){
         $alreadyMailed = [];
         $i=0;
-
+        $supportData = $dataObject;
+        $subscriberData = $dataObject;
         foreach ($directSupporter as $supporter) {
          $user = Nickname::getUserByNickName($supporter->nick_name_id);
          $alreadyMailed[] = $user->id;
-         $topic = \App\Model\Topic::where('topic_num','=',$dataObject['topic_num'])->latest('submit_time')->get();
+         $topic = \App\Model\Topic::where('topic_num','=',$supportData['topic_num'])->latest('submit_time')->get();
          $topic_name_space_id = isset($topic[0]) ? $topic[0]->namespace_id:1;
          $nickName = \App\Model\Nickname::find($supporter->nick_name_id);
          $supported_camp = $nickName->getSupportCampList($topic_name_space_id);
-         $supported_camp_list = $nickName->getSupportCampListNamesEmail($supported_camp,$dataObject['topic_num']);
-         $dataObject['support_list'] = $supported_camp_list; 
+         $supported_camp_list = $nickName->getSupportCampListNamesEmail($supported_camp,$supportData['topic_num']);
+         $supportData['support_list'] = $supported_camp_list; 
           $ifalsoSubscriber = Camp::checkifSubscriber($subscribers,$user);
           if($ifalsoSubscriber){
-            $dataObject['also_subscriber'] = 1;
-            $dataObject['sub_support_list'] = Camp::getSubscriptionList($user->id,$dataObject['topic_num']);      
+            $supportData['also_subscriber'] = 1;
+            $supportData['sub_support_list'] = Camp::getSubscriptionList($user->id,$supportData['topic_num']);      
          }
          
          $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
-         Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new PurposedToSupportersMail($user, $link, $dataObject));
+         Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new PurposedToSupportersMail($user, $link, $supportData));
         }
 
         foreach ($subscribers as $usr) {
             $userSub = \App\User::find($usr);
             if(!in_array($userSub->id, $alreadyMailed,TRUE)){
                 $alreadyMailed[] = $userSub->id;
-                $subscriptions_list = Camp::getSubscriptionList($userSub->id,$dataObject['topic_num']);
-                $dataObject['support_list'] = $subscriptions_list; 
+                $subscriptions_list = Camp::getSubscriptionList($userSub->id,$subscriberData['topic_num']);
+                $subscriberData['support_list'] = $subscriptions_list; 
                 $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $userSub->email : config('app.admin_email');
-                $dataObject['subscriber'] = 1;
-              Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new PurposedToSupportersMail($userSub, $link, $dataObject));
+                $subscriberData['subscriber'] = 1;
+              Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new PurposedToSupportersMail($userSub, $link, $subscriberData));
             }
             
         }
