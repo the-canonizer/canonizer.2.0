@@ -436,6 +436,7 @@ class SettingsController extends Controller
                 $result['camp_num'] = $data['camp_num'];
                 $result['nick_name'] = $nickName->nick_name;
                 $result['object'] = $topic->topic_name . " / " . $camp->camp_name;
+                $result['support_camp'] = $camp->camp_name;
                 $result['subject'] = $nickName->nick_name . " has just delegated their support to you.";
                 $link = 'topic/' . $data['topic_num'] . '/' . $data['camp_num'];
                 $receiver = (config('app.env') == "production") ? $parentUser->email : config('app.admin_email');
@@ -527,6 +528,7 @@ class SettingsController extends Controller
             $result['camp_num'] = $data['camp_num'];
             $result['nick_name'] = $nickName->nick_name;
             $result['object'] = $topic->topic_name ." / ".$camp->camp_name;
+            $result['support_camp'] = $camp->camp_name;
             $result['subject'] = $nickName->nick_name . " has added their support to ".$result['object'].".";
             $link = 'topic/' . $data['topic_num'] . '/' . $data['camp_num'];
             $subscribers = Camp::getCampSubscribers($data['topic_num'], $data['camp_num']);
@@ -545,6 +547,7 @@ class SettingsController extends Controller
             $result['camp_num'] = $data['camp_num'];
             $result['nick_name'] = $nickName->nick_name;
             $result['object'] = $topic->topic_name ." / ".$camp->camp_name;
+            $result['support_camp'] = $camp->camp_name;
             $result['subject'] = $nickName->nick_name . " has removed their support from ".$result['object'].".";
             $link = 'topic/' . $data['topic_num'] . '/' . $data['camp_num'];
             $subscribers = Camp::getCampSubscribers($data['topic_num'], $data['camp_num']);
