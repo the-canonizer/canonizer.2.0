@@ -83,10 +83,13 @@ class Support extends Model {
         foreach ($subCampIds as $camp_id) {            
             $data = self::getDirectSupporter($topic_num, $camp_id);
             if(isset($data) && count($data) > 0){
-                if(!in_array($data[0]->nick_name_id, $alreadyExists,TRUE)){
-                $directSupporter[] = $data[0];
-                $alreadyExists[] = $data[0]->nick_name_id;
-            }    
+                foreach($data as $key=>$value){
+                    if(!in_array($value->nick_name_id, $alreadyExists,TRUE)){
+                        $directSupporter[] = $value;
+                         $alreadyExists[] = $value->nick_name_id;
+                     }  
+                }
+                  
             }
             
         }
