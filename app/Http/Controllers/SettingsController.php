@@ -429,12 +429,12 @@ class SettingsController extends Controller
         $topic_name_space_id = isset($topic[0]) ? $topic[0]->namespace_id : 1;
         $nickName = \App\Model\Nickname::find($data['nick_name']);
         $supported_camp = $nickName->getSupportCampList($topic_name_space_id);
-        $supported_camp_list = $nickName->getSupportCampListNamesEmail($supported_camp, $supportData['topic_num']);
+        $supported_camp_list = $nickName->getSupportCampListNamesEmail($supported_camp, $data['topic_num']);
         $dataObject['support_list'] = $supported_camp_list;
         $ifalsoSubscriber = Camp::checkifSubscriber($subscribers, $user);
         if ($ifalsoSubscriber) {
             $dataObject['also_subscriber'] = 1;
-            $dataObject['sub_support_list'] = Camp::getSubscriptionList($user->id, $supportData['topic_num']);
+            $dataObject['sub_support_list'] = Camp::getSubscriptionList($user->id, $data['topic_num']);
         }
          $receiver = (config('app.env') == "production") ? $parentUser->email : config('app.admin_email');
          Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new NewDelegatedSupporterMail($parentUser, $link, $dataObject));
