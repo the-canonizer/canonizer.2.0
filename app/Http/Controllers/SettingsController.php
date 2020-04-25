@@ -404,13 +404,13 @@ class SettingsController extends Controller
                 $result['support_camp'] = $camp->camp_name;
                 $result['subject'] = $nickName->nick_name . " has just delegated their support to you.";
                 $link = 'topic/' . $data['topic_num'] . '/' . $data['camp_num'];
-                $this->mailParentDelegetedUser($data,$link,$result);
+                $subscribers = Camp::getCampSubscribers($data['topic_num'], $data['camp_num']);
+                $directSupporter = Support::getAllDirectSupporters($data['topic_num'], $data['camp_num']);
+                $this->mailParentDelegetedUser($data,$link,$result,$subscribers);
                 //$receiver = (config('app.env') == "production") ? $parentUser->email : config('app.admin_email');
                 //Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new NewDelegatedSupporterMail($parentUser, $link, $result));
                 $result['subject'] = $nickName->nick_name . " has just delegated their support to " . $parentUser->first_name . " " . $parentUser->last_name;
                 $result['delegated_user'] = $parentUser->first_name . " " . $parentUser->last_name;
-                $subscribers = Camp::getCampSubscribers($data['topic_num'], $data['camp_num']);
-                $directSupporter = Support::getAllDirectSupporters($data['topic_num'], $data['camp_num']);
                 $this->mailSubscribersAndSupporters($directSupporter,$subscribers, $link, $result);
                 //$this->mailSubscribers($subscribers, $link, $result,$alreadyMailed); 
                 /* end of email */
@@ -423,7 +423,7 @@ class SettingsController extends Controller
         }
     }
 
-    private function mailParentDelegetedUser($data,$link,$dataObject){
+    private function mailParentDelegetedUser($data,$link,$dataObject,$subscribers){
         $parentUser = Nickname::getUserByNickName($data['delegate_nick_name_id']);
         $topic = \App\Model\Topic::where('topic_num', '=', $data['topic_num'])->latest('submit_time')->get();
         $topic_name_space_id = isset($topic[0]) ? $topic[0]->namespace_id : 1;
@@ -431,10 +431,10 @@ class SettingsController extends Controller
         $supported_camp = $nickName->getSupportCampList($topic_name_space_id);
         $supported_camp_list = $nickName->getSupportCampListNamesEmail($supported_camp, $data['topic_num']);
         $dataObject['support_list'] = $supported_camp_list;
-        $ifalsoSubscriber = Camp::checkifSubscriber($subscribers, $user);
+        $ifalsoSubscriber = Camp::checkifSubscriber($subscribers, $parentUser);
         if ($ifalsoSubscriber) {
             $dataObject['also_subscriber'] = 1;
-            $dataObject['sub_support_list'] = Camp::getSubscriptionList($user->id, $data['topic_num']);
+            $dataObject['sub_support_list'] = Camp::getSubscriptionList($parentUser->id, $data['topic_num']);
         }
          $receiver = (config('app.env') == "production") ? $parentUser->email : config('app.admin_email');
          Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new NewDelegatedSupporterMail($parentUser, $link, $dataObject));
