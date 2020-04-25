@@ -347,42 +347,7 @@ class SettingsController extends Controller
                     ->withErrors($validator)
                     ->withInput();
             }
-            /*
-              $input = $request->all();
-              // Check if camp supported already then remove duplicacy.
-              $userNicknames  = unserialize($input['userNicknames']);
-
-              $confirm_support = $input['confirm_support'];
-
-              $alreadySupport  = Support::where('topic_num',$input['topic_num'])->where('camp_num',$input['camp_num'])->where('end','=',0)->where('nick_name_id',$input['nick_name'])->get();
-              if($alreadySupport->count() > 0 ) {
-              Session::flash('error', "You have already supported this camp, you cant submit your support again.");
-              return redirect()->back();
-              }
-
-              $parentSupport = Camp::validateParentsupport($input['topic_num'],$input['camp_num'],$userNicknames,$confirm_support);
-
-              if($parentSupport==="notlive") {
-              Session::flash('error', "You cant submit your support to this camp as its not live yet.");
-              return redirect()->back();
-
-              }
-              else if($parentSupport==1) {
-
-              Session::flash('error', "You are already supporting parent camp. If you commit this support, support for that camp will be removed.");
-              Session::flash('confirm',1);
-              return redirect()->back();
-
-              }
-
-              $childSupport = Camp::validateChildsupport($input['topic_num'],$input['camp_num'],$userNicknames,$confirm_support);
-
-              if($childSupport) {
-              Session::flash('error', "You are already supporting child camp. If you commit this support, support for that camp will be removed.");
-              Session::flash('confirm',1);
-              return redirect()->back();
-              } */
-
+           
             /* Enter support record to support table */
             $data = $request->all();
             $userNicknames = Nickname::personNicknameArray();
@@ -439,8 +404,9 @@ class SettingsController extends Controller
                 $result['support_camp'] = $camp->camp_name;
                 $result['subject'] = $nickName->nick_name . " has just delegated their support to you.";
                 $link = 'topic/' . $data['topic_num'] . '/' . $data['camp_num'];
-                $receiver = (config('app.env') == "production") ? $parentUser->email : config('app.admin_email');
-                Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new NewDelegatedSupporterMail($parentUser, $link, $result));
+                $this->mailParentDelegetedUser($data,$link,$result);
+                //$receiver = (config('app.env') == "production") ? $parentUser->email : config('app.admin_email');
+                //Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new NewDelegatedSupporterMail($parentUser, $link, $result));
                 $result['subject'] = $nickName->nick_name . " has just delegated their support to " . $parentUser->first_name . " " . $parentUser->last_name;
                 $result['delegated_user'] = $parentUser->first_name . " " . $parentUser->last_name;
                 $subscribers = Camp::getCampSubscribers($data['topic_num'], $data['camp_num']);
@@ -455,6 +421,24 @@ class SettingsController extends Controller
         } else {
             return redirect()->route('login');
         }
+    }
+
+    private function mailParentDelegetedUser($data,$link,$dataObject){
+        $parentUser = Nickname::getUserByNickName($data['delegate_nick_name_id']);
+        $topic = \App\Model\Topic::where('topic_num', '=', $data['topic_num'])->latest('submit_time')->get();
+        $topic_name_space_id = isset($topic[0]) ? $topic[0]->namespace_id : 1;
+        $nickName = \App\Model\Nickname::find($data['nick_name']);
+        $supported_camp = $nickName->getSupportCampList($topic_name_space_id);
+        $supported_camp_list = $nickName->getSupportCampListNamesEmail($supported_camp, $supportData['topic_num']);
+        $dataObject['support_list'] = $supported_camp_list;
+        $ifalsoSubscriber = Camp::checkifSubscriber($subscribers, $user);
+        if ($ifalsoSubscriber) {
+            $dataObject['also_subscriber'] = 1;
+            $dataObject['sub_support_list'] = Camp::getSubscriptionList($user->id, $supportData['topic_num']);
+        }
+         $receiver = (config('app.env') == "production") ? $parentUser->email : config('app.admin_email');
+         Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new NewDelegatedSupporterMail($parentUser, $link, $dataObject));
+             
     }
 
     private function mailSubscribersAndSupporters($directSupporter, $subscribers, $link, $dataObject)
