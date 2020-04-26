@@ -1080,7 +1080,7 @@ class TopicController extends Controller {
             //$link = 'camp/history/' . $id . '/' . $camp->camp_num . '?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $camp->go_live_time);
             $link = 'camp/history/' . $camp->topic_num . '/' . $camp->camp_num;
             $data['object'] = $camp->topic->topic_name . ' / ' . $camp->camp_name;
-            $data['support_camp'] = $livecamp->camp_name;
+            $data['support_camp'] = $camp->camp_name;
             $data['type'] = 'camp : ';
             $data['typeobject'] = 'camp';
             $data['go_live_time'] = $camp->go_live_time;
