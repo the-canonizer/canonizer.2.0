@@ -1,0 +1,13 @@
+User-agent: *
+Allow:https://canonizer.com/
+Allow:/topic/*
+Allow:/forum/*
+Allow:/blog/*
+Allow:/video/*
+
+User-agent: * 
+Disallow: /topic-*/*
+Disallow:/camp/*
+Disallow:/statement/*
+Disallow:/*.js
+Disallow:/*.css
