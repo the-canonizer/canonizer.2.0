@@ -2,7 +2,7 @@
 @section('content')
 <div class="row">
     <div class="col-md-12 panel-warning">
-        @if(session()->has('success'))
+         @if(session()->has('success'))
             <div class="alert alert-success alert-dismissible"> 
                 <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
                 {!! session('success') !!}
@@ -55,6 +55,10 @@
 </div>
 
 <script>
+
+    $(document).on('click', '.close', function () {
+        $(this).parent('div').fadeOut();
+    });
     
     $(document).ready(function(){
         

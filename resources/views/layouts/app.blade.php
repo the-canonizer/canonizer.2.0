@@ -31,8 +31,7 @@
 
 
     </head>
-    <body>
-
+     <body>
         @section('sidebar')
         <nav class="navbar navbar-expand-lg" id="mainNav">
             <a class="navbar-brand" href="{{ url('/') }}">
@@ -166,11 +165,10 @@
 
                     list($controller, $action) = explode('@', $controllerAction);
 
-					$visibleRoutes = array("index","show");
+					$visibleRoutes = array("index","show","browse");
 
 					if(in_array($route,$visibleRoutes) && $controller != "CThreadsController" && $controller != "SettingsController") { ?>
-                    <ul class="lowermneu canoalgo">
-
+                    
 					<!-- set algorithm as per request -->
 					<?php
 
@@ -186,7 +184,12 @@
                     if(isset($_REQUEST['asofdate']) && $_REQUEST['asofdate']) {
                       session(['asofdateDefault'=>$_REQUEST['asofdate']]);
                     }
-					?>
+
+                    $visibleRoutes = array("index","show");
+                    if(in_array($route,$visibleRoutes) && $controller != "CThreadsController" && $controller != "SettingsController") {
+					?> 
+                        <ul class="lowermneu canoalgo">
+
                         <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Components">
                             <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#canoalgo">
                                 <span class="nav-link-text">Canonizer</span>
@@ -199,7 +202,7 @@
                                         <option value="{{ $key }}" {{ session('defaultAlgo') == $key ? 'selected' : ''}}>{{$value}}</option>
                                     @endforeach
                                     </select>
-									<a href="<?php echo url('topic/53-Canonized-Canonizer-Algorithms/2') ?>"><span>Algorithm Information</span></a>
+									<a href="<?php echo url('topic/53-Canonizer-Algorithms/1') ?>"><span>Algorithm Information</span></a>
                                 </li>
 
                                 <li>
@@ -221,7 +224,9 @@
                                 </li>
                             </ul>
                         </li>
+
                     </ul>
+                      <?php } ?>
                     <ul class="lowermneu asof">
                         <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Components">
                             <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#asof">
@@ -241,16 +246,16 @@
 										<label for="radio2">default</label>
 									</div>
 									<div class="radio radio-primary">
-										<input type="radio" <?php echo (session('asofDefault')=="bydate") ? "checked='checked'" : '';?> class="asofdate" name="asof"id="radio3" value="bydate">
-										<label for="radio3">as of (yy/mm/dd)</label>
+										<input type="radio" <?php echo (session('asofDefault')=="bydate") ? "checked='checked'" : '';?> class="asofdate" name="asof" id="radio3" value="bydate">
+										<!-- <label for="radio3">as of (yy/mm/dd)</label> -->
+                                        <label for="radio3">as of date</label>
 									</div>
 									
 									<div><input readonly type="text" id="asofdate" name="asofdate" value=""/></div>
 								    <script>
                                         <?php if(session('asofdateDefault')!=null && session('asofdateDefault')!='') { ?>
-									var date = new Date(<?= strtotime(session('asofdateDefault')) ?> * 1000).toLocaleString();
-									
-									$('#asofdate').val(date);
+    									var date = new Date(<?= strtotime(session('asofdateDefault')) ?> * 1000).toLocaleString();
+                                       $('#asofdate').val(date);
                                    <?php } ?>
 									</script>
 								</form>
@@ -266,7 +271,7 @@
 
         <div class="content-wrapper">
             @yield('content')
-        <div class="homeADDright">
+        <div id="google_ads" class="homeADDright">
 			@include('partials.advertisement')
 		</div>
             <!-- footer -->
@@ -299,23 +304,36 @@ function restrictTextField(e,limitlength){
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
-
+            var currentYear = new Date().getFullYear();
+            var yearRange = (currentYear - 2006);
+            var newDate = new Date($('#asofdate').val());
             $("#asofdate").datepicker({
+                defaultDate:newDate,
                 changeMonth: true,
                 changeYear: true,
-				dateFormat: 'yy/mm/dd'
+				dateFormat: 'yy/mm/dd',
+                yearRange: "-"+yearRange+":+0",
+                onSelect: function () {
+                         $('#as_of').submit();
+                }
             });
-
-			$(".asofdate, #asofdate").change(function(){
+             <?php    if(session('asofDefault')!=null && session('asofDefault') !='bydate'){ ?>
+                    $("#asofdate").prop('disabled','disabled');
+              <?php } ?>
+            
+            $(".asofdate, #asofdate").change(function(){
 				// Do something interesting here
 				 var value = $('#asofdate').val();
-
-				 var bydate = $("input[name='asof']:checked"). val();
-
-				 if(value=="" && bydate == 'bydate') {
+                 var bydate = $("input[name='asof']:checked"). val();  
+                 if(value=="" && bydate == 'bydate') {
 					 $('#asofdate').focus();
-				  return false;
-				 }
+                    return false;
+				 }else if(value !='' && bydate == 'bydate'){
+                     $("#asofdate").removeAttr('disabled');
+                     //return false;
+                 }else if(bydate!='bydate'){
+                    $('#asofdate').prop('disabled','disabled');
+                 }
 				 $('#as_of').submit();
 			});
 

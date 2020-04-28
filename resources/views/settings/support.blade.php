@@ -3,7 +3,6 @@
 <div class="page-titlePnl">
     <h1 class="page-title">Supported Camps</h1>
 </div> 
-
 @if(!Session::has('success') && Session::has('warning'))
 <div class="alert alert-danger">
     <strong>Warning! </strong>{{ Session::get('warning')}} 

@@ -17,23 +17,26 @@ class HomeController extends Controller {
 
     public function __construct() {
         parent::__construct();
-    }
-
-    public function index(Request $request, $params = null) {
         if (Auth::check()) {
             if (!session('defaultUserAlgo')) {
                 $defaultAlgo = Auth::user()->default_algo;
-                session(['defaultAlgo' => $defaultAlgo]);
-                session(['defaultUserAlgo' => $defaultAlgo]);
+                 session()->put('defaultAlgo',$defaultAlgo);
+                 session()->put('defaultUserAlgo',$defaultAlgo);
             }
-
-            if(isset($_REQUEST['asof']) && $_REQUEST['asof']!=''){
-                session(['asofDefault'=>$_REQUEST['asof']]);
+         }
+          if(isset($_REQUEST['asof']) && $_REQUEST['asof']!=''){
+                //session(['asofDefault'=>$_REQUEST['asof']]);
+                session()->put('asofDefault',$_REQUEST['asof']);
             }
             if(isset($_REQUEST['asofdate']) && $_REQUEST['asofdate']!=''){
-                session(['asofdateDefault'=>$_REQUEST['asofdate']]);
+                //session(['asofdateDefault'=>$_REQUEST['asofdate']]);
+                session()->put('asofdateDefault',$_REQUEST['asofdate']);
             }
-        }
+            session()->save();
+    }
+
+    public function index(Request $request, $params = null) {
+        
 		//session()->flush();
         $namespaces = Namespaces::all();
 		//config('app.front_page_limit')

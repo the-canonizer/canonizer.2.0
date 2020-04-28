@@ -43,7 +43,7 @@
                             $camp = \App\Model\Camp::getLiveCamp($support->topic_num,$support->camp_num);
                          ?>
 					   <div id="positions_{{ $support->support_id }}" class="SpCmpBDY support_camp support-sorter-element ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
-					     <form onsubmit="return confirm('Do you really want to delete this support ?');" action="{{ route('settings.support.delete')}}" id="support-{{$support->support_id}}" method="post">
+					     <form onsubmit="return confirm('Do you really want to remove this support ?');" action="{{ route('settings.support.delete')}}" id="support-{{$support->support_id}}" method="post">
 						    <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
 							<input type="hidden" id="support_id_{{ $support->support_id }}" name="support_id" value="{{ $support->support_id }}">

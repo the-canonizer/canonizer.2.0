@@ -13,7 +13,14 @@
 </div>
 @endif
 
-<?php if(count($topic) > 0 ) { ?>
+<div id="camp_subscription_notify"  style="display:none;" class="alert alert-success">
+    <div calss="row">
+                <strong>Success!</strong> <span id="subscription_msg" ></span>
+        </div>       
+</div>
+
+<?php 
+if(isset($topic) && count($topic) > 0 ) { ?>
 
 <div class="camp top-head">
     <h3><b>Topic:</b> {{ $topic->topic_name}}</h3>
@@ -42,7 +49,7 @@
         
          <div class="Scolor-Pnl">
             <h3>Canonizer Sorted Camp Tree
-            <a href="#" class="pull-right" data-toggle="tooltip" data-placement="left" title="This section is a table of contents for this topic. It is in outline or tree form, with supporting sub camps indented from the
+			<a href="#" class="pull-right" data-toggle="tooltip" data-placement="left" title="This section is a table of contents for this topic. It is in outline or tree form, with supporting sub camps indented from the
             parent camp.  If you are in a sub camp, you are also counted in all
             parent camps including the agreement camp at the top.  The numbers are
             canonized scores derived from the people in the camps based on your
@@ -51,8 +58,21 @@
             page which can contain a statement of belief.  The green line
             indicates the camp page you are currently on and the statement below
             is for that camp."><i class="fa fa-question"></i></a>
+            <input type="hidden" id="subs_id" value="<?php echo ($camp_subscription_data && count($camp_subscription_data) > 0) ? $camp_subscription_data[0]->id: null; ?>" />
              <a class="pull-right news-feed" href="{{ url('/addnews/' . $id . '/' . $parentcampnum)}}">Add News</a>
+             <?php if(Auth::check() && Auth::user()->id && $camp_subscriptions == 1){  ?>
+                <a style="float: right;font-size: medium; margin-right: 20px; margin-top: 5px;"><input id="camp_subscription" type="checkbox" name="subscribe" checked="checked" /> Subscribe</a>
+            <?php }else if(Auth::check() && Auth::user()->id && isset($subscribedCamp) && isset($subscribedCamp->topic_num)  && $camp_subscriptions == 2){ 
+                 $title = preg_replace('/[^A-Za-z0-9\-]/', '-', $subscribedCamp->topic->topic_name);
+                 $topic_id = $subscribedCamp->topic_num . "-" . $title;
+             ?> 
+                <a href="{{ url('topic/'.$topic_id.'/'.$subscribedCamp->camp_num)}}"  data-toggle="tooltip" data-placement="top" title="You are subscribed to  {{$subscribedCamp->camp_name}} camp" style="float: right;font-size: medium; margin-right: 20px; margin-top: 5px;"><input disabled="true" id="camp_subscription" type="checkbox" name="subscribe" checked="checked" /> Subscribe</a>
+            <?php }else if(Auth::check() && Auth::user()->id){ ?>
+                <a style="float: right;font-size: medium; margin-right: 20px; margin-top: 5px;"><input id="camp_subscription" type="checkbox" name="subscribe" /> Subscribe</a>
+            <?php } ?>
+            
             </h3>
+			
             <div class="content">
             <div class="row">
                 <div class="tree treeview col-sm-12">
@@ -191,9 +211,20 @@ change camps with them."><i class="fa fa-question"></i></a>
             </div>
         </div>
      <?php } else { ?>
-	  <div>
-	   No camp data available.
-	  </div>
+	  <div class="right-whitePnl">
+        <div class="container-fluid">
+                <div class="Scolor-Pnl">
+                    <form name="as_of" id="as_of_form" method="GET">
+                     <input type="hidden" id="filter" name="filter" value="0.00"/>
+                       <input type="hidden" name="_token" value="{{ csrf_token() }}">                   
+                       <input type="hidden"  name="asof"  value="bydate">
+                       <input hidden type="text" id="asofdatenew" name="asofdate" value="<?php echo $campData[0]->go_live_time; ?>"/>
+                        <h3>This camp was first created on <a href="javascript:void(0);" onClick="submitAsOfForm()">
+                            <?php (count($campData) > 0) ? to_local_time($campData[0]->submit_time) :'' ;?></a></h3>
+                    </form>            
+                </div>
+        </div>              
+        </div>
 	 <?php } ?>
     </div>
 	<div class="post"> </div>
@@ -201,24 +232,55 @@ change camps with them."><i class="fa fa-question"></i></a>
 </div>  <!-- /.right-whitePnl-->
 
 <?php } else { ?>
- <div class="Scolor-Pnl">
-            <h3>Topic does not have any record for selected date.
-            </h3>
-            
-</div>
-<br/>
-<br/>
-<br/>
-<br/>
+    <div class="right-whitePnl">
+    <div class="container-fluid">
+            <div class="Scolor-Pnl">
+                <form name="as_of" id="as_of_form" method="GET">
+                 <input type="hidden" id="filter" name="filter" value="0.00"/>
+                   <input type="hidden" name="_token" value="{{ csrf_token() }}">                   
+                   <input type="hidden"  name="asof"  value="bydate">
+                   <input hidden type="text" id="asofdatenew" name="asofdate" value="<?php echo $topicData[0]->go_live_time; ?>"/>
+                    <h3>This topic was first created on <a href="javascript:void(0);" onClick="submitAsOfForm()">
+                        <?php (count($topicData) > 0) ? to_local_time($topicData[0]->submit_time) :'' ;?></a></h3>
+                </form>            
+            </div>
+    </div>              
+    </div>
 <?php } ?>
 <script>
-
+function submitAsOfForm(){
+    var dateVal = $('#asofdatenew').val();
+    var dateString = new Date(dateVal * 1000).toUTCString();
+     $('#asofdatenew').val(dateString);
+    $('#as_of_form').submit();
+}
 var type = window.location.hash.substr(1);
 if(type=="statement") {
   $('html, body').animate({
         scrollTop: $("#statement").offset().top
     }, 2000);
 }	
+<?php if(isset($topic) && count($topic) > 0) { ?>
+$('#camp_subscription').click(function(){
+    var isChecked = $(this).prop('checked');
+    var userId = '<?php echo (Auth::check()) ?  Auth::user()->id: null; ?>';
+    var topic_num = <?php echo $topic->topic_num; ?>;
+    var camp_num = <?php echo $parentcampnum; ?>;
+    var subscrip_id = $("#subs_id").val();
+    $.ajax({
+        type:'POST',
+        url:"{{ route('camp.subscription')}}",
+        data:{id:subscrip_id,userid:userId,camp_num:camp_num,topic_num:topic_num,checked:isChecked, _token:"{{csrf_token()}}"},
+        success:function(res){
+          $('#subscription_msg').html(res.message);
+          $('#camp_subscription_notify').show().fadeOut(5000);
+          $("#subs_id").val(res.id);
+        }
+    })
+
+})
+<?php } ?>
+
 </script>	
 @endsection
 	

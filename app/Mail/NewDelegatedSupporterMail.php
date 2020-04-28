@@ -34,6 +34,6 @@ class NewDelegatedSupporterMail extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.newdelegatedsupporter')->subject($this->data['subject']);
+        return $this->markdown('emails.newdelegatedsupporter')->subject(config('app.mail_env').$this->data['subject']);
     }
 }

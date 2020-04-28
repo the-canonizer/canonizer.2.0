@@ -27,11 +27,13 @@ class Nickname extends Model {
     }
 
     public static function personNickname() {
-
+         if (Auth::check()) {
         $userid = Auth::user()->id;
         $encode = General::canon_encode($userid);
 
         return DB::table('nick_name')->select('id', 'nick_name')->where('owner_code', $encode)->orderBy('nick_name', 'ASC')->get();
+       }
+       return [];
     }
 
     public static function personNicknameArray() {
@@ -40,7 +42,6 @@ class Nickname extends Model {
         $nicknames = self::personNickname();
 
         foreach ($nicknames as $nickname) {
-
             $userNickname[] = $nickname->id;
         }
         return $userNickname;
@@ -67,6 +68,27 @@ class Nickname extends Model {
         }       
       return $returnHtml;                  
     }
+    public function getSupportCampListNamesEmail($supported_camp = [],$topic_num){
+        $returnHtml = [];
+        if(sizeof($supported_camp) > 0){
+            foreach ($supported_camp as $key => $value) {
+                 if($key == $topic_num){
+                    $h = 1;
+                    if(isset($value['array'])){
+                        ksort($value['array']);
+                    foreach($value['array'] as $i => $supportData ){
+                        foreach($supportData as $j => $support){
+                              $returnHtml[]=  '<a href="'.$support['link'].'">'.$support['camp_name'].'</a>'; 
+                            }
+                        }
+                    }else{
+                       $returnHtml[] =  '<a href="'.$value['link'].'">'.$value['camp_name'].'</a>'; 
+                    }
+               }                
+            }
+        }       
+      return $returnHtml;                  
+    }
     public function getSupportCampList($namespace = 1) {
 
         $as_of_time = time();
@@ -76,9 +98,15 @@ class Nickname extends Model {
 
         if (isset($_REQUEST['asof']) && $_REQUEST['asof'] == 'review') {
             
-        } else if (isset($_REQUEST['asof']) && $_REQUEST['asof'] == 'bydate') {
-            $as_of_time = strtotime(date('Y-m-d H:i:s', strtotime($_REQUEST['asofdate'])));
-            $as_of_clause = "and go_live_time < $as_of_time";
+        } else if ((isset($_REQUEST['asof']) && $_REQUEST['asof'] == 'bydate') || (session()->has('asofDefault') && session('asofDefault') == 'bydate' && !isset($_REQUEST['asof']))) {
+            if(isset($_REQUEST['asof']) && $_REQUEST['asof'] == "bydate"){
+                 $as_of_time = strtotime(date('Y-m-d H:i:s', strtotime($_REQUEST['asofdate'])));
+                $as_of_clause = "and go_live_time < $as_of_time";   
+            }else if(session('asofDefault') == 'bydate' && !isset($_REQUEST['asof'])){
+                $as_of_time = strtotime(session('asofdateDefault'));
+                $as_of_clause = "and go_live_time < $as_of_time";
+            }
+            
         } else {
             $as_of_clause = 'and go_live_time < ' . $as_of_time;
         }
@@ -99,14 +127,21 @@ class Nickname extends Model {
         foreach ($results as $rs) {
             $topic_num = $rs->topic_num;
             $camp_num = $rs->camp_num;
-            $title = preg_replace('/[^A-Za-z0-9\-]/', '-', $rs->camp_name);
+            $title = preg_replace('/[^A-Za-z0-9\-]/', '-', ($rs->title != '') ? $rs->title : $rs->camp_name);
             $topic_id = $topic_num . "-" . $title;
-            if ($rs->delegate_nick_name_id) {
-                
+            if ($rs->delegate_nick_name_id && $camp_num != 1 ) {
+                $supports[$topic_num]['array'][$rs->support_order][] = ['camp_name' => $rs->camp_name, 'camp_num' => $camp_num, 'link' => url('topic/' . $topic_id . '/' . $camp_num),'delegate_nick_name_id'=>$rs->delegate_nick_name_id];
             } else if ($camp_num == 1) {
+                if($rs->title ==''){
+                    $topicData = \App\Model\Topic::where('topic_num','=',$topic_num)->where('go_live_time', '<=', time())->latest('submit_time')->get();
+                    $title = preg_replace('/[^A-Za-z0-9\-]/', '-', $topicData[0]->topic_name);
+                     $topic_id = $topic_num . "-" . $title;
+                }
                 $supports[$topic_num]['camp_name'] = ($rs->camp_name != "") ? $rs->camp_name : $rs->title;
-
                 $supports[$topic_num]['link'] = url('topic/' . $topic_id . '/' . $camp_num);
+                if($rs->delegate_nick_name_id){
+                    $supports[$topic_num]['delegate_nick_name_id'] = $rs->delegate_nick_name_id;
+                }
             } else {
                 $supports[$topic_num]['array'][$rs->support_order][] = ['camp_name' => $rs->camp_name, 'camp_num' => $camp_num, 'link' => url('topic/' . $topic_id . '/' . $camp_num)];
             }

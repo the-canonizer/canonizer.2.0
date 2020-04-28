@@ -74,7 +74,27 @@ class Support extends Model {
 		return  $supportFlag;
 	   
 	}	
-	
+	public static function getAllDirectSupporters($topic_num,$camp_num=1){
+        $camp  = Camp::getLiveCamp($topic_num, $camp_num);
+        Camp::clearChildCampArray();
+        $subCampIds = array_unique(Camp::getAllChildCamps($camp));
+        $directSupporter = [];
+        $alreadyExists = [];
+        foreach ($subCampIds as $camp_id) {            
+            $data = self::getDirectSupporter($topic_num, $camp_id);
+            if(isset($data) && count($data) > 0){
+                foreach($data as $key=>$value){
+                    if(!in_array($value->nick_name_id, $alreadyExists,TRUE)){
+                        $directSupporter[] = $value;
+                         $alreadyExists[] = $value->nick_name_id;
+                     }  
+                }
+                  
+            }
+            
+        }
+        return $directSupporter;
+    }
 	public static function getDirectSupporter($topic_num,$camp_num=1) {
 		$as_of_time = time();
 		return Support::where('topic_num','=',$topic_num)
@@ -87,8 +107,13 @@ class Support extends Model {
                         ->get();
 	}
         
-        public static function ifIamSupporter($topinum,$campnum,$nickNames){
-            $support = self::where('topic_num','=',$topinum)->where('camp_num','=',$campnum)->whereIn('nick_name_id',$nickNames)->where('delegate_nick_name_id',0)->where('end','=',0)->first();
+        public static function ifIamSupporter($topinum,$campnum,$nickNames,$submit_time = null){
+            if($submit_time){
+                $support = self::where('topic_num','=',$topinum)->where('camp_num','=',$campnum)->whereIn('nick_name_id',$nickNames)->where('delegate_nick_name_id',0)->where('end','=',0)->where('start','<=',$submit_time)->first();
+            }else{
+                $support = self::where('topic_num','=',$topinum)->where('camp_num','=',$campnum)->whereIn('nick_name_id',$nickNames)->where('delegate_nick_name_id',0)->where('end','=',0)->first();
+            }
+            
             return count($support) ? $support->nick_name_id : 0 ;
         }
         

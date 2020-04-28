@@ -11,7 +11,7 @@ body.sticky-footer {
     margin-bottom: 56px;
 }
 body.sticky-footer .right-whitePnl {
-    min-height: calc(100vh - 56px - 56px);
+    min-height: calc(100vh - 56px);
 }
 body.fixed-nav {
     padding-top: 56px;
@@ -23,7 +23,7 @@ body.fixed-nav {
     cursor:pointer;
 }
 .right-whitePnl {
-    min-height: calc(100vh - 56px);
+    min-height: calc(100vh - 16px);
     padding:2rem 1rem 0px;
 }
 ul.support-tree li {

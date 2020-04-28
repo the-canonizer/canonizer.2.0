@@ -10,9 +10,9 @@
                     
                    if ($currentLive != 1 && $currentTime >= $data->go_live_time && $data->objector_nick_id == NULL) {
                         $currentLive = 1;
-                      $topicBreadName = $data->topic_name; 
-					  $topicNum = $data->topic_num;
-					  $urltitle      = $topicNum."-".preg_replace('/[^A-Za-z0-9\-]/', '-', $data->topic_name);
+                       $topicBreadName = $data->topic_name; 
+					             $topicNum = $data->topic_num;
+					             $urltitle      = $topicNum."-".preg_replace('/[^A-Za-z0-9\-]/', '-', $data->topic_name);
                     } 
 				}	
                     ?>
@@ -71,12 +71,17 @@
                 $currentTime = time();
                 foreach ($topics as $key => $data) {
                     $nickNamesData = \App\Model\Nickname::personNicknameArray();
-                     $support = \App\Model\Support::where('topic_num',$data->topic_num)->whereIn('nick_name_id',$nickNamesData)->where('end','=',0)->orderBy('support_order','ASC')->get();
-                             if(sizeof($support) > 0){
-                                 if(!$ifIamSupporter){
-                                    $ifIamSupporter = $support[0]->nick_name_id;
-                                  }
-                              }
+                    if($submit_time){
+                      $support = \App\Model\Support::where('topic_num',$data->topic_num)->whereIn('nick_name_id',$nickNamesData)->where('end','=',0)->where('start','<=',$submit_time)->orderBy('support_order','ASC')->get();
+                    }else{
+                      $support = \App\Model\Support::where('topic_num',$data->topic_num)->whereIn('nick_name_id',$nickNamesData)->where('end','=',0)->orderBy('support_order','ASC')->get();
+                    }
+                     
+                     if(sizeof($support) > 0){
+                         if(!$ifIamSupporter){
+                            $ifIamSupporter = $support[0]->nick_name_id;
+                          }
+                      }
                     $isagreeFlag = false;
                     $isGraceFlag = false;
                     $submittime = $data->submit_time;
@@ -111,7 +116,8 @@
                                  });
 
                                  function timeisUp() {
-                                     notifyAndCloseTimer('<?php echo $data->id ;?>');                                                                                                                              }
+                                     notifyAndCloseTimer('<?php echo $data->id ;?>');                                                
+                                   }
                                  });
                            </script>
                        <?php }} 
@@ -149,7 +155,8 @@
                                      //$('#version').attr('href',href);
                                  </script>
 
-                        </div> 	
+                        </div> 
+                        @if(Auth::check())	
                          @if($isagreeFlag && $ifIamSupporter && Auth::user()->id != $submitterUserID)
                             <div class="CmpHistoryPnl-footer">
                                 <div>
@@ -158,7 +165,7 @@
                             </div>
                          @endif
                          
-                          @if(Auth::check())
+                          
                           @if(Auth::user()->id == $submitterUserID && $isGraceFlag && $data->grace_period && $interval > 0)
                           <div class="CmpHistoryPnl-footer" id="countdowntimer_block<?php echo $data->id ;?>">
                                 <div class="grace-period-note"><b>Note: </b>This countdown timer is the grace period in which you can make minor changes to your topic before other direct supporters are notified.</div>

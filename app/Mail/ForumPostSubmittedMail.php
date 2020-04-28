@@ -29,7 +29,7 @@ class ForumPostSubmittedMail extends Mailable
     public function build()
     {
         return $this->markdown('emails.forumpostsubmitemail')->
-                      subject($this->data['subject']);
+                      subject(config('app.mail_env').$this->data['subject']);
     }
 }
 

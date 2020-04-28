@@ -21,3 +21,5 @@ RewriteRule (.*?)index\.php*(.*) /$1$2 [R=301,NE,L]
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 </IfModule>
+
+

@@ -155,7 +155,7 @@ class RegisterController extends Controller
         $user->otp='';
         $user->update();
         // send help link in email
-        $link = 'topic/38-Canonized-help-statement-text/1';		
+        $link = 'topic/132-Help/1';		
         Mail::to($user->email)->bcc(config('app.admin_bcc'))->send(new WelcomeMail($user,$link));
         
         Auth::guard()->login($user);

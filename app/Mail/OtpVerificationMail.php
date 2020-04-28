@@ -30,6 +30,6 @@ class OtpVerificationMail extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.registeration_otp')->subject('One Time Verification Code');
+        return $this->markdown('emails.registeration_otp')->subject(config('app.mail_env').'One Time Verification Code');
     }
 }

@@ -32,6 +32,6 @@ class AdminEmailCampaign extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.mailcampaign')->subject($this->template->subject);
+        return $this->markdown('emails.mailcampaign')->subject(config('app.mail_env').$this->template->subject);
     }
 }
