@@ -22,7 +22,7 @@
                 <select onchange="submitForm(this)" name="namespace" id="namespace" class="namespace-select">
                     <option value="">All</option>
                     @foreach($namespaces as $namespace)
-                        <option data-namespace="{{ $namespace->label }}" value="{{ $namespace->id }}" {{ isset($_REQUEST['namespace']) && $namespace->id == $_REQUEST['namespace'] ? 'selected' : ''}}>{{$namespace->label}}</option>
+                        <option data-namespace="{{ $namespace->label }}" value="{{ $namespace->id }}" {{ $namespace->id == session('defaultNamespaceId') ? 'selected' : ''}}>{{$namespace->label}}</option>
                     @endforeach
                 </select>
                 </div>
@@ -72,7 +72,17 @@
 </div>  <!-- /.right-whitePnl-->
 <script>
 function submitForm(element){
-    $(element).parents('form').submit();
+    changeNamespace(element);
+}
+function changeNamespace(element){
+    $.ajax({
+        url:"{{ url('/change-namespace') }}",
+        type:"POST",
+        data:{namespace:$(element).val()},
+        success:function(response){
+            $(element).parents('form').submit();
+        }
+    });
 }
 </script>
 @endsection
