@@ -64,6 +64,10 @@ Route::post('register/verify-otp', 'Auth\RegisterController@postVerifyOtp');
 //Route::post('login','Auth\LoginController@login');
 Route::get('login', [ 'as' => 'login', 'uses' => 'Auth\LoginController@showLoginForm']);
 Route::post('login', [ 'as' => 'login', 'uses' => 'Auth\LoginController@login']);
+// social login url 
+Route::get('login/{provider}', 'SocialController@redirect');
+Route::get('login/{provider}/callback','SocialController@Callback');
+
 
 
 Route::get('forgetpassword', 'Auth\ForgotPasswordController@showLinkRequestForm');
@@ -110,6 +114,7 @@ Route::group([ 'middleware' => 'auth'], function() {
      Route::get('settings/changepassword', [ 'as' => 'settings.changepassword', 'uses' => 'SettingsController@getChangePassword']);
      Route::post('settings/changepassword', [ 'as' => 'settings.changepassword.save', 'uses' => 'SettingsController@postChangePassword']);
      Route::get('settings/blockchain', [ 'as' => 'settings.blockchain', 'uses' => 'SettingsController@blockchain']);
+     Route::get('settings/sociallinks', [ 'as' => 'settings.sociallinks', 'uses' => 'SettingsController@sociallinks']);
      Route::post('settings/save-ether-address', [ 'as' => 'settings.save-ether-address', 'uses' => 'SettingsController@postSaveEtherAddress']);
     Route::post('statement/agreetochange', 'TopicController@statement_agreetochange');
     Route::post('graceperiod/notify_change', 'TopicController@notify_change');

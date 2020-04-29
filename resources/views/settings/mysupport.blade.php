@@ -29,6 +29,7 @@
                 <li><a class="" href="{{ route('settings.algo-preferences')}}">Default Algorithm</a></li>
                 <li><a class="" href="{{ route('settings.changepassword')}}">Change Password</a></li>
                 <li><a class="" href="{{ route('settings.blockchain')}}">Metamask Account</a></li>
+                 <li class=""><a class="" href="{{ route('settings.sociallinks')}}">Social Oauth Links</a></li>
             </ul>
          <div class="SupportCmp">
 		        <p style="margin-left: 15px;color:red">Note : To change support order of camp, drag & drop the camp box on your choice position. </p>

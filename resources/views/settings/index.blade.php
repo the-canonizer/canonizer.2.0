@@ -28,6 +28,7 @@
                 <li><a class="" href="{{ route('settings.algo-preferences')}}">Default Algorithm</a></li>
                 <li><a class="" href="{{ route('settings.changepassword')}}">Change Password</a></li>
                 <li><a class="" href="{{ route('settings.blockchain')}}">Metamaks Account</a></li>
+                 <li class=""><a class="" href="{{ route('settings.sociallinks')}}">Social Oauth Links</a></li>
 				
             </ul>
 

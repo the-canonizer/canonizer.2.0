@@ -32,6 +32,27 @@
  <div class="col-sm-5 margin-btm-2 lg-signup">
            <div >Don't have an account? <a href="{{ url('/register') }}">Signup Now</a></div>
      </div>
+ <div class="col-sm-12 margin-btm-2 ">
+    <p>Login or Signup with social accounts.</p>
+     <div class="form-group row">
+            <div class="col-md-2">
+                <a href="{{ url('/login/google') }}" class="btn google btn-google-plus"><i class="fa fa-google fa-fw">
+          </i> Google+</a>                 
+            </div>
+            <div class="col-md-2">
+                <a href="{{ url('/login/facebook') }}" class="btn fb btn-facebook"> <i class="fa fa-facebook fa-fw"></i> Facebook</a>                 
+            </div>
+            <div class="col-md-2">
+                <a href="{{ url('/login/twitter') }}" class="btn twitter btn-twitter"><i class="fa fa-twitter fa-fw"></i> Twitter</a>
+            </div>
+            <div class="col-md-2">
+                <a href="{{ url('/login/github') }}" class="btn github btn-github"><i class="fa fa-github fa-fw"></i> GitHub</a>
+            </div>
+            <div class="col-md-2">
+                <a href="{{ url('/login/linkedin') }}" class="btn linkedin btn-linkedin"><i class="fa fa-linkedin fa-fw"></i> Linkedin</a>
+            </div>
+        </div>
+ </div>
 </div>  <!-- /.right-whitePnl-->
 <script>
     window.onload = function() {
