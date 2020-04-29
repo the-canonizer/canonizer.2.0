@@ -248,6 +248,8 @@ class Camp extends Model {
 
         if (isset($_REQUEST['namespace']) && (!empty($_REQUEST['namespace']) || $_REQUEST['namespace'] != 0)) {
             $query->where('namespace_id', $_REQUEST['namespace']);
+        }else if( null !== session('defaultNamespaceId') && !empty(session('defaultNamespaceId'))){
+            $query->whereIn('namespace_id',explode(',', session('defaultNamespaceId', 1)));
         }
         if(isset($_REQUEST['my']) && $_REQUEST['my'] == 1){
             $query->whereIn('topic.submitter_nick_id', $nicknameIds);
