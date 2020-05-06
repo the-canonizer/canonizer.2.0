@@ -26,14 +26,11 @@ class SocialController extends Controller
 	{
 
 		try{
-			if($provider == 'twitter'){
-			$userSocial =   Socialite::driver('twitter')->user();
-       }else{
-       		if (!$request->has('code') || $request->has('denied')) {
+			if (!$request->has('code') || $request->has('denied')) {
        			 if($request->has('error') && $request->has('error_description')){
        			 	Session::flash('social_error', $request['error_description']);
        			 }else{
-       			 	Session::flash('social_error', "Error in $provider login");	
+       			 	Session::flash('social_error', "Cancelled $provider login authentication");	
        			 }
 				 if (Auth::check()) {
 				 	return redirect()->route('settings.sociallinks');
@@ -42,6 +39,10 @@ class SocialController extends Controller
 				 }
 				 
 			}
+
+			if($provider == 'twitter'){
+			$userSocial =   Socialite::driver('twitter')->user();
+       }else{
        		$userSocial =   Socialite::driver($provider)->stateless()->user();
        }
        if (Auth::check()) {
