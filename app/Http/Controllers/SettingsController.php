@@ -273,7 +273,7 @@ class SettingsController extends Controller
                             //Session::flash('warning', "You are already supporting this camp. You cant submit support again.");
                             Session::flash('confirm', 'samecamp');
                         } else {
-                            Session::flash('warning', 'The following  camp are parent camp to "' . $onecamp->camp_name . '" and will be removed if you commit this support.');
+                            Session::flash('warning', 'The following  camp is parent camp to "' . $onecamp->camp_name . '" and will be removed if you commit this support.');
                             Session::flash('confirm', 1);
                         }
                 } else {
@@ -292,7 +292,7 @@ class SettingsController extends Controller
                             //Session::flash('warning', "You are already supporting this camp. You cant submit support again.");
                             Session::flash('confirm', 'samecamp');
                         } else {
-                            Session::flash('warning', 'The following  camp are child camp to "' . $onecamp->camp_name . '" and will be removed if you commit this support.');
+                            Session::flash('warning', 'The following  camp is child camp to "' . $onecamp->camp_name . '" and will be removed if you commit this support.');
                             Session::flash('confirm', 1);
                         }
                 } else {

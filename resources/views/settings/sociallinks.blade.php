@@ -15,6 +15,11 @@
     <strong>Success! </strong>{{ Session::get('success')}}    
 </div>
 @endif
+@if(Session::has('social_error'))
+<div class="alert alert-danger">
+    <strong>Error! </strong>{{ Session::get('social_error')}} 
+</div>
+@endif 
 
 <div class="right-whitePnl">
    <div class="row justify-content-between">

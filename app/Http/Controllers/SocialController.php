@@ -8,6 +8,7 @@ use App\User;
 use App\Model\SocialUser;
 use Auth;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Session;
 use App\Mail\WelcomeMail;
 use App\Mail\OtpVerificationMail;
 use Illuminate\Auth\Events\Registered;
@@ -21,11 +22,26 @@ class SocialController extends Controller
     
    }
 
-    public function Callback($provider)
+    public function Callback(Request $request,$provider)
 	{
-		if($provider == 'twitter'){
+
+		try{
+			if($provider == 'twitter'){
 			$userSocial =   Socialite::driver('twitter')->user();
        }else{
+       		if (!$request->has('code') || $request->has('denied')) {
+       			 if($request->has('error') && $request->has('error_description')){
+       			 	Session::flash('social_error', $request['error_description']);
+       			 }else{
+       			 	Session::flash('social_error', "Error in $provider login");	
+       			 }
+				 if (Auth::check()) {
+				 	return redirect()->route('settings.sociallinks');
+				 }else{
+				 	return redirect()->route('login');	
+				 }
+				 
+			}
        		$userSocial =   Socialite::driver($provider)->stateless()->user();
        }
        if (Auth::check()) {
@@ -74,6 +90,16 @@ class SocialController extends Controller
 			 	}
         	}
     	}
+
+		}catch(Exception $e){
+			Session::flash('social_error', "Error in $provider login");
+				 if (Auth::check()) {
+				 	return redirect()->route('settings.sociallinks');
+				 }else{
+				 	return redirect()->route('login');	
+				 }
+		}
+		
         
         
 	}

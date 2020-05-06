@@ -2,7 +2,12 @@
 @section('content')
 <div class="page-titlePnl">
     <h1 class="page-title">Login</h1>
-</div>       	
+</div>     
+@if(Session::has('social_error'))
+<div class="alert alert-danger">
+    <strong>Error! </strong>{{ Session::get('social_error')}} 
+</div>
+@endif  	
 <div class="right-whitePnl">
 <div class="col-sm-5 margin-btm-2">
     <form id="login_form" action="{{ url('/login')}}" method="post">
