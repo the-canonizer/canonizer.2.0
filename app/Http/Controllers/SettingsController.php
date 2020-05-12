@@ -54,6 +54,7 @@ class SettingsController extends Controller
             'first_name' => 'required|regex:/^[a-zA-Z ]*$/|string|max:100',
             'last_name' => 'required|regex:/^[a-zA-Z ]*$/|string|max:100',
             'middle_name' => 'nullable|regex:/^[a-zA-Z ]*$/|max:100',
+            'postal_code' => 'nullable|regex:/^[a-zA-Z0-9 ]*$/|max:100',
             'country' => 'required',
         ], $messages);
 

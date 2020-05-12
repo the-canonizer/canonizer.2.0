@@ -20,7 +20,45 @@
     <strong>Error! </strong>{{ Session::get('social_error')}} 
 </div>
 @endif 
+@if(Session::has('already_exists'))
+    <div id="myModal" class="modal fade" role="dialog">
+      <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Multiple User Warning</h4>
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+         </div>
+          <div class="modal-body">
+            <p>It seems that there is already a user linked with this email id in canonizer. If that user also belongs to you than it is a violation of canonizer's agreement. So we suggest you to deactivate your another account and keep only single master account active. If you donot want to deactivate than click on cancel and try linking with aanother email id for this social account.If you wish to deactivate than select the account below and click submit</p>
+            <div class="row">
+                <div class="col-md-12"><input type="radio" name="user_deactivate" value="{{Session::get('another_user')->id}}" />
+                    {{Session::get('another_user')->first_name." ".Session::get('another_user')->last_name}}
+                </div>
 
+                <div class="col-md-12"><input type="radio" name="user_deactivate" value="{{Auth::user()->id}}" />
+                    {{Auth::user()->first_name." ".Auth::user()->last_name}}</div>
+            </div>
+            <p>Note: If you select the current user then you will be logged out of the canonizer</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" onClick="deActivateUser()" class="btn btn-success" data-dismiss="modal">Submit</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  <script type="text/javascript">
+        function deActivateUser(){
+            var user_id = $('input[name="user_deactivate"]:checked').val();
+            
+        }
+        $(window).on('load',function(){
+            $('#myModal').modal('show');
+        });
+    </script>
+@endif
 <div class="right-whitePnl">
    <div class="row justify-content-between">
     <div class="col-sm-12 margin-btm-2">

@@ -89,7 +89,7 @@ class Nickname extends Model {
         }       
       return $returnHtml;                  
     }
-    public function getSupportCampList($namespace = 1) {
+    public function getSupportCampList($namespace = 1,$filter = array()) {
 
         $as_of_time = time();
         $as_of_clause = '';
@@ -110,6 +110,11 @@ class Nickname extends Model {
         } else {
             $as_of_clause = 'and go_live_time < ' . $as_of_time;
         }
+
+        if(isset($filter['nofilter']) && $filter['nofilter']){
+                    $as_of_time  = time();
+                    $as_of_clause = 'and go_live_time < ' . $as_of_time;
+         }
 
         $sql = "select u.topic_num, u.camp_num, u.title,u.camp_name, p.support_order, p.delegate_nick_name_id from support p, 
         (select s.title,s.topic_num,s.camp_name,s.submit_time,s.go_live_time, s.camp_num from camp s,

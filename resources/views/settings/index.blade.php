@@ -271,6 +271,7 @@
 								</br>
 								<div style="width:300px;float:left">
                                 <input type="text" name="postal_code"  onkeydown="restrictTextField(event,255)" class="form-control" id="postal_code" value="{{ old('postal_code', $user->postal_code)}}">
+                                 @if ($errors->has('postal_code')) <p class="help-block">{{ $errors->first('postal_code') }}</p> @endif
                                </div>
 								<div style="width:95px;float:right">
 								<select class="form-control" id="postal_code_bit"  name="postal_code_bit">

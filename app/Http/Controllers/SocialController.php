@@ -46,22 +46,30 @@ class SocialController extends Controller
        		$userSocial =   Socialite::driver($provider)->stateless()->user();
        }
        if (Auth::check()) {
-    		$socialUser = SocialUser::create([
-                'user_id'       => Auth::user()->id,
-                'social_email'  => $userSocial->getEmail(),
-                'provider_id'   => $userSocial->getId(),
-                'provider'      => $provider,
-            ]);
-            return redirect()->route('settings.sociallinks');
+       	 $social_user = SocialUser::where(['social_email' => $userSocial->getEmail()])->first();
+       	 	if(isset($social_user) && isset($social_user->user_id) &&  $social_user->user_id != Auth::user()->id){
+       	 		Session::flash('already_exists', "Email is already linked with another account");
+       	 		$another_user = User::where(['id' => $social_user->user_id])->first();
+       	 		return redirect()->route('settings.sociallinks')->with(['another_user' => $another_user] );
+       	 	}else{
+       	 		$socialUser = SocialUser::create([
+	                'user_id'       => Auth::user()->id,
+	                'social_email'  => $userSocial->getEmail(),
+	                'provider_id'   => $userSocial->getId(),
+	                'provider'      => $provider,
+            	]);
+            return redirect()->route('settings.sociallinks');	
+       	 	}
+    		
     	}else{
     		$social_user = SocialUser::where(['social_email' => $userSocial->getEmail(),'provider'=>$provider,'provider_id'=>$userSocial->getId()])->first();
-        if($social_user){
+        if(isset($social_user) && isset($social_user->user_id)){
         	$users       =   User::where(['id' => $social_user->user_id])->first();
         	Auth::login($users);
 		    return redirect('/');
         }else{
         		$users  =  User::where(['email' => $userSocial->getEmail()])->first();
-				if($users){
+				if(isset($user) && isset($user->email)){
 						$socialUser = SocialUser::create([
 			                'user_id'       => $users->id,
 			                'social_email'  => $userSocial->getEmail(),

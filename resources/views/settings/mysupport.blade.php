@@ -41,7 +41,7 @@
 					   <?php $topicSupport = $data->topic->Getsupports($data->topic_num,$userNickname);?>
 					   @foreach($topicSupport as $k=>$support)
                         <?php if($support->delegate_nick_name_id == 0) {
-                            $camp = \App\Model\Camp::getLiveCamp($support->topic_num,$support->camp_num);
+                            $camp = \App\Model\Camp::getLiveCamp($support->topic_num,$support->camp_num,['nofilter'=>true]);
                          ?>
 					   <div id="positions_{{ $support->support_id }}" class="SpCmpBDY support_camp support-sorter-element ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
 					     <form onsubmit="return confirm('Do you really want to remove this support ?');" action="{{ route('settings.support.delete')}}" id="support-{{$support->support_id}}" method="post">

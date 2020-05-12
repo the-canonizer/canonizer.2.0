@@ -18,7 +18,8 @@
 					 
 					 <?php
 
-					  if(isset($childSupport) && !empty($childSupport) ) { foreach($childSupport as $supportData) { 
+					  if(isset($childSupport) && !empty($childSupport) ) {
+					   foreach($childSupport as $supportData) { 
 					       $removedCampList[]=$supportData->camp->camp_num;
 					 ?>
  					  <div class="col-sm-12">   
