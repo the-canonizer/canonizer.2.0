@@ -7,6 +7,12 @@
 <div class="alert alert-danger">
     <strong>Error! </strong>{{ Session::get('social_error')}} 
 </div>
+@endif
+
+@if(Session::has('erro_login'))
+<div class="alert alert-danger">
+    <strong>Error! </strong>{{Session::get('erro_login')}} 
+</div>
 @endif  	
 <div class="right-whitePnl">
 <div class="col-sm-5 margin-btm-2">
@@ -45,7 +51,7 @@
           </i> Google+</a>                 
             </div>
             <div class="col-md-2">
-                <a href="{{ url('/login/facebook') }}" class="btn fb btn-facebook"> <i class="fa fa-facebook fa-fw"></i> Facebook</a>                 
+                <a href="{{ url('/login/facebook') }}" class="btn facebook btn-facebook"> <i class="fa fa-facebook fa-fw"></i> Facebook</a>                 
             </div>
             <div class="col-md-2">
                 <a href="{{ url('/login/twitter') }}" class="btn twitter btn-twitter"><i class="fa fa-twitter fa-fw"></i> Twitter</a>

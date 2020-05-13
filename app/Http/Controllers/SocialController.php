@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 use Socialite;
 use App\User;
 use App\Model\SocialUser;
+use App\Model\Nickname;
+use App\Model\Support;
+use App\Library\General;
 use Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
@@ -107,9 +110,49 @@ class SocialController extends Controller
 				 }else{
 				 	return redirect()->route('login');	
 				 }
+		}   
+        
+	}
+	public function deactivateuser(Request $request){
+		$input = $request->all();
+		$user_to_deactivate = $input['user_deactivate'];
+		// deactivate user
+		$user = User::where('id','=',$user_to_deactivate)->first();
+		$user->status = 0;
+		$user->save();
+		// delete all user supports 
+		$encode = General::canon_encode($user_to_deactivate);
+        //get nicknames
+        $nicknames = Nickname::where('owner_code', '=', $encode)->get();
+        $userNickname = Nickname::personNicknameArray();
+
+        $as_of_time=time()+100;
+        $supportedTopic = Support::whereIn('nick_name_id', $userNickname)
+                ->whereRaw("(start < $as_of_time) and ((end = 0) or (end > $as_of_time))")
+                ->groupBy('topic_num')->orderBy('start', 'DESC')->get();
+        if(count($supportedTopic) > 0){
+        	foreach($supportedTopic as $k=>$v){
+        		$allUserSupports = Support::where('topic_num',$v->topic_num)
+							->whereIn('nick_name_id',$userNickname)
+							->whereRaw("(start < $as_of_time) and ((end = 0) or (end > $as_of_time))")
+							->orderBy('support_order','ASC')							
+							->get();
+		 if(count($allUserSupports) > 0){
+		 	foreach($allUserSupports as $key=>$support){
+		 		  $currentSupport = Support::where('support_id', $support->support_id);
+		 		  $currentSupport->update(array('end' => time()));
+		 		}
+		 	  }
+           }
+        }
+
+        // removing linked social accounts 
+        SocialUser::where('user_id', $user_to_deactivate)->delete();
+        
+		if(Auth::user()->id == $user_to_deactivate){
+			return redirect()->route('login');
+		}else{
+			return redirect()->route('settings.sociallinks');
 		}
-		
-        
-        
 	}
 }

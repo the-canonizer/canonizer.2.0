@@ -63,7 +63,7 @@ Route::post('register/verify-otp', 'Auth\RegisterController@postVerifyOtp');
 //Route::get('login','Auth\LoginController@showLoginForm');
 //Route::post('login','Auth\LoginController@login');
 Route::get('login', [ 'as' => 'login', 'uses' => 'Auth\LoginController@showLoginForm']);
-Route::post('login', [ 'as' => 'login', 'uses' => 'Auth\LoginController@login']);
+Route::post('login', [ 'as' => 'login', 'uses' => 'Auth\LoginController@login','middleware'    => 'checkstatus']);
 // social login url 
 Route::get('login/{provider}', 'SocialController@redirect');
 Route::get('login/{provider}/callback','SocialController@Callback');
@@ -125,7 +125,7 @@ Route::group([ 'middleware' => 'auth'], function() {
     Route::get('/editnews/{topicnum}/{campnum}',['as'=>'newsfeed.edit','uses'=>'NewsFeedController@edit']);
      Route::post('/newsfeed/update',['as'=>'newsfeed.update','uses'=>'NewsFeedController@update']);
     Route::post('/camp/add_subscription',['as'=>'camp.subscription','uses'=>'TopicController@add_camp_subscription']);
-     
+    Route::post('/deactivateuser',['as'=>'social.deactivateuser','uses'=>'SocialController@deactivateuser']);
      
 });
 
