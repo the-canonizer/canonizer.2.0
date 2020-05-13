@@ -21,7 +21,7 @@ return [
     'front_page_limit'=>env('FRONT_PAGE_LIMIT', '30'),
     'go_live_day_limit'=>1,
     'go_live_text' => 'one day / 24 hours',
-    'mail_env' => '[staging.canon]',
+    'mail_env' => '[canon]',
 
     /*
     |--------------------------------------------------------------------------
