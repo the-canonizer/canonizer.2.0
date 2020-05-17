@@ -859,7 +859,7 @@ class Camp extends Model {
                $camp_subscription = \App\Model\CampSubscription::where('user_id','=',$userid)->where('camp_num','=',$campnum)->where('topic_num','=',$topicnum)->where('subscription_start','<=',strtotime(date('Y-m-d H:i:s')))->where('subscription_end','=',null)->orWhere('subscription_end','>=',strtotime(date('Y-m-d H:i:s')))->get();
                 $flag = sizeof($camp_subscription) > 0  || 0;
                  if(!$flag){
-                    $onecamp = self::getLiveCamp($topicnum, $campnum);
+                    $onecamp = self::getLiveCamp($topicnum, $campnum,['nofilter'=>true]);
                     $childCampData = [];
                     if($onecamp){
                          $childCampData = $onecamp->campChild($topicnum,$campnum);
@@ -881,14 +881,14 @@ class Camp extends Model {
                       foreach($child_camps as $camp){
                         $camp_subscription = \App\Model\CampSubscription::where('user_id','=',$userid)->where('camp_num','=',$camp)->where('topic_num','=',$topicnum)->where('subscription_start','<=',strtotime(date('Y-m-d H:i:s')))->where('subscription_end','=',null)->orWhere('subscription_end','>=',strtotime(date('Y-m-d H:i:s')))->get();
                         if(sizeof($camp_subscription) > 0){
-                            $onecamp = self::getLiveCamp($topicnum, $camp);
+                            $onecamp = self::getLiveCamp($topicnum, $camp,['nofilter'=>true]);
                             $returnArr = array('flag'=>$flag,'camp'=>$onecamp,'camp_subscription_data'=>$camp_subscription);
                             break;
                         }
                       }
                     }
                   }else{
-                    $onecamp = self::getLiveCamp($topicnum, $campnum);
+                    $onecamp = self::getLiveCamp($topicnum, $campnum,['nofilter'=>true]);
                     $returnArr = array('flag'=>$flag,'camp'=>$onecamp,'camp_subscription_data'=>$camp_subscription);
                   }
                 return $returnArr;
@@ -903,7 +903,7 @@ class Camp extends Model {
         if(isset($subscriptions ) && count($subscriptions ) > 0){
             $i=1;
             foreach($subscriptions as $subs){
-                $topic = self::getLiveCamp($subs->topic_num,$subs->camp_num);
+                $topic = self::getLiveCamp($subs->topic_num,$subs->camp_num,['nofilter'=>true]);
                 $title = preg_replace('/[^A-Za-z0-9\-]/', '-', ($topic->title != '') ? $topic->title : $topic->camp_name);
                 $topic_id =$subs->topic_num . "-" . $title;
                 $link = url('topic/' . $topic_id . '/' . $subs->camp_num);
@@ -922,7 +922,7 @@ class Camp extends Model {
                 array_push($users_data, $user->user_id);
             }
         }
-        $onecamp = self::getLiveCamp($topic_num, $camp_num);
+        $onecamp = self::getLiveCamp($topic_num, $camp_num,['nofilter'=>true]);
 
         $childCampData = [];
         if(isset($onecamp) && isset($onecamp->camp_name)){
