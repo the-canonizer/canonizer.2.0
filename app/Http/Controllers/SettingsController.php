@@ -241,7 +241,7 @@ class SettingsController extends Controller
             $encode = General::canon_encode($id);
 
             $topic = Camp::where('topic_num', $topicnum)->where('camp_name', '=', 'Agreement')->latest('submit_time')->first();
-            $topicData = Camp::getAgreementTopic($topicnum);
+            $topicData = Camp::getAgreementTopic($topicnum,['nofilter'=>true]);
             //$camp = Camp::where('topic_num',$topicnum)->where('camp_num','=', $campnum)->latest('submit_time','objector')->get();
             $onecamp = Camp::where('topic_num', $topicnum)->where('camp_num', '=', $campnum)->where('go_live_time', '<=', $as_of_time)->latest('submit_time')->first();
             $campWithParents = Camp::campNameWithAncestors($onecamp, '', $topicData->topic_name);
@@ -397,7 +397,7 @@ class SettingsController extends Controller
                 $parentUser = Nickname::getUserByNickName($data['delegate_nick_name_id']);
                 $nickName = Nickname::getNickName($data['nick_name']);
                 // $topic = Camp::where('topic_num', $data['topic_num'])->where('camp_name', '=', 'Agreement')->latest('submit_time')->first();
-                $topic = Camp::getAgreementTopic($data['topic_num']);
+                $topic = Camp::getAgreementTopic($data['topic_num'],['nofilter'=>true]);
                 $camp = Camp::where('topic_num', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('go_live_time', '<=', time())->latest('submit_time')->first();
                 $result['topic_num'] = $data['topic_num'];
                 $result['camp_num'] = $data['camp_num'];
@@ -507,7 +507,7 @@ class SettingsController extends Controller
     private function emailForSupportAdded($data){
             $parentUser = Nickname::getUserByNickName($data['nick_name']);
             $nickName = Nickname::getNickName($data['nick_name']);
-            $topic = Camp::getAgreementTopic($data['topic_num']);
+            $topic = Camp::getAgreementTopic($data['topic_num'],['nofilter'=>true]);
             $camp = Camp::where('topic_num', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('go_live_time', '<=', time())->latest('submit_time')->first();
         
             $result['topic_num'] = $data['topic_num'];
@@ -526,7 +526,7 @@ class SettingsController extends Controller
 
     private function emailForSupportDeleted($data){
             $nickName = Nickname::getNickName($data['nick_name']);
-            $topic = Camp::getAgreementTopic($data['topic_num']);
+            $topic = Camp::getAgreementTopic($data['topic_num'],['nofilter'=>true]);
             $camp = Camp::where('topic_num', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('go_live_time', '<=', time())->latest('submit_time')->first();
 
             $result['topic_num'] = $data['topic_num'];

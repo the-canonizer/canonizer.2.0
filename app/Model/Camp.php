@@ -251,7 +251,7 @@ class Camp extends Model {
         }else if( null !== session('defaultNamespaceId') && !empty(session('defaultNamespaceId'))){
             $query->whereIn('namespace_id',explode(',', session('defaultNamespaceId', 1)));
         }
-        if(isset($_REQUEST['my']) && $_REQUEST['my'] == 1){
+        if(isset($_REQUEST['my']) && $_REQUEST['my'] == $_REQUEST['namespace']){
             $query->whereIn('topic.submitter_nick_id', $nicknameIds);
         }
         return $query->orderBy('namespace.label', 'ASC')->orderBy('topic.topic_name', 'ASC')->orderBy('topic.go_live_time', 'DESC')->groupBy('topic_num')->get();

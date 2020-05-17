@@ -1113,7 +1113,7 @@ class TopicController extends Controller {
             $data['topic_num'] = $topic->topic_num;
             $data['nick_name'] = $nickName->nick_name;
             $data['forum_link'] = 'forum/' . $topic->topic_num . '-' . $topic->topic_name . '/1/threads';
-            $data['subject'] = "Proposed change to " . $topic->topic_name . " submitted";
+            $data['subject'] = "Proposed change to topic " . $topic->topic_name . " submitted";
 
            // $this->mailSupporters($directSupporter, $link, $data);         //mail supporters  
              $this->mailSubscribersAndSupporters($directSupporter,$subscribers,$link, $data);  

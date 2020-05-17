@@ -27,8 +27,9 @@
                 </select>
                 </div>
                 @if(Auth::check())
+                  <?php //echo "<pre>"; print_r($_REQUEST); die; ?>
                     <div class="col-sm-4 checkbox pd-l-0">
-                    <label><input type="checkbox" name="my" value="1" {{ isset($_REQUEST['my']) &&  $_REQUEST['my'] == 1 ? 'checked' : ''}} onchange="submitForm(this)"> Only My Topics</label>
+                    <label><input type="checkbox" name="my" value="{{(session()->has(defaultNamespaceId)) ? session('defaultNamespaceId') : 1}}" {{ isset($_REQUEST['my']) &&  $_REQUEST['my'] == session('defaultNamespaceId') ? 'checked' : ''}} onchange="submitForm(this)"> Only My Topics</label>
                     </div>
                 @endif
                 </form>
