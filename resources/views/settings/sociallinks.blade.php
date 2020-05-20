@@ -100,13 +100,19 @@
                             <td>{{$sociallinks[$provider]['social_email']}}</td>                            
                             <td>{{$sociallinks[$provider]['social_name']}}</td>
                             <td>
-                                <div class="col-md-12"><a  class="btn {{$provider}} btn-{{$provider}}">
+                                <div class="col-md-12">
+                                <div class="col-sm-5" style="margin-left:-30px;">
+                                    <a  class="btn {{$provider}} btn-{{$provider}}">
                                 Linked {{$provider}} <i class="fa fa-{{$provider}} fa-fw"></i></a>
-                                <form method="post" action="{{ url('/delete_social_link/') }}">
-                                <input name="_token" type="hidden" value="{{csrf_token()}}" />
-                                <input type="hidden" name="id" value="{{$sociallinks[$provider]['id']}}" />
-                                 <button type="submit" class="btn btn-danger">Delete</button>
-                                </form>
+                                </div> 
+                                <div class="col-sm-6">
+                                  <form method="post" action="{{ url('/delete_social_link/') }}">
+                                    <input name="_token" type="hidden" value="{{csrf_token()}}" />
+                                    <input type="hidden" name="id" value="{{$sociallinks[$provider]['id']}}" />
+                                     <button type="submit" class="btn btn-danger">Delete</button>
+                                    </form>  
+                                </div>
+                                
                               </div>
                              </td>
 
@@ -119,8 +125,12 @@
                             <td></td>                            
                             <td></td>
                             <td>
-                                <div class="col-md-2"><a href="{{ url('/login/'.$provider) }}" class="btn {{$provider}} fb btn-{{$provider}}">
-                                    Link <i class="fa fa-{{$provider}} fa-fw"></i></a></div>
+                                <div class="col-md-12">
+                                  <div class="col-sm-5" style="margin-left:-30px;">
+                                    <a href="{{ url('/login/'.$provider) }}" class="btn {{$provider}} fb btn-{{$provider}}">
+                                    Link <i class="fa fa-{{$provider}} fa-fw"></i></a>
+                                  </div>
+                                  </div>
                              </td>
                         </tr>
 
