@@ -29,7 +29,7 @@ class SocialController extends Controller
 	{
 
 		try{
-			if (!$request->has('code') || $request->has('denied')) {
+			if ((!$request->has('code') || $request->has('denied')) && $provider !== 'twitter') {
        			 if($request->has('error') && $request->has('error_description')){
        			 	Session::flash('social_error', $request['error_description']);
        			 }else{
@@ -45,39 +45,47 @@ class SocialController extends Controller
 
 			if($provider == 'twitter'){
 			$userSocial =   Socialite::driver('twitter')->user();
+			
        }else{
        		$userSocial =   Socialite::driver($provider)->stateless()->user();
        }
        if (Auth::check()) {
-       	 $social_user = SocialUser::where(['social_email' => $userSocial->getEmail()])->first();
+      $user_email = ($userSocial->getEmail()) ? $userSocial->getEmail() : Auth::user()->email;
+      $social_name =($userSocial->getNickname() && $userSocial->getNickname()!='') ? $userSocial->getNickname():$userSocial->getName();
+       	$social_user = SocialUser::where(['social_email' => $user_email,'provider'=>$provider])->first();
        	 	if(isset($social_user) && isset($social_user->user_id) &&  $social_user->user_id != Auth::user()->id){
        	 		Session::flash('already_exists', "Email is already linked with another account");
        	 		$another_user = User::where(['id' => $social_user->user_id])->first();
        	 		return redirect()->route('settings.sociallinks')->with(['another_user' => $another_user] );
        	 	}else{
+
        	 		$socialUser = SocialUser::create([
 	                'user_id'       => Auth::user()->id,
-	                'social_email'  => $userSocial->getEmail(),
+	                'social_email'  => $user_email,
 	                'provider_id'   => $userSocial->getId(),
 	                'provider'      => $provider,
+	                'social_name'   => $social_name,
             	]);
             return redirect()->route('settings.sociallinks');	
        	 	}
     		
     	}else{
-    		$social_user = SocialUser::where(['social_email' => $userSocial->getEmail(),'provider'=>$provider,'provider_id'=>$userSocial->getId()])->first();
+    		$user_email =  $userSocial->getEmail();
+    		$social_name = ($userSocial->getNickname() && $userSocial->getNickname()!='') ? $userSocial->getNickname():$userSocial->getName();
+    		$social_user = SocialUser::where(['social_email' => $user_email,'provider'=>$provider,'provider_id'=>$userSocial->getId()])->first();
         if(isset($social_user) && isset($social_user->user_id)){
         	$users       =   User::where(['id' => $social_user->user_id])->first();
         	Auth::login($users);
 		    return redirect('/');
         }else{
-        		$users  =  User::where(['email' => $userSocial->getEmail()])->first();
+        		$users  =  User::where(['email' => $user_email])->first();
 				if(isset($user) && isset($user->email)){
 						$socialUser = SocialUser::create([
 			                'user_id'       => $users->id,
-			                'social_email'  => $userSocial->getEmail(),
+			                'social_email'  => $user_email,
 			                'provider_id'   => $userSocial->getId(),
 			                'provider'      => $provider,
+			                'social_name'   => $social_name,
 			            ]);
 			            Auth::login($users);
 			            return redirect('/');
@@ -86,14 +94,15 @@ class SocialController extends Controller
 			        		$authCode = mt_rand(100000, 999999);
 							$user = User::create([
 				                'first_name'    => $userSocial->getName(),
-				                'email'         => $userSocial->getEmail(),
+				                'email'         => $user_email,
 				                'otp'			=> $authCode
 				            ]);
 				            $socialUser = SocialUser::create([
 				                'user_id'       => $users->id,
-				                'social_email'  => $userSocial->getEmail(),
+				                'social_email'  => $user_email,
 				                'provider_id'   => $userSocial->getId(),
 				                'provider'      => $provider,
+				                 'social_name'   => $social_name,
 				            ]);
 				             //otp email
 					       Mail::to($user->email)->bcc(config('app.admin_bcc'))->send(new OtpVerificationMail($user));
@@ -113,6 +122,17 @@ class SocialController extends Controller
 		}   
         
 	}
+
+	public function delete(Request $request)
+    {
+    	$input = $request->all();
+
+    	$social_user = SocialUser::find($input['id']);
+        $social_user->delete();  
+        return redirect()->route('settings.sociallinks')
+                        ->with('success','Social Link deleted successfully');
+    }
+
 	public function deactivateuser(Request $request){
 		$input = $request->all();
 		$user_to_deactivate = $input['user_deactivate'];

@@ -85,7 +85,7 @@
                     <th>Sr</th>                    
                     <th>Provider</th>
                     <th>Email</th>
-                    <th>ProviderId</th>
+                    <th>Social Name</th>
                     <th>Action</th>
                 </tr>                                        
              </thead>
@@ -98,11 +98,18 @@
                             <td>{{$key+1}}</td>
                             <td>{{$sociallinks[$provider]['provider']}}</td>
                             <td>{{$sociallinks[$provider]['social_email']}}</td>                            
-                            <td>{{$sociallinks[$provider]['provider_id']}}</td>
+                            <td>{{$sociallinks[$provider]['social_name']}}</td>
                             <td>
-                                <div class="col-md-2"><a  class="btn {{$provider}} btn-{{$provider}}">
-                                Already linked with {{$provider}} <i class="fa fa-{{$provider}} fa-fw"></i></a></div>
+                                <div class="col-md-12"><a  class="btn {{$provider}} btn-{{$provider}}">
+                                Linked {{$provider}} <i class="fa fa-{{$provider}} fa-fw"></i></a>
+                                <form method="post" action="{{ url('/delete_social_link/') }}">
+                                <input name="_token" type="hidden" value="{{csrf_token()}}" />
+                                <input type="hidden" name="id" value="{{$sociallinks[$provider]['id']}}" />
+                                 <button type="submit" class="btn btn-danger">Delete</button>
+                                </form>
+                              </div>
                              </td>
+
                         </tr>
 
                         @else 
@@ -113,7 +120,7 @@
                             <td></td>
                             <td>
                                 <div class="col-md-2"><a href="{{ url('/login/'.$provider) }}" class="btn {{$provider}} fb btn-{{$provider}}">
-                                    Link with {{$provider}} <i class="fa fa-{{$provider}} fa-fw"></i></a></div>
+                                    Link <i class="fa fa-{{$provider}} fa-fw"></i></a></div>
                              </td>
                         </tr>
 
