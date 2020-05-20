@@ -1063,6 +1063,7 @@ class TopicController extends Controller {
             $data['type'] = 'statement : for camp ';
             $data['typeobject'] = 'statement';
 			$data['note'] = $statement->note;
+            $data['camp_num'] = $statement->camp_num;
             $nickName = Nickname::getNickName($statement->submitter_nick_id);
             $data['topic_num'] = $statement->topic_num;
             $data['nick_name'] = $nickName->nick_name;
@@ -1085,6 +1086,7 @@ class TopicController extends Controller {
             $data['typeobject'] = 'camp';
             $data['go_live_time'] = $camp->go_live_time;
 			$data['note'] = $camp->note;
+            $data['camp_num'] = $camp->camp_num;
             $nickName = Nickname::getNickName($camp->submitter_nick_id);
             $data['topic_num'] = $camp->topic_num;
             $data['nick_name'] = $nickName->nick_name;
@@ -1109,6 +1111,7 @@ class TopicController extends Controller {
             $data['type'] = 'topic : ';
             $data['typeobject'] = 'topic';
 			$data['note'] = $topic->note;
+            $data['camp_num'] = 1;
             $nickName = Nickname::getNickName($topic->submitter_nick_id);
             $data['topic_num'] = $topic->topic_num;
             $data['nick_name'] = $nickName->nick_name;
@@ -1131,13 +1134,14 @@ class TopicController extends Controller {
          $topic = \App\Model\Topic::where('topic_num','=',$supportData['topic_num'])->latest('submit_time')->get();
          $topic_name_space_id = isset($topic[0]) ? $topic[0]->namespace_id:1;
          $nickName = \App\Model\Nickname::find($supporter->nick_name_id);
-         $supported_camp = $nickName->getSupportCampList($topic_name_space_id);
-         $supported_camp_list = $nickName->getSupportCampListNamesEmail($supported_camp,$supportData['topic_num']);
+         $supported_camp = $nickName->getSupportCampList($topic_name_space_id,['nofilter'=>true]);
+         //echo "<pre> camp data"; print_r($supported_camp);
+         $supported_camp_list = $nickName->getSupportCampListNamesEmail($supported_camp,$supportData['topic_num'],$supportData['camp_num']);
          $supportData['support_list'] = $supported_camp_list; 
           $ifalsoSubscriber = Camp::checkifSubscriber($subscribers,$user);
           if($ifalsoSubscriber){
             $supportData['also_subscriber'] = 1;
-            $supportData['sub_support_list'] = Camp::getSubscriptionList($user->id,$supportData['topic_num']);      
+            $supportData['sub_support_list'] = Camp::getSubscriptionList($user->id,$supportData['topic_num'],$supportData['camp_num']);      
          }
          
          $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
@@ -1149,7 +1153,7 @@ class TopicController extends Controller {
             $userSub = \App\User::find($usr);
             if(!in_array($userSub->id, $alreadyMailed,TRUE)){
                 $alreadyMailed[] = $userSub->id;
-                $subscriptions_list = Camp::getSubscriptionList($userSub->id,$subscriberData['topic_num']);
+                $subscriptions_list = Camp::getSubscriptionList($userSub->id,$subscriberData['topic_num'],$subscriberData['camp_num']);
                 $subscriberData['support_list'] = $subscriptions_list; 
                 $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $userSub->email : config('app.admin_email');
                 $subscriberData['subscriber'] = 1;
@@ -1166,8 +1170,8 @@ class TopicController extends Controller {
             $topic = \App\Model\Topic::where('topic_num','=',$data['topic_num'])->latest('submit_time')->get();
              $topic_name_space_id = isset($topic[0]) ? $topic[0]->namespace_id:1;
              $nickName = \App\Model\Nickname::find($supporter->nick_name_id);
-             $supported_camp = $nickName->getSupportCampList($topic_name_space_id);
-             $supported_camp_list = $nickName->getSupportCampListNamesEmail($supported_camp,$data['topic_num']);
+             $supported_camp = $nickName->getSupportCampList($topic_name_space_id,['nofilter'=>true]);
+             $supported_camp_list = $nickName->getSupportCampListNamesEmail($supported_camp,$data['topic_num'],$data['camp_num']);
              $data['support_list'] = $supported_camp_list; 
             $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
             Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new PurposedToSupportersMail($user, $link, $data));
@@ -1177,7 +1181,7 @@ class TopicController extends Controller {
     private function mailSubscribers($subscribers, $link, $data) {
         foreach ($subscribers as $user) {
             $user = \App\User::find($user);
-             $subscriptions_list = Camp::getSubscriptionList($user->id,$data['topic_num']);
+             $subscriptions_list = Camp::getSubscriptionList($user->id,$data['topic_num'],$data['camp_num']);
              $data['support_list'] = $subscriptions_list; 
                 
             $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');

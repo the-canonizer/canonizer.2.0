@@ -68,8 +68,12 @@ class Nickname extends Model {
         }       
       return $returnHtml;                  
     }
-    public function getSupportCampListNamesEmail($supported_camp = [],$topic_num){
+    public function getSupportCampListNamesEmail($supported_camp = [],$topic_num,$camp_num = 1){
         $returnHtml = [];
+        //echo $camp_num; die;
+        $onecamp = Camp::getLiveCamp($topic_num, $camp_num);
+        Camp::clearChildCampArray();
+        $childCamps = array_unique(Camp::getAllChildCamps($onecamp));
         if(sizeof($supported_camp) > 0){
             foreach ($supported_camp as $key => $value) {
                  if($key == $topic_num){
@@ -78,8 +82,13 @@ class Nickname extends Model {
                         ksort($value['array']);
                     foreach($value['array'] as $i => $supportData ){
                         foreach($supportData as $j => $support){
-                              $returnHtml[]=  '<a href="'.$support['link'].'">'.$support['camp_name'].'</a>'; 
+                            if(count($childCamps) > 0 && in_array($support['camp_num'], $childCamps)){
+                                 $returnHtml[]=  '<a href="'.$support['link'].'">'.$support['camp_name'].'</a>'; 
                             }
+                            // else{
+                            //      $returnHtml[]=  '<a href="'.$support['link'].'">'.$support['camp_name'].'</a>'; 
+                            // }
+                          }
                         }
                     }else{
                        $returnHtml[] =  '<a href="'.$value['link'].'">'.$value['camp_name'].'</a>'; 

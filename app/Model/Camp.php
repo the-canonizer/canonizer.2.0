@@ -897,12 +897,21 @@ class Camp extends Model {
         }
     }
     
-    public static function getSubscriptionList($userid,$topic_num){
+    public static function getSubscriptionList($userid,$topic_num,$camp_num=1){
         $list = [];
+         $onecamp = self::getLiveCamp($topic_num, $camp_num);
+         self::clearChildCampArray();
+        $childCamps = array_unique(self::getAllChildCamps($onecamp));
+       
         $subscriptions = \App\Model\CampSubscription::where('user_id','=',$userid)->where('topic_num','=',$topic_num)->where('subscription_start','<=',strtotime(date('Y-m-d H:i:s')))->where('subscription_end','=',null)->orWhere('subscription_end','>=',strtotime(date('Y-m-d H:i:s')))->get();
         if(isset($subscriptions ) && count($subscriptions ) > 0){
             $i=1;
             foreach($subscriptions as $subs){
+                if($camp_num!=1){
+                    if(!in_array($subs->camp_num, $childCamps)){
+                        continue;
+                    }
+                }
                 $topic = self::getLiveCamp($subs->topic_num,$subs->camp_num,['nofilter'=>true]);
                 $title = preg_replace('/[^A-Za-z0-9\-]/', '-', ($topic->title != '') ? $topic->title : $topic->camp_name);
                 $topic_id =$subs->topic_num . "-" . $title;

@@ -430,13 +430,13 @@ class SettingsController extends Controller
         $topic = \App\Model\Topic::where('topic_num', '=', $data['topic_num'])->latest('submit_time')->get();
         $topic_name_space_id = isset($topic[0]) ? $topic[0]->namespace_id : 1;
         $nickName = \App\Model\Nickname::find($data['nick_name']);
-        $supported_camp = $nickName->getSupportCampList($topic_name_space_id);
-        $supported_camp_list = $nickName->getSupportCampListNamesEmail($supported_camp, $data['topic_num']);
+        $supported_camp = $nickName->getSupportCampList($topic_name_space_id,['nofilter'=>true]);
+        $supported_camp_list = $nickName->getSupportCampListNamesEmail($supported_camp, $data['topic_num'],$data['camp_num']);
         $dataObject['support_list'] = $supported_camp_list;
         $ifalsoSubscriber = Camp::checkifSubscriber($subscribers, $parentUser);
         if ($ifalsoSubscriber) {
             $dataObject['also_subscriber'] = 1;
-            $dataObject['sub_support_list'] = Camp::getSubscriptionList($parentUser->id, $data['topic_num']);
+            $dataObject['sub_support_list'] = Camp::getSubscriptionList($parentUser->id, $data['topic_num'],$data['camp_num']);
         }
          $receiver = (config('app.env') == "production") ? $parentUser->email : config('app.admin_email');
          Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new NewDelegatedSupporterMail($parentUser, $link, $dataObject));
@@ -453,13 +453,13 @@ class SettingsController extends Controller
             $topic = \App\Model\Topic::where('topic_num', '=', $supportData['topic_num'])->latest('submit_time')->get();
             $topic_name_space_id = isset($topic[0]) ? $topic[0]->namespace_id : 1;
             $nickName = \App\Model\Nickname::find($supporter->nick_name_id);
-            $supported_camp = $nickName->getSupportCampList($topic_name_space_id);
-            $supported_camp_list = $nickName->getSupportCampListNamesEmail($supported_camp, $supportData['topic_num']);
+            $supported_camp = $nickName->getSupportCampList($topic_name_space_id,['nofilter'=>true]);
+            $supported_camp_list = $nickName->getSupportCampListNamesEmail($supported_camp, $supportData['topic_num'],$supportData['camp_num']);
              $supportData['support_list'] = $supported_camp_list;
             $ifalsoSubscriber = Camp::checkifSubscriber($subscribers, $user);
             if ($ifalsoSubscriber) {
                 $supportData['also_subscriber'] = 1;
-                $supportData['sub_support_list'] = Camp::getSubscriptionList($user->id, $supportData['topic_num']);
+                $supportData['sub_support_list'] = Camp::getSubscriptionList($user->id, $supportData['topic_num'],$supportData['camp_num']);
             }
 
             $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
@@ -472,7 +472,7 @@ class SettingsController extends Controller
             $userSub = \App\User::find($usr);
             if (!in_array($userSub->id, $alreadyMailed, TRUE)) {
                 $alreadyMailed[] = $userSub->id;
-                $subscriptions_list = Camp::getSubscriptionList($userSub->id, $subscriberData['topic_num']);
+                $subscriptions_list = Camp::getSubscriptionList($userSub->id, $subscriberData['topic_num'],$subscriberData['camp_num']);
                 $subscriberData['support_list'] = $subscriptions_list;
                $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $userSub->email : config('app.admin_email');
                 $subscriberData['subscriber'] = 1;
