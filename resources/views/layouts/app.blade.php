@@ -323,9 +323,11 @@ function restrictTextField(e,limitlength){
             
             $(".asofdate, #asofdate").change(function(){
 				// Do something interesting here
-				 var value = $('#asofdate').val();
+                var value = $('#asofdate').val();
                  var bydate = $("input[name='asof']:checked"). val();  
-                 if(value=="" && bydate == 'bydate') {
+
+                 if(value=="" && bydate == 'bydate') {                    
+                     $("#asofdate").removeAttr('disabled');
 					 $('#asofdate').focus();
                     return false;
 				 }else if(value !='' && bydate == 'bydate'){

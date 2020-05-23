@@ -245,7 +245,6 @@ class Camp extends Model {
                 ->where('camp.go_live_time', '<=', $as_of_time)
                 ->whereRaw('topic.go_live_time in (select max(topic.go_live_time) from topic where topic.topic_num=topic.topic_num and topic.objector_nick_id is null and topic.go_live_time <=' . $as_of_time . ' group by topic.topic_num)')
                 ->where('topic.topic_name', '<>', "");
-
         if (isset($_REQUEST['namespace']) && (!empty($_REQUEST['namespace']) || $_REQUEST['namespace'] != 0)) {
             $query->where('namespace_id', $_REQUEST['namespace']);
         }else if( null !== session('defaultNamespaceId') && !empty(session('defaultNamespaceId'))){

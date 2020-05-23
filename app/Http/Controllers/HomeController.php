@@ -71,6 +71,10 @@ class HomeController extends Controller {
     }
 
     public function browse(Request $request) {
+        if(empty($_REQUEST['namespace']) && session()->has('defaultNamespaceId')){
+            session()->forget('defaultNamespaceId');
+            // session()->flush();
+        }
         $topics = Camp::getBrowseTopic();
         $namespaces = Namespaces::all();
         return view('browse', compact('topics', 'namespaces'));
