@@ -72,7 +72,12 @@
 </div>  <!-- /.right-whitePnl-->
 <script>
 function submitForm(element){
-    changeNamespace(element);
+    if(($(element).val() == null) || ($(element).val() == "")){
+         $(element).parents('form').submit();
+    }else{
+      changeNamespace(element);  
+    }
+    
 }
 function changeNamespace(element){
     $.ajax({
