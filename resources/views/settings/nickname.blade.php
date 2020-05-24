@@ -23,13 +23,13 @@
     <div class="col-sm-12 margin-btm-2">
         <div class="well">
             <ul class="nav prfl_ul">
-                <li><a class="" href="{{ route('settings')}}">Manage Profile Info</a></li>
-                <li class="active"><a class="" href="{{ route('settings.nickname')}}" >Manage Nick Names</a></li>
-				<li class=""><a class="" href="{{ route('settings.support')}}" >My Supports</a></li>
-                <li><a class="" href="{{ route('settings.algo-preferences')}}">Default Algorithm</a></li>
+                <li class=""><a class="" href="{{ route('settings')}}">Profile Info</a></li>
+                <li class=""><a class="" href="{{ route('settings.sociallinks')}}">Social Oauth Verification</a></li>                
                 <li><a class="" href="{{ route('settings.changepassword')}}">Change Password</a></li>
-                <li><a class="" href="{{ route('settings.blockchain')}}">Metamask Account</a></li>
-                 <li class=""><a class="" href="{{ route('settings.sociallinks')}}">Social Oauth Links</a></li>
+                <li class="active"><a  href="{{ route('settings.nickname')}}" >Nick Names</a></li>
+                <li class=""><a class="" href="{{ route('settings.support')}}" >Supported Camps</a></li>
+                <!-- <li><a class="" href="{{ route('settings.algo-preferences')}}">Default Algorithm</a></li> -->
+                <li class=""><a class="" href="{{ route('settings.blockchain')}}">Crypto Verification (was Metamask Account)</a></li>
             </ul>
 
          <!-- exsisting Nick Names -->

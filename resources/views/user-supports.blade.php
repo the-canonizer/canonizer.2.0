@@ -67,7 +67,7 @@
 			   @foreach($supportedCamps as $key=>$supports)
                <?php
 
-                                $topic = \App\Model\Topic::where('topic_num','=',$key)->where('go_live_time', '<=', time())->latest('submit_time')->get();
+                                $topic = \App\Model\Topic::where('topic_num','=',$key)->where('objector_nick_id', '=', NULL)->where('go_live_time', '<=', time())->latest('submit_time')->get();
                                 $topic_name = isset($topic[0]) ? $topic[0]->topic_name:'';
                                 $topic_name_space_id = isset($topic[0]) ? $topic[0]->namespace_id:1;
                                 $request_namesapce = isset($_REQUEST['namespace']) ? $_REQUEST['namespace'] :'1';
@@ -78,7 +78,7 @@
                 <ul>
                     <li id="camp_{{$key}}_{{$camp_num}}"><a href="{{ (array_key_exists('link',$supports)  && isset($supports['link'])) ? $supports['link'] : '' }}">{{ (array_key_exists('camp_name',$supports)  && isset($supports['camp_name'])) ? ($topic_name!='')? $topic_name:$supports['camp_name'] : ''}}</a></li>
                     <?php if(isset($supports['delegate_nick_name_id']) && $supports['delegate_nick_name_id'] !=0 && !isset($supports['array'])){ 
-                                    $topic = \App\Model\Topic::where('topic_num','=',$key)->latest('submit_time')->get();
+                                    $topic = \App\Model\Topic::where('objector_nick_id', '=', NULL)->where('topic_num','=',$key)->latest('submit_time')->get();
                                     $delegatedNick = new \App\Model\Nickname();
                                     $topic_name_space_id = isset($topic[0]) ? $topic[0]->namespace_id:1;
                                     $delegatedNickDetail  = $delegatedNick->getNickName($supports['delegate_nick_name_id']);

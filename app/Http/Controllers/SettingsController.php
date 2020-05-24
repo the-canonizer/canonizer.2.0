@@ -100,9 +100,11 @@ class SettingsController extends Controller
                 $private_flags[] = $input['postal_code_bit'];
 
             $flags = implode(",", $private_flags);
-
+            $user->default_algo = $request->input('default_algo');
             $user->private_flags = $flags;
             $user->update();
+        
+        session(['defaultAlgo' => $user->default_algo]);
             Session::flash('success', "Profile updated successfully.");
             return redirect()->back();
         }

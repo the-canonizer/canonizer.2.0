@@ -22,13 +22,13 @@
     <div class="col-sm-12 margin-btm-2">
         <div class="well">
             <ul class="nav prfl_ul">
-                <li class="active"><a class="" href="{{ route('settings')}}">Manage Profile Info</a></li>
-                <li><a class="" href="{{ route('settings.nickname')}}" >Manage Nick Names</a></li>
-				<li class=""><a class="" href="{{ route('settings.support')}}" >My Supports</a></li>
-                <li><a class="" href="{{ route('settings.algo-preferences')}}">Default Algorithm</a></li>
+                <li class="active"><a class="" href="{{ route('settings')}}">Profile Info</a></li>
+                <li class=""><a class="" href="{{ route('settings.sociallinks')}}">Social Oauth Verification</a></li>                
                 <li><a class="" href="{{ route('settings.changepassword')}}">Change Password</a></li>
-                <li><a class="" href="{{ route('settings.blockchain')}}">Metamaks Account</a></li>
-                 <li class=""><a class="" href="{{ route('settings.sociallinks')}}">Social Oauth Links</a></li>
+                <li><a class="" href="{{ route('settings.nickname')}}" >Nick Names</a></li>
+                <li class=""><a class="" href="{{ route('settings.support')}}" >Supported Camps</a></li>
+                <!-- <li><a class="" href="{{ route('settings.algo-preferences')}}">Default Algorithm</a></li> -->
+                <li class=""><a class="" href="{{ route('settings.blockchain')}}">Crypto Verification (was Metamask Account)</a></li>
 				
             </ul>
 
@@ -281,8 +281,18 @@
 								</select> 
 								</div> 
 							</div>
+
+							<div class="col-sm-6 margin-btm-1">
+                                <div class="form-group">
+			                        <label>Choose default algorithm preferences</label>
+			                        <select name="default_algo" id="default_algo" class="form-control">
+			                        @foreach(\App\Model\Algorithm::getList() as $key=>$algo)
+			                            <option value="{{$key}}" {{ $user->default_algo == $key ? 'selected' : ''}}>{{$algo}}</option>
+			                        @endforeach
+			                        </select>
+			                    </div>							
+			                </div>
                         </div>
-                       
                         <button type="submit" id="update_profile" class="btn btn-login">Update</button>
                     </form>  
         </div>
