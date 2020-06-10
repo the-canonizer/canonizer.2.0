@@ -84,6 +84,8 @@ class Algorithm{
 		 } else {
 			$total = $result[0]->countTotal; 
 		 }	
+			
+			
             return isset($result[0]->countTotal) ? $total : 0;
         }
     }
@@ -155,26 +157,26 @@ class Algorithm{
 
     public static function transhumanist($nick_name_id){
          $condition = '(topic_num = 40 and camp_num = 2) or ' .
-            '(topic_num = 41 and camp_num = 2) or ' .
-            '(topic_num = 42 and camp_num = 2) or ' .
-            '(topic_num = 42 and camp_num = 4) or ' .
-            '(topic_num = 43 and camp_num = 2) or ' .
-            '(topic_num = 44 and camp_num = 3) or ' .
-            '(topic_num = 45 and camp_num = 2) or ' .
-            '(topic_num = 46 and camp_num = 2) or ' .
-            '(topic_num = 47 and camp_num = 2) or ' .
-            '(topic_num = 48 and camp_num = 2) or ' .
-            '(topic_num = 48 and camp_num = 3) or ' .
-            '(topic_num = 49 and camp_num = 2) ';
+			     '(topic_num = 41 and camp_num = 2) or ' .
+			     '(topic_num = 42 and camp_num = 2) or ' .
+			     '(topic_num = 42 and camp_num = 4) or ' .
+			     '(topic_num = 43 and camp_num = 2) or ' .
+			     '(topic_num = 44 and camp_num = 3) or ' .
+			     '(topic_num = 45 and camp_num = 2) or ' .
+			     '(topic_num = 46 and camp_num = 2) or ' .
+			     '(topic_num = 47 and camp_num = 2) or ' .
+			     '(topic_num = 48 and camp_num = 2) or ' .
+			     '(topic_num = 48 and camp_num = 3) or ' .
+			     '(topic_num = 49 and camp_num = 2) ';
 
         return self::camp_count($nick_name_id,$condition);
     }
 
     public static function atheist($nick_name_id){
         $condition = '(topic_num = 54 and camp_num = 2) or ' .
-            '(topic_num = 2 and camp_num = 2) or ' .
-            '(topic_num = 2 and camp_num = 4) or ' .
-            '(topic_num = 2 and camp_num = 5)';
+				'(topic_num = 2 and camp_num = 2) or ' .
+				'(topic_num = 2 and camp_num = 4) or ' .
+				'(topic_num = 2 and camp_num = 5)';
         return self::camp_count($nick_name_id,$condition);
     }
 
@@ -190,33 +192,33 @@ class Algorithm{
 
     public static function mormon($nick_name_id){
         $condition = '(topic_num = 54 and camp_num = 7) or ' .
-            '(topic_num = 54 and camp_num = 8) or ' .
-            '(topic_num = 54 and camp_num = 10) or ' .
-            '(topic_num = 54 and camp_num = 11)';
+				'(topic_num = 54 and camp_num = 8) or ' .
+				'(topic_num = 54 and camp_num = 10) or ' .
+				'(topic_num = 54 and camp_num = 11)';
         return self::camp_count($nick_name_id,$condition);
     }
 
     public static function christian($nick_name_id){
         $condition = '(topic_num = 54 and camp_num = 4) or ' .
-            '(topic_num = 54 and camp_num = 5) or ' .
-            '(topic_num = 54 and camp_num = 6) or ' .
-            '(topic_num = 54 and camp_num = 7) or ' .
-            '(topic_num = 54 and camp_num = 8) or ' .
-            '(topic_num = 54 and camp_num = 9) or ' .
-            '(topic_num = 54 and camp_num = 10) or ' .
-            '(topic_num = 54 and camp_num = 11) or ' .
-            '(topic_num = 54 and camp_num = 18)';
+			     '(topic_num = 54 and camp_num = 5) or ' .
+			     '(topic_num = 54 and camp_num = 6) or ' .
+			     '(topic_num = 54 and camp_num = 7) or ' .
+			     '(topic_num = 54 and camp_num = 8) or ' .
+			     '(topic_num = 54 and camp_num = 9) or ' .
+			     '(topic_num = 54 and camp_num = 10) or ' .
+			     '(topic_num = 54 and camp_num = 11) or ' .
+			     '(topic_num = 54 and camp_num = 18)';
         return self::camp_count($nick_name_id,$condition);
     }
 
     public static function PhD($nick_name_id){
         $condition = '(topic_num = 55 and camp_num =  5) or ' .
-            '(topic_num = 55 and camp_num = 10) or ' .
-            '(topic_num = 55 and camp_num = 11) or ' .
-            '(topic_num = 55 and camp_num = 12) or ' .
-            '(topic_num = 55 and camp_num = 14) or ' .
-            '(topic_num = 55 and camp_num = 15) or ' .
-            '(topic_num = 55 and camp_num = 17)';
+						   '(topic_num = 55 and camp_num = 10) or ' .
+						   '(topic_num = 55 and camp_num = 11) or ' .
+						   '(topic_num = 55 and camp_num = 12) or ' .
+						   '(topic_num = 55 and camp_num = 14) or ' .
+						   '(topic_num = 55 and camp_num = 15) or ' .
+						   '(topic_num = 55 and camp_num = 17)';
         return self::camp_count($nick_name_id,$condition);
     }
 	
@@ -260,11 +262,11 @@ class Algorithm{
 			if(isset($_REQUEST['asof']) && $_REQUEST['asof']=="review") {
 			$camps = Cache::remember("$topicnum-review-support", 2, function () use($topicnum) {
                 return Camp::where('topic_num', '=', $topicnum)
-                    ->where('objector_nick_id', '=', NULL)
-                    ->whereRaw('go_live_time in (select max(go_live_time) from camp where topic_num='.$topicnum.' and objector_nick_id is null group by camp_num)')				
-                    ->orderBy('submit_time', 'desc')
-                    ->groupBy('camp_num')
-                    ->get();	
+                            ->where('objector_nick_id', '=', NULL)
+                            ->whereRaw('go_live_time in (select max(go_live_time) from camp where topic_num='.$topicnum.' and objector_nick_id is null group by camp_num)')				
+                            ->orderBy('submit_time', 'desc')
+                            ->groupBy('camp_num')
+                            ->get();	
                 });
 				
 			} else if(isset($_REQUEST['asof']) && $_REQUEST['asof']=="bydate") {
@@ -299,11 +301,11 @@ class Algorithm{
 
 		# Implemented cache for existing data. 
         $supports = Cache::remember("$topicnum-supports-$key", 2, function () use($topicnum,$as_of_time) {
-            return Support::where('topic_num','=',$topicnum)
-            ->whereRaw("(start < $as_of_time) and ((end = 0) or (end > $as_of_time))")
-            ->orderBy('start','DESC')
-            ->select(['support_order','camp_num','topic_num','nick_name_id','delegate_nick_name_id'])
-            ->get();
+                 return Support::where('topic_num','=',$topicnum)
+                    ->whereRaw("(start < $as_of_time) and ((end = 0) or (end > $as_of_time))")
+                    ->orderBy('start','DESC')
+                    ->select(['support_order','camp_num','topic_num','nick_name_id','delegate_nick_name_id'])
+                    ->get();
         });
 
         $directSupports = $supports->filter(function($item) use($nick_name_id){
@@ -315,37 +317,15 @@ class Algorithm{
         });
         
 		# start with one person one vote canonize.
+		
         $expertCampReducedTree = $expertCamp->campTree('blind_popularity'); # only need to canonize this branch
         
-        // Check if user supports himself
-        $only_support_his_camp = 0;
-        
-        // $user_support_camps = Support::where('topic_num','=',$topicnum)
-        //     ->whereRaw("(start < $as_of_time) and ((end = 0) or (end > $as_of_time))")
-        //     ->where('nick_name_id', '=', $nick_name_id)
-        //     ->get();
-        
-        // foreach ($user_support_camps as $scamp) {
-        //     $ret_camp = Camp::where('topic_num', '=', $scamp->topic_num)
-        //         ->where('camp_num', '=', $scamp->camp_num)
-        //         ->whereNotNull('camp_about_nick_id')
-        //         ->where('camp_about_nick_id', '<>', 0)
-        //         ->whereRaw('go_live_time in (select max(go_live_time) from camp where topic_num='.$topicnum.' and objector_nick_id is null and go_live_time < "'.time().'" group by camp_num)')				
-        //         ->where('go_live_time','<',time())
-        //         ->groupBy('camp_num')				
-		// 		->orderBy('submit_time', 'desc')
-        //         ->get();
-
-        //     if ( $ret_camp->count() ) {
-        //         $only_support_his_camp++;
-        //     }
-        // }
-
-        if( ( $directSupports->count() > 0 || $delegatedSupports->count() > 0 )  ) {
+        if($directSupports->count() > 0 || $delegatedSupports->count() > 0){
              return $expertCampReducedTree[$expertCamp->camp_num]['score'] * 5;
-        }
-        else{
+        }else{
              return $expertCampReducedTree[$expertCamp->camp_num]['score'] * 1;
         }
     }
+
+    
 }
