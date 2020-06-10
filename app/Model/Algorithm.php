@@ -341,7 +341,7 @@ class Algorithm{
             }
         }
 
-        if( ( $directSupports->count() > 0 || $delegatedSupports->count() > 0 ) && $only_support_his_camp > 1 ) {
+        if( ( $directSupports->count() > 0 || $delegatedSupports->count() > 0 )  ) {
              return $expertCampReducedTree[$expertCamp->camp_num]['score'] * 5;
         }
         else{
