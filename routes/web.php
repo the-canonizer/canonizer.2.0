@@ -60,6 +60,8 @@ Route::get('logout', 'Auth\LoginController@logout');
 //Route::get('register/verify-otp', 'Auth\RegisterController@getOtpForm');
 Route::get('register/verify-otp', ['as' => 'register.otp', 'uses' => 'Auth\RegisterController@getOtpForm']);
 Route::post('register/verify-otp', 'Auth\RegisterController@postVerifyOtp');
+Route::get('social/askemail', ['as' => 'social.askemail', 'uses' => 'SocialController@getAskEmail']);
+Route::post('social/verifyemail', 'SocialController@postVerifyEmail');
 //Route::get('login','Auth\LoginController@showLoginForm');
 //Route::post('login','Auth\LoginController@login');
 Route::get('login', [ 'as' => 'login', 'uses' => 'Auth\LoginController@showLoginForm']);

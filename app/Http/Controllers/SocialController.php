@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Session;
 use App\Mail\WelcomeMail;
 use App\Mail\OtpVerificationMail;
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Support\Facades\Validator;
 
 class SocialController extends Controller
 {
@@ -71,45 +72,52 @@ class SocialController extends Controller
     		
     	}else{
     		$user_email =  $userSocial->getEmail();
-    		$social_name = ($userSocial->getNickname() && $userSocial->getNickname()!='') ? $userSocial->getNickname():$userSocial->getName();
+    		if(!empty($user_email)){
+    			$social_name = ($userSocial->getNickname() && $userSocial->getNickname()!='') ? $userSocial->getNickname():$userSocial->getName();
     		$social_user = SocialUser::where(['social_email' => $user_email,'provider'=>$provider,'provider_id'=>$userSocial->getId()])->first();
-        if(isset($social_user) && isset($social_user->user_id)){
-        	$users       =   User::where(['id' => $social_user->user_id])->first();
-        	Auth::login($users);
-		    return redirect('/');
-        }else{
-        		$users  =  User::where(['email' => $user_email])->first();
-				if(isset($user) && isset($user->email)){
-						$socialUser = SocialUser::create([
-			                'user_id'       => $users->id,
-			                'social_email'  => $user_email,
-			                'provider_id'   => $userSocial->getId(),
-			                'provider'      => $provider,
-			                'social_name'   => $social_name,
-			            ]);
-			            Auth::login($users);
-			            return redirect('/');
-			        }else{
-			        	
-			        		$authCode = mt_rand(100000, 999999);
-							$user = User::create([
-				                'first_name'    => $userSocial->getName(),
-				                'email'         => $user_email,
-				                'otp'			=> $authCode
-				            ]);
-				            $socialUser = SocialUser::create([
+	        if(isset($social_user) && isset($social_user->user_id)){
+	        	$users       =   User::where(['id' => $social_user->user_id])->first();
+	        	Auth::login($users);
+			    return redirect('/');
+	        }else{
+	        		$users  =  User::where(['email' => $user_email])->first();
+					if(isset($users) && isset($users->email)){
+							$socialUser = SocialUser::create([
 				                'user_id'       => $users->id,
 				                'social_email'  => $user_email,
 				                'provider_id'   => $userSocial->getId(),
 				                'provider'      => $provider,
-				                 'social_name'   => $social_name,
+				                'social_name'   => $social_name,
 				            ]);
-				             //otp email
-					       Mail::to($user->email)->bcc(config('app.admin_bcc'))->send(new OtpVerificationMail($user));
-					       return redirect()->route('register.otp', ['user' => base64_encode($user->email)]);
-			        	
-			 	}
-        	}
+				            Auth::login($users);
+				            return redirect('/');
+				        }else{
+				        	
+				        		$authCode = mt_rand(100000, 999999);
+								$user = User::create([
+					                'first_name'    => $userSocial->getName(),
+					                'email'         => $user_email,
+					                'otp'			=> $authCode
+					            ]);
+					            $socialUser = SocialUser::create([
+					                'user_id'       => $users->id,
+					                'social_email'  => $user_email,
+					                'provider_id'   => $userSocial->getId(),
+					                'provider'      => $provider,
+					                 'social_name'   => $social_name,
+					            ]);
+					             //otp email
+						       Mail::to($user->email)->bcc(config('app.admin_bcc'))->send(new OtpVerificationMail($user));
+						       return redirect()->route('register.otp', ['user' => base64_encode($user->email)]);
+				        	
+				 	}
+	        	}
+    		}else{
+    			session()->put('social_user',$userSocial);
+    			session()->put('provider',$provider);
+    			return redirect()->route('social.askemail');
+    		}
+    		
     	}
 
 		}catch(Exception $e){
@@ -132,6 +140,66 @@ class SocialController extends Controller
         return redirect()->route('settings.sociallinks')
                         ->with('success','Social Link deleted successfully');
     }
+
+    public function getAskEmail(Request $request){
+        return view('auth.askemail');
+    }
+
+     public function postVerifyEmail(Request $request){
+    	$all = $request->all();
+    	$userSocial = session()->get('social_user');
+    	$provider = session()->get('provider');
+    	$message = [
+          'email.required'=>'Please enter Email'  
+        ];
+        $validator = Validator::make($all, [
+                    'email' => 'required',
+        ],$message);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                            ->withErrors($validator) 
+                            ->withInput();
+        }
+        $users  =  User::where(['email' => $all['email']])->first();
+        $user_email =  $all['email'];
+     $social_name = ($userSocial->getNickname() && $userSocial->getNickname()!='') ? $userSocial->getNickname():$userSocial->getName();
+
+					if(isset($users) && isset($users->email)){
+							$socialUser = SocialUser::create([
+				                'user_id'       => $users->id,
+				                'social_email'  => $user_email,
+				                'provider_id'   => $userSocial->getId(),
+				                'provider'      => $provider,
+				                'social_name'   => $social_name,
+				            ]);
+				            Auth::login($users);
+				            session()->forget('social_user');
+    						session()->forget('provider');
+				            return redirect('/');
+				        }else{
+				        	
+				        		$authCode = mt_rand(100000, 999999);
+								$user = User::create([
+					                'first_name'    => $userSocial->getName(),
+					                'email'         => $user_email,
+					                'otp'			=> $authCode
+					            ]);
+					            $socialUser = SocialUser::create([
+					                'user_id'       => $users->id,
+					                'social_email'  => $user_email,
+					                'provider_id'   => $userSocial->getId(),
+					                'provider'      => $provider,
+					                 'social_name'   => $social_name,
+					            ]);
+					             //otp email
+					            session()->forget('social_user');
+    							session()->forget('provider');
+						       Mail::to($user->email)->bcc(config('app.admin_bcc'))->send(new OtpVerificationMail($user));
+						       return redirect()->route('register.otp', ['user' => base64_encode($user->email)]);
+				        	
+				 	}
+	 }
 
 	public function deactivateuser(Request $request){
 		$input = $request->all();
