@@ -89,7 +89,7 @@ class LoginController extends Controller
                 $authCode = mt_rand(100000, 999999);
                 $user->otp = $authCode;
                 $user->update();
-                 Mail::to($user->email)->bcc(config('app.admin_bcc'))->send(new OtpVerificationMail($user));
+                 Mail::to($user->email)->bcc(config('app.admin_bcc'))->send(new OtpVerificationMail($user,true));
                 return redirect()->route('login.otp',['user'=>base64_encode($user->email)]);
             }else{
                  $userPhone = User::where('phone_number','=',$arr['email'])->first();
