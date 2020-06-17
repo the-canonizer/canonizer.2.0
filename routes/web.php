@@ -69,6 +69,8 @@ Route::post('login', [ 'as' => 'login', 'uses' => 'Auth\LoginController@login','
 // social login url 
 Route::get('login/{provider}', 'SocialController@redirect');
 Route::get('login/{provider}/callback','SocialController@Callback');
+Route::get('verify-otp', ['as' => 'login.otp', 'uses' => 'Auth\LoginController@getOtpForm']);
+Route::post('verify-otp', 'Auth\LoginController@validateLoginOtp');
 
 
 
