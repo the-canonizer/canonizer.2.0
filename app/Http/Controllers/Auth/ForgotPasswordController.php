@@ -51,6 +51,7 @@ class ForgotPasswordController extends Controller {
 
         // send resetlink in email
         $link = 'resetpassword/' . base64_encode($user->email);
+        echo config('app.mail_env')."--".env('APP_ENV', 'development'); die;
         Mail::to($user->email)->send(new PasswordResetMail($user,$link));
         
         return redirect('resetlinksent');
