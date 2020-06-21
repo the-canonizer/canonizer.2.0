@@ -77,10 +77,14 @@ class LoginController extends Controller
         $arr = [
             $this->username() => 'required|string'
         ];
-        if(isset($all['password'])){
+        if(isset($all['password']) || !(isset($all['request_opt']) && $all['request_opt'] == 'on')){
             $arr['password']= 'required|string';
         }
-        $this->validate($request, $arr);
+       $msgs =  [
+        'email.required' => 'The Email/Phone Number field is required.',
+        'password.required' => 'The password is required.'
+       ];
+        $this->validate($request, $arr,$msgs);
     }
     public function request_otp($request,$arr){
         if($arr && isset($arr['email'])){

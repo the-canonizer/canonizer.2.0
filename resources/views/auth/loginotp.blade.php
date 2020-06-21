@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
 <div class="page-titlePnl">
-    <h1 class="page-title">Login Otp Verification</h1>
+    <h1 class="page-title">Login OTP Verification</h1>
 </div>       
 @if(Session::has('error'))
 <div class="alert alert-danger">

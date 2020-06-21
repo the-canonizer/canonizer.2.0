@@ -30,7 +30,7 @@ class SocialController extends Controller
 	{
 
 		try{
-			if ((!$request->has('code') || $request->has('denied')) && $provider !== 'twitter') {
+			if ((!$request->has('code') &&  $request->has('denied')) || ($request->has('error') && $request->has('error_description')) ) {
        			 if($request->has('error') && $request->has('error_description')){
        			 	Session::flash('social_error', $request['error_description']);
        			 }else{
@@ -44,12 +44,11 @@ class SocialController extends Controller
 				 
 			}
 
-			if($provider == 'twitter'){
+		  if($provider == 'twitter'){
 			$userSocial =   Socialite::driver('twitter')->user();
-			
-       }else{
+		  }else{
        		$userSocial =   Socialite::driver($provider)->stateless()->user();
-       }
+       	 }
        if (Auth::check()) {
       $user_email = ($userSocial->getEmail()) ? $userSocial->getEmail() : Auth::user()->email;
       $social_name =($userSocial->getNickname() && $userSocial->getNickname()!='') ? $userSocial->getNickname():$userSocial->getName();
@@ -186,7 +185,7 @@ class SocialController extends Controller
 					                'otp'			=> $authCode
 					            ]);
 					            $socialUser = SocialUser::create([
-					                'user_id'       => $users->id,
+					                'user_id'       => $user->id,
 					                'social_email'  => $user_email,
 					                'provider_id'   => $userSocial->getId(),
 					                'provider'      => $provider,

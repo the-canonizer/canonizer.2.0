@@ -26,7 +26,7 @@
 
         <div class="form-group">
             <label>Password <span style="color:red">*</span></label>
-            <label><input type="checkbox"  name="request_opt"  id="request_opt">Request Otp</label>
+            <label><input type="checkbox"  name="request_opt"  id="request_opt">Request OTP</label>
             <input type="password" name="password" class="form-control" id="password" value="{{ old('password')}}">
             @if ($errors->has('password')) <p class="help-block">{{ $errors->first('password') }}</p> @endif
         </div>
