@@ -321,7 +321,7 @@ class Algorithm{
         $expertCampReducedTree = $expertCamp->campTree('blind_popularity'); # only need to canonize this branch
 
         // Check if user supports himself
-        $only_support_his_camp = 0;
+        $num_of_camps_supported = 0;
         
         $user_support_camps = Support::where('topic_num','=',$topicnum)
             ->whereRaw("(start < $as_of_time) and ((end = 0) or (end > $as_of_time))")
@@ -340,16 +340,14 @@ class Algorithm{
                 ->get();
 
             if ( $ret_camp->count() ) {
-                $only_support_his_camp++;
+                $num_of_camps_supported++;
             }
         }
         
-        if( ( $directSupports->count() > 0 || $delegatedSupports->count() > 0 ) && $only_support_his_camp > 1 ) {
+        if( ( $directSupports->count() > 0 || $delegatedSupports->count() > 0 ) && $num_of_camps_supported > 1 ) {
              return $expertCampReducedTree[$expertCamp->camp_num]['score'] * 5;
         }else{
              return $expertCampReducedTree[$expertCamp->camp_num]['score'] * 1;
         }
     }
-
-    
 }
