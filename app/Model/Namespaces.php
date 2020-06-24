@@ -15,5 +15,9 @@ class Namespaces extends Model {
     public function parentNamespace(){
         return $this->belongsTo('\App\Model\Namespaces','parent_id');
     }
+
+    public function topics(){
+    	return $this->hasMany('\App\Model\Topic','namespace_id');
+    }
     
 }

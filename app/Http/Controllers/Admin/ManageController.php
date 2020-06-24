@@ -34,22 +34,23 @@ class ManageController extends Controller {
 
 	public function postCreateNamespace(Request $request){
 		$data = $request->only(['name','parent_id']);
-		$data['name'] = str_slug($data['name']);
-		 $validatorArray = [  'name' => 'required|unique:namespace|max:100'];
+		 $validatorArray = [  'name' => 'required|alpha_dash|unique:namespace|max:100'];
          $message = [
          	'name.required' => 'Namespace field is required.',
          	'name.unique' => 'Namespace must be unique.',
-         	'name.max' => 'Namespace Name may not be greater than 100 characters.'
+         	'name.max' => 'Namespace Name may not be greater than 100 characters.',
+         	'name.alpha_dash' => 'Namespace name must not contain any space.'
          ];
          $validator = Validator::make($data, $validatorArray, $message);
          if ($validator->fails()) {  
             return back()->withErrors($validator->errors())->withInput($request->all());
         }
-        $data['name'] = str_slug($data['name']);
+
+        $data['name'] = str_slug($data['name'],"_");
 		$requestId = $request->input('request_id');
 		$namespaceRequest = NamespaceRequest::find($requestId);
 		
-		$slug = str_slug($data['name']);
+		$slug = str_slug($data['name'],"_");
 		if(isset($data['parent_id']) && $data['parent_id'] !=0 ){
 			if($namespace = Namespaces::find($data['parent_id'])){
 				$slug = $namespace->label.$slug.'/';
@@ -78,7 +79,7 @@ class ManageController extends Controller {
 		
 		$data = $request->only(['name','parent_id']);
 
-		$slug = (isset($data['name']) && $data['name'] != '' && $data['name']!=null) ? str_slug($data['name']) : '';
+		$slug = (isset($data['name']) && $data['name'] != '' && $data['name']!=null) ? str_slug($data['name'],"_") : '';
 		$oldNamespace = Namespaces::find($id);
 		if(isset($data['parent_id']) && $data['parent_id'] !=0 ){
 			if($namespace = Namespaces::find($data['parent_id'])){
@@ -89,29 +90,37 @@ class ManageController extends Controller {
 			$slug = "/".$slug."/";
 		}
 		$data['label'] = $slug;
-		$data['name'] = str_slug($data['name']);
 		
 		if(strtolower($oldNamespace->name) != strtolower($data['name'])){
-			$validatorArray = [  'name' => 'required|unique:namespace|max:100'];
+			$validatorArray = [  'name' => 'required|unique:namespace|max:100|alpha_dash'];
 		}else{
 			$validatorArray = [  'name' => 'required|max:100'];
 		}
 	  $message = [
          	'name.required' => 'Namespace field is required.',
          	'name.unique' => 'Namespace must be unique.',
-         	'name.max' => 'Namespace Name may not be greater than 100 characters.'
+         	'name.max' => 'Namespace Name may not be greater than 100 characters.',
+         	'name.alpha_dash' => 'Namespace name must not contain any space.'
          ];
          $validator = Validator::make($data, $validatorArray, $message);
          if ($validator->fails()) {  
             return back()->withErrors($validator->errors())->withInput($request->all());
         }
-      
+        $data['name'] = str_slug($data['name'],"_");
 		
 		$oldNamespace->name = $data['name'];
 		$oldNamespace->parent_id = isset($data['parent_id']) ? $data['parent_id'] : 0;
 		$oldNamespace->label = $data['label'];
 		$oldNamespace->save();
 
+		return redirect('/admin/namespace');
+	}
+
+	public function removeNamespace($id){
+		if($id){
+			$namespace = Namespaces::find($id);
+     		$namespace->delete();     		
+		}
 		return redirect('/admin/namespace');
 	}
 

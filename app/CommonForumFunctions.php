@@ -267,9 +267,11 @@ class CommonForumFunctions
     public static function getTopicName($topicid)
     {
         return Topic::where('topic_num', $topicid)->
-                      where('objector_nick_id', '=', NULL)->
-                      orderBy('go_live_time', 'desc')->
-                      first()->topic_name;
+                      where('objector_nick_id', '=', NULL)
+                      ->where('go_live_time', '<=', time())
+                            ->latest('submit_time')->first()->topic_name;
+                      // ->orderBy('go_live_time', 'desc')->
+                      // first()->topic_name;
     }
 
 

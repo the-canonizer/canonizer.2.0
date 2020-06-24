@@ -25,6 +25,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'adminauth'], function () {
     Route::post('/namespace/create', 'Admin\ManageController@postCreateNamespace');
     Route::get('/namespace/edit/{id}', 'Admin\ManageController@getUpdateNamespace');
     Route::post('/namespace/edit/{id}', 'Admin\ManageController@postUpdateNamespace');
+    Route::get('/namespace/delete/{id}', 'Admin\ManageController@removeNamespace');
     Route::get('/namespace-requests', 'Admin\ManageController@getNamespaceRequests');
     Route::get('/users', 'Admin\UserController@getIndex');
     Route::get('/users/edit/{id}', 'Admin\UserController@getEdit');
