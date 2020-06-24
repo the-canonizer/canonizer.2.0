@@ -285,9 +285,11 @@ class CommonForumFunctions
     {
         return Camp::where('camp_num', $campnum)->
                      where('objector_nick_id', '=', NULL)->
-                     where('topic_num', $topicid)->
-                     orderBy('go_live_time', 'desc')->
-                     first()->camp_name;
+                     where('topic_num', $topicid)
+                     ->where('go_live_time', '<=', time())
+                            ->latest('submit_time')->first()->camp_name;
+                     // ->orderBy('go_live_time', 'desc')->
+                     // first()->camp_name;
     }
 }
 
