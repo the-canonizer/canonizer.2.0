@@ -162,7 +162,7 @@ class SocialController extends Controller
         }
         $users  =  User::where(['email' => $all['email']])->first();
         $user_email =  $all['email'];
-     $social_name = ($userSocial->getNickname() && $userSocial->getNickname()!='') ? $userSocial->getNickname():$userSocial->getName();
+     $social_name = ($userSocial && $userSocial->getNickname() && $userSocial->getNickname()!='') ? $userSocial->getNickname():$userSocial->getName();
 
 					if(isset($users) && isset($users->email)){
 							$socialUser = SocialUser::create([
