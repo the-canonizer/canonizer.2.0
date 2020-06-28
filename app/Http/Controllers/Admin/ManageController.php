@@ -53,11 +53,22 @@ class ManageController extends Controller {
 		$slug = str_slug($data['name'],"_");
 		if(isset($data['parent_id']) && $data['parent_id'] !=0 ){
 			if($namespace = Namespaces::find($data['parent_id'])){
-				$slug = $namespace->label.$slug.'/';
+				$label = $namespace->label;
+				if(isset($label[0]) && $label[0]!='/'){
+					$label = "/".$label;	
+				}
+
+				if((!empty($label) && $label[strlen($label) - 1] != '/')){
+					$label = $label."/";
+				}
+				$slug = $label.$slug.'/';
 			}
 		}
-		if($slug[0] != '/' || $slug[strlen($slug) - 1] != '/'){
-			$slug = "/".$slug."/";
+		if($slug[0] != '/'){
+			$slug = "/".$slug;
+		}
+		if($slug[strlen($slug) - 1] != '/'){
+			$slug = $slug."/";
 		}
 		$data['label'] = $slug;
 		$namespace = Namespaces::create($data);
@@ -78,17 +89,29 @@ class ManageController extends Controller {
 	public function postUpdateNamespace(Request $request,$id){
 		
 		$data = $request->only(['name','parent_id']);
-
 		$slug = (isset($data['name']) && $data['name'] != '' && $data['name']!=null) ? str_slug($data['name'],"_") : '';
 		$oldNamespace = Namespaces::find($id);
 		if(isset($data['parent_id']) && $data['parent_id'] !=0 ){
 			if($namespace = Namespaces::find($data['parent_id'])){
-				$slug = $namespace->label.'/'.$slug;
+				$label = $namespace->label;
+				if(isset($label[0]) && $label[0]!='/'){
+					$label = "/".$label;	
+				}
+
+				if((!empty($label) && $label[strlen($label) - 1] != '/')){
+					$label = $label."/";
+				}
+				$slug = $label.$slug;
 			}
 		}
-		if((isset($slug[0]) && $slug[0] != '/') || (!empty($slug) && $slug[strlen($slug) - 1] != '/')){
-			$slug = "/".$slug."/";
+
+		if((isset($slug[0]) && $slug[0] != '/')){
+			$slug = "/".$slug;
 		}
+		if((!empty($slug) && $slug[strlen($slug) - 1] != '/')){
+			$slug = $slug."/";
+		}
+
 		$data['label'] = $slug;
 		
 		if(strtolower($oldNamespace->name) != strtolower($data['name'])){
