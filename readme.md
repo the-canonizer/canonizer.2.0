@@ -97,16 +97,27 @@ git push origin dev-jackson
 
    ## Setup on linux ( Lamp Stack Setup)
    1. Update your linux system with following command
+
    		 sudo apt-get update
+
    2.  Install Apache Server
+
        sudo apt-get install apache2 apache2-doc apache2-npm-prefork apache2-utils libexpat1 ssl-cert
+
    3. Install Mysql-server
+
        sudo apt-get install mysql-server mysql-client libmysqlclient-dev
+
    4. Install php ( php 7 or the latest version of php)
+
        sudo apt-get install libapache2-mod-php7.0 php7.0 php7.0-common php7.0-curl php7.0-dev php7.0-gd php-pear php-imagick php7.0-mcrypt php7.0-mysql php7.0-ps php7.0-xsl
+
    5. Install phpmyadmin(Optional as it provide GUI to access database)
+
       sudo apt-get install phpmyadmin
+
    6. clone the canonizer code to /var/www/html directory from the link mentioned above 
+   
    7. create a database in your mysql, set the same name in .env file and  run the migrations in the project( got to var/www/html/canonizer in terminal and run php artisan migrate)
 
 
