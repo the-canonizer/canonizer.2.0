@@ -91,7 +91,7 @@ git push origin dev-jackson
    2. After download install Xampp in your system lets say c://Xampp.
    3. After installing xampp open xampp application and start apache server and mysql server
    4. clone the canonizer code to xampp/htdocs directory from the link mentioned above 
-   5. create a database in your mysql, set the same name in .env file and  run the migrations in the project( got to xampp/htdocs/canonizer in terminal and run php artisan migrate)
+   5. create a database in your mysql, set the same name in .env file and  run the migrations in the project( go to xampp/htdocs/canonizer in terminal and run php artisan migrate)
 
    Thats it! Canonizer will work on your local system
 
@@ -117,8 +117,8 @@ git push origin dev-jackson
       sudo apt-get install phpmyadmin
 
    6. clone the canonizer code to /var/www/html directory from the link mentioned above 
-   
-   7. create a database in your mysql, set the same name in .env file and  run the migrations in the project( got to var/www/html/canonizer in terminal and run php artisan migrate)
+
+   7. create a database in your mysql, set the same name in .env file and  run the migrations in the project( go to var/www/html/canonizer in terminal and run php artisan migrate)
 
 
 
