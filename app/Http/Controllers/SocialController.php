@@ -152,7 +152,7 @@ class SocialController extends Controller
           'email.required'=>'Please enter Email'  
         ];
         $validator = Validator::make($all, [
-                    'email' => 'required',
+                    'email' => 'required|email',
         ],$message);
 
         if ($validator->fails()) {
