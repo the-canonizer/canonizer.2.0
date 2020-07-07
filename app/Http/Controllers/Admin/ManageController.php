@@ -46,7 +46,7 @@ class ManageController extends Controller {
             return back()->withErrors($validator->errors())->withInput($request->all());
         }
 
-        $data['name'] = str_slug($data['name'],"_");
+       // $data['name'] = str_slug($data['name'],"_");
 		$requestId = $request->input('request_id');
 		$namespaceRequest = NamespaceRequest::find($requestId);
 		
@@ -89,7 +89,8 @@ class ManageController extends Controller {
 	public function postUpdateNamespace(Request $request,$id){
 		
 		$data = $request->only(['name','parent_id']);
-		$slug = (isset($data['name']) && $data['name'] != '' && $data['name']!=null) ? str_slug($data['name'],"_") : '';
+		//$slug = (isset($data['name']) && $data['name'] != '' && $data['name']!=null) ? str_slug($data['name'],"_") : '';
+		$slug = (isset($data['name']) && $data['name'] != '' && $data['name']!=null) ? $data['name'] : '';
 		$oldNamespace = Namespaces::find($id);
 		if(isset($data['parent_id']) && $data['parent_id'] !=0 ){
 			if($namespace = Namespaces::find($data['parent_id'])){
