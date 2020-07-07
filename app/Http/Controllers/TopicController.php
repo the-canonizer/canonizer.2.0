@@ -72,7 +72,7 @@ class TopicController extends Controller {
      */
     public function store(Request $request) {
         $all = $request->all();
-         $validatorArray = ['topic_name' => 'required|max:30',
+         $validatorArray = ['topic_name' => 'required|max:30|regex:/^[a-zA-Z0-9\s]+$/',
             'namespace' => 'required',
             'create_namespace' => 'required_if:namespace,other|max:100',
             'nick_name' => 'required'
@@ -87,6 +87,7 @@ class TopicController extends Controller {
                              ->latest('submit_time')
                              ->first();
         $message = [
+            'topic_name.regex' => 'Topic name must only contain space and alphanumeric characters.',
             'create_namespace.required_if' => 'The Other Namespace Name field is required when namespace is other.',
             'create_namespace.max' => 'The Other Namespace Name may not be greater than 100 characters.'
         ];
