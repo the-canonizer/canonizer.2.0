@@ -34,12 +34,12 @@ class ManageController extends Controller {
 
 	public function postCreateNamespace(Request $request){
 		$data = $request->only(['name','parent_id']);
-		 $validatorArray = [  'name' => 'required|regex:"^[a-zA-Z0-9_]*$"|unique:namespace|max:100'];
+		 $validatorArray = [  'name' => 'required|regex:"^[a-zA-Z0-9_/]*$"|unique:namespace|max:100'];
          $message = [
          	'name.required' => 'Namespace field is required.',
          	'name.unique' => 'Namespace must be unique.',
          	'name.max' => 'Namespace Name may not be greater than 100 characters.',
-         	'name.regex' => 'Namespace Name may only contain letters, numbers and underscore.'
+         	'name.regex' => 'Namespace Name may only contain letters, numbers, backslashes and underscore.'
          ];
          $validator = Validator::make($data, $validatorArray, $message);
          if ($validator->fails()) {  
@@ -50,7 +50,7 @@ class ManageController extends Controller {
 		$requestId = $request->input('request_id');
 		$namespaceRequest = NamespaceRequest::find($requestId);
 		
-		$slug = str_slug($data['name'],"_");
+		$slug = $data['name']; //str_slug($data['name'],"_");
 		if(isset($data['parent_id']) && $data['parent_id'] !=0 ){
 			if($namespace = Namespaces::find($data['parent_id'])){
 				$label = $namespace->label;
@@ -115,7 +115,7 @@ class ManageController extends Controller {
 		$data['label'] = $slug;
 		
 		if(strtolower($oldNamespace->name) != strtolower($data['name'])){
-			$validatorArray = [  'name' => 'required|unique:namespace|max:100|regex:"^[a-zA-Z0-9_]*$"'];
+			$validatorArray = [  'name' => 'required|unique:namespace|max:100|regex:"^[a-zA-Z0-9_/]*$"'];
 		}else{
 			$validatorArray = [  'name' => 'required|max:100'];
 		}
@@ -123,13 +123,13 @@ class ManageController extends Controller {
          	'name.required' => 'Namespace field is required.',
          	'name.unique' => 'Namespace must be unique.',
          	'name.max' => 'Namespace Name may not be greater than 100 characters.',
-         	'name.regex' => 'Namespace Name may only contain letters, numbers and underscore.'
+         	'name.regex' => 'Namespace Name may only contain letters, numbers, backslashes and underscore.'
          ];
          $validator = Validator::make($data, $validatorArray, $message);
          if ($validator->fails()) {  
             return back()->withErrors($validator->errors())->withInput($request->all());
         }
-        $data['name'] = str_slug($data['name'],"_");
+        //$data['name'] = str_slug($data['name'],"_");
 		
 		$oldNamespace->name = $data['name'];
 		$oldNamespace->parent_id = isset($data['parent_id']) ? $data['parent_id'] : 0;
