@@ -34,7 +34,8 @@ class ThankToSubmitterMail extends Mailable
      */
     public function build()
     {
-        echo env('APP_ENV', 'development')."--".(env('APP_ENV', 'development') == 'staging' )."--".config('app.mail_env'); die;
+        echo (env('APP_ENV', 'development') == 'staging' ) ? '[staging.canon]': (env('APP_ENV', 'development') == 'local' ) ? '[local.canon]' : '[canon] ';
+        echo "pre".env('APP_ENV', 'development')."--".(env('APP_ENV', 'development') == 'staging' )."--".config('app.mail_env'); die;
         return $this->markdown('emails.thanktosubmitter')->subject(config('app.mail_env').'Thank you for contributing to Canonizer.com');
     }
 }
