@@ -154,6 +154,8 @@ class RegisterController extends Controller
         $user->status = 1;
         $user->otp='';
         $user->update();
+         session()->forget('social_user');
+         session()->forget('provider');
         // send help link in email
         $link = 'topic/132-Help/1';		
         Mail::to($user->email)->bcc(config('app.admin_bcc'))->send(new WelcomeMail($user,$link));

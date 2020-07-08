@@ -161,10 +161,11 @@ class SocialController extends Controller
                             ->withInput();
         }
         $users  =  User::where(['email' => $all['email']])->first();
-        $user_email =  $all['email'];
-     $social_name = ($userSocial && $userSocial->getNickname() && $userSocial->getNickname()!='') ? $userSocial->getNickname():$userSocial->getName();
 
-					if(isset($users) && isset($users->email)){
+        $user_email =  $all['email'];
+     	$social_name = ($userSocial && $userSocial->getNickname() && $userSocial->getNickname()!='') ? $userSocial->getNickname():$userSocial->getName();
+
+					if(isset($users) && isset($users->email) && $users->status!=0){
 							$socialUser = SocialUser::create([
 				                'user_id'       => $users->id,
 				                'social_email'  => $user_email,
@@ -176,6 +177,9 @@ class SocialController extends Controller
 				            session()->forget('social_user');
     						session()->forget('provider');
 				            return redirect('/');
+				        }else if(isset($users) && isset($users->email) && $users->status ==0){
+				        		Mail::to($users->email)->bcc(config('app.admin_bcc'))->send(new OtpVerificationMail($users));
+						       return redirect()->route('register.otp', ['user' => base64_encode($users->email)]);
 				        }else{
 				        	
 				        		$authCode = mt_rand(100000, 999999);
@@ -192,8 +196,7 @@ class SocialController extends Controller
 					                 'social_name'   => $social_name,
 					            ]);
 					             //otp email
-					            session()->forget('social_user');
-    							session()->forget('provider');
+					           
 						       Mail::to($user->email)->bcc(config('app.admin_bcc'))->send(new OtpVerificationMail($user));
 						       return redirect()->route('register.otp', ['user' => base64_encode($user->email)]);
 				        	
