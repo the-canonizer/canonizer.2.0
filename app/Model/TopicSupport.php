@@ -235,14 +235,16 @@ class TopicSupport extends Model {
   //          $as_of_time = strtotime($_REQUEST['asofdate']);
 		// }
         if(!session("topic-support-tree-$topicnum")){
-            $data = Support::where('topic_num','=',$topicnum)
+            $query = Support::where('topic_num','=',$topicnum)
             //->where('delegate_nick_name_id',$delegateNickId)
-            ->whereRaw("(start <= $as_of_time) and ((end = 0) or (end >= $as_of_time))")
-            //->where('camp_num',$campnum)
-            ->orderBy('start','DESC')
-            ->select(['support_order','camp_num','topic_num','nick_name_id','delegate_nick_name_id'])
+            ->whereRaw("(start <= $as_of_time) and ((end = 0) or (end >= $as_of_time))");
+            if($campnum){
+                    $query->where('camp_num',$campnum);             
+            }
+            
+            $query->orderBy('start','DESC')->select(['support_order','camp_num','topic_num','nick_name_id','delegate_nick_name_id']);
             //->select(['support_order','camp_num'])
-            ->get();
+            $data = $query->get();
             session(["topic-support-tree-$topicnum"=>$data]);
         }
        
