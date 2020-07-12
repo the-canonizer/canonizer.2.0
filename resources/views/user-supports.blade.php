@@ -17,6 +17,7 @@
         <?php $user = $nickName->getUser();
             $privateFlags = explode(',',$user->private_flags);
             $supportedCamps = $nickName->getSupportCampList($_REQUEST['namespace'],['nofilter'=>true]);
+           // echo "<pre>"; print_r($supportedCamps); die;
             $camp_num = app('request')->input('campnum');
             $topic_num = app('request')->input('topicnum');
          ?>
@@ -65,8 +66,10 @@
             <h5>List of supported camps</h5>
             @if(count($supportedCamps) > 0)
 			   @foreach($supportedCamps as $key=>$supports)
+                           
                <?php
 
+                                 $delegate_flag = 0;    
                                 $topic = \App\Model\Topic::where('topic_num','=',$key)->where('objector_nick_id', '=', NULL)->where('go_live_time', '<=', time())->latest('submit_time')->get();
                                 $topic_name = isset($topic[0]) ? $topic[0]->topic_name:'';
                                 $topic_name_space_id = isset($topic[0]) ? $topic[0]->namespace_id:1;
@@ -99,12 +102,13 @@
                     <?php } ?>
                     <ul>
                         @if(isset($supports['array']))
-                        <?php ksort($supports['array']); ?>
+                        <?php ksort($supports['array']);
+                         ?>
                         @foreach($supports['array'] as $support_order)
                             @foreach($support_order as $support)
 
                             <?php 
-                            if(isset($support['delegate_nick_name_id']) && $support['delegate_nick_name_id'] !=0){ 
+                            if(isset($support['delegate_nick_name_id']) && $support['delegate_nick_name_id'] !=0 && !$delegate_flag){ 
 
                                     $topic = \App\Model\Topic::where('topic_num','=',$key)->latest('submit_time')->get();
                                     $delegatedNick = new \App\Model\Nickname();
@@ -112,7 +116,8 @@
                                     $delegatedNickDetail  = $delegatedNick->getNickName($support['delegate_nick_name_id']);
                                     $nickName = \App\Model\Nickname::find($support['delegate_nick_name_id']);
                                     $supported_camp = $nickName->getDelegatedSupportCampList($topic_name_space_id,['nofilter'=>true]);
-                                    $supported_camp_list = $nickName->getSupportCampListNames($supported_camp,$key)
+                                    $supported_camp_list = $nickName->getSupportCampListNames($supported_camp,$key);
+                                    $delegate_flag = 1;
                                 ?>
                                 <li style="list-style:none;">
                                     Support delegated to {{$delegatedNickDetail->nick_name }}
@@ -120,7 +125,7 @@
                                       <span style="font-size:10px; width:100%; float:left;"><b>Supported camp list</b> : {!!$supported_camp_list !!}</span>
                                   <?php } ?>
                                 </li>
-                            <?php } else{ ?>    
+                            <?php } else if(isset($support['delegate_nick_name_id']) && $support['delegate_nick_name_id'] ==0){ ?>    
                                 <li id="camp_{{$key}}_{{$support['camp_num']}}">
                                     <a href="{{ (array_key_exists('link',$support)  && isset($support['link'])) ? $support['link'] : ''  }}" style="{{ ($support['camp_num'] == $camp_num && $key == $topic_num) ? 'font-weight:bold; font-size:16px;' : '' }}">{{(array_key_exists('camp_name',$support)  && isset($support['camp_name'])) ? $support['camp_name'] : ''}}</a></li>
                             <?php } ?>
