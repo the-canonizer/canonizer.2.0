@@ -98,6 +98,70 @@ class Nickname extends Model {
         }       
       return $returnHtml;                  
     }
+
+    public function getDelegatedSupportCampList($namespace = 1,$filter = array()){
+        $as_of_time = time();
+        $as_of_clause = '';
+
+        $namespace = isset($_REQUEST['namespace']) ? $_REQUEST['namespace'] : $namespace;
+
+        if (isset($_REQUEST['asof']) && $_REQUEST['asof'] == 'review') {
+            
+        } else if ((isset($_REQUEST['asof']) && $_REQUEST['asof'] == 'bydate') || (session()->has('asofDefault') && session('asofDefault') == 'bydate' && !isset($_REQUEST['asof']))) {
+            if(isset($_REQUEST['asof']) && $_REQUEST['asof'] == "bydate"){
+                 $as_of_time = strtotime(date('Y-m-d H:i:s', strtotime($_REQUEST['asofdate'])));
+                $as_of_clause = "and go_live_time < $as_of_time";   
+            }else if(session('asofDefault') == 'bydate' && !isset($_REQUEST['asof'])){
+                $as_of_time = strtotime(session('asofdateDefault'));
+                $as_of_clause = "and go_live_time < $as_of_time";
+            }
+            
+        } else {
+            $as_of_clause = 'and go_live_time < ' . $as_of_time;
+        }
+
+        if(isset($filter['nofilter']) && $filter['nofilter']){
+                    $as_of_time  = time();
+                    $as_of_clause = 'and go_live_time < ' . $as_of_time;
+         }
+
+        $sql = "select u.topic_num, u.camp_num, u.title,u.camp_name, p.support_order, p.delegate_nick_name_id from support p, 
+        (select s.title,s.topic_num,s.camp_name,s.submit_time,s.go_live_time, s.camp_num from camp s,
+            (select topic_num, camp_num, max(go_live_time) as camp_max_glt from camp
+                where objector_nick_id is null $as_of_clause group by topic_num, camp_num) cz,
+                (select t.topic_num, t.topic_name, t.namespace, t.go_live_time from topic t,
+                    (select ts.topic_num, max(ts.go_live_time) as topic_max_glt from topic ts
+                        where ts.namespace_id=$namespace and ts.objector_nick_id is null $as_of_clause group by ts.topic_num) tz
+                            where t.namespace_id=$namespace and t.topic_num = tz.topic_num and t.go_live_time = tz.topic_max_glt) uz
+                where s.topic_num = cz.topic_num and s.camp_num=cz.camp_num and s.go_live_time = cz.camp_max_glt and s.topic_num=uz.topic_num) u
+        where u.topic_num = p.topic_num and ((u.camp_num = p.camp_num) or (u.camp_num = 1)) and p.delegate_nick_name_id = {$this->id} and
+        (p.start < $as_of_time) and ((p.end = 0) or (p.end > $as_of_time)) and u.go_live_time < $as_of_time order by u.submit_time DESC";
+        $results = DB::select($sql);
+        $supports = [];
+        foreach ($results as $rs) {
+            $topic_num = $rs->topic_num;
+            $camp_num = $rs->camp_num;
+            $title = preg_replace('/[^A-Za-z0-9\-]/', '-', ($rs->title != '') ? $rs->title : $rs->camp_name);
+            $topic_id = $topic_num . "-" . $title;
+            if ($rs->delegate_nick_name_id && $camp_num != 1 ) {
+                $supports[$topic_num]['array'][$rs->support_order][] = ['camp_name' => $rs->camp_name, 'camp_num' => $camp_num, 'link' => url('topic/' . $topic_id . '/' . $camp_num),'delegate_nick_name_id'=>$rs->delegate_nick_name_id];
+            } else if ($camp_num == 1) {
+                if($rs->title ==''){
+                    $topicData = \App\Model\Topic::where('topic_num','=',$topic_num)->where('go_live_time', '<=', time())->latest('submit_time')->get();
+                    $title = preg_replace('/[^A-Za-z0-9\-]/', '-', $topicData[0]->topic_name);
+                     $topic_id = $topic_num . "-" . $title;
+                }
+                $supports[$topic_num]['camp_name'] = ($rs->camp_name != "") ? $rs->camp_name : $rs->title;
+                $supports[$topic_num]['link'] = url('topic/' . $topic_id . '/' . $camp_num);
+                if($rs->delegate_nick_name_id){
+                    $supports[$topic_num]['delegate_nick_name_id'] = $rs->delegate_nick_name_id;
+                }
+            } else {
+                $supports[$topic_num]['array'][$rs->support_order][] = ['camp_name' => $rs->camp_name, 'camp_num' => $camp_num, 'link' => url('topic/' . $topic_id . '/' . $camp_num)];
+            }
+        }
+        return $supports;
+    }
     public function getSupportCampList($namespace = 1,$filter = array()) {
 
         $as_of_time = time();
@@ -138,6 +202,7 @@ class Nickname extends Model {
         (p.start < $as_of_time) and ((p.end = 0) or (p.end > $as_of_time)) and u.go_live_time < $as_of_time order by u.submit_time DESC";
         $results = DB::select($sql);
         $supports = [];
+        echo "<pre>dddd"; print_r($results); die;
         foreach ($results as $rs) {
             $topic_num = $rs->topic_num;
             $camp_num = $rs->camp_num;
