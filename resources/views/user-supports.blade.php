@@ -108,6 +108,9 @@
                             @foreach($support_order as $support)
 
                             <?php 
+                             if(isset($support['delegate_nick_name_id']) && $support['delegate_nick_name_id'] !=0 && $delegate_flag){
+                                continue;
+                             }
                             if(isset($support['delegate_nick_name_id']) && $support['delegate_nick_name_id'] !=0 && !$delegate_flag){ 
 
                                     $topic = \App\Model\Topic::where('topic_num','=',$key)->latest('submit_time')->get();
@@ -125,7 +128,7 @@
                                       <span style="font-size:10px; width:100%; float:left;"><b>Supported camp list</b> : {!!$supported_camp_list !!}</span>
                                   <?php } ?>
                                 </li>
-                            <?php } else if(isset($support['delegate_nick_name_id']) && $support['delegate_nick_name_id'] ==0){ ?>    
+                            <?php } else { ?>    
                                 <li id="camp_{{$key}}_{{$support['camp_num']}}">
                                     <a href="{{ (array_key_exists('link',$support)  && isset($support['link'])) ? $support['link'] : ''  }}" style="{{ ($support['camp_num'] == $camp_num && $key == $topic_num) ? 'font-weight:bold; font-size:16px;' : '' }}">{{(array_key_exists('camp_name',$support)  && isset($support['camp_name'])) ? $support['camp_name'] : ''}}</a></li>
                             <?php } ?>
