@@ -202,7 +202,6 @@ class Nickname extends Model {
         (p.start < $as_of_time) and ((p.end = 0) or (p.end > $as_of_time)) and u.go_live_time < $as_of_time order by u.submit_time DESC";
         $results = DB::select($sql);
         $supports = [];
-        echo "<pre>dddd"; print_r($results); die;
         foreach ($results as $rs) {
             $topic_num = $rs->topic_num;
             $camp_num = $rs->camp_num;
