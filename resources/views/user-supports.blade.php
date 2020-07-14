@@ -17,7 +17,6 @@
         <?php $user = $nickName->getUser();
             $privateFlags = explode(',',$user->private_flags);
             $supportedCamps = $nickName->getSupportCampList($_REQUEST['namespace'],['nofilter'=>true]);
-           // echo "<pre>"; print_r($supportedCamps); die;
             $camp_num = app('request')->input('campnum');
             $topic_num = app('request')->input('topicnum');
          ?>
