@@ -125,7 +125,7 @@ class Nickname extends Model {
                     $as_of_clause = 'and go_live_time < ' . $as_of_time;
          }
 
-        $sql = "select u.topic_num, u.camp_num, u.title,u.camp_name, ,p.support_order, p.delegate_nick_name_id from support p, 
+        $sql = "select u.topic_num, u.camp_num, u.title,u.camp_name,p.support_order, p.delegate_nick_name_id from support p, 
         (select s.title,s.topic_num,s.camp_name,s.submit_time,s.go_live_time, s.camp_num from camp s,
             (select topic_num, camp_num, max(go_live_time) as camp_max_glt from camp
                 where objector_nick_id is null $as_of_clause group by topic_num, camp_num) cz,
