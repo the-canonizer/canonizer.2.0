@@ -962,7 +962,7 @@ class TopicController extends Controller {
         if($namespace_id == 0 && isset($topicData[0])){
             $namespace_id  = $topicData[0]->namespace_id ;
         } 
-        return view('user-supports', compact('nickName', 'namespaces','namespace_id'));
+        return view('user-supports', compact('nickName', 'namespaces','namespace_id','id'));
     }
 
     public function preview_statement(Request $request) {

@@ -99,7 +99,7 @@ class Nickname extends Model {
       return $returnHtml;                  
     }
 
-    public function getDelegatedSupportCampList($namespace = 1,$filter = array()){
+    public function getDelegatedSupportCampList($namespace = 1,$id = 0,$filter = array()){
         $as_of_time = time();
         $as_of_clause = '';
 
@@ -125,7 +125,7 @@ class Nickname extends Model {
                     $as_of_clause = 'and go_live_time < ' . $as_of_time;
          }
 
-        $sql = "select u.topic_num, u.camp_num, u.title,u.camp_name, p.support_order, p.delegate_nick_name_id from support p, 
+        $sql = "select u.topic_num, u.camp_num, u.title,u.camp_name, ,p.support_order, p.delegate_nick_name_id from support p, 
         (select s.title,s.topic_num,s.camp_name,s.submit_time,s.go_live_time, s.camp_num from camp s,
             (select topic_num, camp_num, max(go_live_time) as camp_max_glt from camp
                 where objector_nick_id is null $as_of_clause group by topic_num, camp_num) cz,
@@ -134,7 +134,7 @@ class Nickname extends Model {
                         where ts.namespace_id=$namespace and ts.objector_nick_id is null $as_of_clause group by ts.topic_num) tz
                             where t.namespace_id=$namespace and t.topic_num = tz.topic_num and t.go_live_time = tz.topic_max_glt) uz
                 where s.topic_num = cz.topic_num and s.camp_num=cz.camp_num and s.go_live_time = cz.camp_max_glt and s.topic_num=uz.topic_num) u
-        where u.topic_num = p.topic_num and ((u.camp_num = p.camp_num) or (u.camp_num = 1)) and p.delegate_nick_name_id = {$this->id} and
+        where u.topic_num = p.topic_num and ((u.camp_num = p.camp_num) or (u.camp_num = 1)) and p.nick_name_id = {$id} and p.delegate_nick_name_id = {$this->id} and
         (p.start < $as_of_time) and ((p.end = 0) or (p.end > $as_of_time)) and u.go_live_time < $as_of_time order by u.submit_time DESC";
         $results = DB::select($sql);
         $supports = [];
