@@ -86,6 +86,7 @@
                                     $delegatedNickDetail  = $delegatedNick->getNickName($supports['delegate_nick_name_id']);
                                     $nickName = \App\Model\Nickname::find($supports['delegate_nick_name_id']);
                                     $supported_camp = $nickName->getDelegatedSupportCampList($topic_name_space_id,['nofilter'=>true]);
+                                    echo "<pre>"; print_r($supported_camp); die;
                                     $supported_camp_list = $nickName->getSupportCampListNames($supported_camp,$key)
 
                       ?>
