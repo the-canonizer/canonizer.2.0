@@ -86,7 +86,8 @@
                                     $delegatedNickDetail  = $delegatedNick->getNickName($supports['delegate_nick_name_id']);
                                     $nickName = \App\Model\Nickname::find($supports['delegate_nick_name_id']);
                                     $supported_camp = $nickName->getDelegatedSupportCampList($topic_name_space_id,['nofilter'=>true]);
-                                    $supported_camp_list = $nickName->getSupportCampListNames($supported_camp,$key)
+                                    $supported_camp_list = $nickName->getSupportCampListNames($supported_camp,$key);
+                                    echo "<pre>"; print_r($supported_camp); die;
 
                       ?>
                       <ul>
@@ -120,6 +121,7 @@
                                     $supported_camp = $nickName->getDelegatedSupportCampList($topic_name_space_id,['nofilter'=>true]);
                                     $supported_camp_list = $nickName->getSupportCampListNames($supported_camp,$key);
                                     $delegate_flag = 1;
+                                    echo "<pre>"; print_r($supported_camp); die;
                                 ?>
                                 <li style="list-style:none;">
                                     Support delegated to {{$delegatedNickDetail->nick_name }}
