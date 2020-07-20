@@ -132,8 +132,7 @@
                         <div>
                             <b>Topic Name :</b> {{ $data->topic_name }} <br/>
                             <b>Edit summary :</b> {{ $data->note }} <br/>
-
-                            <b>Namespace :</b> {{ $data->topicnamespace->label }} <br/>
+                            <b>Namespace :</b>{{namespace_label($data->topicnamespace)}} <br/>
                             <b>Submitter Nick Name :</b> {{ isset($data->submitternickname->nick_name) ? $data->submitternickname->nick_name : 'N/A' }} <br/>
                             <b>Submitted on :</b> {{ to_local_time($data->submit_time) }} <br/>
                             <b>Go live Time :</b> {{ to_local_time($data->go_live_time)}} <br/>

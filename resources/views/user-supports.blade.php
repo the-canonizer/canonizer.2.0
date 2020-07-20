@@ -55,7 +55,7 @@
                 <input type="hidden" name="topicnum" value="{{$topic_num}}" />
                 <select onchange="submitForm(this)" name="namespace" id="namespace" class="namespace-select">
                     @foreach($namespaces as $namespace)
-                        <option data-namespace="{{ $namespace->label }}" value="{{ $namespace->id }}" {{ isset($namespace_id) && $namespace->id == $namespace_id ? 'selected' : ''}}>{{$namespace->label}}</option>
+                        <option data-namespace="{{ $namespace->name }}" value="{{ $namespace->id }}" {{ isset($namespace_id) && $namespace->id == $namespace_id ? 'selected' : ''}}>{{namespace_label($namespace)}}</option>
                     @endforeach
                 </select>
                 </form>

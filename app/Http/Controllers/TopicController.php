@@ -204,8 +204,8 @@ class TopicController extends Controller {
                 $othernamespace = trim($all['create_namespace'], '/');
                 $namespace = new Namespaces();
                 $namespace->parent_id = 0;
-                $namespace->name = $othernamespace;
-                $namespace->label = '/' . $othernamespace . '/';
+                $namespace->name = '/' .$othernamespace . '/';
+               // $namespace->label = '/' . $othernamespace . '/';
                 $namespace->save();
 
                 //update namespace id

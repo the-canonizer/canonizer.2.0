@@ -237,7 +237,7 @@ class Camp extends Model {
         }else if(session()->has('asofDefault') && session('asofDefault') == 'bydate' && !isset($_REQUEST['asof']) ){
             $as_of_time = strtotime(session('asofdateDefault'));
         }
-        $query = Topic::select('topic.go_live_time', 'topic.topic_name', 'namespace.name as namespace', 'namespace.label', 'topic.topic_num', 'camp.title', 'camp.camp_num')
+        $query = Topic::select('topic.go_live_time', 'topic.topic_name', 'topic.namespace_id','namespace.name as namespace', 'namespace.name', 'topic.topic_num', 'camp.title', 'camp.camp_num')
                 ->join('camp', 'topic.topic_num', '=', 'camp.topic_num')
                 ->join('namespace', 'topic.namespace_id', '=', 'namespace.id')
                 ->where('camp_name', '=', 'Agreement')
@@ -253,13 +253,13 @@ class Camp extends Model {
         if(isset($_REQUEST['my']) && $_REQUEST['my'] == $_REQUEST['namespace']){
             $query->whereIn('topic.submitter_nick_id', $nicknameIds);
         }
-        return $query->orderBy('namespace.label', 'ASC')->orderBy('topic.topic_name', 'ASC')->orderBy('topic.go_live_time', 'DESC')->groupBy('topic_num')->get();
+        return $query->orderBy('namespace.name', 'ASC')->orderBy('topic.topic_name', 'ASC')->orderBy('topic.go_live_time', 'DESC')->groupBy('topic_num')->get();
     }
 
     public static function getAgreementTopic($topicnum, $filter = array()) {
 
         if ((!isset($filter['asof']) && !session()->has('asofDefault')) || (isset($filter['asof']) && $filter['asof'] == "default") || (session()->has('asofDefault') && session('asofDefault') == 'default' && !isset($filter['asof']))) {
-            return self::select('topic.topic_name', 'camp.*', 'namespace.name as namespace_name', 'namespace.label')
+            return self::select('topic.topic_name','topic.namespace_id', 'camp.*', 'namespace.name as namespace_name', 'namespace.name')
                             ->join('topic', 'topic.topic_num', '=', 'camp.topic_num')
                             ->join('namespace', 'topic.namespace_id', '=', 'namespace.id')
                             ->where('topic.topic_num', $topicnum)->where('camp_name', '=', 'Agreement')
@@ -271,7 +271,7 @@ class Camp extends Model {
         } else {
 
             if ((isset($filter['asof']) && $filter['asof'] == "review") || (session('asofDefault')=="review" && !isset($filter['asof']))) {
-                return self::select('topic.topic_name', 'camp.*', 'namespace.name as namespace_name','namespace.label')
+                return self::select('topic.topic_name', 'topic.namespace_id','camp.*', 'namespace.name as namespace_name','namespace.name')
                                 ->join('topic', 'topic.topic_num', '=', 'camp.topic_num')
                                 ->join('namespace', 'topic.namespace_id', '=', 'namespace.id')
                                 ->where('camp.topic_num', $topicnum)->where('camp_name', '=', 'Agreement')
@@ -287,7 +287,7 @@ class Camp extends Model {
                 if(isset($filter['nofilter']) && $filter['nofilter']){
                     $asofdate  = time();
                 }
-                return self::select('topic.topic_name', 'camp.*', 'namespace.name as namespace_name','namespace.label')
+                return self::select('topic.topic_name','topic.namespace_id', 'camp.*', 'namespace.name as namespace_name','namespace.name')
                                 ->join('topic', 'topic.topic_num', '=', 'camp.topic_num')
                                 ->join('namespace', 'topic.namespace_id', '=', 'namespace.id')
                                 ->where('camp.topic_num', $topicnum)->where('camp_name', '=', 'Agreement')
