@@ -20,8 +20,9 @@
 		$label = $label."/";
 	}	
  	if($namespace->parent_id != 0){
- 		  echo "<pre>"; print_r($namespace); die;
+
  		   $nameSpaceParent = \App\Model\Namespaces::find($namespace->parent_id);
+ 		   echo "<pre>"; print_r($nameSpaceParent); die;
  		  	return get_namespace_label($nameSpaceParent,$nameSpaceParent->name.$label);
  	}
  	return $label;
