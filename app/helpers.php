@@ -20,7 +20,8 @@
 		$label = $label."/";
 	}	
  	if($namespace->parent_id != 0){
- 		  	//return get_namespace_label($namespace->parentNamespace,$namespace->parentNamespace->name.$label);
+ 		   $nameSpaceParent = \App\Model\Namespaces::find($namespace->parent_id);
+ 		  	return get_namespace_label($nameSpaceParent,$nameSpaceParent->name.$label);
  	}
  	return $label;
  	
