@@ -50,7 +50,7 @@
 						   
 						  $topic_id = $topic->topic_num."-".$title;
               $namespace = \App\Model\Namespaces::find($topic->namespace_id);
-						  echo "<pre>"; print_r($namespace); die;
+						  
 						 ?>
 					 
 					 <li id="outline_{{ $topic->topic_num }}" style="line-height: 2"> <a href="<?php echo url('topic/'.$topic_id.'/'.$topic->camp_num) ?>"> {{ namespace_label($namespace) }} {{ $topic->topic_name }} </a></li>

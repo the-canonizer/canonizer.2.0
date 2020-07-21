@@ -23,6 +23,11 @@
 											<select name="parent_id" class="form-control">
                                                 <option value="0">-- No Parent -- </option>
                                                 @foreach($namespaces as $nm)
+                                                <?php 
+                                                	if($nm->id == $namespace->id){
+                                                		continue;
+                                                	}
+                                                ?>
                                                     <option value="{{$nm->id}}" @if($namespace->parent_id==$nm->id) selected @endif>{{$nm->name}}</option>
                                                 @endforeach
                                             </select>
