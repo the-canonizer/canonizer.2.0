@@ -20,8 +20,10 @@
 		$label = $label."/";
 	}	
  	if($namespace->parent_id != 0){
- 		  	//return get_namespace_label($namespace->parentNamespace,$namespace->parentNamespace->name.$label);
+ 		  	return get_namespace_label($namespace->parentNamespace,$namespace->parentNamespace->name.$label);
+ 	}else{
+ 		return $label;
  	}
- 	return $label;
+ 	
  	
  }
