@@ -18,7 +18,7 @@
             <h3>Select Namespace
             <div class="col-md-6 pull-right">
                 <form class="row">
-                <div class="col-sm-8"><?php echo "<pre>"; print_r($namespaces); die; ?>
+                <div class="col-sm-8">
                 <select onchange="submitForm(this)" name="namespace" id="namespace" class="namespace-select">
                     <option value="">All</option>
                     @foreach($namespaces as $namespace)
