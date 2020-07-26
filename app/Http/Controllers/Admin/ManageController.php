@@ -61,32 +61,13 @@ class ManageController extends Controller {
          		return back()->withErrors($validator->errors()->add('name', 'Namespace must be unique.'))->withInput($request->all());
          	}
         }
-
-       // $data['name'] = str_slug($data['name'],"_");
+        $name = $data['name'];
+		if((isset($name[0]) && $name[0] =='/') || ((!empty($name) && $name[strlen($name) - 1] == '/'))){
+			$name = str_replace('/', "", $name);	
+		}
+		$data['name'] = $name;
 		$requestId = $request->input('request_id');
 		$namespaceRequest = NamespaceRequest::find($requestId);
-		
-		//$slug = $data['name']; //str_slug($data['name'],"_");
-		// if(isset($data['parent_id']) && $data['parent_id'] !=0 ){
-		// 	if($namespace = Namespaces::find($data['parent_id'])){
-		// 		$label = $namespace->label;
-		// 		if(isset($label[0]) && $label[0]!='/'){
-		// 			$label = "/".$label;	
-		// 		}
-
-		// 		if((!empty($label) && $label[strlen($label) - 1] != '/')){
-		// 			$label = $label."/";
-		// 		}
-		// 		$slug = $label.$slug.'/';
-		// 	}
-		// }
-		// if($slug[0] != '/'){
-		// 	$slug = "/".$slug;
-		// }
-		// if($slug[strlen($slug) - 1] != '/'){
-		// 	$slug = $slug."/";
-		// }
-		// $data['label'] = $slug;
 		$namespace = Namespaces::create($data);
 		if($namespaceRequest){
 			$namespaceRequest->status=1;
@@ -107,31 +88,7 @@ class ManageController extends Controller {
 		$data = $request->only(['name','parent_id']);
 		$all = $request->all();
 		$page_no  = isset($all['page']) ? $all['page'] : 1 ;  
-		//$slug = (isset($data['name']) && $data['name'] != '' && $data['name']!=null) ? str_slug($data['name'],"_") : '';
-		//$slug = (isset($data['name']) && $data['name'] != '' && $data['name']!=null) ? $data['name'] : '';
 		$oldNamespace = Namespaces::find($id);
-		// if(isset($data['parent_id']) && $data['parent_id'] !=0 ){
-		// 	if($namespace = Namespaces::find($data['parent_id'])){
-		// 		$label = $namespace->label;
-		// 		if(isset($label[0]) && $label[0]!='/'){
-		// 			$label = "/".$label;	
-		// 		}
-
-		// 		if((!empty($label) && $label[strlen($label) - 1] != '/')){
-		// 			$label = $label."/";
-		// 		}
-		// 		$slug = $label.$slug;
-		// 	}
-		// }
-
-		// if((isset($slug[0]) && $slug[0] != '/')){
-		// 	$slug = "/".$slug;
-		// }
-		// if((!empty($slug) && $slug[strlen($slug) - 1] != '/')){
-		// 	$slug = $slug."/";
-		// }
-
-		// $data['label'] = $slug;
 		
 		if(strtolower($oldNamespace->name) != strtolower($data['name'])){
 			$validatorArray = [  'name' => 'required|unique:namespace|max:100|regex:"^[/]?[a-zA-Z0-9_]*[/]?$"'];
@@ -161,11 +118,13 @@ class ManageController extends Controller {
          		return back()->withErrors($validator->errors()->add('name', 'Namespace must be unique.'))->withInput($request->all());
          	}
         }
-        //$data['name'] = str_slug($data['name'],"_");
-		
+		$name = $data['name'];
+		if((isset($name[0]) && $name[0] =='/') || ((!empty($name) && $name[strlen($name) - 1] == '/'))){
+			$name = str_replace('/', "", $name);	
+		}
+		$data['name'] = $name;
 		$oldNamespace->name = $data['name'];
 		$oldNamespace->parent_id = isset($data['parent_id']) ? $data['parent_id'] : 0;
-		//$oldNamespace->label = $data['label'];
 		$oldNamespace->save();
 
 		return redirect('/admin/namespace?page='.$page_no);
