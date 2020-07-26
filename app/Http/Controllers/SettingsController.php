@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\NewDelegatedSupporterMail;
 use App\Mail\PhoneOTPMail;
 use App\Model\EtherAddresses;
+use App\Model\SocialUser;
 use Hash;
 
 class SettingsController extends Controller
@@ -53,6 +54,7 @@ class SettingsController extends Controller
             'first_name' => 'required|regex:/^[a-zA-Z ]*$/|string|max:100',
             'last_name' => 'required|regex:/^[a-zA-Z ]*$/|string|max:100',
             'middle_name' => 'nullable|regex:/^[a-zA-Z ]*$/|max:100',
+            'postal_code' => 'nullable|regex:/^[a-zA-Z0-9 ]*$/|max:100',
             'country' => 'required',
         ], $messages);
 
@@ -98,9 +100,11 @@ class SettingsController extends Controller
                 $private_flags[] = $input['postal_code_bit'];
 
             $flags = implode(",", $private_flags);
-
+            $user->default_algo = $request->input('default_algo');
             $user->private_flags = $flags;
             $user->update();
+        
+        session(['defaultAlgo' => $user->default_algo]);
             Session::flash('success', "Profile updated successfully.");
             return redirect()->back();
         }
@@ -239,7 +243,7 @@ class SettingsController extends Controller
             $encode = General::canon_encode($id);
 
             $topic = Camp::where('topic_num', $topicnum)->where('camp_name', '=', 'Agreement')->latest('submit_time')->first();
-            $topicData = Camp::getAgreementTopic($topicnum);
+            $topicData = Camp::getAgreementTopic($topicnum,['nofilter'=>true]);
             //$camp = Camp::where('topic_num',$topicnum)->where('camp_num','=', $campnum)->latest('submit_time','objector')->get();
             $onecamp = Camp::where('topic_num', $topicnum)->where('camp_num', '=', $campnum)->where('go_live_time', '<=', $as_of_time)->latest('submit_time')->first();
             $campWithParents = Camp::campNameWithAncestors($onecamp, '', $topicData->topic_name);
@@ -272,7 +276,7 @@ class SettingsController extends Controller
                             //Session::flash('warning', "You are already supporting this camp. You cant submit support again.");
                             Session::flash('confirm', 'samecamp');
                         } else {
-                            Session::flash('warning', 'The following  camp are parent camp to "' . $onecamp->camp_name . '" and will be removed if you commit this support.');
+                            Session::flash('warning', 'The following  camp is parent camp to "' . $onecamp->camp_name . '" and will be removed if you commit this support.');
                             Session::flash('confirm', 1);
                         }
                 } else {
@@ -291,7 +295,7 @@ class SettingsController extends Controller
                             //Session::flash('warning', "You are already supporting this camp. You cant submit support again.");
                             Session::flash('confirm', 'samecamp');
                         } else {
-                            Session::flash('warning', 'The following  camp are child camp to "' . $onecamp->camp_name . '" and will be removed if you commit this support.');
+                            Session::flash('warning', 'The following  camp is child camp to "' . $onecamp->camp_name . '" and will be removed if you commit this support.');
                             Session::flash('confirm', 1);
                         }
                 } else {
@@ -395,7 +399,7 @@ class SettingsController extends Controller
                 $parentUser = Nickname::getUserByNickName($data['delegate_nick_name_id']);
                 $nickName = Nickname::getNickName($data['nick_name']);
                 // $topic = Camp::where('topic_num', $data['topic_num'])->where('camp_name', '=', 'Agreement')->latest('submit_time')->first();
-                $topic = Camp::getAgreementTopic($data['topic_num']);
+                $topic = Camp::getAgreementTopic($data['topic_num'],['nofilter'=>true]);
                 $camp = Camp::where('topic_num', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('go_live_time', '<=', time())->latest('submit_time')->first();
                 $result['topic_num'] = $data['topic_num'];
                 $result['camp_num'] = $data['camp_num'];
@@ -428,13 +432,13 @@ class SettingsController extends Controller
         $topic = \App\Model\Topic::where('topic_num', '=', $data['topic_num'])->latest('submit_time')->get();
         $topic_name_space_id = isset($topic[0]) ? $topic[0]->namespace_id : 1;
         $nickName = \App\Model\Nickname::find($data['nick_name']);
-        $supported_camp = $nickName->getSupportCampList($topic_name_space_id);
-        $supported_camp_list = $nickName->getSupportCampListNamesEmail($supported_camp, $data['topic_num']);
+        $supported_camp = $nickName->getSupportCampList($topic_name_space_id,['nofilter'=>true]);
+        $supported_camp_list = $nickName->getSupportCampListNamesEmail($supported_camp, $data['topic_num'],$data['camp_num']);
         $dataObject['support_list'] = $supported_camp_list;
         $ifalsoSubscriber = Camp::checkifSubscriber($subscribers, $parentUser);
         if ($ifalsoSubscriber) {
             $dataObject['also_subscriber'] = 1;
-            $dataObject['sub_support_list'] = Camp::getSubscriptionList($parentUser->id, $data['topic_num']);
+            $dataObject['sub_support_list'] = Camp::getSubscriptionList($parentUser->id, $data['topic_num'],$data['camp_num']);
         }
          $receiver = (config('app.env') == "production") ? $parentUser->email : config('app.admin_email');
          Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new NewDelegatedSupporterMail($parentUser, $link, $dataObject));
@@ -451,13 +455,13 @@ class SettingsController extends Controller
             $topic = \App\Model\Topic::where('topic_num', '=', $supportData['topic_num'])->latest('submit_time')->get();
             $topic_name_space_id = isset($topic[0]) ? $topic[0]->namespace_id : 1;
             $nickName = \App\Model\Nickname::find($supporter->nick_name_id);
-            $supported_camp = $nickName->getSupportCampList($topic_name_space_id);
-            $supported_camp_list = $nickName->getSupportCampListNamesEmail($supported_camp, $supportData['topic_num']);
+            $supported_camp = $nickName->getSupportCampList($topic_name_space_id,['nofilter'=>true]);
+            $supported_camp_list = $nickName->getSupportCampListNamesEmail($supported_camp, $supportData['topic_num'],$supportData['camp_num']);
              $supportData['support_list'] = $supported_camp_list;
             $ifalsoSubscriber = Camp::checkifSubscriber($subscribers, $user);
             if ($ifalsoSubscriber) {
                 $supportData['also_subscriber'] = 1;
-                $supportData['sub_support_list'] = Camp::getSubscriptionList($user->id, $supportData['topic_num']);
+                $supportData['sub_support_list'] = Camp::getSubscriptionList($user->id, $supportData['topic_num'],$supportData['camp_num']);
             }
 
             $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
@@ -470,7 +474,7 @@ class SettingsController extends Controller
             $userSub = \App\User::find($usr);
             if (!in_array($userSub->id, $alreadyMailed, TRUE)) {
                 $alreadyMailed[] = $userSub->id;
-                $subscriptions_list = Camp::getSubscriptionList($userSub->id, $subscriberData['topic_num']);
+                $subscriptions_list = Camp::getSubscriptionList($userSub->id, $subscriberData['topic_num'],$subscriberData['camp_num']);
                 $subscriberData['support_list'] = $subscriptions_list;
                $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $userSub->email : config('app.admin_email');
                 $subscriberData['subscriber'] = 1;
@@ -505,7 +509,7 @@ class SettingsController extends Controller
     private function emailForSupportAdded($data){
             $parentUser = Nickname::getUserByNickName($data['nick_name']);
             $nickName = Nickname::getNickName($data['nick_name']);
-            $topic = Camp::getAgreementTopic($data['topic_num']);
+            $topic = Camp::getAgreementTopic($data['topic_num'],['nofilter'=>true]);
             $camp = Camp::where('topic_num', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('go_live_time', '<=', time())->latest('submit_time')->first();
         
             $result['topic_num'] = $data['topic_num'];
@@ -524,7 +528,7 @@ class SettingsController extends Controller
 
     private function emailForSupportDeleted($data){
             $nickName = Nickname::getNickName($data['nick_name']);
-            $topic = Camp::getAgreementTopic($data['topic_num']);
+            $topic = Camp::getAgreementTopic($data['topic_num'],['nofilter'=>true]);
             $camp = Camp::where('topic_num', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('go_live_time', '<=', time())->latest('submit_time')->first();
 
             $result['topic_num'] = $data['topic_num'];
@@ -659,11 +663,45 @@ class SettingsController extends Controller
             return redirect()->route('login');
         }
     }
-
-
-    function blockchain()
-    {
-        if (Auth::check()) {
+  private function link_exists($provider,$data){
+        $returnArr = [];
+        foreach ($data as $key => $value) {
+            if($value->provider == $provider){
+                $returnArr = $value;
+            }
+        }
+        return $returnArr;
+    }
+    function sociallinks(){
+        if(Auth::check()){
+            $providers = ['google','facebook','github','twitter','linkedin'];
+            $user = Auth::user();
+            $socialdata = []; 
+            $social_data = SocialUser::where('user_id','=',$user->id)->get();
+            if(count($social_data) > 0){
+                foreach($providers as $key=>$d){
+                    $data_exist = $this->link_exists($d,$social_data);
+                    if($data_exist && isset($data_exist->provider)){
+                         $socialdata[$d]=$data_exist;   
+                    }else{
+                         $socialdata[$d]=['provider'=>$d];   
+                    }
+                }
+            }else{
+                
+                foreach($providers as $key=>$d){
+                    $socialdata[$d]=['provider'=>$d];   
+                } 
+            }
+            return view('settings.sociallinks',['sociallinks'=>$socialdata,'providers'=>$providers]);
+        }else{
+            return redirect()->route('login');
+        }
+        
+        
+    }
+    function blockchain(){
+        if(Auth::check()){
             $user = Auth::user();
         }
         $addresses = EtherAddresses::where('user_id', '=', $user->id)->get();

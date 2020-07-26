@@ -33,39 +33,48 @@ class ManageController extends Controller {
 	}
 
 	public function postCreateNamespace(Request $request){
+		$all = $request->all();
+		$page_no  = isset($all['page']) ? $all['page'] : 1 ; 
 		$data = $request->only(['name','parent_id']);
-		$data['name'] = str_slug($data['name']);
-		 $validatorArray = [  'name' => 'required|unique:namespace|max:100'];
+		 $validatorArray = ['name' => 'required|regex:"^[/]?[a-zA-Z0-9_]*[/]?$"|unique:namespace|max:100'];
          $message = [
          	'name.required' => 'Namespace field is required.',
          	'name.unique' => 'Namespace must be unique.',
-         	'name.max' => 'Namespace Name may not be greater than 100 characters.'
+         	'name.max' => 'Namespace Name may not be greater than 100 characters.',
+         	'name.regex' => 'Namespace Name may only contain letters, numbers, underscore and backslashes at begining and end only.'
          ];
+
          $validator = Validator::make($data, $validatorArray, $message);
          if ($validator->fails()) {  
             return back()->withErrors($validator->errors())->withInput($request->all());
+        }else{
+        	$query =Namespaces::where('name',$data['name']);
+        	if($data['name'][0]!='/' && $data['name'][strlen($data['name'])-1] != '/'){
+        		$query = $query->orWhere('name',"/".$data['name']."/");
+        	}else if($data['name'][0]!='/'){
+        		$query = $query->orWhere('name',"/".$data['name']);
+        	}else if($data['name'][strlen($data['name'])-1] != '/'){
+        		$query = $query->orWhere('name',$data['name']."/");
+        	}
+			$oldData = $query->get();
+         	if($oldData && sizeof($oldData) > 0){
+         		return back()->withErrors($validator->errors()->add('name', 'Namespace must be unique.'))->withInput($request->all());
+         	}
         }
-        $data['name'] = str_slug($data['name']);
+        $name = $data['name'];
+		if((isset($name[0]) && $name[0] =='/') || ((!empty($name) && $name[strlen($name) - 1] == '/'))){
+			$name = str_replace('/', "", $name);	
+		}
+		$data['name'] = $name;
 		$requestId = $request->input('request_id');
 		$namespaceRequest = NamespaceRequest::find($requestId);
-		
-		$slug = str_slug($data['name']);
-		if(isset($data['parent_id']) && $data['parent_id'] !=0 ){
-			if($namespace = Namespaces::find($data['parent_id'])){
-				$slug = $namespace->label.$slug.'/';
-			}
-		}
-		if($slug[0] != '/' || $slug[strlen($slug) - 1] != '/'){
-			$slug = "/".$slug."/";
-		}
-		$data['label'] = $slug;
 		$namespace = Namespaces::create($data);
 		if($namespaceRequest){
 			$namespaceRequest->status=1;
 			$namespaceRequest->save();
 			Topic::where('topic_num',$namespaceRequest->topic_num)->update(array('namespace_id'=>$namespace->id));
 		}
-		return redirect('/admin/namespace');
+		return redirect('/admin/namespace?page='.$page_no);
 	}
 
 	public function getUpdateNamespace(Request $request,$id){
@@ -77,41 +86,55 @@ class ManageController extends Controller {
 	public function postUpdateNamespace(Request $request,$id){
 		
 		$data = $request->only(['name','parent_id']);
-
-		$slug = (isset($data['name']) && $data['name'] != '' && $data['name']!=null) ? str_slug($data['name']) : '';
+		$all = $request->all();
+		$page_no  = isset($all['page']) ? $all['page'] : 1 ;  
 		$oldNamespace = Namespaces::find($id);
-		if(isset($data['parent_id']) && $data['parent_id'] !=0 ){
-			if($namespace = Namespaces::find($data['parent_id'])){
-				$slug = $namespace->label.'/'.$slug;
-			}
-		}
-		if((isset($slug[0]) && $slug[0] != '/') || (!empty($slug) && $slug[strlen($slug) - 1] != '/')){
-			$slug = "/".$slug."/";
-		}
-		$data['label'] = $slug;
-		$data['name'] = str_slug($data['name']);
 		
 		if(strtolower($oldNamespace->name) != strtolower($data['name'])){
-			$validatorArray = [  'name' => 'required|unique:namespace|max:100'];
+			$validatorArray = [  'name' => 'required|unique:namespace|max:100|regex:"^[/]?[a-zA-Z0-9_]*[/]?$"'];
 		}else{
-			$validatorArray = [  'name' => 'required|max:100'];
+			$validatorArray = [  'name' => 'required|max:100|regex:"^[/]?[a-zA-Z0-9_]*[/]?$"'];
 		}
 	  $message = [
          	'name.required' => 'Namespace field is required.',
          	'name.unique' => 'Namespace must be unique.',
-         	'name.max' => 'Namespace Name may not be greater than 100 characters.'
+         	'name.max' => 'Namespace Name may not be greater than 100 characters.',
+         	'name.regex' => 'Namespace Name may only contain letters, numbers, underscore and backslashes at begining and end only.'
          ];
          $validator = Validator::make($data, $validatorArray, $message);
          if ($validator->fails()) {  
             return back()->withErrors($validator->errors())->withInput($request->all());
+        }else{
+        	$query =Namespaces::where('name',$data['name']);
+        	if($data['name'][0]!='/' && $data['name'][strlen($data['name'])-1] != '/'){
+        		$query = $query->orWhere('name',"/".$data['name']."/");
+        	}else if($data['name'][0]!='/'){
+        		$query = $query->orWhere('name',"/".$data['name']);
+        	}else if($data['name'][strlen($data['name'])-1] != '/'){
+        		$query = $query->orWhere('name',$data['name']."/");
+        	}
+			$oldData = $query->get();
+         	if($oldData && sizeof($oldData) > 0 && $oldNamespace->id != $oldData[0]->id){
+         		return back()->withErrors($validator->errors()->add('name', 'Namespace must be unique.'))->withInput($request->all());
+         	}
         }
-      
-		
+		$name = $data['name'];
+		if((isset($name[0]) && $name[0] =='/') || ((!empty($name) && $name[strlen($name) - 1] == '/'))){
+			$name = str_replace('/', "", $name);	
+		}
+		$data['name'] = $name;
 		$oldNamespace->name = $data['name'];
 		$oldNamespace->parent_id = isset($data['parent_id']) ? $data['parent_id'] : 0;
-		$oldNamespace->label = $data['label'];
 		$oldNamespace->save();
 
+		return redirect('/admin/namespace?page='.$page_no);
+	}
+
+	public function removeNamespace($id){
+		if($id){
+			$namespace = Namespaces::find($id);
+     		$namespace->delete();     		
+		}
 		return redirect('/admin/namespace');
 	}
 

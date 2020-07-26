@@ -237,7 +237,7 @@ class Camp extends Model {
         }else if(session()->has('asofDefault') && session('asofDefault') == 'bydate' && !isset($_REQUEST['asof']) ){
             $as_of_time = strtotime(session('asofdateDefault'));
         }
-        $query = Topic::select('topic.go_live_time', 'topic.topic_name', 'namespace.name as namespace', 'namespace.label', 'topic.topic_num', 'camp.title', 'camp.camp_num')
+        $query = Topic::select('topic.go_live_time', 'topic.topic_name', 'topic.namespace_id','namespace.name as namespace', 'namespace.name', 'topic.topic_num', 'camp.title', 'camp.camp_num')
                 ->join('camp', 'topic.topic_num', '=', 'camp.topic_num')
                 ->join('namespace', 'topic.namespace_id', '=', 'namespace.id')
                 ->where('camp_name', '=', 'Agreement')
@@ -245,20 +245,21 @@ class Camp extends Model {
                 ->where('camp.go_live_time', '<=', $as_of_time)
                 ->whereRaw('topic.go_live_time in (select max(topic.go_live_time) from topic where topic.topic_num=topic.topic_num and topic.objector_nick_id is null and topic.go_live_time <=' . $as_of_time . ' group by topic.topic_num)')
                 ->where('topic.topic_name', '<>', "");
-
         if (isset($_REQUEST['namespace']) && (!empty($_REQUEST['namespace']) || $_REQUEST['namespace'] != 0)) {
             $query->where('namespace_id', $_REQUEST['namespace']);
+        }else if( null !== session('defaultNamespaceId') && !empty(session('defaultNamespaceId'))){
+            $query->whereIn('namespace_id',explode(',', session('defaultNamespaceId', 1)));
         }
-        if(isset($_REQUEST['my']) && $_REQUEST['my'] == 1){
+        if(isset($_REQUEST['my']) && $_REQUEST['my'] == $_REQUEST['namespace']){
             $query->whereIn('topic.submitter_nick_id', $nicknameIds);
         }
-        return $query->orderBy('namespace.label', 'ASC')->orderBy('topic.topic_name', 'ASC')->orderBy('topic.go_live_time', 'DESC')->groupBy('topic_num')->get();
+        return $query->orderBy('namespace.name', 'ASC')->orderBy('topic.topic_name', 'ASC')->orderBy('topic.go_live_time', 'DESC')->groupBy('topic_num')->get();
     }
 
     public static function getAgreementTopic($topicnum, $filter = array()) {
 
         if ((!isset($filter['asof']) && !session()->has('asofDefault')) || (isset($filter['asof']) && $filter['asof'] == "default") || (session()->has('asofDefault') && session('asofDefault') == 'default' && !isset($filter['asof']))) {
-            return self::select('topic.topic_name', 'camp.*', 'namespace.name as namespace_name', 'namespace.label')
+            return self::select('topic.topic_name','topic.namespace_id', 'camp.*', 'namespace.name as namespace_name', 'namespace.name')
                             ->join('topic', 'topic.topic_num', '=', 'camp.topic_num')
                             ->join('namespace', 'topic.namespace_id', '=', 'namespace.id')
                             ->where('topic.topic_num', $topicnum)->where('camp_name', '=', 'Agreement')
@@ -270,7 +271,7 @@ class Camp extends Model {
         } else {
 
             if ((isset($filter['asof']) && $filter['asof'] == "review") || (session('asofDefault')=="review" && !isset($filter['asof']))) {
-                return self::select('topic.topic_name', 'camp.*', 'namespace.name as namespace_name','namespace.label')
+                return self::select('topic.topic_name', 'topic.namespace_id','camp.*', 'namespace.name as namespace_name','namespace.name')
                                 ->join('topic', 'topic.topic_num', '=', 'camp.topic_num')
                                 ->join('namespace', 'topic.namespace_id', '=', 'namespace.id')
                                 ->where('camp.topic_num', $topicnum)->where('camp_name', '=', 'Agreement')
@@ -286,7 +287,7 @@ class Camp extends Model {
                 if(isset($filter['nofilter']) && $filter['nofilter']){
                     $asofdate  = time();
                 }
-                return self::select('topic.topic_name', 'camp.*', 'namespace.name as namespace_name','namespace.label')
+                return self::select('topic.topic_name','topic.namespace_id', 'camp.*', 'namespace.name as namespace_name','namespace.name')
                                 ->join('topic', 'topic.topic_num', '=', 'camp.topic_num')
                                 ->join('namespace', 'topic.namespace_id', '=', 'namespace.id')
                                 ->where('camp.topic_num', $topicnum)->where('camp_name', '=', 'Agreement')
@@ -857,7 +858,7 @@ class Camp extends Model {
                $camp_subscription = \App\Model\CampSubscription::where('user_id','=',$userid)->where('camp_num','=',$campnum)->where('topic_num','=',$topicnum)->where('subscription_start','<=',strtotime(date('Y-m-d H:i:s')))->where('subscription_end','=',null)->orWhere('subscription_end','>=',strtotime(date('Y-m-d H:i:s')))->get();
                 $flag = sizeof($camp_subscription) > 0  || 0;
                  if(!$flag){
-                    $onecamp = self::getLiveCamp($topicnum, $campnum);
+                    $onecamp = self::getLiveCamp($topicnum, $campnum,['nofilter'=>true]);
                     $childCampData = [];
                     if($onecamp){
                          $childCampData = $onecamp->campChild($topicnum,$campnum);
@@ -879,14 +880,14 @@ class Camp extends Model {
                       foreach($child_camps as $camp){
                         $camp_subscription = \App\Model\CampSubscription::where('user_id','=',$userid)->where('camp_num','=',$camp)->where('topic_num','=',$topicnum)->where('subscription_start','<=',strtotime(date('Y-m-d H:i:s')))->where('subscription_end','=',null)->orWhere('subscription_end','>=',strtotime(date('Y-m-d H:i:s')))->get();
                         if(sizeof($camp_subscription) > 0){
-                            $onecamp = self::getLiveCamp($topicnum, $camp);
+                            $onecamp = self::getLiveCamp($topicnum, $camp,['nofilter'=>true]);
                             $returnArr = array('flag'=>$flag,'camp'=>$onecamp,'camp_subscription_data'=>$camp_subscription);
                             break;
                         }
                       }
                     }
                   }else{
-                    $onecamp = self::getLiveCamp($topicnum, $campnum);
+                    $onecamp = self::getLiveCamp($topicnum, $campnum,['nofilter'=>true]);
                     $returnArr = array('flag'=>$flag,'camp'=>$onecamp,'camp_subscription_data'=>$camp_subscription);
                   }
                 return $returnArr;
@@ -895,13 +896,22 @@ class Camp extends Model {
         }
     }
     
-    public static function getSubscriptionList($userid,$topic_num){
+    public static function getSubscriptionList($userid,$topic_num,$camp_num=1){
         $list = [];
+         $onecamp = self::getLiveCamp($topic_num, $camp_num);
+         self::clearChildCampArray();
+        $childCamps = array_unique(self::getAllChildCamps($onecamp));
+       
         $subscriptions = \App\Model\CampSubscription::where('user_id','=',$userid)->where('topic_num','=',$topic_num)->where('subscription_start','<=',strtotime(date('Y-m-d H:i:s')))->where('subscription_end','=',null)->orWhere('subscription_end','>=',strtotime(date('Y-m-d H:i:s')))->get();
         if(isset($subscriptions ) && count($subscriptions ) > 0){
             $i=1;
             foreach($subscriptions as $subs){
-                $topic = self::getLiveCamp($subs->topic_num,$subs->camp_num);
+                if($camp_num!=1){
+                    if(!in_array($subs->camp_num, $childCamps)){
+                        continue;
+                    }
+                }
+                $topic = self::getLiveCamp($subs->topic_num,$subs->camp_num,['nofilter'=>true]);
                 $title = preg_replace('/[^A-Za-z0-9\-]/', '-', ($topic->title != '') ? $topic->title : $topic->camp_name);
                 $topic_id =$subs->topic_num . "-" . $title;
                 $link = url('topic/' . $topic_id . '/' . $subs->camp_num);
@@ -920,7 +930,7 @@ class Camp extends Model {
                 array_push($users_data, $user->user_id);
             }
         }
-        $onecamp = self::getLiveCamp($topic_num, $camp_num);
+        $onecamp = self::getLiveCamp($topic_num, $camp_num,['nofilter'=>true]);
 
         $childCampData = [];
         if(isset($onecamp) && isset($onecamp->camp_name)){

@@ -65,8 +65,8 @@ class ResetPasswordController extends Controller {
         if ($this->resetPassword($user, $password)) {
 			
 			// send help link in email
-			$link = 'topic/38-Canonized-help-statement-text/1';
-			
+			//$link = 'topic/38-Canonized-help-statement-text/1';
+			$link = 'topic/132-Help/1';
 			Mail::to($user->email)->send(new RecoverAccountMail($user,$link));
 			
             return $this->sendResetResponse("Password Reset Successfully");

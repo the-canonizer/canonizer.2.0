@@ -223,7 +223,7 @@ class CThreadsController extends Controller
 
         $this->validate(
             $request, [
-                'title'    => 'required|max:100',
+                'title'    => 'required|max:100|regex:/^[a-zA-Z0-9\s]+$/',
                 'nick_name' => 'required'
             ]
         );

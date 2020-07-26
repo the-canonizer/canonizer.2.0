@@ -45,7 +45,7 @@
                 <select  onchange="selectNamespace(this)" name="namespace" id="namespace" class="form-control">
                     
                     @foreach($namespaces as $namespace)
-                    <option value="{{ $namespace->id }}" >{{$namespace->label}}</option>
+                    <option value="{{ $namespace->id }}" >{{namespace_label($namespace)}}</option>
                     @endforeach
                     <!-- <option value="other" @if(old('namespace') == 'other') selected @endif>Other</option> -->
                 </select>

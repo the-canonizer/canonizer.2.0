@@ -80,7 +80,7 @@
 
                         </div>
                         @else
-						<a class="nav-link guestLogin">Browsing as: Guest_31</a>
+						<a class="nav-link guestLogin">Browsing as: Guest</a>
                         <a class="nav-link" href="{{ url('/login')}}"><i class="fa fa-fw fa-user"></i> Log in</a>
                         <a class="nav-link" href="{{ url('/register')}}"><i class="fa fa-fw fa-user-plus"></i> Register </a>
                         @endif
@@ -323,9 +323,11 @@ function restrictTextField(e,limitlength){
             
             $(".asofdate, #asofdate").change(function(){
 				// Do something interesting here
-				 var value = $('#asofdate').val();
+                var value = $('#asofdate').val();
                  var bydate = $("input[name='asof']:checked"). val();  
-                 if(value=="" && bydate == 'bydate') {
+
+                 if(value=="" && bydate == 'bydate') {                    
+                     $("#asofdate").removeAttr('disabled');
 					 $('#asofdate').focus();
                     return false;
 				 }else if(value !='' && bydate == 'bydate'){

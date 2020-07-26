@@ -32,6 +32,6 @@ class PasswordResetMail extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.resetpassword');
+        return $this->markdown('emails.resetpassword')->subject(config('app.mail_env').' Reset Password Mail.');
     }
 }

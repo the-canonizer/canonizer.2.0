@@ -179,8 +179,9 @@ change camps with them."><i class="fa fa-question"></i></a>
             <div class="content">
             <div class="row">
                 <div class="tree col-sm-12">
+                    <?php $namespace = \App\Model\Namespaces::find($topic->namespace_id); ?>
                     Topic Name : <?php echo $topic->topic_name;?> <br/>
-					Namespace : <?php echo (isset($topic->namespace_name)) ? $topic->label : 'N/A';?>
+					Namespace : {{namespace_label($namespace)}}
                 </div>
               
             </div>    

@@ -25,6 +25,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'adminauth'], function () {
     Route::post('/namespace/create', 'Admin\ManageController@postCreateNamespace');
     Route::get('/namespace/edit/{id}', 'Admin\ManageController@getUpdateNamespace');
     Route::post('/namespace/edit/{id}', 'Admin\ManageController@postUpdateNamespace');
+    Route::get('/namespace/delete/{id}', 'Admin\ManageController@removeNamespace');
     Route::get('/namespace-requests', 'Admin\ManageController@getNamespaceRequests');
     Route::get('/users', 'Admin\UserController@getIndex');
     Route::get('/users/edit/{id}', 'Admin\UserController@getEdit');
@@ -60,10 +61,18 @@ Route::get('logout', 'Auth\LoginController@logout');
 //Route::get('register/verify-otp', 'Auth\RegisterController@getOtpForm');
 Route::get('register/verify-otp', ['as' => 'register.otp', 'uses' => 'Auth\RegisterController@getOtpForm']);
 Route::post('register/verify-otp', 'Auth\RegisterController@postVerifyOtp');
+Route::get('social/askemail', ['as' => 'social.askemail', 'uses' => 'SocialController@getAskEmail']);
+Route::post('social/verifyemail', 'SocialController@postVerifyEmail');
 //Route::get('login','Auth\LoginController@showLoginForm');
 //Route::post('login','Auth\LoginController@login');
 Route::get('login', [ 'as' => 'login', 'uses' => 'Auth\LoginController@showLoginForm']);
-Route::post('login', [ 'as' => 'login', 'uses' => 'Auth\LoginController@login']);
+Route::post('login', [ 'as' => 'login', 'uses' => 'Auth\LoginController@login','middleware'    => 'checkstatus']);
+// social login url 
+Route::get('login/{provider}', 'SocialController@redirect');
+Route::get('login/{provider}/callback','SocialController@Callback');
+Route::get('verify-otp', ['as' => 'login.otp', 'uses' => 'Auth\LoginController@getOtpForm']);
+Route::post('verify-otp', 'Auth\LoginController@validateLoginOtp');
+
 
 
 Route::get('forgetpassword', 'Auth\ForgotPasswordController@showLinkRequestForm');
@@ -110,6 +119,7 @@ Route::group([ 'middleware' => 'auth'], function() {
      Route::get('settings/changepassword', [ 'as' => 'settings.changepassword', 'uses' => 'SettingsController@getChangePassword']);
      Route::post('settings/changepassword', [ 'as' => 'settings.changepassword.save', 'uses' => 'SettingsController@postChangePassword']);
      Route::get('settings/blockchain', [ 'as' => 'settings.blockchain', 'uses' => 'SettingsController@blockchain']);
+     Route::get('settings/sociallinks', [ 'as' => 'settings.sociallinks', 'uses' => 'SettingsController@sociallinks']);
      Route::post('settings/save-ether-address', [ 'as' => 'settings.save-ether-address', 'uses' => 'SettingsController@postSaveEtherAddress']);
     Route::post('statement/agreetochange', 'TopicController@statement_agreetochange');
     Route::post('graceperiod/notify_change', 'TopicController@notify_change');
@@ -120,7 +130,8 @@ Route::group([ 'middleware' => 'auth'], function() {
     Route::get('/editnews/{topicnum}/{campnum}',['as'=>'newsfeed.edit','uses'=>'NewsFeedController@edit']);
      Route::post('/newsfeed/update',['as'=>'newsfeed.update','uses'=>'NewsFeedController@update']);
     Route::post('/camp/add_subscription',['as'=>'camp.subscription','uses'=>'TopicController@add_camp_subscription']);
-     
+    Route::post('/deactivateuser',['as'=>'social.deactivateuser','uses'=>'SocialController@deactivateuser']);
+    Route::post('/delete_social_link',['as'=>'social.delete_social_link','uses'=>'SocialController@delete']);
      
 });
 

@@ -39,6 +39,9 @@ class HomeController extends Controller {
         
 		//session()->flush();
         $namespaces = Namespaces::all();
+         if(null == session('defaultNamespaceId')){
+            session()->put('defaultNamespaceId',1);
+        }
 		//config('app.front_page_limit')
         $topics = Camp::getAllAgreementTopic(1000, $_REQUEST);
         $videopodcast = VideoPodcast::all()->first();
@@ -67,10 +70,12 @@ class HomeController extends Controller {
         echo $output;
     }
 
-    public function browse() {
+    public function browse(Request $request) {
+        if(empty($_REQUEST['namespace']) && session()->has('defaultNamespaceId')){
+            session()->forget('defaultNamespaceId');
+        }
         $topics = Camp::getBrowseTopic();
         $namespaces = Namespaces::all();
-
         return view('browse', compact('topics', 'namespaces'));
     }
 

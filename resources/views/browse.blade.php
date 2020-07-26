@@ -22,13 +22,13 @@
                 <select onchange="submitForm(this)" name="namespace" id="namespace" class="namespace-select">
                     <option value="">All</option>
                     @foreach($namespaces as $namespace)
-                        <option data-namespace="{{ $namespace->label }}" value="{{ $namespace->id }}" {{ isset($_REQUEST['namespace']) && $namespace->id == $_REQUEST['namespace'] ? 'selected' : ''}}>{{$namespace->label}}</option>
+                        <option data-namespace="{{ $namespace->name }}" value="{{ $namespace->id }}" {{ $namespace->id == session('defaultNamespaceId') ? 'selected' : ''}}>{{namespace_label($namespace)}}</option>
                     @endforeach
                 </select>
                 </div>
                 @if(Auth::check())
                     <div class="col-sm-4 checkbox pd-l-0">
-                    <label><input type="checkbox" name="my" value="1" {{ isset($_REQUEST['my']) &&  $_REQUEST['my'] == 1 ? 'checked' : ''}} onchange="submitForm(this)"> Only My Topics</label>
+                    <label><input type="checkbox" name="my" value="{{(session()->has('defaultNamespaceId')) ? session('defaultNamespaceId') : ''}}" {{ isset($_REQUEST['my']) &&  $_REQUEST['my'] == session('defaultNamespaceId') ? 'checked' : ''}} onchange="submitForm(this)"> Only My Topics</label>
                     </div>
                 @endif
                 </form>
@@ -49,10 +49,11 @@
 						  $title = preg_replace('/[^A-Za-z0-9\-]/', '-', $topic->topic_name);
 						   
 						  $topic_id = $topic->topic_num."-".$title;
+              $namespace = \App\Model\Namespaces::find($topic->namespace_id);
 						  
 						 ?>
 					 
-					 <li id="outline_{{ $topic->topic_num }}" style="line-height: 2"> <a href="<?php echo url('topic/'.$topic_id.'/'.$topic->camp_num) ?>"> {{ $topic->label }} {{ $topic->topic_name }} </a></li>
+					 <li id="outline_{{ $topic->topic_num }}" style="line-height: 2"> <a href="<?php echo url('topic/'.$topic_id.'/'.$topic->camp_num) ?>"> {{ namespace_label($namespace) }} {{ $topic->topic_name }} </a></li>
 					 @endforeach
                                          @else
                                          @if(isset($_REQUEST['asof']) && isset($_REQUEST['asofdate']))
@@ -72,7 +73,22 @@
 </div>  <!-- /.right-whitePnl-->
 <script>
 function submitForm(element){
-    $(element).parents('form').submit();
+    if(($(element).val() == null) || ($(element).val() == "")){
+         $(element).parents('form').submit();
+    }else{
+      changeNamespace(element);  
+    }
+    
+}
+function changeNamespace(element){
+    $.ajax({
+        url:"{{ url('/change-namespace') }}",
+        type:"POST",
+        data:{namespace:$(element).val()},
+        success:function(response){
+            $(element).parents('form').submit();
+        }
+    });
 }
 </script>
 @endsection
