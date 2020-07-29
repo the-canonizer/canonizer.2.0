@@ -16,7 +16,7 @@
     <div class="container-fluid">
         <?php $user = $nickName->getUser();
             $privateFlags = explode(',',$user->private_flags);
-            $supportedCamps = $nickName->getSupportCampList($_REQUEST['namespace'],['nofilter'=>true]);
+            $supportedCamps = $nickName->getSupportCampList($namespace_id,['nofilter'=>true]);
             $camp_num = app('request')->input('campnum');
             $topic_num = app('request')->input('topicnum');
          ?>
