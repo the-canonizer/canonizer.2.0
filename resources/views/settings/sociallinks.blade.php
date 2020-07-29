@@ -79,7 +79,7 @@
              
             <div id="myTabContent" class="add-nickname-section" style="margin-top:20px;">
             <div id="savedAddress">
-               <table class="table">
+               <table class="table table-responsive">
                <thead class="thead-default">
                 <tr>
                     <th>Sr</th>                    
@@ -100,19 +100,18 @@
                             <td>{{$sociallinks[$provider]['social_email']}}</td>                            
                             <td>{{$sociallinks[$provider]['social_name']}}</td>
                             <td>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                      <div class="col-sm-4">
-                                          <a  class="btn {{$provider}} btn-{{$provider}}">
-                                      Linked <i class="fa fa-{{$provider}} fa-fw"></i></a>
-                                      </div> 
-                                      <div class="col-sm-4">
-                                        <form method="post" action="{{ url('/delete_social_link/') }}">
-                                          <input name="_token" type="hidden" value="{{csrf_token()}}" />
-                                          <input type="hidden" name="id" value="{{$sociallinks[$provider]['id']}}" />
-                                           <button type="submit" class="btn btn-danger">Unlink</button>
-                                          </form>  
-                                      </div>
+                                <div class="row ml-0">
+                                    <div class="btn-group">
+                                         <div class="col-sm-5">
+                                             <a  class="btn btn-sm {{$provider}} btn-{{$provider}}"> Linked <i class="fa fa-{{$provider}} fa-fw"></i></a>
+                                          </div> 
+                                          <div class="col-sm-4">
+                                            <form method="post" class="form-group" action="{{ url('/delete_social_link/') }}">
+                                              <input name="_token" type="hidden" value="{{csrf_token()}}" />
+                                              <input type="hidden" name="id" value="{{$sociallinks[$provider]['id']}}" />
+                                               <button type="submit" class="btn btn-sm btn-danger">Unlink</button>
+                                              </form>  
+                                          </div>
                                       
                                     </div>
                                 </div>
@@ -131,7 +130,7 @@
                                <div class="row">
                                   <div class="col-md-12">
                                   <div class="col-sm-4">
-                                    <a href="{{ url('/login/'.$provider) }}" class="btn {{$provider}} fb btn-{{$provider}}">
+                                    <a href="{{ url('/login/'.$provider) }}" class="btn btn-sm {{$provider}} fb btn-{{$provider}}">
                                     Link <i class="fa fa-{{$provider}} fa-fw"></i></a>
                                   </div>
                                   </div>
