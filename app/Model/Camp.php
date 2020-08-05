@@ -729,6 +729,7 @@ class Camp extends Model {
             $array[$child->camp_num]['children'] = is_array($children) ? $children : [];
         }
         return $array;
+        
     }
 
     public function campTree($algorithm, $activeAcamp = null, $supportCampCount = 0, $needSelected = 0) {
@@ -806,14 +807,14 @@ class Camp extends Model {
         $tree[$this->camp_num]['link'] = url('topic/' . $topic_id . '/' . $this->camp_num.'#statement');
         $tree[$this->camp_num]['score'] = $this->getCamptSupportCount($algorithm, $this->topic_num, $this->camp_num);
         $tree[$this->camp_num]['children'] = $this->traverseCampTree($algorithm, $this->topic_num, $this->camp_num);
-
+        
         return $reducedTree = TopicSupport::sumTranversedArraySupportCount($tree);
     }
 
     public function campTreeHtml($activeCamp = null, $activeCampDefault = false) {
 
         $reducedTree = $this->campTree(session('defaultAlgo', 'blind_popularity'), $activeAcamp = null, $supportCampCount = 0, $needSelected = 0);
-
+        
         $filter = isset($_REQUEST['filter']) && is_numeric($_REQUEST['filter']) ? $_REQUEST['filter'] : 0.001;
         
 		       if(session('filter')==="removed") {

@@ -538,8 +538,14 @@ class SettingsController extends Controller
             $result['support_camp'] = $camp->camp_name;
             $result['subject'] = $nickName->nick_name . " has removed their support from ".$result['object'].".";
             $link = 'topic/' . $data['topic_num'] . '/' . $data['camp_num'];
+            $deletedSupport = Support::where('topic_num', $data['topic_num'])
+                ->whereIn('nick_name_id', [$data['nick_name']])
+                ->orderBy('end', 'DESC')
+                ->get();
+
             $subscribers = Camp::getCampSubscribers($data['topic_num'], $data['camp_num']);
             $directSupporter = Support::getAllDirectSupporters($data['topic_num'], $data['camp_num']);
+            $supportsDirect = array_push($directSupporter,$deletedSupport[0]);
             $result['support_deleted'] = 1;
             $this->mailSubscribersAndSupporters($directSupporter,$subscribers, $link, $result);   
     }

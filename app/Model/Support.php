@@ -36,9 +36,9 @@ class Support extends Model {
 	   $othersupports = [];
        $supportFlag = 1;
        if($camp_num != 0){
-        $othersupports = self::where('topic_num',$topic_num)->where('camp_num',$camp_num)->whereNotIn('nick_name_id',$userNicknames)->where('end','=',0)->orderBy('support_order','ASC')->get();
+        $othersupports = self::where('topic_num',$topic_num)->where('camp_num',$camp_num)->whereNotIn('nick_name_id',$userNicknames)->where('delegate_nick_name_id',0)->where('end','=',0)->orderBy('support_order','ASC')->get();
         }else{
-            $othersupports = self::where('topic_num',$topic_num)->whereNotIn('nick_name_id',$userNicknames)->where('end','=',0)->orderBy('support_order','ASC')->get();
+            $othersupports = self::where('topic_num',$topic_num)->whereNotIn('nick_name_id',$userNicknames)->where('delegate_nick_name_id',0)->where('end','=',0)->orderBy('support_order','ASC')->get();
         }
 
 
@@ -56,7 +56,7 @@ class Support extends Model {
                 $allChildren = Camp::getAllChildCamps($camp[0]);
                 if(sizeof($allChildren) > 0 ){
                 foreach($allChildren as $campnum){
-                    $support = self::where('topic_num',$topic_num)->where('camp_num',$campnum)->whereNotIn('nick_name_id',$userNicknames)->where('end','=',0)->orderBy('support_order','ASC')->get();
+                    $support = self::where('topic_num',$topic_num)->where('camp_num',$campnum)->whereNotIn('nick_name_id',$userNicknames)->where('delegate_nick_name_id',0)->where('end','=',0)->orderBy('support_order','ASC')->get();
                       if(sizeof($support) > 0){
                             $supportFlag = 0;
                             break;
@@ -64,7 +64,7 @@ class Support extends Model {
                     }
                 }
             }else{
-                $support = self::where('topic_num',$topic_num)->whereNotIn('nick_name_id',$userNicknames)->where('end','=',0)->orderBy('support_order','ASC')->get();
+                $support = self::where('topic_num',$topic_num)->whereNotIn('nick_name_id',$userNicknames)->where('delegate_nick_name_id',0)->where('end','=',0)->orderBy('support_order','ASC')->get();
                       if(sizeof($support) > 0){
                             $supportFlag = 0;
                         }
@@ -134,7 +134,7 @@ class Support extends Model {
             }
           if(sizeof($allChildren) > 0 ){
             foreach($allChildren as $campnum){
-                $supportData = self::where('topic_num',$topic)->where('camp_num',$campnum)->whereNotIn('nick_name_id',$nickNametoExclude)->where('end','=',0)->orderBy('support_order','ASC')->get();
+                $supportData = self::where('topic_num',$topic)->where('camp_num',$campnum)->whereNotIn('nick_name_id',$nickNametoExclude)->where('delegate_nick_name_id',0)->where('end','=',0)->orderBy('support_order','ASC')->get();
                if(count($supportData) > 0){
                         foreach($supportData as $sp){
                             array_push( $nickNametoExclude, $sp->nick_name_id);

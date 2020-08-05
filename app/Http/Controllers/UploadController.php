@@ -19,8 +19,11 @@ class UploadController extends Controller
 
     public function postUpload(Request $request){
        
-        $validatorArray = [
-            'file' => 'required|mimes:jpeg,bmp,png,jpg,gif|max:5120|min:1'
+        // $validatorArray = [
+        //     'file' => 'required|mimes:jpeg,bmp,png,jpg,gif|max:5120|min:1'
+        // ];
+         $validatorArray = [
+            'file' => 'required|max:5120|min:1'
         ];
         $validator = Validator::make($request->all(),$validatorArray);
         if($validator->fails()) {
