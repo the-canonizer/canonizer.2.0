@@ -769,7 +769,7 @@ h1.page-title{
         background-color: #f9f9f9;
         right: 15px;
         top: 100%;
-        z-index: 1;
+        z-index: 2;
         padding: 10px;
         max-width: 500px;
     }
@@ -813,7 +813,7 @@ h1.page-title{
         background-color: #f9f9f9;
         right: 15px;
         top: 100%;
-        z-index: 1;
+        z-index: 2;
         padding: 10px;
         max-width:290px;
     }
