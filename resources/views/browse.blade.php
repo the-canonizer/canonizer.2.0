@@ -15,7 +15,8 @@
 <div class="right-whitePnl">
     <div class="container-fluid">
         <div class="Gcolor-Pnl">
-            <h3>Select Namespace
+            <h3 class="row">
+            <div class="col-md-6">Select Namespace</div>
             <div class="col-md-6 pull-right">
                 <form class="row">
                 <div class="col-sm-8">
@@ -27,7 +28,7 @@
                 </select>
                 </div>
                 @if(Auth::check())
-                    <div class="col-sm-4 checkbox pd-l-0">
+                    <div class="col-sm-4 checkbox pd-2-0">
                     <label><input type="checkbox" name="my" value="{{(session()->has('defaultNamespaceId')) ? session('defaultNamespaceId') : ''}}" {{ isset($_REQUEST['my']) &&  $_REQUEST['my'] == session('defaultNamespaceId') ? 'checked' : ''}} onchange="submitForm(this)"> Only My Topics</label>
                     </div>
                 @endif

@@ -48,8 +48,10 @@ if(isset($topic) && count($topic) > 0 ) { ?>
          @endif
         
          <div class="Scolor-Pnl">
-            <h3>Canonizer Sorted Camp Tree
-			<a href="#" class="pull-right" data-toggle="tooltip" data-placement="left" title="This section is a table of contents for this topic. It is in outline or tree form, with supporting sub camps indented from the
+            <h3 class="row">
+            <div class="col-md-4">Canonizer Sorted Camp Tree</div>
+            <div class="col-md-8">
+                <a href="#" class="pull-right" data-toggle="tooltip" data-placement="left" title="This section is a table of contents for this topic. It is in outline or tree form, with supporting sub camps indented from the
             parent camp.  If you are in a sub camp, you are also counted in all
             parent camps including the agreement camp at the top.  The numbers are
             canonized scores derived from the people in the camps based on your
@@ -70,6 +72,9 @@ if(isset($topic) && count($topic) > 0 ) { ?>
             <?php }else if(Auth::check() && Auth::user()->id){ ?>
                 <a style="float: right;font-size: medium; margin-right: 20px; margin-top: 5px;"><input id="camp_subscription" type="checkbox" name="subscribe" /> Subscribe</a>
             <?php } ?>
+
+            </div>
+			
             
             </h3>
 			
@@ -91,11 +96,14 @@ if(isset($topic) && count($topic) > 0 ) { ?>
             </div>
         </div>
         <?php if(count($camp) > 0) { ?>
-        <div class="Scolor-Pnl" id="statement">
+        <div class="Scolor-Pnl pull-left" id="statement">
 		     <?php $statement = $camp->statement($camp->topic_num,$camp->camp_num);  ?>
-            <h3><?php echo ($parentcamp=="Agreement") ? $parentcamp : "Camp";?> Statement
-			<?php if(isset($statement->go_live_time)) { ?><span style="float:right; font-size:14px"><b>Go live Time :</b> {{ to_local_time($statement->go_live_time) }}</span>
-            <?php } ?>
+            <h3 class="row">
+             <div class="col-md-4"><?php echo ($parentcamp=="Agreement") ? $parentcamp : "Camp";?> Statement</div>
+             <div class="col-md-8">                    
+                <?php if(isset($statement->go_live_time)) { ?><span class="pull-right" style="font-size:14px"><b>Go live Time :</b> {{ to_local_time($statement->go_live_time) }}</span>
+                <?php } ?>
+             </div>
 			</h3>
             <div class="content" style="width:100%;" id="camp_statement">
                     <?php 
@@ -141,13 +149,17 @@ if(isset($topic) && count($topic) > 0 ) { ?>
         </div>
         
         <div class="Scolor-Pnl">
-            <h3>Support Tree for "<?php echo $camp->camp_name;?>" Camp
-             <a href="#" class="pull-right" data-toggle="tooltip" data-placement="left" title="Supporters can delegate their support to others.  Direct supporters
+            <h3 class="row">
+            <div class="col-md-6">Support Tree for "<?php echo $camp->camp_name;?>" Camp</div>
+             <div class="col-md-6">
+                 <a href="#" class="pull-right" data-toggle="tooltip" data-placement="left" title="Supporters can delegate their support to others.  Direct supporters
 receive email notifications of proposed camp changes, while delegated
 supporters don’t.  People delegating their support to others are shown
 below and indented from their delegates in an outline form.  If a
 delegate changes camp, everyone delegating their support to them will
 change camps with them."><i class="fa fa-question"></i></a>
+             </div>
+
             </h3>
             <div class="content">
             <div class="row">
@@ -174,7 +186,8 @@ change camps with them."><i class="fa fa-question"></i></a>
         </div>
    
         <div class="Scolor-Pnl">
-            <h3>Current Topic Record:
+            <h3 class="row">
+                <div class="col-md-6">Current Topic Record:</div>
             </h3>
             <div class="content">
             <div class="row">
