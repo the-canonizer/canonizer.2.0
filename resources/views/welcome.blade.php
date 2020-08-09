@@ -56,6 +56,7 @@
                        @foreach($topics as $k=>$topic)
 
                        <?php
+
                         $topicData = \App\Model\Topic::where('topic_num','=',$topic->topic_num)->where('go_live_time', '<=', $as_of_time)->latest('submit_time')->get();
                         $topic_name_space_id = isset($topicData[0]) ? $topicData[0]->namespace_id:1;
                         $topic_name = isset($topicData[0]) ? $topicData[0]->topic_name:'';
@@ -70,7 +71,6 @@
                         if(isset($_REQUEST['asof']) && $_REQUEST['asof']=='date'){
                             $as_of_time = strtotime($_REQUEST['asofdate']);
                         }
-
                        ?>
                          {!! $topic->campTreeHtml($createCamp) !!}
                          <?php $createCamp = 0;?>

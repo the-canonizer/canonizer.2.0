@@ -302,9 +302,10 @@ class Camp extends Model {
     public static function getAllAgreementTopic($limit = 10, $filter = array()) {
 
         $as_of_time = time();
+        $returnTopics = [];
 
         if ((!isset($filter['asof']) && !session('asofDefault')) || (isset($filter['asof']) && $filter['asof'] == "default") || (session()->has('asofDefault') && session('asofDefault') == 'default' && !isset($filter['asof']))) {
-            return self::select(DB::raw('(select count(topic_support.id) from topic_support where topic_support.topic_num=camp.topic_num) as support, camp.*'))
+            $returnTopics = self::select(DB::raw('(select count(topic_support.id) from topic_support where topic_support.topic_num=camp.topic_num) as support, camp.*'))
                             ->join('topic', 'topic.topic_num', '=', 'camp.topic_num')
                             ->where('camp_name', '=', 'Agreement')
                             ->where('topic.objector_nick_id', '=', NULL)
@@ -318,7 +319,7 @@ class Camp extends Model {
 
 
                // return self::where('camp_name', '=', 'Agreement')->join('topic', 'topic.topic_num', '=', 'camp.topic_num')->whereIn('namespace_id', explode(',', session('defaultNamespaceId')))->latest('camp.submit_time')->get()->take($limit); //->sortBy('topic.topic_name');
-              return self::select(DB::raw('(select count(topic_support.id) from topic_support where topic_support.topic_num=camp.topic_num) as support, camp.*'))
+              $returnTopics =  self::select(DB::raw('(select count(topic_support.id) from topic_support where topic_support.topic_num=camp.topic_num) as support, camp.*'))
                             ->join('topic', 'topic.topic_num', '=', 'camp.topic_num')
                             ->where('camp_name', '=', 'Agreement')
                             ->where('topic.objector_nick_id', '=', NULL)
@@ -337,10 +338,12 @@ class Camp extends Model {
                      $asofdate = strtotime(date('Y-m-d H:i:s', strtotime(session('asofdateDefault'))));
                  }
 
-                return self::where('camp_name', '=', 'Agreement')->join('topic', 'topic.topic_num', '=', 'camp.topic_num')->whereIn('namespace_id', explode(',', session('defaultNamespaceId',1)))->where('topic.objector_nick_id', '=', NULL)->where('camp.go_live_time', '<=', $asofdate)->latest('camp.submit_time')->take($limit)->get()->unique('topic_num'); //->sortBy('topic.topic_name');
+                $returnTopics =  self::where('camp_name', '=', 'Agreement')->join('topic', 'topic.topic_num', '=', 'camp.topic_num')->whereIn('namespace_id', explode(',', session('defaultNamespaceId',1)))->where('topic.objector_nick_id', '=', NULL)->where('camp.go_live_time', '<=', $asofdate)->latest('camp.submit_time')->take($limit)->get()->unique('topic_num'); //->sortBy('topic.topic_name');
 
             }
         }
+
+        return $returnTopics;
     }
 
     public static function getAllLoadMoreTopic($offset = 10, $filter = array(), $id) {
@@ -615,28 +618,25 @@ class Camp extends Model {
 
     public function getCamptSupportCount($algorithm, $topicnum, $campnum) {
 
-        $as_of_time = time();
-        if ((isset($_REQUEST['asof']) && $_REQUEST['asof'] == "bydate") || (session()->has('asofDefault') && session('asofDefault') == 'bydate' && !isset($_REQUEST['asof']))) {
-            if(isset($_REQUEST['asof']) && $_REQUEST['asof'] == "bydate"){
-                 $as_of_time = strtotime(date('Y-m-d H:i:s', strtotime($_REQUEST['asofdate'])));
-             }else if(session()->has('asofdateDefault') && session('asofdateDefault')!='' && !isset($_REQUEST['asof'])){
-                $as_of_time =  strtotime(session('asofdateDefault'));
-            }
-        }
+        // $as_of_time = time();
+        // if ((isset($_REQUEST['asof']) && $_REQUEST['asof'] == "bydate") || (session()->has('asofDefault') && session('asofDefault') == 'bydate' && !isset($_REQUEST['asof']))) {
+        //     if(isset($_REQUEST['asof']) && $_REQUEST['asof'] == "bydate"){
+        //          $as_of_time = strtotime(date('Y-m-d H:i:s', strtotime($_REQUEST['asofdate'])));
+        //      }else if(session()->has('asofdateDefault') && session('asofdateDefault')!='' && !isset($_REQUEST['asof'])){
+        //         $as_of_time =  strtotime(session('asofdateDefault'));
+        //     }
+        // }
 
         $supportCountTotal = 0;
         try {
             foreach (session("topic-support-nickname-$topicnum") as $supported) {
-
                 $nickNameSupports = session("topic-support-{$topicnum}")->filter(function ($item) use($supported) {
                     return $item->nick_name_id == $supported->nick_name_id; /* Current camp support */
                 });
-
                 $supportPoint = Algorithm::{$algorithm}($supported->nick_name_id);
                 $currentCampSupport = $nickNameSupports->filter(function ($item) use($campnum) {
                             return $item->camp_num == $campnum; /* Current camp support */
                         })->first();
-               
 			   /*The canonizer value should be the same as their value supporting that camp. 
 				   1 if they only support one party, 
 				   0.5 for their first, if they support 2, 
@@ -708,6 +708,21 @@ class Camp extends Model {
         return $html;
     }
 
+    public static function sortTopicsBasedOnScore($topics){
+
+        if(sizeof($topics) > 0){
+
+                 foreach ($topics as $key => $value) {
+                    $reducedTree = $value->getTopicScore(session('defaultAlgo', 'blind_popularity'), $activeAcamp = null, $supportCampCount = 0, $needSelected = 0);
+                    $topics[$key]['score'] = $reducedTree[$value->camp_num]['score'];
+                }
+               $topics = $topics->sortBy('score',SORT_REGULAR, true);
+                return $topics;
+        }else{
+            return $topics;
+        }
+    }
+
     public function traverseCampTree($algorithm, $topicnum, $parentcamp, $lastparent = null) {
         $key = $topicnum . '-' . $parentcamp . '-' . $lastparent;
         if (in_array($key, Camp::$traversetempArray)) {
@@ -732,15 +747,95 @@ class Camp extends Model {
         
     }
 
-    public function campTree($algorithm, $activeAcamp = null, $supportCampCount = 0, $needSelected = 0) {
+    public function getTopicScore($algorithm, $activeAcamp = null, $supportCampCount = 0, $needSelected = 0){
+        if (!session("topic-support-nickname-{$this->topic_num}")) { 
+        $this->campTreeData(session('defaultAlgo', 'blind_popularity'), $activeAcamp = null, $supportCampCount = 0, $needSelected = 0);
+        }
+        $topic_name = (isset($this->topic) && isset($this->topic->topic_name)) ? $this->topic->topic_name: '';
+        $title = preg_replace('/[^A-Za-z0-9\-]/', '-', $topic_name);
+        $topic_id = $this->topic_num . "-" . $title;
+       
+        $treeNew = [];
+        $treeNew[$this->camp_num]['score'] = $this->getCamptSupportCount($algorithm, $this->topic_num, $this->camp_num);
+        $treeNew[$this->camp_num]['children'] = $this->traverseCampTree($algorithm, $this->topic_num, $this->camp_num);
+         
+        return $reducedTree = TopicSupport::sumTranversedArraySupportCount($treeNew);
+    }
+    public function campTreeData($algorithm, $activeAcamp = null, $supportCampCount = 0, $needSelected = 0){
         $as_of_time = time();
         if ((isset($_REQUEST['asof']) && $_REQUEST['asof'] == 'bydate')) {
             $as_of_time = strtotime($_REQUEST['asofdate']);
         }else if((session()->has('asof') && session('asof') == 'bydate' && !isset($_REQUEST['asof']))){
             $as_of_time = strtotime(session('asofdateDefault'));
         }
+        if (!session("topic-support-nickname-{$this->topic_num}")) { 
+            session(["topic-support-nickname-{$this->topic_num}" => Support::where('topic_num', '=', $this->topic_num)
+                        ->where('delegate_nick_name_id', 0)
+                        ->whereRaw("(start <= $as_of_time) and ((end = 0) or (end > $as_of_time))")
+                        ->orderBy('start', 'DESC')
+                        ->groupBy('nick_name_id')
+                        ->select(['nick_name_id', 'delegate_nick_name_id', 'support_order', 'topic_num', 'camp_num'])
+                        ->get()]);
+        }
 
-        if (!session("topic-support-nickname-{$this->topic_num}")) {
+
+        if (!session("topic-support-{$this->topic_num}")) {
+            session(["topic-support-{$this->topic_num}" => Support::where('topic_num', '=', $this->topic_num)
+                        ->whereRaw("(start <= $as_of_time) and ((end = 0) or (end > $as_of_time))")
+                        ->orderBy('start', 'DESC')
+                        ->select(['support_order', 'camp_num', 'nick_name_id', 'delegate_nick_name_id', 'topic_num'])
+                        ->get()]);
+        }
+
+        if ((!isset($_REQUEST['asof']) && !(session()->has('asofDefault'))) || (isset($_REQUEST['asof']) && $_REQUEST['asof'] == "default") || (session()->has('asofDefault') && session('asofDefault') == 'default' && !isset($_REQUEST['asof']))) {
+                session(["topic-child-{$this->topic_num}" => self::where('topic_num', '=', $this->topic_num)
+                        ->where('camp_name', '!=', 'Agreement')
+                        ->where('objector_nick_id', '=', NULL)
+                        ->whereRaw('go_live_time in (select max(go_live_time) from camp where topic_num=' . $this->topic_num . ' and objector_nick_id is null and go_live_time < "' . time() . '" group by camp_num)')
+                        ->where('go_live_time', '<=', time())
+                        ->groupBy('camp_num')
+                        ->orderBy('submit_time', 'desc')
+                        ->get()]);
+        } else {
+            
+            if ((isset($_REQUEST['asof']) && $_REQUEST['asof'] == "review") || (session('asofDefault')=="review" && !isset($_REQUEST['asof']))) {
+            
+            
+                session(["topic-child-{$this->topic_num}" => self::where('topic_num', '=', $this->topic_num)
+                            ->where('camp_name', '!=', 'Agreement')
+                            ->where('objector_nick_id', '=', NULL)
+                            ->whereRaw('go_live_time in (select max(go_live_time) from camp where topic_num=' . $this->topic_num . ' and objector_nick_id is null group by camp_num)')
+                            ->orderBy('submit_time', 'desc')
+                            ->groupBy('camp_num')
+                            ->get()]);
+            } else if ((isset($_REQUEST['asof']) && $_REQUEST['asof'] == "bydate") || (session()->has('asofDefault') && session('asofDefault') == 'bydate' && !isset($_REQUEST['asof']))) {
+                if(isset($_REQUEST['asof']) && $_REQUEST['asof'] == "bydate"){
+                          $asofdate = strtotime(date('Y-m-d H:i:s', strtotime($_REQUEST['asofdate'])));
+                }else if(session()->has('asofdateDefault') && session('asofdateDefault')!='' && !isset($_REQUEST['asof'])){
+                    $asofdate = strtotime(session('asofdateDefault'));
+                }
+               
+                session(["topic-child-{$this->topic_num}" => self::where('topic_num', '=', $this->topic_num)
+                            ->where('camp_name', '!=', 'Agreement')
+                            ->where('objector_nick_id', '=', NULL)
+                            ->whereRaw('go_live_time in (select max(go_live_time) from camp where topic_num=' . $this->topic_num . ' and objector_nick_id is null and go_live_time <= '.$asofdate.' group by camp_num)')
+                            ->orderBy('submit_time', 'DESC')
+                            ->groupBy('camp_num')
+                            ->get()]);
+                            
+            }
+        }
+
+    }
+    public function campTree($algorithm, $activeAcamp = null, $supportCampCount = 0, $needSelected = 0) {
+        $as_of_time = time();
+        Camp::$traversetempArray = [];
+        if ((isset($_REQUEST['asof']) && $_REQUEST['asof'] == 'bydate')) {
+            $as_of_time = strtotime($_REQUEST['asofdate']);
+        }else if((session()->has('asof') && session('asof') == 'bydate' && !isset($_REQUEST['asof']))){
+            $as_of_time = strtotime(session('asofdateDefault'));
+        }
+        if (!session("topic-support-nickname-{$this->topic_num}")) { 
             session(["topic-support-nickname-{$this->topic_num}" => Support::where('topic_num', '=', $this->topic_num)
                         ->where('delegate_nick_name_id', 0)
                         ->whereRaw("(start <= $as_of_time) and ((end = 0) or (end > $as_of_time))")
@@ -791,7 +886,6 @@ class Camp extends Model {
                             ->where('camp_name', '!=', 'Agreement')
                             ->where('objector_nick_id', '=', NULL)
                             ->whereRaw('go_live_time in (select max(go_live_time) from camp where topic_num=' . $this->topic_num . ' and objector_nick_id is null and go_live_time <= '.$asofdate.' group by camp_num)')
-                            //->where('go_live_time', '<=', $asofdate)
                             ->orderBy('submit_time', 'DESC')
                             ->groupBy('camp_num')
                             ->get()]);

@@ -109,7 +109,6 @@ class TopicSupport extends Model {
             $array[$support->nick_name_id]['children'] = [];
 
             $multiSupport = false;
-			// echo $currentCampSupport->support_order;
 			if($currentCampSupport){
 				if($nickNameSupports->count() > 1){
                     $multiSupport = true;

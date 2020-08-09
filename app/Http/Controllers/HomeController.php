@@ -43,7 +43,7 @@ class HomeController extends Controller {
             session()->put('defaultNamespaceId',1);
         }
 		//config('app.front_page_limit')
-        $topics = Camp::getAllAgreementTopic(1000, $_REQUEST);
+        $topics =  Camp::sortTopicsBasedOnScore(Camp::getAllAgreementTopic(1000, $_REQUEST));
         $videopodcast = VideoPodcast::all()->first();
         return view('welcome', ['topics' => $topics, 'namespaces' => $namespaces,'videopodcast'=>$videopodcast]);
     }
@@ -81,7 +81,7 @@ class HomeController extends Controller {
 
     public function recusriveCampDisp($childs) {
         foreach ($childs as $child) {
-            echo "child --" . $child->title . "<br/>";
+             echo "child --" . $child->title . "<br/>";
             if (count($child->childrens($child->topic_num, $child->camp_num)) > 0) {
                 $this->recusriveCampDisp($child->childrens($child->topic_num, $child->camp_num));
             }
