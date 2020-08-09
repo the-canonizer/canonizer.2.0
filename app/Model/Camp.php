@@ -814,7 +814,6 @@ class Camp extends Model {
     public function campTreeHtml($activeCamp = null, $activeCampDefault = false) {
 
         $reducedTree = $this->campTree(session('defaultAlgo', 'blind_popularity'), $activeAcamp = null, $supportCampCount = 0, $needSelected = 0);
-        
         $filter = isset($_REQUEST['filter']) && is_numeric($_REQUEST['filter']) ? $_REQUEST['filter'] : 0.001;
         
 		       if(session('filter')==="removed") {
