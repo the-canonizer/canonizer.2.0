@@ -96,7 +96,7 @@ if(isset($topic) && count($topic) > 0 ) { ?>
             </div>
         </div>
         <?php if(count($camp) > 0) { ?>
-        <div class="Scolor-Pnl pull-left" id="statement">
+        <div class="Scolor-Pnl" id="statement">
 		     <?php $statement = $camp->statement($camp->topic_num,$camp->camp_num);  ?>
             <h3 class="row">
              <div class="col-md-4"><?php echo ($parentcamp=="Agreement") ? $parentcamp : "Camp";?> Statement</div>

@@ -633,6 +633,12 @@ h1.page-title{
         column-count: 2;
     }
 }
+@media (max-width: 400px) {
+    ul.mainouter li .tp-title {
+          margin-left: 15px;
+          margin-top:-20px;
+    }
+}
 @media (min-width: 992px) and (max-width: 1024px) {
     /*.search-panel {
         margin-right: 125px;
@@ -931,6 +937,7 @@ ul.mainouter li .tp-title {
     display:inline-block;
     font-size:13px;
 }
+
 .right-whitePnl i.fa.fa-question {
     padding: 2px 7px 2px 6px;
     border-radius: 15px;
