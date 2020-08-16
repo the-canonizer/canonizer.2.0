@@ -737,7 +737,7 @@ class Camp extends Model {
             $topic_id = $child->topic_num . "-" . $title;
             $array[$child->camp_num]['title'] = $child->camp_name;
 			$queryString = (app('request')->getQueryString()) ? '?'.app('request')->getQueryString() : "";
-            $array[$child->camp_num]['link'] = url('topic/' . $topic_id . '/' . $child->camp_num . $queryString .'#statement');
+            $array[$child->camp_num]['link'] = self::getTopicCampUrl($child->topic_num,$child->camp_num). $queryString .'#statement';
             $array[$child->camp_num]['score'] = $this->getCamptSupportCount($algorithm, $child->topic_num, $child->camp_num);
             $children = $this->traverseCampTree($algorithm, $child->topic_num, $child->camp_num, $child->parent_camp_num);
 
@@ -745,6 +745,21 @@ class Camp extends Model {
         }
         return $array;
         
+    }
+
+    public static function getTopicCampUrl($topic_num,$camp_num){
+        $as_of_time = time();
+        if (isset($_REQUEST['asof']) && $_REQUEST['asof'] == 'bydate') {
+            $as_of_time = strtotime($_REQUEST['asofdate']);
+        }else if(session()->has('asofDefault') && session('asofDefault') == 'bydate' && !isset($_REQUEST['asof'])){
+            $as_of_time = strtotime(session('asofdateDefault'));
+        }
+        $topic =  \App\Model\Topic::where('topic_num','=',$topic_num)->where('go_live_time', '<=', $as_of_time)->latest('submit_time')->first();
+        $camp = self::where('topic_num','=',$topic_num)->where('camp_num','=',$camp_num)->where('go_live_time', '<=', $as_of_time)->latest('submit_time')->first();
+        $topic_name = ($topic->topic_name !='') ? $topic->topic_name: $topic->title;
+        $topic_id_name = $topic_num . "-" . preg_replace('/[^A-Za-z0-9\-]/', '-',$topic_name);
+        $camp_num_name = $camp_num."-".preg_replace('/[^A-Za-z0-9\-]/', '-', $camp->camp_name);
+        return url('topic/' . $topic_id_name . '/' . $camp_num_name);
     }
 
     public function getTopicScore($algorithm, $activeAcamp = null, $supportCampCount = 0, $needSelected = 0){

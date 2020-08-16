@@ -51,10 +51,10 @@
 						   
 						  $topic_id = $topic->topic_num."-".$title;
               $namespace = \App\Model\Namespaces::find($topic->namespace_id);
-						  
+						  $link = \App\Model\Camp::getTopicCampUrl($topic->topic_num,$topic->camp_num);
 						 ?>
 					 
-					 <li id="outline_{{ $topic->topic_num }}" style="line-height: 2"> <a href="<?php echo url('topic/'.$topic_id.'/'.$topic->camp_num) ?>"> {{ namespace_label($namespace) }} {{ $topic->topic_name }} </a></li>
+					 <li id="outline_{{ $topic->topic_num }}" style="line-height: 2"> <a href="<?php echo $link; ?>"> {{ namespace_label($namespace) }} {{ $topic->topic_name }} </a></li>
 					 @endforeach
                                          @else
                                          @if(isset($_REQUEST['asof']) && isset($_REQUEST['asofdate']))

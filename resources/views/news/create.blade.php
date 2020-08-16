@@ -42,7 +42,10 @@
             </div>
             
             <button type="submit" id="submit" class="btn btn-login">Create News</button>
-            <a href="{{ url('topic/' . $topic . '/' . $campnum)}}" class="btn btn-default">Cancel</a>
+            <?php 
+               $link = \App\Model\Camp::getTopicCampUrl($topic,$campnum);
+            ?>
+            <a href="<?php echo $link; ?>" class="btn btn-default">Cancel</a>
         </form>
     </div>
  </div>   
