@@ -163,9 +163,20 @@ class TopicSupport extends Model {
     public static function buildTree($topicnum,$campnum,$traversedTreeArray,$parentNode=false){
         
         $html= "";
+
+           // echo "<pre>"; print_r($traversedTreeArray);die;
         foreach($traversedTreeArray as $array){
             $nickName = Nickname::where('id',$array['index'])->first();
             $userFromNickname = $nickName->getUser();
+            $delegatedUserID = [];
+            if(is_array($array['children']) && sizeof($array['children']) > 0){
+                foreach ($array['children'] as $key => $value) {
+                    $delnickName = Nickname::where('id',$value['index'])->first();
+                   $deluserFromNickname = $delnickName->getUser();
+                   $delegatedUserID[] = $deluserFromNickname->id;
+                }
+                
+            }
             $userId = null;
             if(Auth::check()){
                 $userId = Auth::user()->id;
@@ -177,13 +188,13 @@ class TopicSupport extends Model {
             $support_txt = ($support_number) ? $support_number.":": '';
              if($parentNode){
                 $html.= "<li class='main-parent'><a href='".route('user_supports',$nickName->id)."?topicnum=".$topicnum."&campnum=".$campnum."&namespace=".$namespace_id."#camp_".$topicnum."_".$campnum."'>{$support_txt}{$nickName->nick_name}</a><div class='badge'>".round($array['score'],2)."</div>";
-                if($userId && $userFromNickname->id != $userId){
-                    $html.='<a href="'.url('support/'.$topicnum.'/'.$campnum.'-'.$array['index']).'" class="btn btn-info">Delegate Your Support</a>';
+                if($userId && $userFromNickname->id != $userId && !in_array($userId, $delegatedUserID)){
+                    $html.='ffff<a href="'.url('support/'.$topicnum.'/'.$campnum.'-'.$array['index']).'" class="btn btn-info">Delegate Your Support</a>';
                 }
                 
             }else{
                 $html.= "<li><a href='".route('user_supports',$nickName->id)."?topicnum=".$topicnum."&campnum=".$campnum."&namespace=".$namespace_id."#camp_".$topicnum."_".$campnum."'>{$nickName->nick_name}</a><div class='badge'>".round($array['score'],2)."</div> ";
-                 if($userId && $userFromNickname->id != $userId){
+                 if($userId && $userFromNickname->id != $userId && !in_array($userId, $delegatedUserID)){
                      $html.='<a href="'.url('support/'.$topicnum.'/'.$campnum.'-'.$array['index']).'" class="btn btn-info">Delegate Your Support</a>';
                 }
             }
