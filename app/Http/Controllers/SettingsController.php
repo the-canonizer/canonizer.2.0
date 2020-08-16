@@ -263,7 +263,7 @@ class SettingsController extends Controller
                 if($alreadySupport[0]->delegate_nick_name_id!=0){
                     $nickName = Nickname::where('id',$alreadySupport[0]->delegate_nick_name_id)->first();
                     $userFromNickname = $nickName->getUser();
-                    Session::flash('warning', "You have already delegated your support for this camp to user ".$userFromNickname->first_name." ".$userFromNickname->last_name.". If you continue your delegated support will be removed.");
+                    Session::flash('warningDelegate', "You have already delegated your support for this camp to user ".$userFromNickname->first_name." ".$userFromNickname->last_name.". If you continue your delegated support will be removed.");
                 }
                 //Session::flash('warning', "You have already supported this camp, you cant submit your support again.");
                 // return redirect()->back();
