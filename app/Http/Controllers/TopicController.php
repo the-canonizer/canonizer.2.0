@@ -231,7 +231,7 @@ class TopicController extends Controller {
                 $link = 'topic-history/' . $topic->topic_num;
 				$data['type'] = "topic";
                 $data['object'] = $topic->topic_name;
-				$data['link'] = 'topic/' . $topic->topic_num . '/1';				
+				$data['link'] = \App\Model\Camp::getTopicCampUrl($topic->topic_num,1);				
                 Mail::to(Auth::user()->email)->bcc(config('app.admin_bcc'))->send(new ThankToSubmitterMail(Auth::user(), $link,$data));
             } else if ($eventtype == "OBJECTION") {
 
@@ -708,7 +708,7 @@ class TopicController extends Controller {
 
                 $livecamp = Camp::getLiveCamp($camp->topic_num,$camp->camp_num);
 				$data['object'] = $livecamp->topic->topic_name . " / " . $camp->camp_name;
-				$data['link'] = 'topic/' . $camp->topic_num . '/1';
+				$data['link'] = \App\Model\Camp::getTopicCampUrl($camp->topic_num,1);
                 Mail::to(Auth::user()->email)->bcc(config('app.admin_bcc'))->send(new ThankToSubmitterMail(Auth::user(), $link,$data));
             } else if ($eventtype == "OBJECTION") {
 
@@ -847,7 +847,7 @@ class TopicController extends Controller {
             $livecamp = Camp::getLiveCamp($statement->topic_num,$statement->camp_num);
 			$data['type'] = "statement";
 			$data['object'] = $livecamp->topic->topic_name . " / " . $livecamp->camp_name;
-			$data['link'] = 'topic/' . $statement->topic_num . '/1';
+			$data['link'] = \App\Model\Camp::getTopicCampUrl($statement->topic_num,1);
             Mail::to(Auth::user()->email)->bcc(config('app.admin_bcc'))->send(new ThankToSubmitterMail(Auth::user(), $link,$data));
             // mail to direct supporters on new statement creation
             $directSupporter = Support::getAllDirectSupporters($statement->topic_num, $statement->camp_num);

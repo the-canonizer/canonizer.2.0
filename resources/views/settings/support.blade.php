@@ -303,7 +303,10 @@
                     </div>
                      @if(!Session::has('warning'))
                     <button type="submit" id="submit" class="btn btn-login">Submit</button>
-				    <a  class="btn btn-login" href="<?php echo url('topic/'.$topic->topic_num.'/'.session('campnum'));?>">Cancel</a>
+                     <?php  
+                     $link = \App\Model\Camp::getTopicCampUrl($topic->topic_num,session('campnum'));
+                 	 ?>
+				    <a  class="btn btn-login" href="<?php echo $link; ?>">Cancel</a>
 				    @else
 					<div style="display:none">	
 					<button type="submit" id="submit" class="btn btn-login"></button>	

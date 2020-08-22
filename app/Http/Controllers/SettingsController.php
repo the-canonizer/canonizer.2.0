@@ -412,7 +412,7 @@ class SettingsController extends Controller
                 $result['object'] = $topic->topic_name . " / " . $camp->camp_name;
                 $result['support_camp'] = $camp->camp_name;
                 $result['subject'] = $nickName->nick_name . " has just delegated their support to you.";
-                $link = 'topic/' . $data['topic_num'] . '/' . $data['camp_num'];
+                $link = \App\Model\Camp::getTopicCampUrl($data['topic_num'],$data['camp_num']);
                 $subscribers = Camp::getCampSubscribers($data['topic_num'], $data['camp_num']);
                 $directSupporter = Support::getAllDirectSupporters($data['topic_num'], $data['camp_num']);
                 $this->mailParentDelegetedUser($data,$link,$result,$subscribers);
@@ -426,7 +426,7 @@ class SettingsController extends Controller
             }
             Session::flash('success', "Your support update has been submitted successfully.");
             // return redirect('support/' . $data['topic_num'] . '/' . $data['camp_num']);
-            return redirect('topic/' . $data['topic_num'] . '/' . session('campnum'));
+            return redirect(\App\Model\Camp::getTopicCampUrl($data['topic_num'],session('campnum')));
         } else {
             return redirect()->route('login');
         }
@@ -523,7 +523,7 @@ class SettingsController extends Controller
             $result['object'] = $topic->topic_name ." / ".$camp->camp_name;
             $result['support_camp'] = $camp->camp_name;
             $result['subject'] = $nickName->nick_name . " has added their support to ".$result['object'].".";
-            $link = 'topic/' . $data['topic_num'] . '/' . $data['camp_num'];
+            $link = \App\Model\Camp::getTopicCampUrl($data['topic_num'],$data['camp_num']);
             $subscribers = Camp::getCampSubscribers($data['topic_num'], $data['camp_num']);
             $directSupporter = Support::getAllDirectSupporters($data['topic_num'], $data['camp_num']);
             $result['support_added'] = 1;
@@ -542,7 +542,7 @@ class SettingsController extends Controller
             $result['object'] = $topic->topic_name ." / ".$camp->camp_name;
             $result['support_camp'] = $camp->camp_name;
             $result['subject'] = $nickName->nick_name . " has removed their support from ".$result['object'].".";
-            $link = 'topic/' . $data['topic_num'] . '/' . $data['camp_num'];
+            $link = \App\Model\Camp::getTopicCampUrl($data['topic_num'],$data['camp_num']);
             $deletedSupport = Support::where('topic_num', $data['topic_num'])
                 ->whereIn('nick_name_id', [$data['nick_name']])
                 ->orderBy('end', 'DESC')
