@@ -110,7 +110,7 @@
                             </div>
                             <div id="download_metamask" style="display:none;">
                                 <a href="https://metamask.io">
-                                    <img src="https://raw.githubusercontent.com/MetaMask/faq/master/images/download-metamask.png" alt="">
+                                    <img src="https://raw.githubusercontent.com/MetaMask/faq/master/images/download-metamask.png" alt="DownLoad Metamask">
                                 </a>
                             </div>
                         </div>

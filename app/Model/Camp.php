@@ -305,29 +305,49 @@ class Camp extends Model {
         $returnTopics = [];
 
         if ((!isset($filter['asof']) && !session('asofDefault')) || (isset($filter['asof']) && $filter['asof'] == "default") || (session()->has('asofDefault') && session('asofDefault') == 'default' && !isset($filter['asof']))) {
-            $returnTopics = self::select(DB::raw('(select count(topic_support.id) from topic_support where topic_support.topic_num=camp.topic_num) as support, camp.*'))
+            // $returnTopics = self::select(DB::raw('(select count(topic_support.id) from topic_support where topic_support.topic_num=camp.topic_num) as support, camp.*'))
+            //                 ->join('topic', 'topic.topic_num', '=', 'camp.topic_num')
+            //                 ->where('camp_name', '=', 'Agreement')
+            //                 ->where('topic.objector_nick_id', '=', NULL)
+            //                 ->whereIn('namespace_id', explode(',', session('defaultNamespaceId', 1)))
+            //                 ->where('camp.go_live_time', '<=', $as_of_time)
+            //                 ->whereRaw('topic.go_live_time in (select max(topic.go_live_time) from topic where topic.topic_num=topic.topic_num and topic.objector_nick_id is null and topic.go_live_time <=' . $as_of_time . ' group by topic.topic_num)')
+            //                 ->latest('support')->take($limit)->get()->unique('topic_num'); //->sortBy('topic.topic_name');
+
+            $returnTopics = DB::table('camp')->select(DB::raw('(select count(topic_support.id) from topic_support where topic_support.topic_num=camp.topic_num) as support, camp.*'))
                             ->join('topic', 'topic.topic_num', '=', 'camp.topic_num')
                             ->where('camp_name', '=', 'Agreement')
                             ->where('topic.objector_nick_id', '=', NULL)
                             ->whereIn('namespace_id', explode(',', session('defaultNamespaceId', 1)))
                             ->where('camp.go_live_time', '<=', $as_of_time)
                             ->whereRaw('topic.go_live_time in (select max(topic.go_live_time) from topic where topic.topic_num=topic.topic_num and topic.objector_nick_id is null and topic.go_live_time <=' . $as_of_time . ' group by topic.topic_num)')
-                            ->latest('support')->take($limit)->get()->unique('topic_num'); //->sortBy('topic.topic_name');
+                            ->latest('support')->groupBy('topic.topic_num')->paginate($limit,['camp.topic_num']);
+                   // echo "<pre>"; print_r($returnTopics); die;
+                            //->get()->unique('topic_num'); //->sortBy('topic.topic_name');
+
 
         } else {
             if ((isset($filter['asof']) && $filter['asof'] == "review") || (session('asofDefault')=="review" && !isset($filter['asof']))) {
 
 
-               // return self::where('camp_name', '=', 'Agreement')->join('topic', 'topic.topic_num', '=', 'camp.topic_num')->whereIn('namespace_id', explode(',', session('defaultNamespaceId')))->latest('camp.submit_time')->get()->take($limit); //->sortBy('topic.topic_name');
-              $returnTopics =  self::select(DB::raw('(select count(topic_support.id) from topic_support where topic_support.topic_num=camp.topic_num) as support, camp.*'))
+               // $returnTopics =  self::select(DB::raw('(select count(topic_support.id) from topic_support where topic_support.topic_num=camp.topic_num) as support, camp.*'))
+              //               ->join('topic', 'topic.topic_num', '=', 'camp.topic_num')
+              //               ->where('camp_name', '=', 'Agreement')
+              //               ->where('topic.objector_nick_id', '=', NULL)
+              //               ->whereIn('namespace_id', explode(',', session('defaultNamespaceId', 1)))
+              //               //->where('camp.go_live_time', '<=', $as_of_time)
+              //               ->whereRaw('topic.go_live_time in (select max(topic.go_live_time) from topic where topic.topic_num=topic.topic_num and topic.objector_nick_id is null group by topic.topic_num)')
+              //               //->whereRaw('topic.go_live_time','DESC')					 
+              //               ->latest('support')->take($limit)->get()->unique('topic_num'); //->sortBy('topic.topic_name');
+
+                $returnTopics =  DB::table('camp')->select(DB::raw('(select count(topic_support.id) from topic_support where topic_support.topic_num=camp.topic_num) as support, camp.*'))
                             ->join('topic', 'topic.topic_num', '=', 'camp.topic_num')
                             ->where('camp_name', '=', 'Agreement')
                             ->where('topic.objector_nick_id', '=', NULL)
                             ->whereIn('namespace_id', explode(',', session('defaultNamespaceId', 1)))
-                            //->where('camp.go_live_time', '<=', $as_of_time)
                             ->whereRaw('topic.go_live_time in (select max(topic.go_live_time) from topic where topic.topic_num=topic.topic_num and topic.objector_nick_id is null group by topic.topic_num)')
-                            //->whereRaw('topic.go_live_time','DESC')					 
-                            ->latest('support')->take($limit)->get()->unique('topic_num'); //->sortBy('topic.topic_name');
+                            ->latest('support')->groupBy('topic.topic_num')->paginate($limit);
+                            //->get()->unique('topic_num'); //->sortBy('topic.topic_name');
 
        
 			
@@ -338,7 +358,10 @@ class Camp extends Model {
                      $asofdate = strtotime(date('Y-m-d H:i:s', strtotime(session('asofdateDefault'))));
                  }
 
-                $returnTopics =  self::where('camp_name', '=', 'Agreement')->join('topic', 'topic.topic_num', '=', 'camp.topic_num')->whereIn('namespace_id', explode(',', session('defaultNamespaceId',1)))->where('topic.objector_nick_id', '=', NULL)->where('camp.go_live_time', '<=', $asofdate)->latest('camp.submit_time')->take($limit)->get()->unique('topic_num'); //->sortBy('topic.topic_name');
+                // $returnTopics =  self::where('camp_name', '=', 'Agreement')->join('topic', 'topic.topic_num', '=', 'camp.topic_num')->whereIn('namespace_id', explode(',', session('defaultNamespaceId',1)))->where('topic.objector_nick_id', '=', NULL)->where('camp.go_live_time', '<=', $asofdate)->latest('camp.submit_time')->take($limit)->get()->unique('topic_num'); //->sortBy('topic.topic_name');
+
+                 $returnTopics =  DB::table('camp')->where('camp_name', '=', 'Agreement')->join('topic', 'topic.topic_num', '=', 'camp.topic_num')->whereIn('namespace_id', explode(',', session('defaultNamespaceId',1)))->where('topic.objector_nick_id', '=', NULL)->where('camp.go_live_time', '<=', $asofdate)->latest('camp.submit_time')->groupBy('topic.topic_num')->paginate($limit);
+                 //->get()->unique('topic_num');
 
             }
         }
@@ -713,10 +736,12 @@ class Camp extends Model {
         if(sizeof($topics) > 0){
 
                  foreach ($topics as $key => $value) {
-                    $reducedTree = $value->getTopicScore(session('defaultAlgo', 'blind_popularity'), $activeAcamp = null, $supportCampCount = 0, $needSelected = 0);
-                    $topics[$key]['score'] = $reducedTree[$value->camp_num]['score'];
+                    $campData = self::where('topic_num',$value->topic_num)->where('camp_num',$value->camp_num)->first();
+                    $reducedTree = $campData ->getTopicScore(session('defaultAlgo', 'blind_popularity'), $activeAcamp = null, $supportCampCount = 0, $needSelected = 0);
+                    $topics[$key]->score = $reducedTree[$value->camp_num]['score'];
                 }
-               $topics = $topics->sortBy('score',SORT_REGULAR, true);
+              // $topics = $topics->sortBy('score',SORT_REGULAR, true);
+                $topics->setCollection(collect(collect($topics->items())->sortByDesc('score'))->values());
                 return $topics;
         }else{
             return $topics;

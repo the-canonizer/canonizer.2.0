@@ -42,10 +42,31 @@ class HomeController extends Controller {
          if(null == session('defaultNamespaceId')){
             session()->put('defaultNamespaceId',1);
         }
-		//config('app.front_page_limit')
-        $topics =  Camp::sortTopicsBasedOnScore(Camp::getAllAgreementTopic(1000, $_REQUEST));
+        $page_no = isset($_REQUEST['page']) ? $_REQUEST['page'] : 1; 
+        $topics =  Camp::sortTopicsBasedOnScore(Camp::getAllAgreementTopic(20, $_REQUEST));
         $videopodcast = VideoPodcast::all()->first();
         return view('welcome', ['topics' => $topics, 'namespaces' => $namespaces,'videopodcast'=>$videopodcast]);
+    }
+
+    public function loadmoretopics(Request $request){
+        if($request->ajax())
+         {
+           $topics =  Camp::sortTopicsBasedOnScore(Camp::getAllAgreementTopic(20, $_REQUEST));
+            foreach ($topics as $k => $topicdata) {
+            $topic = \App\Model\Topic::where('topic_num','=',$topicdata->topic_num)->latest('submit_time')->get();
+            $topic_name_space_id = isset($topic[0]) ? $topic[0]->namespace_id:1;
+            $request_namesapce = session('defaultNamespaceId', 1);
+            if($topic_name_space_id !='' && $topic_name_space_id != $request_namesapce){
+                continue;
+            }
+            $output .= $topicdata->campTreeHtml();
+            }
+            ($output != '') ? $output .= '<a id="btn-more" class="remove-row" data-id="' . $topicdata->id . '"></a>' : '';
+
+            echo $output;
+         }else{
+            echo "";
+         }
     }
 
     public function loadtopic(Request $request) {
