@@ -196,7 +196,8 @@ class Camp extends Model {
                     }
                      
                 }				
-                $url = url('topic/' . $camp->topic_num . '-'.$titleAppend.'/' . $camp->camp_num);
+                //$url = url('topic/' . $camp->topic_num . '-'.$titleAppend.'/' . $camp->camp_num);
+                $url = self::getTopicCampUrl($camp->topic_num,$camp->camp_num);
                 $campname = "<a href='" . $url . "'>" . $camp->camp_name . '</a> / ' . $campname;
             } else {
                 if($title ==''){
@@ -208,7 +209,8 @@ class Camp extends Model {
                        $titleAppend      = preg_replace('/[^A-Za-z0-9\-]/', '-', $title); 
                     }
                 }
-				$url = url('topic/' . $camp->topic_num .'-'.$titleAppend. '/' . $camp->camp_num);
+				//$url = url('topic/' . $camp->topic_num .'-'.$titleAppend. '/' . $camp->camp_num);
+                $url = self::getTopicCampUrl($camp->topic_num,$camp->camp_num);
                 $campname = "<a href='" . $url . "'>" . $camp->camp_name . '</a>';
             }
 

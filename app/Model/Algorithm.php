@@ -46,7 +46,6 @@ class Algorithm{
         @nick_name_id , $condition
     */
     public static function camp_count($nick_name_id,$condition, $political=false,$topicnum=0,$campnum=0){
-    
         $as_of_time = time();
         $cacheWithTime = false; 
         if(isset($_REQUEST['asof']) && $_REQUEST['asof'] == 'bydate'){
@@ -56,9 +55,10 @@ class Algorithm{
             }
         }
   
-        $sql = "select count(*) as countTotal,support_order from support where nick_name_id = $nick_name_id and (" .$condition.")";
+        $sql = "select count(*) as countTotal,support_order,camp_num from support where nick_name_id = $nick_name_id and (" .$condition.")";
         $sql2 ="and ((start < $as_of_time) and ((end = 0) or (end > $as_of_time)))
          ";
+         
         /* Cache applied to avoid repeated queries in recursion */
         if($cacheWithTime){
             $result = Cache::remember("$sql $sql2", 2, function () use($sql,$sql2) {
@@ -193,6 +193,7 @@ class Algorithm{
     public static function mormon($nick_name_id){
         $condition = '(topic_num = 54 and camp_num = 7) or ' .
 				'(topic_num = 54 and camp_num = 8) or ' .
+                '(topic_num = 54 and camp_num = 9) or ' .
 				'(topic_num = 54 and camp_num = 10) or ' .
 				'(topic_num = 54 and camp_num = 11)';
         return self::camp_count($nick_name_id,$condition);

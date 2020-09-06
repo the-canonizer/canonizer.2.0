@@ -106,6 +106,7 @@
 </div>  <!-- /.right-whitePnl-->
 
 <script>
+<?php  $page_no = isset($_REQUEST['page']) ? $_REQUEST['page'] : 1;  ?>
 var request = false;
 var offset = '<?php echo config('app.front_page_limit'); ?>';
    $('#loadtopic').click(function(e){
@@ -151,13 +152,17 @@ function changeNamespace(element){
         type:"POST",
         data:{namespace:$(element).val()},
         success:function(response){
+            var pageNo= <?php echo $page_no; ?>;
+            if(pageNo > 1){
+              pageNo = 1;
+            }
             @if(env('APP_DEBUG'))
-                window.location.reload();
+                 window.location.href="{{ url('/') }}"+"?page="+pageNo;//window.location.reload();
             @else
             try{
-                window.location.href="{{ url('/') }}"+$(element).find('option:selected').attr('data-namespace');
+                window.location.href="{{ url('/') }}"+$(element).find('option:selected').attr('data-namespace')+"?page="+pageNo;
             }catch(err){
-                window.location.href="{{ url('/') }}";
+                window.location.href="{{ url('/') }}"+"?page="+pageNo;
             }
             @endif
         }
