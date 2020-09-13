@@ -940,7 +940,7 @@ class Camp extends Model {
         $topic_id = $this->topic_num . "-" . $title;
         $tree = [];
         $tree[$this->camp_num]['title'] = $topic_name;
-        $tree[$this->camp_num]['link'] = url('topic/' . $topic_id . '/' . $this->camp_num.'#statement');
+        $tree[$this->camp_num]['link'] = self::getTopicCampUrl($this->topic_num,$this->camp_num);//  url('topic/' . $topic_id . '/' . $this->camp_num.'#statement');
         $tree[$this->camp_num]['score'] = $this->getCamptSupportCount($algorithm, $this->topic_num, $this->camp_num);
         $tree[$this->camp_num]['children'] = $this->traverseCampTree($algorithm, $this->topic_num, $this->camp_num);
         
@@ -1050,7 +1050,7 @@ class Camp extends Model {
                 $topic = self::getLiveCamp($subs->topic_num,$subs->camp_num,['nofilter'=>true]);
                 $title = preg_replace('/[^A-Za-z0-9\-]/', '-', ($topic->title != '') ? $topic->title : $topic->camp_name);
                 $topic_id =$subs->topic_num . "-" . $title;
-                $link = url('topic/' . $topic_id . '/' . $subs->camp_num);
+                $link = self::getTopicCampUrl($topic_num,$camp_num); //url('topic/' . $topic_id . '/' . $subs->camp_num);
                 $list[]= '<a href="'.$link.'">'.$topic->camp_name.'</a>';
             }
         }
