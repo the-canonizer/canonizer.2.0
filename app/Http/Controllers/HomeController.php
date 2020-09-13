@@ -44,6 +44,7 @@ class HomeController extends Controller {
         }
         $page_no = isset($_REQUEST['page']) ? $_REQUEST['page'] : 1; 
         $topics =  Camp::sortTopicsBasedOnScore(Camp::getAllAgreementTopic(20, $_REQUEST));
+       // echo "<pre>"; print_r($topics); die;
         $videopodcast = VideoPodcast::all()->first();
         return view('welcome', ['topics' => $topics, 'namespaces' => $namespaces,'videopodcast'=>$videopodcast]);
     }
@@ -56,9 +57,9 @@ class HomeController extends Controller {
             $topic = \App\Model\Topic::where('topic_num','=',$topicdata->topic_num)->latest('submit_time')->get();
             $topic_name_space_id = isset($topic[0]) ? $topic[0]->namespace_id:1;
             $request_namesapce = session('defaultNamespaceId', 1);
-            if($topic_name_space_id !='' && $topic_name_space_id != $request_namesapce){
-                continue;
-            }
+            // if($topic_name_space_id !='' && $topic_name_space_id != $request_namesapce){
+            //     continue;
+            // }
             $output .= $topicdata->campTreeHtml();
             }
             ($output != '') ? $output .= '<a id="btn-more" class="remove-row" data-id="' . $topicdata->id . '"></a>' : '';
@@ -81,9 +82,9 @@ class HomeController extends Controller {
             $topic = \App\Model\Topic::where('topic_num','=',$topicdata->topic_num)->latest('submit_time')->get();
             $topic_name_space_id = isset($topic[0]) ? $topic[0]->namespace_id:1;
             $request_namesapce = session('defaultNamespaceId', 1);
-            if($topic_name_space_id !='' && $topic_name_space_id != $request_namesapce){
-                continue;
-            }
+            // if($topic_name_space_id !='' && $topic_name_space_id != $request_namesapce){
+            //     continue;
+            // }
             $output .= $topicdata->campTreeHtml();
         }
         ($output != '') ? $output .= '<a id="btn-more" class="remove-row" data-id="' . $topicdata->id . '"></a>' : '';

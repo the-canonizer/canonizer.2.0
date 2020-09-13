@@ -62,11 +62,11 @@
                         $topic_name_space_id = isset($topicData[0]) ? $topicData[0]->namespace_id:1;
                         $topic_name = isset($topicData[0]) ? $topicData[0]->topic_name:'';
                         $request_namesapce = session('defaultNamespaceId', 1); 
-                        if($topic_name_space_id !='' && $topic_name_space_id != $request_namesapce){
-                            continue;
-                        }else if(isset($topic_name) && trim($topic_name) ==''){
-                          continue;
-                        }
+                        // if($topic_name_space_id !='' && $topic_name_space_id != $request_namesapce){
+                        //     continue;
+                        // }else if(isset($topic_name) && trim($topic_name) ==''){
+                        //   continue;
+                        // }
                         
                         $as_of_time = time();
                         if(isset($_REQUEST['asof']) && $_REQUEST['asof']=='date'){
