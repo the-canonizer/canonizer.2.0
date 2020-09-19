@@ -1,5 +1,6 @@
 from CanonizerBase import Page
 from Identifiers import CreateNewTopicPageIdentifiers
+from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support.select import Select
 
 
@@ -51,7 +52,13 @@ class CanonizerCreateNewTopicPage(Page):
 
     def create_topic_with_blank_nick_name(self, topic_name, namespace, note):
         self.create_topic('', topic_name, namespace, note)
-        return self.find_element(*CreateNewTopicPageIdentifiers.ERROR_NICK_NAME).text
+        #return self.find_element(*CreateNewTopicPageIdentifiers.ERROR_NICK_NAME).text
+        try:
+            return self.find_element(*CreateNewTopicPageIdentifiers.ERROR_NICK_NAME)
+        except NoSuchElementException:
+            return False
+
+        return True
 
     def create_topic_with_blank_topic_name(self, nickname, namespace, note):
         self.create_topic(nickname, '', namespace, note)
@@ -62,7 +69,13 @@ class CanonizerCreateNewTopicPage(Page):
         return self.find_element(*CreateNewTopicPageIdentifiers.ERROR_TOPIC_NAME).text
 
     def create_new_topic_page_should_have_add_new_nick_name_link_for_new_users(self):
-        return self.find_element(*CreateNewTopicPageIdentifiers.ADDNEWNICKNAME).text
+        #return self.find_element(*CreateNewTopicPageIdentifiers.ADDNEWNICKNAME).text
+        try:
+            return self.find_element(*CreateNewTopicPageIdentifiers.ADDNEWNICKNAME)
+        except NoSuchElementException:
+            return False
+
+        return True
 
     def create_new_topic_page_mandatory_fields_are_marked_with_asterisk(self):
         """

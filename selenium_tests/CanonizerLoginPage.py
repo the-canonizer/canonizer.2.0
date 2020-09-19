@@ -127,5 +127,32 @@ class CanonizerLoginPage(Page):
     def login_should_have_forgot_password_link(self):
         return self.find_element(*LoginPageIdentifiers.FORGOTPASSWORD).text
 
+    def click_request_otp_button(self):
+        self.find_element(*LoginPageIdentifiers.REQUEST_OTP).click()
+
+    def request_otp(self, user):
+        self.enter_email(user)
+        self.click_request_otp_button()
+
+    def request_otp_with_valid_user_email(self, user):
+        self.request_otp(user)
+        return self
+
+    def request_otp_with_invalid_user_email(self, user):
+        self.request_otp(user)
+        return self.find_element(*LoginPageIdentifiers.ERROR_MESSAGE).text
+
+    def request_otp_with_valid_user_phone_number(self, phone_number):
+        self.request_otp(phone_number)
+        return self
+
+    def request_otp_with_invalid_user_phone_number(self, phone_number):
+        self.request_otp(phone_number)
+        return self.find_element(*LoginPageIdentifiers.ERROR_MESSAGE).text
+
+    def request_otp_with_blank_email_or_phone_number(self):
+        self.request_otp('')
+        return self.find_element(*LoginPageIdentifiers.ERROR_EMAIL).text
+
 
 

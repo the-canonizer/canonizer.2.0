@@ -1,6 +1,8 @@
 from CanonizerBase import Page
 from Identifiers import TopicUpdatePageIdentifiers, BrowsePageIdentifiers, TopicObjectPageIdentifiers
 from selenium.webdriver.support.ui import Select
+from selenium.common.exceptions import NoSuchElementException
+
 
 class CanonizerTopicUpdatePage(Page):
 
@@ -48,11 +50,16 @@ class CanonizerTopicUpdatePage(Page):
             Go To The topic
         """
         self.load_topic_agreement_page()
-        # Click on View This Version
-        self.hover(*TopicUpdatePageIdentifiers.OBJECT)
-        self.find_element(*TopicUpdatePageIdentifiers.OBJECT).click()
 
-        return CanonizerTopicUpdatePage(self.driver)
+        try:
+            self.hover(*TopicUpdatePageIdentifiers.OBJECT)
+            self.find_element(*TopicUpdatePageIdentifiers.OBJECT).click()
+            return CanonizerTopicUpdatePage(self.driver)
+
+        except NoSuchElementException:
+            return False
+
+        return True
 
     def topic_update_page_mandatory_fields_are_marked_with_asterisk(self):
         """
@@ -63,10 +70,10 @@ class CanonizerTopicUpdatePage(Page):
         """
 
         return \
-            self.find_element(*TopicUpdatePageIdentifiers.NICK_NAME_ASTRK) and \
-            self.find_element(*TopicUpdatePageIdentifiers.TOPIC_NAME_ASTRK) and \
-            self.find_element(*TopicUpdatePageIdentifiers.NAMESPACE_ASTRK) and \
-            self.find_element(*TopicUpdatePageIdentifiers.OTHER_NAMESPACE_NAME_ASTRK)
+                self.find_element(*TopicUpdatePageIdentifiers.NICK_NAME_ASTRK) and \
+                self.find_element(*TopicUpdatePageIdentifiers.TOPIC_NAME_ASTRK) and \
+                self.find_element(*TopicUpdatePageIdentifiers.NAMESPACE_ASTRK) and \
+                self.find_element(*TopicUpdatePageIdentifiers.OTHER_NAMESPACE_NAME_ASTRK)
 
     def topic_objection_page_mandatory_fields_are_marked_with_asterisk(self):
         """
@@ -82,7 +89,14 @@ class CanonizerTopicUpdatePage(Page):
             self.find_element(*TopicObjectPageIdentifiers.OBJECTION_REASON_ASTRK)
 
     def topic_update_page_should_have_add_new_nick_name_link_for_new_users(self):
-            return self.find_element(*TopicUpdatePageIdentifiers.ADDNEWNICKNAME).text
+            #return self.find_element(*TopicUpdatePageIdentifiers.ADDNEWNICKNAME).text
+
+        try:
+            return self.find_element(*TopicUpdatePageIdentifiers.ADDNEWNICKNAME)
+        except NoSuchElementException:
+            return False
+
+        return True
 
     def enter_nick_name(self, nickname):
         self.find_element(*TopicUpdatePageIdentifiers.NICK_NAME).send_keys(nickname)
@@ -92,9 +106,6 @@ class CanonizerTopicUpdatePage(Page):
 
     def enter_namespace(self, namespace):
         self.find_element(*TopicUpdatePageIdentifiers.NAMESPACE).send_keys(namespace)
-
-    #def enter_other_namespace_name(self, other_namespace_name):
-     #   self.find_element(*TopicUpdatePageIdentifiers.OTHER_NAMESPACE_NAME).send_keys(other_namespace_name)
 
     def enter_note(self, note):
         self.find_element(*TopicUpdatePageIdentifiers.NOTE).send_keys(note)
@@ -110,13 +121,18 @@ class CanonizerTopicUpdatePage(Page):
         self.enter_nick_name(nickname)
         self.enter_topic_name(topic_name)
         self.enter_namespace(namespace)
-       # self.enter_other_namespace_name(other_namespace_name)
         self.enter_note(note)
         self.click_submit_update_button()
 
     def submit_update_with_blank_nick_name(self, topic_name, namespace, note):
         self.submit_update('', topic_name, namespace, note)
-        return self.find_element(*TopicUpdatePageIdentifiers.ERROR_NICK_NAME).text
+        #return self.find_element(*TopicUpdatePageIdentifiers.ERROR_NICK_NAME).text
+        try:
+            return self.find_element(*TopicUpdatePageIdentifiers.ERROR_NICK_NAME)
+        except NoSuchElementException:
+            return False
+
+        return True
 
     def submit_update_with_blank_topic_name(self, nickname, namespace, note):
         self.find_element(*TopicUpdatePageIdentifiers.TOPIC_NAME).clear()

@@ -1,14 +1,12 @@
 from CanonizerBase import Page
-from Identifiers import CreateNewCampPageIdentifiers, BrowsePageIdentifiers, TopicUpdatePageIdentifiers, CampEditPageIdentifiers, HomePageIdentifiers
+from Identifiers import CreateNewCampPageIdentifiers, BrowsePageIdentifiers, TopicUpdatePageIdentifiers, CampEditPageIdentifiers, HomePageIdentifiers, BreadCrumbsLinksIdentifiers,CampStatementEditPageIdentifiers
 from selenium.webdriver.support.ui import Select
+from selenium.common.exceptions import NoSuchElementException
 
 
 class CanonizerCampPage(Page):
 
-    def load_create_camp_page(self):
-        """
-            Go To The topic
-        """
+    def load_topic_page(self):
         # Browse to Browse Page
         self.hover(*BrowsePageIdentifiers.BROWSE)
         self.find_element(*BrowsePageIdentifiers.BROWSE).click()
@@ -16,23 +14,17 @@ class CanonizerCampPage(Page):
         # Browse to Topic Name
         self.hover(*TopicUpdatePageIdentifiers.TOPIC_IDENTIFIER)
         self.find_element(*TopicUpdatePageIdentifiers.TOPIC_IDENTIFIER).click()
+        return CanonizerCampPage(self.driver)
 
+    def load_create_camp_page(self):
+        self.load_topic_page()
         # Click on Create New Camp
         self.hover(*CreateNewCampPageIdentifiers.CREATE_CAMP)
         self.find_element(*CreateNewCampPageIdentifiers.CREATE_CAMP).click()
         return CanonizerCampPage(self.driver)
 
     def load_create_new_camp_page(self):
-        """
-            Go To The topic
-        """
-        # Browse to Browse Page
-        self.hover(*BrowsePageIdentifiers.BROWSE)
-        self.find_element(*BrowsePageIdentifiers.BROWSE).click()
-
-        # Browse to Topic Name
-        self.hover(*TopicUpdatePageIdentifiers.TOPIC_IDENTIFIER)
-        self.find_element(*TopicUpdatePageIdentifiers.TOPIC_IDENTIFIER).click()
+        self.load_topic_page()
 
         # Click on Create New Camp
         self.hover(*HomePageIdentifiers.CREATE_NEW_CAMP)
@@ -40,12 +32,6 @@ class CanonizerCampPage(Page):
         return CanonizerCampPage(self.driver)
 
     def create_new_camp_page_mandatory_fields_are_marked_with_asterisk(self):
-        """
-        This Function checks, if Mandatory fields on Register Page Marked with *
-        First Name, Last Name, Email, Password, Confirm Password are Mandatory Fields
-
-        :return: the element value
-        """
 
         return \
             self.find_element(*CreateNewCampPageIdentifiers.NICK_NAME_ASTRK) and \
@@ -53,6 +39,9 @@ class CanonizerCampPage(Page):
 
     def enter_nick_name(self, nickname):
         self.find_element(*CreateNewCampPageIdentifiers.NICK_NAME).send_keys(nickname)
+
+    def enter_parent_camp_name(self, parent_camp_name):
+        self.find_element(*CreateNewCampPageIdentifiers.PARENT_CAMP).send_keys(parent_camp_name)
 
     def enter_camp_name(self, camp_name):
         self.find_element(*CreateNewCampPageIdentifiers.CAMP_NAME).send_keys(camp_name)
@@ -76,8 +65,9 @@ class CanonizerCampPage(Page):
         """
         self.find_element(*CreateNewCampPageIdentifiers.CREATE_CAMP_BUTTON).click()
 
-    def create_camp(self, nickname, camp_name, keywords, note, camp_about_url, camp_about_nick_name):
+    def create_camp(self, nickname, parent_camp_name, camp_name, keywords, note, camp_about_url, camp_about_nick_name):
         self.enter_nick_name(nickname)
+        self.enter_parent_camp_name(parent_camp_name)
         self.enter_camp_name(camp_name)
         self.enter_keywords(keywords)
         self.enter_note(note)
@@ -85,24 +75,139 @@ class CanonizerCampPage(Page):
         self.enter_camp_about_nick_name(camp_about_nick_name)
         self.click_create_camp_button()
 
-    def create_camp_with_blank_nick_name(self, camp_name, keywords, note, camp_about_url, camp_about_nick_name):
-        self.create_camp('', camp_name, keywords, note, camp_about_url, camp_about_nick_name)
-        return self.find_element(*CreateNewCampPageIdentifiers.ERROR_NICK_NAME).text
+    def create_camp_with_blank_nick_name(self, parent_camp_name, camp_name, keywords, note, camp_about_url, camp_about_nick_name):
+        self.create_camp('', parent_camp_name, camp_name, keywords, note, camp_about_url, camp_about_nick_name)
+        #return self.find_element(*CreateNewCampPageIdentifiers.ERROR_NICK_NAME).text
+        try:
+            return self.find_element(*CreateNewCampPageIdentifiers.ERROR_NICK_NAME)
+        except NoSuchElementException:
+            return False
 
-    def create_camp_with_blank_camp_name(self, nick_name, keywords, note, camp_about_url, camp_about_nick_name):
-        self.create_camp(nick_name, '', keywords, note, camp_about_url, camp_about_nick_name)
+        return True
+
+    def create_camp_with_blank_camp_name(self, nick_name, parent_camp_name, keywords, note, camp_about_url, camp_about_nick_name):
+        self.create_camp(nick_name, parent_camp_name, '', keywords, note, camp_about_url, camp_about_nick_name)
         return self.find_element(*CreateNewCampPageIdentifiers.ERROR_CAMP_NAME).text
 
-    def create_camp_with_valid_data(self, nick_name, camp_name, keywords, note, camp_about_url, camp_about_nick_name):
-        self.create_camp(nick_name, camp_name, keywords, note, camp_about_url, camp_about_nick_name)
+    def create_camp_with_valid_data(self, nick_name, parent_camp_name, camp_name, keywords, note, camp_about_url, camp_about_nick_name):
+        self.create_camp(nick_name, parent_camp_name, camp_name, keywords, note, camp_about_url, camp_about_nick_name)
         return self
 
     def create_new_camp_page_should_have_add_new_nick_name_link_for_new_users(self):
-        return self.find_element(*CreateNewCampPageIdentifiers.ADDNEWNICKNAME).text
+        #return self.find_element(*CreateNewCampPageIdentifiers.ADDNEWNICKNAME).text
+        try:
+            return self.find_element(*CreateNewCampPageIdentifiers.ADDNEWNICKNAME)
+        except NoSuchElementException:
+            return False
 
-    def create_camp_with_duplicate_camp_name(self, nick_name, camp_name, keywords, note, camp_about_url, camp_about_nick_name):
-        self.create_camp(nick_name, camp_name, keywords, note, camp_about_url, camp_about_nick_name)
+        return True
+
+    def create_camp_with_duplicate_camp_name(self, nick_name, parent_camp_name, camp_name, keywords, note, camp_about_url, camp_about_nick_name):
+        self.create_camp(nick_name, parent_camp_name, camp_name, keywords, note, camp_about_url, camp_about_nick_name)
         return self.find_element(*CreateNewCampPageIdentifiers.ERROR_DUPLICATE_CAMP_NAME).text
+
+    def create_camp_with_invalid_camp_name(self, nick_name, parent_camp_name, camp_name, keywords, note, camp_about_url, camp_about_nick_name):
+        self.create_camp(nick_name, parent_camp_name, camp_name, keywords, note, camp_about_url, camp_about_nick_name)
+        return self.find_element(*CreateNewCampPageIdentifiers.ERROR_INVALID_CAMP_NAME).text
+
+    def load_agreement_page_from_bread_crumb_agreement_camp_link(self):
+        self.load_topic_page()
+
+        # Click on agreement camp on bread crumbs
+        self.hover(*BreadCrumbsLinksIdentifiers.AGREEMENT_CAMP)
+        self.find_element(*BreadCrumbsLinksIdentifiers.AGREEMENT_CAMP).click()
+        return CanonizerCampPage(self.driver)
+
+    def load_agreement_page_from_bread_crumb_child_camp_link(self):
+        self.load_topic_page()
+
+        self.hover(*BreadCrumbsLinksIdentifiers.APPROACHABLE_VIA_SCIENCE)
+        self.find_element(*BreadCrumbsLinksIdentifiers.APPROACHABLE_VIA_SCIENCE).click()
+
+        self.hover(*BreadCrumbsLinksIdentifiers.UP)
+        self.find_element(*BreadCrumbsLinksIdentifiers.UP).click()
+
+        # Click on agreement camp on bread crumbs
+        self.hover(*BreadCrumbsLinksIdentifiers.APPROACHABLE_VIA_SCIENCE_CAMP)
+        self.find_element(*BreadCrumbsLinksIdentifiers.APPROACHABLE_VIA_SCIENCE_CAMP).click()
+        return CanonizerCampPage(self.driver)
+
+    def load_agreement_page_from_bread_crumb_forum_agreement_camp_link(self):
+        self.load_topic_page()
+
+        # Click on agreement camp on bread crumbs
+        self.hover(*BreadCrumbsLinksIdentifiers.CAMP_FORUM)
+        self.find_element(*BreadCrumbsLinksIdentifiers.CAMP_FORUM).click()
+        self.hover(*BreadCrumbsLinksIdentifiers.CAMP_FORUM_AGREEMENT)
+        self.find_element(*BreadCrumbsLinksIdentifiers.CAMP_FORUM_AGREEMENT).click()
+
+        return CanonizerCampPage(self.driver)
+
+    def load_agreement_page_from_bread_crumb_camp_statement_history_agreement_camp_link(self):
+        self.load_topic_page()
+
+        # Click on agreement camp on bread crumbs
+        self.hover(*CampStatementEditPageIdentifiers.EDIT_CAMP_STATEMENT)
+        self.find_element(*CampStatementEditPageIdentifiers.EDIT_CAMP_STATEMENT).click()
+        self.hover(*BreadCrumbsLinksIdentifiers.CAMP_STATEMENT_HISTORY_AGREEMENT)
+        self.find_element(*BreadCrumbsLinksIdentifiers.CAMP_STATEMENT_HISTORY_AGREEMENT).click()
+
+        return CanonizerCampPage(self.driver)
+
+    def load_agreement_page_from_bread_crumb_camp_supported_camps_agreement_camp_link(self):
+        self.load_topic_page()
+
+        # Click on agreement camp on bread crumbs
+        self.hover(*BreadCrumbsLinksIdentifiers.JOIN_SUPPORT_CAMP)
+        self.find_element(*BreadCrumbsLinksIdentifiers.JOIN_SUPPORT_CAMP).click()
+        self.hover(*BreadCrumbsLinksIdentifiers.SUPPORTED_CAMPS_AGREEMENT)
+        self.find_element(*BreadCrumbsLinksIdentifiers.SUPPORTED_CAMPS_AGREEMENT).click()
+
+        return CanonizerCampPage(self.driver)
+
+    def load_agreement_page_from_bread_crumb_camp_history_agreement_camp_link(self):
+        self.load_topic_page()
+
+        # Click on agreement camp on bread crumbs
+        self.hover(*CampEditPageIdentifiers.MANAGE_EDIT_CAMP)
+        self.find_element(*CampEditPageIdentifiers.MANAGE_EDIT_CAMP).click()
+        self.hover(*BreadCrumbsLinksIdentifiers.CAMP_HISTORY_AGREEMENT)
+        self.find_element(*BreadCrumbsLinksIdentifiers.CAMP_HISTORY_AGREEMENT).click()
+
+        return CanonizerCampPage(self.driver)
+
+    def load_agreement_page_from_bread_crumb_create_new_camp_agreement_camp_link(self):
+        self.load_topic_page()
+
+        # Click on agreement camp on bread crumbs
+        self.hover(*HomePageIdentifiers.CREATE_NEW_CAMP)
+        self.find_element(*HomePageIdentifiers.CREATE_NEW_CAMP).click()
+        self.hover(*BreadCrumbsLinksIdentifiers.CREATE_NEW_CAMP_AGREEMENT)
+        self.find_element(*BreadCrumbsLinksIdentifiers.CREATE_NEW_CAMP_AGREEMENT).click()
+
+        return CanonizerCampPage(self.driver)
+
+    def load_agreement_page_from_bread_crumb_topic_history_topic_name_link(self):
+        self.load_topic_page()
+
+        # Click on agreement camp on bread crumbs
+        self.hover(*TopicUpdatePageIdentifiers.MANAGE_EDIT_TOPIC)
+        self.find_element(*TopicUpdatePageIdentifiers.MANAGE_EDIT_TOPIC).click()
+        self.hover(*BreadCrumbsLinksIdentifiers.TOPIC_HISTORY_TOPIC_NAME)
+        self.find_element(*BreadCrumbsLinksIdentifiers.TOPIC_HISTORY_TOPIC_NAME).click()
+
+        return CanonizerCampPage(self.driver)
+
+    def load_create_camp_page_from_bread_crumb_link(self):
+        self.load_topic_page()
+
+        # Click on agreement camp on bread crumbs
+        self.hover(*BreadCrumbsLinksIdentifiers.AGREEMENT_CAMP)
+        self.find_element(*BreadCrumbsLinksIdentifiers.AGREEMENT_CAMP).click()
+        # Click on Create New Camp
+        self.hover(*CreateNewCampPageIdentifiers.CREATE_CAMP)
+        self.find_element(*CreateNewCampPageIdentifiers.CREATE_CAMP).click()
+        return CanonizerCampPage(self.driver)
 
 
 class CanonizerEditCampPage(Page):
@@ -123,9 +228,6 @@ class CanonizerEditCampPage(Page):
         self.hover(*CampEditPageIdentifiers.CAMP_IDENTIFIER)
         self.find_element(*CampEditPageIdentifiers.CAMP_IDENTIFIER).click()
 
-        # Click on Manage/Edit This camp
-        self.hover(*CampEditPageIdentifiers.MANAGE_EDIT_CAMP)
-        self.find_element(*CampEditPageIdentifiers.MANAGE_EDIT_CAMP).click()
         return CanonizerEditCampPage(self.driver)
 
     def load_camp_update_page(self):
@@ -134,6 +236,9 @@ class CanonizerEditCampPage(Page):
         :return:
         """
         self.load_topic_agreement_page()
+        # Click on Manage/Edit This camp
+        self.hover(*CampEditPageIdentifiers.MANAGE_EDIT_CAMP)
+        self.find_element(*CampEditPageIdentifiers.MANAGE_EDIT_CAMP).click()
         # Click on SUBMIT_CAMP_UPDATE_BASED_ON_THIS
         self.hover(*CampEditPageIdentifiers.SUBMIT_CAMP_UPDATE_BASED_ON_THIS)
         self.find_element(*CampEditPageIdentifiers.SUBMIT_CAMP_UPDATE_BASED_ON_THIS).click()
@@ -144,6 +249,9 @@ class CanonizerEditCampPage(Page):
             Go To The topic
         """
         self.load_topic_agreement_page()
+        # Click on Manage/Edit This camp
+        self.hover(*CampEditPageIdentifiers.MANAGE_EDIT_CAMP)
+        self.find_element(*CampEditPageIdentifiers.MANAGE_EDIT_CAMP).click()
         # Click on View This Version
         self.hover(*CampEditPageIdentifiers.VIEW_THIS_VERSION)
         self.find_element(*CampEditPageIdentifiers.VIEW_THIS_VERSION).click()
@@ -155,9 +263,37 @@ class CanonizerEditCampPage(Page):
             Go To The topic
         """
         self.load_topic_agreement_page()
+        # Click on Manage/Edit This camp
+
+        self.hover(*CampEditPageIdentifiers.MANAGE_EDIT_CAMP)
+        self.find_element(*CampEditPageIdentifiers.MANAGE_EDIT_CAMP).click()
         # Click on View This Version
         self.hover(*CampEditPageIdentifiers.OBJECT)
         self.find_element(*CampEditPageIdentifiers.OBJECT).click()
+
+        return CanonizerEditCampPage(self.driver)
+
+    def load_camp_user_supports_page(self):
+        """
+            Go To The topic
+        """
+        self.load_topic_agreement_page()
+        # Click on user nick name
+        self.hover(*CampEditPageIdentifiers.USER_NICK_NAME)
+        self.find_element(*CampEditPageIdentifiers.USER_NICK_NAME).click()
+        return CanonizerEditCampPage(self.driver)
+
+    def load_camp_history_from_user_supports_page(self):
+        """
+            Go To The topic
+        """
+        self.load_topic_agreement_page()
+        # Click on user nick name
+        self.hover(*CampEditPageIdentifiers.USER_NICK_NAME)
+        self.find_element(*CampEditPageIdentifiers.USER_NICK_NAME).click()
+
+        self.hover(*CampEditPageIdentifiers.USER_SUPPORTS_CAMP_NAME)
+        self.find_element(*CampEditPageIdentifiers.USER_SUPPORTS_CAMP_NAME).click()
 
         return CanonizerEditCampPage(self.driver)
 
@@ -172,6 +308,9 @@ class CanonizerEditCampPage(Page):
         return \
             self.find_element(*CampEditPageIdentifiers.NICK_NAME_ASTRK) and \
             self.find_element(*CampEditPageIdentifiers.CAMP_NAME_ASTRK)
+
+    def enter_parent_camp_name(self, parent_camp_name):
+        self.find_element(*CreateNewCampPageIdentifiers.PARENT_CAMP).send_keys(parent_camp_name)
 
     def enter_nick_name(self, nickname):
         self.find_element(*CampEditPageIdentifiers.NICK_NAME).send_keys(nickname)
@@ -207,22 +346,35 @@ class CanonizerEditCampPage(Page):
         self.enter_camp_about_nick_name(camp_about_nick_name)
         self.click_submit_update_button()
 
-    def submit_camp_update_with_blank_nick_name(self, camp_name, keywords, note, camp_about_url, camp_about_nick_name):
-        self.submit_update('', camp_name, keywords, note, camp_about_url, camp_about_nick_name)
-        return self.find_element(*CampEditPageIdentifiers.ERROR_NICK_NAME).text
+    def submit_camp_update_with_blank_nick_name(self, parent_camp_name, camp_name, keywords, note, camp_about_url, camp_about_nick_name):
+        self.submit_update(parent_camp_name, '', camp_name, keywords, note, camp_about_url, camp_about_nick_name)
+        #return self.find_element(*CampEditPageIdentifiers.ERROR_NICK_NAME).text
+        try:
+            return self.find_element(*CampEditPageIdentifiers.ERROR_NICK_NAME)
+        except NoSuchElementException:
+            return False
 
-    def submit_camp_update_with_blank_camp_name(self, nick_name, keywords, note, camp_about_url, camp_about_nick_name):
-        self.submit_update(nick_name, '', keywords, note, camp_about_url, camp_about_nick_name)
+        return True
+
+    def submit_camp_update_with_blank_camp_name(self, parent_camp_name, nick_name, keywords, note, camp_about_url, camp_about_nick_name):
+        self.find_element(*CampEditPageIdentifiers.CAMP_NAME).clear()
+        self.submit_update(parent_camp_name, nick_name, '', keywords, note, camp_about_url, camp_about_nick_name)
         return self.find_element(*CampEditPageIdentifiers.ERROR_CAMP_NAME).text
 
-    def submit_camp_update_with_valid_data(self, nick_name, camp_name, keywords, note, camp_about_url, camp_about_nick_name):
-        self.submit_update(nick_name, camp_name, keywords, note, camp_about_url, camp_about_nick_name)
+    def submit_camp_update_with_valid_data(self, parent_camp_name, nick_name, camp_name, keywords, note, camp_about_url, camp_about_nick_name):
+        self.submit_update(parent_camp_name, nick_name, camp_name, keywords, note, camp_about_url, camp_about_nick_name)
         return self
 
     def submit_camp_update_page_should_have_add_new_nick_name_link_for_new_users(self):
         return self.find_element(*CampEditPageIdentifiers.ADDNEWNICKNAME).text
 
-    def submit_camp_update_with_duplicate_camp_name(self, nick_name, camp_name, keywords, note, camp_about_url, camp_about_nick_name):
+    def submit_camp_update_with_duplicate_camp_name(self, parent_camp_name, nick_name, camp_name, keywords, note, camp_about_url, camp_about_nick_name):
         self.find_element(*CampEditPageIdentifiers.CAMP_NAME).clear()
-        self.submit_update(nick_name, camp_name, keywords, note, camp_about_url, camp_about_nick_name)
+        self.submit_update(parent_camp_name, nick_name, camp_name, keywords, note, camp_about_url, camp_about_nick_name)
         return self.find_element(*CampEditPageIdentifiers.ERROR_DUPLICATE_CAMP_NAME).text
+
+    def submit_camp_update_with_invalid_camp_name(self, parent_camp_name, nick_name, camp_name, keywords, note, camp_about_url, camp_about_nick_name):
+        self.find_element(*CampEditPageIdentifiers.CAMP_NAME).clear()
+        self.submit_update(parent_camp_name, nick_name, camp_name, keywords, note, camp_about_url, camp_about_nick_name)
+        return self.find_element(*CampEditPageIdentifiers.ERROR_INVALID_CAMP_NAME).text
+

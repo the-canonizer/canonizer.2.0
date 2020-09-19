@@ -16,8 +16,9 @@ if platform.system() == 'Darwin':
     DEFAULT_BINARY_LOCATION = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
     DEFAULT_CHROME_DRIVER_LOCATION = os.getcwd() + "/Webdrivers/chromedriver_mac"
 elif platform.system() == 'Windows':
-    #DEFAULT_BINARY_LOCATION = "C:\\Users\\ajay\\AppData\\Local\\Google\\Chrome\\Application"
-    DEFAULT_BINARY_LOCATION = "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"
+    DEFAULT_BINARY_LOCATION = "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe"
+    #DEFAULT_BINARY_LOCATION = "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"
+
     DEFAULT_CHROME_DRIVER_LOCATION = os.getcwd() + "/Webdrivers/chromedriver"
 elif platform.system() == 'Linux':
     DEFAULT_BINARY_LOCATION = "/usr/bin/google-chrome"
@@ -25,13 +26,15 @@ elif platform.system() == 'Linux':
 else:
     print("Unknown OS")
     exit(1)
-
+# Login Page Configuration Parameters
 DEFAULT_USER = "rupali.chavan9860@gmail.com"
-DEFAULT_PASS = "rupali@12345"
-#DEFAULT_USER = "r_cano_user@yopmail.com"
+DEFAULT_PASS = "Rupali@12345"
+#DEFAULT_USER = "r_canonizer_user@yopmail.com"
 #DEFAULT_PASS = "Rupali@12345"
 DEFAULT_INVALID_USER = "invaliduser@gmail.com"
 DEFAULT_INVALID_PASSWORD = "invalid_password"
+DEFAULT_INVALID_PHONE_NUMBER = "1234567890"
+DEFAULT_VALID_PHONE_NUMBER = ""
 
 # Registration Page Configuration Parameters
 DEFAULT_FIRST_NAME = "Rupali"
@@ -43,7 +46,7 @@ DEFAULT_ORIGINAL_FILE_NAME = ""
 DEFAULT_NEW_FILE_NAME = ""
 DEFAULT_FILE_SIZE = ""
 INVALID_FILE_FORMAT = "C:\\Users\\ajay\\Desktop\\Canonizer text file.txt"
-FILE_WITH_MORE_THAN_5MB = "E:\\ambition\\images universe ona stronomy by only ajjjjay\\PIA00272.jpg"
+FILE_WITH_MORE_THAN_5MB = "H:\\Astronomy\\Images\\PIA00272.jpg"
 FILE_WITH_SAME_NAME = "C:\\Users\\Public\\Pictures\\Sample Pictures\\Hydrangeas.jpg"
 FILE_WITH_ZERO_BYTES = "C:\\Users\\ajay\Desktop\\New Bitmap Image.bmp"
 

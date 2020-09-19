@@ -26,6 +26,12 @@ class Page(object):
         hover = ActionChains(self.driver).move_to_element(element)
         hover.perform()
 
+    def get_attribute(self):
+        return self.driver.attribute
+
+
+
+
 
 
 

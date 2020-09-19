@@ -79,9 +79,9 @@ class CanonizerAccountSettingsPage(Page):
         self.find_element(*AccountSettingsIdentifiers.MY_SUPPORTS).click()
         return CanonizerAccountSettingsPage(self.driver)
 
-    def click_account_settings_default_algorithm_page_button(self):
+    def click_account_settings_social_oauth_verification_page_button(self):
         """
-        This function is to click on the Account Settings ->Default Algorithm tab
+        This function is to click on the Account Settings ->Social Oauth Verification tab
         -> Hover to the Account Settings button
         -> Find the element and click it
 
@@ -89,8 +89,8 @@ class CanonizerAccountSettingsPage(Page):
             Return the result to the main page.
         """
 
-        self.hover(*AccountSettingsIdentifiers.DEFAULT_ALGORITHM)
-        self.find_element(*AccountSettingsIdentifiers.DEFAULT_ALGORITHM).click()
+        self.hover(*AccountSettingsIdentifiers.SOCIAL_OAUTH_VERIFICATION)
+        self.find_element(*AccountSettingsIdentifiers.SOCIAL_OAUTH_VERIFICATION).click()
         return CanonizerAccountSettingsPage(self.driver)
 
     def click_account_settings_change_password_page_button(self):
@@ -106,6 +106,20 @@ class CanonizerAccountSettingsPage(Page):
 
         self.hover(*AccountSettingsIdentifiers.CHANGE_PASSWORD)
         self.find_element(*AccountSettingsIdentifiers.CHANGE_PASSWORD).click()
+        return CanonizerAccountSettingsPage(self.driver)
+
+    def check_topic_create_new_camp_page_from_my_supports_loaded(self):
+        """
+        This function is to click on the Account Settings ->Crypto Verification (was Metamask Account)tab
+        -> Hover to the Account Settings button
+        -> Find the element and click it
+
+        :return:
+            Return the result to the main page.
+        """
+
+        self.hover(*AccountSettingsIdentifiers.CRYPTO_VERIFICATION)
+        self.find_element(*AccountSettingsIdentifiers.CRYPTO_VERIFICATION).click()
         return CanonizerAccountSettingsPage(self.driver)
 
 

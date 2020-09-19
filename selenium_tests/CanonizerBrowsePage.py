@@ -1,7 +1,7 @@
 from CanonizerBase import Page
 from Identifiers import BrowsePageIdentifiers
-from selenium import webdriver
 from selenium.webdriver.support.ui import Select
+from selenium import webdriver
 
 
 class CanonizerBrowsePage(Page):
@@ -21,14 +21,6 @@ class CanonizerBrowsePage(Page):
         return CanonizerBrowsePage(self.driver)
 
     def click_only_my_topics_button(self):
-        """
-        This function is to click on the ONLY MY TOPICS checkbox
-
-        """
-        self.hover(*BrowsePageIdentifiers.BROWSE)
-        self.find_element(*BrowsePageIdentifiers.BROWSE).click()
-        self.hover(*BrowsePageIdentifiers.NAMESPACE)
-        self.find_element(*BrowsePageIdentifiers.NAMESPACE).click()
         self.hover(*BrowsePageIdentifiers.ONLY_MY_TOPICS)
         self.find_element(*BrowsePageIdentifiers.ONLY_MY_TOPICS).click()
         return CanonizerBrowsePage(self.driver)
@@ -41,6 +33,13 @@ class CanonizerBrowsePage(Page):
     def select_by_value_general(self):
         select = Select(self.find_element(*BrowsePageIdentifiers.NAMESPACE))
         select.select_by_value("1")
+        return CanonizerBrowsePage(self.driver)
+
+    def select_by_value_general_only_my_topics(self):
+        self.click_browse_page_button()
+        self.select_dropdown_value()
+        self.select_by_value_general()
+        self.click_only_my_topics_button()
         return CanonizerBrowsePage(self.driver)
 
     def select_by_value_corporations(self):
@@ -141,6 +140,21 @@ class CanonizerBrowsePage(Page):
     def select_by_value_crypto_currency_ethereum(self):
         select = Select(self.find_element(*BrowsePageIdentifiers.NAMESPACE))
         select.select_by_value("21")
+        return CanonizerBrowsePage(self.driver)
+
+    def select_by_value_void(self):
+        select = Select(self.find_element(*BrowsePageIdentifiers.NAMESPACE))
+        select.select_by_value("22")
+        return CanonizerBrowsePage(self.driver)
+
+    def select_by_value_mormon_canon_project(self):
+        select = Select(self.find_element(*BrowsePageIdentifiers.NAMESPACE))
+        select.select_by_value("24")
+        return CanonizerBrowsePage(self.driver)
+
+    def select_by_value_organizations_united_utah_party(self):
+        select = Select(self.find_element(*BrowsePageIdentifiers.NAMESPACE))
+        select.select_by_value("26")
         return CanonizerBrowsePage(self.driver)
 
 

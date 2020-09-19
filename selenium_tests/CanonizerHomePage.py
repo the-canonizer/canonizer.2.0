@@ -25,14 +25,14 @@ class CanonizerMainPage(Page):
 
         return True if self.find_element(*HomePageIdentifiers.BODY) else False
 
-    def check_load_all_topic_text(self):
-        """
-        Verify the text to load all the Topics should be "Load All Topics"
-
-        :return:
-            "Load All Topics" String to the main program
-        """
-        return self.find_element(*HomePageIdentifiers.LOADALLTOPICS).text
+    # def check_load_all_topic_text(self):
+    #     """
+    #     Verify the text to load all the Topics should be "Load All Topics"
+    #
+    #     :return:
+    #         "Load All Topics" String to the main program
+    #     """
+    #     return self.find_element(*HomePageIdentifiers.LOADALLTOPICS).text
 
     def click_what_is_canonizer_page_link(self):
         """
@@ -71,6 +71,23 @@ class CanonizerHomePage(Page):
 
         return self.find_element(*HomePageIdentifiers.TURNOFFSETTINGS).text
 
+    def footer_should_have_privacy_policy_and_terms_services(self):
+        """
+
+        :return:
+        """
+
+        return self.find_element(*HomePageIdentifiers.FOOTER).text
+
+    def check_garbage_url(self):
+        """
+
+        :return:
+        """
+
+        return self.find_element(*HomePageIdentifiers.GARBAGE_URL).text
+
+
 class WhatIsCanonizerPage(Page):
     def join_or_support_camp_without_user_registration(self):
         self.find_element(*WhatIsCanonizerPageIdentifiers.JOINORSUPPORTCAMP)
@@ -89,6 +106,15 @@ class CanonizerBlog(Page):
         self.find_element(*HomePageIdentifiers.BLOG).click()
         return CanonizerBlog(self.driver)
 
+    def blog_footer_should_have_privacy_policy_and_terms_services(self):
+        """
+
+        :return:
+        """
+        self.hover(*HomePageIdentifiers.BLOG)
+        self.find_element(*HomePageIdentifiers.BLOG).click()
+        return self.find_element(*HomePageIdentifiers.BLOG_FOOTER).text
+
 
 class CanonizerAlgorithmInformation(Page):
     def check_algorithm_information_page_should_open(self):
@@ -104,15 +130,6 @@ class CanonizerAlgorithmInformation(Page):
         self.hover(*AlgorithmInformationIdentifiers.ALGORITHM_INFORMATION)
         self.find_element(*AlgorithmInformationIdentifiers.ALGORITHM_INFORMATION).click()
 
-        self.hover(*AlgorithmInformationIdentifiers.MIND_EXPERTS)
-        self.find_element(*AlgorithmInformationIdentifiers.MIND_EXPERTS).click()
-
-        self.hover(*AlgorithmInformationIdentifiers.MIND_EXPERTS_TOPIC)
-        self.find_element(*AlgorithmInformationIdentifiers.MIND_EXPERTS_TOPIC).click()
-
-        #self.hover(*HomePageIdentifiers.CREATE_NEW_CAMP)
-        #self.find_element(*HomePageIdentifiers.CREATE_NEW_CAMP).click()
-
         return CanonizerAlgorithmInformation(self.driver)
 
     def check_camp_create_new_camp_page_from_algo_info_loaded(self):
@@ -120,10 +137,12 @@ class CanonizerAlgorithmInformation(Page):
         This function verifies if the canonizer help page loads properly.
         :return:
         """
+        self.check_from_algo_info_topic_loaded()
         self.hover(*HomePageIdentifiers.CREATE_NEW_CAMP)
         self.find_element(*HomePageIdentifiers.CREATE_NEW_CAMP).click()
 
         return CanonizerAlgorithmInformation(self.driver)
+
 
 class CanonizerAsOfFilters(Page):
     def check_include_review_filter_applied(self):
@@ -140,6 +159,19 @@ class CanonizerAsOfFilters(Page):
         self.hover(*AsOfIdentifiers.AS_OF_DATE)
         self.find_element(*AsOfIdentifiers.AS_OF_DATE).click()
         return CanonizerAsOfFilters(self.driver)
+
+
+class CanonizerTermsAndPrivacyPolicy(Page):
+    def load_privacy_policy_page(self):
+        self.hover(*TermsAndPrivacyPolicyIdentifiers.PRIVACY_POLICY)
+        self.find_element(*TermsAndPrivacyPolicyIdentifiers.PRIVACY_POLICY).click()
+        return CanonizerTermsAndPrivacyPolicy(self.driver)
+
+    def load_terms_services_page(self):
+        self.hover(*TermsAndPrivacyPolicyIdentifiers.TERMS_SERVICES)
+        self.find_element(*TermsAndPrivacyPolicyIdentifiers.TERMS_SERVICES).click()
+        return CanonizerTermsAndPrivacyPolicy(self.driver)
+
 
 
 

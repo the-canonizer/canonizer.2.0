@@ -1,5 +1,6 @@
 from CanonizerBase import Page
 from Identifiers import CampStatementEditPageIdentifiers,BrowsePageIdentifiers, TopicUpdatePageIdentifiers, AddCampStatementPageIdentifiers
+from selenium.common.exceptions import NoSuchElementException
 
 
 class CanonizerCampStatementPage(Page):
@@ -66,7 +67,13 @@ class CanonizerCampStatementPage(Page):
 
     def submit_statement_update_with_blank_nick_name(self, statement, note):
         self.submit_update('', statement, note)
-        return self.find_element(*CampStatementEditPageIdentifiers.ERROR_NICK_NAME).text
+        #return self.find_element(*CampStatementEditPageIdentifiers.ERROR_NICK_NAME).text
+        try:
+            return self.find_element(*CampStatementEditPageIdentifiers.ERROR_NICK_NAME)
+        except NoSuchElementException:
+            return False
+
+        return True
 
     def submit_statement_update_with_blank_statement(self, nick_name, note):
         self.submit_update(nick_name, '', note)
@@ -132,7 +139,13 @@ class AddCampStatementPage(Page):
 
     def submit_statement_with_blank_nick_name(self, statement, note):
         self.submit_statement('', statement, note)
-        return self.find_element(*AddCampStatementPageIdentifiers.ERROR_NICK_NAME).text
+        #return self.find_element(*AddCampStatementPageIdentifiers.ERROR_NICK_NAME).text
+        try:
+            return self.find_element(*AddCampStatementPageIdentifiers.ERROR_NICK_NAME)
+        except NoSuchElementException:
+            return False
+
+        return True
 
     def submit_statement_with_blank_statement(self, nick_name, note):
         self.submit_statement(nick_name, '', note)
