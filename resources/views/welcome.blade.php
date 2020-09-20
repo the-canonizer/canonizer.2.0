@@ -80,7 +80,6 @@
 
                     </ul>
                     {!! $topics->links() !!}
-                    <!--<button style="background: blue;color: white; cursor:pointer" name="load_more" id="loadtopic">Load All Topics</button>-->
                 </div>
         @else
          <h6 style="margin-left:30px;"> No topic available.</h6>
