@@ -693,7 +693,8 @@ class Camp extends Model {
         $onecamp =  self::getLiveCamp($this->topic_num, $activeCamp);
         
         if ($currentCamp == $activeCamp && $action != "index") { 
-            $html = '<ul><li class="create-new-li"><span><a href="' . route('camp.create', [$this->topic_num."-".preg_replace('/[^A-Za-z0-9\-]/', '-', ($onecamp->parent_camp_num) ? $onecamp->camp_name :$this->topic_name ), $currentCamp]) . '">&lt;Start new supporting camp here&gt;</a></span></li>';
+            $url_portion = self::getSeoBasedUrlPortion($this->topic_num,$currentCamp);
+            $html = '<ul><li class="create-new-li"><span><a href="' . url('camp/create/'.$url_portion) . '">&lt;Start new supporting camp here&gt;</a></span></li>';
         }
   
         if (is_array($traversedTreeArray)) {
@@ -773,8 +774,7 @@ class Camp extends Model {
         return $array;
         
     }
-
-    public static function getTopicCampUrl($topic_num,$camp_num){
+    public static function getSeoBasedUrlPortion($topic_num,$camp_num){
         $as_of_time = time();
         if (isset($_REQUEST['asof']) && $_REQUEST['asof'] == 'bydate') {
             $as_of_time = strtotime($_REQUEST['asofdate']);
@@ -786,7 +786,11 @@ class Camp extends Model {
         $topic_name = ($topic->topic_name !='') ? $topic->topic_name: $topic->title;
         $topic_id_name = $topic_num . "-" . preg_replace('/[^A-Za-z0-9\-]/', '-',$topic_name);
         $camp_num_name = $camp_num."-".preg_replace('/[^A-Za-z0-9\-]/', '-', $camp->camp_name);
-        return url('topic/' . $topic_id_name . '/' . $camp_num_name);
+        return $topic_id_name . '/' . $camp_num_name;
+    }
+    public static function getTopicCampUrl($topic_num,$camp_num){
+        $urlPortion = self::getSeoBasedUrlPortion($topic_num,$camp_num); 
+        return url('topic/' .$urlPortion);
     }
 
     public function getTopicScore($algorithm, $activeAcamp = null, $supportCampCount = 0, $needSelected = 0){

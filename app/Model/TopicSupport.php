@@ -189,13 +189,15 @@ class TopicSupport extends Model {
              if($parentNode){
                 $html.= "<li class='main-parent'><a href='".route('user_supports',$nickName->id)."?topicnum=".$topicnum."&campnum=".$campnum."&namespace=".$namespace_id."#camp_".$topicnum."_".$campnum."'>{$support_txt}{$nickName->nick_name}</a><div class='badge'>".round($array['score'],2)."</div>";
                 if($userId && $userFromNickname->id != $userId && !in_array($userId, $delegatedUserID)){
-                    $html.='<a href="'.url('support/'.$topicnum.'/'.$campnum.'-'.$array['index']).'" class="btn btn-info">Delegate Your Support</a>';
+                    $urlPortion = Camp::getSeoBasedUrlPortion($topicnum,$campnum);
+                    $html.='<a href="'.url('support/'.$urlPortion.'-'.$array['index']).'" class="btn btn-info">Delegate Your Support</a>';
                 }
                 
             }else{
                 $html.= "<li><a href='".route('user_supports',$nickName->id)."?topicnum=".$topicnum."&campnum=".$campnum."&namespace=".$namespace_id."#camp_".$topicnum."_".$campnum."'>{$nickName->nick_name}</a><div class='badge'>".round($array['score'],2)."</div> ";
                  if($userId && $userFromNickname->id != $userId && !in_array($userId, $delegatedUserID)){
-                     $html.='<a href="'.url('support/'.$topicnum.'/'.$campnum.'-'.$array['index']).'" class="btn btn-info">Delegate Your Support</a>';
+                    $urlPortion = Camp::getSeoBasedUrlPortion($topicnum,$campnum);
+                     $html.='<a href="'.url('support/'.$urlPortion.'-'.$array['index']).'" class="btn btn-info">Delegate Your Support</a>';
                 }
             }
             $html.="<ul>";

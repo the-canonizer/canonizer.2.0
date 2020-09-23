@@ -138,13 +138,15 @@ if(isset($topic) && count($topic) > 0 ) { ?>
             <div class="footer">
 			<?php 
 			$statementCount = count($camp->anystatement($camp->topic_num,$camp->camp_num));
-			
-			if($statementCount > 0) { ?>
-            	<a id="edit_camp_statement" class="btn btn-success" href="<?php echo url('statement/history/'.$topic_id.'/'.$camp->camp_num);?>">Manage/Edit Camp Statement</a>
+			$url_portion = \App\Model\Camp::getSeoBasedUrlPortion($camp->topic_num,$camp->camp_num);
+			if($statementCount > 0) { 
+                
+                ?>
+            	<a id="edit_camp_statement" class="btn btn-success" href="<?php echo url('statement/history/'.$url_portion);?>">Manage/Edit Camp Statement</a>
 			<?php } else { ?>
-                <a id="add_camp_statement" class="btn btn-success" href="<?php echo url('create/statement/'.$camp->topic_num.'/'.$camp->camp_num);?>">Add Camp Statement</a>
+                <a id="add_camp_statement" class="btn btn-success" href="<?php echo url('create/statement/'.$url_portion);?>">Add Camp Statement</a>
 			<?php } ?>			
-                <a id="camp_forum" href="<?php echo url('forum/'.$topic_id.'/'.$camp->camp_num.'/threads');?>" class="btn btn-danger">Camp Forum</a>
+                <a id="camp_forum" href="<?php echo url('forum/'.$url_portion.'/threads');?>" class="btn btn-danger">Camp Forum</a>
             </div>
 			
         </div>
@@ -182,7 +184,7 @@ change camps with them."><i class="fa fa-question"></i></a>
             </div>    
             </div>
             <div class="footer">
-               <a id="join_support_camp" class="btn btn-warning" href="<?php echo url('support/'.$topic_id.'/'.$camp->camp_num);?>">Directly Join or Manage Support</a>
+               <a id="join_support_camp" class="btn btn-warning" href="<?php echo url('support/'.$url_portion );?>">Directly Join or Manage Support</a>
             </div>
         </div>
    
@@ -222,7 +224,7 @@ change camps with them."><i class="fa fa-question"></i></a>
             </div>    
             </div>
             <div class="footer">
-            	<a id="edit_camp" class="btn btn-success"href="<?php echo url('camp/history/'.$camp->topic_num.'/'.$camp->camp_num);?>">Manage/Edit This Camp</a>
+            	<a id="edit_camp" class="btn btn-success"href="<?php echo url('camp/history/'.$url_portion );?>">Manage/Edit This Camp</a>
             </div>
         </div>
      <?php } else { ?>

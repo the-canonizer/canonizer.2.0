@@ -13,11 +13,12 @@
                        $topicBreadName = $data->topic_name; 
 					             $topicNum = $data->topic_num;
 					             $urltitle      = $topicNum."-".preg_replace('/[^A-Za-z0-9\-]/', '-', $data->topic_name);
+                       $url_portion = \App\Model\Camp::getSeoBasedUrlPortion($topicNum,$currentLive);
                     } 
 				}	
                     ?>
 <div class="camp top-head">
-    <h3><b>Topic:</b>  <a href="/topic/{{$urltitle}}/1" >{{ $topicBreadName}}</a></h3>
+    <h3><b>Topic:</b>  <a href="/topic/{{$url_portion}}" >{{ $topicBreadName}}</a></h3>
    
 </div>
 <?php } ?>

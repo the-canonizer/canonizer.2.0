@@ -143,7 +143,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url('/topic/132-Help/1')}}">
+                            <a class="nav-link" href="{{ url('/topic/132-Help/1-Agreement')}}">
                                 <span class="nav-link-text {{ (str_contains(Request::fullUrl(), '132-Help')) ? 'menu-active':''}}">Help</span>
                             </a>
                         </li>
@@ -202,7 +202,7 @@
                                         <option value="{{ $key }}" {{ session('defaultAlgo') == $key ? 'selected' : ''}}>{{$value}}</option>
                                     @endforeach
                                     </select>
-									<a href="<?php echo url('topic/53-Canonizer-Algorithms/1') ?>"><span>Algorithm Information</span></a>
+									<a href="<?php echo url('topic/53-Canonizer-Algorithms/1-Agreement') ?>"><span>Algorithm Information</span></a>
                                 </li>
 
                                 <li>
