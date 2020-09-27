@@ -799,7 +799,7 @@ class Camp extends Model {
                 $topic_name = ($topic->topic_name !='') ? $topic->topic_name: $topic->title;
         }
         if($camp && isset($camp->camp_name)){
-                 $camp_name = $camp->camp_name
+              $camp_name = $camp->camp_name;
             }
         $topic_id_name = $topic_num;
         $camp_num_name = $camp_num;
