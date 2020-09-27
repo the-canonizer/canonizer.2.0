@@ -793,13 +793,21 @@ class Camp extends Model {
         }
         $topic =  \App\Model\Topic::where('topic_num','=',$topic_num)->where('go_live_time', '<=', $as_of_time)->latest('submit_time')->first();
         $camp = self::where('topic_num','=',$topic_num)->where('camp_num','=',$camp_num)->where('go_live_time', '<=', $as_of_time)->latest('submit_time')->first();
-        $topic_name = ($topic->topic_name !='') ? $topic->topic_name: $topic->title;
+        $topic_name = '';
+        $camp_name = '';
+        if($topic && isset($topic->topic_name)){
+                $topic_name = ($topic->topic_name !='') ? $topic->topic_name: $topic->title;
+        }
+        if($camp && isset($camp->camp_name)){
+                 $camp_name = $camp->camp_name
+            }
+        $topic_id_name = $topic_num;
+        $camp_num_name = $camp_num;
         if($topic_name!=''){
             $topic_id_name = $topic_num . "-" . preg_replace('/[^A-Za-z0-9\-]/', '-',$topic_name);
-            $camp_num_name = $camp_num."-".preg_replace('/[^A-Za-z0-9\-]/', '-', $camp->camp_name);
-        }else{
-            $topic_id_name = $topic_num;
-            $camp_num_name = $camp_num;
+        }
+        if($camp_name!=''){
+                $camp_num_name = $camp_num."-".preg_replace('/[^A-Za-z0-9\-]/', '-', $camp->camp_name);
         }
         
         return $topic_id_name . '/' . $camp_num_name;

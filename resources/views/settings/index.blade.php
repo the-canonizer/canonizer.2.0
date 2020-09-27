@@ -330,21 +330,21 @@
 	  // Get the place details from the autocomplete object.
 	  const place = autocomplete.getPlace();
 	  console.log('place',place);
-	  for (const component in componentForm) {
-	    document.getElementById(component).value = "";
-	    document.getElementById(component).disabled = false;
-	  }
+	  // for (const component in componentForm) {
+	  //   document.getElementById(component).value = "";
+	  //   document.getElementById(component).disabled = false;
+	  // }
 
-	  // Get each component of the address from the place details,
-	  // and then fill-in the corresponding field on the form.
-	  for (const component of place.address_components) {
-	    const addressType = component.types[0];
+	  // // Get each component of the address from the place details,
+	  // // and then fill-in the corresponding field on the form.
+	  // for (const component of place.address_components) {
+	  //   const addressType = component.types[0];
 
-	    if (componentForm[addressType]) {
-	      const val = component[componentForm[addressType]];
-	      document.getElementById(addressType).value = val;
-	    }
-	  }
+	  //   if (componentForm[addressType]) {
+	  //     const val = component[componentForm[addressType]];
+	  //     document.getElementById(addressType).value = val;
+	  //   }
+	  // }
 	}
 
 	// Bias the autocomplete object to the user's geographical location,
