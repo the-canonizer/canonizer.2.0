@@ -362,12 +362,18 @@ class Camp extends Model {
 
                 // $returnTopics =  self::where('camp_name', '=', 'Agreement')->join('topic', 'topic.topic_num', '=', 'camp.topic_num')->whereIn('namespace_id', explode(',', session('defaultNamespaceId',1)))->where('topic.objector_nick_id', '=', NULL)->where('camp.go_live_time', '<=', $asofdate)->latest('camp.submit_time')->take($limit)->get()->unique('topic_num'); //->sortBy('topic.topic_name');
 
-                 $returnTopics =  DB::table('camp')->where('camp_name', '=', 'Agreement')->join('topic', 'topic.topic_num', '=', 'camp.topic_num')->whereIn('namespace_id', explode(',', session('defaultNamespaceId',1)))->where('topic.objector_nick_id', '=', NULL)->where('camp.go_live_time', '<=', $asofdate)->latest('camp.submit_time')->groupBy('topic.topic_num')->orderBy('topic.topic_name', 'DESC')->paginate($limit,['camp.topic_num']);
+                 $returnTopics =  DB::table('camp')->select(DB::raw('(select count(topic_support.id) from topic_support where topic_support.topic_num=camp.topic_num) as support, camp.*'))
+                     ->join('topic', 'topic.topic_num', '=', 'camp.topic_num')
+                     ->where('camp_name', '=', 'Agreement')                   
+                    ->whereIn('namespace_id', explode(',', session('defaultNamespaceId',1)))
+                    ->where('topic.objector_nick_id', '=', NULL)
+                    ->where('camp.go_live_time', '<=', $asofdate)
+                    ->latest('support')->groupBy('topic.topic_num')->orderBy('topic.topic_name', 'DESC')->paginate($limit,['camp.topic_num']);
                  //->get()->unique('topic_num');
 
             }
         }
-
+        //echo "<pre>"; print_r($returnTopics); die;
         return $returnTopics;
     }
 
@@ -666,7 +672,6 @@ class Camp extends Model {
 				   1 if they only support one party, 
 				   0.5 for their first, if they support 2, 
 				   0.25 after and half, again, for each one after that. */
-                
 				if ($currentCampSupport) {
                     $multiSupport = false;
                     if ($nickNameSupports->count() > 1) {
@@ -675,7 +680,7 @@ class Camp extends Model {
 						$supportCountTotal += round($supportPoint / (2 ** ($currentCampSupport->support_order)), 2);
 						
                     } else if ($nickNameSupports->count() == 1) {
-                        $supportCountTotal += $supportPoint;
+                         $supportCountTotal += $supportPoint;
                     }
                     $supportCountTotal += $this->getDeletegatedSupportCount($algorithm, $topicnum, $campnum, $supported->nick_name_id, $currentCampSupport->support_order, $multiSupport);
                 }
@@ -740,8 +745,13 @@ class Camp extends Model {
 
                  foreach ($topics as $key => $value) {
                     $campData = self::where('topic_num',$value->topic_num)->where('camp_num',$value->camp_num)->first();
-                    $reducedTree = $campData ->getTopicScore(session('defaultAlgo', 'blind_popularity'), $activeAcamp = null, $supportCampCount = 0, $needSelected = 0);
-                    $topics[$key]->score = $reducedTree[$value->camp_num]['score'];
+                    if( $campData){
+                        $reducedTree = $campData ->getTopicScore(session('defaultAlgo', 'blind_popularity'), $activeAcamp = null, $supportCampCount = 0, $needSelected = 0);
+                        $topics[$key]->score = $reducedTree[$value->camp_num]['score'];
+                    }else{
+                        $topics[$key]->score = 0;
+                    }
+                    
                 }
               // $topics = $topics->sortBy('score',SORT_REGULAR, true);
                 $topics->setCollection(collect(collect($topics->items())->sortByDesc('score'))->values());
@@ -784,8 +794,14 @@ class Camp extends Model {
         $topic =  \App\Model\Topic::where('topic_num','=',$topic_num)->where('go_live_time', '<=', $as_of_time)->latest('submit_time')->first();
         $camp = self::where('topic_num','=',$topic_num)->where('camp_num','=',$camp_num)->where('go_live_time', '<=', $as_of_time)->latest('submit_time')->first();
         $topic_name = ($topic->topic_name !='') ? $topic->topic_name: $topic->title;
-        $topic_id_name = $topic_num . "-" . preg_replace('/[^A-Za-z0-9\-]/', '-',$topic_name);
-        $camp_num_name = $camp_num."-".preg_replace('/[^A-Za-z0-9\-]/', '-', $camp->camp_name);
+        if($topic_name!=''){
+            $topic_id_name = $topic_num . "-" . preg_replace('/[^A-Za-z0-9\-]/', '-',$topic_name);
+            $camp_num_name = $camp_num."-".preg_replace('/[^A-Za-z0-9\-]/', '-', $camp->camp_name);
+        }else{
+            $topic_id_name = $topic_num;
+            $camp_num_name = $camp_num;
+        }
+        
         return $topic_id_name . '/' . $camp_num_name;
     }
     public static function getTopicCampUrl($topic_num,$camp_num){

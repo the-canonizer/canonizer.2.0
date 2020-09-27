@@ -109,7 +109,7 @@
                                             <form method="post" class="form-group" action="{{ url('/delete_social_link/') }}">
                                               <input name="_token" type="hidden" value="{{csrf_token()}}" />
                                               <input type="hidden" name="id" value="{{$sociallinks[$provider]['id']}}" />
-                                               <button type="submit" class="btn btn-sm btn-danger">Unlink</button>
+                                               <button  type="submit" onClick="submitForm(event)" class="btn btn-sm btn-danger">Unlink</button>
                                               </form>  
                                           </div>
                                       
@@ -158,5 +158,12 @@
     </div>   
  </div></div>
 </div>  <!-- /.right-whitePnl-->
+<script type="text/javascript">
+  function submitForm(e){
+    $(e.target).attr("disabled", true);
+    $(e.target).parent('form').submit();
+    return true;
+  }
+</script>
 @endsection
 
