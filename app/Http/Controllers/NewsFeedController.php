@@ -16,7 +16,9 @@ class NewsFeedController extends Controller
     public function create($topic,$campnum){
         $topicnumArray = explode("-", $topic);
         $topicnum = $topicnumArray[0];
-        return view('news.create', compact('topicnum', 'campnum','topic'));        
+        $campnumArray = explode("-", $campnum);
+        $camp_num = $campnumArray[0];
+        return view('news.create', compact('topicnum', 'campnum','camp_num','topic'));        
     }
     
     public function store(Request $request){
@@ -56,9 +58,11 @@ class NewsFeedController extends Controller
     public function edit($topic,$campnum){
         $topicnumArray = explode("-", $topic);
         $topicnum = $topicnumArray[0];
-        $news = NewsFeed::where('topic_num','=',$topicnum)->where('camp_num','=',$campnum)->where('end_time','=',null)->orderBy('order_id','ASC')->get();
+        $campnumArray = explode("-", $campnum);
+        $camp_num = $campnumArray[0];
+        $news = NewsFeed::where('topic_num','=',$topicnum)->where('camp_num','=',$camp_num)->where('end_time','=',null)->orderBy('order_id','ASC')->get();
         
-        return view('news.edit', compact('topicnum', 'campnum','topic','news'));        
+        return view('news.edit', compact('topicnum', 'campnum','camp_num','topic','news'));        
         
     }
     
