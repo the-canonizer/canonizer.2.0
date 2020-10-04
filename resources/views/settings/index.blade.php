@@ -334,7 +334,12 @@
 	  const place = autocomplete.getPlace();
 	  for (const component in componentForm) {
 	    document.getElementById(component).value = "";
-	    document.getElementById(component).disabled = false;
+	    if(component == 'address_1'){
+	    	document.getElementById(component).disabled = false;
+	    }else{
+	    	document.getElementById(component).disabled = true;
+	    }	
+	    
 	  }
 
 	  console.log(' place.address_components', place.address_components);
