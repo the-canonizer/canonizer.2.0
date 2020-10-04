@@ -299,7 +299,7 @@
     </div>   
  </div></div>
 </div>  <!-- /.right-whitePnl-->
-  <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDMtlWJeoKZiwNw9FXG-xLTKj7GvkonarA&libraries=places"></script>
+  <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB9KjPwjqnwoqvXVV3POGI0_hMXKcPxvDM&libraries=places"></script>
     <script>
     	let placeSearch;
 		let autocomplete;

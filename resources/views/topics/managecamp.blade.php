@@ -76,7 +76,7 @@
                 </select>
                  @if ($errors->has('nick_name')) <p class="help-block">{{ $errors->first('nick_name') }}</p> @endif
 				<?php if(count($nickNames) == 0) { ?> 
-                     <p style="color:red">Note:You have not yet added a nick name. A public or private nick name must be added then selected here when contributing.</p>
+                     <p style="color:red" class="help-block">Note:You have not yet added a nick name. A public or private nick name must be added then selected here when contributing.</p>
 				<a href="<?php echo url('settings/nickname');?>">Add New Nick Name</a>
 				<?php } ?>
              </div> 
