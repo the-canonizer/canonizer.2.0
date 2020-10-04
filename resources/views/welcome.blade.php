@@ -46,12 +46,14 @@
           <div class="tree col-sm-12">
                     <ul class="mainouter" id="load-data">
                       <?php $createCamp = 1;
+                        session(['topic_on_page' => 0]);
                        $as_of_time = time();
                         if (isset($_REQUEST['asof']) && $_REQUEST['asof'] == 'bydate') {
                             $as_of_time = strtotime($_REQUEST['asofdate']);
                         }else if(session()->has('asofDefault') && session('asofDefault') == 'bydate' && !isset($_REQUEST['asof'])){
                             $as_of_time = strtotime(session('asofdateDefault'));
                         }
+                        session(['topic_on_page' => 0]);
                         ?>
                        @foreach($topics as $k=>$topic)
 
@@ -71,7 +73,7 @@
                         $as_of_time = time();
                         if(isset($_REQUEST['asof']) && $_REQUEST['asof']=='date'){
                             $as_of_time = strtotime($_REQUEST['asofdate']);
-                        }
+                        } 
                        ?>
                          {!! $campData->campTreeHtml($createCamp) !!}
                          <?php $createCamp = 0;?>
@@ -79,6 +81,9 @@
                     <a id="btn-more" class="remove-row" data-id="{{ $topic->id }}"></a>
 
                     </ul>
+                    @if(session('topic_on_page') >=20)
+                     <p>There are no topics on this page, given the current algorithm and filter setting.</p>
+                    @endif
                     {!! $topics->links() !!}
                 </div>
         @else

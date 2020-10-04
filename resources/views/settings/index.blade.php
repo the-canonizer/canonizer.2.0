@@ -304,51 +304,54 @@
     	let placeSearch;
 		let autocomplete;
 		const componentForm = {
-		  street_number: "short_name",
-		  route: "long_name",
-		  locality: "long_name",
-		  administrative_area_level_1: "short_name",
-		  country: "long_name",
+		  address_1: "short_name",
+		  address_2: "long_name",
+		  city: "long_name",
+		  state: "long_name",
+		  country: "short_name",
 		  postal_code: "short_name",
 		};
+		const components = {
+			neighborhood:'address_1',
+			street_number:'address_1',
+			route:'address_1',
+			locality:'address_2',
+			administrative_area_level_2:'city',
+			administrative_area_level_1:'state',
+			country:'country',
+			postal_code:'postal_code'
+		}
 		function initAutocomplete() {
-  		// Create the autocomplete object, restricting the search predictions to
-  		// geographical location types.
 	  autocomplete = new google.maps.places.Autocomplete(
 	    document.getElementById("address_1"),
 	    { types: ["geocode"] }
 	  );
-	  // Avoid paying for data that you don't need by restricting the set of
-	  // place fields that are returned to just the address components.
 	  autocomplete.setFields(["address_component"]);
-	  // When the user selects an address from the drop-down, populate the
-	  // address fields in the form.
 	  autocomplete.addListener("place_changed", fillInAddress);
 	}
 
 	function fillInAddress() {
-	  // Get the place details from the autocomplete object.
 	  const place = autocomplete.getPlace();
-	  console.log('place',place);
-	  // for (const component in componentForm) {
-	  //   document.getElementById(component).value = "";
-	  //   document.getElementById(component).disabled = false;
-	  // }
+	  for (const component in componentForm) {
+	    document.getElementById(component).value = "";
+	    document.getElementById(component).disabled = false;
+	  }
 
-	  // // Get each component of the address from the place details,
-	  // // and then fill-in the corresponding field on the form.
-	  // for (const component of place.address_components) {
-	  //   const addressType = component.types[0];
-
-	  //   if (componentForm[addressType]) {
-	  //     const val = component[componentForm[addressType]];
-	  //     document.getElementById(addressType).value = val;
-	  //   }
-	  // }
+	  console.log(' place.address_components', place.address_components);
+	  for (const component of place.address_components) {
+	       const addressType = component.types[0];
+	       console.log('addressType',addressType,components[addressType]);
+	    if (components[addressType]) {
+	      var val = component[componentForm[components[addressType]]];
+	      var oldVal = document.getElementById(components[addressType]).value;
+	      if(oldVal !=''){
+	      	val = oldVal+","+val	
+	      }
+	      
+	      document.getElementById(components[addressType]).value = val;
+	    }
+	  }
 	}
-
-	// Bias the autocomplete object to the user's geographical location,
-	// as supplied by the browser's 'navigator.geolocation' object.
 	function geolocate() {
 	  if (navigator.geolocation) {
 	    navigator.geolocation.getCurrentPosition((position) => {

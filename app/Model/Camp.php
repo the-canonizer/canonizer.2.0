@@ -989,7 +989,9 @@ class Camp extends Model {
 				}
 		
         if ($reducedTree[$this->camp_num]['score'] < $filter) {
-            return;
+             $val = session('topic_on_page');
+             session(['topic_on_page' => $val+1]);
+              return;
         }
 
 
