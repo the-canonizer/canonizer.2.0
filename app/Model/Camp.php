@@ -676,7 +676,6 @@ class Camp extends Model {
                     $multiSupport = false;
                     if ($nickNameSupports->count() > 1) {
                         $multiSupport = true;
-						
 						$supportCountTotal += round($supportPoint / (2 ** ($currentCampSupport->support_order)), 2);
 						
                     } else if ($nickNameSupports->count() == 1) {
@@ -692,7 +691,7 @@ class Camp extends Model {
         return $supportCountTotal;
     }
 
-    public function buildCampTree($traversedTreeArray, $currentCamp = null, $activeCamp = null, $activeCampDefault = false) {
+    public function buildCampTree($traversedTreeArray, $currentCamp = null, $activeCamp = null, $activeCampDefault = false,$add_supporter = false) {
         $html = '<ul>';
 		$action = Route::getCurrentRoute()->getActionMethod();
         $onecamp =  self::getLiveCamp($this->topic_num, $activeCamp);
@@ -722,16 +721,28 @@ class Camp extends Model {
                 $childCount = is_array($array['children']) ? count($array['children']) : 0;
                 $class = is_array($array['children']) && count($array['children']) > 0 ? 'parent' : '';
                 $icon = ($childCount || ($campnum == $activeCamp)) ?  '<i class="fa fa-arrow-down"></i>' : '';
-				
+				$support_tree = '';
+                if($add_supporter){
+                  $support_tree=TopicSupport::topicSupportTree(session('defaultAlgo','blind_popularity'),$this->topic_num,$campnum);
+                }
                 $html .= "<li id='tree_" . $this->topic_num . "_" . $currentCamp . "_" . $campnum . "'>";
                 //$selected = '';
                 $selected = ($campnum == $activeCamp) && $activeCampDefault ? "color:#08b608; font-weight:bold" : "";
                 if (($campnum == $activeCamp) && $activeCampDefault) {
                     session(['supportCountTotal' => $array['score']]);
                 }
-
-                $html .= '<span class="' . $class . '">' . $icon . '</span><div class="tp-title"><a style="' . $selected . '" href="' . $array['link'] . '">' . $array['title'] . '</a> <div class="badge">' . $array['score'] . '</div></div>';
-                $html .= $this->buildCampTree($array['children'], $campnum, $activeCamp, $activeCampDefault);
+                $support_tree_html = '';
+                 if($support_tree !=''){
+                    $support_tree_html .=  "<ul><li id='support_tree_" . $this->topic_num . "_" . $currentCamp . "_" . $campnum . "'>";
+                    $support_tree_html .= '<span class="'.$class.'"><i class="fa fa-arrow-right"></i></span>';
+                    $support_tree_html.= '<div class="tp-title"><a style="' . $selected . '" href="javascript:void(0);">supporters</a></div>';
+                    $support_tree_html.= '<ul>'.$support_tree.'</ul>';
+                    $support_tree_html .= '</li></ul>';
+                }
+                $html .= '<span class="' . $class . '">' . $icon . '</span><div class="tp-title"><a style="' . $selected . '" href="' . $array['link'] . '">' . $array['title'] . '</a> <div class="badge">' . $array['score'] .'</div>'.$support_tree_html;
+               
+                $html .= '</div>';
+                $html .= $this->buildCampTree($array['children'], $campnum, $activeCamp, $activeCampDefault,$add_supporter);
                 $html .= '</li>';
             }
         }
@@ -975,7 +986,7 @@ class Camp extends Model {
         return $reducedTree = TopicSupport::sumTranversedArraySupportCount($tree);
     }
 
-    public function campTreeHtml($activeCamp = null, $activeCampDefault = false) {
+    public function campTreeHtml($activeCamp = null, $activeCampDefault = false,$add_supporter = false) {
 
         $reducedTree = $this->campTree(session('defaultAlgo', 'blind_popularity'), $activeAcamp = null, $supportCampCount = 0, $needSelected = 0);
         $filter = isset($_REQUEST['filter']) && is_numeric($_REQUEST['filter']) ? $_REQUEST['filter'] : 0.001;
@@ -999,7 +1010,10 @@ class Camp extends Model {
         if (($this->camp_num == $activeCamp)) {
             session(['supportCountTotal' => $reducedTree[$this->camp_num]['score']]);
         }
-
+        $support_tree = '';
+        if($add_supporter){
+          $support_tree = TopicSupport::topicSupportTree(session('defaultAlgo','blind_popularity'),$this->topic_num,$this->camp_num);
+         }
         $html = "<li id='tree_" . $this->topic_num . "_" . $activeCamp . "_" . $this->camp_num . "'>";
         $parentClass = is_array($reducedTree[$this->camp_num]['children']) && count($reducedTree[$this->camp_num]['children']) > 0 ? 'parent' : '';
         $icon = is_array($reducedTree[$this->camp_num]['children']) && count($reducedTree[$this->camp_num]['children']) > 0 ? '<i class="fa fa-arrow-down"></i>' : '';
@@ -1013,7 +1027,7 @@ class Camp extends Model {
 	  
 		$html .= '<span class="' . $parentClass . '">'. $icon.' </span>';
         $html .= '<div class="tp-title"><a style="' . $selected . '" href="' . $reducedTree[$this->camp_num]['link'] . '">' . $reducedTree[$this->camp_num]['title'] . '</a><div class="badge">' . round($reducedTree[$this->camp_num]['score'], 2) . '</div></div>';
-        $html .= $this->buildCampTree($reducedTree[$this->camp_num]['children'], $this->camp_num, $activeCamp, $activeCampDefault);
+        $html .= $this->buildCampTree($reducedTree[$this->camp_num]['children'], $this->camp_num, $activeCamp, $activeCampDefault,$add_supporter);
         $html .= "</li>";
         return $html;
     }

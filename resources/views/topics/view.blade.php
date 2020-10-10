@@ -88,7 +88,7 @@ if(isset($topic) && count($topic) > 0 ) { ?>
                         $title      = preg_replace('/[^A-Za-z0-9\-]/', '-', $topic->topic_name);						  
                         $topic_id  = $topic->topic_num."-".$title;
 						 ?>
-                     {!! $topic->campTreeHtml($parentcampnum,1,true) !!} 
+                     {!! $topic->campTreeHtml($parentcampnum,1,false) !!} 
                     </ul>
                     
                 </div>
@@ -297,7 +297,7 @@ $('#camp_subscription').click(function(){
 
 })
 <?php } ?>
-
+//outlinecall(54,9,true);
 </script>	
 @endsection
 	
