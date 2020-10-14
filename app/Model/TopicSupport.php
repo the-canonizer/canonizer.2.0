@@ -64,7 +64,7 @@ class TopicSupport extends Model {
         $array = [];
         foreach($delegatedSupports as $support){
             
-            $supportPoint = Algorithm::{$algorithm}($support->nick_name_id); 
+            $supportPoint = Algorithm::{$algorithm}($support->nick_name_id,$support->topic_num,$support->camp_num); 
             $array[$support->nick_name_id]['index']=$support->nick_name_id;
              //dd($array);
             if($multiSupport){
@@ -98,7 +98,7 @@ class TopicSupport extends Model {
                 return $item->nick_name_id == $support->nick_name_id;
             });
 
-            $supportPoint = Algorithm::{$algorithm}($support->nick_name_id);
+            $supportPoint = Algorithm::{$algorithm}($support->nick_name_id,$support->topic_num,$support->camp_num);
 			$currentCampSupport =  $nickNameSupports->filter(function ($item) use($campnum)
 			{
 				return $item->camp_num == $campnum; /* Current camp support */
@@ -164,7 +164,6 @@ class TopicSupport extends Model {
         
         $html= "";
 
-           // echo "<pre>"; print_r($traversedTreeArray);die;
         foreach($traversedTreeArray as $array){
             $nickName = Nickname::where('id',$array['index'])->first();
             $userFromNickname = $nickName->getUser();
@@ -261,7 +260,7 @@ class TopicSupport extends Model {
 		// if(isset($_REQUEST['asof']) && $_REQUEST['asof']=='bydate'){
   //          $as_of_time = strtotime($_REQUEST['asofdate']);
 		// }
-        if(!session("topic-support-tree-$topicnum")){
+        if(!session("topic-support-tree-$topicnum")){ 
             $query = Support::where('topic_num','=',$topicnum)
             //->where('delegate_nick_name_id',$delegateNickId)
             ->whereRaw("(start <= $as_of_time) and ((end = 0) or (end >= $as_of_time))");

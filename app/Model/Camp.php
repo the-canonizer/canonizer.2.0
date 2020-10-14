@@ -633,7 +633,7 @@ class Camp extends Model {
         $score = 0;
 
         foreach ($delegatedSupports as $support) {
-            $supportPoint = Algorithm::{$algorithm}($support->nick_name_id);
+            $supportPoint = Algorithm::{$algorithm}($support->nick_name_id,$support->topic_num, $support->camp_num);
 
             if ($multiSupport) {
                 $score += round($supportPoint / (2 ** ($parent_support_order)), 2);
@@ -649,25 +649,19 @@ class Camp extends Model {
 
     public function getCamptSupportCount($algorithm, $topicnum, $campnum) {
 
-        // $as_of_time = time();
-        // if ((isset($_REQUEST['asof']) && $_REQUEST['asof'] == "bydate") || (session()->has('asofDefault') && session('asofDefault') == 'bydate' && !isset($_REQUEST['asof']))) {
-        //     if(isset($_REQUEST['asof']) && $_REQUEST['asof'] == "bydate"){
-        //          $as_of_time = strtotime(date('Y-m-d H:i:s', strtotime($_REQUEST['asofdate'])));
-        //      }else if(session()->has('asofdateDefault') && session('asofdateDefault')!='' && !isset($_REQUEST['asof'])){
-        //         $as_of_time =  strtotime(session('asofdateDefault'));
-        //     }
-        // }
-
         $supportCountTotal = 0;
+
         try {
             foreach (session("topic-support-nickname-$topicnum") as $supported) {
                 $nickNameSupports = session("topic-support-{$topicnum}")->filter(function ($item) use($supported) {
                     return $item->nick_name_id == $supported->nick_name_id; /* Current camp support */
                 });
-                $supportPoint = Algorithm::{$algorithm}($supported->nick_name_id);
+                $supportPoint = Algorithm::{$algorithm}($supported->nick_name_id,$supported->topic_num,$supported->camp_num);
+
                 $currentCampSupport = $nickNameSupports->filter(function ($item) use($campnum) {
                             return $item->camp_num == $campnum; /* Current camp support */
                         })->first();
+                
 			   /*The canonizer value should be the same as their value supporting that camp. 
 				   1 if they only support one party, 
 				   0.5 for their first, if they support 2, 
@@ -676,8 +670,7 @@ class Camp extends Model {
                     $multiSupport = false;
                     if ($nickNameSupports->count() > 1) {
                         $multiSupport = true;
-						$supportCountTotal += round($supportPoint / (2 ** ($currentCampSupport->support_order)), 2);
-						
+                        $supportCountTotal += round($supportPoint / (2 ** ($currentCampSupport->support_order)), 2);
                     } else if ($nickNameSupports->count() == 1) {
                          $supportCountTotal += $supportPoint;
                     }
