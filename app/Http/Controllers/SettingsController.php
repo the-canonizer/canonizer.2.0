@@ -373,7 +373,7 @@ class SettingsController extends Controller
                     $mailData = $data;
                     $mailData['camp_num'] = $singleSupport->camp_num;
                     /* send support deleted mail to all supporter and subscribers */
-                    $this->emailForSupportDeleted($data);
+                    $this->emailForSupportDeleted($mailData);
                 }
                 
             }
@@ -538,7 +538,7 @@ class SettingsController extends Controller
     }
 
     private function emailForSupportDeleted($data){
-            $nickName = Nickname::getNickName($data['nick_name']);
+           $nickName = Nickname::getNickName($data['nick_name']);
             $topic = Camp::getAgreementTopic($data['topic_num'],['nofilter'=>true]);
             $camp = Camp::where('topic_num', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('go_live_time', '<=', time())->latest('submit_time')->first();
 
