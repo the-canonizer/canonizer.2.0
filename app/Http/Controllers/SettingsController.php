@@ -370,9 +370,12 @@ class SettingsController extends Controller
                 foreach ($mysupports as $singleSupport) {
                     $singleSupport->end = time();
                     $singleSupport->save();
+                    $mailData = $data;
+                    $mailData['camp_num'] = $singleSupport->camp_num;
+                    /* send support deleted mail to all supporter and subscribers */
+                    $this->emailForSupportDeleted($data);
                 }
-                /* send support deleted mail to all supporter and subscribers */
-                $this->emailForSupportDeleted($data);
+                
             }
             
             $last_camp =  $data['camp_num'];
