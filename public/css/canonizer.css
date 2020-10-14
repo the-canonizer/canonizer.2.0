@@ -936,8 +936,34 @@ h1.page-title{
 ul.mainouter li .tp-title {
     display:inline-block;
     font-size:13px;
+    position: relative;
 }
-
+.supporter_list_tree{
+    position: absolute;
+    width: 100%;
+    min-width:500px;
+    height: 115px;
+    display: block;
+    z-index: 99;
+    left: 100%;
+    top:0px;
+}
+.supporter_list_tree ul ul{
+    background: #fff;
+}
+.supporter_list_tree .supportLI::before{
+    height: 0px !important;
+}
+.supporter_list_tree .supportLI::after{
+    border:none;
+}
+.supporter_list_tree > ul{
+    padding-left: 5px !important;
+}
+.supporter_list_tree .supportLI > span{
+    padding-left: 0px;
+    cursor:pointer;
+}
 .right-whitePnl i.fa.fa-question {
     padding: 2px 7px 2px 6px;
     border-radius: 15px;
@@ -1393,4 +1419,21 @@ a.rgWT {
 .linkedin{
    background-color: #003F67;
   color: white!important; 
+}
+.supporter{
+    display: inline-block;
+    padding: 1px 5px 1px;
+    font-size: 90%;
+    font-weight: normal;
+    line-height: 14px;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    border-radius: 10px;
+    background-color: #008000;
+    margin: 0px;
+    z-index: 99;
+    position: absolute;
+    top: 3px;
 }

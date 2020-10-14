@@ -160,7 +160,7 @@ class TopicSupport extends Model {
         }
         return $i;
     }
-    public static function buildTree($topicnum,$campnum,$traversedTreeArray,$parentNode=false){
+    public static function buildTree($topicnum,$campnum,$traversedTreeArray,$parentNode=false,$add_supporter = false){
         
         $html= "";
 
@@ -186,22 +186,28 @@ class TopicSupport extends Model {
             $supports = $nickName->getSupportCampList($namespace_id);
             $support_number = self::getSupportNumber($topicnum,$campnum,$supports);
             $support_txt = ($support_number) ? $support_number.":": '';
+            $space_html = '';
+             if($add_supporter){
+                    $space_html='<span class="" title="Collapse"></span>';
+                }
              if($parentNode){
-                $html.= "<li class='main-parent'><a href='".route('user_supports',$nickName->id)."?topicnum=".$topicnum."&campnum=".$campnum."&namespace=".$namespace_id."#camp_".$topicnum."_".$campnum."'>{$support_txt}{$nickName->nick_name}</a><div class='badge'>".round($array['score'],2)."</div>";
-                if($userId && $userFromNickname->id != $userId && !in_array($userId, $delegatedUserID)){
+               
+                $html.= "<li class='main-parent'>".$space_html."<a href='".route('user_supports',$nickName->id)."?topicnum=".$topicnum."&campnum=".$campnum."&namespace=".$namespace_id."#camp_".$topicnum."_".$campnum."'>{$support_txt}{$nickName->nick_name}</a><div class='badge'>".round($array['score'],2)."</div>";
+                if($userId && $userFromNickname->id != $userId && !in_array($userId, $delegatedUserID) && !$add_supporter){
                     $urlPortion = Camp::getSeoBasedUrlPortion($topicnum,$campnum);
                     $html.='<a href="'.url('support/'.$urlPortion.'-'.$array['index']).'" class="btn btn-info">Delegate Your Support</a>';
                 }
                 
             }else{
-                $html.= "<li><a href='".route('user_supports',$nickName->id)."?topicnum=".$topicnum."&campnum=".$campnum."&namespace=".$namespace_id."#camp_".$topicnum."_".$campnum."'>{$nickName->nick_name}</a><div class='badge'>".round($array['score'],2)."</div> ";
-                 if($userId && $userFromNickname->id != $userId && !in_array($userId, $delegatedUserID)){
+               
+                $html.= "<li>".$space_html."<a href='".route('user_supports',$nickName->id)."?topicnum=".$topicnum."&campnum=".$campnum."&namespace=".$namespace_id."#camp_".$topicnum."_".$campnum."'>{$nickName->nick_name}</a><div class='badge'>".round($array['score'],2)."</div> ";
+                 if($userId && $userFromNickname->id != $userId && !in_array($userId, $delegatedUserID) && !$add_supporter){
                     $urlPortion = Camp::getSeoBasedUrlPortion($topicnum,$campnum);
                      $html.='<a href="'.url('support/'.$urlPortion.'-'.$array['index']).'" class="btn btn-info">Delegate Your Support</a>';
                 }
             }
             $html.="<ul>";
-            $html.=self::buildTree($topicnum,$campnum,$array['children'],false);
+            $html.=self::buildTree($topicnum,$campnum,$array['children'],false,$add_supporter);
             $html.="</ul></li>";
             
         
@@ -243,8 +249,7 @@ class TopicSupport extends Model {
 
    
 
-    public static function topicSupportTree($algorithm,$topicnum,$campnum){
-        
+    public static function topicSupportTree($algorithm,$topicnum,$campnum,$add_supporter = false){
         $as_of_time = time();
         if ((isset($_REQUEST['asof']) && $_REQUEST['asof'] == 'bydate') || (session()->has('asofDefault') && session('asofDefault') == 'bydate' && !isset($_REQUEST['asof']))) {
             if(isset($_REQUEST['asof']) && $_REQUEST['asof'] == "bydate"){
@@ -271,7 +276,7 @@ class TopicSupport extends Model {
         }
        
         $traversedSupportCountTreeArray = self::sortTraversedSupportCountTreeArray(self::sumTranversedArraySupportCount(self::traverseTree($algorithm,$topicnum,$campnum)));
-         return self::buildTree($topicnum,$campnum,$traversedSupportCountTreeArray,true);
+         return self::buildTree($topicnum,$campnum,$traversedSupportCountTreeArray,true,$add_supporter);
     }
 
    

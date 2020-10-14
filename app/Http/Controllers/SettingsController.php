@@ -237,8 +237,10 @@ class SettingsController extends Controller
             $campnum = $campnumArray[0];
             session(['campnum' => $campnum]);
 
-            $delegate_nick_name_id = (isset($campnumArray[1])) ? $campnumArray[1] : 0;
-
+            $delegate_nick_name_id = ( sizeof($campnumArray) > 1 && isset($campnumArray[sizeof($campnumArray) -1])) ? $campnumArray[sizeof($campnumArray) - 1] : 0;
+            if(!is_int($delegate_nick_name_id)){
+                $delegate_nick_name_id = 0;
+            }
             $id = Auth::user()->id;
             $encode = General::canon_encode($id);
 
@@ -259,6 +261,7 @@ class SettingsController extends Controller
             $confirm_support = 0;
 
             $alreadySupport = Support::where('topic_num', $topicnum)->where('camp_num', $campnum)->where('end', '=', 0)->whereIn('nick_name_id', $userNickname)->get();
+            //echo "<pre>"; print_r($alreadySupport); die;
             if ($alreadySupport->count() > 0) {
                 if($alreadySupport[0]->delegate_nick_name_id!=0){
                     $nickName = Nickname::where('id',$alreadySupport[0]->delegate_nick_name_id)->first();

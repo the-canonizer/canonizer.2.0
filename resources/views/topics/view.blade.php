@@ -244,7 +244,7 @@ change camps with them."><i class="fa fa-question"></i></a>
         </div>
 	 <?php } ?>
     </div>
-	<div class="post"> </div>
+	
 	
 </div>  <!-- /.right-whitePnl-->
 
@@ -297,7 +297,6 @@ $('#camp_subscription').click(function(){
 
 })
 <?php } ?>
-//outlinecall(54,9,true);
 </script>	
 @endsection
 	
