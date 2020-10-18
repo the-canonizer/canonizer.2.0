@@ -233,11 +233,11 @@ class SettingsController extends Controller
             $topicnumArray = explode("-", $id);
             $topicnum = $topicnumArray[0];
             // get deligated nickname if exist
-            $campnumArray = explode("-", $campnums);
-            $campnum = $campnumArray[0];
+            $campnumArray = explode("_", $campnums);
+            $campnum = explode("-",$campnumArray[0])[0];
             session(['campnum' => $campnum]);
-            $delegate_nick_name_id = ( sizeof($campnumArray) > 1 && isset($campnumArray[sizeof($campnumArray) -1])) ? $campnumArray[sizeof($campnumArray) - 1] : 0;
-           
+            $delegate_nick_name_id = (isset($campnumArray[1])) ? $campnumArray[1] : 0;
+            //echo $campnum.$delegate_nick_name_id ; die;
             if(!$delegate_nick_name_id){
                 $delegate_nick_name_id = 0;
             }
