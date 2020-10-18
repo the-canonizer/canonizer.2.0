@@ -42,7 +42,7 @@ class SettingsController extends Controller
         $id = (isset($_GET['id'])) ? $_GET['id'] : '';
         $private_flags = array();
 
-
+        //echo "<pre>"; print_r($input); die;
         $messages = [
             'first_name.required' => 'First name is required.',
             'last_name.required' => 'Last name is required.',
