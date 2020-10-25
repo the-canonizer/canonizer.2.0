@@ -255,7 +255,8 @@
                                 <label for="country">Country <span style="color:red;">*</span></label>
 								</br>
 								<div style="width:300px;float:left">
-                                <select name="country" readonly id="country" class="form-control">
+							    <input type="hidden" name="country" id="country" value="{{$user->country}}" />
+                                <select name="country_select" disabled id="country_select" class="form-control">
                                 	<option value=""> -- Select -- </option>
                                     <option value="AF" {{ ($user->country == 'AF') ? "selected='selected'" : '' }} >Afghanistan</option>
                                     <option value="AL" {{ ($user->country == 'AL') ? "selected='selected'" : '' }}>Albania</option>
@@ -579,12 +580,16 @@
 	  for (const component of place.address_components) {
 	       const addressType = component.types[0];
 	    if (components[addressType]) {
+
 	      var val = component[componentForm[components[addressType]]];
 	      var oldVal = document.getElementById(components[addressType]).value;
 	      if(oldVal !='' && components[addressType] == 'address_1'){
 	      	val = oldVal+","+val	
 	      }	      
 	      document.getElementById(components[addressType]).value = val;
+	      if(components[addressType] == 'country'){
+	      		document.getElementById('country_select').value = val;
+			}
 	    }
 	  }
 	}
@@ -617,9 +622,7 @@
             	}
             })
 
-            $('#update_profile').click(function(){
-            	enableDisbleFields(false);
-            })
+           
             
         })
         function checkCarrier(){
@@ -642,7 +645,7 @@
         }
 
 checkCarrier();
-//outlinecall(54,9,true);
+//outlinecall(88,36,true);
     </script>
 
 

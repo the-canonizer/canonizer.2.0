@@ -99,6 +99,7 @@ class TopicSupport extends Model {
             });
 
             $supportPoint = Algorithm::{$algorithm}($support->nick_name_id,$support->topic_num,$support->camp_num);
+            //echo $supportPoint."spp"; 
 			$currentCampSupport =  $nickNameSupports->filter(function ($item) use($campnum)
 			{
 				return $item->camp_num == $campnum; /* Current camp support */

@@ -237,7 +237,6 @@ class SettingsController extends Controller
             $campnum = explode("-",$campnumArray[0])[0];
             session(['campnum' => $campnum]);
             $delegate_nick_name_id = (isset($campnumArray[1])) ? $campnumArray[1] : 0;
-            //echo $campnum.$delegate_nick_name_id ; die;
             if(!$delegate_nick_name_id){
                 $delegate_nick_name_id = 0;
             }

@@ -728,7 +728,7 @@ class Camp extends Model {
                 $support_tree_html = '';
                  if($support_tree !=''){
                     $support_tree_html .=  "<div class='supporter_list_tree'><ul><li class='supportLI' id='support_tree_" . $this->topic_num . "_" . $currentCamp . "_" . $campnum . "'>";
-                    $support_tree_html .= '<span class="'.$class.'"><i class="supporter">S</i></span>';
+                    $support_tree_html .= '<span class="'.$class.'"><i class="supporter fa fa-arrow-down"></i></span>';
                     $support_tree_html.= '<ul>'.$support_tree.'</ul>';
                     $support_tree_html .= '</li></ul></div>';
                 }
@@ -1010,7 +1010,7 @@ class Camp extends Model {
         $support_tree_html = '';
          if($support_tree !=''){
             $support_tree_html .=  "<div class='supporter_list_tree'><ul><li class='supportLI' id='support_tree_" . $this->topic_num . "_" . $activeCamp . "_" . $this->camp_num . "'>";
-            $support_tree_html .= '<span class="'.$class.'"><i class="supporter">S</i></span>';
+            $support_tree_html .= '<span class="'.$class.'"><i class="supporter fa fa-arrow-down"></i></span>';
             $support_tree_html.= '<ul>'.$support_tree.'</ul>';
             $support_tree_html .= '</li></ul></div>';
         }
@@ -1026,7 +1026,7 @@ class Camp extends Model {
  	      $icon = '<i class="fa fa-arrow-right"></i>';
 	  
 		$html .= '<span class="' . $parentClass . '">'. $icon.' </span>';
-        $html .= '<div class="tp-title"><a style="' . $selected . '" href="' . $reducedTree[$this->camp_num]['link'] . '">' . $reducedTree[$this->camp_num]['title'] . '</a><div class="badge">' . round($reducedTree[$this->camp_num]['score'], 2) . '</div></div>'.$support_tree_html;
+        $html .= '<div class="tp-title"><a style="' . $selected . '" href="' . $reducedTree[$this->camp_num]['link'] . '">' . $reducedTree[$this->camp_num]['title'] . '</a><div class="badge">' . round($reducedTree[$this->camp_num]['score'], 2) . '</div>'.$support_tree_html.'</div>';
         $html .= $this->buildCampTree($reducedTree[$this->camp_num]['children'], $this->camp_num, $activeCamp, $activeCampDefault,$add_supporter);
         $html .= "</li>";
         return $html;

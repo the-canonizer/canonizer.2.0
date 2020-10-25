@@ -547,6 +547,20 @@ h1.page-title{
     z-index: 1;
     top:0px;
 }
+i.supporter.fa.fa-arrow-right , i.supporter.fa.fa-arrow-down {
+    background-color: red;
+    color: #fff;
+    font-size: 8px;
+    padding: 1px 2px 2px;
+    border-radius: 3px;
+    margin-top: 3px;
+    display: inline-block;
+    vertical-align: middle;
+    position: absolute;
+    left: 5px;
+    z-index: 1;
+    top: 0px;
+}
 .tree li.parent_li>span {
     cursor:pointer
 }
