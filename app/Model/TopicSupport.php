@@ -87,7 +87,7 @@ class TopicSupport extends Model {
 
         /*Fetching direct support to camp*/
 
-        $supports = session("topic-support-tree-$topicnum")->filter(function($item) use ($campnum,$delegateNickId){
+        $supports = session("topic-support-nickname-$topicnum")->filter(function($item) use ($campnum,$delegateNickId){
                 return $item->delegate_nick_name_id == 0 && $item->camp_num == $campnum;
         });
         
@@ -97,9 +97,7 @@ class TopicSupport extends Model {
             $nickNameSupports =  session("topic-support-tree-$topicnum")->filter(function($item) use($support) {
                 return $item->nick_name_id == $support->nick_name_id;
             });
-
             $supportPoint = Algorithm::{$algorithm}($support->nick_name_id,$support->topic_num,$support->camp_num);
-            //echo $supportPoint."spp"; 
 			$currentCampSupport =  $nickNameSupports->filter(function ($item) use($campnum)
 			{
 				return $item->camp_num == $campnum; /* Current camp support */
@@ -112,12 +110,13 @@ class TopicSupport extends Model {
             $multiSupport = false;
 			if($currentCampSupport){
 				if($nickNameSupports->count() > 1){
-                    $multiSupport = true;
-					
+                    $multiSupport = true;					
 					$array[$support->nick_name_id]['score']=round($supportPoint / (2 ** ($currentCampSupport->support_order)),2);
 						
-				}else if($nickNameSupports->count() == 1){
-					
+				}else if($nickNameSupports->count() >= 1 && $support->topic_num !='54' && $algorithm = 'mormon'){ //only for mormon if selected
+                    $multiSupport = true;                   
+                    $array[$support->nick_name_id]['score']=round($supportPoint / (2 ** ($currentCampSupport->support_order)),2);
+                }else if($nickNameSupports->count() == 1){
 					
 					 $array[$support->nick_name_id]['score']=$supportPoint;
 					

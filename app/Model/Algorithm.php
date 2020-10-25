@@ -196,7 +196,7 @@ class Algorithm{
                 '(topic_num = 54 and camp_num = 9) or ' .
                 '(topic_num = 54 and camp_num = 10) or ' .
                 '(topic_num = 54 and camp_num = 11)';
-        if($campnum == 9){
+        if($campnum == 9 || $campnum == 8){
             $condition = '(topic_num = 54 and camp_num = 8) or ' .
                 '(topic_num = 54 and camp_num = 9)';
         }
