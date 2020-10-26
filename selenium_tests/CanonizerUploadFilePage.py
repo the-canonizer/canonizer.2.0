@@ -46,9 +46,9 @@ class CanonizerUploadFilePage(Page):
         self.upload(originalfilename)
         return self.find_element(*UploadFileIdentifiers.ERROR_FILE_SIZE).text
 
-    def upload_file_with_invalid_format(self, originalfilename):
+    def upload_file_with_valid_format(self, originalfilename):
         self.upload(originalfilename)
-        return self.find_element(*UploadFileIdentifiers.INVALID_FILE_FORMAT_ERROR).text
+        return self
 
     def upload_file_with_same_file_name(self, originalfilename):
         self.upload(originalfilename)

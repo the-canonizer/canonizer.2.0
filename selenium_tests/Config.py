@@ -42,13 +42,13 @@ DEFAULT_MIDDLE_NAME = ""
 DEFAULT_LAST_NAME = "Chavan"
 
 # File Upload Page Configuration Parameters
-DEFAULT_ORIGINAL_FILE_NAME = ""
+DEFAULT_ORIGINAL_FILE_NAME = "H:\\Astronomy\\Images\\venera.gif"
 DEFAULT_NEW_FILE_NAME = ""
 DEFAULT_FILE_SIZE = ""
 INVALID_FILE_FORMAT = "C:\\Users\\ajay\\Desktop\\Canonizer text file.txt"
 FILE_WITH_MORE_THAN_5MB = "H:\\Astronomy\\Images\\PIA00272.jpg"
-FILE_WITH_SAME_NAME = "C:\\Users\\Public\\Pictures\\Sample Pictures\\Hydrangeas.jpg"
-FILE_WITH_ZERO_BYTES = "C:\\Users\\ajay\Desktop\\New Bitmap Image.bmp"
+FILE_WITH_SAME_NAME = "H:\\Astronomy\\Images\\venera.gif"
+FILE_WITH_ZERO_BYTES = "C:\\Users\\Ajay\\Desktop\\New folder\\New Bitmap Image.bmp"
 
 # Create New Topic Configuration Parameters
 DEFAULT_NICK_NAME = ""
@@ -56,6 +56,7 @@ DEFAULT_TOPIC_NAME = ""
 DEFAULT_NAMESPACE = ""
 DEFAULT_NOTE = ""
 DUPLICATE_TOPIC_NAME = "Theories of Consciousness"
+DUPLICATE_CAMP_NAME = "Levels Of Testing"
 
 # Change Password Configuration Parameters
 DEFAULT_CURRENT_PASSWORD = "Rupali@12345"

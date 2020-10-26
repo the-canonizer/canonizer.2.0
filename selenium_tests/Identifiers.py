@@ -32,11 +32,12 @@ class HomePageIdentifiers(object):
     GOOGLESEARCH = (By.ID, 'sbi')
     GOOGLESEARCHSUBMIT = (By.ID, 'sbb')
     # Broken URL XPATH
-    BROKENURL_1 = (By.XPATH, '//*[@id="rso"]/div/div/div[1]/div/div/div[1]/a')
-    BROKENURL_2 = (By.XPATH, '//*[@id="rso"]/div/div/div[2]/div/div/div[1]/a')
-    BROKENURL_3 = (By.XPATH, '//*[@id="rso"]/div/div/div[3]/div/div/div[1]/a')
-    BROKENURL_4 = (By.XPATH, '//*[@id="rso"]/div/div/div[4]/div/div/div[1]/a')
-    BROKENURL_5 = (By.XPATH, '//*[@id="rso"]/div/div/div[5]/div/div/div[1]/a')
+    #BROKENURL_1 = (By.XPATH, '//*[@id="rso"]/div/div/div[1]/div/div/div[1]/a')
+    BROKENURL_1 = (By.XPATH, '//*[@id="rso"]/div[1]/div/div[1]/a/h3/span')
+    BROKENURL_2 = (By.XPATH, '//*[@id="rso"]/div[2]/div/div[1]/a/h3/span')
+    BROKENURL_3 = (By.XPATH, '//*[@id="rso"]/div[3]/div/div[1]/a/h3/span')
+    BROKENURL_4 = (By.XPATH, '//*[@id="rso"]/div[4]/div/div[1]/a/h3/span')
+    BROKENURL_5 = (By.XPATH, '//*[@id="rso"]/div[5]/div/div[1]/a/h3/span')
     TURNOFFSETTINGS = (By.XPATH, '/html/body/pre')
     FOOTER = (By.XPATH, '/html/body/footer')
     GARBAGE_URL = (By.XPATH, '/html/body/div')
@@ -295,7 +296,8 @@ class TopicUpdatePageIdentifiers(object):
     """
         Class to hold the Topic Update Page Identifiers
     """
-    TOPIC_IDENTIFIER = (By.XPATH, '//*[@id="outline_88"]/a')
+    #TOPIC_IDENTIFIER = (By.XPATH, '//*[@id="outline_88"]/a')
+    TOPIC_IDENTIFIER = (By.XPATH, '//*[@id="outline_173"]/a')
     MANAGE_EDIT_TOPIC = (By.XPATH, '//*[@id="edit_topic"]')
     SUBMIT_TOPIC_UPDATE_BASED_ON_THIS = (By.XPATH, '//*[@id="update"]')
     NICK_NAME = (By.ID, 'nick_name')
@@ -336,7 +338,8 @@ class CreateNewCampPageIdentifiers(object):
         Class to hold the Create New Camp Page Identifiers
     """
 
-    CREATE_CAMP = (By.XPATH, '//*[@id="tree_88_1-Agreement_1"]/ul/li[1]/span/a')
+    #CREATE_CAMP = (By.XPATH, '//*[@id="tree_88_1-Agreement_1"]/ul/li[1]/span/a')
+    CREATE_CAMP = (By.XPATH, '//*[@id="tree_173_1-Agreement_1"]/ul/li[1]/span/a')
     NICK_NAME = (By.ID, 'nick_name')
     CAMP_NAME = (By.ID, 'camp_name')
     KEYWORDS = (By.ID, 'keywords')
@@ -372,14 +375,13 @@ class CampEditPageIdentifiers(object):
     CAMP_NAME_ASTRK = (By.XPATH, '/html/body/div[1]/div[3]/div/div/form/div[2]/label/span')
     CREATE_CAMP_BUTTON = (By.ID, 'submit')
     ERROR_NICK_NAME = (By.XPATH, '/html/body/div[1]/div[3]/div/div/form/div[1]/p')
-    ERROR_CAMP_NAME = (By.XPATH, '/html/body/div[1]/div[3]/div/div/form/div[2]/p')
+    ERROR_CAMP_NAME = (By.XPATH, '/html/body/div/div[3]/div/div/form/div[3]/p')
     ADDNEWNICKNAME = (By.XPATH, '/html/body/div[1]/div[3]/div/div/form/div[1]/a')
     SUBMIT_UPDATE = (By.ID, 'submit')
     ERROR_DUPLICATE_CAMP_NAME = (By.XPATH, '/html/body/div/div[3]/div/div/form/div[3]/p')
-    CAMP_IDENTIFIER = (By.XPATH, '//*[@id="tree_88_1-Agreement_1"]/div/a')
-    USER_NICK_NAME = (By.XPATH, '//*[@id="support-tree"]/li[1]/a')
-    #USER_NICK_NAME = (By.XPATH, '//*[@id="support-tree"]/li[5]/a[1]')
-    USER_SUPPORTS_CAMP_NAME = (By.XPATH, '/html/body/div/div[3]/div/div/form/div[3]/p')
+    CAMP_IDENTIFIER = (By.XPATH, '//*[@id="tree_173_1_2"]/div/a')
+    USER_NICK_NAME = (By.XPATH, '//*[@id="support-tree"]/li[2]/a')
+    USER_SUPPORTS_CAMP_NAME = (By.XPATH, '//*[@id="camp_173_2"]/a')
 
 
 class CampStatementEditPageIdentifiers(object):
@@ -387,7 +389,7 @@ class CampStatementEditPageIdentifiers(object):
         Class to hold the Camp Statement Page Identifiers
     """
     EDIT_CAMP_STATEMENT = (By.ID, 'edit_camp_statement')
-    SUBMIT_STATEMENT_UPDATE_BASED_ON_THIS = (By.XPATH, '/html/body/div/div[3]/div[2]/div/div[1]/div[2]/a[1]')
+    SUBMIT_STATEMENT_UPDATE_BASED_ON_THIS = (By.ID, 'update')
     VIEW_THIS_VERSION = (By.ID, 'version')
     OBJECT = (By.ID, 'object')
     NICK_NAME = (By.ID, 'nick_name')
@@ -406,8 +408,8 @@ class AddNewsPageIdentifiers(object):
     """
         Class to hold the Add News Page Identifiers
     """
-    #ADD_NEWS = (By.XPATH, '/html/body/div[1]/div[2]/div[1]/div[2]/h3/a[2]')
-    ADD_NEWS = (By.XPATH, '/html/body/div[1]/div[2]/div[1]/div[1]/h3/a[2]')
+    #ADD_NEWS = (By.XPATH, '/html/body/div[1]/div[3]/div[1]/div[1]/h3/div[2]/a[2]')
+    ADD_NEWS = (By.XPATH, '/html/body/div[1]/div[3]/div[1]/div[2]/h3/div[2]/a[2]')
     DISPLAY_TEXT = (By.ID, 'display_text')
     DISPLAY_TEXT_ASTRK = (By.XPATH, '//*[@id="topicForm"]/div[1]/label/span')
     LINK = (By.ID, 'link')
@@ -424,12 +426,13 @@ class EditNewsPageIdentifiers(object):
     """
         Class to hold the Edit News Page Identifiers
     """
-    EDIT_NEWS = (By.XPATH, '/html/body/div[1]/div[2]/div[1]/div[1]/h3/a')
+
+    EDIT_NEWS = (By.XPATH, '/html/body/div[1]/div[3]/div[1]/div[1]/h3/a')
     DISPLAY_TEXT = (By.ID, 'display_text')
     LINK = (By.ID, 'link')
     CANCEL = (By.XPATH, '//*[@id="topicForm"]/a')
-    DISPLAY_TEXT_ASTRK = (By.XPATH, '//*[@id="sortable"]/div/div[1]/lasubmitbel/span')
-    LINK_ASTRK = (By.XPATH, '//*[@id="sortable"]/div/div[2]/label/span')
+    DISPLAY_TEXT_ASTRK = (By.XPATH, '//*[@id="sortable"]/div[1]/div[1]/label/span')
+    LINK_ASTRK = (By.XPATH, '//*[@id="sortable"]/div[1]/div[2]/label/span')
     SUBMIT = (By.ID, 'submit')
     ERROR_DISPLAY_TEXT = (By.XPATH, '//*[@id="sortable"]/div[1]/div[1]/p')
     ERROR_LINK = (By.XPATH, '//*[@id="sortable"]/div[1]/div[2]/p')
@@ -475,9 +478,9 @@ class BreadCrumbsLinksIdentifiers(object):
     Class to hold the bread crumbs links Identifiers
     """
     AGREEMENT_CAMP = (By.XPATH, '/html/body/div[1]/div[2]/h3[2]/a')
-    APPROACHABLE_VIA_SCIENCE = (By.XPATH, '//*[@id="tree_88_1_2"]/div/a')
+    CHILD_CAMP_TYPES_OF_TESTING = (By.XPATH, '//*[@id="tree_173_1_2"]/div/a')
     UP = (By.XPATH, '/html/body/div[1]/a')
-    APPROACHABLE_VIA_SCIENCE_CAMP = (By.XPATH, '/html/body/div[1]/div[2]/h3[2]/a[2]')
+    CHILD_CAMP_TYPES_OF_TESTING_CAMP = (By.XPATH, '/html/body/div[1]/div[2]/h3[2]/a[2]')
     CAMP_FORUM = (By.ID, 'camp_forum')
     CAMP_FORUM_AGREEMENT = (By.XPATH, '/html/body/div/div[1]/h3[3]/a')
     CAMP_STATEMENT_HISTORY_AGREEMENT = (By.XPATH, '/html/body/div/div[1]/h3[2]/a')

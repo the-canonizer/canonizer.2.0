@@ -108,9 +108,9 @@ class CanonizerAccountSettingsPage(Page):
         self.find_element(*AccountSettingsIdentifiers.CHANGE_PASSWORD).click()
         return CanonizerAccountSettingsPage(self.driver)
 
-    def check_topic_create_new_camp_page_from_my_supports_loaded(self):
+    def click_account_settings_crypto_verification_page_button(self):
         """
-        This function is to click on the Account Settings ->Crypto Verification (was Metamask Account)tab
+        This function is to click on the Account Settings ->Social Oauth Verification tab
         -> Hover to the Account Settings button
         -> Find the element and click it
 
@@ -121,6 +121,7 @@ class CanonizerAccountSettingsPage(Page):
         self.hover(*AccountSettingsIdentifiers.CRYPTO_VERIFICATION)
         self.find_element(*AccountSettingsIdentifiers.CRYPTO_VERIFICATION).click()
         return CanonizerAccountSettingsPage(self.driver)
+
 
 
 class CanonizerAccountSettingsChangePasswordPage(Page):

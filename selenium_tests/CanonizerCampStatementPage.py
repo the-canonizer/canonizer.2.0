@@ -1,7 +1,7 @@
 from CanonizerBase import Page
 from Identifiers import CampStatementEditPageIdentifiers,BrowsePageIdentifiers, TopicUpdatePageIdentifiers, AddCampStatementPageIdentifiers
 from selenium.common.exceptions import NoSuchElementException
-
+import time
 
 class CanonizerCampStatementPage(Page):
 
@@ -17,6 +17,8 @@ class CanonizerCampStatementPage(Page):
         self.hover(*TopicUpdatePageIdentifiers.TOPIC_IDENTIFIER)
         self.find_element(*TopicUpdatePageIdentifiers.TOPIC_IDENTIFIER).click()
 
+        time.sleep(3)
+
         # Click on Manage/Edit This camp
         self.hover(*CampStatementEditPageIdentifiers.EDIT_CAMP_STATEMENT)
         self.find_element(*CampStatementEditPageIdentifiers.EDIT_CAMP_STATEMENT).click()
@@ -28,6 +30,7 @@ class CanonizerCampStatementPage(Page):
         :return:
         """
         self.load_topic_agreement_page()
+
         # Click on SUBMIT_CAMP_UPDATE_BASED_ON_THIS
         self.hover(*CampStatementEditPageIdentifiers.SUBMIT_STATEMENT_UPDATE_BASED_ON_THIS)
         self.find_element(*CampStatementEditPageIdentifiers.SUBMIT_STATEMENT_UPDATE_BASED_ON_THIS).click()
@@ -66,6 +69,7 @@ class CanonizerCampStatementPage(Page):
         self.click_submit_update_button()
 
     def submit_statement_update_with_blank_nick_name(self, statement, note):
+        self.find_element(*CampStatementEditPageIdentifiers.STATEMENT).clear()
         self.submit_update('', statement, note)
         #return self.find_element(*CampStatementEditPageIdentifiers.ERROR_NICK_NAME).text
         try:
@@ -76,12 +80,9 @@ class CanonizerCampStatementPage(Page):
         return True
 
     def submit_statement_update_with_blank_statement(self, nick_name, note):
+        self.find_element(*CampStatementEditPageIdentifiers.STATEMENT).clear()
         self.submit_update(nick_name, '', note)
         return self.find_element(*CampStatementEditPageIdentifiers.ERROR_STATEMENT).text
-
-    def submit_statement_update_with_valid_data(self, nick_name, statement, note):
-        self.submit_update(nick_name, statement, note)
-        return self
 
     def statement_update_page_should_have_add_new_nick_name_link_for_new_users(self):
         return self.find_element(*CampStatementEditPageIdentifiers.ADDNEWNICKNAME).text
