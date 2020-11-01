@@ -8,7 +8,13 @@
             <b>
                 <a href="{{ URL::to('/')}}/forum/{{ $topicname }}/{{ $campnum }}/threads">
                     &laquo; List of All Camp Threads</a>
-                <hr>
+                <hr/>
+                <h3><b>Camp:</b>
+                    @php
+                        echo $parentcamp
+                    @endphp
+                </h3>
+                <hr/>
                 <a href="#">{{ $threads->creator->nick_name }}
                 </a> started this thread : "{{ $threads->title }}"
             </b>
