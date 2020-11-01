@@ -91,9 +91,10 @@ class TopicSupport extends Model {
                 return $item->delegate_nick_name_id == 0 && $item->camp_num == $campnum;
         });
         
-        
         $array = [];
         foreach($supports as $support){
+
+       
             $nickNameSupports =  session("topic-support-tree-$topicnum")->filter(function($item) use($support) {
                 return $item->nick_name_id == $support->nick_name_id;
             });
@@ -106,24 +107,22 @@ class TopicSupport extends Model {
 
             $array[$support->nick_name_id]['score'] = 0;
             $array[$support->nick_name_id]['children'] = [];
-
+            $array[$support->nick_name_id]['index']=$support->nick_name_id;
             $multiSupport = false;
 			if($currentCampSupport){
 				if($nickNameSupports->count() > 1){
                     $multiSupport = true;					
 					$array[$support->nick_name_id]['score']=round($supportPoint / (2 ** ($currentCampSupport->support_order)),2);
-						
-				}else if($nickNameSupports->count() >= 1 && $support->topic_num !='54' && $algorithm = 'mormon'){ //only for mormon if selected
+				}else if($nickNameSupports->count() >= 1 && $support->topic_num !='54' && $algorithm == 'mormon'){ //only for mormon if selected
                     $multiSupport = true;                   
                     $array[$support->nick_name_id]['score']=round($supportPoint / (2 ** ($currentCampSupport->support_order)),2);
-                }else if($nickNameSupports->count() == 1){
+                }
+                else if($nickNameSupports->count() == 1){
 					
 					 $array[$support->nick_name_id]['score']=$supportPoint;
 					
 				}
 			
-            
-            $array[$support->nick_name_id]['index']=$support->nick_name_id;
             $array[$support->nick_name_id]['children'] = self::traverseChildTree($algorithm,$topicnum,$campnum,$support->nick_name_id,$currentCampSupport->support_order,$multiSupport);
             }
         }
