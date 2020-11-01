@@ -42,11 +42,29 @@
 									</a>
 								</p>
 							@endif
-
-                            @foreach ($threads as $thread)
+										<thead>
+											<th>Thread Name</th>
+											<th>Replies</th>
+											<th>Most Recent Post Date</th>
+										</thead>
+										<tbody>
+											@foreach ($threads as $thread)
+											<tr>
+												<td>
+													<a href="{{ URL::to('/')}}/forum/{{ $topicname }}/{{ $campnum }}/threads/{{ $thread->id }}">
+		                                            {{ $thread->title }}
+		                                            </a>
+												</td>
+												<td>{{ $thread->replies->count() }}</td>
+												<td>{{ date('d-m-Y', strtotime($thread->updated_at))}}</td>
+											</tr>
+											 @endforeach
+										</tbody>
+                           <!--  @foreach ($threads as $thread)
                             <article>
 
 								<div class="level" style="word-break:break-all">
+									
 									<h5>
 	                                    <ul class = "list-group">
 	                                        <li class = "list-group-item">
@@ -73,7 +91,7 @@
 
                                 {{--  <div class="body"> {{ $thread->body }} </div>  --}}
                             </article>
-                            @endforeach
+                            @endforeach -->
 
 							<!-- For Pagination -->
 							@if (count($threads) > 0)
