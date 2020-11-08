@@ -177,7 +177,7 @@
                                 </select>
                             </div>
                             <div class="col-sm-6 margin-btm-1">
-                                <label for="address_1">Date Of Birth</label>
+                                <label for="dob">Date Of Birth</label>
 								</br>
 								<div style="width:300px;float:left">
                                 @if(old('birthday') != '')
@@ -198,7 +198,8 @@
                                 <label for="address_1">Address Line 1 (Limit 255 Chars) </label>
 								</br>
 								<div style="width:300px;float:left">
-                                <input type="text" onkeydown="restrictTextField(event,255)" onfocus="initAutocomplete()" name="address_1" class="form-control" id="address_1" value="{{ old('address_1', $user->address_1)}}">
+                                <input type="text" onkeydown="restrictTextField(event,255)" onfocus="initAutocomplete()" onfocusout="emptyAddress()" name="address_1" class="form-control" id="address_1" value="{{ old('address_1', $user->address_1)}}">
+                                <span style="color:red;">Note*: To update address please select a address from suggesstion box</span>
                                 </div>
 								<div style="width:95px;float:right">
 								<select class="form-control" id="address_1_bit"  name="address_1_bit">
@@ -252,7 +253,7 @@
 								</div>  
 							</div>
                             <div class="col-sm-6 margin-btm-1">
-                                <label for="country">Country <span style="color:red;">*</span></label>
+                                <label for="country">Country <span style="color:red;"></span></label>
 								</br>
 								<div style="width:300px;float:left">
 							    <input type="hidden" name="country" id="country" value="{{$user->country}}" />
@@ -535,6 +536,7 @@
 			                </div>
                         </div>
                         <button type="submit" id="update_profile" class="btn btn-login">Update</button>
+
                     </form>  
         </div>
     </div>   
@@ -543,6 +545,8 @@
 </div>  <!-- /.right-whitePnl-->
   <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB9KjPwjqnwoqvXVV3POGI0_hMXKcPxvDM&libraries=places"></script>
     <script>
+    	var ifAddressSelected = false;
+    	var oldAddressVal = document.getElementById("address_1").value;
     	let placeSearch;
 		let autocomplete;
 		const componentForm = {
@@ -565,7 +569,8 @@
 			postal_code:'postal_code'
 		}
 		function initAutocomplete() {
-	  autocomplete = new google.maps.places.Autocomplete(
+
+	  	autocomplete = new google.maps.places.Autocomplete(
 	    document.getElementById("address_1"),
 	    { types: ["geocode"] }
 	  );
@@ -573,14 +578,29 @@
 	  autocomplete.addListener("place_changed", fillInAddress);
 	}
 
+	function emptyAddress(){
+		var val = document.getElementById('address_1').value;
+
+		if((oldAddressVal != val) && (val =='' || val ==null || !ifAddressSelected)){
+			Object.keys(componentForm).forEach(function(k,val){
+				if(k == 'country'){
+					document.getElementById('country_select').value = '';
+				}
+				document.getElementById(k).value = "";
+			})
+		}
+		ifAddressSelected = false;
+	}
+
 	function fillInAddress() {
+	  ifAddressSelected = true;
+	  document.getElementById('address_1').value = "";
 	  const place = autocomplete.getPlace();
 	  
 	  if(place && place.address_components)
 	  for (const component of place.address_components) {
 	       const addressType = component.types[0];
 	    if (components[addressType]) {
-
 	      var val = component[componentForm[components[addressType]]];
 	      var oldVal = document.getElementById(components[addressType]).value;
 	      if(oldVal !='' && components[addressType] == 'address_1'){
