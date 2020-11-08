@@ -7,18 +7,20 @@
         <h3>
             <b>
                 <a href="{{ URL::to('/')}}/forum/{{ $topicname }}/{{ $campnum }}/threads">
-                    &laquo; List of All Camp Threads</a>
-                <hr/>
-                <h3><b>Camp:</b>
+                    &laquo; List of All Camp Threads</a>              
+               
+            </b>
+        </h3>
+        <h3><b>Camp:</b>
                     @php
                         echo $parentcamp
                     @endphp
+                     <hr/>
+                     <a href="#">{{ $threads->creator->nick_name }}
+                    </a> started this thread : "{{ $threads->title }}"
                 </h3>
-                <hr/>
-                <a href="#">{{ $threads->creator->nick_name }}
-                </a> started this thread : "{{ $threads->title }}"
-            </b>
-        </h3>
+        
+
 	</div>
     <div class="right-whitePnl">
 
@@ -27,7 +29,7 @@
 
                 <div class="panel panel-default">
                    <div class="panel-body">
-                        <span> Thread Post at {{ $threads->created_at->diffForHumans() }}
+                        <span> Thread Post at {{ date('d-m-Y', strtotime($threads->updated_at))}}
                             by <a href="#"> {{ $threads->creator->nick_name }} </a>
                         </span><br />
 
