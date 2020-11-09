@@ -569,7 +569,7 @@
 			postal_code:'postal_code'
 		}
 		function initAutocomplete() {
-
+		ifAddressSelected = false;
 	  	autocomplete = new google.maps.places.Autocomplete(
 	    document.getElementById("address_1"),
 	    { types: ["geocode"] }

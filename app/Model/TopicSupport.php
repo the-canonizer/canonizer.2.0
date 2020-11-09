@@ -119,8 +119,7 @@ class TopicSupport extends Model {
                 }
                 else if($nickNameSupports->count() == 1){
 					
-					 $array[$support->nick_name_id]['score']=$supportPoint;
-					
+					 $array[$support->nick_name_id]['score']=$supportPoint;					
 				}
 			
             $array[$support->nick_name_id]['children'] = self::traverseChildTree($algorithm,$topicnum,$campnum,$support->nick_name_id,$currentCampSupport->support_order,$multiSupport);

@@ -196,10 +196,10 @@ class Algorithm{
                 '(topic_num = 54 and camp_num = 9) or ' .
                 '(topic_num = 54 and camp_num = 10) or ' .
                 '(topic_num = 54 and camp_num = 11)';
-        if($campnum == 9 || $campnum == 8){
-            $condition = '(topic_num = 54 and camp_num = 8) or ' .
-                '(topic_num = 54 and camp_num = 9)';
-        }
+        // if($campnum == 9 || $campnum == 8){
+        //     $condition = '(topic_num = 54 and camp_num = 8) or ' .
+        //         '(topic_num = 54 and camp_num = 9)';
+        // }
         
        // $condition = "(topic_num = $topicnum and camp_num = $campnum)";
                 //if($nick_name_id == 67)
