@@ -198,7 +198,7 @@
                                 <label for="address_1">Address Line 1 (Limit 255 Chars) </label>
 								</br>
 								<div style="width:300px;float:left">
-                                <input type="text" onkeydown="restrictTextField(event,255)" onfocus="initAutocomplete()" onfocusout="emptyAddress()" name="address_1" class="form-control" id="address_1" value="{{ old('address_1', $user->address_1)}}">
+                                <input type="text" onkeyup="blankAddress();" onkeydown="restrictTextField(event,255);" onfocus="initAutocomplete()" onfocusout="emptyAddress()" name="address_1" class="form-control" id="address_1" value="{{ old('address_1', $user->address_1)}}">
                                 <span style="color:red;">Note*: To update address please select a address from suggesstion box</span>
                                 </div>
 								<div style="width:95px;float:right">
@@ -577,10 +577,20 @@
 	  autocomplete.setFields(["address_component"]);
 	  autocomplete.addListener("place_changed", fillInAddress);
 	}
+    function blankAddress(){
+		var val = document.getElementById('address_1').value;
+		if(val =='' || val == null){
+			Object.keys(componentForm).forEach(function(k,val){
+				if(k == 'country'){
+					document.getElementById('country_select').value = '';
+				}
+				document.getElementById(k).value = "";
+			})
+		}
+	}
 
 	function emptyAddress(){
 		var val = document.getElementById('address_1').value;
-
 		if((oldAddressVal != val) && (val =='' || val ==null || !ifAddressSelected)){
 			Object.keys(componentForm).forEach(function(k,val){
 				if(k == 'country'){
@@ -593,14 +603,14 @@
 	}
 
 	function fillInAddress() {
-	  ifAddressSelected = true;
 	  document.getElementById('address_1').value = "";
-	  const place = autocomplete.getPlace();
-	  
+	  const place = autocomplete.getPlace();	  
+	  ifAddressSelected = true;
 	  if(place && place.address_components)
 	  for (const component of place.address_components) {
 	       const addressType = component.types[0];
 	    if (components[addressType]) {
+
 	      var val = component[componentForm[components[addressType]]];
 	      var oldVal = document.getElementById(components[addressType]).value;
 	      if(oldVal !='' && components[addressType] == 'address_1'){
