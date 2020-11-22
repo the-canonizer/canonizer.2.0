@@ -116,6 +116,9 @@ class TopicSupport extends Model {
 				}else if($nickNameSupports->count() >= 1 && $support->topic_num !='54' && $algorithm == 'mormon'){ //only for mormon if selected
                     $multiSupport = true;                   
                     $array[$support->nick_name_id]['score']=round($supportPoint / (2 ** ($currentCampSupport->support_order)),2);
+                }else if($nickNameSupports->count() == 1 && $support->topic_num =='54' && $algorithm == 'mormon'){ //only for mormon if selected
+                    $multiSupport = true;                   
+                    $array[$support->nick_name_id]['score']=round($supportPoint / (2 ** ($currentCampSupport->support_order)),2);
                 }
                 else if($nickNameSupports->count() == 1){
 					
