@@ -31,7 +31,7 @@
 						@endif
 					</div>
 					<br>
-
+					
                     <div class="panel-body">
                         <table class="table">
 
@@ -49,6 +49,11 @@
 										</thead>
 										<tbody>
 											@foreach ($threads as $thread)
+											<?php $date  = $thread->updated_at;
+												if($thread->replies->count()){
+													$date  = $thread->replies[0]->updated_at;
+												}
+											?>
 											<tr>
 												<td>
 													<a href="{{ URL::to('/')}}/forum/{{ $topicname }}/{{ $campnum }}/threads/{{ $thread->id }}">
@@ -56,7 +61,7 @@
 		                                            </a>
 												</td>
 												<td>{{ $thread->replies->count() }}</td>
-												<td>{{ date('d-m-Y', strtotime($thread->updated_at))}}</td>
+												<td>{{ date('d-m-Y', strtotime($date))}}</td>
 											</tr>
 											 @endforeach
 										</tbody>
