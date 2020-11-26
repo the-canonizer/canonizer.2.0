@@ -98,12 +98,13 @@
                             </article>
                             @endforeach -->
 
-							<!-- For Pagination -->
+							
+
+                        </table>
+                        <!-- For Pagination -->
 							@if (count($threads) > 0)
 								{{ $threads->links() }}
 							@endif
-
-                        </table>
 
 						@if ($message = Session::get('success'))
 						<div class="alert alert-success alert-block">

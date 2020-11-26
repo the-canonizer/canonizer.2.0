@@ -258,7 +258,7 @@
 								<div style="width:300px;float:left">
 							    <input type="hidden" name="country" id="country" value="{{$user->country}}" />
                                 <select name="country_select" disabled id="country_select" class="form-control">
-                                	<option value=""> -- Select -- </option>
+                                	<option value="">  </option>
                                     <option value="AF" {{ ($user->country == 'AF') ? "selected='selected'" : '' }} >Afghanistan</option>
                                     <option value="AL" {{ ($user->country == 'AL') ? "selected='selected'" : '' }}>Albania</option>
                                     <option value="DZ" {{ ($user->country == 'DZ') ? "selected='selected'" : '' }}>Algeria</option>
