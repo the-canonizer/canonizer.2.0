@@ -190,7 +190,7 @@ change camps with them."><i class="fa fa-question"></i></a>
    
         <div class="Scolor-Pnl">
             <h3 class="row">
-                <div class="col-md-6">Current Topic Record:</div>
+                <div class="col-md-6">Current Topic Record</div>
             </h3>
             <div class="content">
             <div class="row">
@@ -208,8 +208,7 @@ change camps with them."><i class="fa fa-question"></i></a>
         </div>
    
         <div class="Scolor-Pnl">
-            <h3>Current Camp Record:
-            </h3>
+            <h3 class="row"><div class="col-md-6">Current Camp Record</div></h3>
             <div class="content">
             <div class="row">
                 <div class="tree col-sm-12">
