@@ -190,7 +190,7 @@ change camps with them."><i class="fa fa-question"></i></a>
    
         <div class="Scolor-Pnl">
             <h3 class="row">
-                <div class="col-md-6">Current Topic Record:</div>
+                <div class="col-md-6">Current Topic Record</div>
             </h3>
             <div class="content">
             <div class="row">
@@ -208,8 +208,7 @@ change camps with them."><i class="fa fa-question"></i></a>
         </div>
    
         <div class="Scolor-Pnl">
-            <h3>Current Camp Record:
-            </h3>
+            <h3 class="row"><div class="col-md-6">Current Camp Record</div></h3>
             <div class="content">
             <div class="row">
                 <div class="tree col-sm-12">
@@ -232,7 +231,7 @@ change camps with them."><i class="fa fa-question"></i></a>
         <div class="container-fluid">
                 <div class="Scolor-Pnl">
                     <form name="as_of" id="as_of_form" method="GET">
-                     <input type="hidden" id="filter" name="filter" value="0.00"/>
+                     <input type="hidden"  name="filter" value="0.00"/>
                        <input type="hidden" name="_token" value="{{ csrf_token() }}">                   
                        <input type="hidden"  name="asof"  value="bydate">
                        <input hidden type="text" id="asofdatenew" name="asofdate" value="<?php echo $campData[0]->go_live_time; ?>"/>
@@ -253,7 +252,7 @@ change camps with them."><i class="fa fa-question"></i></a>
     <div class="container-fluid">
             <div class="Scolor-Pnl">
                 <form name="as_of" id="as_of_form" method="GET">
-                 <input type="hidden" id="filter" name="filter" value="0.00"/>
+                 <input type="hidden"  name="filter" value="0.00"/>
                    <input type="hidden" name="_token" value="{{ csrf_token() }}">                   
                    <input type="hidden"  name="asof"  value="bydate">
                    <input hidden type="text" id="asofdatenew" name="asofdate" value="<?php echo $topicData[0]->go_live_time; ?>"/>
@@ -281,8 +280,8 @@ if(type=="statement") {
 $('#camp_subscription').click(function(){
     var isChecked = $(this).prop('checked');
     var userId = '<?php echo (Auth::check()) ?  Auth::user()->id: null; ?>';
-    var topic_num = <?php echo $topic->topic_num; ?>;
-    var camp_num = <?php echo $parentcampnum; ?>;
+    var topic_num = "<?php echo $topic->topic_num; ?>";
+    var camp_num = "<?php echo $parentcampnum; ?>";
     var subscrip_id = $("#subs_id").val();
     $.ajax({
         type:'POST',
