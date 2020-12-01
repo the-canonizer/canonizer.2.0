@@ -79,6 +79,10 @@ class SettingsController extends Controller
             $user->birthday = date('Y-m-d', strtotime($input['birthday']));
             if ($input['birthday_bit'] != '0')
                 $private_flags[] = $input['birthday_bit'];
+			
+			if ($input['email_bit'] != '0')
+                $private_flags[] = $input['email_bit'];
+			
             $user->language = $input['language'];
             $user->address_1 = $input['address_1'];
             if ($input['address_1_bit'] != '0')
