@@ -29,7 +29,7 @@
 
                 <div class="panel panel-default">
                    <div class="panel-body">
-                        <span> Thread Post at {{ date('d-m-Y', strtotime($threads->updated_at))}}
+                        <span> Thread Post at {{ date('d-m-Y', strtotime($threads->created_at))}}
                             by <a href="#"> {{ $threads->creator->nick_name }} </a>
                         </span><br />
 
