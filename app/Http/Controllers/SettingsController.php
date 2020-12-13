@@ -98,6 +98,8 @@ class SettingsController extends Controller
             $user->postal_code = $input['postal_code'];
             if ($input['postal_code_bit'] != '0')
                 $private_flags[] = $input['postal_code_bit'];
+            if ($input['email_bit'] != '0')
+                $private_flags[] = $input['email_bit'];
 
             $flags = implode(",", $private_flags);
             $user->default_algo = $request->input('default_algo');
