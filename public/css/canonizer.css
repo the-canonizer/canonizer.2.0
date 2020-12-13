@@ -953,18 +953,18 @@ ul.mainouter li .tp-title {
     position: relative;
 }
 .supporter_list_tree{
-    position: absolute;
+   /* position: absolute;
     width: 100%;
     min-width:500px;
     height: 115px;
     display: block;
     z-index: 99;
     left: 100%;
-    top:0px;
+    top:0px;*/
 }
-.supporter_list_tree ul ul{
+/*.supporter_list_tree ul ul{
     background: #fff;
-}
+}*/
 .supporter_list_tree .supportLI::before{
     height: 0px !important;
 }
