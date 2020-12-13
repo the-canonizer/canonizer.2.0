@@ -724,6 +724,47 @@ class SettingsController extends Controller
             $user = Auth::user();
         }
         $addresses = EtherAddresses::where('user_id', '=', $user->id)->get();
+
+        $api_key = '0d4a2732eca64e71a1be52c3a750aaa4';                      // Project Key
+        $ether_url = 'https://mainnet.infura.io/v3/' + $api_key;            // Ether Url
+
+        foreach ($addresses as $key=>$ether) {                                       // If users has multiple addresses
+
+            $curl = curl_init();
+
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => "https://mainnet.infura.io/v3/0d4a2732eca64e71a1be52c3a750aaa4",
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => "",
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 30,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => "POST",
+                CURLOPT_POSTFIELDS => "{\"jsonrpc\":\"2.0\",\"method\":\"eth_getBalance\",\"params\": [\"$ether->address\", \"latest\"],\"id\":1}",
+                CURLOPT_HTTPHEADER => array(
+                  "Accept-Encoding: gzip, deflate",
+                  "Cache-Control: no-cache",
+                  "Connection: keep-alive",
+                  "Content-Type: application/json",
+                  "Host: mainnet.infura.io"
+                ),
+              ));
+
+            $curl_response = curl_exec($curl);
+            $err = curl_error($curl);
+
+            curl_close($curl);
+
+            if ($err) {
+                return 0;
+            } 
+            else {
+                $curl_result_obj = json_decode($curl_response);
+                $balance = $curl_result_obj->result;
+                // $total_ethers += (hexdec($balance)/1000000000000000000);       // Convert Ether to Wei
+                $addresses[$key]->balance = (hexdec($balance)/1000000000000000000); 
+            }
+        }
         return view('settings.blockchain', ['addresses' => $addresses]);
     }
 
