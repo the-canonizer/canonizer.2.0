@@ -547,6 +547,20 @@ h1.page-title{
     z-index: 1;
     top:0px;
 }
+i.supporter.fa.fa-arrow-right , i.supporter.fa.fa-arrow-down {
+    background-color: red;
+    color: #fff;
+    font-size: 8px;
+    padding: 1px 2px 2px;
+    border-radius: 3px;
+    margin-top: 3px;
+    display: inline-block;
+    vertical-align: middle;
+    position: absolute;
+    left: 5px;
+    z-index: 1;
+    top: 0px;
+}
 .tree li.parent_li>span {
     cursor:pointer
 }
@@ -631,6 +645,12 @@ h1.page-title{
 @media (min-width: 1200px) {
     .card-columns {
         column-count: 2;
+    }
+}
+@media (max-width: 400px) {
+    ul.mainouter li .tp-title {
+          margin-left: 15px;
+          margin-top:-20px;
     }
 }
 @media (min-width: 992px) and (max-width: 1024px) {
@@ -769,7 +789,7 @@ h1.page-title{
         background-color: #f9f9f9;
         right: 15px;
         top: 100%;
-        z-index: 1;
+        z-index: 2;
         padding: 10px;
         max-width: 500px;
     }
@@ -813,7 +833,7 @@ h1.page-title{
         background-color: #f9f9f9;
         right: 15px;
         top: 100%;
-        z-index: 1;
+        z-index: 2;
         padding: 10px;
         max-width:290px;
     }
@@ -930,6 +950,33 @@ h1.page-title{
 ul.mainouter li .tp-title {
     display:inline-block;
     font-size:13px;
+    position: relative;
+}
+.supporter_list_tree{
+   /* position: absolute;
+    width: 100%;
+    min-width:500px;
+    height: 115px;
+    display: block;
+    z-index: 99;
+    left: 100%;
+    top:0px;*/
+}
+/*.supporter_list_tree ul ul{
+    background: #fff;
+}*/
+.supporter_list_tree .supportLI::before{
+    height: 0px !important;
+}
+.supporter_list_tree .supportLI::after{
+    border:none;
+}
+.supporter_list_tree > ul{
+    padding-left: 5px !important;
+}
+.supporter_list_tree .supportLI > span{
+    padding-left: 0px;
+    cursor:pointer;
 }
 .right-whitePnl i.fa.fa-question {
     padding: 2px 7px 2px 6px;
@@ -1121,8 +1168,11 @@ ul.pagination li a{
     margin: 0px 1px;
     border-radius: 3px;
 }
+ul.pagination li.active{
+    background: #CCC;
+}
 ul.pagination li.active span{
-    background-color: #f5f5f5;
+    background-color: #CCC;
     color: #0056b3;
     padding: 2px 8px;
     line-height: 10px;
@@ -1383,4 +1433,21 @@ a.rgWT {
 .linkedin{
    background-color: #003F67;
   color: white!important; 
+}
+.supporter{
+    display: inline-block;
+    padding: 1px 5px 1px;
+    font-size: 90%;
+    font-weight: normal;
+    line-height: 14px;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    border-radius: 10px;
+    background-color: #008000;
+    margin: 0px;
+    z-index: 99;
+    position: absolute;
+    top: 3px;
 }

@@ -42,11 +42,11 @@ class SettingsController extends Controller
         $id = (isset($_GET['id'])) ? $_GET['id'] : '';
         $private_flags = array();
 
-
+        //echo "<pre>"; print_r($input); die;
         $messages = [
             'first_name.required' => 'First name is required.',
             'last_name.required' => 'Last name is required.',
-            'country.required' => 'Country is required.'
+           // 'country.required' => 'Country is required.'
         ];
 
 
@@ -54,8 +54,8 @@ class SettingsController extends Controller
             'first_name' => 'required|regex:/^[a-zA-Z ]*$/|string|max:100',
             'last_name' => 'required|regex:/^[a-zA-Z ]*$/|string|max:100',
             'middle_name' => 'nullable|regex:/^[a-zA-Z ]*$/|max:100',
-            'postal_code' => 'nullable|regex:/^[a-zA-Z0-9 ]*$/|max:100',
-            'country' => 'required',
+            //'postal_code' => 'nullable|regex:/^[a-zA-Z0-9 ]*$/|max:100',
+           // 'country' => 'required',
         ], $messages);
 
         if ($validator->fails()) {
@@ -79,6 +79,10 @@ class SettingsController extends Controller
             $user->birthday = date('Y-m-d', strtotime($input['birthday']));
             if ($input['birthday_bit'] != '0')
                 $private_flags[] = $input['birthday_bit'];
+			
+			if ($input['email_bit'] != '0')
+                $private_flags[] = $input['email_bit'];
+			
             $user->language = $input['language'];
             $user->address_1 = $input['address_1'];
             if ($input['address_1_bit'] != '0')
@@ -235,12 +239,13 @@ class SettingsController extends Controller
             $topicnumArray = explode("-", $id);
             $topicnum = $topicnumArray[0];
             // get deligated nickname if exist
-            $campnumArray = explode("-", $campnums);
-            $campnum = $campnumArray[0];
+            $campnumArray = explode("_", $campnums);
+            $campnum = explode("-",$campnumArray[0])[0];
             session(['campnum' => $campnum]);
-
             $delegate_nick_name_id = (isset($campnumArray[1])) ? $campnumArray[1] : 0;
-
+            if(!$delegate_nick_name_id){
+                $delegate_nick_name_id = 0;
+            }
             $id = Auth::user()->id;
             $encode = General::canon_encode($id);
 
@@ -262,6 +267,11 @@ class SettingsController extends Controller
 
             $alreadySupport = Support::where('topic_num', $topicnum)->where('camp_num', $campnum)->where('end', '=', 0)->whereIn('nick_name_id', $userNickname)->get();
             if ($alreadySupport->count() > 0) {
+                if($alreadySupport[0]->delegate_nick_name_id!=0){
+                    $nickName = Nickname::where('id',$alreadySupport[0]->delegate_nick_name_id)->first();
+                    $userFromNickname = $nickName->getUser();
+                    Session::flash('warningDelegate', "You have already delegated your support for this camp to user ".$userFromNickname->first_name." ".$userFromNickname->last_name.". If you continue your delegated support will be removed.");
+                }
                 //Session::flash('warning', "You have already supported this camp, you cant submit your support again.");
                 // return redirect()->back();
             }
@@ -364,9 +374,12 @@ class SettingsController extends Controller
                 foreach ($mysupports as $singleSupport) {
                     $singleSupport->end = time();
                     $singleSupport->save();
+                    $mailData = $data;
+                    $mailData['camp_num'] = $singleSupport->camp_num;
+                    /* send support deleted mail to all supporter and subscribers */
+                    $this->emailForSupportDeleted($mailData);
                 }
-                /* send support deleted mail to all supporter and subscribers */
-                $this->emailForSupportDeleted($data);
+                
             }
             
             $last_camp =  $data['camp_num'];
@@ -409,7 +422,7 @@ class SettingsController extends Controller
                 $result['object'] = $topic->topic_name . " / " . $camp->camp_name;
                 $result['support_camp'] = $camp->camp_name;
                 $result['subject'] = $nickName->nick_name . " has just delegated their support to you.";
-                $link = 'topic/' . $data['topic_num'] . '/' . $data['camp_num'];
+                $link = \App\Model\Camp::getTopicCampUrl($data['topic_num'],$data['camp_num']);
                 $subscribers = Camp::getCampSubscribers($data['topic_num'], $data['camp_num']);
                 $directSupporter = Support::getAllDirectSupporters($data['topic_num'], $data['camp_num']);
                 $this->mailParentDelegetedUser($data,$link,$result,$subscribers);
@@ -423,7 +436,7 @@ class SettingsController extends Controller
             }
             Session::flash('success', "Your support update has been submitted successfully.");
             // return redirect('support/' . $data['topic_num'] . '/' . $data['camp_num']);
-            return redirect('topic/' . $data['topic_num'] . '/' . session('campnum'));
+            return redirect(\App\Model\Camp::getTopicCampUrl($data['topic_num'],session('campnum')));
         } else {
             return redirect()->route('login');
         }
@@ -520,7 +533,7 @@ class SettingsController extends Controller
             $result['object'] = $topic->topic_name ." / ".$camp->camp_name;
             $result['support_camp'] = $camp->camp_name;
             $result['subject'] = $nickName->nick_name . " has added their support to ".$result['object'].".";
-            $link = 'topic/' . $data['topic_num'] . '/' . $data['camp_num'];
+            $link = \App\Model\Camp::getTopicCampUrl($data['topic_num'],$data['camp_num']);
             $subscribers = Camp::getCampSubscribers($data['topic_num'], $data['camp_num']);
             $directSupporter = Support::getAllDirectSupporters($data['topic_num'], $data['camp_num']);
             $result['support_added'] = 1;
@@ -529,7 +542,7 @@ class SettingsController extends Controller
     }
 
     private function emailForSupportDeleted($data){
-            $nickName = Nickname::getNickName($data['nick_name']);
+           $nickName = Nickname::getNickName($data['nick_name']);
             $topic = Camp::getAgreementTopic($data['topic_num'],['nofilter'=>true]);
             $camp = Camp::where('topic_num', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('go_live_time', '<=', time())->latest('submit_time')->first();
 
@@ -539,9 +552,15 @@ class SettingsController extends Controller
             $result['object'] = $topic->topic_name ." / ".$camp->camp_name;
             $result['support_camp'] = $camp->camp_name;
             $result['subject'] = $nickName->nick_name . " has removed their support from ".$result['object'].".";
-            $link = 'topic/' . $data['topic_num'] . '/' . $data['camp_num'];
+            $link = \App\Model\Camp::getTopicCampUrl($data['topic_num'],$data['camp_num']);
+            $deletedSupport = Support::where('topic_num', $data['topic_num'])
+                ->whereIn('nick_name_id', [$data['nick_name']])
+                ->orderBy('end', 'DESC')
+                ->get();
+
             $subscribers = Camp::getCampSubscribers($data['topic_num'], $data['camp_num']);
             $directSupporter = Support::getAllDirectSupporters($data['topic_num'], $data['camp_num']);
+            $supportsDirect = array_push($directSupporter,$deletedSupport[0]);
             $result['support_deleted'] = 1;
             $this->mailSubscribersAndSupporters($directSupporter,$subscribers, $link, $result);   
     }
@@ -707,6 +726,47 @@ class SettingsController extends Controller
             $user = Auth::user();
         }
         $addresses = EtherAddresses::where('user_id', '=', $user->id)->get();
+
+        $api_key = '0d4a2732eca64e71a1be52c3a750aaa4';                      // Project Key
+        $ether_url = 'https://mainnet.infura.io/v3/' + $api_key;            // Ether Url
+
+        foreach ($addresses as $key=>$ether) {                                       // If users has multiple addresses
+
+            $curl = curl_init();
+
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => "https://mainnet.infura.io/v3/0d4a2732eca64e71a1be52c3a750aaa4",
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => "",
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 30,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => "POST",
+                CURLOPT_POSTFIELDS => "{\"jsonrpc\":\"2.0\",\"method\":\"eth_getBalance\",\"params\": [\"$ether->address\", \"latest\"],\"id\":1}",
+                CURLOPT_HTTPHEADER => array(
+                  "Accept-Encoding: gzip, deflate",
+                  "Cache-Control: no-cache",
+                  "Connection: keep-alive",
+                  "Content-Type: application/json",
+                  "Host: mainnet.infura.io"
+                ),
+              ));
+
+            $curl_response = curl_exec($curl);
+            $err = curl_error($curl);
+
+            curl_close($curl);
+
+            if ($err) {
+                return 0;
+            } 
+            else {
+                $curl_result_obj = json_decode($curl_response);
+                $balance = $curl_result_obj->result;
+                // $total_ethers += (hexdec($balance)/1000000000000000000);       // Convert Ether to Wei
+                $addresses[$key]->balance = (hexdec($balance)/1000000000000000000); 
+            }
+        }
         return view('settings.blockchain', ['addresses' => $addresses]);
     }
 

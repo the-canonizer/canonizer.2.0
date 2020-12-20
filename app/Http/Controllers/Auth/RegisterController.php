@@ -157,7 +157,7 @@ class RegisterController extends Controller
          session()->forget('social_user');
          session()->forget('provider');
         // send help link in email
-        $link = 'topic/132-Help/1';		
+        $link = 'topic/132-Help/1-Agreement';		
         Mail::to($user->email)->bcc(config('app.admin_bcc'))->send(new WelcomeMail($user,$link));
         
         Auth::guard()->login($user);

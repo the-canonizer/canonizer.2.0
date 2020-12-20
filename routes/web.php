@@ -87,7 +87,7 @@ Route::post('loadtopic', 'HomeController@loadtopic');
 Route::get('camp/history/{id}/{campnum}', 'TopicController@camp_history');
 Route::get('statement/history/{id}/{campnum}', 'TopicController@statement_history');
 Route::get('topic-history/{id}', 'TopicController@topic_history');
-Route::get('api/v1/getcampoutline/{topic_num}/{camp_num}', 'ApiController@getcampoutline');
+Route::get('api/v1/getcampoutline/{topic_num}/{camp_num}/{add_supporters}', 'ApiController@getcampoutline');
 Route::get('user/supports/{user_id}', 'TopicController@usersupports');
 
 Route::group([ 'middleware' => 'auth'], function() {

@@ -67,7 +67,6 @@
 			   @foreach($supportedCamps as $key=>$supports)
                            
                <?php
-
                                  $delegate_flag = 0;    
                                 $topic = \App\Model\Topic::where('topic_num','=',$key)->where('objector_nick_id', '=', NULL)->where('go_live_time', '<=', time())->latest('submit_time')->get();
                                 $topic_name = isset($topic[0]) ? $topic[0]->topic_name:'';
@@ -78,7 +77,7 @@
                                 }
                             ?>
                 <ul>
-                    <li id="camp_{{$key}}_{{$camp_num}}"><a href="{{ (array_key_exists('link',$supports)  && isset($supports['link'])) ? $supports['link'] : '' }}">{{ (array_key_exists('camp_name',$supports)  && isset($supports['camp_name'])) ? ($topic_name!='')? $topic_name:$supports['camp_name'] : ''}}</a></li>
+                    <li id="camp_{{$key}}_{{$camp_num}}"><a style="{{ (!isset($supports['array']) && $key == $topic_num) ? 'font-weight:bold; font-size:16px;' : '' }}" href="{{ (array_key_exists('link',$supports)  && isset($supports['link'])) ? $supports['link'] : '' }}">{{ (array_key_exists('camp_name',$supports)  && isset($supports['camp_name'])) ? ($topic_name!='')? $topic_name:$supports['camp_name'] : ''}}</a></li>
                     <?php if(isset($supports['delegate_nick_name_id']) && $supports['delegate_nick_name_id'] !=0 && !isset($supports['array'])){ 
                                     $topic = \App\Model\Topic::where('objector_nick_id', '=', NULL)->where('topic_num','=',$key)->latest('submit_time')->get();
                                     $delegatedNick = new \App\Model\Nickname();
@@ -127,7 +126,7 @@
                                       <span style="font-size:10px; width:100%; float:left;"><b>Supported camp list</b> : {!!$supported_camp_list !!}</span>
                                   <?php } ?>
                                 </li>
-                            <?php } else { ?>    
+                            <?php } else {  ?>    
                                 <li id="camp_{{$key}}_{{$support['camp_num']}}">
                                     <a href="{{ (array_key_exists('link',$support)  && isset($support['link'])) ? $support['link'] : ''  }}" style="{{ ($support['camp_num'] == $camp_num && $key == $topic_num) ? 'font-weight:bold; font-size:16px;' : '' }}">{{(array_key_exists('camp_name',$support)  && isset($support['camp_name'])) ? $support['camp_name'] : ''}}</a></li>
                             <?php } ?>

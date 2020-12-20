@@ -41,10 +41,10 @@ class ApiController extends Controller {
      *
      * @return \Illuminate\Http\Response
      */
-    public function getcampoutline($topic_num,$camp_num) {
+    public function getcampoutline($topic_num,$camp_num,$add_supporters) {
         
 		$topic     = Camp::getAgreementTopic($topic_num);
-		$campOutline = $topic->campTreeHtml($camp_num,1,true);
+		$campOutline = $topic->campTreeHtml($camp_num,1,$add_supporters);
 		
 		return response()->json(['outline' => $campOutline, 'status' => '200']);
     }

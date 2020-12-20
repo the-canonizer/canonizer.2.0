@@ -13,11 +13,12 @@
                        $topicBreadName = $data->topic_name; 
 					             $topicNum = $data->topic_num;
 					             $urltitle      = $topicNum."-".preg_replace('/[^A-Za-z0-9\-]/', '-', $data->topic_name);
+                       $url_portion = \App\Model\Camp::getSeoBasedUrlPortion($topicNum,$currentLive);
                     } 
 				}	
                     ?>
 <div class="camp top-head">
-    <h3><b>Topic:</b>  <a href="/topic/{{$urltitle}}/1" >{{ $topicBreadName}}</a></h3>
+    <h3><b>Topic:</b>  <a href="/topic/{{$url_portion}}" >{{ $topicBreadName}}</a></h3>
    
 </div>
 <?php } ?>
@@ -72,9 +73,9 @@
                 foreach ($topics as $key => $data) {
                     $nickNamesData = \App\Model\Nickname::personNicknameArray();
                     if($submit_time){
-                      $support = \App\Model\Support::where('topic_num',$data->topic_num)->whereIn('nick_name_id',$nickNamesData)->where('end','=',0)->where('start','<=',$submit_time)->orderBy('support_order','ASC')->get();
+                      $support = \App\Model\Support::where('topic_num',$data->topic_num)->whereIn('nick_name_id',$nickNamesData)->where('delegate_nick_name_id',0)->where('end','=',0)->where('start','<=',$submit_time)->orderBy('support_order','ASC')->get();
                     }else{
-                      $support = \App\Model\Support::where('topic_num',$data->topic_num)->whereIn('nick_name_id',$nickNamesData)->where('end','=',0)->orderBy('support_order','ASC')->get();
+                      $support = \App\Model\Support::where('topic_num',$data->topic_num)->whereIn('nick_name_id',$nickNamesData)->where('delegate_nick_name_id',0)->where('end','=',0)->orderBy('support_order','ASC')->get();
                     }
                      
                      if(sizeof($support) > 0){
@@ -145,8 +146,11 @@
         <?php if ($currentTime < $data->go_live_time && $currentTime >= $data->submit_time && $ifIamSupporter) { ?>
                                 <a id="object" class="btn btn-historysmt" href="<?php echo url('manage/topic/' . $data->id . '-objection'); ?>">Object</a>
                             <?php } ?>  
-                            <a id="update" class="btn btn-historysmt" href="<?php echo url('manage/topic/' . $data->id); ?>">Submit Topic Update Based On This</a>				  
-                            <a id="version" class="btn btn-historysmt" href="<?php echo url('topic/' . $data->topic_num . '/1?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $data->go_live_time)); ?>">View This Version</a>
+                            <a id="update" class="btn btn-historysmt" href="<?php echo url('manage/topic/' . $data->id); ?>">Submit Topic Update Based On This</a>		
+                            <?php
+                              $link = \App\Model\Camp::getTopicCampUrl($data->topic_num,1);
+                            ?>		  
+                            <a id="version" class="btn btn-historysmt" href="<?php echo $link.'?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $data->go_live_time); ?>">View This Version</a>
                                <script>
                                      var href = $('#version').attr('href');
                                      var date = new Date(<?= $data->go_live_time ?> * 1000).toLocaleString();

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
 <div class="page-titlePnl">
-    <h1 class="page-title">Profile</h1>
+    <h1 class="page-title">Crypto Verification</h1>
 </div> 
 
 @if(Session::has('error'))
@@ -110,7 +110,7 @@
                             </div>
                             <div id="download_metamask" style="display:none;">
                                 <a href="https://metamask.io">
-                                    <img src="https://raw.githubusercontent.com/MetaMask/faq/master/images/download-metamask.png" alt="">
+                                    <img src="https://raw.githubusercontent.com/MetaMask/faq/master/images/download-metamask.png" alt="DownLoad Metamask">
                                 </a>
                             </div>
                         </div>
@@ -155,7 +155,7 @@
                     $('#download_metamask').hide();                     
                     $('#savedAddress').hide();
                 }
-                if(accounts.length == 0){ 
+                if(accounts.length == 0){ console.log('i m here');
                     localStorage.removeItem('userLoggedIn');
                     isMetamaskLocked = true;
                     isLoggedIn = false;
@@ -213,11 +213,19 @@
             
         }
        
-    }else{ 
-        $('#login_div').hide();
-        $('#enable_metamask').hide()
-        $('#download_metamask').show();
-        $('#savedAddress').hide();
+    }else{
+      if(addressLenth){
+            $('#login_div').hide();
+            $('#enable_metamask').hide()
+            $('#download_metamask').hide();
+            $('#savedAddress').show();
+      }else{
+            $('#login_div').hide();
+            $('#enable_metamask').hide()
+            $('#download_metamask').show();
+            $('#savedAddress').hide();
+      } 
+        
         
     }
     //var web3 = window.Web3;
@@ -236,18 +244,19 @@
     }
     
     function isInstalled() {
-            if (typeof web3 !== 'undefined'){
+         if (typeof web3 !== 'undefined'){
                 console.log('MetaMask is installed')
                 ethereum.autoRefreshOnNetworkChange = false;
                 return true;
-            } 
+            }
+           
             return false;
     }
 
     async function isLocked() {
             return new Promise((resolve,reject)=>{
                 web3.eth.getAccounts(function(err, accounts){
-                if (err != null) {
+                 if (err != null) {
                     console.log(err)
                     isMetamaskLocked =  true;
                     resolve(true);

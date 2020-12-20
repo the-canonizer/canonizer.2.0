@@ -264,10 +264,11 @@ class CThreadsController extends Controller
     public function show($topicid, $topicname, $campnum, $CThread)
     {
         $topic = getArray($topicid, $topicname, $campnum);
-
+        $camp  = Camp::getLiveCamp($topicid,$campnum);
         return view(
             'threads.show',
              $topic, [
+                'parentcamp'       => Camp::campNameWithAncestors($camp,'',$topicname),
                 'userNicknames' => (auth()->check()) ? Nickname::topicNicknameUsed($topicid) : array(),
                 'threads' => CThread::findOrFail($CThread),
                 'replies' => CThread::findOrFail($CThread)

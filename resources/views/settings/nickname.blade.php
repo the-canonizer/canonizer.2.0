@@ -62,7 +62,10 @@
 
 
 
-            <div id="myTabContent" class="add-nickname-section">  
+            <div id="myTabContent" class="add-nickname-section"> 
+              <?php if(count($nicknames) == 0) { ?>
+             <p class="help-block" style="color:red">Note: You have not yet added a nick name. A public or private nick name must be used whenever contributing.</p> 
+                <?php } ?>
                  <h5>Add New Nick Name </h5>
                 <form action="{{ route('settings.nickname.add')}}" method="post">
                     <input type="hidden" name="_token" value="{{ csrf_token() }}">

@@ -12,7 +12,7 @@
 			  				<div class="panel-body">
 			  					<form method="POST">
                                   <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
-                                  <input type="hidden" name="page" value="<?php echo $_GET['page']; ?>">
+                                  <input type="hidden" name="page" value="<?php echo (isset($_GET['page'])) ? $_GET['page'] : 1; ?>">
 								  @if($namespaceRequest)
 								  <input type="hidden" name="requestId" value="{{$namespaceRequest->id}}"/>
 								  @endif

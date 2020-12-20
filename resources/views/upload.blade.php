@@ -22,7 +22,8 @@
 <div class="right-whitePnl">
     <div class="container-fluid">
         <div class="Gcolor-Pnl">
-            <h3>Upload images only ( jpeg,bmp,png,jpg,gif ), Max size 5 MB</h3>
+            <!-- <h3>Upload images only ( jpeg,bmp,png,jpg,gif ), Max size 5 MB</h3> -->
+            <h3>Upload Files, Max size 5 MB</h3>
             <div class="content">	  
 			   <form method="post" class="form-horizontal" enctype="multipart/form-data">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}"/>

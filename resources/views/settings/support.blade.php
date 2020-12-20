@@ -8,6 +8,11 @@
     <strong>Warning! </strong>{{ Session::get('warning')}} 
 </div>
 @endif
+@if(Session::has('warningDelegate'))
+<div class="alert alert-danger">
+    <strong>Warning! </strong>{{ Session::get('warningDelegate')}} 
+</div>
+@endif
 <?php $removedCampList = array(); ?>
 @if(Session::has('confirm') && Session::has('warning') && Session::get('confirm') !='samecamp')
 	
@@ -291,6 +296,7 @@
 						</select>
 						 @if ($errors->has('nick_name')) <p class="help-block">{{ $errors->first('nick_name') }}</p> @endif
 						 <?php if(count($nicknames) == 0) { ?>
+						 <p style="color:red" class="help-block">Note:You have not yet added a nick name. A public or private nick name must be added then selected here when contributing.</p>
 						 <a id="add_new_nickname" href="<?php echo url('settings/nickname');?>">Add New Nick Name </a>
 						 <?php } ?>
 						</div> 
@@ -298,7 +304,10 @@
                     </div>
                      @if(!Session::has('warning'))
                     <button type="submit" id="submit" class="btn btn-login">Submit</button>
-				    <a  class="btn btn-login" href="<?php echo url('topic/'.$topic->topic_num.'/'.session('campnum'));?>">Cancel</a>
+                     <?php  
+                     $link = \App\Model\Camp::getTopicCampUrl($topic->topic_num,session('campnum'));
+                 	 ?>
+				    <a  class="btn btn-login" href="<?php echo $link; ?>">Cancel</a>
 				    @else
 					<div style="display:none">	
 					<button type="submit" id="submit" class="btn btn-login"></button>	
@@ -344,6 +353,7 @@
 {{ Session::forget('success') }} 
 {{ Session::forget('confirm') }} 
 {{ Session::forget('error') }}
+{{ Session::forget('warningDelegate') }}
 
 
 @endsection

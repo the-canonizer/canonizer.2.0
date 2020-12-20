@@ -231,7 +231,7 @@ class TopicController extends Controller {
                 $link = 'topic-history/' . $topic->topic_num;
 				$data['type'] = "topic";
                 $data['object'] = $topic->topic_name;
-				$data['link'] = 'topic/' . $topic->topic_num . '/1';				
+				$data['link'] = \App\Model\Camp::getTopicCampUrl($topic->topic_num,1);				
                 Mail::to(Auth::user()->email)->bcc(config('app.admin_bcc'))->send(new ThankToSubmitterMail(Auth::user(), $link,$data));
             } else if ($eventtype == "OBJECTION") {
 
@@ -708,7 +708,7 @@ class TopicController extends Controller {
 
                 $livecamp = Camp::getLiveCamp($camp->topic_num,$camp->camp_num);
 				$data['object'] = $livecamp->topic->topic_name . " / " . $camp->camp_name;
-				$data['link'] = 'topic/' . $camp->topic_num . '/1';
+				$data['link'] = \App\Model\Camp::getTopicCampUrl($camp->topic_num,1);
                 Mail::to(Auth::user()->email)->bcc(config('app.admin_bcc'))->send(new ThankToSubmitterMail(Auth::user(), $link,$data));
             } else if ($eventtype == "OBJECTION") {
 
@@ -847,7 +847,7 @@ class TopicController extends Controller {
             $livecamp = Camp::getLiveCamp($statement->topic_num,$statement->camp_num);
 			$data['type'] = "statement";
 			$data['object'] = $livecamp->topic->topic_name . " / " . $livecamp->camp_name;
-			$data['link'] = 'topic/' . $statement->topic_num . '/1';
+			$data['link'] = \App\Model\Camp::getTopicCampUrl($statement->topic_num,1);
             Mail::to(Auth::user()->email)->bcc(config('app.admin_bcc'))->send(new ThankToSubmitterMail(Auth::user(), $link,$data));
             // mail to direct supporters on new statement creation
             $directSupporter = Support::getAllDirectSupporters($statement->topic_num, $statement->camp_num);
@@ -1087,20 +1087,20 @@ class TopicController extends Controller {
             //$link = 'camp/history/' . $id . '/' . $camp->camp_num . '?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $camp->go_live_time);
             $link = 'camp/history/' . $livecamp->topic_num . '/' . $livecamp->camp_num;
             $data['object'] = $livecamp->topic->topic_name . ' / ' . $livecamp->camp_name;
-            $data['support_camp'] = $livecamp->camp_name;
+            $data['support_camp'] = $camp->camp_name;
             $data['type'] = 'camp : ';
             $data['typeobject'] = 'camp';
-            $data['go_live_time'] = $livecamp->go_live_time;
-			$data['note'] = $livecamp->note;
-            $data['camp_num'] = $livecamp->camp_num;
+            $data['go_live_time'] = $camp->go_live_time;
+			$data['note'] = $camp->note;
+            $data['camp_num'] = $camp->camp_num;
             $nickName = Nickname::getNickName($camp->submitter_nick_id);
-            $data['topic_num'] = $livecamp->topic_num;
+            $data['topic_num'] = $camp->topic_num;
             $data['nick_name'] = $nickName->nick_name;
             $data['forum_link'] = 'forum/' . $livecamp->topic_num . '-' . $livecamp->camp_name . '/' . $livecamp->camp_num . '/threads';
             $data['subject'] = "Proposed change to " . $livecamp->topic->topic_name . ' / ' . $livecamp->camp_name . " submitted";
 
             //$this->mailSupporters($directSupporter, $link, $data);         //mail supporters             
-            //$this->mailSubscribers($subscribers, $link, $data);         // mail subscribers            
+            //$this->mailSubscribers($subscribers, $link, $data);         // mail subscribers  
             $this->mailSubscribersAndSupporters($directSupporter,$subscribers,$link, $data);  
             return response()->json(['id' => $camp->id, 'message' => 'Your change to camp has been submitted to your supporters.']);
         } else if ($type == 'topic') {
