@@ -99,7 +99,7 @@ class SocialController extends Controller
 					                'otp'			=> $authCode
 					            ]);
 					            $socialUser = SocialUser::create([
-					                'user_id'       => $users->id,
+					                'user_id'       => $user->id,
 					                'social_email'  => $user_email,
 					                'provider_id'   => $userSocial->getId(),
 					                'provider'      => $provider,
