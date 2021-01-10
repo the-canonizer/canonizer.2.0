@@ -4,12 +4,13 @@
     <list default="true" id="73daf555-1c66-4b71-9cef-6585f4ebe7b9" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/selenium_tests/CanonizerAccountSettingsPage.py" beforeDir="false" afterPath="$PROJECT_DIR$/selenium_tests/CanonizerAccountSettingsPage.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/selenium_tests/CanonizerBrowsePage.py" beforeDir="false" afterPath="$PROJECT_DIR$/selenium_tests/CanonizerBrowsePage.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/selenium_tests/CanonizerCampPage.py" beforeDir="false" afterPath="$PROJECT_DIR$/selenium_tests/CanonizerCampPage.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/selenium_tests/CanonizerCampStatementPage.py" beforeDir="false" afterPath="$PROJECT_DIR$/selenium_tests/CanonizerCampStatementPage.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/selenium_tests/CanonizerHomePage.py" beforeDir="false" afterPath="$PROJECT_DIR$/selenium_tests/CanonizerHomePage.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/selenium_tests/CanonizerLoginPage.py" beforeDir="false" afterPath="$PROJECT_DIR$/selenium_tests/CanonizerLoginPage.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/selenium_tests/CanonizerRegistrationPage.py" beforeDir="false" afterPath="$PROJECT_DIR$/selenium_tests/CanonizerRegistrationPage.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/selenium_tests/CanonizerTestCases.py" beforeDir="false" afterPath="$PROJECT_DIR$/selenium_tests/CanonizerTestCases.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/selenium_tests/CanonizerUploadFilePage.py" beforeDir="false" afterPath="$PROJECT_DIR$/selenium_tests/CanonizerUploadFilePage.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/selenium_tests/Config.py" beforeDir="false" afterPath="$PROJECT_DIR$/selenium_tests/Config.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/selenium_tests/CanonizerTopicUpdatePage.py" beforeDir="false" afterPath="$PROJECT_DIR$/selenium_tests/CanonizerTopicUpdatePage.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/selenium_tests/Identifiers.py" beforeDir="false" afterPath="$PROJECT_DIR$/selenium_tests/Identifiers.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/selenium_tests/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/selenium_tests/main.py" afterDir="false" />
     </list>
@@ -23,53 +24,60 @@
     <session id="-1607159918">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="109" />
+          <entry key="project.closed" value="143" />
           <entry key="project.open.time.11" value="1" />
           <entry key="project.open.time.12" value="4" />
-          <entry key="project.open.time.13" value="3" />
-          <entry key="project.open.time.14" value="20" />
-          <entry key="project.open.time.15" value="14" />
-          <entry key="project.open.time.16" value="13" />
-          <entry key="project.open.time.17" value="7" />
+          <entry key="project.open.time.13" value="5" />
+          <entry key="project.open.time.14" value="22" />
+          <entry key="project.open.time.15" value="16" />
+          <entry key="project.open.time.16" value="16" />
+          <entry key="project.open.time.17" value="9" />
           <entry key="project.open.time.18" value="13" />
-          <entry key="project.open.time.19" value="12" />
+          <entry key="project.open.time.19" value="15" />
           <entry key="project.open.time.2" value="1" />
-          <entry key="project.open.time.20" value="4" />
-          <entry key="project.open.time.21" value="3" />
-          <entry key="project.open.time.22" value="3" />
-          <entry key="project.open.time.23" value="3" />
+          <entry key="project.open.time.20" value="5" />
+          <entry key="project.open.time.21" value="5" />
+          <entry key="project.open.time.22" value="5" />
+          <entry key="project.open.time.23" value="6" />
           <entry key="project.open.time.24" value="1" />
-          <entry key="project.open.time.25" value="3" />
+          <entry key="project.open.time.25" value="4" />
           <entry key="project.open.time.26" value="2" />
-          <entry key="project.open.time.28" value="1" />
-          <entry key="project.open.time.34" value="1" />
-          <entry key="project.open.time.4" value="1" />
+          <entry key="project.open.time.28" value="2" />
+          <entry key="project.open.time.33" value="1" />
+          <entry key="project.open.time.34" value="2" />
+          <entry key="project.open.time.35" value="1" />
+          <entry key="project.open.time.36" value="1" />
+          <entry key="project.open.time.4" value="2" />
+          <entry key="project.open.time.42" value="1" />
+          <entry key="project.open.time.43" value="1" />
+          <entry key="project.open.time.49" value="1" />
           <entry key="project.open.time.5" value="1" />
           <entry key="project.open.time.6" value="1" />
-          <entry key="project.opened" value="112" />
+          <entry key="project.open.time.66" value="1" />
+          <entry key="project.opened" value="145" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
           <entry key="csv" value="1" />
           <entry key="log" value="1" />
-          <entry key="py" value="126" />
+          <entry key="py" value="153" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
           <entry key="PLAIN_TEXT" value="2" />
-          <entry key="Python" value="126" />
+          <entry key="Python" value="153" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="py" value="6289" />
+          <entry key="py" value="7564" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="Python" value="6289" />
+          <entry key="Python" value="7564" />
         </counts>
       </usages-collector>
     </session>
@@ -79,8 +87,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/selenium_tests/CanonizerTestCases.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2771">
-              <caret line="163" column="72" selection-start-line="163" selection-start-column="64" selection-end-line="163" selection-end-column="72" />
+            <state relative-caret-position="443">
+              <caret line="241" column="1" lean-forward="true" selection-start-line="241" selection-start-column="1" selection-end-line="241" selection-end-column="1" />
             </state>
           </provider>
         </entry>
@@ -88,26 +96,18 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/selenium_tests/main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="276">
-              <caret line="1654" column="24" lean-forward="true" selection-start-line="1654" selection-start-column="24" selection-end-line="1654" selection-end-column="24" />
+            <state relative-caret-position="-2594">
+              <caret line="1901" column="32" lean-forward="true" selection-start-line="1901" selection-start-column="32" selection-end-line="1901" selection-end-column="32" />
               <folding>
                 <element signature="e#0#15#0" expanded="true" />
-                <marker date="1603372593424" expanded="true" signature="93396:93405" ph="..." />
-                <marker date="1603372593424" expanded="true" signature="94291:94300" ph="..." />
-                <marker date="1603372593424" expanded="true" signature="97824:97829" ph="..." />
-                <marker date="1603372593424" expanded="true" signature="98437:98446" ph="..." />
-                <marker date="1603372593424" expanded="true" signature="100188:100193" ph="..." />
-                <marker date="1603372593424" expanded="true" signature="103500:103505" ph="..." />
+                <marker date="1610101798131" expanded="true" signature="93928:93937" ph="..." />
+                <marker date="1610101798131" expanded="true" signature="94823:94832" ph="..." />
+                <marker date="1610101798131" expanded="true" signature="98356:98361" ph="..." />
+                <marker date="1610101798131" expanded="true" signature="98969:98978" ph="..." />
+                <marker date="1610101798131" expanded="true" signature="100720:100725" ph="..." />
+                <marker date="1610101798131" expanded="true" signature="104032:104037" ph="..." />
+                <marker date="1610101798131" expanded="true" signature="107013:107184" ph="..." />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/selenium_tests/CanonizerBrokenURL.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="170">
-              <caret line="24" column="58" selection-start-line="24" selection-start-column="47" selection-end-line="24" selection-end-column="58" />
             </state>
           </provider>
         </entry>
@@ -115,17 +115,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/selenium_tests/Config.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="969">
-              <caret line="58" column="41" selection-start-line="58" selection-start-column="41" selection-end-line="58" selection-end-column="41" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/selenium_tests/CanonizerBase.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="272">
-              <caret line="17" column="24" selection-start-line="17" selection-start-column="24" selection-end-line="17" selection-end-column="24" />
+            <state relative-caret-position="527">
+              <caret line="32" column="1" selection-start-line="32" selection-start-column="1" selection-end-line="32" selection-end-column="1" />
             </state>
           </provider>
         </entry>
@@ -133,8 +124,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/selenium_tests/Identifiers.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="211">
-              <caret line="39" column="48" selection-start-line="39" selection-start-column="48" selection-end-line="39" selection-end-column="48" />
+            <state relative-caret-position="205">
+              <caret line="46" column="17" selection-start-line="46" selection-start-column="4" selection-end-line="46" selection-end-column="17" />
               <folding>
                 <element signature="e#0#27#0" expanded="true" />
               </folding>
@@ -143,13 +134,10 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/selenium_tests/CanonizerCampPage.py">
+        <entry file="file://$PROJECT_DIR$/selenium_tests/CanonizerHomePage.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="6273">
-              <caret line="373" column="51" selection-start-line="373" selection-start-column="8" selection-end-line="373" selection-end-column="51" />
-              <folding>
-                <element signature="e#0#30#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="51">
+              <caret line="3" column="11" selection-start-line="3" selection-start-column="11" selection-end-line="3" selection-end-column="11" />
             </state>
           </provider>
         </entry>
@@ -158,36 +146,36 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>load_camp_update_page</find>
-      <find>submit_camp_update_with_blank_nick_name</find>
+      <find>verify_phone_email</find>
+      <find>if</find>
+      <find>result =</find>
+      <find>camp_id</find>
+      <find>campstate</find>
       <find>load_edit_camp_statement_page</find>
-      <find>//*[@id=&quot;update&quot;]</find>
-      <find>submit_update</find>
-      <find>clear</find>
-      <find>submit_statement_update_with_valid_data</find>
-      <find>submit_statement_update_with_blank_statement</find>
-      <find>(128</find>
-      <find>statement fie</find>
-      <find>submit_statement_update_with_blank_nick_name</find>
-      <find>USER_SUPPORTS_CAMP_NAME</find>
+      <find>load_add_camp_statement_page</find>
+      <find>add_camp_statement_page_mandatory_fields_are_marked_with_asterisk</find>
       <find>load_camp_user_supports_page</find>
-      <find>//*[@id=&quot;camp_173_2&quot;]/a</find>
-      <find>AGREEMENT_CAMP</find>
-      <find>/html/body/div[1]/div[2]/h3[2]/a</find>
-      <find>create_camp_with_invalid_camp_name</find>
-      <find>load_create_camp_page</find>
+      <find>load_topic_page</find>
+      <find>/html/body/div/div[1]/h3[2]/a</find>
       <find>load_create_camp_page_from_bread_crumb_link</find>
-      <find>/html/body/div[1]/div[3]/div/div/form/div[2]/p</find>
-      <find>/html/body/div/div[3]/div/div/form/div[3]/p</find>
-      <find>DUPLICATE_CAMP_NAME</find>
-      <find>submit_camp_update_with_duplicate_camp_name</find>
-      <find>submit_camp_update_with_invalid_camp_name</find>
-      <find>test_submit_statement_with_blank_statement</find>
-      <find>/Occupy Wall Street</find>
-      <find>BROKENURL_1</find>
-      <find>//*[@id=&quot;rso&quot;]/div[1]/div/div[1]/a/h3/span</find>
-      <find>broke</find>
-      <find>wall</find>
+      <find>canonizer</find>
+      <find>HomePageIdentifiers</find>
+      <find>//*[@id=&quot;exampleAccordion&quot;]/ul[1]/li[1]/a/span</find>
+      <find>check_what_is_canonizer_page_loaded</find>
+      <find>canonizer main page</find>
+      <find>browse</find>
+      <find>//*[@id=&quot;mainNav&quot;]/a/img</find>
+      <find>sign</find>
+      <find>/register</find>
+      <find>check_home_page_loaded</find>
+      <find>check_register_page_open_click_signup_now_link</find>
+      <find>/html/body/div[1]/div[2]/div[3]/div/a</find>
+      <find>login</find>
+      <find>SIGNUPNOW</find>
+      <find>/html/body/div/div[2]/div[3]/div/a</find>
+      <find>//*[@id=&quot;navbarResponsive&quot;]/ul[1]/li[2]/a[2]</find>
+      <find>/login</find>
+      <find>click_what_is_canonizer_page_link</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -199,18 +187,19 @@
         <option value="$PROJECT_DIR$/selenium_tests/CanonizerBrokenURL.py" />
         <option value="$PROJECT_DIR$/selenium_tests/CanonizerBase.py" />
         <option value="$PROJECT_DIR$/selenium_tests/CanonizerCreateNewTopicPage.py" />
-        <option value="$PROJECT_DIR$/selenium_tests/CanonizerLoginPage.py" />
-        <option value="$PROJECT_DIR$/selenium_tests/CanonizerHomePage.py" />
-        <option value="$PROJECT_DIR$/selenium_tests/CanonizerAccountSettingsPage.py" />
         <option value="$PROJECT_DIR$/selenium_tests/CanonizerUploadFilePage.py" />
-        <option value="$PROJECT_DIR$/selenium_tests/CanonizerTopicUpdatePage.py" />
         <option value="$PROJECT_DIR$/selenium_tests/CanonizerBrowsePage.py" />
+        <option value="$PROJECT_DIR$/selenium_tests/CanonizerAccountSettingsPage.py" />
+        <option value="$PROJECT_DIR$/selenium_tests/CanonizerTopicUpdatePage.py" />
         <option value="$PROJECT_DIR$/selenium_tests/Config.py" />
         <option value="$PROJECT_DIR$/selenium_tests/CanonizerCampStatementPage.py" />
-        <option value="$PROJECT_DIR$/selenium_tests/CanonizerTestCases.py" />
         <option value="$PROJECT_DIR$/selenium_tests/CanonizerCampPage.py" />
-        <option value="$PROJECT_DIR$/selenium_tests/main.py" />
+        <option value="$PROJECT_DIR$/selenium_tests/CanonizerLoginPage.py" />
+        <option value="$PROJECT_DIR$/selenium_tests/CanonizerRegistrationPage.py" />
         <option value="$PROJECT_DIR$/selenium_tests/Identifiers.py" />
+        <option value="$PROJECT_DIR$/selenium_tests/CanonizerTestCases.py" />
+        <option value="$PROJECT_DIR$/selenium_tests/CanonizerHomePage.py" />
+        <option value="$PROJECT_DIR$/selenium_tests/main.py" />
       </list>
     </option>
   </component>
@@ -268,8 +257,8 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python tests.Unittests for main.TestPages.test_broken_url">
-    <configuration name="Unittests for main.TestPages.test_broken_url" type="tests" factoryName="Unittests" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="Python tests.Unittests for main.TestPages.test_check_register_page_open_click_signup_now_link">
+    <configuration name="Unittests for main.TestPages.test_check_home_page_loaded_logo_click" type="tests" factoryName="Unittests" temporary="true" nameIsGenerated="true">
       <module name="canonizer.2.0" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -279,11 +268,11 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;main.TestPages.test_broken_url&quot;" />
+      <option name="_new_target" value="&quot;main.TestPages.test_check_home_page_loaded_logo_click&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
-    <configuration name="Unittests for main.TestPages.test_check_topic_create_new_camp_page_from_my_supports_loaded" type="tests" factoryName="Unittests" temporary="true" nameIsGenerated="true">
+    <configuration name="Unittests for main.TestPages.test_check_login_page_open_click_login_here_link" type="tests" factoryName="Unittests" temporary="true" nameIsGenerated="true">
       <module name="canonizer.2.0" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -293,11 +282,11 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;main.TestPages.test_check_topic_create_new_camp_page_from_my_supports_loaded&quot;" />
+      <option name="_new_target" value="&quot;main.TestPages.test_check_login_page_open_click_login_here_link&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
-    <configuration name="Unittests for main.TestPages.test_click_account_settings_crypto_verification_page_button" type="tests" factoryName="Unittests" temporary="true" nameIsGenerated="true">
+    <configuration name="Unittests for main.TestPages.test_check_register_page_open_click_signup_now_link" type="tests" factoryName="Unittests" temporary="true" nameIsGenerated="true">
       <module name="canonizer.2.0" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -307,11 +296,11 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;main.TestPages.test_click_account_settings_crypto_verification_page_button&quot;" />
+      <option name="_new_target" value="&quot;main.TestPages.test_check_register_page_open_click_signup_now_link&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
-    <configuration name="Unittests for main.TestPages.test_select_by_value_mormon_canon_project" type="tests" factoryName="Unittests" temporary="true" nameIsGenerated="true">
+    <configuration name="Unittests for main.TestPages.test_check_scroll_to_top_click" type="tests" factoryName="Unittests" temporary="true" nameIsGenerated="true">
       <module name="canonizer.2.0" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -321,11 +310,11 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;main.TestPages.test_select_by_value_mormon_canon_project&quot;" />
+      <option name="_new_target" value="&quot;main.TestPages.test_check_scroll_to_top_click&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
-    <configuration name="Unittests for main.TestPages.test_select_by_value_organizations_united_utah_party" type="tests" factoryName="Unittests" temporary="true" nameIsGenerated="true">
+    <configuration name="Unittests for main.TestPages.test_what_is_canonizer_page_loaded_properly" type="tests" factoryName="Unittests" temporary="true" nameIsGenerated="true">
       <module name="canonizer.2.0" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -335,24 +324,24 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;main.TestPages.test_select_by_value_organizations_united_utah_party&quot;" />
+      <option name="_new_target" value="&quot;main.TestPages.test_what_is_canonizer_page_loaded_properly&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Python tests.Unittests for main.TestPages.test_select_by_value_organizations_united_utah_party" />
-      <item itemvalue="Python tests.Unittests for main.TestPages.test_select_by_value_mormon_canon_project" />
-      <item itemvalue="Python tests.Unittests for main.TestPages.test_click_account_settings_crypto_verification_page_button" />
-      <item itemvalue="Python tests.Unittests for main.TestPages.test_broken_url" />
-      <item itemvalue="Python tests.Unittests for main.TestPages.test_check_topic_create_new_camp_page_from_my_supports_loaded" />
+      <item itemvalue="Python tests.Unittests for main.TestPages.test_check_home_page_loaded_logo_click" />
+      <item itemvalue="Python tests.Unittests for main.TestPages.test_check_register_page_open_click_signup_now_link" />
+      <item itemvalue="Python tests.Unittests for main.TestPages.test_check_login_page_open_click_login_here_link" />
+      <item itemvalue="Python tests.Unittests for main.TestPages.test_what_is_canonizer_page_loaded_properly" />
+      <item itemvalue="Python tests.Unittests for main.TestPages.test_check_scroll_to_top_click" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python tests.Unittests for main.TestPages.test_broken_url" />
-        <item itemvalue="Python tests.Unittests for main.TestPages.test_check_topic_create_new_camp_page_from_my_supports_loaded" />
-        <item itemvalue="Python tests.Unittests for main.TestPages.test_click_account_settings_crypto_verification_page_button" />
-        <item itemvalue="Python tests.Unittests for main.TestPages.test_select_by_value_mormon_canon_project" />
-        <item itemvalue="Python tests.Unittests for main.TestPages.test_select_by_value_organizations_united_utah_party" />
+        <item itemvalue="Python tests.Unittests for main.TestPages.test_check_register_page_open_click_signup_now_link" />
+        <item itemvalue="Python tests.Unittests for main.TestPages.test_check_scroll_to_top_click" />
+        <item itemvalue="Python tests.Unittests for main.TestPages.test_what_is_canonizer_page_loaded_properly" />
+        <item itemvalue="Python tests.Unittests for main.TestPages.test_check_login_page_open_click_login_here_link" />
+        <item itemvalue="Python tests.Unittests for main.TestPages.test_check_home_page_loaded_logo_click" />
       </list>
     </recent_temporary>
   </component>
@@ -370,73 +359,72 @@
     <servers />
   </component>
   <component name="TestHistory">
-    <history-entry file="Unittests_for_main_TestPages_test_create_new_topic_page_should_have_add_new_nick_name_link_for_new_users - 2020.10.20 at 16h 31m 50s.xml">
-      <configuration name="Unittests for main.TestPages.test_create_new_topic_page_should_have_add_new_nick_name_link_for_new_users" configurationId="tests" />
+    <history-entry file="Unittests_for_main_TestPages_test_check_login_page_open_click_login_here_link - 2021.01.08 at 15h 23m 20s.xml">
+      <configuration name="Unittests for main.TestPages.test_check_login_page_open_click_login_here_link" configurationId="tests" />
     </history-entry>
-    <history-entry file="Unittests_for_main_TestPages_test_create_new_topic_page_should_have_add_new_nick_name_link_for_new_users - 2020.10.20 at 16h 32m 28s.xml">
-      <configuration name="Unittests for main.TestPages.test_create_new_topic_page_should_have_add_new_nick_name_link_for_new_users" configurationId="tests" />
+    <history-entry file="Unittests_for_main_TestPages_test_check_login_page_open_click_login_here_link - 2021.01.08 at 15h 24m 24s.xml">
+      <configuration name="Unittests for main.TestPages.test_check_login_page_open_click_login_here_link" configurationId="tests" />
     </history-entry>
-    <history-entry file="Unittests_for_main_TestPages_test_select_by_value_organizations_united_utah_party - 2020.10.20 at 16h 33m 17s.xml">
-      <configuration name="Unittests for main.TestPages.test_select_by_value_organizations_united_utah_party" configurationId="tests" />
+    <history-entry file="Unittests_for_main_TestPages_test_what_is_canonizer_page_loaded_properly - 2021.01.08 at 15h 37m 39s.xml">
+      <configuration name="Unittests for main.TestPages.test_what_is_canonizer_page_loaded_properly" configurationId="tests" />
     </history-entry>
-    <history-entry file="Unittests_for_main_TestPages_test_select_by_value_mormon_canon_project - 2020.10.20 at 16h 35m 04s.xml">
-      <configuration name="Unittests for main.TestPages.test_select_by_value_mormon_canon_project" configurationId="tests" />
+    <history-entry file="Unittests_for_main_TestPages_test_what_is_canonizer_page_loaded_properly - 2021.01.08 at 15h 38m 36s.xml">
+      <configuration name="Unittests for main.TestPages.test_what_is_canonizer_page_loaded_properly" configurationId="tests" />
     </history-entry>
-    <history-entry file="Unittests_for_main_TestPages_test_click_account_settings_crypto_verification_page_button - 2020.10.20 at 16h 39m 14s.xml">
-      <configuration name="Unittests for main.TestPages.test_click_account_settings_crypto_verification_page_button" configurationId="tests" />
+    <history-entry file="Unittests_for_main_TestPages_test_check_scroll_to_top_click - 2021.01.08 at 15h 40m 44s.xml">
+      <configuration name="Unittests for main.TestPages.test_check_scroll_to_top_click" configurationId="tests" />
     </history-entry>
-    <history-entry file="Unittests_for_main_TestPages_test_broken_url - 2020.10.22 at 18h 50m 57s.xml">
-      <configuration name="Unittests for main.TestPages.test_broken_url" configurationId="tests" />
+    <history-entry file="Unittests_for_main_TestPages_test_check_scroll_to_top_click - 2021.01.08 at 15h 41m 34s.xml">
+      <configuration name="Unittests for main.TestPages.test_check_scroll_to_top_click" configurationId="tests" />
     </history-entry>
-    <history-entry file="Unittests_for_main_TestPages_test_check_topic_create_new_camp_page_from_my_supports_loaded - 2020.10.22 at 18h 52m 13s.xml">
-      <configuration name="Unittests for main.TestPages.test_check_topic_create_new_camp_page_from_my_supports_loaded" configurationId="tests" />
+    <history-entry file="Unittests_for_main_TestPages_test_check_scroll_to_top_click - 2021.01.08 at 15h 42m 25s.xml">
+      <configuration name="Unittests for main.TestPages.test_check_scroll_to_top_click" configurationId="tests" />
     </history-entry>
-    <history-entry file="Unittests_for_main_TestPages_test_broken_url - 2020.10.26 at 19h 56m 38s.xml">
-      <configuration name="Unittests for main.TestPages.test_broken_url" configurationId="tests" />
+    <history-entry file="Unittests_for_main_TestPages_test_check_scroll_to_top_click - 2021.01.08 at 15h 43m 28s.xml">
+      <configuration name="Unittests for main.TestPages.test_check_scroll_to_top_click" configurationId="tests" />
     </history-entry>
-    <history-entry file="Unittests_for_main_TestPages_test_broken_url - 2020.10.26 at 20h 02m 54s.xml">
-      <configuration name="Unittests for main.TestPages.test_broken_url" configurationId="tests" />
+    <history-entry file="Unittests_for_main_TestPages_test_check_scroll_to_top_click - 2021.01.08 at 15h 50m 38s.xml">
+      <configuration name="Unittests for main.TestPages.test_check_scroll_to_top_click" configurationId="tests" />
     </history-entry>
-    <history-entry file="Unittests_for_main_TestPages_test_broken_url - 2020.10.26 at 20h 03m 59s.xml">
-      <configuration name="Unittests for main.TestPages.test_broken_url" configurationId="tests" />
+    <history-entry file="Unittests_for_main_TestPages_test_check_register_page_open_click_signup_now_link - 2021.01.08 at 16h 00m 24s.xml">
+      <configuration name="Unittests for main.TestPages.test_check_register_page_open_click_signup_now_link" configurationId="tests" />
     </history-entry>
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
-    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.19345239" />
-      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49871466" visible="true" weight="0.19345239" />
+      <window_info id="Structure" order="1" sideWeight="0.5012854" side_tool="true" weight="0.19345239" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.3295082" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49925596" weight="0.3622951" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.4985119" weight="0.3622951" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Version Control" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Terminal" order="8" />
-      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.50074404" side_tool="true" weight="0.3622951" />
+      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.5014881" side_tool="true" weight="0.3622951" />
       <window_info anchor="bottom" id="Python Console" order="10" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
     </layout>
     <layout-to-restore>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.19345239" />
-      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49871466" visible="true" weight="0.19345239" />
+      <window_info id="Structure" order="1" sideWeight="0.5012854" side_tool="true" weight="0.19345239" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.3622951" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.3295082" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.4985119" visible="true" weight="0.3622951" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Version Control" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Terminal" order="8" />
-      <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
+      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.5014881" side_tool="true" weight="0.3622951" />
       <window_info anchor="bottom" id="Python Console" order="10" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -449,13 +437,6 @@
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/selenium_tests/testCase.csv">
       <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/selenium_tests/CanonizerRegistrationPage.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="279">
-          <caret line="88" column="49" lean-forward="true" selection-start-line="88" selection-start-column="49" selection-end-line="88" selection-end-column="49" />
-        </state>
-      </provider>
     </entry>
     <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36/Lib/unittest/case.py">
       <provider selected="true" editor-type-id="text-editor">
@@ -498,20 +479,6 @@
     <entry file="file://$PROJECT_DIR$/selenium_tests/geckodriver.log">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/selenium_tests/CanonizerLoginPage.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="72">
-          <caret line="144" column="48" selection-start-line="144" selection-start-column="8" selection-end-line="144" selection-end-column="48" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/selenium_tests/CanonizerHomePage.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="307">
-          <caret line="137" column="16" selection-start-line="137" selection-start-column="16" selection-end-line="137" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/selenium_tests/CanonizerNewsFeedsPage.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="238">
@@ -526,13 +493,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/selenium_tests/CanonizerAccountSettingsPage.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="110" column="62" selection-start-line="110" selection-start-column="8" selection-end-line="110" selection-end-column="62" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/selenium_tests/CanonizerUploadFilePage.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="833">
@@ -540,38 +500,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/selenium_tests/CanonizerBrowsePage.py">
+    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36/Lib/site-packages/selenium/webdriver/remote/errorhandler.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="5812">
-          <caret line="393" column="21" selection-start-line="393" selection-start-column="21" selection-end-line="393" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/selenium_tests/CanonizerTopicUpdatePage.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="52">
-          <caret line="137" column="73" lean-forward="true" selection-start-line="137" selection-start-column="8" selection-end-line="137" selection-end-column="73" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/selenium_tests/CanonizerCampStatementPage.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="340">
-          <caret line="89" lean-forward="true" selection-start-line="89" selection-end-line="89" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/selenium_tests/CanonizerTestCases.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2771">
-          <caret line="163" column="72" selection-start-line="163" selection-start-column="64" selection-end-line="163" selection-end-column="72" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/selenium_tests/Config.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="969">
-          <caret line="58" column="41" selection-start-line="58" selection-start-column="41" selection-end-line="58" selection-end-column="41" />
+        <state relative-caret-position="194">
+          <caret line="241" selection-start-line="241" selection-end-line="241" />
         </state>
       </provider>
     </entry>
@@ -582,45 +514,102 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/selenium_tests/CanonizerCampPage.py">
+    <entry file="file://$PROJECT_DIR$/selenium_tests/CanonizerAccountSettingsPage.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="6273">
-          <caret line="373" column="51" selection-start-line="373" selection-start-column="8" selection-end-line="373" selection-end-column="51" />
-          <folding>
-            <element signature="e#0#30#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="120">
+          <caret line="348" column="77" selection-start-line="348" selection-start-column="71" selection-end-line="348" selection-end-column="77" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/selenium_tests/CanonizerBrowsePage.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/selenium_tests/CanonizerTopicUpdatePage.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1">
+          <caret line="139" column="43" selection-start-line="139" selection-start-column="8" selection-end-line="139" selection-end-column="43" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/selenium_tests/CanonizerBrokenURL.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="170">
-          <caret line="24" column="58" selection-start-line="24" selection-start-column="47" selection-end-line="24" selection-end-column="58" />
+        <state relative-caret-position="-339">
+          <caret line="18" column="37" selection-start-line="18" selection-start-column="8" selection-end-line="18" selection-end-column="37" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/selenium_tests/Config.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="527">
+          <caret line="32" column="1" selection-start-line="32" selection-start-column="1" selection-end-line="32" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/selenium_tests/CanonizerLoginPage.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="412">
+          <caret line="192" column="46" lean-forward="true" selection-start-line="188" selection-start-column="4" selection-end-line="192" selection-end-column="46" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/selenium_tests/CanonizerRegistrationPage.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="358">
+          <caret line="109" column="60" lean-forward="true" selection-start-line="109" selection-start-column="60" selection-end-line="109" selection-end-column="60" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/selenium_tests/CanonizerCampStatementPage.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1905">
+          <caret line="128" lean-forward="true" selection-start-line="128" selection-end-line="128" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/selenium_tests/CanonizerCampPage.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2206">
+          <caret line="243" column="21" lean-forward="true" selection-start-line="242" selection-start-column="8" selection-end-line="243" selection-end-column="21" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/selenium_tests/Identifiers.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="211">
-          <caret line="39" column="48" selection-start-line="39" selection-start-column="48" selection-end-line="39" selection-end-column="48" />
+        <state relative-caret-position="205">
+          <caret line="46" column="17" selection-start-line="46" selection-start-column="4" selection-end-line="46" selection-end-column="17" />
           <folding>
             <element signature="e#0#27#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/selenium_tests/CanonizerHomePage.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="51">
+          <caret line="3" column="11" selection-start-line="3" selection-start-column="11" selection-end-line="3" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/selenium_tests/CanonizerTestCases.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="443">
+          <caret line="241" column="1" lean-forward="true" selection-start-line="241" selection-start-column="1" selection-end-line="241" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/selenium_tests/main.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="276">
-          <caret line="1654" column="24" lean-forward="true" selection-start-line="1654" selection-start-column="24" selection-end-line="1654" selection-end-column="24" />
+        <state relative-caret-position="-2594">
+          <caret line="1901" column="32" lean-forward="true" selection-start-line="1901" selection-start-column="32" selection-end-line="1901" selection-end-column="32" />
           <folding>
             <element signature="e#0#15#0" expanded="true" />
-            <marker date="1603372593424" expanded="true" signature="93396:93405" ph="..." />
-            <marker date="1603372593424" expanded="true" signature="94291:94300" ph="..." />
-            <marker date="1603372593424" expanded="true" signature="97824:97829" ph="..." />
-            <marker date="1603372593424" expanded="true" signature="98437:98446" ph="..." />
-            <marker date="1603372593424" expanded="true" signature="100188:100193" ph="..." />
-            <marker date="1603372593424" expanded="true" signature="103500:103505" ph="..." />
+            <marker date="1610101798131" expanded="true" signature="93928:93937" ph="..." />
+            <marker date="1610101798131" expanded="true" signature="94823:94832" ph="..." />
+            <marker date="1610101798131" expanded="true" signature="98356:98361" ph="..." />
+            <marker date="1610101798131" expanded="true" signature="98969:98978" ph="..." />
+            <marker date="1610101798131" expanded="true" signature="100720:100725" ph="..." />
+            <marker date="1610101798131" expanded="true" signature="104032:104037" ph="..." />
+            <marker date="1610101798131" expanded="true" signature="107013:107184" ph="..." />
           </folding>
         </state>
       </provider>

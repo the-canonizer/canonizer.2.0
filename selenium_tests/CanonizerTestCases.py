@@ -23,7 +23,7 @@ testCases = {
     11: [critical, 'When user clicks on What is Canonizer.com, page should be loaded.'],
     12: [critical, 'If any unauthenticated user wants to join the camp, User should be directed to the login page'],
     #13: [low, 'When the main page loads, Text on button to upload all topic is "Load All Topics"'],\
-    13: [low, 'In Login Page, When user doesn\'t put Email/Phone Number, user must see Error Message'],
+    13: [low, 'In Request OTP Page, When user doesn\'t put Email/Phone Number, user must see Error Message'],
     14: [low, 'Register page should have "Login" option/button for existing users'],
     15: [low, 'Login Page should have "Register" Option/button for new users'],
     16: [low, 'On Registration Page, All Mandatory Fields are marked with * Sign'],
@@ -229,7 +229,16 @@ testCases = {
     216: [low, 'In Login Page, when user request otp with a valid user phone number, user should redirect to Login OTP Verification page'],
     217: [low, 'On Browse Page,When user select /void/ namespace from drop down and Only My Topics, User must see own topics under /void/ namespace'],
     218: [low, 'On Browse Page,When user select /Mormon_Canon_Project/ namespace from drop down and Only My Topics, User must see own topics under /Mormon_Canon_Project/ namespace'],
-    219: [low, 'On Browse Page,When user select /organizations/united_utah_party/ namespace from drop down and Only My Topics, User must see own topics under /organizations/united_utah_party/ namespace']
+    219: [low, 'On Browse Page,When user select /organizations/united_utah_party/ namespace from drop down and Only My Topics, User must see own topics under /organizations/united_utah_party/ namespace'],
+    220: [critical, 'When user logged in and clicks on open source , User should see open source in new window'],
+    221: [critical, 'When user without logged in clicks on open source, User should see open source in new window'],
+    222: [critical, 'When user goes to Canonizer main page, page should be loaded Properly'],
+    223: [critical, 'When user clicks on What is Canonizer.com, page should be loaded.'],
+    224: [critical, 'When user clicks on Canonizer logo,canonizer main page should be loaded.'],
+    225: [critical, 'On Login page, when user click "Signup Now" link, User should see User Registration Page'],
+    226: [critical, 'On Register page, when user click "Login here" link, User should see User Login Page'],
+    227: [critical, 'On Canonizer Main Page, when user goes to bottom of the page click on UP icon , User should reach to of the page']
+
 }
 
 

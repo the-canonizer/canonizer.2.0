@@ -42,6 +42,9 @@ class HomePageIdentifiers(object):
     FOOTER = (By.XPATH, '/html/body/footer')
     GARBAGE_URL = (By.XPATH, '/html/body/div')
     BLOG_FOOTER = (By.XPATH, '/html/body/div/footer/div[2]/div')
+    OPEN_SOURCE = (By.XPATH, '/html/body/div[1]/div[1]/small/a')
+    CANONIZER_LOGO = (By.XPATH, '//*[@id="mainNav"]/a/img')
+    SCROLL_TO_TOP = (By.XPATH, '/html/body/div[1]/a/i')
 
 
 class LoginPageIdentifiers(object):
@@ -52,13 +55,23 @@ class LoginPageIdentifiers(object):
     PASSWORD      = (By.ID, 'password')
     SUBMIT        = (By.ID, 'submit')
     ERROR_MESSAGE = (By.XPATH, '/html/body/div[1]/div[2]/div/form/div[1]/p')
-    SIGNUPNOW     = (By.XPATH, '/html/body/div[1]/div[2]/div[3]/div/a')
+    SIGNUPNOW     = (By.XPATH, '/html/body/div/div[2]/div[3]/div/a')
     ERROR_EMAIL = (By.XPATH, '/html/body/div/div[2]/div[1]/form/div[1]/p')
     ERROR_PASSWORD = (By.XPATH, '/html/body/div/div[2]/div[1]/form/div[2]/p')
     EMAIL_ASTRK = (By.XPATH, '/html/body/div/div[2]/div[1]/form/div[1]/label/span')
     PASSWORD_ASTRK = (By.XPATH, '/html/body/div/div[2]/div[1]/form/div[2]/label/span')
     FORGOTPASSWORD = (By.XPATH, '/html/body/div/div[2]/div[1]/form/div[3]/a')
     REQUEST_OTP = (By.ID, 'request_opt')
+
+
+class LoginOTPVerificationIdentifiers(object):
+    """
+    Class to holds the Login OTP Verification page Identifiers Path
+    """
+    OTP = (By.ID, 'otp')
+    SUBMIT = (By.ID, 'submit')
+    ERROR_OTP = (By.XPATH, '/html/body/div/div[2]/div/form/div/p')
+    OTP_ASTRK = (By.XPATH, '/html/body/div/div[2]/div/form/div/label/span')
 
 
 class RegistrationPageIdentifiers(object):
@@ -77,7 +90,7 @@ class RegistrationPageIdentifiers(object):
     PASSWORD_ASTRK   = (By.XPATH, '/html/body/div[1]/div[2]/div[1]/form/div[5]/label/span')
     CONFIRM_PASSWORD = (By.ID, 'pwd_confirm')
     CNFM_PSSWD_ASTRK = (By.XPATH, '/html/body/div[1]/div[2]/div[1]/form/div[6]/label/span')
-    LOGINOPTION      = (By.XPATH, '/html/body/div[1]/div[2]/div[3]/div/a')
+    LOGINOPTION      = (By.XPATH, '/html/body/div/div[2]/div[3]/div/a')
     CREATE_ACCOUNT   = (By.XPATH, '/html/body/div[1]/div[2]/div/form/button')
     ERROR_FIRST_NAME = (By.XPATH, '/html/body/div[1]/div[2]/div[1]/form/div[1]/p')
     ERROR_LAST_NAME  = (By.XPATH, '/html/body/div[1]/div[2]/div/form/div[3]/p')
@@ -250,18 +263,18 @@ class AccountSettingsManageProfileInfoIdentifiers(object):
     ADDRESS_LINE2 = (By.ID, 'address_2')
     CITY = (By.ID, 'city')
     STATE = (By.ID, 'state')
-    COUNTRY = (By.ID, 'country')
+    COUNTRY = (By.ID, 'country_select')
     ZIP_CODE = (By.ID, 'postal_code')
-    FIRST_NAME_ASTRK = (By.XPATH, '//*[@id="myTabContent"]/form/div/div[1]/label/span')
-    LAST_NAME_ASTRK = (By.XPATH, '//*[@id="myTabContent"]/form/div/div[3]/label/span')
-    COUNTRY_ASTRK = (By.XPATH, '//*[@id="myTabContent"]/form/div/div[12]/label/span')
-    ERROR_FIRST_NAME = (By.XPATH, '//*[@id="myTabContent"]/form/div/div[1]/div[1]/p')
-    ERROR_MIDDLE_NAME = (By.XPATH, '//*[@id="myTabContent"]/form/div/div[2]/div[1]/p')
-    ERROR_LAST_NAME = (By.XPATH, '//*[@id="myTabContent"]/form/div/div[3]/div[1]/p')
+    FIRST_NAME_ASTRK = (By.XPATH, '//*[@id="myTabContent"]/form[2]/div/div[1]/label/span')
+    LAST_NAME_ASTRK = (By.XPATH, '//*[@id="myTabContent"]/form[2]/div/div[3]/label/span')
+    COUNTRY_ASTRK = (By.XPATH, '//*[@id="myTabContent"]/form[2]/div/div[12]/label/span')
+    ERROR_FIRST_NAME = (By.XPATH, '//*[@id="myTabContent"]/form[2]/div/div[1]/div[1]/p')
+    ERROR_MIDDLE_NAME = (By.XPATH, '//*[@id="myTabContent"]/form[2]/div/div[2]/div[1]/p')
+    ERROR_LAST_NAME = (By.XPATH, '//*[@id="myTabContent"]/form[2]/div/div[3]/div[1]/p')
     UPDATE = (By.ID, 'update_profile')
     PHONE_NUMBER = (By.ID, 'phone_number')
     ERROR_PHONE_NUMBER = (By.XPATH, '//*[@id="myTabContent"]/form[1]/div/div[1]/div/p')
-    VERIFY = (By.ID, 'verify_phone_email')
+    VERIFY = (By.ID, 'verifyButton')
     PHONE_NUMBER_ASTRK = (By.XPATH, '//*[@id="myTabContent"]/form[1]/div/div[1]/label/span')
 
 
@@ -461,7 +474,7 @@ class AddCampStatementPageIdentifiers(object):
     ERROR_STATEMENT = (By.XPATH, '/html/body/div/div[3]/div/div/form/div[2]/p')
     SUBMIT_STATEMENT = (By.ID, 'submit')
     ADDNEWNICKNAME = (By.XPATH, '//*[@id="add_new_nickname"]')
-    TOPIC_IDENTIFIER = (By.XPATH, '//*[@id="outline_235"]/a')
+    TOPIC_IDENTIFIER = (By.XPATH, '//*[@id="outline_173"]/a')
 
 
 class TermsAndPrivacyPolicyIdentifiers(object):

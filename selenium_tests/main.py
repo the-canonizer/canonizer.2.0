@@ -621,7 +621,6 @@ class TestPages(unittest.TestCase):
             '',
             '',
             '',
-            '',
             '')
         self.assertIn("First name is required.", result)
 
@@ -637,7 +636,6 @@ class TestPages(unittest.TestCase):
             DEFAULT_FIRST_NAME,
             DEFAULT_MIDDLE_NAME,
             DEFAULT_USER,
-            '',
             '',
             '',
             '',
@@ -1173,7 +1171,7 @@ class TestPages(unittest.TestCase):
             # Click on the Login Page and Create a Login Session and for further actions.
             self.login_to_canonizer_app()
             print("\n" + str(test_cases(126)))
-            self.assertIn("manage/statement/1399", CanonizerCampStatementPage(self.driver).load_edit_camp_statement_page().get_url())
+            self.assertIn("manage/statement", CanonizerCampStatementPage(self.driver).load_edit_camp_statement_page().get_url())
 
     # 128
     def test_camp_statement_edit_page_mandatory_fields_are_marked_with_asterisk(self):
@@ -1601,7 +1599,9 @@ class TestPages(unittest.TestCase):
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         print("\n" + str(test_cases(171)))
-        self.assertIn("create/statement/235/1", AddCampStatementPage(self.driver).load_add_camp_statement_page().get_url())
+        result = AddCampStatementPage(self.driver).load_add_camp_statement_page()
+        if result == 1:
+            self.assertIn("create/statement/", AddCampStatementPage(self.driver).load_add_camp_statement_page().get_url())
 
     # 173
     def test_add_camp_statement_page_mandatory_fields_are_marked_with_asterisk(self):
@@ -1609,7 +1609,9 @@ class TestPages(unittest.TestCase):
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the Create New camp  link
-        self.assertTrue(AddCampStatementPage(self.driver).load_add_camp_statement_page().add_camp_statement_page_mandatory_fields_are_marked_with_asterisk())
+        result = AddCampStatementPage(self.driver).load_add_camp_statement_page()
+        if result == 1:
+            self.assertTrue(AddCampStatementPage(self.driver).load_add_camp_statement_page().add_camp_statement_page_mandatory_fields_are_marked_with_asterisk())
 
     # 174
     def test_submit_statement_with_blank_nick_name(self):
@@ -1617,10 +1619,12 @@ class TestPages(unittest.TestCase):
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Go to Manage/Edit Camp and check if nick name is blank
-        result = AddCampStatementPage(self.driver).load_add_camp_statement_page().submit_statement_with_blank_nick_name(
-            "Test",
-            "")
-        self.assertIn("The nick name field is required.", result)
+        result = AddCampStatementPage(self.driver).load_add_camp_statement_page()
+        if result == 1:
+            result = AddCampStatementPage(self.driver).load_add_camp_statement_page().submit_statement_with_blank_nick_name(
+                "Test",
+                "")
+            self.assertIn("The nick name field is required.", result)
 
     # 175
     def test_submit_statement_with_blank_statement(self):
@@ -1628,17 +1632,21 @@ class TestPages(unittest.TestCase):
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Go to Manage/Edit Camp and check if nick name is blank
-        result = AddCampStatementPage(self.driver).load_add_camp_statement_page().submit_statement_with_blank_statement(
-            "Test",
-            "")
-        self.assertIn("The statement field is required.", result)
+        result = AddCampStatementPage(self.driver).load_add_camp_statement_page()
+        if result == 1:
+            result = AddCampStatementPage(self.driver).load_add_camp_statement_page().submit_statement_with_blank_statement(
+                "Test",
+                "")
+            self.assertIn("The statement field is required.", result)
 
     # 176
     def test_add_camp_statement_page_should_have_add_new_nick_name_link_for_new_users(self):
         print("\n" + str(test_cases(175)))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
-        self.assertTrue(AddCampStatementPage(self.driver).load_add_camp_statement_page().add_camp_statement_page_should_have_add_new_nick_name_link_for_new_users())
+        result = AddCampStatementPage(self.driver).load_add_camp_statement_page()
+        if result == 1:
+            self.assertTrue(AddCampStatementPage(self.driver).load_add_camp_statement_page().add_camp_statement_page_should_have_add_new_nick_name_link_for_new_users())
 
     # 177
     def test_registration_with_blank_spaces_first_name(self):
@@ -1993,22 +2001,74 @@ class TestPages(unittest.TestCase):
         # Click on the Browse link
         self.assertIn("/browse?namespace=22&my=22", CanonizerBrowsePage(self.driver).select_by_value_void_only_my_topics().get_url())
 
-    # 218
+    # 219
     def test_select_by_value_mormon_canon_project_only_my_topics(self):
-        print("\n" + str(test_cases(217)))
+        print("\n" + str(test_cases(218)))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the Browse link
         self.assertIn("/browse?namespace=24&my=24", CanonizerBrowsePage(self.driver).select_by_value_mormon_canon_project_only_my_topics().get_url())
 
-    # 219
+    # 220
     def test_select_by_value_organizations_united_utah_party_only_my_topics(self):
-        print("\n" + str(test_cases(218)))
+        print("\n" + str(test_cases(219)))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the Browse link
         self.assertIn("/browse?namespace=26&my=26", CanonizerBrowsePage(self.driver).select_by_value_organizations_united_utah_party_only_my_topics().get_url())
 
+    # ----- Open source Test Cases Start -----
+    # 221
+    def test_check_open_source_should_open_with_login(self):
+        print("\n" + str(test_cases(220)))
+        # Click on the Login Page and Create a Login Session and for further actions.
+        self.login_to_canonizer_app()
+        # Click on the open source link
+        CanonizerOpenSource(self.driver).check_open_source_should_open().open("https://github.com/the-canonizer/canonizer.2.0")
+
+    # 222
+    def test_check_open_source_should_open_without_login(self):
+        print("\n" + str(test_cases(221)))
+        # Click on the open source link
+        CanonizerOpenSource(self.driver).check_open_source_should_open().open("https://github.com/the-canonizer/canonizer.2.0")
+
+    # 223
+    def test_canonizer_home_page_load_with_user_login(self):
+        print("\n" + str(test_cases(222)))
+        self.login_to_canonizer_app()
+        self.assertTrue(CanonizerMainPage(self.driver).check_home_page_loaded())
+
+    # 224
+    def test_what_is_canonizer_page_loaded_properly_with_user_login(self):
+        print("\n" + str(test_cases(223)))
+        self.login_to_canonizer_app()
+        self.assertTrue(CanonizerMainPage(self.driver).click_what_is_canonizer_page_link().check_what_is_canonizer_page_loaded())
+
+    # 225
+    def test_check_home_page_loaded_logo_click(self):
+        print("\n" + str(test_cases(224)))
+        self.login_to_canonizer_app()
+        self.assertTrue(CanonizerMainPage(self.driver).check_home_page_loaded_logo_click())
+
+    # 226
+    def test_check_register_page_open_click_signup_now_link(self):
+        print("\n" + str(test_cases(225)))
+        loginpage = CanonizerLoginPage(self.driver).click_login_page_button().check_register_page_open_click_signup_now_link()
+        self.assertIn("/register", loginpage.get_url())
+
+    # 227
+    def test_check_login_page_open_click_login_here_link(self):
+        print("\n" + str(test_cases(226)))
+        registerpage = CanonizerRegisterPage(self.driver).click_register_button().check_login_page_open_click_login_here_link()
+        self.assertIn("/login", registerpage.get_url())
+
+    # 228
+    def test_check_scroll_to_top_click(self):
+        print("\n" + str(test_cases(227)))
+        self.login_to_canonizer_app()
+        self.assertTrue(CanonizerMainPage(self.driver).check_scroll_to_top_click())
+
+    # ----- Open source Test Cases End -----
     def tearDown(self):
         self.driver.close()
 

@@ -314,8 +314,8 @@ class AccountSettingsManageProfileInfoPage(Page):
     def enter_state(self, state):
             self.find_element(*AccountSettingsManageProfileInfoIdentifiers.STATE).send_keys(state)
 
-    def enter_country(self, country):
-            self.find_element(*AccountSettingsManageProfileInfoIdentifiers.COUNTRY).send_keys(country)
+    #def enter_country(self, country):
+            #self.find_element(*AccountSettingsManageProfileInfoIdentifiers.COUNTRY).send_keys(country)
 
     def enter_zip_code(self, zip_code):
             self.find_element(*AccountSettingsManageProfileInfoIdentifiers.ZIP_CODE).send_keys(zip_code)
@@ -330,7 +330,7 @@ class AccountSettingsManageProfileInfoPage(Page):
         """
         self.find_element(*AccountSettingsManageProfileInfoIdentifiers.UPDATE).click()
 
-    def update(self, first_name, middle_name, last_name, email, language, dob, address_line1, address_line2, city, state, country, zip_code):
+    def update(self, first_name, middle_name, last_name, email, language, dob, address_line1, address_line2, city, state, zip_code):
         self.enter_first_name(first_name)
         self.enter_middle_name(middle_name)
         self.enter_last_name(last_name)
@@ -341,7 +341,7 @@ class AccountSettingsManageProfileInfoPage(Page):
         self.enter_address_line2(address_line2)
         self.enter_city(city)
         self.enter_state(state)
-        self.enter_country(country)
+        #self.enter_country(country)
         self.enter_zip_code(zip_code)
         self.click_update_button()
 
@@ -365,14 +365,14 @@ class AccountSettingsManageProfileInfoPage(Page):
             self.find_element(*AccountSettingsManageProfileInfoIdentifiers.COUNTRY_ASTRK) and \
             self.find_element(*AccountSettingsManageProfileInfoIdentifiers.PHONE_NUMBER_ASTRK)
 
-    def update_profile_with_blank_first_name(self, middle_name, last_name, email, language, dob, address_line1, address_line2, city, state, country, zip_code):
+    def update_profile_with_blank_first_name(self, middle_name, last_name, email, language, dob, address_line1, address_line2, city, state, zip_code):
         self.find_element(*AccountSettingsManageProfileInfoIdentifiers.FIRST_NAME).clear()
-        self.update('', middle_name, last_name, email, language, dob, address_line1, address_line2, city, state, country, zip_code)
+        self.update('', middle_name, last_name, email, language, dob, address_line1, address_line2, city, state, zip_code)
         return self.find_element(*AccountSettingsManageProfileInfoIdentifiers.ERROR_FIRST_NAME).text
 
-    def update_profile_with_blank_last_name(self, first_name, middle_name, email, language, dob, address_line1, address_line2, city, state, country, zip_code):
+    def update_profile_with_blank_last_name(self, first_name, middle_name, email, language, dob, address_line1, address_line2, city, state, zip_code):
         self.find_element(*AccountSettingsManageProfileInfoIdentifiers.LAST_NAME).clear()
-        self.update(first_name, middle_name, '', email, language, dob, address_line1, address_line2, city, state, country, zip_code)
+        self.update(first_name, middle_name, '', email, language, dob, address_line1, address_line2, city, state, zip_code)
         return self.find_element(*AccountSettingsManageProfileInfoIdentifiers.ERROR_LAST_NAME).text
 
     def verify_phone_number_with_blank_phone_number(self):

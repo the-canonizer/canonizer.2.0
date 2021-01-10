@@ -105,5 +105,11 @@ class CanonizerRegisterPage(Page):
         self.register(firstname, lastname, email, password, confirmpassword)
         return self.find_element(*RegistrationPageIdentifiers.ERROR_FIRST_NAME).text
 
+    def check_login_page_open_click_login_here_link(self):
+
+        self.hover(*RegistrationPageIdentifiers.LOGINOPTION)
+        self.find_element(*RegistrationPageIdentifiers.LOGINOPTION).click()
+        return CanonizerRegisterPage(self.driver)
+
 
 

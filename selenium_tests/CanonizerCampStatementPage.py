@@ -3,6 +3,7 @@ from Identifiers import CampStatementEditPageIdentifiers,BrowsePageIdentifiers, 
 from selenium.common.exceptions import NoSuchElementException
 import time
 
+
 class CanonizerCampStatementPage(Page):
 
     def load_topic_agreement_page(self):
@@ -20,9 +21,17 @@ class CanonizerCampStatementPage(Page):
         time.sleep(3)
 
         # Click on Manage/Edit This camp
-        self.hover(*CampStatementEditPageIdentifiers.EDIT_CAMP_STATEMENT)
-        self.find_element(*CampStatementEditPageIdentifiers.EDIT_CAMP_STATEMENT).click()
-        return CanonizerCampStatementPage(self.driver)
+        # self.hover(*CampStatementEditPageIdentifiers.EDIT_CAMP_STATEMENT)
+        # self.find_element(*CampStatementEditPageIdentifiers.EDIT_CAMP_STATEMENT).click()
+        # return CanonizerCampStatementPage(self.driver)
+        try:
+            self.hover(*CampStatementEditPageIdentifiers.EDIT_CAMP_STATEMENT)
+            self.find_element(*CampStatementEditPageIdentifiers.EDIT_CAMP_STATEMENT).click()
+            return CanonizerCampStatementPage(self.driver)
+        except NoSuchElementException:
+            return False
+
+        return True
 
     def load_edit_camp_statement_page(self):
         """
@@ -100,11 +109,17 @@ class AddCampStatementPage(Page):
         # Browse to Topic Name
         self.hover(*AddCampStatementPageIdentifiers.TOPIC_IDENTIFIER)
         self.find_element(*AddCampStatementPageIdentifiers.TOPIC_IDENTIFIER).click()
+        time.sleep(3)
 
         # Click Add Camp Statement This camp
-        self.hover(*AddCampStatementPageIdentifiers.ADD_CAMP_STATEMENT)
-        self.find_element(*AddCampStatementPageIdentifiers.ADD_CAMP_STATEMENT).click()
-        return AddCampStatementPage(self.driver)
+        try:
+            self.hover(*AddCampStatementPageIdentifiers.ADD_CAMP_STATEMENT)
+            self.find_element(*AddCampStatementPageIdentifiers.ADD_CAMP_STATEMENT).click()
+            return AddCampStatementPage(self.driver)
+        except NoSuchElementException:
+            return False
+
+        return True
 
     def add_camp_statement_page_mandatory_fields_are_marked_with_asterisk(self):
         """

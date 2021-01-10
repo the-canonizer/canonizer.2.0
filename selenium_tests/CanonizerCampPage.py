@@ -119,6 +119,7 @@ class CanonizerCampPage(Page):
 
     def load_agreement_page_from_bread_crumb_child_camp_link(self):
         self.load_topic_page()
+        time.sleep(3)
 
         self.hover(*BreadCrumbsLinksIdentifiers.CHILD_CAMP_TYPES_OF_TESTING)
         self.find_element(*BreadCrumbsLinksIdentifiers.CHILD_CAMP_TYPES_OF_TESTING).click()
@@ -189,6 +190,10 @@ class CanonizerCampPage(Page):
     def load_agreement_page_from_bread_crumb_topic_history_topic_name_link(self):
         self.load_topic_page()
 
+        url = self.driver.current_url
+        self.driver.get(url)
+        self.driver.execute_script("window.scrollTo(0,document.body.scrollHeight)")
+
         # Click on agreement camp on bread crumbs
         self.hover(*TopicUpdatePageIdentifiers.MANAGE_EDIT_TOPIC)
         self.find_element(*TopicUpdatePageIdentifiers.MANAGE_EDIT_TOPIC).click()
@@ -203,6 +208,7 @@ class CanonizerCampPage(Page):
         # Click on agreement camp on bread crumbs
         self.hover(*BreadCrumbsLinksIdentifiers.AGREEMENT_CAMP)
         self.find_element(*BreadCrumbsLinksIdentifiers.AGREEMENT_CAMP).click()
+        time.sleep(3)
         # Click on Create New Camp
         self.hover(*CreateNewCampPageIdentifiers.CREATE_CAMP)
         self.find_element(*CreateNewCampPageIdentifiers.CREATE_CAMP).click()
@@ -379,5 +385,5 @@ class CanonizerEditCampPage(Page):
     def submit_camp_update_with_invalid_camp_name(self, parent_camp_name, nick_name, camp_name, keywords, note, camp_about_url, camp_about_nick_name):
         self.find_element(*CampEditPageIdentifiers.CAMP_NAME).clear()
         self.submit_update(parent_camp_name, nick_name, camp_name, keywords, note, camp_about_url, camp_about_nick_name)
-        return self.find_element(*CampEditPageIdentifiers.ERROR_INVALID_CAMP_NAME).text
+        return self.find_element(*CampEditPageIdentifiers.ERROR_CAMP_NAME).text
 

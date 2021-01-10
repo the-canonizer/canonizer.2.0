@@ -2,6 +2,7 @@ from CanonizerBase import Page
 from Identifiers import TopicUpdatePageIdentifiers, BrowsePageIdentifiers, TopicObjectPageIdentifiers
 from selenium.webdriver.support.ui import Select
 from selenium.common.exceptions import NoSuchElementException
+import time
 
 
 class CanonizerTopicUpdatePage(Page):
@@ -17,6 +18,10 @@ class CanonizerTopicUpdatePage(Page):
         # Browse to Topic Name
         self.hover(*TopicUpdatePageIdentifiers.TOPIC_IDENTIFIER)
         self.find_element(*TopicUpdatePageIdentifiers.TOPIC_IDENTIFIER).click()
+
+        url = self.driver.current_url
+        self.driver.get(url)
+        self.driver.execute_script("window.scrollTo(0,document.body.scrollHeight)")
 
         # Browse To Manage/Edit This Topic
         self.hover(*TopicUpdatePageIdentifiers.MANAGE_EDIT_TOPIC)
@@ -39,6 +44,7 @@ class CanonizerTopicUpdatePage(Page):
             Go To The topic
         """
         self.load_topic_agreement_page()
+        time.sleep(3)
         # Click on View This Version
         self.hover(*TopicUpdatePageIdentifiers.VIEW_THIS_VERSION)
         self.find_element(*TopicUpdatePageIdentifiers.VIEW_THIS_VERSION).click()
@@ -90,12 +96,10 @@ class CanonizerTopicUpdatePage(Page):
 
     def topic_update_page_should_have_add_new_nick_name_link_for_new_users(self):
             #return self.find_element(*TopicUpdatePageIdentifiers.ADDNEWNICKNAME).text
-
         try:
             return self.find_element(*TopicUpdatePageIdentifiers.ADDNEWNICKNAME)
         except NoSuchElementException:
             return False
-
         return True
 
     def enter_nick_name(self, nickname):
@@ -131,7 +135,6 @@ class CanonizerTopicUpdatePage(Page):
             return self.find_element(*TopicUpdatePageIdentifiers.ERROR_NICK_NAME)
         except NoSuchElementException:
             return False
-
         return True
 
     def submit_update_with_blank_topic_name(self, nickname, namespace, note):

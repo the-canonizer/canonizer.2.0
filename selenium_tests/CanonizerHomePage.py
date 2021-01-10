@@ -1,6 +1,7 @@
 from selenium.webdriver.common.keys import Keys
 from CanonizerBase import Page
 from Identifiers import *
+import time
 from selenium import webdriver
 from selenium.webdriver.support.ui import Select
 
@@ -38,11 +39,25 @@ class CanonizerMainPage(Page):
         """
         This Function is to verify if the canonizer main page loads properly
         :return:
-            Return the result to the main page.
+            Return the result to the main page.check_home_page_loaded
         """
         self.hover(*HomePageIdentifiers.WHATISCANONIZER)
         self.find_element(*HomePageIdentifiers.WHATISCANONIZER).click()
         return CanonizerHomePage(self.driver)
+
+    def check_home_page_loaded_logo_click(self):
+
+        self.hover(*HomePageIdentifiers.CANONIZER_LOGO)
+        self.find_element(*HomePageIdentifiers.CANONIZER_LOGO).click()
+        return True if self.find_element(*HomePageIdentifiers.BODY) else False
+
+    def check_scroll_to_top_click(self):
+        self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        time.sleep(3)
+        self.hover(*HomePageIdentifiers.CANONIZER_LOGO)
+        self.find_element(*HomePageIdentifiers.CANONIZER_LOGO).click()
+        return CanonizerHomePage(self.driver)
+
 
 ##########################\
 #  Tests For Login Page  #
@@ -171,6 +186,13 @@ class CanonizerTermsAndPrivacyPolicy(Page):
         self.hover(*TermsAndPrivacyPolicyIdentifiers.TERMS_SERVICES)
         self.find_element(*TermsAndPrivacyPolicyIdentifiers.TERMS_SERVICES).click()
         return CanonizerTermsAndPrivacyPolicy(self.driver)
+
+
+class CanonizerOpenSource(Page):
+    def check_open_source_should_open(self):
+        self.hover(*HomePageIdentifiers.OPEN_SOURCE)
+        self.find_element(*HomePageIdentifiers.OPEN_SOURCE).click()
+        return CanonizerOpenSource(self.driver)
 
 
 
