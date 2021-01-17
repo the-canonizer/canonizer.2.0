@@ -4,7 +4,7 @@
         <div class="level">
             <a href="#">
                 {{ $reply->owner->nick_name }}
-            </a> replied {{ $reply->created_at->diffForHumans() }}
+            </a> replied on {{ date('d-m-Y', strtotime($reply->updated_at)) }}
             <br><br>
         </div>
 

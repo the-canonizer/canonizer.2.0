@@ -97,9 +97,9 @@
                   if(sizeof($allChildren) > 0 ){
                   foreach($allChildren as $campnum){
                      if($submit_time){
-                        $support = \App\Model\Support::where('topic_num',$data->topic_num)->where('camp_num',$campnum)->whereIn('nick_name_id',$nickNamesData)->where('end','=',0)->where('start','<=',$submit_time)->orderBy('support_order','ASC')->get();
+                        $support = \App\Model\Support::where('topic_num',$data->topic_num)->where('camp_num',$campnum)->whereIn('nick_name_id',$nickNamesData)->where('delegate_nick_name_id',0)->where('end','=',0)->where('start','<=',$submit_time)->orderBy('support_order','ASC')->get();
                      }else{
-                        $support = \App\Model\Support::where('topic_num',$data->topic_num)->where('camp_num',$campnum)->whereIn('nick_name_id',$nickNamesData)->where('end','=',0)->orderBy('support_order','ASC')->get();
+                        $support = \App\Model\Support::where('topic_num',$data->topic_num)->where('camp_num',$campnum)->whereIn('nick_name_id',$nickNamesData)->where('delegate_nick_name_id',0)->where('end','=',0)->orderBy('support_order','ASC')->get();
                      }
                       
                          if(sizeof($support) > 0){
@@ -199,7 +199,10 @@
             <a id="object" class="btn btn-historysmt" href="<?php echo url('manage/statement/'.$data->id.'-objection');?>">Object</a>
           <?php } ?>	
 					<a id="update" class="btn btn-historysmt" href="<?php echo url('manage/statement/'.$data->id);?>">Submit Statement Update Based On This</a>
-                    <a id="version" class="btn btn-historysmt" href="<?php echo url('topic/'.$data->topic_num.'/'.$data->camp_num.'?asof=bydate&asofdate='. date('Y/m/d H:i:s', $data->go_live_time)); ?>">View This Version</a>
+                   <?php
+                        $link = \App\Model\Camp::getTopicCampUrl($data->topic_num,$data->camp_num);
+                      ?>
+                    <a id="version" class="btn btn-historysmt" href="<?php echo $link.'?asof=bydate&asofdate='. date('Y/m/d H:i:s', $data->go_live_time); ?>">View This Version</a>
 				          <script>
                    var href = $('#version').attr('href');
                    var date = new Date(<?= $data->go_live_time ?> * 1000).toLocaleString();

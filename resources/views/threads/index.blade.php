@@ -31,7 +31,7 @@
 						@endif
 					</div>
 					<br>
-
+					
                     <div class="panel-body">
                         <table class="table">
 
@@ -42,11 +42,34 @@
 									</a>
 								</p>
 							@endif
-
-                            @foreach ($threads as $thread)
+										<thead>
+											<th>Thread Name</th>
+											<th>Replies</th>
+											<th>Most Recent Post Date</th>
+										</thead>
+										<tbody>
+											@foreach ($threads as $thread)
+											<?php $date  = $thread->updated_at;
+												if($thread->replies->count()){
+													$date  = $thread->replies[0]->updated_at;
+												}
+											?>
+											<tr>
+												<td>
+													<a href="{{ URL::to('/')}}/forum/{{ $topicname }}/{{ $campnum }}/threads/{{ $thread->id }}">
+		                                            {{ $thread->title }}
+		                                            </a>
+												</td>
+												<td>{{ $thread->replies->count() }}</td>
+												<td>{{ date('d-m-Y', strtotime($date))}}</td>
+											</tr>
+											 @endforeach
+										</tbody>
+                           <!--  @foreach ($threads as $thread)
                             <article>
 
 								<div class="level" style="word-break:break-all">
+									
 									<h5>
 	                                    <ul class = "list-group">
 	                                        <li class = "list-group-item">
@@ -73,14 +96,15 @@
 
                                 {{--  <div class="body"> {{ $thread->body }} </div>  --}}
                             </article>
-                            @endforeach
+                            @endforeach -->
 
-							<!-- For Pagination -->
+							
+
+                        </table>
+                        <!-- For Pagination -->
 							@if (count($threads) > 0)
 								{{ $threads->links() }}
 							@endif
-
-                        </table>
 
 						@if ($message = Session::get('success'))
 						<div class="alert alert-success alert-block">

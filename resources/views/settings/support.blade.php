@@ -8,6 +8,11 @@
     <strong>Warning! </strong>{{ Session::get('warning')}} 
 </div>
 @endif
+@if(Session::has('warningDelegate'))
+<div class="alert alert-danger">
+    <strong>Warning! </strong>{{ Session::get('warningDelegate')}} 
+</div>
+@endif
 <?php $removedCampList = array(); ?>
 @if(Session::has('confirm') && Session::has('warning') && Session::get('confirm') !='samecamp')
 	
@@ -18,7 +23,8 @@
 					 
 					 <?php
 
-					  if(isset($childSupport) && !empty($childSupport) ) { foreach($childSupport as $supportData) { 
+					  if(isset($childSupport) && !empty($childSupport) ) {
+					   foreach($childSupport as $supportData) { 
 					       $removedCampList[]=$supportData->camp->camp_num;
 					 ?>
  					  <div class="col-sm-12">   
@@ -71,10 +77,13 @@
     <div class="col-sm-12 margin-btm-2">
         <div class="well">
             <ul class="nav prfl_ul">
-                <li><a class="" href="{{ route('settings')}}">Manage Profile Info</a></li>
-                <li class=""><a class="" href="{{ route('settings.nickname')}}" >Manage Nick Names</a></li>
-				<li class="active"><a class="" href="{{ route('settings.support')}}" >My Supports</a></li>
-                <li><a class="" href="{{ route('settings.algo-preferences')}}">Default Algorithm</a></li>
+               <li class=""><a class="" href="{{ route('settings')}}">Profile Info</a></li>
+                <li class=""><a class="" href="{{ route('settings.sociallinks')}}">Social Oauth Verification</a></li>                
+                <li><a class="" href="{{ route('settings.changepassword')}}">Change Password</a></li>
+                <li><a class="" href="{{ route('settings.nickname')}}" >Nick Names</a></li>
+                <li class="active"><a class="" href="{{ route('settings.support')}}" >Supported Camps</a></li>
+                <!-- <li><a class="" href="{{ route('settings.algo-preferences')}}">Default Algorithm</a></li> -->
+                <li ><a class="" href="{{ route('settings.blockchain')}}">Crypto Verification (was Metamask Account)</a></li>
             </ul>
 		<form id="support_form" action="{{ route('settings.support.add')}}" method="post">	
          <div class="SupportCmp">
@@ -287,6 +296,7 @@
 						</select>
 						 @if ($errors->has('nick_name')) <p class="help-block">{{ $errors->first('nick_name') }}</p> @endif
 						 <?php if(count($nicknames) == 0) { ?>
+						 <p style="color:red" class="help-block">Note:You have not yet added a nick name. A public or private nick name must be added then selected here when contributing.</p>
 						 <a id="add_new_nickname" href="<?php echo url('settings/nickname');?>">Add New Nick Name </a>
 						 <?php } ?>
 						</div> 
@@ -294,7 +304,10 @@
                     </div>
                      @if(!Session::has('warning'))
                     <button type="submit" id="submit" class="btn btn-login">Submit</button>
-				    <a  class="btn btn-login" href="<?php echo url('topic/'.$topic->topic_num.'/'.session('campnum'));?>">Cancel</a>
+                     <?php  
+                     $link = \App\Model\Camp::getTopicCampUrl($topic->topic_num,session('campnum'));
+                 	 ?>
+				    <a  class="btn btn-login" href="<?php echo $link; ?>">Cancel</a>
 				    @else
 					<div style="display:none">	
 					<button type="submit" id="submit" class="btn btn-login"></button>	
@@ -340,6 +353,7 @@
 {{ Session::forget('success') }} 
 {{ Session::forget('confirm') }} 
 {{ Session::forget('error') }}
+{{ Session::forget('warningDelegate') }}
 
 
 @endsection

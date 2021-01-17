@@ -7,12 +7,20 @@
         <h3>
             <b>
                 <a href="{{ URL::to('/')}}/forum/{{ $topicname }}/{{ $campnum }}/threads">
-                    &laquo; List of All Camp Threads</a>
-                <hr>
-                <a href="#">{{ $threads->creator->nick_name }}
-                </a> started this thread : "{{ $threads->title }}"
+                    &laquo; List of All Camp Threads</a>              
+               
             </b>
         </h3>
+        <h3><b>Camp:</b>
+                    @php
+                        echo $parentcamp
+                    @endphp
+                     <hr/>
+                     <a href="#">{{ $threads->creator->nick_name }}
+                    </a> started this thread : "{{ $threads->title }}"
+                </h3>
+        
+
 	</div>
     <div class="right-whitePnl">
 
@@ -21,7 +29,7 @@
 
                 <div class="panel panel-default">
                    <div class="panel-body">
-                        <span> Thread Post at {{ $threads->created_at->diffForHumans() }}
+                        <span> Thread Created at {{ date('d-m-Y', strtotime($threads->created_at))}}
                             by <a href="#"> {{ $threads->creator->nick_name }} </a>
                         </span><br />
 
@@ -74,6 +82,7 @@
 							</select>
 							 @if ($errors->has('nick_name')) <p class="help-block">{{ $errors->first('nick_name') }}</p> @endif
                              <?php if(count($userNicknames) == 0) { ?>
+                                 <p style="color:red" class="help-block">Note:You have not yet added a nick name. A public or private nick name must be added then selected here when contributing.</p>
 							       <a href="<?php echo url('settings/nickname');?>">Add New Nick Name </a>
                              <?php } ?>
 						</div>

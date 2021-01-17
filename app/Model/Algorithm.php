@@ -46,7 +46,6 @@ class Algorithm{
         @nick_name_id , $condition
     */
     public static function camp_count($nick_name_id,$condition, $political=false,$topicnum=0,$campnum=0){
-    
         $as_of_time = time();
         $cacheWithTime = false; 
         if(isset($_REQUEST['asof']) && $_REQUEST['asof'] == 'bydate'){
@@ -56,9 +55,9 @@ class Algorithm{
             }
         }
   
-        $sql = "select count(*) as countTotal,support_order from support where nick_name_id = $nick_name_id and (" .$condition.")";
-        $sql2 ="and ((start < $as_of_time) and ((end = 0) or (end > $as_of_time)))
-         ";
+        $sql = "select count(*) as countTotal,support_order,camp_num from support where nick_name_id = $nick_name_id and (" .$condition.")";
+        $sql2 ="and ((start < $as_of_time) and ((end = 0) or (end > $as_of_time)))";
+         
         /* Cache applied to avoid repeated queries in recursion */
         if($cacheWithTime){
             $result = Cache::remember("$sql $sql2", 2, function () use($sql,$sql2) {
@@ -69,6 +68,7 @@ class Algorithm{
             $result = Cache::remember("$sql", 1, function () use($sql,$sql2) {
                 return DB::select("$sql $sql2");
             });
+           
 		 if($political==true && $topicnum==231 && ($campnum==2 ||  $campnum==3 || $campnum==4) ) {						
                       	
 			if($result[0]->support_order==1)
@@ -90,7 +90,7 @@ class Algorithm{
         }
     }
 
-    public static function ether($nick_name_id) {
+    public static function ether($nick_name_id,$topicnum=0,$campnum=0) {
         $user_id = Nickname::getUserIDByNickName($nick_name_id);
         $ethers = EtherAddresses::where('user_id', '=', $user_id)->get();
         
@@ -139,15 +139,15 @@ class Algorithm{
         return $total_ethers;
     }
 
-    public static function blind_popularity($nick_name_id = null){
+    public static function blind_popularity($nick_name_id = null,$topicnum=0,$campnum=0){
         return 1;
     }
 
-    public static function mind_experts($nick_name_id = null){
+    public static function mind_experts($nick_name_id = null,$topicnum=0,$campnum=0){
         return self::camp_tree_count(81,$nick_name_id);
     }
 
-    public static function computer_science_experts($nick_name_id){
+    public static function computer_science_experts($nick_name_id,$topicnum=0,$campnum=0){
         return self::camp_tree_count(124,$nick_name_id);
     }
 
@@ -155,7 +155,7 @@ class Algorithm{
         Transhumanist - Algorithm
     */
 
-    public static function transhumanist($nick_name_id){
+    public static function transhumanist($nick_name_id,$topicnum=0,$campnum=0){
          $condition = '(topic_num = 40 and camp_num = 2) or ' .
 			     '(topic_num = 41 and camp_num = 2) or ' .
 			     '(topic_num = 42 and camp_num = 2) or ' .
@@ -172,7 +172,7 @@ class Algorithm{
         return self::camp_count($nick_name_id,$condition);
     }
 
-    public static function atheist($nick_name_id){
+    public static function atheist($nick_name_id,$topicnum=0,$campnum=0){
         $condition = '(topic_num = 54 and camp_num = 2) or ' .
 				'(topic_num = 2 and camp_num = 2) or ' .
 				'(topic_num = 2 and camp_num = 4) or ' .
@@ -180,25 +180,34 @@ class Algorithm{
         return self::camp_count($nick_name_id,$condition);
     }
 
-    public static function uu($nick_name_id){
+    public static function uu($nick_name_id,$topicnum=0,$campnum=0){
         $condition = '(topic_num = 54 and camp_num = 15)';
         return self::camp_count($nick_name_id,$condition);
     }
 
-    public static function secular($nick_name_id){
+    public static function secular($nick_name_id,$topicnum=0,$campnum=0){
         $condition = '(topic_num = 54 and camp_num = 3)';
         return self::camp_count($nick_name_id,$condition);
     }
 
-    public static function mormon($nick_name_id){
+    public static function mormon($nick_name_id,$topicnum=0,$campnum=0){
         $condition = '(topic_num = 54 and camp_num = 7) or ' .
-				'(topic_num = 54 and camp_num = 8) or ' .
-				'(topic_num = 54 and camp_num = 10) or ' .
-				'(topic_num = 54 and camp_num = 11)';
-        return self::camp_count($nick_name_id,$condition);
+                '(topic_num = 54 and camp_num = 8) or ' .
+                '(topic_num = 54 and camp_num = 9) or ' .
+                '(topic_num = 54 and camp_num = 10) or ' .
+                '(topic_num = 54 and camp_num = 11)';
+        // if($campnum == 9 || $campnum == 8){
+        //     $condition = '(topic_num = 54 and camp_num = 8) or ' .
+        //         '(topic_num = 54 and camp_num = 9)';
+        // }
+        
+       // $condition = "(topic_num = $topicnum and camp_num = $campnum)";
+                //if($nick_name_id == 67)
+               // echo self::camp_count($nick_name_id,$condition,false,$topicnum,$campnum)."--".$nick_name_id."<br/>"; 
+        return self::camp_count($nick_name_id,$condition,false,$topicnum,$campnum);
     }
 
-    public static function christian($nick_name_id){
+    public static function christian($nick_name_id,$topicnum=0,$campnum=0){
         $condition = '(topic_num = 54 and camp_num = 4) or ' .
 			     '(topic_num = 54 and camp_num = 5) or ' .
 			     '(topic_num = 54 and camp_num = 6) or ' .
@@ -211,7 +220,7 @@ class Algorithm{
         return self::camp_count($nick_name_id,$condition);
     }
 
-    public static function PhD($nick_name_id){
+    public static function PhD($nick_name_id,$topicnum=0,$campnum=0){
         $condition = '(topic_num = 55 and camp_num =  5) or ' .
 						   '(topic_num = 55 and camp_num = 10) or ' .
 						   '(topic_num = 55 and camp_num = 11) or ' .
@@ -224,21 +233,21 @@ class Algorithm{
 	
 	// United Utah Party Algorithm using related topic and camp
 	
-	public static function united_utah($nick_name_id){
+	public static function united_utah($nick_name_id,$topicnum=0,$campnum=0){
         $condition = '(topic_num = 231 and camp_num = 2)';
         return self::camp_count($nick_name_id,$condition,true,231,2);
     }
 	
 	// Republican Algorithm using related topic and camp
 	 
-	public static function republican($nick_name_id){
+	public static function republican($nick_name_id,$topicnum=0,$campnum=0){
         $condition = '(topic_num = 231 and camp_num = 3)';
         return self::camp_count($nick_name_id,$condition,true,231,3);
     }
 	
 	// Democrat Algorithm using related topic and camp
 	
-	public static function democrat($nick_name_id){
+	public static function democrat($nick_name_id,$topicnum=0,$campnum=0){
         $condition = '(topic_num = 231 and camp_num = 4)';
         return self::camp_count($nick_name_id,$condition,true,231,4);
     }

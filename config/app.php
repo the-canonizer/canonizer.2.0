@@ -21,7 +21,7 @@ return [
     'front_page_limit'=>env('FRONT_PAGE_LIMIT', '30'),
     'go_live_day_limit'=>1,
     'go_live_text' => 'one day / 24 hours',
-    'mail_env' => '[staging.canon]',
+    'mail_env' => (env('APP_ENV', 'development') == 'staging'  || (env('APP_ENV', 'development') == 'local' )) ? (env('APP_ENV', 'development') == 'local' ) ? '[local.canon]'  : '[staging.canon]'  : '[canon]',
 
     /*
     |--------------------------------------------------------------------------
@@ -187,7 +187,8 @@ return [
         App\Providers\RouteServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class,
         LaravelCaptcha\Providers\LaravelCaptchaServiceProvider::class,
-
+        //Laravel\Socialite\SocialiteServiceProvider::class,
+        App\Library\Socialite\SocialiteServiceProvider::class,
     ],
 
     /*
@@ -237,7 +238,10 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'Form' => Collective\Html\FormFacade::class,
-      'Html' => Collective\Html\HtmlFacade::class,
+        'Html' => Collective\Html\HtmlFacade::class,
+        //'Socialite' => Laravel\Socialite\Facades\Socialite::class,
+        'Socialite' => App\Library\Socialite\Facades\Socialite::class,
+        
     ],
 
 ];

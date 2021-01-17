@@ -66,7 +66,7 @@ class NotifyUserForChangeSubmit extends Command {
                 $statement = $record;
                 $statement->grace_period = 0;
                 $statement->update();
-                $directSupporter = Support::getDirectSupporter($statement->topic_num, $statement->camp_num);
+                $directSupporter = Support::getAllDirectSupporters($statement->topic_num, $statement->camp_num);
                 $subscribers = Camp::getCampSubscribers($statement->topic_num, $statement->camp_num);
                 // $link = 'statement/history/' . $id . '/' . $statement->camp_num . '?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $statement->go_live_time);
                 $link = 'statement/history/' . $statement->topic_num . '/' . $statement->camp_num;
@@ -89,7 +89,7 @@ class NotifyUserForChangeSubmit extends Command {
                 $camp->grace_period = 0;
                 $camp->update();
 
-                $directSupporter = Support::getDirectSupporter($camp->topic_num, $camp->camp_num);
+                $directSupporter = Support::getAllDirectSupporters($camp->topic_num, $camp->camp_num);
                 $subscribers = Camp::getCampSubscribers($camp->topic_num, $camp->camp_num);
                 //$link = 'camp/history/' . $id . '/' . $camp->camp_num . '?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $camp->go_live_time);
                 $link = 'camp/history/' . $camp->topic_num . '/' . $camp->camp_num;
@@ -111,7 +111,7 @@ class NotifyUserForChangeSubmit extends Command {
                 $topic = $record;
                 $topic->grace_period = 0;
                 $topic->update();
-                $directSupporter = Support::getDirectSupporter($topic->topic_num);          
+                $directSupporter = Support::getAllDirectSupporters($topic->topic_num);          
                 $subscribers = Camp::getCampSubscribers($camp->topic_num, 1);
                  // $link = 'topic/' . $topic->topic_num . '/' . $topic->camp_num . '?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $topic->go_live_time);
                 $link = 'topic-history/' . $topic->topic_num;
@@ -142,22 +142,39 @@ class NotifyUserForChangeSubmit extends Command {
         return;
     }
 
-    public static function mailSubscribersAndSupporters($directSupporter,$subscribers,$link, $dataObject){
+     private function mailSubscribersAndSupporters($directSupporter,$subscribers,$link, $dataObject){
         $alreadyMailed = [];
         $i=0;
-        foreach ($directSupporter as $supporter) {
-         $user = Nickname::getUserByNickName($supporter->nick_name_id);
+        foreach ($directSupporter as $supporter) {            
+        $supportData = $dataObject;
+         $user = \App\Model\Nickname::getUserByNickName($supporter->nick_name_id);
          $alreadyMailed[] = $user->id;
+         $topic = \App\Model\Topic::where('topic_num','=',$supportData['topic_num'])->latest('submit_time')->get();
+         $topic_name_space_id = isset($topic[0]) ? $topic[0]->namespace_id:1;
+         $nickName = \App\Model\Nickname::find($supporter->nick_name_id);
+         $supported_camp = $nickName->getSupportCampList($topic_name_space_id);
+         $supported_camp_list = $nickName->getSupportCampListNamesEmail($supported_camp,$supportData['topic_num']);
+         $supportData['support_list'] = $supported_camp_list; 
+          $ifalsoSubscriber = Camp::checkifSubscriber($subscribers,$user);
+          if($ifalsoSubscriber){
+            $supportData['also_subscriber'] = 1;
+            $supportData['sub_support_list'] = Camp::getSubscriptionList($user->id,$supportData['topic_num']);      
+         }
+         
          $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
-         Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new PurposedToSupportersMail($user, $link, $dataObject));
+         Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new PurposedToSupportersMail($user, $link, $supportData));
         }
-        foreach ($subscribers as $usr) {
+
+        foreach ($subscribers as $usr) {            
+            $subscriberData = $dataObject;
             $userSub = \App\User::find($usr);
             if(!in_array($userSub->id, $alreadyMailed,TRUE)){
                 $alreadyMailed[] = $userSub->id;
+                $subscriptions_list = Camp::getSubscriptionList($userSub->id,$subscriberData['topic_num']);
+                $subscriberData['support_list'] = $subscriptions_list; 
                 $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $userSub->email : config('app.admin_email');
-                $dataObject['subscriber'] = 1;
-                Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new PurposedToSupportersMail($userSub, $link, $dataObject));
+                $subscriberData['subscriber'] = 1;
+              Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new PurposedToSupportersMail($userSub, $link, $subscriberData));
             }
             
         }

@@ -223,7 +223,7 @@ class CThreadsController extends Controller
 
         $this->validate(
             $request, [
-                'title'    => 'required|max:100',
+                'title'    => 'required|max:100|regex:/^[a-zA-Z0-9\s]+$/',
                 'nick_name' => 'required'
             ]
         );
@@ -264,10 +264,11 @@ class CThreadsController extends Controller
     public function show($topicid, $topicname, $campnum, $CThread)
     {
         $topic = getArray($topicid, $topicname, $campnum);
-
+        $camp  = Camp::getLiveCamp($topicid,$campnum);
         return view(
             'threads.show',
              $topic, [
+                'parentcamp'       => Camp::campNameWithAncestors($camp,'',$topicname),
                 'userNicknames' => (auth()->check()) ? Nickname::topicNicknameUsed($topicid) : array(),
                 'threads' => CThread::findOrFail($CThread),
                 'replies' => CThread::findOrFail($CThread)

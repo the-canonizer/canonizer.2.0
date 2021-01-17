@@ -8,9 +8,12 @@ jQuery('head').append('<link rel="stylesheet" href="https://canonizer.com/css/ca
 /* Developer : Karun Gautam */
 
 
-function outlinecall(topic_num,camp_num) {
-
-	jQuery.getJSON('https://canonizer.com/api/v1/getcampoutline/'+topic_num+'/'+camp_num)
+function outlinecall(topic_num,camp_num,add_supporter) {
+	var url = 'https://canonizer.com/api/v1/getcampoutline/'+topic_num+'/'+camp_num;
+	if(add_supporter){
+		url = 'http://localhost:8000/api/v1/getcampoutline/'+topic_num+'/'+camp_num+'/'+add_supporter;
+	}
+	jQuery.getJSON(url)
 	  .done(function(data){
 		 jQuery('.post').append("<div class='tree treeview'><ul class='mainouter'>"+data.outline+"</ul></div>");
 	})

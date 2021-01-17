@@ -23,24 +23,28 @@
     <div class="col-sm-12 margin-btm-2">
         <div class="well">
             <ul class="nav prfl_ul">
-                <li><a class="" href="{{ route('settings')}}">Manage Profile Info</a></li>
-                <li class=""><a class="" href="{{ route('settings.nickname')}}" >Manage Nick Names</a></li>
-				<li class="active"><a class="" href="{{ route('settings.support')}}" >My Supports</a></li>
-                <li><a class="" href="{{ route('settings.algo-preferences')}}">Default Algorithm</a></li>
+                <li class=""><a class="" href="{{ route('settings')}}">Profile Info</a></li>
+                <li class=""><a class="" href="{{ route('settings.sociallinks')}}">Social Oauth Verification</a></li>                
                 <li><a class="" href="{{ route('settings.changepassword')}}">Change Password</a></li>
-                <li><a class="" href="{{ route('settings.blockchain')}}">Metamask Account</a></li>
+                <li><a class="" href="{{ route('settings.nickname')}}" >Nick Names</a></li>
+                <li class="active"><a class="" href="{{ route('settings.support')}}" >Supported Camps</a></li>
+                <!-- <li><a class="" href="{{ route('settings.algo-preferences')}}">Default Algorithm</a></li> -->
+                <li class=""><a class="" href="{{ route('settings.blockchain')}}">Crypto Verification (was Metamask Account)</a></li>
             </ul>
          <div class="SupportCmp">
 		        <p style="margin-left: 15px;color:red">Note : To change support order of camp, drag & drop the camp box on your choice position. </p>
                 @if(count($supportedTopic))
                  @foreach($supportedTopic as $data)
-                 <?php $title      = preg_replace('/[^A-Za-z0-9\-]/', '-', $data->topic->topic_name);	?>
-                       <div class="SpCmpHd"><b>For Topic : <a href="/topic/{{ $data->topic->topic_num }}-{{ $title }}/1">{{ $data->topic->topic_name}} </a> </b></div>
+                 <?php  
+                     $link = \App\Model\Camp::getTopicCampUrl($data->topic->topic_num,1);
+
+                 ?>
+                       <div class="SpCmpHd"><b>For Topic : <a href="<?php echo $link; ?>">{{ $data->topic->topic_name}} </a> </b></div>
                		<div class="row column{{ $data->topic_num }}" style="padding:10px 15px;">
 					   <?php $topicSupport = $data->topic->Getsupports($data->topic_num,$userNickname);?>
 					   @foreach($topicSupport as $k=>$support)
                         <?php if($support->delegate_nick_name_id == 0) {
-                            $camp = \App\Model\Camp::getLiveCamp($support->topic_num,$support->camp_num);
+                            $camp = \App\Model\Camp::getLiveCamp($support->topic_num,$support->camp_num,['nofilter'=>true]);
                          ?>
 					   <div id="positions_{{ $support->support_id }}" class="SpCmpBDY support_camp support-sorter-element ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
 					     <form onsubmit="return confirm('Do you really want to remove this support ?');" action="{{ route('settings.support.delete')}}" id="support-{{$support->support_id}}" method="post">
@@ -51,8 +55,11 @@
 							<input type="hidden" id= "nick_name_id_{{ $support->support_id }}" name="nick_name_id" value="{{ $support->nick_name_id }}">
 						  <button type="submit" id="submit_{{ $support->support_id }}" class="btn-sptclose" title="Remove Support"><i class="fa fa-close"></i></button>
 						 </form>
-						
-					     <b><span class="support_order">{{ $support->support_order }}</span> . <a style="text-decoration: underline; color: blue;" href="/topic/{{ $data->topic_num }}-{{ $title }}/{{ isset($support->camp->camp_num) ? $support->camp->camp_num : '1' }}"> {{ isset($camp->camp_name) ? $camp->camp_name : '' }}  </a> <br/>
+						    <?php  
+                     $link = \App\Model\Camp::getTopicCampUrl($data->topic_num,isset($support->camp->camp_num) ? $support->camp->camp_num : '1' );
+
+                 ?>
+					     <b><span class="support_order">{{ $support->support_order }}</span> . <a style="text-decoration: underline; color: blue;" href="<?php echo $link; ?>"> {{ isset($camp->camp_name) ? $camp->camp_name : '' }}  </a> <br/>
 					   	 </b>
                        </div>
 						<?php } else { 
@@ -60,8 +67,8 @@
                             $topic_name_space_id = isset($topic[0]) ? $topic[0]->namespace_id:1;
                             $delegatedNickDetail  = $delegatedNick->getNickName($support->delegate_nick_name_id);
                             $nickName = \App\Model\Nickname::find($support->delegate_nick_name_id);
-                            $supported_camp = $nickName->getSupportCampList($topic_name_space_id);
-                            $supported_camp_list = $nickName->getSupportCampListNames($supported_camp,$data->topic_num)
+                            $supported_camp = $nickName->getDelegatedSupportCampList($topic_name_space_id,$support->nick_name_id);
+                            $supported_camp_list = $nickName->getSupportCampListNames($supported_camp,$data->topic_num);
 						 ?>
 						 <div id="positions" class="SpCmpBDY delegate_support support-sorter-element ui-widget">
 					   

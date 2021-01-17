@@ -16,7 +16,9 @@ class NewsFeedController extends Controller
     public function create($topic,$campnum){
         $topicnumArray = explode("-", $topic);
         $topicnum = $topicnumArray[0];
-        return view('news.create', compact('topicnum', 'campnum','topic'));        
+        $campnumArray = explode("-", $campnum);
+        $camp_num = $campnumArray[0];
+        return view('news.create', compact('topicnum', 'campnum','camp_num','topic'));        
     }
     
     public function store(Request $request){
@@ -40,25 +42,27 @@ class NewsFeedController extends Controller
         if ($validator->fails()) {
             return back()->withErrors($validator->errors())->withInput($request->all());
         }
-        
+         $campnum = explode("-", $all['camp_num'])[0];
+       $topicnum = explode("-",$all['topic_num'])[0];
         $news = new NewsFeed();
-        $news->topic_num = $all['topic_num'];
-        $news->camp_num = $all['camp_num'];
+        $news->topic_num = $topicnum;
+        $news->camp_num = $campnum;
         $news->display_text = $all['display_text'];
         $news->link = $all['link'];        
         $news->available_for_child = isset($all['available_for_child']) ? $all['available_for_child'] : 0 ;
         $news->submit_time = strtotime(date('Y-m-d H:i:s'));
         $news->save();
-        
-        return redirect('topic/' . $all['topic_slug'] . '/' . $all['camp_num'])->with(['success' => "News added successfully"]);
+        return redirect(\App\Model\Camp::getTopicCampUrl($topicnum,$campnum))->with(['success' => "News added successfully"]);
     }
     
     public function edit($topic,$campnum){
         $topicnumArray = explode("-", $topic);
         $topicnum = $topicnumArray[0];
-        $news = NewsFeed::where('topic_num','=',$topicnum)->where('camp_num','=',$campnum)->where('end_time','=',null)->orderBy('order_id','ASC')->get();
+        $campnumArray = explode("-", $campnum);
+        $camp_num = $campnumArray[0];
+        $news = NewsFeed::where('topic_num','=',$topicnum)->where('camp_num','=',$camp_num)->where('end_time','=',null)->orderBy('order_id','ASC')->get();
         
-        return view('news.edit', compact('topicnum', 'campnum','topic','news'));        
+        return view('news.edit', compact('topicnum', 'campnum','camp_num','topic','news'));        
         
     }
     
@@ -83,8 +87,8 @@ class NewsFeedController extends Controller
             //echo "<pre>"; print_r($validator->errors()); exit;
             return back()->withErrors($validator->errors())->withInput($request->all());
         }
-       $campnum = $all['camp_num'];
-       $topicnum = $all['topic_num'];
+       $campnum = explode("-", $all['camp_num'])[0];
+       $topicnum = explode("-",$all['topic_num'])[0];
        $submittime = strtotime(date('Y-m-d H:i:s'));
        //deactive previous
        DB::table('news_feed')->where('camp_num','=',$campnum)
@@ -95,15 +99,15 @@ class NewsFeedController extends Controller
        //New entery
        foreach($all['news_order'] as $key=>$order){
             $news = new NewsFeed();
-            $news->topic_num = $all['topic_num'];
-            $news->camp_num = $all['camp_num'];
+            $news->topic_num = $topicnum;
+            $news->camp_num =$campnum;
             $news->display_text = $all['display_text'][$key];
             $news->link = $all['link'][$key];       
             $news->available_for_child = isset($all['available_for_child'][$key]) ? $all['available_for_child'][$key] : 0 ;
             $news->submit_time = strtotime(date('Y-m-d H:i:s'));
             $news->save();
        }
-       return redirect('topic/' . $all['topic_slug'] . '/' . $all['camp_num'])->with(['success' => "News updated successfully"]);
+       return redirect(\App\Model\Camp::getTopicCampUrl($topicnum,$campnum))->with(['success' => "News updated successfully"]);
     }
     
 }

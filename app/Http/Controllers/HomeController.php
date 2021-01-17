@@ -39,10 +39,35 @@ class HomeController extends Controller {
         
 		//session()->flush();
         $namespaces = Namespaces::all();
-		//config('app.front_page_limit')
-        $topics = Camp::getAllAgreementTopic(1000, $_REQUEST);
+         if(null == session('defaultNamespaceId')){
+            session()->put('defaultNamespaceId',1);
+        }
+        $page_no = isset($_REQUEST['page']) ? $_REQUEST['page'] : 1; 
+        $topics =  Camp::sortTopicsBasedOnScore(Camp::getAllAgreementTopic(20, $_REQUEST));
+       // echo "<pre>"; print_r($topics); die;
         $videopodcast = VideoPodcast::all()->first();
         return view('welcome', ['topics' => $topics, 'namespaces' => $namespaces,'videopodcast'=>$videopodcast]);
+    }
+
+    public function loadmoretopics(Request $request){
+        if($request->ajax())
+         {
+           $topics =  Camp::sortTopicsBasedOnScore(Camp::getAllAgreementTopic(20, $_REQUEST));
+            foreach ($topics as $k => $topicdata) {
+            $topic = \App\Model\Topic::where('topic_num','=',$topicdata->topic_num)->latest('submit_time')->get();
+            $topic_name_space_id = isset($topic[0]) ? $topic[0]->namespace_id:1;
+            $request_namesapce = session('defaultNamespaceId', 1);
+            // if($topic_name_space_id !='' && $topic_name_space_id != $request_namesapce){
+            //     continue;
+            // }
+            $output .= $topicdata->campTreeHtml();
+            }
+            ($output != '') ? $output .= '<a id="btn-more" class="remove-row" data-id="' . $topicdata->id . '"></a>' : '';
+
+            echo $output;
+         }else{
+            echo "";
+         }
     }
 
     public function loadtopic(Request $request) {
@@ -57,9 +82,9 @@ class HomeController extends Controller {
             $topic = \App\Model\Topic::where('topic_num','=',$topicdata->topic_num)->latest('submit_time')->get();
             $topic_name_space_id = isset($topic[0]) ? $topic[0]->namespace_id:1;
             $request_namesapce = session('defaultNamespaceId', 1);
-            if($topic_name_space_id !='' && $topic_name_space_id != $request_namesapce){
-                continue;
-            }
+            // if($topic_name_space_id !='' && $topic_name_space_id != $request_namesapce){
+            //     continue;
+            // }
             $output .= $topicdata->campTreeHtml();
         }
         ($output != '') ? $output .= '<a id="btn-more" class="remove-row" data-id="' . $topicdata->id . '"></a>' : '';
@@ -67,16 +92,18 @@ class HomeController extends Controller {
         echo $output;
     }
 
-    public function browse() {
+    public function browse(Request $request) {
+        if(empty($_REQUEST['namespace']) && session()->has('defaultNamespaceId')){
+            session()->forget('defaultNamespaceId');
+        }
         $topics = Camp::getBrowseTopic();
         $namespaces = Namespaces::all();
-
         return view('browse', compact('topics', 'namespaces'));
     }
 
     public function recusriveCampDisp($childs) {
         foreach ($childs as $child) {
-            echo "child --" . $child->title . "<br/>";
+             echo "child --" . $child->title . "<br/>";
             if (count($child->childrens($child->topic_num, $child->camp_num)) > 0) {
                 $this->recusriveCampDisp($child->childrens($child->topic_num, $child->camp_num));
             }

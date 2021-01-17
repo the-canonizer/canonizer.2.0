@@ -7,7 +7,7 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <title>Canonizer Admin</title>
 
-        <link rel="shortcut icon" href="img/favicon.ico" >
+        <!-- <link rel="shortcut icon" href="img/favicon.ico" > -->
         <!-- Bootstrap core CSS-->
         <link href="{{ URL::asset('/css/bootstrap.min.css') }}" rel="stylesheet">
         <!-- Custom fonts for this template-->

@@ -15,7 +15,7 @@
 									<fieldset>
 										<div class="form-group">
 											<label>Namespace Name ( Limit 100 Chars ) <span style="color:red">*</span></label>
-											<input name="name" onkeydown="restrictTextField(event,100)" class="form-control" placeholder="Namespace name" value="{{ $namespace->name }}" type="text">
+											<input name="name" onkeydown="restrictTextField(event,100)" class="form-control" placeholder="Namespace name" value="{{ $errors->has('name') ? old('name') : $namespace->name }}" type="text">
 											 @if ($errors->has('name')) <p class="help-block">{{ $errors->first('name') }}</p> @endif
 										</div>
 										<div class="form-group">
@@ -23,6 +23,11 @@
 											<select name="parent_id" class="form-control">
                                                 <option value="0">-- No Parent -- </option>
                                                 @foreach($namespaces as $nm)
+                                                <?php 
+                                                	if($nm->id == $namespace->id){
+                                                		continue;
+                                                	}
+                                                ?>
                                                     <option value="{{$nm->id}}" @if($namespace->parent_id==$nm->id) selected @endif>{{$nm->name}}</option>
                                                 @endforeach
                                             </select>

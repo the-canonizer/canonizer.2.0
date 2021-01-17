@@ -34,6 +34,6 @@ class ThankToSubmitterMail extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.thanktosubmitter')->subject(config('app.mail_env').'Thank you for contributing to Canonizer.com');
+         return $this->markdown('emails.thanktosubmitter')->subject(config('app.mail_env').'Thank you for contributing to Canonizer.com');
     }
 }

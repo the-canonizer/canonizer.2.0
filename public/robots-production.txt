@@ -6,6 +6,7 @@ Allow:/blog/*
 Allow:/video/*
 
 User-agent: * 
+DIsallow: https://mail.canonizer.com/
 Disallow: /topic-*/*
 Disallow:/camp/*
 Disallow:/statement/*

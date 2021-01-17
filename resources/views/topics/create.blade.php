@@ -32,6 +32,7 @@
                 </select>
                  @if ($errors->has('nick_name')) <p class="help-block">{{ $errors->first('nick_name') }}</p> @endif
 				 <?php if(count($nickNames) == 0) { ?>
+           <p style="color:red" class="help-block">Note:You have not yet added a nick name. A public or private nick name must be added then selected here when contributing.</p>
 				 <a href="<?php echo url('settings/nickname');?>">Add New Nick Name </a>
 				 <?php } ?>
             </div> 
@@ -45,7 +46,7 @@
                 <select  onchange="selectNamespace(this)" name="namespace" id="namespace" class="form-control">
                     
                     @foreach($namespaces as $namespace)
-                    <option value="{{ $namespace->id }}" >{{$namespace->label}}</option>
+                    <option value="{{ $namespace->id }}" >{{namespace_label($namespace)}}</option>
                     @endforeach
                     <!-- <option value="other" @if(old('namespace') == 'other') selected @endif>Other</option> -->
                 </select>

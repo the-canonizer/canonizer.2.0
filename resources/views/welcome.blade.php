@@ -34,7 +34,7 @@
                   <h3>Canonized list for
                 <select onchange="changeNamespace(this)" id="namespace">
                     @foreach($namespaces as $namespace)
-                        <option data-namespace="{{ $namespace->label }}" value="{{ $namespace->id }}" {{ $namespace->id == session('defaultNamespaceId') ? 'selected' : ''}}>{{$namespace->label}}</option>
+                        <option data-namespace="{{ $namespace->name }}" value="{{ $namespace->id }}" {{ $namespace->id == session('defaultNamespaceId') ? 'selected' : ''}}>{{namespace_label($namespace)}}</option>
                     @endforeach
 
 
@@ -46,43 +46,50 @@
           <div class="tree col-sm-12">
                     <ul class="mainouter" id="load-data">
                       <?php $createCamp = 1;
+                        session(['topic_on_page' => 0]);
                        $as_of_time = time();
                         if (isset($_REQUEST['asof']) && $_REQUEST['asof'] == 'bydate') {
                             $as_of_time = strtotime($_REQUEST['asofdate']);
                         }else if(session()->has('asofDefault') && session('asofDefault') == 'bydate' && !isset($_REQUEST['asof'])){
                             $as_of_time = strtotime(session('asofdateDefault'));
                         }
+                        session(['topic_on_page' => 0]);
                         ?>
                        @foreach($topics as $k=>$topic)
 
                        <?php
+
                         $topicData = \App\Model\Topic::where('topic_num','=',$topic->topic_num)->where('go_live_time', '<=', $as_of_time)->latest('submit_time')->get();
+                        $campData = \App\Model\Camp::where('topic_num',$topic->topic_num)->where('camp_num',$topic->camp_num)->where('go_live_time', '<=', $as_of_time)->latest('submit_time')->first();
                         $topic_name_space_id = isset($topicData[0]) ? $topicData[0]->namespace_id:1;
                         $topic_name = isset($topicData[0]) ? $topicData[0]->topic_name:'';
                         $request_namesapce = session('defaultNamespaceId', 1); 
-                        if($topic_name_space_id !='' && $topic_name_space_id != $request_namesapce){
-                            continue;
-                        }else if(isset($topic_name) && trim($topic_name) ==''){
-                          continue;
-                        }
+                        // if($topic_name_space_id !='' && $topic_name_space_id != $request_namesapce){
+                        //     continue;
+                        // }else if(isset($topic_name) && trim($topic_name) ==''){
+                        //   continue;
+                        // }
                         
                         $as_of_time = time();
                         if(isset($_REQUEST['asof']) && $_REQUEST['asof']=='date'){
                             $as_of_time = strtotime($_REQUEST['asofdate']);
-                        }
-
+                        } 
                        ?>
-                         {!! $topic->campTreeHtml($createCamp) !!}
+                         {!! $campData->campTreeHtml($createCamp) !!}
                          <?php $createCamp = 0;?>
                        @endforeach
-             <a id="btn-more" class="remove-row" data-id="{{ $topic->id }}"></a>
+                    <a id="btn-more" class="remove-row" data-id="{{ $topic->id }}"></a>
 
                     </ul>
-                    <!--<button style="background: blue;color: white; cursor:pointer" name="load_more" id="loadtopic">Load All Topics</button>-->
+                    @if(session('topic_on_page') >=20)
+                     <p>There are no topics on this page, given the current algorithm and filter setting.</p>
+                    @endif
+                    {!! $topics->links() !!}
                 </div>
         @else
          <h6 style="margin-left:30px;"> No topic available.</h6>
                 @endif
+              
               </div>
             </div>
 
@@ -103,6 +110,7 @@
 </div>  <!-- /.right-whitePnl-->
 
 <script>
+<?php  $page_no = isset($_REQUEST['page']) ? $_REQUEST['page'] : 1;  ?>
 var request = false;
 var offset = '<?php echo config('app.front_page_limit'); ?>';
    $('#loadtopic').click(function(e){
@@ -148,13 +156,17 @@ function changeNamespace(element){
         type:"POST",
         data:{namespace:$(element).val()},
         success:function(response){
+            var pageNo= <?php echo $page_no; ?>;
+            if(pageNo > 1){
+              pageNo = 1;
+            }
             @if(env('APP_DEBUG'))
-                window.location.reload();
+                 window.location.href="{{ url('/') }}"+"?page="+pageNo;//window.location.reload();
             @else
             try{
-                window.location.href="{{ url('/') }}"+$(element).find('option:selected').attr('data-namespace');
+                window.location.href="{{ url('/') }}"+$(element).find('option:selected').attr('data-namespace')+"?page="+pageNo;
             }catch(err){
-                window.location.href="{{ url('/') }}";
+                window.location.href="{{ url('/') }}"+"?page="+pageNo;
             }
             @endif
         }

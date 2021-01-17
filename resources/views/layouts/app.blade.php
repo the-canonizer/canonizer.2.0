@@ -22,6 +22,7 @@
         <script src="{{ URL::asset('/js/jquery.min.js') }}"></script>
         <script src="{{ URL::asset('/js/jquery.min.js') }}"></script>
         <script src="{{ URL::asset('/js/jquery-ui/jquery-ui.js') }}"></script>
+        <script type="text/javascript" src="{{URL::asset('js/campoutline.js')}}"></script>
         <link href="{{ URL::asset('/js/jquery-ui/jquery-ui.css') }}" rel="stylesheet" type="text/css">
 
         <!--countdown timers -->
@@ -80,7 +81,7 @@
 
                         </div>
                         @else
-						<a class="nav-link guestLogin">Browsing as: Guest_31</a>
+						<a class="nav-link guestLogin">Browsing as: Guest</a>
                         <a class="nav-link" href="{{ url('/login')}}"><i class="fa fa-fw fa-user"></i> Log in</a>
                         <a class="nav-link" href="{{ url('/register')}}"><i class="fa fa-fw fa-user-plus"></i> Register </a>
                         @endif
@@ -143,7 +144,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url('/topic/132-Help/1')}}">
+                            <a class="nav-link" href="{{ url('/topic/132-Help/1-Agreement')}}">
                                 <span class="nav-link-text {{ (str_contains(Request::fullUrl(), '132-Help')) ? 'menu-active':''}}">Help</span>
                             </a>
                         </li>
@@ -202,7 +203,7 @@
                                         <option value="{{ $key }}" {{ session('defaultAlgo') == $key ? 'selected' : ''}}>{{$value}}</option>
                                     @endforeach
                                     </select>
-									<a href="<?php echo url('topic/53-Canonizer-Algorithms/1') ?>"><span>Algorithm Information</span></a>
+									<a href="<?php echo url('topic/53-Canonizer-Algorithms/1-Agreement') ?>"><span>Algorithm Information</span></a>
                                 </li>
 
                                 <li>
@@ -323,9 +324,11 @@ function restrictTextField(e,limitlength){
             
             $(".asofdate, #asofdate").change(function(){
 				// Do something interesting here
-				 var value = $('#asofdate').val();
+                var value = $('#asofdate').val();
                  var bydate = $("input[name='asof']:checked"). val();  
-                 if(value=="" && bydate == 'bydate') {
+
+                 if(value=="" && bydate == 'bydate') {                    
+                     $("#asofdate").removeAttr('disabled');
 					 $('#asofdate').focus();
                     return false;
 				 }else if(value !='' && bydate == 'bydate'){
