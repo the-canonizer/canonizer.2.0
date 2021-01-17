@@ -28,7 +28,7 @@
         <p><strong>Email : </strong>{{$user->email}}</p>
         @endif
         @if(!in_array('birthday',$privateFlags))
-        <p><strong>Birthday : </strong>{{$user->birthday}}</p>
+        <p><strong>Date Of Birth : </strong>{{$user->birthday}}</p>
         @endif
         @if(!in_array('address_1',$privateFlags))
         <p><strong>Address : </strong>{{$user->address_1}}</p>
@@ -40,7 +40,7 @@
         <p><strong>State : </strong>{{$user->state}}</p>
         @endif
         @if(!in_array('postal_code',$privateFlags))
-        <p><strong>Postal Code : </strong>{{$user->postal_code}}</p>
+        <p><strong>Zip Code : </strong>{{$user->postal_code}}</p>
         @endif
         @if(!in_array('country',$privateFlags))
         <p><strong>Country : </strong>{{$user->country}}</p>

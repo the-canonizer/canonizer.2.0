@@ -186,7 +186,8 @@ class SocialController extends Controller
 								$user = User::create([
 					                'first_name'    => $userSocial->getName(),
 					                'email'         => $user_email,
-					                'otp'			=> $authCode
+					                'otp'			=> $authCode,
+					                'status'		=> 0
 					            ]);
 					            $socialUser = SocialUser::create([
 					                'user_id'       => $user->id,

@@ -366,9 +366,8 @@ class SettingsController extends Controller
             $data = $request->all();
             $userNicknames = Nickname::personNicknameArray();
             $topic_num = $data['topic_num'];
-
             $mysupports = Support::where('topic_num', $topic_num)->whereIn('nick_name_id', $userNicknames)->where('end', '=', 0)->orderBy('support_order', 'ASC')->get();
-            if (isset($mysupports) && count($mysupports) > 0) {
+            if (isset($mysupports) && count($mysupports) > 0 && count($data['removed_camp']) > 0) {
                 foreach ($mysupports as $singleSupport) {
                     $singleSupport->end = time();
                     $singleSupport->save();
