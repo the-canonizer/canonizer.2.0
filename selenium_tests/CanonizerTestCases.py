@@ -237,7 +237,11 @@ testCases = {
     224: [critical, 'When user clicks on Canonizer logo,canonizer main page should be loaded.'],
     225: [critical, 'On Login page, when user click "Signup Now" link, User should see User Registration Page'],
     226: [critical, 'On Register page, when user click "Login here" link, User should see User Login Page'],
-    227: [critical, 'On Canonizer Main Page, when user goes to bottom of the page click on UP icon , User should reach to of the page']
+    227: [critical, 'On Canonizer Main Page, when user goes to bottom of the page click on UP icon , User should reach to of the page'],
+    228: [low, 'On Login OTP Verification page when user doesn\'t put OTP, User should see error message'],
+    229: [low, 'On Login OTP Verification page , All Mandatory Fields are marked with * Sign'],
+    230: [low, 'On Login OTP Verification page when user put invalid OTP, User should see error message'],
+    231: [low, 'In User Registration Page, When user doesn\'t put Captcha, user must see Error Message']
 
 }
 

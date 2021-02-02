@@ -82,7 +82,8 @@ class TestPages(unittest.TestCase):
             DEFAULT_LAST_NAME,
             DEFAULT_USER,
             DEFAULT_PASS,
-            DEFAULT_PASS)
+            DEFAULT_PASS,
+            '')
         self.assertIn("The first name field is required.", result)
 
     # 06
@@ -92,7 +93,8 @@ class TestPages(unittest.TestCase):
             DEFAULT_FIRST_NAME,
             DEFAULT_USER,
             DEFAULT_PASS,
-            DEFAULT_PASS)
+            DEFAULT_PASS,
+            '')
         self.assertIn("The last name field is required.", result)
 
     # 07
@@ -102,7 +104,8 @@ class TestPages(unittest.TestCase):
             DEFAULT_FIRST_NAME,
             DEFAULT_LAST_NAME,
             DEFAULT_PASS,
-            DEFAULT_PASS)
+            DEFAULT_PASS,
+            '')
         self.assertIn("The email field is required.", result)
 
     # 08
@@ -111,7 +114,8 @@ class TestPages(unittest.TestCase):
         result = CanonizerRegisterPage(self.driver).click_register_button().registration_with_blank_password(
             DEFAULT_FIRST_NAME,
             DEFAULT_LAST_NAME,
-            DEFAULT_USER)
+            DEFAULT_USER,
+            '')
         self.assertIn('The password field is required.', result)
 
     # 09
@@ -122,7 +126,8 @@ class TestPages(unittest.TestCase):
             DEFAULT_LAST_NAME,
             DEFAULT_USER,
             '12345',
-            '12345')
+            '12345',
+            '')
         self.assertIn('Password must be atleast 8 characters, including atleast one digit, one lower case letter and one special character(@,# !,$..)',result)
 
     # 10
@@ -133,7 +138,8 @@ class TestPages(unittest.TestCase):
             DEFAULT_LAST_NAME,
             DEFAULT_USER,
             'Test@1234567',
-            'Test@123456')
+            'Test@123456',
+            '')
         self.assertIn('The password confirmation does not match.', result)
 
     def test_what_is_canonizer_page_loaded_properly(self):
@@ -2067,6 +2073,44 @@ class TestPages(unittest.TestCase):
         print("\n" + str(test_cases(227)))
         self.login_to_canonizer_app()
         self.assertTrue(CanonizerMainPage(self.driver).check_scroll_to_top_click())
+
+    # 229
+    def test_login_with_blank_otp(self):
+        print("\n" + str(test_cases(228)))
+        # Click on the Login Page
+        CanonizerLoginPage(self.driver).click_login_page_button()
+        # Click on the Forgot Password link and put email as blank
+        result = CanonizerLoginPage(self.driver).request_otp_with_valid_user_email(DEFAULT_USER).login_with_blank_otp()
+        self.assertIn("Please enter OTP", result)
+
+    # 230
+    def test_login_otp_verification_page_mandatory_fields_are_marked_with_asterisk(self):
+        print("\n" + str(test_cases(229)))
+        # Click on the Login Page
+        CanonizerLoginPage(self.driver).click_login_page_button()
+        # Click on the Forgot Password link
+        self.assertTrue(CanonizerLoginPage(
+            self.driver).request_otp_with_valid_user_email(DEFAULT_USER).login_otp_verification_page_mandatory_fields_are_marked_with_asterisk())
+
+    # 231
+    def test_login_with_invalid_otp(self):
+        print("\n" + str(test_cases(230)))
+        # Click on the Login Page
+        CanonizerLoginPage(self.driver).click_login_page_button()
+        # Click on the Forgot Password link and put email as blank
+        result = CanonizerLoginPage(self.driver).request_otp_with_valid_user_email(DEFAULT_USER).login_with_invalid_otp(DEFAULT_INVALID_OTP)
+        self.assertIn("Error! Incorrect OTP Entered", result)
+
+    # 232
+    def test_registration_with_blank_captcha(self):
+        print("\n" + str(test_cases(231)))
+        result = CanonizerRegisterPage(self.driver).click_register_button().registration_with_blank_captcha(
+            DEFAULT_FIRST_NAME,
+            DEFAULT_LAST_NAME,
+            DEFAULT_USER,
+            DEFAULT_PASS,
+            DEFAULT_PASS)
+        self.assertIn("The captcha code field is required.", result)
 
     # ----- Open source Test Cases End -----
     def tearDown(self):

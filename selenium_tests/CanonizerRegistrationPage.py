@@ -41,6 +41,9 @@ class CanonizerRegisterPage(Page):
     def enter_confirm_password(self, confirmpassword):
         self.find_element(*RegistrationPageIdentifiers.CONFIRM_PASSWORD).send_keys(confirmpassword)
 
+    def enter_captcha(self, captcha):
+        self.find_element(*RegistrationPageIdentifiers.CAPTCHA).send_keys(captcha)
+
     def click_create_account_button(self):
         """
         This function clicks the Create Account Button
@@ -48,36 +51,37 @@ class CanonizerRegisterPage(Page):
         """
         self.find_element(*RegistrationPageIdentifiers.CREATE_ACCOUNT).click()
 
-    def register(self, firstname, lastname, email, password, confirmpassword):
+    def register(self, firstname, lastname, email, password, confirmpassword, captcha):
         self.enter_first_name(firstname)
         self.enter_last_name(lastname)
         self.enter_email(email)
         self.enter_password(password)
         self.enter_confirm_password(confirmpassword)
+        self.enter_captcha(captcha)
         self.click_create_account_button()
 
-    def registration_with_blank_first_name(self, lastname, email, password, confirmpassword):
-        self.register('', lastname, email, password, confirmpassword)
+    def registration_with_blank_first_name(self, lastname, email, password, confirmpassword, captcha):
+        self.register('', lastname, email, password, confirmpassword, captcha)
         return self.find_element(*RegistrationPageIdentifiers.ERROR_FIRST_NAME).text
 
-    def registration_with_blank_last_name(self, firstname, email, password, confirmpassword):
-        self.register(firstname, '', email, password, confirmpassword)
+    def registration_with_blank_last_name(self, firstname, email, password, confirmpassword, captcha):
+        self.register(firstname, '', email, password, confirmpassword, captcha)
         return self.find_element(*RegistrationPageIdentifiers.ERROR_LAST_NAME).text
 
-    def registration_with_blank_email(self, firstname, lastname, password, confirmpassword):
-        self.register(firstname, lastname, '', password, confirmpassword)
+    def registration_with_blank_email(self, firstname, lastname, password, confirmpassword, captcha):
+        self.register(firstname, lastname, '', password, confirmpassword, captcha)
         return self.find_element(*RegistrationPageIdentifiers.ERROR_EMAIL).text
 
-    def registration_with_blank_password(self, firstname, lastname, user):
-        self.register(firstname, lastname, user, '', '')
+    def registration_with_blank_password(self, firstname, lastname, user, captcha):
+        self.register(firstname, lastname, user, '', '', captcha)
         return self.find_element(*RegistrationPageIdentifiers.ERROR_PASSWORD).text
 
-    def registration_with_invalid_password_length(self, firstname, lastname, user, password, confirmpassword):
-        self.register(firstname, lastname, user, password, confirmpassword)
+    def registration_with_invalid_password_length(self, firstname, lastname, user, password, confirmpassword, captcha):
+        self.register(firstname, lastname, user, password, confirmpassword, captcha)
         return self.find_element(*RegistrationPageIdentifiers.ERROR_PASSWORD).text
 
-    def registration_with_different_confirmation_password(self, firstname, lastname, user, password, confirmpassword):
-        self.register(firstname, lastname, user, password, confirmpassword)
+    def registration_with_different_confirmation_password(self, firstname, lastname, user, password, confirmpassword, captcha):
+        self.register(firstname, lastname, user, password, confirmpassword, captcha)
         return self.find_element(*RegistrationPageIdentifiers.ERROR_PASSWORD).text
 
     def registration_should_have_login_option_for_existing_users(self):
@@ -97,12 +101,12 @@ class CanonizerRegisterPage(Page):
             self.find_element(*RegistrationPageIdentifiers.PASSWORD_ASTRK) and \
             self.find_element(*RegistrationPageIdentifiers.CNFM_PSSWD_ASTRK)
 
-    def registration_with_duplicate_email(self, firstname, lastname, email, password, confirmpassword):
-        self.register(firstname, lastname, email, password, confirmpassword)
+    def registration_with_duplicate_email(self, firstname, lastname, email, password, confirmpassword, captcha):
+        self.register(firstname, lastname, email, password, confirmpassword, captcha)
         return self.find_element(*RegistrationPageIdentifiers.ERROR_DUPLICATE_EMAIL).text
 
-    def registration_with_blank_spaces_first_name(self, firstname, lastname, email, password, confirmpassword):
-        self.register(firstname, lastname, email, password, confirmpassword)
+    def registration_with_blank_spaces_first_name(self, firstname, lastname, email, password, confirmpassword, captcha):
+        self.register(firstname, lastname, email, password, confirmpassword, captcha)
         return self.find_element(*RegistrationPageIdentifiers.ERROR_FIRST_NAME).text
 
     def check_login_page_open_click_login_here_link(self):
@@ -110,6 +114,11 @@ class CanonizerRegisterPage(Page):
         self.hover(*RegistrationPageIdentifiers.LOGINOPTION)
         self.find_element(*RegistrationPageIdentifiers.LOGINOPTION).click()
         return CanonizerRegisterPage(self.driver)
+
+    def registration_with_blank_captcha(self, firstname, lastname, email, password, confirmpassword):
+        self.register(firstname, lastname, email, password, confirmpassword, '')
+        return self.find_element(*RegistrationPageIdentifiers.ERROR_CAPTCHA).text
+
 
 
 

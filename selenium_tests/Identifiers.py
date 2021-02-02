@@ -71,6 +71,7 @@ class LoginOTPVerificationIdentifiers(object):
     OTP = (By.ID, 'otp')
     SUBMIT = (By.ID, 'submit')
     ERROR_OTP = (By.XPATH, '/html/body/div/div[2]/div/form/div/p')
+    ERROR_INVALID_OTP = (By.XPATH, '/html/body/div/div[2]')
     OTP_ASTRK = (By.XPATH, '/html/body/div/div[2]/div/form/div/label/span')
 
 
@@ -97,6 +98,8 @@ class RegistrationPageIdentifiers(object):
     ERROR_EMAIL      = (By.XPATH, '/html/body/div[1]/div[2]/div/form/div[4]/p')
     ERROR_PASSWORD   = (By.XPATH, '/html/body/div[1]/div[2]/div/form/div[5]/p')
     ERROR_DUPLICATE_EMAIL = (By.XPATH, '/html/body/div/div[2]/div[1]/form/div[4]/p')
+    CAPTCHA = (By.ID, 'CaptchaCode')
+    ERROR_CAPTCHA = (By.XPATH, '/html/body/div/div[2]/div[1]/form/div[7]/p')
 
 
 class WhatIsCanonizerPageIdentifiers(object):

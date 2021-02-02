@@ -16,8 +16,8 @@ if platform.system() == 'Darwin':
     DEFAULT_BINARY_LOCATION = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
     DEFAULT_CHROME_DRIVER_LOCATION = os.getcwd() + "/Webdrivers/chromedriver_mac"
 elif platform.system() == 'Windows':
-    DEFAULT_BINARY_LOCATION = "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe"
-    #DEFAULT_BINARY_LOCATION = "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"
+    #DEFAULT_BINARY_LOCATION = "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe"
+    DEFAULT_BINARY_LOCATION = "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"
 
     DEFAULT_CHROME_DRIVER_LOCATION = os.getcwd() + "/Webdrivers/chromedriver"
 elif platform.system() == 'Linux':
@@ -35,6 +35,7 @@ DEFAULT_INVALID_USER = "invaliduser@gmail.com"
 DEFAULT_INVALID_PASSWORD = "invalid_password"
 DEFAULT_INVALID_PHONE_NUMBER = "1234567890"
 DEFAULT_VALID_PHONE_NUMBER = ""
+DEFAULT_INVALID_OTP = "123456789"
 
 # Registration Page Configuration Parameters
 DEFAULT_FIRST_NAME = "Rupali"

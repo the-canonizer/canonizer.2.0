@@ -171,7 +171,7 @@ class CanonizerLoginPage(Page):
 
     def login_with_invalid_otp(self, otp):
         self.click_submit_otp(otp)
-        return self.find_element(*LoginOTPVerificationIdentifiers.ERROR_OTP).text
+        return self.find_element(*LoginOTPVerificationIdentifiers.ERROR_INVALID_OTP).text
 
     def login_otp_verification_page_mandatory_fields_are_marked_with_asterisk(self):
         """
@@ -183,7 +183,7 @@ class CanonizerLoginPage(Page):
             self.find_element(*LoginOTPVerificationIdentifiers.OTP_ASTRK)
 
     def login_with_blank_otp(self):
-        self.submit_otp('')
+        self.click_submit_otp('')
         return self.find_element(*LoginOTPVerificationIdentifiers.ERROR_OTP).text
 
     def check_register_page_open_click_signup_now_link(self):
