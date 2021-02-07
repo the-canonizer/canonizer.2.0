@@ -1,5 +1,5 @@
  @component('mail::message')
- Hi {{ $user->first_name }} {{ $user->last_name }},<br/>
+ Hello {{ $user->first_name }} {{ $user->last_name }},<br/>
 <p>
  
 {{ $data['nick_name'] }} has proposed a change to this {{$data['type']}}<a href="{{ url('/') . '/' . $link }}">{{ $data['object']}} </a> which you currently {{(isset($data['subscriber']) && $data['subscriber'] == 1) ? 'subscribed' :'directly support'}}.  If no supporters of this {{$data['typeobject']}} object to this change, it will go live in {{ config('app.go_live_text') }}.

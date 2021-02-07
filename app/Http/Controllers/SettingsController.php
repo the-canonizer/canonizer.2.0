@@ -302,7 +302,7 @@ class SettingsController extends Controller
                 if (count($childSupport) == 1) {
                     foreach ($childSupport as $child)
                         if ($child->camp_num == $campnum) {
-                            //Session::flash('warning', "You are already supporting this camp. You cant submit support again.");
+                            // Session::flash('warning', "You are already supporting this camp. You cant submit support again.");
                             Session::flash('confirm', 'samecamp');
                         } else {
                             Session::flash('warning', 'The following  camp is child camp to "' . $onecamp->camp_name . '" and will be removed if you commit this support.');
@@ -364,32 +364,46 @@ class SettingsController extends Controller
            
             /* Enter support record to support table */
             $data = $request->all();
+             
             $userNicknames = Nickname::personNicknameArray();
             $topic_num = $data['topic_num'];
+            $mysupportArray = [];
             $mysupports = Support::where('topic_num', $topic_num)->whereIn('nick_name_id', $userNicknames)->where('end', '=', 0)->orderBy('support_order', 'ASC')->get();
+            if(isset($mysupports) && count($mysupports) > 0){
+                foreach ($mysupports as $spp){
+                    $mysupportArray[] =  $spp->camp_num;
+                }
+            }
             if (isset($mysupports) && count($mysupports) > 0 && count($data['removed_camp']) > 0) {
+
                 foreach ($mysupports as $singleSupport) {
-                    $singleSupport->end = time();
-                    $singleSupport->save();
-                    $mailData = $data;
-                    $mailData['camp_num'] = $singleSupport->camp_num;
-                    /* send support deleted mail to all supporter and subscribers */
-                    $this->emailForSupportDeleted($mailData);
+                    if(in_array($singleSupport->camp_num,$data['removed_camp'])){
+                        $singleSupport->end = time();
+                        $singleSupport->save();
+                        $mailData = $data;
+                        $mailData['camp_num'] = $singleSupport->camp_num;
+                        /* send support deleted mail to all supporter and subscribers */
+                        $this->emailForSupportDeleted($mailData); 
+                    }
                 }
                 
             }
             
             $last_camp =  $data['camp_num'];
+            $newcamp_mail_flag = false;
             if (isset($data['support_order'])) {
                 foreach ($data['support_order'] as $camp_num => $support_order) {
                     $last_camp = $camp_num;
+                    if(!in_array($camp_num,$mysupportArray)){
+                        $newcamp_mail_flag = true;
+                        $data['camp_num'] = $camp_num;
+                    }
                     $supportTopic = new Support();
                     $supportTopic->topic_num = $topic_num;
                     $supportTopic->nick_name_id = $data['nick_name'];
                     $supportTopic->delegate_nick_name_id = $data['delegate_nick_name_id'];
                     $supportTopic->start = time();
                     $supportTopic->camp_num = $camp_num;
-
                     $supportTopic->support_order = $support_order;
                     $supportTopic->save();
 
@@ -400,7 +414,9 @@ class SettingsController extends Controller
                     session()->forget("topic-support-tree-{$topic_num}");
                 }
                 /* send support added mail to all supporter and subscribers */
-                $this->emailForSupportAdded($data);
+                if($newcamp_mail_flag){
+                    $this->emailForSupportAdded($data);   
+                }
             }
             if ($last_camp == $data['camp_num']) {
                 Session::flash('confirm', "samecamp");
@@ -410,7 +426,6 @@ class SettingsController extends Controller
             if (isset($data['delegate_nick_name_id']) && $data['delegate_nick_name_id'] != 0) {
                 $parentUser = Nickname::getUserByNickName($data['delegate_nick_name_id']);
                 $nickName = Nickname::getNickName($data['nick_name']);
-                // $topic = Camp::where('topic_num', $data['topic_num'])->where('camp_name', '=', 'Agreement')->latest('submit_time')->first();
                 $topic = Camp::getAgreementTopic($data['topic_num'],['nofilter'=>true]);
                 $camp = Camp::where('topic_num', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('go_live_time', '<=', time())->latest('submit_time')->first();
                 $result['topic_num'] = $data['topic_num'];
@@ -423,16 +438,11 @@ class SettingsController extends Controller
                 $subscribers = Camp::getCampSubscribers($data['topic_num'], $data['camp_num']);
                 $directSupporter = Support::getAllDirectSupporters($data['topic_num'], $data['camp_num']);
                 $this->mailParentDelegetedUser($data,$link,$result,$subscribers);
-                //$receiver = (config('app.env') == "production") ? $parentUser->email : config('app.admin_email');
-                //Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new NewDelegatedSupporterMail($parentUser, $link, $result));
                 $result['subject'] = $nickName->nick_name . " has just delegated their support to " . $parentUser->first_name . " " . $parentUser->last_name;
                 $result['delegated_user'] = $parentUser->first_name . " " . $parentUser->last_name;
                 $this->mailSubscribersAndSupporters($directSupporter,$subscribers, $link, $result);
-                //$this->mailSubscribers($subscribers, $link, $result,$alreadyMailed); 
-                /* end of email */
             }
             Session::flash('success', "Your support update has been submitted successfully.");
-            // return redirect('support/' . $data['topic_num'] . '/' . $data['camp_num']);
             return redirect(\App\Model\Camp::getTopicCampUrl($data['topic_num'],session('campnum')));
         } else {
             return redirect()->route('login');

@@ -1,5 +1,5 @@
 @component('mail::message')
-Hi {{ $user->first_name }} {{ $user->last_name }}, <br/>
+Hello {{ $user->first_name }} {{ $user->last_name }}, <br/>
 
 <p>
     {{ $data['nick_name']->nick_name }} has created the new thread
