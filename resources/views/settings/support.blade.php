@@ -98,7 +98,7 @@
 				
 				?>
                 @if(count($supportedTopic))
-                   
+                   <?php echo "<pre>"; print_r($supportedTopic); die;?>
                    <div class="SpCmpHd"><b>Your supporting camps list for topic "{{ $supportedTopic->topic->topic_name}}"</b></div>
                		<div class="row" style="min-height:120px">
 					@if(Session::has('confirm') && Session::get('confirm') == 'samecamp')
