@@ -138,11 +138,11 @@
                      </div>					  
                     @else  				
 					
-                   <?php echo "i m here"; die; ?>
-					<!-- <div class="col-sm-6">
+                   <?php //echo "i m here"; die; ?>
+					<div class="col-sm-6">
 					 <div class="row column">
                        <?php $key = 0; 
-                       //$topicSupport = $supportedTopic->topic->Getsupports($supportedTopic->topic_num,[$supportedTopic->nick_name_id]);
+                        $topicSupport = $supportedTopic->topic->Getsupports($supportedTopic->topic_num,[$supportedTopic->nick_name_id]);
 
                        ?>
 					   @foreach($topicSupport as $k=>$support)
@@ -158,7 +158,7 @@
                             <b><span class="support_order">{{ $support->support_order }} </span> . {{ $support->camp->camp_name }} </b><br/>
                              
                         
-							<?php //if(isset($topic->topic_num) && $topic->topic_num==$supportedTopic->topic_num) $lastsupportOrder++;
+							<?php if(isset($topic->topic_num) && $topic->topic_num==$supportedTopic->topic_num) $lastsupportOrder++;
 								
 							?>
 							<span class="remove_camp">X</span>
@@ -166,7 +166,7 @@
                            </div>
 					  </div>
                        @endif					  
-					   @endforeach -->
+					   @endforeach
 					  
 				  @if(Session::get('confirm') !='samecamp') 
 					   <!-- current supporting camp detail -->
