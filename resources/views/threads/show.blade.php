@@ -11,12 +11,21 @@
                
             </b>
         </h3>
+        <?php
+            $topic = App\Model\Topic::where('topic_num','=',$threads->topic_id)->first();
+            $namespace_id = 1;
+            if(isset($topic->topic_num)){
+                $namespace_id = $topic->namespace_id;
+            }
+           $userUrl = route('user_supports',$threads->creator->id)."?topicnum=".$threads->topic_id."&campnum=".$threads->camp_id."&namespace=".$namespace_id."#camp_".$threads->topic_id."_".$threads->camp_id;
+        ?>
         <h3><b>Camp:</b>
                     @php
                         echo $parentcamp
                     @endphp
                      <hr/>
-                     <a href="#">{{ $threads->creator->nick_name }}
+                     
+                     <a href="{{$userUrl}}">{{ $threads->creator->nick_name }}
                     </a> started this thread : "{{ $threads->title }}"
                 </h3>
         
@@ -30,7 +39,7 @@
                 <div class="panel panel-default">
                    <div class="panel-body">
                         <span> Thread Created at {{ date('d-m-Y', strtotime($threads->created_at))}}
-                            by <a href="#"> {{ $threads->creator->nick_name }} </a>
+                            by <a href="{{$userUrl}}"> {{ $threads->creator->nick_name }} </a>
                         </span><br />
 
                         <span>
