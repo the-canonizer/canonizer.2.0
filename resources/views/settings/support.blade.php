@@ -10,7 +10,7 @@
 @endif
 @if(Session::has('confirm') && Session::get('confirm') =='samecamp')
 <div class="alert alert-danger">
-    <strong>Warning! </strong>You are already supporting this camp. You cant submit support again.
+    <strong>Warning! </strong>You are already supporting this camp. You can't submit support again.
 </div>
 	
 @endif

@@ -41,14 +41,15 @@ class SettingsController extends Controller
         $input = $request->all();
         $id = (isset($_GET['id'])) ? $_GET['id'] : '';
         $private_flags = array();
-
-        //echo "<pre>"; print_r($input); die;
+        
         $messages = [
             'first_name.required' => 'First name is required.',
             'last_name.required' => 'Last name is required.',
-           // 'country.required' => 'Country is required.'
+            'first_name.regex' => 'First name must be in letters only',
+            'middle_name.regex' => 'Middle name must be in letters only',
+            'last_name.regex' => 'Last name must be in letters only'
         ];
-
+        
 
         $validator = Validator::make($request->all(), [
             'first_name' => 'required|regex:/^[a-zA-Z ]*$/|string|max:100',
@@ -270,7 +271,7 @@ class SettingsController extends Controller
                     $userFromNickname = $nickName->getUser();
                     Session::flash('warningDelegate', "You have already delegated your support for this camp to user ".$userFromNickname->first_name." ".$userFromNickname->last_name.". If you continue your delegated support will be removed.");
                 }
-                //Session::flash('warning', "You have already supported this camp, you cant submit your support again.");
+                //Session::flash('warning', "You have already supported this camp, you can't submit your support again.");
                 // return redirect()->back();
             }
 
@@ -283,7 +284,7 @@ class SettingsController extends Controller
                 if (count($parentSupport) == 1) {
                     foreach ($parentSupport as $parent)
                         if ($parent->camp_num == $campnum) {
-                            //Session::flash('warning', "You are already supporting this camp. You cant submit support again.");
+                            //Session::flash('warning', "You are already supporting this camp. You can't submit support again.");
                             Session::flash('confirm', 'samecamp');
                         } else {
                             Session::flash('warning', 'The following  camp is parent camp to "' . $onecamp->camp_name . '" and will be removed if you commit this support.');
