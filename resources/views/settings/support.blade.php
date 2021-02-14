@@ -98,6 +98,7 @@
 				
 				?>
                 @if(count($supportedTopic))
+                   <?php echo "i m here"; die; ?>
                    
                    <div class="SpCmpHd"><b>Your supporting camps list for topic "{{ $supportedTopic->topic->topic_name}}"</b></div>
                		<div class="row" style="min-height:120px">
