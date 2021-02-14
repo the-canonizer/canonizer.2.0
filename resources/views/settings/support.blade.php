@@ -125,7 +125,7 @@
                             <b><span class="support_order"> {{ $support->support_order }} </span> . {{ $camp->camp_name }} </b><br/>
                              
                         
-							<?php if(isset($topic->topic_num) && isset($supportedTopic->topic_num) && $topic->topic_num==$supportedTopic->topic_num) $lastsupportOrder++;
+							<?php if(isset($topic->topic_num) && $topic->topic_num==$supportedTopic->topic_num) $lastsupportOrder++;
 								
 							?>
 							<span class="remove_camp">X</span>
@@ -138,11 +138,9 @@
                      </div>					  
                     @else  				
 					
-                   <?php //echo "i m here"; die; ?>
 					<div class="col-sm-6">
 					 <div class="row column">
-                       <?php $key = 0; 
-                        $topicSupport = $supportedTopic->topic->Getsupports($supportedTopic->topic_num,[$supportedTopic->nick_name_id]);
+                       <?php $key = 0; $topicSupport = $supportedTopic->topic->Getsupports($supportedTopic->topic_num,[$supportedTopic->nick_name_id]);
 
                        ?>
 					   @foreach($topicSupport as $k=>$support)
@@ -288,6 +286,13 @@
                         cursor: 'move',
                         opacity: 0.6,
                         update: function(event, ui) {
+                           /* $.post('{{ route("settings.support-reorder") }}', $(this).sortable('serialize')+"&_token={{ csrf_token() }}&topicnum={{ $supportedTopic->topic_num }}", function(data) {
+                                
+                                if(!data.success) {
+                                    alert('Whoops, something went wrong :/');
+                                }
+                                
+                        }, 'json');*/
                         $( ".column" ).find('.support-sorter-element').each(function(i,v){
                                 $(v).find('.support_order').text(i+1);
 								$(v).find('.final_support_order').val(i+1);
