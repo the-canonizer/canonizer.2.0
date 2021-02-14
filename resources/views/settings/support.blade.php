@@ -101,14 +101,14 @@
                 @if(isset($supportedTopic) && isset($supportedTopic->topic_num) && count($supportedTopic))
                    <div class="SpCmpHd"><b>Your supporting camps list for topic "{{ $supportedTopic->topic->topic_name}}"</b></div>
                		<div class="row" style="min-height:120px">
-               		<?php $k = 0; $topicSupport = $supportedTopic->topic->Getsupports($supportedTopic->topic_num,[$supportedTopic->nick_name_id]);
-
-                       ?>	
+               			
 					@if(Session::has('confirm') && Session::get('confirm') == 'samecamp')
 					
 					 <div class="col-sm-6">
 					<div class="row column">
-					
+					<?php $k = 0; $topicSupport = $supportedTopic->topic->Getsupports($supportedTopic->topic_num,[$supportedTopic->nick_name_id]);
+
+                       ?>
                        
 					   @foreach($topicSupport as $k=>$support)
 					   <?php 
@@ -141,7 +141,7 @@
 					
 					<div class="col-sm-6">
 					 <div class="row column">
-                       <?php //$key = 0; $topicSupport = $supportedTopic->topic->Getsupports($supportedTopic->topic_num,[$supportedTopic->nick_name_id]);
+                       <?php $key = 0; $topicSupport = $supportedTopic->topic->Getsupports($supportedTopic->topic_num,[$supportedTopic->nick_name_id]);
 
                        ?>
 					   @foreach($topicSupport as $k=>$support)
