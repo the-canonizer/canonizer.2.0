@@ -98,7 +98,6 @@
 				
 				?>
                 @if(count($supportedTopic))
-                   <?php echo "i m here"; die; ?>
                    
                    <div class="SpCmpHd"><b>Your supporting camps list for topic "{{ $supportedTopic->topic->topic_name}}"</b></div>
                		<div class="row" style="min-height:120px">
@@ -139,6 +138,7 @@
                      </div>					  
                     @else  				
 					
+                   <?php echo "i m here"; die; ?>
 					<!-- <div class="col-sm-6">
 					 <div class="row column">
                        <?php $key = 0; 
@@ -288,13 +288,6 @@
                         cursor: 'move',
                         opacity: 0.6,
                         update: function(event, ui) {
-                           /* $.post('{{ route("settings.support-reorder") }}', $(this).sortable('serialize')+"&_token={{ csrf_token() }}&topicnum={{ $supportedTopic->topic_num }}", function(data) {
-                                
-                                if(!data.success) {
-                                    alert('Whoops, something went wrong :/');
-                                }
-                                
-                        }, 'json');*/
                         $( ".column" ).find('.support-sorter-element').each(function(i,v){
                                 $(v).find('.support_order').text(i+1);
 								$(v).find('.final_support_order').val(i+1);
