@@ -374,7 +374,7 @@ class SettingsController extends Controller
                     $mysupportArray[] =  $spp->camp_num;
                 }
             }
-            if (isset($mysupports) && count($mysupports) > 0 && count($data['removed_camp']) > 0) {
+            if (isset($mysupports) && count($mysupports) > 0 && isset($data['removed_camp']) && count($data['removed_camp']) > 0) {
 
                 foreach ($mysupports as $singleSupport) {
                     if(in_array($singleSupport->camp_num,$data['removed_camp'])){
