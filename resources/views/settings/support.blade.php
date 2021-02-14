@@ -97,8 +97,9 @@
 		        <?php $lastsupportOrder = 0;
 				
 				?>
-                @if(count($supportedTopic))
+				
                    <?php echo "<pre>"; print_r($supportedTopic); die;?>
+                @if(count($supportedTopic))
                    <div class="SpCmpHd"><b>Your supporting camps list for topic "{{ $supportedTopic->topic->topic_name}}"</b></div>
                		<div class="row" style="min-height:120px">
                		<?php $k = 0; $topicSupport = $supportedTopic->topic->Getsupports($supportedTopic->topic_num,[$supportedTopic->nick_name_id]);
