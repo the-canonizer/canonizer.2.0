@@ -125,7 +125,7 @@
                             <b><span class="support_order"> {{ $support->support_order }} </span> . {{ $camp->camp_name }} </b><br/>
                              
                         
-							<?php if(isset($topic->topic_num) && $topic->topic_num==$supportedTopic->topic_num) $lastsupportOrder++;
+							<?php if(isset($topic->topic_num) && isset($supportedTopic->topic_num) &&  $topic->topic_num==$supportedTopic->topic_num) $lastsupportOrder++;
 								
 							?>
 							<span class="remove_camp">X</span>
@@ -156,7 +156,7 @@
                             <b><span class="support_order">{{ $support->support_order }} </span> . {{ $support->camp->camp_name }} </b><br/>
                              
                         
-							<?php if(isset($topic->topic_num) && $topic->topic_num==$supportedTopic->topic_num) $lastsupportOrder++;
+							<?php if(isset($topic->topic_num) && isset($supportedTopic->topic_num) &&  $topic->topic_num==$supportedTopic->topic_num) $lastsupportOrder++;
 								
 							?>
 							<span class="remove_camp">X</span>
