@@ -418,6 +418,7 @@ class Camp extends Model {
         }
     }
 
+
     public static function getLiveCamp($topicnum, $campnum, $filter = array()) {
         if ((!isset($_REQUEST['asof']) && !session()->has('asofDefault')) || (isset($_REQUEST['asof']) && $_REQUEST['asof'] == "default")  || (session()->has('asofDefault') && session('asofDefault') == 'default' && !isset($_REQUEST['asof']))) {
 
@@ -789,14 +790,8 @@ class Camp extends Model {
         
     }
     public static function getSeoBasedUrlPortion($topic_num,$camp_num){
-        $as_of_time = time();
-        if (isset($_REQUEST['asof']) && $_REQUEST['asof'] == 'bydate') {
-            $as_of_time = strtotime($_REQUEST['asofdate']);
-        }else if(session()->has('asofDefault') && session('asofDefault') == 'bydate' && !isset($_REQUEST['asof'])){
-            $as_of_time = strtotime(session('asofdateDefault'));
-        }
-        $topic =  \App\Model\Topic::where('topic_num','=',$topic_num)->where('go_live_time', '<=', $as_of_time)->latest('submit_time')->first();
-        $camp = self::where('topic_num','=',$topic_num)->where('camp_num','=',$camp_num)->where('go_live_time', '<=', $as_of_time)->latest('submit_time')->first();
+        $topic = \App\Model\Topic::getLiveTopic($topic_num,['nofilter'=>true]);
+        $camp = self::getLiveCamp($topic_num,$camp_num,['nofilter'=>true]);
         $topic_name = '';
         $camp_name = '';
         if($topic && isset($topic->topic_name)){
