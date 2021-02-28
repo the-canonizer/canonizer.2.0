@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
 <div class="page-titlePnl">
-    <h1 class="page-title">Login One Time Password Verification</h1>
+    <h1 class="page-title">Login One Time Verification Code</h1>
 </div>       
 @if(Session::has('error'))
 <div class="alert alert-danger">
@@ -14,7 +14,7 @@
         <input type="hidden" name="_token" value="{{ csrf_token() }}">
         <input type="hidden" name="user" value="{{ $user }}">
        
-        <p style="color:red">Note : A One Time Password has been sent to your registered email address. </p>  
+        <p style="color:red">Note : One Time Verification Code has been sent to your registered email address. </p>  
         <div class="form-group">
             
             <label>One Time Verification Code <span style="color:red">*</span></label>

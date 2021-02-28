@@ -171,7 +171,7 @@ class SettingsController extends Controller
                     $user->mobile_verified = 0;
 
                     $user->update();
-                    Session::flash('otpsent', "Invalid verification code.");
+                    Session::flash('otpsent', "Invalid One Time Verification Code.");
                 }
             } else {
                 $six_digit_random_number = mt_rand(100000, 999999);

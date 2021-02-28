@@ -14,7 +14,7 @@
         <input type="hidden" name="_token" value="{{ csrf_token() }}">
         <input type="hidden" name="user" value="{{ $user }}">
        
-        <p style="color:red">Note : A One Time Password has been sent to your registered email address. </p>  
+        <p style="color:red">Note : One Time Verification Code has been sent to your registered email address. </p>  
         <div class="form-group">
 		    
             <label>One Time Verification Code <span style="color:red">*</span></label>
