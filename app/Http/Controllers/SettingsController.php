@@ -41,14 +41,15 @@ class SettingsController extends Controller
         $input = $request->all();
         $id = (isset($_GET['id'])) ? $_GET['id'] : '';
         $private_flags = array();
-
-        //echo "<pre>"; print_r($input); die;
+        
         $messages = [
             'first_name.required' => 'First name is required.',
             'last_name.required' => 'Last name is required.',
-           // 'country.required' => 'Country is required.'
+            'first_name.regex' => 'First name must be in letters only',
+            'middle_name.regex' => 'Middle name must be in letters only',
+            'last_name.regex' => 'Last name must be in letters only'
         ];
-
+        
 
         $validator = Validator::make($request->all(), [
             'first_name' => 'required|regex:/^[a-zA-Z ]*$/|string|max:100',
@@ -170,7 +171,7 @@ class SettingsController extends Controller
                     $user->mobile_verified = 0;
 
                     $user->update();
-                    Session::flash('otpsent', "Invalid verification code.");
+                    Session::flash('otpsent', "Invalid One Time Verification Code.");
                 }
             } else {
                 $six_digit_random_number = mt_rand(100000, 999999);
@@ -270,7 +271,7 @@ class SettingsController extends Controller
                     $userFromNickname = $nickName->getUser();
                     Session::flash('warningDelegate', "You have already delegated your support for this camp to user ".$userFromNickname->first_name." ".$userFromNickname->last_name.". If you continue your delegated support will be removed.");
                 }
-                //Session::flash('warning', "You have already supported this camp, you cant submit your support again.");
+                //Session::flash('warning', "You have already supported this camp, you can't submit your support again.");
                 // return redirect()->back();
             }
 
@@ -283,7 +284,7 @@ class SettingsController extends Controller
                 if (count($parentSupport) == 1) {
                     foreach ($parentSupport as $parent)
                         if ($parent->camp_num == $campnum) {
-                            //Session::flash('warning', "You are already supporting this camp. You cant submit support again.");
+                            //Session::flash('warning', "You are already supporting this camp. You can't submit support again.");
                             Session::flash('confirm', 'samecamp');
                         } else {
                             Session::flash('warning', 'The following  camp is parent camp to "' . $onecamp->camp_name . '" and will be removed if you commit this support.');
@@ -302,7 +303,7 @@ class SettingsController extends Controller
                 if (count($childSupport) == 1) {
                     foreach ($childSupport as $child)
                         if ($child->camp_num == $campnum) {
-                            //Session::flash('warning', "You are already supporting this camp. You cant submit support again.");
+                            // Session::flash('warning', "You are already supporting this camp. You cant submit support again.");
                             Session::flash('confirm', 'samecamp');
                         } else {
                             Session::flash('warning', 'The following  camp is child camp to "' . $onecamp->camp_name . '" and will be removed if you commit this support.');
@@ -364,33 +365,46 @@ class SettingsController extends Controller
            
             /* Enter support record to support table */
             $data = $request->all();
+             
             $userNicknames = Nickname::personNicknameArray();
             $topic_num = $data['topic_num'];
-
+            $mysupportArray = [];
             $mysupports = Support::where('topic_num', $topic_num)->whereIn('nick_name_id', $userNicknames)->where('end', '=', 0)->orderBy('support_order', 'ASC')->get();
-            if (isset($mysupports) && count($mysupports) > 0) {
+            if(isset($mysupports) && count($mysupports) > 0){
+                foreach ($mysupports as $spp){
+                    $mysupportArray[] =  $spp->camp_num;
+                }
+            }
+            if (isset($mysupports) && count($mysupports) > 0 && isset($data['removed_camp']) && count($data['removed_camp']) > 0) {
+
                 foreach ($mysupports as $singleSupport) {
-                    $singleSupport->end = time();
-                    $singleSupport->save();
-                    $mailData = $data;
-                    $mailData['camp_num'] = $singleSupport->camp_num;
-                    /* send support deleted mail to all supporter and subscribers */
-                    $this->emailForSupportDeleted($mailData);
+                    if(in_array($singleSupport->camp_num,$data['removed_camp'])){
+                        $singleSupport->end = time();
+                        $singleSupport->save();
+                        $mailData = $data;
+                        $mailData['camp_num'] = $singleSupport->camp_num;
+                        /* send support deleted mail to all supporter and subscribers */
+                        $this->emailForSupportDeleted($mailData); 
+                    }
                 }
                 
             }
             
             $last_camp =  $data['camp_num'];
+            $newcamp_mail_flag = false;
             if (isset($data['support_order'])) {
                 foreach ($data['support_order'] as $camp_num => $support_order) {
                     $last_camp = $camp_num;
+                    if(!in_array($camp_num,$mysupportArray)){
+                        $newcamp_mail_flag = true;
+                        $data['camp_num'] = $camp_num;
+                    }
                     $supportTopic = new Support();
                     $supportTopic->topic_num = $topic_num;
                     $supportTopic->nick_name_id = $data['nick_name'];
                     $supportTopic->delegate_nick_name_id = $data['delegate_nick_name_id'];
                     $supportTopic->start = time();
                     $supportTopic->camp_num = $camp_num;
-
                     $supportTopic->support_order = $support_order;
                     $supportTopic->save();
 
@@ -401,7 +415,9 @@ class SettingsController extends Controller
                     session()->forget("topic-support-tree-{$topic_num}");
                 }
                 /* send support added mail to all supporter and subscribers */
-                $this->emailForSupportAdded($data);
+                if($newcamp_mail_flag){
+                    $this->emailForSupportAdded($data);   
+                }
             }
             if ($last_camp == $data['camp_num']) {
                 Session::flash('confirm', "samecamp");
@@ -411,7 +427,6 @@ class SettingsController extends Controller
             if (isset($data['delegate_nick_name_id']) && $data['delegate_nick_name_id'] != 0) {
                 $parentUser = Nickname::getUserByNickName($data['delegate_nick_name_id']);
                 $nickName = Nickname::getNickName($data['nick_name']);
-                // $topic = Camp::where('topic_num', $data['topic_num'])->where('camp_name', '=', 'Agreement')->latest('submit_time')->first();
                 $topic = Camp::getAgreementTopic($data['topic_num'],['nofilter'=>true]);
                 $camp = Camp::where('topic_num', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('go_live_time', '<=', time())->latest('submit_time')->first();
                 $result['topic_num'] = $data['topic_num'];
@@ -424,16 +439,11 @@ class SettingsController extends Controller
                 $subscribers = Camp::getCampSubscribers($data['topic_num'], $data['camp_num']);
                 $directSupporter = Support::getAllDirectSupporters($data['topic_num'], $data['camp_num']);
                 $this->mailParentDelegetedUser($data,$link,$result,$subscribers);
-                //$receiver = (config('app.env') == "production") ? $parentUser->email : config('app.admin_email');
-                //Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new NewDelegatedSupporterMail($parentUser, $link, $result));
                 $result['subject'] = $nickName->nick_name . " has just delegated their support to " . $parentUser->first_name . " " . $parentUser->last_name;
                 $result['delegated_user'] = $parentUser->first_name . " " . $parentUser->last_name;
                 $this->mailSubscribersAndSupporters($directSupporter,$subscribers, $link, $result);
-                //$this->mailSubscribers($subscribers, $link, $result,$alreadyMailed); 
-                /* end of email */
             }
             Session::flash('success', "Your support update has been submitted successfully.");
-            // return redirect('support/' . $data['topic_num'] . '/' . $data['camp_num']);
             return redirect(\App\Model\Camp::getTopicCampUrl($data['topic_num'],session('campnum')));
         } else {
             return redirect()->route('login');

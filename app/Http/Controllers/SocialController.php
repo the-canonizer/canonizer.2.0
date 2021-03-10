@@ -30,9 +30,11 @@ class SocialController extends Controller
 	{
 
 		try{
-			if ((!$request->has('code') &&  $request->has('denied')) || ($request->has('error') && $request->has('error_description')) ) {
+			if ((!$request->has('code') &&  $request->has('denied')) || ($request->has('error') && $request->has('error_description')) || ($request->has('error_code') && $request->has('error_message')) ) {
        			 if($request->has('error') && $request->has('error_description')){
        			 	Session::flash('social_error', $request['error_description']);
+       			 }else if(($request->has('error_code') && $request->has('error_message'))){
+       			 	Session::flash('social_error', $request['error_message']);
        			 }else{
        			 	Session::flash('social_error', "Cancelled $provider login authentication");	
        			 }
@@ -186,7 +188,8 @@ class SocialController extends Controller
 								$user = User::create([
 					                'first_name'    => $userSocial->getName(),
 					                'email'         => $user_email,
-					                'otp'			=> $authCode
+					                'otp'			=> $authCode,
+					                'status'		=> 0
 					            ]);
 					            $socialUser = SocialUser::create([
 					                'user_id'       => $user->id,

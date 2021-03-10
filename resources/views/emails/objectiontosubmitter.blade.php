@@ -1,5 +1,5 @@
 @component('mail::message')
- Hi {{ $user->first_name }} {{ $user->last_name }},<br/>
+ Hello {{ $user->first_name }} {{ $user->last_name }},<br/>
 <p>{{ $data['nick_name'] }} has objected to your proposed change submitted for {{$data['type']}} <a href="{{ url('/').'/'.$link}}">{{ $data['object'] }} </a></p>
 @component('mail::button', ['url' => url('/') . '/' . $link])
 See this link for options you can take when there are objections:

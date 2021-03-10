@@ -220,12 +220,16 @@ class CThreadsController extends Controller
         $thread_flag = CThread::where('camp_id', $campnum)->
                                 where('topic_id', $topicid)->
                                 where('title', $request->{'title'})->get();
-
+        $messagesVal = [
+            'title.regex' => 'Title must only contain space and alphanumeric characters.',
+            'title.required' => 'Title is required.',
+            'nick_name.required' => 'Nickname is required.',
+        ];
         $this->validate(
             $request, [
                 'title'    => 'required|max:100|regex:/^[a-zA-Z0-9\s]+$/',
                 'nick_name' => 'required'
-            ]
+            ],$messagesVal
         );
 
         if (count($thread_flag) > 0) {

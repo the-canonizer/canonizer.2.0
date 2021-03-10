@@ -81,7 +81,7 @@
 
                         </div>
                         @else
-						<a class="nav-link guestLogin">Browsing as: Guest</a>
+						<a class="nav-link guestLogin" style="cursor:default;">Browsing as: Guest</a>
                         <a class="nav-link" href="{{ url('/login')}}"><i class="fa fa-fw fa-user"></i> Log in</a>
                         <a class="nav-link" href="{{ url('/register')}}"><i class="fa fa-fw fa-user-plus"></i> Register </a>
                         @endif

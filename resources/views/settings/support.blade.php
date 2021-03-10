@@ -8,6 +8,12 @@
     <strong>Warning! </strong>{{ Session::get('warning')}} 
 </div>
 @endif
+@if(Session::has('confirm') && Session::get('confirm') =='samecamp')
+<div class="alert alert-danger">
+    <strong>Warning! </strong>You are already supporting this camp. You can't submit support again.
+</div>
+	
+@endif
 @if(Session::has('warningDelegate'))
 <div class="alert alert-danger">
     <strong>Warning! </strong>{{ Session::get('warningDelegate')}} 
@@ -28,7 +34,7 @@
 					       $removedCampList[]=$supportData->camp->camp_num;
 					 ?>
  					  <div class="col-sm-12">   
-					   <div class="SpCmpBDY support-sorter-element ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
+					   <div class="SpCmpBDY column support-sorter-element ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
                             
 							
                             <b>{{ $supportData->support_order }}. {{ $supportData->camp->camp_name }}</b><br/>
@@ -91,17 +97,19 @@
 		        <?php $lastsupportOrder = 0;
 				
 				?>
-                @if(count($supportedTopic))
-                   
+
+                @if(isset($supportedTopic) && isset($supportedTopic->topic_num) && count($supportedTopic))
                    <div class="SpCmpHd"><b>Your supporting camps list for topic "{{ $supportedTopic->topic->topic_name}}"</b></div>
                		<div class="row" style="min-height:120px">
+               			
 					@if(Session::has('confirm') && Session::get('confirm') == 'samecamp')
+					
 					 <div class="col-sm-6">
 					<div class="row column">
-					
-                       <?php $k = 0; $topicSupport = $supportedTopic->topic->Getsupports($supportedTopic->topic_num,[$supportedTopic->nick_name_id]);
+					<?php $k = 0; $topicSupport = $supportedTopic->topic->Getsupports($supportedTopic->topic_num,[$supportedTopic->nick_name_id]);
 
                        ?>
+                       
 					   @foreach($topicSupport as $k=>$support)
 					   <?php 
 					   		
@@ -109,15 +117,8 @@
 					   ?>
 					  
                        <div class="col-sm-12">
-                            <div id="positions_{{ $support->support_id }}" class="SpCmpBDY support-sorter-element ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
-                            <!--<form action="{{ route('settings.support.delete')}}" id="support-{{$support->support_id}}" method="post">
-                                <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                <!--<input type="hidden" id="support_id_{{ $support->support_id }}" name="support_id" value="{{ $support->support_id }}">
-                                <input type="hidden" id="topic_num_{{ $support->support_id }}" name="topic_num" value="{{ $supportedTopic->topic_num }}">
-                                
-                                <input type="hidden" id="nick_name_id_{{ $support->support_id }}" name="nick_name_id" value="{{ $support->nick_name_id }}">
-                            <button type="submit" id="submit_{{ $support->support_id }}" class="btn-sptclose"><i class="fa fa-close"></i></button>
-                            </form> -->
+                            <div id="positions_{{ $support->support_id }}" class="SpCmpBDY column support-sorter-element ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
+                           
 							<input type="hidden" class="final_support_order" name="support_order[{{$support->camp->camp_num}}]" id="support_order_{{ $support->support_id }}" value="{{ $support->support_order  }}">
                                 
 							<input type="hidden" name="camp[{{$support->camp->camp_num}}]" value="{{ $support->camp->camp_num }}">
@@ -125,7 +126,7 @@
                             <b><span class="support_order"> {{ $support->support_order }} </span> . {{ $camp->camp_name }} </b><br/>
                              
                         
-							<?php if(isset($topic->topic_num) && $topic->topic_num==$supportedTopic->topic_num) $lastsupportOrder++;
+							<?php if(isset($topic->topic_num) && isset($supportedTopic->topic_num) &&  $topic->topic_num==$supportedTopic->topic_num) $lastsupportOrder++;
 								
 							?>
 							<span class="remove_camp">X</span>
@@ -140,7 +141,6 @@
 					
 					<div class="col-sm-6">
 					 <div class="row column">
-					 
                        <?php $key = 0; $topicSupport = $supportedTopic->topic->Getsupports($supportedTopic->topic_num,[$supportedTopic->nick_name_id]);
 
                        ?>
@@ -148,15 +148,8 @@
 					   
 					   @if(!in_array($support->camp->camp_num,$removedCampList)) <?php $key = $key + 1; ?>
                        <div class="col-sm-12">
-                            <div id="positions_{{ $support->support_id }}" class="SpCmpBDY support-sorter-element ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
-                            <!--<form action="{{ route('settings.support.delete')}}" id="support-{{$support->support_id}}" method="post">
-                                <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                <!--<input type="hidden" id="support_id_{{ $support->support_id }}" name="support_id" value="{{ $support->support_id }}">
-                                <input type="hidden" id="topic_num_{{ $support->support_id }}" name="topic_num" value="{{ $supportedTopic->topic_num }}">
-                                
-                                <input type="hidden" id="nick_name_id_{{ $support->support_id }}" name="nick_name_id" value="{{ $support->nick_name_id }}">
-                            <button type="submit" id="submit_{{ $support->support_id }}" class="btn-sptclose"><i class="fa fa-close"></i></button>
-                            </form> -->
+                            <div id="positions_{{ $support->support_id }}" class="SpCmpBDY column support-sorter-element ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
+                            
 							<input type="hidden" class="final_support_order" name="support_order[{{$support->camp->camp_num}}]" id="support_order_{{ $support->support_id }}" value="{{ $key  }}">
                                 
 							<input type="hidden" name="camp[{{$support->camp->camp_num}}]" value="{{ $support->camp->camp_num }}">
@@ -164,7 +157,7 @@
                             <b><span class="support_order">{{ $support->support_order }} </span> . {{ $support->camp->camp_name }} </b><br/>
                              
                         
-							<?php if(isset($topic->topic_num) && $topic->topic_num==$supportedTopic->topic_num) $lastsupportOrder++;
+							<?php if(isset($topic->topic_num) && isset($supportedTopic->topic_num) &&  $topic->topic_num==$supportedTopic->topic_num) $lastsupportOrder++;
 								
 							?>
 							<span class="remove_camp">X</span>
@@ -177,17 +170,8 @@
 				  @if(Session::get('confirm') !='samecamp') 
 					   <!-- current supporting camp detail -->
 					<div class="col-sm-12">   
-					   <div id="positions_0" class="SpCmpBDY support-sorter-element ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
-                            <!--<form action="{{ route('settings.support.delete')}}" id="support-0" method="post">
-                                <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                
-                                <input type="hidden" id="support_id_0" name="support_id" value="0">
-								<input type="hidden" id="support_id_0" name="support_id" value="0">
-                                <input type="hidden" id="topic_num_0" name="topic_num" value="{{ $camp->topic_num }}">
-                             
-                                <input type="hidden" id="nick_name_id_0" name="nick_name_id" value="{{ $supportedTopic->nickname->id }}">
-                            <button type="submit" id="submit_0" class="btn-sptclose"><i class="fa fa-close"></i></button>
-                            </form> -->
+					   <div id="positions_0" class="SpCmpBDY column support-sorter-element ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
+                         
 							<input type="hidden" class="final_support_order" name="support_order[{{$camp->camp_num}}]" id="support_order_0" value="{{ $key + 1  }}">
                             
 							<input type="hidden" name="camp[{{$camp->camp_num}}]" value="{{ $camp->camp_num }}">
@@ -206,44 +190,12 @@
 					</div>   
 					</div>
 					@endif   
-                <script>
-                $( function() {
-                    $( ".column" ).sortable({
-                        connectWith: ".column",
-                        cursor: 'move',
-                        opacity: 0.6,
-                        update: function(event, ui) {
-                           /* $.post('{{ route("settings.support-reorder") }}', $(this).sortable('serialize')+"&_token={{ csrf_token() }}&topicnum={{ $supportedTopic->topic_num }}", function(data) {
-                                
-                                if(!data.success) {
-                                    alert('Whoops, something went wrong :/');
-                                }
-                                
-                        }, 'json');*/
-                        $( ".column" ).find('.support-sorter-element').each(function(i,v){
-                                $(v).find('.support_order').text(i+1);
-								$(v).find('.final_support_order').val(i+1);
-                            });
-
-                        } 
-                    });
-
-                     $('.remove_camp').click(function(){
-                        	$(this).parent(".support-sorter-element").remove();
-                        	$( ".column" ).find('.support-sorter-element').each(function(i,v){
-                                $(v).find('.support_order').text(i+1);
-								$(v).find('.final_support_order').val(i+1);
-                            });
-
-                        })
-                    
-                });
-                </script>
+               
                @else
 
 				   <div class="row">
 				  	<div class="col-sm-12">   
-					   <div id="positions_0" class="SpCmpBDY support-sorter-element ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
+					   <div id="positions_0" class="SpCmpBDY column support-sorter-element ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
                           
 							<input type="hidden" class="final_support_order" name="support_order[{{$camp->camp_num}}]" id="support_order_0 }}" value="{{ (isset($support->support_order)) ? $support->support_order + 1 : 1 }}">
                             
@@ -252,7 +204,7 @@
                             
                             <b><span class="support_order">{{ ++$lastsupportOrder }} </span> . {{ $camp->camp_name }} </b><br/>
 
-
+                            <span class="remove_camp">X</span>
                             
                         <?php $lastsupportOrder++; ?>
                         
@@ -277,8 +229,11 @@
 					<input type="hidden" id="userNicknames" name="userNicknames" value="{{ serialize($userNickname) }}">
 					<input type="hidden" id="support_id" name="support_id" value="{{ isset($supportedTopic->support_id) ? $supportedTopic->support_id : '0'}}">
 					<input type="hidden" id="confirm_support" name="confirm_support" value="0">
-					<input type="hidden" id="removed_camp" name="removed_camp" value="">
-                    
+					@if(count($removedCampList) > 0)
+					 @foreach($removedCampList as $cmp)
+					 	<input type="hidden" id="removed_camp" name="removed_camp[]" value="{{$cmp}}">
+					 @endforeach
+					 @endif
                     <div class="row">
                         <div class="col-sm-6 margin-btm-1">
 						<select name="nick_name" id="select_nick_name" class="form-control">
@@ -303,12 +258,14 @@
                        
                     </div>
                      @if(!Session::has('warning'))
-                    <button type="submit" id="submit" class="btn btn-login">Submit</button>
+                     	@if(Session::get('confirm') != 'samecamp')
+	                    	<button type="submit" id="submit" class="btn btn-login">Submit</button>
+	                    @endif
                      <?php  
                      $link = \App\Model\Camp::getTopicCampUrl($topic->topic_num,session('campnum'));
                  	 ?>
 				    <a  class="btn btn-login" href="<?php echo $link; ?>">Cancel</a>
-				    @else
+				    @elseif(Session::get('confirm') != 'samecamp')
 					<div style="display:none">	
 					<button type="submit" id="submit" class="btn btn-login"></button>	
 					</div>
@@ -323,7 +280,32 @@
     </div>   
  </div></div>
 </div>  <!-- /.right-whitePnl-->
+ <script>
+                $( function() {
+                    $( ".column" ).sortable({
+                        connectWith: ".column",
+                        cursor: 'move',
+                        opacity: 0.6,
+                        update: function(event, ui) {
+                        $( ".column" ).find('.support-sorter-element').each(function(i,v){
+                                $(v).find('.support_order').text(i+1);
+								$(v).find('.final_support_order').val(i+1);
+                            });
 
+                        } 
+                    });
+
+                     $('.remove_camp').click(function(){
+                        	$(this).parent(".support-sorter-element").remove();
+                        	$( ".column" ).find('.support-sorter-element').each(function(i,v){
+                                $(v).find('.support_order').text(i+1);
+								$(v).find('.final_support_order').val(i+1);
+                            });
+
+                        })
+                    
+                });
+                </script>
     <script>
         $(document).ready(function () {
             $("#birthday").datepicker({

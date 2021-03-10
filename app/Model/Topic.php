@@ -80,6 +80,38 @@ class Topic extends Model {
 		
 		return self::where('topic_num',$topicnum)->latest('submit_time')->get();
 	}
+
+      public static function getLiveTopic($topicnum, $filter = array()) {
+        if ((!isset($_REQUEST['asof']) && !session()->has('asofDefault')) || (isset($_REQUEST['asof']) && $_REQUEST['asof'] == "default")  || (session()->has('asofDefault') && session('asofDefault') == 'default' && !isset($_REQUEST['asof']))) {
+
+            return self::where('topic_num', $topicnum)
+                            ->where('objector_nick_id', '=', NULL)
+                            ->where('go_live_time', '<=', time())
+                            ->latest('submit_time')->first();
+        } else {
+
+            if ((isset($_REQUEST['asof']) && $_REQUEST['asof'] == "review") || (session('asofDefault')=="review" && !isset($_REQUEST['asof']))) {
+
+                return self::where('topic_num', $topicnum)
+                                ->where('objector_nick_id', '=', NULL)
+                                ->latest('submit_time')->first();
+            } else if ((isset($_REQUEST['asof']) && $_REQUEST['asof'] == "bydate")  || (session()->has('asofDefault') && session('asofDefault') == 'bydate' && !isset($_REQUEST['asof']))) {
+                if(isset($_REQUEST['asof']) && $_REQUEST['asof'] == "bydate"){
+                    $asofdate = strtotime(date('Y-m-d H:i:s', strtotime($_REQUEST['asofdate'])));
+                }else if(session()->has('asofdateDefault') && session('asofdateDefault') && !isset($_REQUEST['asof'])){
+                    $asofdate = strtotime(session('asofdateDefault'));
+                }
+                if(isset($filter['nofilter']) && $filter['nofilter']){
+                    $asofdate  = time();
+                }
+                
+                return self::where('topic_num', $topicnum)
+                                ->where('objector_nick_id', '=', NULL)
+                                ->where('go_live_time', '<=', $asofdate)
+                                ->latest('submit_time')->first();
+            }
+        }
+    }
 	
 
 }

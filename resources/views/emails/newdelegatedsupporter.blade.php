@@ -1,5 +1,5 @@
 @component('mail::message')
- Hi {{ $user->first_name }} {{ $user->last_name }},<br/>
+ Hello {{ $user->first_name }} {{ $user->last_name }},<br/>
  <p>
  @if (isset($data['support_added']) && $data['support_added'] == 1 )
  	{{ $data['nick_name']}} has just added their support to this camp: <a href="{{$link }}"><b>{{ $data['object']}}</b></a>

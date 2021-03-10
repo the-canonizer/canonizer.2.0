@@ -1,5 +1,5 @@
 @component('mail::message')
-Hi {{ $user->first_name }} {{ $user->last_name }},<br/>
+Hello {{ $user->first_name }} {{ $user->last_name }},<br/>
  
 <p>You proposed a change for {{ $data['type']}} : <b>{{ $data['object']}}</b> @component('mail::button', ['url' => $data['link']])
 Click Here To View

@@ -591,20 +591,32 @@ class TopicController extends Controller {
     public function store_camp(Request $request) {
         $all = $request->all();
         $currentTime = time();
+        $messagesVal = [
+            'camp_name.regex' => 'Camp name must only contain space and alphanumeric characters.',
+            'nick_name.required' => 'Nickname is required.',
+            'camp_name.required' => 'Camp name is required.',
+        ];
         $validator = Validator::make($request->all(), [
                     'nick_name' => 'required',
                     'camp_name' => 'required|max:30|regex:/^[a-zA-Z0-9\s]+$/'
                    // 'note' => 'required',
-        ]);
+        ],$messagesVal);
+        
 		session(['filter'=>'removed']);
         $objection = '';
         if (isset($all['objection']) && $all['objection'] == 1) {
             $objection = 1;
+            $messagesVal = [
+            'camp_name.regex' => 'Camp name must only contain space and alphanumeric characters.',
+            'nick_name.required' => 'Nickname is required.',
+            'camp_name.required' => 'Camp name is required.',
+            'objection.required' => 'Objection reason is required.',
+        ];
             $validator = Validator::make($request->all(), [
                         'nick_name' => 'required',
                         'camp_name' => 'required|max:30|regex:/^[a-zA-Z0-9\s]+$/',
                         'objection_reason' => 'required|max:100',
-            ]);
+            ],$messagesVal);
         }
         $topicnum = (isset($all['topic_num'])) ? $all['topic_num'] : null;
         if($topicnum!=null){

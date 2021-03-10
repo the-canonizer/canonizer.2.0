@@ -172,7 +172,7 @@ class LoginController extends Controller
         $email = base64_decode($all['user']);
         $user = User::where('email', '=', $email)->first();
         $message = [
-          'otp.required'=>'Please enter OTP'  
+          'otp.required'=>'Please enter One Time Verification Code'  
         ];
         $validator = Validator::make($all, [
                     'otp' => 'required',
@@ -185,7 +185,7 @@ class LoginController extends Controller
         }
 
         if ($otp != $user->otp) {
-            session()->flash('error', 'Incorrect OTP Entered');
+            session()->flash('error', 'Incorrect One Time Verification Code Entered');
             return redirect()->back();
         }
         $user->otp = '';
