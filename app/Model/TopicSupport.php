@@ -196,7 +196,7 @@ class TopicSupport extends Model {
             if(Auth::check()){
                 $userId = Auth::user()->id;
             }
-            $topicData = Topic::where('topic_num',$topicnum)->latest('submit_time')->get();
+            $topicData = Topic::getLiveTopic($topicnum,['nofilter'=>true]);//Topic::where('topic_num',$topicnum)->latest('submit_time')->get();
             $namespace_id = (isset($topicData[0])) ? $topicData[0]->namespace_id:1;
             $supports = $nickName->getSupportCampList($namespace_id);
             $support_number = self::getSupportNumber($topicnum,$campnum,$supports);

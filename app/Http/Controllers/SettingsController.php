@@ -259,7 +259,8 @@ class SettingsController extends Controller
             }
 
             //get nicknames
-            $nicknames = Nickname::where('owner_code', '=', $encode)->get();
+            //$nicknames = Nickname::where('owner_code', '=', $encode)->get();
+            $nicknames = Nickname::topicCampNicknameUsed($topicnum,$campnum,$encode);
             $userNickname = Nickname::personNicknameArray();
 
             $confirm_support = 0;
@@ -326,11 +327,12 @@ class SettingsController extends Controller
             $id = Auth::user()->id;
             $encode = General::canon_encode($id);
 
-            $nicknames = Nickname::where('owner_code', '=', $encode)->get();
+           // $nicknames = Nickname::where('owner_code', '=', $encode)->get();
+            $nicknames = Nickname::topicCampNicknameUsed($topicnum,$campnum,$encode);
+            // echo "<pre>"; print_r( $nicknames); die;
             $delegatedNick = new Nickname();
             $userNickname = array();
             foreach ($nicknames as $nickname) {
-
                 $userNickname[] = $nickname->id;
             }
 

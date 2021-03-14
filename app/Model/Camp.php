@@ -962,7 +962,8 @@ class Camp extends Model {
             }
         }
 
-        $topic_name = (isset($this->topic) && isset($this->topic->topic_name)) ? $this->topic->topic_name: '';
+        $topic = Topic::getLiveTopic($this->topic->topic_num,['nofilter'=>true]);//(isset($this->topic) && isset($this->topic->topic_name)) ? $this->topic->topic_name: '';
+        $topic_name = (isset($topic) && isset($topic->topic_name)) ? $topic->topic_name: '';
         $title = preg_replace('/[^A-Za-z0-9\-]/', '-', $topic_name);
         $topic_id = $this->topic_num . "-" . $title;
         $tree = [];

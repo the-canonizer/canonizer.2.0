@@ -116,8 +116,8 @@
                             $camp = \App\Model\Camp::getLiveCamp($support->topic_num,$support->camp_num);
 					   ?>
 					  
-                       <div class="col-sm-12">
-                            <div id="positions_{{ $support->support_id }}" class="SpCmpBDY column support-sorter-element ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
+                       <div class="col-sm-12 column">
+                            <div id="positions_{{ $support->support_id }}" class="SpCmpBDY  support-sorter-element ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
                            
 							<input type="hidden" class="final_support_order" name="support_order[{{$support->camp->camp_num}}]" id="support_order_{{ $support->support_id }}" value="{{ $support->support_order  }}">
                                 
@@ -147,8 +147,8 @@
 					   @foreach($topicSupport as $k=>$support)
 					   
 					   @if(!in_array($support->camp->camp_num,$removedCampList)) <?php $key = $key + 1; ?>
-                       <div class="col-sm-12">
-                            <div id="positions_{{ $support->support_id }}" class="SpCmpBDY column support-sorter-element ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
+                       <div class="col-sm-12 column">
+                            <div id="positions_{{ $support->support_id }}" class="SpCmpBDY  support-sorter-element ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
                             
 							<input type="hidden" class="final_support_order" name="support_order[{{$support->camp->camp_num}}]" id="support_order_{{ $support->support_id }}" value="{{ $key  }}">
                                 
@@ -169,8 +169,8 @@
 					  
 				  @if(Session::get('confirm') !='samecamp') 
 					   <!-- current supporting camp detail -->
-					<div class="col-sm-12">   
-					   <div id="positions_0" class="SpCmpBDY column support-sorter-element ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
+					<div class="col-sm-12 column">   
+					   <div id="positions_0" class="SpCmpBDY  support-sorter-element ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
                          
 							<input type="hidden" class="final_support_order" name="support_order[{{$camp->camp_num}}]" id="support_order_0" value="{{ $key + 1  }}">
                             
@@ -193,9 +193,9 @@
                
                @else
 
-				   <div class="row">
-				  	<div class="col-sm-12">   
-					   <div id="positions_0" class="SpCmpBDY column support-sorter-element ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
+				   <div class="row column">
+				  	<div class="col-sm-12 column">   
+					   <div id="positions_0" class="SpCmpBDY  support-sorter-element ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
                           
 							<input type="hidden" class="final_support_order" name="support_order[{{$camp->camp_num}}]" id="support_order_0 }}" value="{{ (isset($support->support_order)) ? $support->support_order + 1 : 1 }}">
                             
