@@ -33,8 +33,8 @@
 					   foreach($childSupport as $supportData) { 
 					       $removedCampList[]=$supportData->camp->camp_num;
 					 ?>
- 					  <div class="col-sm-12">   
-					   <div class="SpCmpBDY column support-sorter-element ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
+ 					  <div class="col-sm-12 column">   
+					   <div class="SpCmpBDY  support-sorter-element ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
                             
 							
                             <b>{{ $supportData->support_order }}. {{ $supportData->camp->camp_name }}</b><br/>
@@ -107,8 +107,7 @@
 					 <div class="col-sm-6">
 					<div class="row column">
 					<?php $k = 0; $topicSupport = $supportedTopic->topic->Getsupports($supportedTopic->topic_num,[$supportedTopic->nick_name_id]);
-
-                       ?>
+					?>
                        
 					   @foreach($topicSupport as $k=>$support)
 					   <?php 
@@ -142,7 +141,6 @@
 					<div class="col-sm-6">
 					 <div class="row column">
                        <?php $key = 0; $topicSupport = $supportedTopic->topic->Getsupports($supportedTopic->topic_num,[$supportedTopic->nick_name_id]);
-
                        ?>
 					   @foreach($topicSupport as $k=>$support)
 					   
