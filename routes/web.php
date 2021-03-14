@@ -138,27 +138,34 @@ Route::group([ 'middleware' => 'auth'], function() {
 Route::get('topic.asp/{id}', [ 'as' => 'topic', 'uses' => 'TopicController@show']);
 
 Route::get(
-        '/forum/{topicid}-{topicname}/{campnum}/threads', ['uses' => 'CThreadsController@index']
+    '/forum/{topicid}-{topicname}/{campnum}/threads', ['uses' => 'CThreadsController@index']
 );
 
 Route::get(
-        '/forum/{topicid}-{topicname}/threads', ['uses' => 'CThreadsController@topicindex']
+  '/forum/{topicid}-{topicname}/threads', ['uses' => 'CThreadsController@topicindex']
 );
 
 Route::get(
-        '/forum/{topicid}-{topicname}/{campnum}/threads/create', ['uses' => 'CThreadsController@create']
+    '/forum/{topicid}-{topicname}/{campnum}/threads/create', ['uses' => 'CThreadsController@create']
 );
 
 Route::get(
-        '/forum/{topicid}-{topicname}/{campnum}/threads/{thread}', [ 'uses' => 'CThreadsController@show']
+    '/forum/{topicid}-{topicname}/{campnum}/threads/{thread}', [ 'uses' => 'CThreadsController@show']
+);
+
+Route::get(
+  '/forum/{topicid}-{topicname}/{campnum}/threads/{thread}/edit', [ 'uses' => 'CThreadsController@edit']
+);
+Route::post(
+  '/forum/{topicid}-{topicname}/{campnum}/threads/{thread}/edit', [ 'uses' => 'CThreadsController@save_title']
 );
 
 Route::post(
-        '/forum/{topicid}-{topicname}/{campnum}/threads', 'CThreadsController@store'
+    '/forum/{topicid}-{topicname}/{campnum}/threads', 'CThreadsController@store'
 );
 
 Route::post(
-        '/forum/{topicid}-{topicname}/{campnum}/threads/{thread}/replies', ['uses' => 'ReplyController@store']
+    '/forum/{topicid}-{topicname}/{campnum}/threads/{thread}/replies', ['uses' => 'ReplyController@store']
 );
 
 if (env('APP_DEBUG')) {
