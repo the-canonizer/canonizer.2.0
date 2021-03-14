@@ -93,22 +93,21 @@ class CThreadsController extends Controller
                  * @var [type]
                  */
                 $threads = CThread::join('post', 'thread.id', '=', 'post.c_thread_id' )->
-                                    select('thread.*', DB::raw('count(post.c_thread_id) as post_count')) ->
-                                    where('camp_id', $campnum)->
-                                    where('topic_id', $topicid)->
-                                    groupBy('thread.id')->
-                                    orderBy('post_count', 'desc')->
-                                    latest()->paginate(10);
+                  select('thread.*', DB::raw('count(post.c_thread_id) as post_count')) ->
+                  where('camp_id', $campnum)->
+                  where('topic_id', $topicid)->
+                  groupBy('thread.id')->
+                  orderBy('post_count', 'desc')->
+                  latest()->paginate(10);
             }
-
             else {
                 /**
                  * Filter out the threads on the basis of the latest creation dates
                  * @var [type]
                  */
                 $threads = CThread::where('camp_id', $campnum)->
-                                    where('topic_id', $topicid)->
-                                    latest()->paginate(10);
+                  where('topic_id', $topicid)->
+                  latest()->paginate(10);
             }
         }
         else {
@@ -288,10 +287,22 @@ class CThreadsController extends Controller
      * @parameter \App\CThread  $CThread
      * @return    \Illuminate\Http\Response
      */
-    public function edit(CThread $CThread)
-    {
-        //
+    public function edit($topicId, $topicName, $campNum, $threadId) {
+      return view(
+        'threads.edit',
+        [
+          'topicid' => $topicId,
+          'topicName' => $topicName,
+          'campNum' => $campNum,
+          'thread' => CThread::findOrFail($threadId)
+        ]
+      );
     }
+
+    public function save_title($topicId, $topicName, $campNum, $threadId) {
+      
+    }
+ 
 
     /**
      * Update the specified resource in storage.
