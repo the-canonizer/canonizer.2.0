@@ -4,3 +4,7 @@ vendor/
 composer.lock
 /nbproject/private/
 public/robots.txt
+.bash_logout
+.bashrc
+.profile
+storage/logs/laravel.log
