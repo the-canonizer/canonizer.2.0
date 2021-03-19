@@ -279,7 +279,7 @@ class Nickname extends Model {
             } else {
                 $usedNickid = $mycamps->submitter_nick_id;
             }
-        } else {
+        } else if(!empty($mysupports)) {
             $usedNickid = $mysupports->nick_name_id;
         }
 
