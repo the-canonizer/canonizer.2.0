@@ -42,8 +42,6 @@ class ReplyController extends Controller
     public function store($topicid, $topicname, $campnum, $threadId, request $request)
     {
 
-         // $threads = new CThread;
-
          $this->validate(
              $request, [
                 'body' => 'required',
