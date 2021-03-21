@@ -327,9 +327,8 @@ class SettingsController extends Controller
             $id = Auth::user()->id;
             $encode = General::canon_encode($id);
 
-           // $nicknames = Nickname::where('owner_code', '=', $encode)->get();
-            $nicknames = Nickname::topicCampNicknameUsed($topicnum,$campnum,$encode);
-            // echo "<pre>"; print_r( $nicknames); die;
+            $nicknames = Nickname::where('owner_code', '=', $encode)->get();
+           // $nicknames = Nickname::topicCampNicknameUsed($topicnum,$campnum,$encode);
             $delegatedNick = new Nickname();
             $userNickname = array();
             foreach ($nicknames as $nickname) {
