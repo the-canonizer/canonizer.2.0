@@ -75,7 +75,7 @@ Route::post('verify-otp', 'Auth\LoginController@validateLoginOtp');
 
 
 
-Route::get('forgetpassword', 'Auth\ForgotPasswordController@showLinkRequestForm');
+Route::get('forgotpassword', 'Auth\ForgotPasswordController@showLinkRequestForm');
 Route::post('forgetpassword', 'Auth\ForgotPasswordController@sendResetLinkEmail');
 Route::get('resetlinksent', 'Auth\ForgotPasswordController@resetLinkSent');
 Route::get('resetpassword/{token}', 'Auth\ResetPasswordController@showResetForm');
