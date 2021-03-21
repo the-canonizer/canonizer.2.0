@@ -321,13 +321,14 @@ class SettingsController extends Controller
                 ->whereIn('nick_name_id', $userNickname)
                 ->whereRaw("(start <= " . $as_of_time . ") and ((end = 0) or (end >= " . $as_of_time . "))")
                 ->groupBy('topic_num')->orderBy('start', 'DESC')->first();
-
+                
             return view('settings.support', ['parentSupport' => $parentSupport, 'childSupport' => $childSupport, 'userNickname' => $userNickname, 'supportedTopic' => $supportedTopic, 'topic' => $topic, 'nicknames' => $nicknames, 'camp' => $onecamp, 'parentcamp' => $campWithParents, 'delegate_nick_name_id' => $delegate_nick_name_id]);
         } else {
             $id = Auth::user()->id;
             $encode = General::canon_encode($id);
 
             $nicknames = Nickname::where('owner_code', '=', $encode)->get();
+            echo "<pre>"; print_r($nicknames); die;
            // $nicknames = Nickname::topicCampNicknameUsed($topicnum,$campnum,$encode);
             $delegatedNick = new Nickname();
             $userNickname = array();
