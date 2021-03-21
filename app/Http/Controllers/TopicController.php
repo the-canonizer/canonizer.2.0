@@ -590,7 +590,7 @@ class TopicController extends Controller {
         $currentTime = time();
         $messagesVal = [
             'camp_name.regex' => 'Camp name must only contain space and alphanumeric characters.',
-            'nick_name.required' => 'Nickname is required.',
+            'nick_name.required' => 'The nick name field is required.',
             'camp_name.required' => 'Camp name is required.',
         ];
         $validator = Validator::make($request->all(), [
@@ -605,7 +605,7 @@ class TopicController extends Controller {
             $objection = 1;
             $messagesVal = [
             'camp_name.regex' => 'Camp name must only contain space and alphanumeric characters.',
-            'nick_name.required' => 'Nickname is required.',
+            'nick_name.required' => 'The nick name field is required.',
             'camp_name.required' => 'Camp name is required.',
             'objection.required' => 'Objection reason is required.',
         ];
