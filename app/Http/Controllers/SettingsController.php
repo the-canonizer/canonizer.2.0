@@ -366,7 +366,6 @@ class SettingsController extends Controller
            
             /* Enter support record to support table */
             $data = $request->all();
-             
             $userNicknames = Nickname::personNicknameArray();
             $topic_num = $data['topic_num'];
             $mysupportArray = [];
@@ -399,15 +398,20 @@ class SettingsController extends Controller
                     if(!in_array($camp_num,$mysupportArray)){
                         $newcamp_mail_flag = true;
                         $data['camp_num'] = $camp_num;
+                        $supportTopic = new Support();
+                        $supportTopic->topic_num = $topic_num;
+                        $supportTopic->nick_name_id = $data['nick_name'];
+                        $supportTopic->delegate_nick_name_id = $data['delegate_nick_name_id'];
+                        $supportTopic->start = time();
+                        $supportTopic->camp_num = $camp_num;
+                        $supportTopic->support_order = $support_order;
+                        $supportTopic->save();
+                    }else{
+                        $support = Support::where('topic_num', $topic_num)->where('camp_num','=', $camp_num)->where('end', '=', 0)->get();
+                        $support[0]->support_order = $support_order;
+                        $support[0]->save();
                     }
-                    $supportTopic = new Support();
-                    $supportTopic->topic_num = $topic_num;
-                    $supportTopic->nick_name_id = $data['nick_name'];
-                    $supportTopic->delegate_nick_name_id = $data['delegate_nick_name_id'];
-                    $supportTopic->start = time();
-                    $supportTopic->camp_num = $camp_num;
-                    $supportTopic->support_order = $support_order;
-                    $supportTopic->save();
+                    
 
                     /* clear the existing session for the topic to get updated support count */
 
