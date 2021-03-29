@@ -36,8 +36,7 @@
  					  <div class="col-sm-12 column">   
 					   <div class="SpCmpBDY  support-sorter-element ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
 							
-                            <b>{{ $supportData->support_order }}. {{ $supportData->camp->camp_name }}</b><br/>
-                            
+                            <b>{{ $supportData->support_order }}. {{ $supportData->camp->camp_name }}</b><br/>                            
                        
                         
                         </div>
