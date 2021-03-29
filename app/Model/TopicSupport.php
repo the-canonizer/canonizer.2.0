@@ -148,7 +148,7 @@ class TopicSupport extends Model {
     }
 
     public static function getSupportNumber($topicnum,$campnum,$supports){
-        $i = 0;
+        $i = 1;
         $flag = false;
         if($supports && sizeof($supports) > 0){
             foreach($supports as $key => $spp){
@@ -196,8 +196,8 @@ class TopicSupport extends Model {
             if(Auth::check()){
                 $userId = Auth::user()->id;
             }
-            $topicData = Topic::getLiveTopic($topicnum,['nofilter'=>true]);//Topic::where('topic_num',$topicnum)->latest('submit_time')->get();
-            $namespace_id = (isset($topicData[0])) ? $topicData[0]->namespace_id:1;
+            $topicData = Topic::getLiveTopic($topicnum,['nofilter'=>true]);//
+            $namespace_id = (isset($topicData->namespace_id)) ? $topicData->namespace_id:1;
             $supports = $nickName->getSupportCampList($namespace_id);
             $support_number = self::getSupportNumber($topicnum,$campnum,$supports);
             $support_txt = ($support_number) ? $support_number.":": '';
@@ -216,7 +216,7 @@ class TopicSupport extends Model {
                 
             }else{
                
-                $html.= "<li>".$space_html."<a href='".route('user_supports',$nickName->id)."?topicnum=".$topicnum."&campnum=".$campnum."&namespace=".$namespace_id."#camp_".$topicnum."_".$campnum."'>{$nickName->nick_name}</a><div class='badge'>".round($array['score'],2)."</div> ";
+                $html.= "<li>".$space_html."<a href='".route('user_supports',$nickName->id)."?topicnum=".$topicnum."&campnum=".$campnum."&namespace=".$namespace_id."#camp_".$topicnum."_".$campnum."'>{$support_txt}{$nickName->nick_name}</a><div class='badge'>".round($array['score'],2)."</div> ";
                  if($userId && $userFromNickname->id != $userId && !in_array($userId, $delegatedUserID) && isset($ifSupporter) && !$ifSupporter &&   !$add_supporter){
                     $urlPortion = Camp::getSeoBasedUrlPortion($topicnum,$campnum);
                      $html.='<a href="'.url('support/'.$urlPortion.'_'.$array['index']).'" class="btn btn-info">Delegate Your Support</a>';
