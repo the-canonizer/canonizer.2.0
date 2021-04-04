@@ -366,11 +366,9 @@ class SettingsController extends Controller
            
             /* Enter support record to support table */
             $data = $request->all();
-            //echo "<pre>"; print_r($data); die;
             $userNicknames = Nickname::personNicknameArray();
             $topic_num = $data['topic_num'];
             $mysupportArray = [];
-            // echo "<pre>"; print_r($data); die;
             $mysupports = Support::where('topic_num', $topic_num)->whereIn('nick_name_id', $userNicknames)->where('end', '=', 0)->orderBy('support_order', 'ASC')->get();
 
             if(isset($mysupports) && count($mysupports) > 0){

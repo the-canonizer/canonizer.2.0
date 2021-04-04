@@ -254,7 +254,7 @@ class Nickname extends Model {
      public static function topicCampNicknameUsed($topic_num,$camp_num,$encode=null) {
         $personNicknameArray = self::personNicknameArray();
         $usedNickid = 0;
-        $mysupports = Support::select('nick_name_id')->where('topic_num', $topic_num)->where('camp_num',$camp_num)->whereIn('nick_name_id', $personNicknameArray)->where('end', '=', 0)->groupBy('topic_num')->orderBy('support_order', 'ASC')->first();
+        $mysupports = Support::select('nick_name_id')->where('topic_num', $topic_num)->whereIn('nick_name_id', $personNicknameArray)->groupBy('topic_num')->orderBy('support_order', 'ASC')->first();
         if (empty($mysupports)) { 
             $mycamps = Camp::select('submitter_nick_id')->where('topic_num', $topic_num)->where('camp_num',$camp_num)->whereIn('submitter_nick_id', $personNicknameArray)->orderBy('submit_time', 'DESC')->first();
 
