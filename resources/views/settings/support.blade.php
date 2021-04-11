@@ -107,8 +107,8 @@
 					
 					 <div class="col-sm-6">
 					<div class="row column">
-						
-					<?php echo "<pre>"; print_r($supportedTopic->topic->Getsupports($supportedTopic->topic_num,[$supportedTopic->nick_name_id])); die;
+
+					<?php 
 					$k = 0; $topicSupportCamp = $supportedTopic->topic->Getsupports($supportedTopic->topic_num,[$supportedTopic->nick_name_id]);
 
 				
@@ -227,7 +227,7 @@
 
 
          </div>
-					 
+	    <?php echo "<pre>"; print_r($topic); die; ?>	 
         @if(isset($topic))
          <div id="myTabContent" class="add-nickname-section">  
                  <h5>Nick Name To Support Above Camps </h5>
