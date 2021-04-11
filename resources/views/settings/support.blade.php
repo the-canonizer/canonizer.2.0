@@ -19,8 +19,7 @@
     <strong>Warning! </strong>{{ Session::get('warningDelegate')}} 
 </div>
 @endif
-<?php $removedCampList = array();?>
-
+<?php $removedCampList = array(); ?>
 @if(Session::has('confirm') && Session::has('warning') && Session::get('confirm') !='samecamp')
 	
 <div class="row">
@@ -31,22 +30,19 @@
 					 <?php
 
 					  if(isset($childSupport) && !empty($childSupport) ) {
-					   foreach($childSupport as $supportDatachild) { 
-					       $removedCampList[]=$supportDatachild->camp->camp_num;
+					   foreach($childSupport as $supportData) { 
+					       $removedCampList[]=$supportData->camp->camp_num;
 					 ?>
  					  <div class="col-sm-12 column">   
 					   <div class="SpCmpBDY  support-sorter-element ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
 							
-                            <b>{{ $supportDatachild->support_order }}. {{ $supportDatachild->camp->camp_name }}</b><br/>                            
+                            <b>{{ $supportData->support_order }}. {{ $supportData->camp->camp_name }}</b><br/>                            
                        
                         
                         </div>
 						</div>
-					 <?php } }?>
-	
-					 <?php if(isset($parentSupport) && !empty($parentSupport) ) { 
-					 	foreach($parentSupport as $supportData) { 
-
+					 <?php } }?>	
+					 <?php if(isset($parentSupport) && !empty($parentSupport) ) { foreach($parentSupport as $supportData) { 
 					       $removedCampList[]=$supportData->camp->camp_num;
 					 ?>
  					  <div class="col-sm-12">   
@@ -63,6 +59,7 @@
                      				 
 					</div></div>
 </div>
+
 <div class="alert alert-success">
    <div style="text-align:center">
      <a href="{{ route('settings.support')}}"><input type="button" name="cancel" class="btn btn-login" value="Cancel"></a>
@@ -77,6 +74,8 @@
     <strong>Success! </strong>{{ Session::get('success')}}     
 </div>
 @endif
+
+
 <div class="right-whitePnl">
    <div class="row justify-content-between">
     <div class="col-sm-12 margin-btm-2">
@@ -94,9 +93,8 @@
          <div class="SupportCmp">
 		        <p style="margin-left: 15px;color:red">Note : To change support order of camp, drag & drop the camp box on your choice position. </p>
 		        <?php $lastsupportOrder = 0;
-					
+				
 				?>
-	
 
                 @if(isset($supportedTopic) && isset($supportedTopic->topic_num) && count($supportedTopic))
                    <div class="SpCmpHd"><b>Your supporting camps list for topic "{{ $supportedTopic->topic->topic_name}}"</b></div>
@@ -104,28 +102,17 @@
                			
 					@if(Session::has('confirm') && Session::get('confirm') == 'samecamp')
 					
-               
-	    	 
 					 <div class="col-sm-6">
 					<div class="row column">
-
-					<?php 
-					$k = 0; $topicSupportCamp = $supportedTopic->topic->Getsupports($supportedTopic->topic_num,[$supportedTopic->nick_name_id]);
-
+					<?php $k = 0; $topicSupport = $supportedTopic->topic->Getsupports($supportedTopic->topic_num,[$supportedTopic->nick_name_id]);
 					?>
-
                        
-					   @foreach($topicSupportCamp as $k=>$support)
-
-					  	
+					   @foreach($topicSupport as $k=>$support)
 					   <?php 
 					   		
-                            $livecamp = \App\Model\Camp::getLiveCamp($support->topic_num,$support->camp_num);
-
- 
-                        ?>
-
-					
+                            $camp = \App\Model\Camp::getLiveCamp($support->topic_num,$support->camp_num);
+					   ?>
+					  
                        <div class="col-sm-12 column">
                             <div id="positions_{{ $support->support_id }}" class="SpCmpBDY  support-sorter-element ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
                            
@@ -136,14 +123,12 @@
                             <b><span class="support_order"> {{ $support->support_order }} </span> . {{ $camp->camp_name }} </b><br/>
                              
                         
-							<?php 
-							if(isset($topic->topic_num) && isset($supportedTopic->topic_num) &&  $topic->topic_num==$supportedTopic->topic_num) $lastsupportOrder++;{
+							<?php if(isset($topic->topic_num) && isset($supportedTopic->topic_num) &&  $topic->topic_num==$supportedTopic->topic_num) $lastsupportOrder++;
 								
 							?>
 							<span class="remove_camp">X</span>
-                        	<?php } ?>
+                        
                            </div>
-							
 					  </div>
                        				  
 					   @endforeach
@@ -151,15 +136,10 @@
                      </div>					  
                     @else  				
 					
-				 
-                       
 					<div class="col-sm-6">
 					 <div class="row column">
                        <?php $key = 0; $topicSupport = $supportedTopic->topic->Getsupports($supportedTopic->topic_num,[$supportedTopic->nick_name_id]);
-
                        ?>
-
-					   <?php //echo "<pre>"; print_r($camp) ; die; ?>
 					   @foreach($topicSupport as $k=>$support)
 					   
 					   @if(!in_array($support->camp->camp_num,$removedCampList)) <?php $key = $key + 1; ?>
@@ -197,7 +177,7 @@
                             <span class="remove_camp">X</span>
                             
                         	
-                        <?php $lastsupportOrder++;  ?>
+                        <?php $lastsupportOrder++; ?>
                         
                         </div>
 					</div>	
@@ -208,6 +188,7 @@
 					@endif   
                
                @else
+
 				   <div class="row column">
 				  	<div class="col-sm-12 column">   
 					   <div id="positions_0" class="SpCmpBDY  support-sorter-element ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
@@ -230,6 +211,9 @@
 
 
          </div>
+		            
+					
+					 
         @if(isset($topic))
          <div id="myTabContent" class="add-nickname-section">  
                  <h5>Nick Name To Support Above Camps </h5>
