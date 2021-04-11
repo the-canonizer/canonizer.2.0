@@ -113,7 +113,7 @@
                        
 					   @foreach($topicSupportCamp as $k=>$support)
 
-					  <?php echo "<pre>";print_r($support); die;?>
+					  
 					   <?php 
 					   		
                             $camp = \App\Model\Camp::getLiveCamp($support->topic_num,$support->camp_num);
@@ -129,12 +129,14 @@
                             <b><span class="support_order"> {{ $support->support_order }} </span> . {{ $camp->camp_name }} </b><br/>
                              
                         
-							<?php if(isset($topic->topic_num) && isset($supportedTopic->topic_num) &&  $topic->topic_num==$supportedTopic->topic_num) $lastsupportOrder++;
+							<?php 
+							if(isset($topic->topic_num) && isset($supportedTopic->topic_num) &&  $topic->topic_num==$supportedTopic->topic_num) $lastsupportOrder++;{
 								
 							?>
 							<span class="remove_camp">X</span>
-                        
+                        	<?php } ?>
                            </div>
+							
 					  </div>
                        				  
 					   @endforeach
@@ -147,6 +149,7 @@
                        <?php $key = 0; $topicSupport = $supportedTopic->topic->Getsupports($supportedTopic->topic_num,[$supportedTopic->nick_name_id]);
 
                        ?>
+                       <?php echo "<pre>";print_r($topicSupport); die;?>
 					   @foreach($topicSupport as $k=>$support)
 					   
 					   @if(!in_array($support->camp->camp_num,$removedCampList)) <?php $key = $key + 1; ?>
