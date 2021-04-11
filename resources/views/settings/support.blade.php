@@ -110,7 +110,7 @@
 					   @foreach($topicSupport as $k=>$support)
 					   <?php 
 					   		
-                            $livecamp = \App\Model\Camp::getLiveCamp($support->topic_num,$support->camp_num);
+                           // $livecamp = \App\Model\Camp::getLiveCamp($support->topic_num,$support->camp_num);
 					   ?>
 					  <?php echo "<pre>"; print_r($support); ?>
                        <div class="col-sm-12 column">
@@ -120,7 +120,7 @@
                                 
 							<input type="hidden" name="camp[{{$support->camp->camp_num}}]" value="{{ $support->camp->camp_num }}">
 							<input type="hidden" name="delegated[{{$support->camp->camp_num}}]" value="{{ $support->delegate_nick_name_id }}">
-                            <b><span class="support_order"> {{ $support->support_order }} </span> . {{ $livecamp->camp_name }} </b><br/>
+                            <b><span class="support_order"> {{ $support->support_order }} </span> . {{ $camp->camp_name }} </b><br/>
                              
                         
 							<?php if(isset($topic->topic_num) && isset($supportedTopic->topic_num) &&  $topic->topic_num==$supportedTopic->topic_num) $lastsupportOrder++;
