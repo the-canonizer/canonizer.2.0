@@ -77,7 +77,7 @@
     <strong>Success! </strong>{{ Session::get('success')}}     
 </div>
 @endif
-<?php   echo "<pre>"; print_r($livecamp) ; die;
+<?php   echo "<pre>"; print_r($camp) ; die;
                          ?>
 <div class="right-whitePnl">
    <div class="row justify-content-between">
