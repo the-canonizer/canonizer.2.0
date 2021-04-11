@@ -143,7 +143,8 @@
 					<div class="col-sm-6">
 					 <div class="row column">
                        <?php $key = 0; $topicSupport = $supportedTopic->topic->Getsupports($supportedTopic->topic_num,[$supportedTopic->nick_name_id]);
-
+                       
+					   	echo "<pre>"; print_r($topicSupport);die;
                        ?>
 					   @foreach($topicSupport as $k=>$support)
 					   
@@ -182,10 +183,7 @@
                             <span class="remove_camp">X</span>
                             
                         	
-                        <?php $lastsupportOrder++; 
-                        
-					   	echo "<pre>"; print_r($topicSupport);die;
-                        ?>
+                        <?php $lastsupportOrder++;  ?>
                         
                         </div>
 					</div>	
