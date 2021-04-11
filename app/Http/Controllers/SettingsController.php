@@ -322,7 +322,7 @@ class SettingsController extends Controller
                 ->whereRaw("(start <= " . $as_of_time . ") and ((end = 0) or (end >= " . $as_of_time . "))")
                 ->groupBy('topic_num')->orderBy('start', 'DESC')->first();
 
-            echo "<pre>"; print_r($supportedTopic );print_r($parentSupport); print_r($onecamp); print_r($childSupport); die;
+            echo "<pre>"; print_r($parentSupport); die;
             return view('settings.support', ['parentSupport' => $parentSupport, 'childSupport' => $childSupport, 'userNickname' => $userNickname, 'supportedTopic' => $supportedTopic, 'topic' => $topic, 'nicknames' => $nicknames, 'camp' => $onecamp, 'parentcamp' => $campWithParents, 'delegate_nick_name_id' => $delegate_nick_name_id]);
         } else {
             $id = Auth::user()->id;
