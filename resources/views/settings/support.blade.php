@@ -31,21 +31,23 @@
 					 <?php
 
 					  if(isset($childSupport) && !empty($childSupport) ) {
-					   foreach($childSupport as $supportData) { 
-					   	echo "<pre>"; print_r($supportData);die;
-					       $removedCampList[]=$supportData->camp->camp_num;
+					   foreach($childSupport as $supportDatachild) { 
+					       $removedCampList[]=$supportDatachild->camp->camp_num;
 					 ?>
  					  <div class="col-sm-12 column">   
 					   <div class="SpCmpBDY  support-sorter-element ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
 							
-                            <b>{{ $supportData->support_order }}. {{ $supportData->camp->camp_name }}</b><br/>                            
+                            <b>{{ $supportDatachild->support_order }}. {{ $supportDatachild->camp->camp_name }}</b><br/>                            
                        
                         
                         </div>
 						</div>
 					 <?php } }?>
 	
-					 <?php if(isset($parentSupport) && !empty($parentSupport) ) { foreach($parentSupport as $supportData) { 
+					 <?php if(isset($parentSupport) && !empty($parentSupport) ) { 
+					 	foreach($parentSupport as $supportData) { 
+
+					   	echo "<pre>"; print_r($supportData);die;
 					       $removedCampList[]=$supportData->camp->camp_num;
 					 ?>
  					  <div class="col-sm-12">   
