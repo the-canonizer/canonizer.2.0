@@ -97,7 +97,6 @@
 		        <p style="margin-left: 15px;color:red">Note : To change support order of camp, drag & drop the camp box on your choice position. </p>
 		        <?php $lastsupportOrder = 0;
 					
-					   	echo "<pre>"; print_r($supportedTopic);die;
 				?>
 
                 @if(isset($supportedTopic) && isset($supportedTopic->topic_num) && count($supportedTopic))
@@ -109,6 +108,8 @@
 					 <div class="col-sm-6">
 					<div class="row column">
 					<?php $k = 0; $topicSupport = $supportedTopic->topic->Getsupports($supportedTopic->topic_num,[$supportedTopic->nick_name_id]);
+					
+					   	echo "<pre>"; print_r($topicSupport);die;
 					?>
                        
 					   @foreach($topicSupport as $k=>$support)
