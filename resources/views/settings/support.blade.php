@@ -77,7 +77,8 @@
     <strong>Success! </strong>{{ Session::get('success')}}     
 </div>
 @endif
-
+<?php   echo "<pre>"; print_r($livecamp) ; die;
+                         ?>
 <div class="right-whitePnl">
    <div class="row justify-content-between">
     <div class="col-sm-12 margin-btm-2">
@@ -120,7 +121,6 @@
 					   <?php 
 					   		
                             $livecamp = \App\Model\Camp::getLiveCamp($support->topic_num,$support->camp_num);
-                            echo "<pre>"; print_r($livecamp);
                         ?>
 
 					
@@ -145,7 +145,7 @@
 					  </div>
                        				  
 					   @endforeach
-					   <?php die; ?>
+
 					  </div>
                      </div>					  
                     @else  				
