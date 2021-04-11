@@ -159,7 +159,7 @@
 
                        ?>
 
-					   <?php echo "<pre>"; print_r($camp) ; die; ?>
+					   <?php //echo "<pre>"; print_r($camp) ; die; ?>
 					   @foreach($topicSupport as $k=>$support)
 					   
 					   @if(!in_array($support->camp->camp_num,$removedCampList)) <?php $key = $key + 1; ?>
