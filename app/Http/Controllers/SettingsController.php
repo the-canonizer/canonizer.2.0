@@ -278,7 +278,6 @@ class SettingsController extends Controller
 
 
             $parentSupport = Camp::validateParentsupport($topicnum, $campnum, $userNickname, $confirm_support);
-             echo "i mhere"; die;
             if ($parentSupport === "notlive") {
                 Session::flash('warning', "You cant submit your support to this camp as its not live yet.");
                 //return redirect()->back();
@@ -300,7 +299,8 @@ class SettingsController extends Controller
                 }
                 //return redirect()->back();
             }
-
+            
+             echo "i mhere"; die;
             $childSupport = Camp::validateChildsupport($topicnum, $campnum, $userNickname, $confirm_support);
 
             if ($childSupport) {
