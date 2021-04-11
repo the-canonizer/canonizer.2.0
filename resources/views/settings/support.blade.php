@@ -97,7 +97,8 @@
 		        <?php $lastsupportOrder = 0;
 					
 				?>
-
+	
+<?php echo "i m here"; die;?>
                 @if(isset($supportedTopic) && isset($supportedTopic->topic_num) && count($supportedTopic))
                    <div class="SpCmpHd"><b>Your supporting camps list for topic "{{ $supportedTopic->topic->topic_name}}"</b></div>
                		<div class="row" style="min-height:120px">
@@ -215,9 +216,6 @@
 
 
          </div>
-		            
-					
-<?php echo "i m here"; die;?>
 					 
         @if(isset($topic))
          <div id="myTabContent" class="add-nickname-section">  
