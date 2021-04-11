@@ -111,7 +111,7 @@
 					<?php 
 					$k = 0; $topicSupportCamp = $supportedTopic->topic->Getsupports($supportedTopic->topic_num,[$supportedTopic->nick_name_id]);
 
-				
+				 <?php echo "<pre>"; print_r($camp); die; ?>
 					?>
 
                        
@@ -150,7 +150,7 @@
                      </div>					  
                     @else  				
 					
-				  <?php echo "<pre>"; print_r($camp); die; ?>
+				 
                        
 					<div class="col-sm-6">
 					 <div class="row column">
