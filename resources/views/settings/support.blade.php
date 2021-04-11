@@ -21,7 +21,7 @@
 @endif
 <?php $removedCampList = array(); 
 	
-						echo "<pre>";print_r($supportData); die; 
+						echo "<pre>";print_r($childSupport); die; 
 ?>
 
 @if(Session::has('confirm') && Session::has('warning') && Session::get('confirm') !='samecamp')
