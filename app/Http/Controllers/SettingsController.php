@@ -300,7 +300,6 @@ class SettingsController extends Controller
                 //return redirect()->back();
             }
             
-             echo "i mhere"; die;
             $childSupport = Camp::validateChildsupport($topicnum, $campnum, $userNickname, $confirm_support);
 
             if ($childSupport) {
