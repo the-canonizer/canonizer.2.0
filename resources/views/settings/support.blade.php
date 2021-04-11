@@ -47,7 +47,6 @@
 					 <?php if(isset($parentSupport) && !empty($parentSupport) ) { 
 					 	foreach($parentSupport as $supportData) { 
 
-					   	echo "<pre>"; print_r($supportData);die;
 					       $removedCampList[]=$supportData->camp->camp_num;
 					 ?>
  					  <div class="col-sm-12">   
@@ -97,7 +96,8 @@
          <div class="SupportCmp">
 		        <p style="margin-left: 15px;color:red">Note : To change support order of camp, drag & drop the camp box on your choice position. </p>
 		        <?php $lastsupportOrder = 0;
-				
+					
+					   	echo "<pre>"; print_r($supportedTopic);die;
 				?>
 
                 @if(isset($supportedTopic) && isset($supportedTopic->topic_num) && count($supportedTopic))
