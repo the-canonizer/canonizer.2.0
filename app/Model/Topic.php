@@ -67,6 +67,11 @@ class Topic extends Model {
 	
 	public function scopeGetsupports($query,$topic_num,$userNickname=null) {
 		$as_of_time=time()+100;
+        if(isset($_REQUEST['asof']) && $_REQUEST['asof'] == "bydate"){
+                    $as_of_time = strtotime(date('Y-m-d H:i:s', strtotime($_REQUEST['asofdate'])));
+                }else if(session()->has('asofdateDefault') && session('asofdateDefault') && !isset($_REQUEST['asof'])){
+                    $as_of_time = strtotime(session('asofdateDefault'));
+                }
 		return $supports = Support::where('topic_num',$topic_num)		                    
 							//->where('delegate_nick_name_id',0)
 							->whereIn('nick_name_id',$userNickname)
