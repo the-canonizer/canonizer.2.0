@@ -140,6 +140,7 @@
 					 <div class="row column">
                        <?php $key = 0; $topicSupport = $supportedTopic->topic->Getsupports($supportedTopic->topic_num,[$supportedTopic->nick_name_id]);
                        ?>
+                       	   <?php echo "here"; die; ?>
 					   @foreach($topicSupport as $k=>$support)
 					   
 					   @if(!in_array($support->camp->camp_num,$removedCampList)) <?php $key = $key + 1; ?>
@@ -165,7 +166,7 @@
 					  
 				  @if(Session::get('confirm') !='samecamp') 
 					   <!-- current supporting camp detail -->
-					   <?php echo "here"; die; ?>
+
 					<div class="col-sm-12 column">   
 					   <div id="positions_0" class="SpCmpBDY  support-sorter-element ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
                          
