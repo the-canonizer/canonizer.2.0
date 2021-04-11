@@ -250,7 +250,6 @@ class SettingsController extends Controller
 
             $topic = Camp::where('topic_num', $topicnum)->where('camp_name', '=', 'Agreement')->latest('submit_time')->first();
             $topicData = Camp::getAgreementTopic($topicnum,['nofilter'=>true]);
-            echo "<pre>"; print_r($topicData);print_r($topic);die;
             //$camp = Camp::where('topic_num',$topicnum)->where('camp_num','=', $campnum)->latest('submit_time','objector')->get();
             $onecamp = Camp::where('topic_num', $topicnum)->where('camp_num', '=', $campnum)->where('go_live_time', '<=', $as_of_time)->latest('submit_time')->first();
             $campWithParents = Camp::campNameWithAncestors($onecamp, '', $topicData->topic_name);
@@ -266,6 +265,7 @@ class SettingsController extends Controller
             $confirm_support = 0;
 
             $alreadySupport = Support::where('topic_num', $topicnum)->where('camp_num', $campnum)->where('end', '=', 0)->whereIn('nick_name_id', $userNickname)->get();
+            echo "<pre>"; print_r($alreadySupport); die;
             if ($alreadySupport->count() > 0) {
                 if($alreadySupport[0]->delegate_nick_name_id!=0){
                     $nickName = Nickname::where('id',$alreadySupport[0]->delegate_nick_name_id)->first();
