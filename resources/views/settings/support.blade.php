@@ -111,8 +111,7 @@
 					   <?php 
 					   		
                             $camp = \App\Model\Camp::getLiveCamp($support->topic_num,$support->camp_num);
-                            echo "<pre>"; print_r($camp);print_r($topic); die;
-					   ?>
+                        ?>
 					  
                        <div class="col-sm-12 column">
                             <div id="positions_{{ $support->support_id }}" class="SpCmpBDY  support-sorter-element ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
