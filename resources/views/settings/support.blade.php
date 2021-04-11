@@ -77,7 +77,7 @@
     <strong>Success! </strong>{{ Session::get('success')}}     
 </div>
 @endif
-
+<?php echo "i m here"; die;?>
 
 <div class="right-whitePnl">
    <div class="row justify-content-between">
@@ -107,11 +107,11 @@
 					
 					 <div class="col-sm-6">
 					<div class="row column">
-					<?php $k = 0; $topicSupport = $supportedTopic->topic->Getsupports($supportedTopic->topic_num,[$supportedTopic->nick_name_id]);
+					<?php $k = 0; $topicSupportCamp = $supportedTopic->topic->Getsupports($supportedTopic->topic_num,[$supportedTopic->nick_name_id]);
 
 					?>
                        
-					   @foreach($topicSupport as $k=>$support)
+					   @foreach($topicSupportCamp as $k=>$support)
 					   <?php 
 					   		
                             $camp = \App\Model\Camp::getLiveCamp($support->topic_num,$support->camp_num);
@@ -143,8 +143,7 @@
 					<div class="col-sm-6">
 					 <div class="row column">
                        <?php $key = 0; $topicSupport = $supportedTopic->topic->Getsupports($supportedTopic->topic_num,[$supportedTopic->nick_name_id]);
-                       
-					   	echo "<pre>"; print_r($topicSupport);die;
+
                        ?>
 					   @foreach($topicSupport as $k=>$support)
 					   
