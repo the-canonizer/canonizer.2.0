@@ -37,7 +37,7 @@
                  @foreach($supportedTopic as $data)
                  <?php  
                      $link = \App\Model\Camp::getTopicCampUrl($data->topic->topic_num,1);
-                     echo "<pre>"; print_r($data->topic); die;
+                     echo "<pre>"."fffff"; print_r($data->topic); die;
                  ?>
                        <div class="SpCmpHd"><b>For Topic : <a href="<?php echo $link; ?>">{{ $data->topic->topic_name}} </a> </b></div>
                		<div class="row column{{ $data->topic_num }}" style="padding:10px 15px;">
