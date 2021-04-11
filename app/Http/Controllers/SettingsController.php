@@ -253,7 +253,6 @@ class SettingsController extends Controller
             //$camp = Camp::where('topic_num',$topicnum)->where('camp_num','=', $campnum)->latest('submit_time','objector')->get();
             $onecamp = Camp::where('topic_num', $topicnum)->where('camp_num', '=', $campnum)->where('go_live_time', '<=', $as_of_time)->latest('submit_time')->first();
             $campWithParents = Camp::campNameWithAncestors($onecamp, '', $topicData->topic_name);
-            echo "<pre>"; print_r($onecamp); die;
             if (!count($onecamp)) {
                 return back();
             }
