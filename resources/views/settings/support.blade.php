@@ -189,7 +189,7 @@
 							<input type="hidden" name="camp[{{$camp->camp_num}}]" value="{{ $camp->camp_num }}">
 							<input type="hidden" name="delegated[{{$camp->camp_num}}]" value="{{ $delegate_nick_name_id }}">
                             
-                            <b><span class="support_order">{{ $key+1 }} </span> . {{ $camp->camp_name }} <br/></b>
+                            <!-- <b><span class="support_order">{{ $key+1 }} </span> . {{ $camp->camp_name }} <br/></b> -->
                             <span class="remove_camp">X</span>
                             
                         	
@@ -227,7 +227,7 @@
 
 
          </div>
-	    <?php echo "<pre>"; print_r($topic); die; ?>	 
+	    	 
         @if(isset($topic))
          <div id="myTabContent" class="add-nickname-section">  
                  <h5>Nick Name To Support Above Camps </h5>
