@@ -150,6 +150,7 @@
                      </div>					  
                     @else  				
 					
+				  <?php echo "<pre>"; print_r($camp); die; ?>
                        
 					<div class="col-sm-6">
 					 <div class="row column">
@@ -180,7 +181,6 @@
 					   @endforeach
 					  
 				  @if(Session::get('confirm') !='samecamp') 
-				  <?php echo "<pre>"; print_r($camp); die; ?>
 					   <!-- current supporting camp detail -->
 					<div class="col-sm-12 column">   
 					   <div id="positions_0" class="SpCmpBDY  support-sorter-element ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
