@@ -144,12 +144,12 @@
                      </div>					  
                     @else  				
 					
+                       <?php echo "<pre> i m hee"; die;?>
 					<div class="col-sm-6">
 					 <div class="row column">
                        <?php $key = 0; $topicSupport = $supportedTopic->topic->Getsupports($supportedTopic->topic_num,[$supportedTopic->nick_name_id]);
 
                        ?>
-                       <?php echo "<pre>";print_r($topicSupport); die;?>
 					   @foreach($topicSupport as $k=>$support)
 					   
 					   @if(!in_array($support->camp->camp_num,$removedCampList)) <?php $key = $key + 1; ?>
