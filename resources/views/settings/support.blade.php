@@ -106,7 +106,7 @@
 					<div class="row column">
 					<?php $k = 0; $topicSupport = $supportedTopic->topic->Getsupports($supportedTopic->topic_num,[$supportedTopic->nick_name_id]);
 					?>
-                       <?php echo "<pre>"; print_r($topicSupport); die; ?>
+                       
 					   @foreach($topicSupport as $k=>$support)
 					   <?php 
 					   		
