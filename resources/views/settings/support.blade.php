@@ -107,10 +107,10 @@
 					
 					 <div class="col-sm-6">
 					<div class="row column">
-					<?php $k = 0; $topicSupportCamp = $supportedTopic->topic->Getsupports($supportedTopic->topic_num,[$supportedTopic->nick_name_id]);
+					<?php $k = 0; $topicSupportCamp =[];// $supportedTopic->topic->Getsupports($supportedTopic->topic_num,[$supportedTopic->nick_name_id]);
 
 					?>
-					<?php echo "<pre>";print_r($topicSupportCamp); die;?>
+
                        
 					   @foreach($topicSupportCamp as $k=>$support)
 
