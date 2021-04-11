@@ -111,7 +111,6 @@
 					<?php 
 					$k = 0; $topicSupportCamp = $supportedTopic->topic->Getsupports($supportedTopic->topic_num,[$supportedTopic->nick_name_id]);
 
-				 		echo "<pre>"; print_r($camp); die; 
 					?>
 
                        
@@ -120,7 +119,8 @@
 					  
 					   <?php 
 					   		
-                            $camp = \App\Model\Camp::getLiveCamp($support->topic_num,$support->camp_num);
+                            $livecamp = \App\Model\Camp::getLiveCamp($support->topic_num,$support->camp_num);
+                            echo "<pre>"; print_r($livecamp);
                         ?>
 
 					
@@ -131,7 +131,7 @@
                                 
 							<input type="hidden" name="camp[{{$support->camp->camp_num}}]" value="{{ $support->camp->camp_num }}">
 							<input type="hidden" name="delegated[{{$support->camp->camp_num}}]" value="{{ $support->delegate_nick_name_id }}">
-                            <b><span class="support_order"> {{ $support->support_order }} </span> . {{ $camp->camp_name }} </b><br/>
+                            <b><span class="support_order"> {{ $support->support_order }} </span> . {{ $livecamp->camp_name }} </b><br/>
                              
                         
 							<?php 
@@ -145,7 +145,7 @@
 					  </div>
                        				  
 					   @endforeach
-
+					   <?php die; ?>
 					  </div>
                      </div>					  
                     @else  				
