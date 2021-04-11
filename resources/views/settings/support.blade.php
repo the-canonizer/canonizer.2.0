@@ -32,7 +32,7 @@
 
 					  if(isset($childSupport) && !empty($childSupport) ) {
 					   foreach($childSupport as $supportData) { 
-					   	echo "<pre>"; print_r($supportData); die;
+					   	echo "<pre>"; print_r($supportData);die;
 					       $removedCampList[]=$supportData->camp->camp_num;
 					 ?>
  					  <div class="col-sm-12 column">   
