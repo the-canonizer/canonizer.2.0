@@ -20,6 +20,8 @@
 </div>
 @endif
 <?php $removedCampList = array(); ?>
+
+<?php echo "i m here"; die; 
 @if(Session::has('confirm') && Session::has('warning') && Session::get('confirm') !='samecamp')
 	
 <div class="row">
@@ -58,8 +60,7 @@
 					 <?php } } ?>
                      				 
 					</div></div>
-</div>
-<?php echo "i m here"; die; ?>
+</div>?>
 <div class="alert alert-success">
    <div style="text-align:center">
      <a href="{{ route('settings.support')}}"><input type="button" name="cancel" class="btn btn-login" value="Cancel"></a>
