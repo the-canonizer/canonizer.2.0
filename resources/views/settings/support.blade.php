@@ -111,7 +111,7 @@
 					   <?php 
 					   		
                             $camp = \App\Model\Camp::getLiveCamp($support->topic_num,$support->camp_num);
-                            echo "<pre>"; print_r($camp);print_r($support->camp); die;
+                            echo "<pre>"; print_r($camp);print_r($supportedTopic); die;
 					   ?>
 					  
                        <div class="col-sm-12 column">
