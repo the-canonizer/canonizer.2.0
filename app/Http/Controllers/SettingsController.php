@@ -277,13 +277,13 @@ class SettingsController extends Controller
             }
 
             $parentSupport = Camp::validateParentsupport($topicnum, $campnum, $userNickname, $confirm_support);
-
             if ($parentSupport === "notlive") {
                 Session::flash('warning', "You cant submit your support to this camp as its not live yet.");
                 //return redirect()->back();
             } else if ($parentSupport) {
                 if (count($parentSupport) == 1) {
-                    foreach ($parentSupport as $parent)
+                    foreach ($parentSupport as $parent){
+                        
                         if ($parent->camp_num == $campnum) {
                             //Session::flash('warning', "You are already supporting this camp. You can't submit support again.");
                             Session::flash('confirm', 'samecamp');
@@ -291,6 +291,7 @@ class SettingsController extends Controller
                             Session::flash('warning', 'The following  camp is parent camp to "' . $onecamp->camp_name . '" and will be removed if you commit this support.');
                             Session::flash('confirm', 1);
                         }
+                    }
                 } else {
                     Session::flash('warning', 'The following  camps are parent camps to "' . $onecamp->camp_name . '" and will be removed if you commit this support.');
                     Session::flash('confirm', 1);
@@ -303,7 +304,7 @@ class SettingsController extends Controller
             if ($childSupport) {
                 if (count($childSupport) == 1) {
                     foreach ($childSupport as $child)
-                        if ($child->camp_num == $campnum) {
+                        if ($child->camp_num == $campnum && $child->delegate_nick_name_id == 0) {
                             // Session::flash('warning', "You are already supporting this camp. You cant submit support again.");
                             Session::flash('confirm', 'samecamp');
                         } else {
