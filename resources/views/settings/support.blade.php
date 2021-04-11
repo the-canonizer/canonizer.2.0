@@ -111,7 +111,7 @@
 					<?php 
 					$k = 0; $topicSupportCamp = $supportedTopic->topic->Getsupports($supportedTopic->topic_num,[$supportedTopic->nick_name_id]);
 
-				 <?php echo "<pre>"; print_r($camp); die; ?>
+				 		echo "<pre>"; print_r($camp); die; 
 					?>
 
                        
