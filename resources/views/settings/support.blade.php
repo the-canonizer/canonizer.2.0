@@ -32,6 +32,8 @@
 
 					  if(isset($childSupport) && !empty($childSupport) ) {
 					   foreach($childSupport as $supportData) { 
+
+						echo "<pre>";print_r($supportData) die; 
 					       $removedCampList[]=$supportData->camp->camp_num;
 					 ?>
  					  <div class="col-sm-12 column">   
@@ -43,8 +45,7 @@
                         </div>
 						</div>
 					 <?php } }?>
-					 
-<?php echo "i m here"; die; ?>	
+	
 					 <?php if(isset($parentSupport) && !empty($parentSupport) ) { foreach($parentSupport as $supportData) { 
 					       $removedCampList[]=$supportData->camp->camp_num;
 					 ?>
