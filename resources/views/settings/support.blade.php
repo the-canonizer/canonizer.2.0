@@ -28,7 +28,7 @@
 					
 					 
 					 <?php
-					 echo "<pre>"; print_r($supportData); die;
+					 
 					  if(isset($childSupport) && !empty($childSupport) ) {
 					   foreach($childSupport as $supportData) { 
 					       $removedCampList[]=$supportData->camp->camp_num;
