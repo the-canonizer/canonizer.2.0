@@ -118,11 +118,11 @@
 					   @foreach($topicSupportCamp as $k=>$support)
 
 					  	
-<?php   echo "<pre>"; print_r($camp) ; die;
-                         ?>
 					   <?php 
 					   		
-                           // $livecamp = \App\Model\Camp::getLiveCamp($support->topic_num,$support->camp_num);
+                            $livecamp = \App\Model\Camp::getLiveCamp($support->topic_num,$support->camp_num);
+
+ echo "<pre>"; print_r($livecamp) ;
                         ?>
 
 					
@@ -147,7 +147,7 @@
 					  </div>
                        				  
 					   @endforeach
-
+					   <?php die; ?>
 					  </div>
                      </div>					  
                     @else  				
