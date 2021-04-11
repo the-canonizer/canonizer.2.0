@@ -98,7 +98,7 @@
 					
 				?>
 	
-<?php echo "<pre>";print_r($supportedTopic); die;?>
+<?php echo "<pre>";print_r($supportedTopic->topic); die;?>
                 @if(isset($supportedTopic) && isset($supportedTopic->topic_num) && count($supportedTopic))
                    <div class="SpCmpHd"><b>Your supporting camps list for topic "{{ $supportedTopic->topic->topic_name}}"</b></div>
                		<div class="row" style="min-height:120px">
