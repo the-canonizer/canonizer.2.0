@@ -265,7 +265,6 @@ class SettingsController extends Controller
             $confirm_support = 0;
 
             $alreadySupport = Support::where('topic_num', $topicnum)->where('camp_num', $campnum)->where('end', '=', 0)->whereIn('nick_name_id', $userNickname)->get();
-            echo "<pre>"; print_r($alreadySupport); die;
             if ($alreadySupport->count() > 0) {
                 if($alreadySupport[0]->delegate_nick_name_id!=0){
                     $nickName = Nickname::where('id',$alreadySupport[0]->delegate_nick_name_id)->first();
@@ -323,6 +322,7 @@ class SettingsController extends Controller
                 ->whereRaw("(start <= " . $as_of_time . ") and ((end = 0) or (end >= " . $as_of_time . "))")
                 ->groupBy('topic_num')->orderBy('start', 'DESC')->first();
 
+            echo "<pre>"; print_r($supportedTopic );print_r($parentSupport); print_r($onecamp); print_r($childSupport); die;
             return view('settings.support', ['parentSupport' => $parentSupport, 'childSupport' => $childSupport, 'userNickname' => $userNickname, 'supportedTopic' => $supportedTopic, 'topic' => $topic, 'nicknames' => $nicknames, 'camp' => $onecamp, 'parentcamp' => $campWithParents, 'delegate_nick_name_id' => $delegate_nick_name_id]);
         } else {
             $id = Auth::user()->id;
