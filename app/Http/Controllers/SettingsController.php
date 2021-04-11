@@ -275,6 +275,8 @@ class SettingsController extends Controller
                 // return redirect()->back();
             }
 
+            echo "i mhere"; die;
+
             $parentSupport = Camp::validateParentsupport($topicnum, $campnum, $userNickname, $confirm_support);
             if ($parentSupport === "notlive") {
                 Session::flash('warning', "You cant submit your support to this camp as its not live yet.");
@@ -322,7 +324,7 @@ class SettingsController extends Controller
                 ->whereRaw("(start <= " . $as_of_time . ") and ((end = 0) or (end >= " . $as_of_time . "))")
                 ->groupBy('topic_num')->orderBy('start', 'DESC')->first();
 
-            echo "<pre>"; print_r($parentSupport); die;
+        
             return view('settings.support', ['parentSupport' => $parentSupport, 'childSupport' => $childSupport, 'userNickname' => $userNickname, 'supportedTopic' => $supportedTopic, 'topic' => $topic, 'nicknames' => $nicknames, 'camp' => $onecamp, 'parentcamp' => $campWithParents, 'delegate_nick_name_id' => $delegate_nick_name_id]);
         } else {
             $id = Auth::user()->id;
