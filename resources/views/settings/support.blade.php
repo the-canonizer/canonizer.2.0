@@ -106,13 +106,13 @@
 					<div class="row column">
 					<?php $k = 0; $topicSupport = $supportedTopic->topic->Getsupports($supportedTopic->topic_num,[$supportedTopic->nick_name_id]);
 					?>
-                       
+                       <?php echo "<pre>"; print_r($topicSupport); die; ?>
 					   @foreach($topicSupport as $k=>$support)
 					   <?php 
 					   		
                             $livecamp = \App\Model\Camp::getLiveCamp($support->topic_num,$support->camp_num);
 					   ?>
-					  <?php echo "<pre>"; print_r($livecamp); ?>
+					  
                        <div class="col-sm-12 column">
                             <div id="positions_{{ $support->support_id }}" class="SpCmpBDY  support-sorter-element ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
                            
