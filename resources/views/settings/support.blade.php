@@ -107,10 +107,11 @@
 					
 					 <div class="col-sm-6">
 					<div class="row column">
-					<?php 
+						
+					<?php echo "<pre>"; print_r($supportedTopic->topic->Getsupports($supportedTopic->topic_num,[$supportedTopic->nick_name_id])); die;
 					$k = 0; $topicSupportCamp = $supportedTopic->topic->Getsupports($supportedTopic->topic_num,[$supportedTopic->nick_name_id]);
 
-				echo "<pre>"; print_r($supportedTopic->topic->Getsupports($supportedTopic->topic_num,[$supportedTopic->nick_name_id])); die;
+				
 					?>
 
                        
