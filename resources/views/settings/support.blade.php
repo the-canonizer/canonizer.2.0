@@ -19,10 +19,7 @@
     <strong>Warning! </strong>{{ Session::get('warningDelegate')}} 
 </div>
 @endif
-<?php $removedCampList = array(); 
-	
-						echo "<pre>";print_r($childSupport); die; 
-?>
+<?php $removedCampList = array();?>
 
 @if(Session::has('confirm') && Session::has('warning') && Session::get('confirm') !='samecamp')
 	
@@ -35,7 +32,7 @@
 
 					  if(isset($childSupport) && !empty($childSupport) ) {
 					   foreach($childSupport as $supportData) { 
-
+					   	echo "<pre>"; print_r($supportData); die;
 					       $removedCampList[]=$supportData->camp->camp_num;
 					 ?>
  					  <div class="col-sm-12 column">   
