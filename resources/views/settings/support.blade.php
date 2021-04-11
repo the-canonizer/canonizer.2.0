@@ -203,7 +203,10 @@
 					@endif   
                
                @else
-
+               
+	    	 
+<?php   echo "<pre>"; print_r($camp) ; die;
+                         ?>
 				   <div class="row column">
 				  	<div class="col-sm-12 column">   
 					   <div id="positions_0" class="SpCmpBDY  support-sorter-element ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
@@ -226,9 +229,6 @@
 
 
          </div>
-	    	 
-<?php   echo "<pre>"; print_r($camp) ; die;
-                         ?>
         @if(isset($topic))
          <div id="myTabContent" class="add-nickname-section">  
                  <h5>Nick Name To Support Above Camps </h5>
