@@ -180,6 +180,7 @@
 					   @endforeach
 					  
 				  @if(Session::get('confirm') !='samecamp') 
+				  <?php echo "<pre>"; print_r($camp); die; ?>
 					   <!-- current supporting camp detail -->
 					<div class="col-sm-12 column">   
 					   <div id="positions_0" class="SpCmpBDY  support-sorter-element ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
@@ -189,7 +190,7 @@
 							<input type="hidden" name="camp[{{$camp->camp_num}}]" value="{{ $camp->camp_num }}">
 							<input type="hidden" name="delegated[{{$camp->camp_num}}]" value="{{ $delegate_nick_name_id }}">
                             
-                            <!-- <b><span class="support_order">{{ $key+1 }} </span> . {{ $camp->camp_name }} <br/></b> -->
+                            <b><span class="support_order">{{ $key+1 }} </span> . {{ $camp->camp_name }} <br/></b>
                             <span class="remove_camp">X</span>
                             
                         	
