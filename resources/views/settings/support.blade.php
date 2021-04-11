@@ -110,9 +110,10 @@
 					<?php $k = 0; $topicSupportCamp = $supportedTopic->topic->Getsupports($supportedTopic->topic_num,[$supportedTopic->nick_name_id]);
 
 					?>
-					  <?php echo "<pre>";print_r($topicSupportCamp); die;?>
                        
 					   @foreach($topicSupportCamp as $k=>$support)
+
+					  <?php echo "<pre>";print_r($support); die;?>
 					   <?php 
 					   		
                             $camp = \App\Model\Camp::getLiveCamp($support->topic_num,$support->camp_num);
