@@ -122,7 +122,7 @@
 					   		
                             $livecamp = \App\Model\Camp::getLiveCamp($support->topic_num,$support->camp_num);
 
- echo "<pre>"; print_r($livecamp) ;
+ 
                         ?>
 
 					
@@ -147,7 +147,6 @@
 					  </div>
                        				  
 					   @endforeach
-					   <?php die; ?>
 					  </div>
                      </div>					  
                     @else  				
@@ -159,6 +158,8 @@
                        <?php $key = 0; $topicSupport = $supportedTopic->topic->Getsupports($supportedTopic->topic_num,[$supportedTopic->nick_name_id]);
 
                        ?>
+
+					   <?php echo "<pre>"; print_r($camp) ; die; ?>
 					   @foreach($topicSupport as $k=>$support)
 					   
 					   @if(!in_array($support->camp->camp_num,$removedCampList)) <?php $key = $key + 1; ?>
