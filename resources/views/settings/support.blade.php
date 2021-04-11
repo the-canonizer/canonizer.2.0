@@ -77,8 +77,6 @@
     <strong>Success! </strong>{{ Session::get('success')}}     
 </div>
 @endif
-<?php   echo "<pre>"; print_r($camp) ; die;
-                         ?>
 <div class="right-whitePnl">
    <div class="row justify-content-between">
     <div class="col-sm-12 margin-btm-2">
@@ -229,6 +227,8 @@
 
          </div>
 	    	 
+<?php   echo "<pre>"; print_r($camp) ; die;
+                         ?>
         @if(isset($topic))
          <div id="myTabContent" class="add-nickname-section">  
                  <h5>Nick Name To Support Above Camps </h5>
