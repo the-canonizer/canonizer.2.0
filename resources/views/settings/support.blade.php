@@ -77,7 +77,6 @@
     <strong>Success! </strong>{{ Session::get('success')}}     
 </div>
 @endif
-<?php echo "i m here"; die;?>
 
 <div class="right-whitePnl">
    <div class="row justify-content-between">
@@ -218,6 +217,7 @@
          </div>
 		            
 					
+<?php echo "i m here"; die;?>
 					 
         @if(isset($topic))
          <div id="myTabContent" class="add-nickname-section">  
