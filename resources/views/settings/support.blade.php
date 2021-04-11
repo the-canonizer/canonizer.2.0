@@ -110,6 +110,7 @@
 					<?php $k = 0; $topicSupportCamp = $supportedTopic->topic->Getsupports($supportedTopic->topic_num,[$supportedTopic->nick_name_id]);
 
 					?>
+					<?php echo "<pre>";print_r($topicSupportCamp); die;?>
                        
 					   @foreach($topicSupportCamp as $k=>$support)
 
@@ -141,7 +142,7 @@
 					  </div>
                        				  
 					   @endforeach
-					    <?php echo "<pre>";print_r($topic); die;?>
+
 					  </div>
                      </div>					  
                     @else  				
