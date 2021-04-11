@@ -110,7 +110,7 @@
 					<?php $k = 0; $topicSupportCamp = $supportedTopic->topic->Getsupports($supportedTopic->topic_num,[$supportedTopic->nick_name_id]);
 
 					?>
-                       
+                       <?php echo "<pre> i m hee"; die;?>
 					   @foreach($topicSupportCamp as $k=>$support)
 
 					  
@@ -144,7 +144,7 @@
                      </div>					  
                     @else  				
 					
-                       <?php echo "<pre> i m hee"; die;?>
+                       
 					<div class="col-sm-6">
 					 <div class="row column">
                        <?php $key = 0; $topicSupport = $supportedTopic->topic->Getsupports($supportedTopic->topic_num,[$supportedTopic->nick_name_id]);
