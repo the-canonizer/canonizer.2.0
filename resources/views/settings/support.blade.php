@@ -21,7 +21,6 @@
 @endif
 <?php $removedCampList = array(); ?>
 
-<?php echo "i m here"; die; ?>
 @if(Session::has('confirm') && Session::has('warning') && Session::get('confirm') !='samecamp')
 	
 <div class="row">
@@ -43,7 +42,9 @@
                         
                         </div>
 						</div>
-					 <?php } }?>	
+					 <?php } }?>
+					 
+<?php echo "i m here"; die; ?>	
 					 <?php if(isset($parentSupport) && !empty($parentSupport) ) { foreach($parentSupport as $supportData) { 
 					       $removedCampList[]=$supportData->camp->camp_num;
 					 ?>
