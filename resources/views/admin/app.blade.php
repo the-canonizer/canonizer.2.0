@@ -53,6 +53,7 @@
                     <li class="{{ ($route=='getNamespaceRequests') ? 'current':''}}"><a href="{{ url('/admin/namespace-requests') }}"><i class="glyphicon glyphicon-calendar"></i> Namespace Requests</a></li>
                     <li class="{{ ($route=='getIndex' & str_contains(Request::fullUrl(), 'users')) ? 'current':''}}"><a href="{{ url('/admin/users') }}"><i class="glyphicon glyphicon-calendar"></i> Users</a></li>
                     <li class="{{ ($route=='index' & str_contains(Request::fullUrl(), 'templates')) ? 'current':''}}"><a href="{{ url('/admin/templates') }}"><i class="glyphicon glyphicon-pencil"></i> Templates</a></li>
+                     <li class="{{ ($route=='index' & str_contains(Request::fullUrl(), 'shares')) ? 'current':''}}"><a href="{{ url('/admin/shares') }}"><i class="glyphicon glyphicon-pencil"></i> Shares</a></li>
                     <li class="{{ ($route=='getSendmail') ? 'current':''}}"><a href="{{ url('/admin/sendmail') }}"><i class="glyphicon glyphicon-pencil"></i> Send Email</a></li>
                     <li class="{{ ($route=='index' & str_contains(Request::fullUrl(), 'videopodcast')) ? 'current':''}}"><a href="{{ url('/admin/videopodcast') }}"><i class="glyphicon glyphicon-facetime-video"></i> Video Podcast</a></li>
                     <!--<li><a href="stats.html"><i class="glyphicon glyphicon-stats"></i> Statistics (Charts)</a></li>
