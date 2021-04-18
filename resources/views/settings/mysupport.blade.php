@@ -40,7 +40,7 @@
                  ?>
                        <div class="SpCmpHd"><b>For Topic : <a href="<?php echo $link; ?>">{{ $data->topic->topic_name}} </a> </b></div>
                		<div class="row column{{ $data->topic_num }}" style="padding:10px 15px;">
-					   <?php $topicSupport = $data->topic->Getsupports($data->topic_num,$userNickname);?>
+					   <?php $topicSupport = $data->topic->Getsupports($data->topic_num,$userNickname,['nofilter'=>true]);?>
 
 					   @foreach($topicSupport as $k=>$support)
                         <?php if($support->delegate_nick_name_id == 0) {

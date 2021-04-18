@@ -104,7 +104,7 @@
 					
 					 <div class="col-sm-6">
 					<div class="row column">
-					<?php $k = 0; $topicSupport = $supportedTopic->topic->Getsupports($supportedTopic->topic_num,[$supportedTopic->nick_name_id]);
+					<?php $k = 0; $topicSupport = $supportedTopic->topic->Getsupports($supportedTopic->topic_num,[$supportedTopic->nick_name_id],['nofilter'=>true]);
 					?>
                        
 					   @foreach($topicSupport as $k=>$support)
@@ -138,7 +138,7 @@
 					
 					<div class="col-sm-6">
 					 <div class="row column">
-                       <?php $key = 0; $topicSupport = $supportedTopic->topic->Getsupports($supportedTopic->topic_num,[$supportedTopic->nick_name_id]);
+                       <?php $key = 0; $topicSupport = $supportedTopic->topic->Getsupports($supportedTopic->topic_num,[$supportedTopic->nick_name_id],['nofilter'=>true]);
                         // echo "<pre>"; print_r($topicSupport); die;
                        ?>
 
