@@ -270,6 +270,7 @@ class SettingsController extends Controller
                     $nickName = Nickname::where('id',$alreadySupport[0]->delegate_nick_name_id)->first();
                     $userFromNickname = $nickName->getUser();
                     Session::flash('warningDelegate', "You have already delegated your support for this camp to user ".$userFromNickname->first_name." ".$userFromNickname->last_name.". If you continue your delegated support will be removed.");
+
                 }
                 //Session::flash('warning', "You have already supported this camp, you can't submit your support again.");
                 // return redirect()->back();
@@ -372,8 +373,7 @@ class SettingsController extends Controller
             $userNicknames = Nickname::personNicknameArray();
             $topic_num = $data['topic_num'];
             $mysupportArray = [];
-            $mysupports = Support::where('topic_num', $topic_num)->whereIn('nick_name_id', $userNicknames)->where('end', '=', 0)->orderBy('support_order', 'ASC')->get();
-
+            $mysupports = Support::where('topic_num', $topic_num)->whereIn('nick_name_id', $userNicknames)->where('delegate_nick_name_id','=',0)->where('end', '=', 0)->orderBy('support_order', 'ASC')->get();
             if(isset($mysupports) && count($mysupports) > 0){
                 foreach ($mysupports as $spp){
                     $mysupportArray[] =  $spp->camp_num;
@@ -397,6 +397,7 @@ class SettingsController extends Controller
             
             $last_camp =  $data['camp_num'];
             $newcamp_mail_flag = false;
+            
             if (isset($data['support_order'])) {
                 foreach ($data['support_order'] as $camp_num => $support_order) {
                     $last_camp = $camp_num;
@@ -432,7 +433,18 @@ class SettingsController extends Controller
             if ($last_camp == $data['camp_num']) {
                 Session::flash('confirm', "samecamp");
             }
-
+           /* remove delegate support if user is support directly */
+             if(isset($data['delegated']) && count($data['delegated']) > 0 && $data['delegate_nick_name_id'] == 0){
+                foreach($data['delegated'] as $k=>$d){
+                    if($k == $camp_num){
+                        $support = Support::where('topic_num', $topic_num)->where('camp_num','=', $camp_num)->where('delegate_nick_name_id','=',$d)->where('end', '=', 0)->get();
+                         $support[0]->end = time();
+                         $support[0]->save();    
+                    }
+                    
+                }
+               
+             }
             /* Send delegated support email to the direct supporter and all parent  and to subscriber*/
             if (isset($data['delegate_nick_name_id']) && $data['delegate_nick_name_id'] != 0) {
                 $parentUser = Nickname::getUserByNickName($data['delegate_nick_name_id']);

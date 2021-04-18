@@ -139,6 +139,7 @@
 					<div class="col-sm-6">
 					 <div class="row column">
                        <?php $key = 0; $topicSupport = $supportedTopic->topic->Getsupports($supportedTopic->topic_num,[$supportedTopic->nick_name_id]);
+                        // echo "<pre>"; print_r($topicSupport); die;
                        ?>
 
 					   @foreach($topicSupport as $k=>$support)
@@ -164,9 +165,8 @@
                        @endif					  
 					   @endforeach
 					  
-				  @if(Session::get('confirm') !='samecamp') 
+				  @if(Session::get('confirm') !='samecamp' && !Session::has('warningDelegate')) 
 					   <!-- current supporting camp detail -->
-
 					<div class="col-sm-12 column">   
 					   <div id="positions_0" class="SpCmpBDY  support-sorter-element ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
                          
