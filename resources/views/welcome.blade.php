@@ -20,7 +20,7 @@
 <div class="right-whitePnl">
     <div class="container-fluid">
         <div class="Gcolor-Pnl">
-            <h3>What is Canonizer.com?</h3>
+            <h3>Help us bring the world together!</h3>
             <div class="content">
 
                 <iframe src="https://player.vimeo.com/video/307590745" style="position: relative;width: 100%;height:400px;border:none;" id="homeiframe">
