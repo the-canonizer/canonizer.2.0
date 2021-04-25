@@ -7,6 +7,7 @@ use App\Model\Camp;
 use App\Model\Support;
 use App\Model\EtherAddresses;
 use App\Model\Nickname;
+use App\Model\SharesAlgorithm;
 use Illuminate\Database\Eloquent\Collection;
 
 class Algorithm{
@@ -30,6 +31,8 @@ class Algorithm{
 			'republican'=>'Republican',
 			'democrat'=>'Democrat',
 			'ether' => 'Ethereum'
+            'shares'=> 'Canonizer Shares',
+            'shares_sqrt' => 'Canonizer Canonizer'
         );
     }
 	
@@ -37,7 +40,7 @@ class Algorithm{
     @return all the available algorithm key values
     */
     public static function getKeyList(){
-        return array('blind_popularity','mind_experts','computer_science_experts','PhD','christian','secular','mormon','uu','atheist','transhumanist','united_utah','republican','democrat', 'ether'
+        return array('blind_popularity','mind_experts','computer_science_experts','PhD','christian','secular','mormon','uu','atheist','transhumanist','united_utah','republican','democrat', 'ether','shares','shares_sqrt'
         );
     }
     
@@ -137,6 +140,35 @@ class Algorithm{
         }
         
         return $total_ethers;
+    }
+
+    public static function share_algo($nick_name_id,$topicnum=0,$campnum=0,$algo='shares'){
+        $as_of_time = time();
+        $key = '';
+        if(isset($_REQUEST['asof']) && $_REQUEST['asof']=='bydate'){
+            $as_of_time = strtotime($_REQUEST['asofdate']);
+            $key = $as_of_time;
+        }
+        $user_id = Nickname::getUserIDByNickName($nick_name_id);
+        $year = date('Y',strtotime($as_of_time));
+        $month = date('m',strtotime($as_of_time));
+        $shares = SharesAlgorithm::whereYear('as_of_date', '=', $year)
+              ->whereMonth('as_of_date', '<=', $month)->where('nick_name_id',$nick_name_id)->get();
+        $sum_of_shares = 0;
+        $sum_of_sqrt_shares = 0;
+        if(count($shares)){
+            foreach($shares as $s){
+                $sum_of_shares = $sum_of_shares + $s->share_value;
+                $sum_of_sqrt_shares = $sum_of_sqrt_shares+ number_format(sqrt($s->share_value),2);
+            }
+        }
+
+        if($algo == 'shares'){
+            return $sum_of_shares;
+        }else{
+            return $sum_of_sqrt_shares;
+        }
+
     }
 
     public static function blind_popularity($nick_name_id = null,$topicnum=0,$campnum=0){
