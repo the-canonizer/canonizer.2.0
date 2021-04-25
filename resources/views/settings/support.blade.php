@@ -110,7 +110,7 @@
 					   @foreach($topicSupport as $k=>$support)
 					   <?php 
 					   		
-                            $livecamp = \App\Model\Camp::getLiveCamp($support->topic_num,$support->camp_num);
+                            $livecamp = \App\Model\Camp::getLiveCamp($support->topic_num,$support->camp_num,['nofilter'=>true]);
 					   ?>
 					  
                        <div class="col-sm-12 column">
