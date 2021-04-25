@@ -163,5 +163,54 @@ class SharesAlgoController extends Controller {
         }
     }
 
+    public function getshares(Request $request){
+        $data = $request->only('month');
+         $table = "<table class='table table-row'><tr>
+                    <th>Nick Name</th>
+                    <th>Date</th>
+                    <th>share</th>
+                    <th>Sqrt(shares)</th>
+                    <th>Action</th>
+                </tr>";
+        if(isset($data['month']) && $data['month']!=''){
+            $year = date('Y',strtotime($data['month']));
+            $month = date('m',strtotime($data['month']));
+            $dataShares = SharesAlgorithm::whereYear('as_of_date', '=', $year)
+              ->whereMonth('as_of_date', '=', $month)->paginate(10);
+            //echo "<pre>"; print_r($dataShares); die;
+           
+
+            if(count($dataShares) > 0){
+                foreach($dataShares as $d){
+                    $table.="<tr>";
+                    $table.="<td>".$d->usernickname->nick_name."</td><td>".date("F,Y",strtotime($d->as_of_date))."</td><td>".$d->share_value."</td><td>".number_format(sqrt($d->share_value),2)."</td>";
+                    $table.="<td>
+                        <a href='".url('/admin/shares/edit/'.$d->id) ."'><i class='fa fa-edit'></i>&nbsp;&nbsp;Edit</a>
+                        &nbsp;&nbsp;<a href='javascript:void(0)' onClick='deleteShare('".$d->id."')'><i class='fa fa-trash'></i>&nbsp;&nbsp;Delete</a>
+                    </td>";
+                    $table.="</tr>";
+                }
+            }else{
+                $table.="<tr>";
+                $table.="<td colspan='5'><span>No Share data found!</span></td>";
+                $table.="</tr>";
+            }
+
+            $table.="</table>";
+            $table.=$dataShares->links();
+
+
+        }else{
+                $table.="<tr>";
+                $table.="<td colspan='5'><span>No Share data found!</span></td>";
+                $table.="</tr>";
+         }
+
+            $table.="</table>";
+        echo $table; exit;
+        
+
+    }
+
 
 }
