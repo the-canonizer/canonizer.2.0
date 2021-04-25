@@ -436,7 +436,7 @@ class SettingsController extends Controller
            /* remove delegate support if user is support directly */
              if(isset($data['delegated']) && count($data['delegated']) > 0 && $data['delegate_nick_name_id'] == 0){
                 foreach($data['delegated'] as $k=>$d){
-                    if($k == $camp_num){
+                    if($k == $camp_num && $d !=0){
                         $support = Support::where('topic_num', $topic_num)->where('camp_num','=', $camp_num)->where('delegate_nick_name_id','=',$d)->where('end', '=', 0)->get();
                          $support[0]->end = time();
                          $support[0]->save();    
