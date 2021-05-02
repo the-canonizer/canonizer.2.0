@@ -30,7 +30,7 @@ class Algorithm{
 			'united_utah'=>'United Utah',
 			'republican'=>'Republican',
 			'democrat'=>'Democrat',
-			'ether' => 'Ethereum'
+			'ether' => 'Ethereum',
             'shares'=> 'Canonizer Shares',
             'shares_sqrt' => 'Canonizer Canonizer'
         );
@@ -144,30 +144,54 @@ class Algorithm{
 
     public static function share_algo($nick_name_id,$topicnum=0,$campnum=0,$algo='shares'){
         $as_of_time = time();
-        $key = '';
         if(isset($_REQUEST['asof']) && $_REQUEST['asof']=='bydate'){
             $as_of_time = strtotime($_REQUEST['asofdate']);
-            $key = $as_of_time;
         }
-        $user_id = Nickname::getUserIDByNickName($nick_name_id);
-        $year = date('Y',strtotime($as_of_time));
-        $month = date('m',strtotime($as_of_time));
+        $year = date('Y',$as_of_time);
+        $month = date('m',$as_of_time);
         $shares = SharesAlgorithm::whereYear('as_of_date', '=', $year)
               ->whereMonth('as_of_date', '<=', $month)->where('nick_name_id',$nick_name_id)->get();
         $sum_of_shares = 0;
         $sum_of_sqrt_shares = 0;
+       
         if(count($shares)){
             foreach($shares as $s){
                 $sum_of_shares = $sum_of_shares + $s->share_value;
                 $sum_of_sqrt_shares = $sum_of_sqrt_shares+ number_format(sqrt($s->share_value),2);
             }
         }
-
+        $condition = "topic_num = $topicnum and camp_num = $campnum";
+         $sql = "select count(*) as countTotal,support_order,camp_num from support where nick_name_id = $nick_name_id and (" .$condition.")";
+        $sql2 ="and ((start < $as_of_time) and ((end = 0) or (end > $as_of_time)))";
+         
+        $result = Cache::remember("$sql $sql2", 2, function () use($sql,$sql2) {
+                return DB::select("$sql $sql2");
+        });
+        $total = 0;
+        
         if($algo == 'shares'){
-            return $sum_of_shares;
+           if($result[0]->support_order==1)
+                $total = $sum_of_shares;
+            else if($result[0]->support_order==2)
+                $total = $sum_of_shares / 2;
+            else if($result[0]->support_order==3)
+                $total = $sum_of_shares / 4;
+            else if($result[0]->support_order==4)
+                $total = $sum_of_shares / 6;
+            else $total = $sum_of_shares;
         }else{
-            return $sum_of_sqrt_shares;
+            if($result[0]->support_order==1)
+                $total = $sum_of_sqrt_shares;
+            else if($result[0]->support_order==2)
+                $total = $sum_of_sqrt_shares / 2;
+            else if($result[0]->support_order==3)
+                $total = $sum_of_sqrt_shares / 4;
+            else if($result[0]->support_order==4)
+                $total = $sum_of_sqrt_shares / 6;
+            else $total = $sum_of_sqrt_shares;
         }
+
+        return $total;
 
     }
 
@@ -178,6 +202,14 @@ class Algorithm{
     public static function mind_experts($nick_name_id = null,$topicnum=0,$campnum=0){
         return self::camp_tree_count(81,$nick_name_id);
     }
+
+    public static function shares($nick_name_id = null,$topicnum=0,$campnum=0,$algo='shares'){
+        return self::share_algo($nick_name_id,$topicnum,$campnum,$algo);
+    }
+    public static function shares_sqrt($nick_name_id= null,$topicnum=0,$campnum=0,$algo='shares_sqrt'){
+        return self::share_algo($nick_name_id,$topicnum,$campnum,$algo);
+    }
+
 
     public static function computer_science_experts($nick_name_id,$topicnum=0,$campnum=0){
         return self::camp_tree_count(124,$nick_name_id);

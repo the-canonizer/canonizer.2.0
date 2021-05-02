@@ -30,14 +30,14 @@ class SharesAlgoController extends Controller {
     public function create()
     {
 
-        $nickNames = Nickname::all();
-        $nick_names = [];
-        if(count($nickNames) > 0){
-            foreach($nickNames as $n){
-               $nick_names[$n->id] = $n->nick_name; 
-            }
-        }
-        return view('admin.shares.create',compact('nick_names'));
+        // $nickNames = Nickname::all();
+        // $nick_names = [];
+        // if(count($nickNames) > 0){
+        //     foreach($nickNames as $n){
+        //        $nick_names[$n->id] = $n->nick_name; 
+        //     }
+        // }
+        return view('admin.shares.create');
     }
 
     /**
@@ -49,28 +49,34 @@ class SharesAlgoController extends Controller {
     public function store(Request $request)
     {
         $data = $request->only('nick_name_id','as_of_date','share_value');
+
          $validatorArray = [ 
           'nick_name_id' => 'required',
           'as_of_date' => 'required',
           'share_value' => 'required'
           ];
-         // $message = [
-         //    'name.required' => 'Template Name field is required.',
-         //    'subject.required' => 'Template Subject field is required.',
-         //    'body.required' => 'Template Body field is required.',
-         // ];
+        
          $validator = Validator::make($request->only(['nick_name_id','as_of_date','share_value']), $validatorArray);
          if ($validator->fails()) {  
             return back()->withErrors($validator->errors())->withInput($request->all());
         }
 
-        // echo "<pre>"; print_r($data); die;
-        $share = new SharesAlgorithm();
-        $share->nick_name_id = $data['nick_name_id'];
-        $share->as_of_date =  date('Y-'.$data['as_of_date'].'-01');
-        $share->share_value = $data['share_value'];
-        $share->save();
-        return redirect('/admin/shares');
+        //validate if nickname id exist
+
+        $nickName = Nickname::find($data['nick_name_id']);
+        if(isset($nickName) && isset($nickName->id)){
+            // echo "<pre>"; print_r($data); die;
+            $share = new SharesAlgorithm();
+            $share->nick_name_id = $data['nick_name_id'];
+            $share->as_of_date =  date('Y-'.$data['as_of_date'].'-01');
+            $share->share_value = $data['share_value'];
+            $share->save();
+            return redirect('/admin/shares');
+        }else{
+             return back()->with('nickNameError', 'Nickname Id does not exist.');   
+        }
+
+        
         
     }
 
@@ -95,14 +101,15 @@ class SharesAlgoController extends Controller {
     {
         if($id){
             $share = SharesAlgorithm::find($id);
-            $nickNames = Nickname::all();
-            $nick_names = [];
-            if(count($nickNames) > 0){
-                foreach($nickNames as $n){
-                   $nick_names[$n->id] = $n->nick_name; 
-                }
-            }
-            return view('admin.shares.edit',compact('share','nick_names'));
+            // $nickNames = Nickname::all();
+            // $nick_names = [];
+            // if(count($nickNames) > 0){
+            //     foreach($nickNames as $n){
+            //        $nick_names[$n->id] = $n->nick_name; 
+            //     }
+            // }
+            // return view('admin.shares.edit',compact('share','nick_names'));
+            return view('admin.shares.edit',compact('share'));
             
         }
     }
@@ -138,12 +145,19 @@ class SharesAlgoController extends Controller {
              if ($validator->fails()) {  
                 return back()->withErrors($validator->errors())->withInput($request->all());
             }
-            $share = SharesAlgorithm::find($id);
-            $share->nick_name_id = $data['nick_name_id'];
-            $share->as_of_date = $data['as_of_date'];
-            $share->share_value = $data['share_value'];
-            $request->session()->flash('success', 'Share Data Updated Successfully');
-            return redirect('/admin/shares');
+
+            $nickName = Nickname::find($data['nick_name_id']);
+            if(isset($nickName) && isset($nickName->id)){
+                $share = SharesAlgorithm::find($id);
+                $share->nick_name_id = $data['nick_name_id'];
+                $share->as_of_date = $data['as_of_date'];
+                $share->share_value = $data['share_value'];
+                $request->session()->flash('success', 'Share Data Updated Successfully');
+                return redirect('/admin/shares');
+            }else{
+                 return back()->with('nickNameError', 'Nickname Id does not exist.');   
+            }
+            
             
         }
     }
