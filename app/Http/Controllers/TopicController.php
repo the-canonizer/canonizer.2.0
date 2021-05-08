@@ -246,7 +246,7 @@ class TopicController extends Controller {
                 $data['nick_name'] = $nickName->nick_name;
                 $data['forum_link'] = 'forum/' . $topic->topic_num . '-' . $liveTopic->topic_name . '/1/threads';
                 $data['subject'] = $data['nick_name'] . " has objected to your proposed change.";
-
+                $data['topic_link'] = \App\Model\Camp::getTopicCampUrl($topic->topic_num,1);  
                 $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
                  Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new ObjectionToSubmitterMail($user, $link, $data));
             } else if ($eventtype == "UPDATE") {
@@ -732,6 +732,7 @@ class TopicController extends Controller {
                 $data['forum_link'] = 'forum/' . $camp->topic_num . '-' . $camp->camp_name . '/' . $camp->camp_num . '/threads';
                 $data['subject'] = $data['nick_name'] . " has objected to your proposed change.";
                 $data['type'] = 'camp';
+                $data['topic_link'] = \App\Model\Camp::getTopicCampUrl($camp->topic_num,$camp->camp_num);  
                 $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
                 Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new ObjectionToSubmitterMail($user, $link, $data));
             } else if ($eventtype == "UPDATE") {
@@ -887,7 +888,7 @@ class TopicController extends Controller {
             $data['nick_name'] = $nickName->nick_name;
             $data['forum_link'] = 'forum/' . $statement->topic_num . '-statement/' . $statement->camp_num . '/threads';
             $data['subject'] = $data['nick_name'] . " has objected to your proposed change.";
-
+            $data['topic_link'] = \App\Model\Camp::getTopicCampUrl($statement->topic_num,$statement->camp_num); 
             $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
          Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new ObjectionToSubmitterMail($user, $link, $data));
         } else if ($eventtype == "UPDATE") {
