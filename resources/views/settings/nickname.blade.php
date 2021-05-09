@@ -39,7 +39,7 @@
               <tr>
                 <th>Sr.No</th>
                 <th>Nick Name</th>
-                <th>Visibilty Status</th>
+                <th>Visibility Status</th>
                 <!--th>Manage Actions</th-->
               </tr>
 		   </thead>

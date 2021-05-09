@@ -199,7 +199,7 @@
 								</br>
 								<div style="width:300px;float:left">
                                 <input type="text" onkeyup="blankAddress();" onkeydown="restrictTextField(event,255);" onfocus="initAutocomplete()" onfocusout="emptyAddress()" name="address_1" class="form-control" id="address_1" value="{{ old('address_1', $user->address_1)}}">
-                                <span style="color:red;">Note*: To update address please select a address from suggesstion box</span>
+                                <span style="color:red;">Note*: To update address please select a address from suggestion box</span>
                                 </div>
 								<div style="width:95px;float:right">
 								<select class="form-control" id="address_1_bit"  name="address_1_bit">
