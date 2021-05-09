@@ -101,14 +101,6 @@ class SharesAlgoController extends Controller {
     {
         if($id){
             $share = SharesAlgorithm::find($id);
-            // $nickNames = Nickname::all();
-            // $nick_names = [];
-            // if(count($nickNames) > 0){
-            //     foreach($nickNames as $n){
-            //        $nick_names[$n->id] = $n->nick_name; 
-            //     }
-            // }
-            // return view('admin.shares.edit',compact('share','nick_names'));
             return view('admin.shares.edit',compact('share'));
             
         }
@@ -150,8 +142,9 @@ class SharesAlgoController extends Controller {
             if(isset($nickName) && isset($nickName->id)){
                 $share = SharesAlgorithm::find($id);
                 $share->nick_name_id = $data['nick_name_id'];
-                $share->as_of_date = $data['as_of_date'];
+                $share->as_of_date = date('Y-'.$data['as_of_date'].'-01');
                 $share->share_value = $data['share_value'];
+                $share->save();
                 $request->session()->flash('success', 'Share Data Updated Successfully');
                 return redirect('/admin/shares');
             }else{

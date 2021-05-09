@@ -178,7 +178,9 @@ class Algorithm{
                 $total = $sum_of_shares / 4;
             else if($result[0]->support_order==4)
                 $total = $sum_of_shares / 6;
-            else $total = $sum_of_shares;
+            else{
+                    $total = $sum_of_shares;
+            } 
         }else{
             if($result[0]->support_order==1)
                 $total = $sum_of_sqrt_shares;
