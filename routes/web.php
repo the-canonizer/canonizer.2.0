@@ -50,6 +50,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'adminauth'], function () {
     Route::get('/shares/delete/{id}', 'Admin\SharesAlgoController@destroy');
     Route::patch('/shares/update/{id}', ['as'=>'shares.update', 'uses'=>'Admin\SharesAlgoController@update']);
     Route::post('/shares/store', ['as'=>'shares.store', 'uses'=>'Admin\SharesAlgoController@store']);
+    Route::post('/shares/getshares', ['as'=>'shares.getshares', 'uses'=>'Admin\SharesAlgoController@getshares']);
 
 });
 

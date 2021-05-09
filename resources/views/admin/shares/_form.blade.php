@@ -7,8 +7,12 @@
 <fieldset>
     <div class="form-group">
         <label>Nick Name <span style="color:red">*</span></label>
-        {{ Form::select('nick_name_id', $nick_names,null,['class'=>'form-control'])}}
+        <!-- {{ Form::select('nick_name_id', $nick_names,null,['class'=>'form-control'])}} -->
+        {{ Form::text('nick_name_id', old('nick_name_id'),['class'=>'form-control','id'=>'nick_name_id']) }}
          @if ($errors->has('nick_name_id')) <p class="help-block">{{ $errors->first('nick_name_id') }}</p> @endif
+         @if(Session::has('nickNameError'))
+        <p class="help-block">{{ Session::get('nickNameError') }}</p>
+        @endif
     </div>
     <div class="form-group">
         <label>As Of Date<span style="color:red">*</span></label>

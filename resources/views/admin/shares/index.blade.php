@@ -18,19 +18,37 @@
 
         </div>
         <div class="content-box-large box-with-header">
-            <table class="table table-row">
+            <div class="row">
+                <div class="form-group">
+                    <!-- <label class="forl-label">Month</label> -->
+                  
+                    <select id="selectMonth" class="form-control" onChange="changeMonthData()">
+                        <option>Select Month</option>
+                            <?php
+
+                                    for($m=1; $m<=date('m'); $m++){
+                                       echo '<option value="'.date('F,Y', mktime(0, 0, 0, $m)).'">'.date('F,Y', mktime(0, 0, 0, $m)).'</option>';
+                                     }
+                            ?>
+                    </select>
+                </div>
+            </div>
+            <div id="data_shares">
+                <table class="table table-row">
                 <tr>
                     <th>Nick Name</th>
                     <th>Date</th>
-                    <th>Value</th>
+                    <th>share</th>
+                    <th>Sqrt(shares)</th>
                     <th>Action</th>
                 </tr>
                 @if(isset($shares) && count($shares) > 0)
                 @foreach($shares as $share)
                 <tr>
                     <td>{{ $share->usernickname->nick_name }}</td>
-                    <td>{{ $share->as_of_date }}</td>
+                    <td>{{ date("F,Y",strtotime($share->as_of_date)) }}</td>
                     <td>{{ $share->share_value}}</td>
+                    <td>{{ number_format(sqrt($share->share_value),2)}}</td>
                     <td>
                         <a href="{{ url('/admin/shares/edit/'.$share->id) }}"><i class="fa fa-edit"></i>&nbsp;&nbsp;Edit</a>
                         &nbsp;&nbsp;<a href="javascript:void(0)" onClick='deleteShare("{{$share->id }}")'><i class="fa fa-trash"></i>&nbsp;&nbsp;Delete</a>
@@ -42,11 +60,25 @@
                 @endif
             </table>
             {{ $shares->links() }}
+            </div>
+            
 
         </div>
     </div>
 </div>
 <script>
+    function changeMonthData(){
+        var val = $('#selectMonth option:selected').val();
+        var csrf_token = "<?php echo csrf_token(); ?>";
+        $.ajax({
+            url:"<?php echo url('/admin/shares/getshares'); ?>",
+            method:'post',
+            data:{month:val,_token:csrf_token},
+            success:function(response){
+                    $('#data_shares').html(response);
+            }
+        })
+    }
    function deleteShare(id){
      var delete_url = "<?php echo url('/admin/shares/delete') ?>/"+id
        var check = confirm("Are you sure to delete this record?");
