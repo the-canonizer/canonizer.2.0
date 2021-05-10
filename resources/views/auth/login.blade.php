@@ -34,7 +34,7 @@
 
         <div class="form-group">            
             <input type="checkbox" name="remember" class="form-control remember-me" id="remember"> Remember Me
-            <a href="{{ url('/forgetpassword') }}" class="pull-right">Forgot Password</a>
+            <a href="{{ url('/forgotpassword') }}" class="pull-right">Forgot Password</a>
         </div>
         <div class="form-group">
         <button type="submit" id="submit" onclick="submitForm(this)"  class=" form-control btn btn-login">Log in</button>

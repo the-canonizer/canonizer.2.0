@@ -101,11 +101,16 @@
                     <ul>
                         @if(isset($supports['array']))
                         <?php ksort($supports['array']);
+                            $sppArr = [];
                          ?>
                         @foreach($supports['array'] as $support_order)
                             @foreach($support_order as $support)
 
                             <?php 
+                             if(isset($sppArr) && in_array($support['camp_num'], $sppArr)){
+                                continue;
+                             }
+                             $sppArr[] = $support['camp_num'];
                              if(isset($support['delegate_nick_name_id']) && $support['delegate_nick_name_id'] !=0 && $delegate_flag){
                                 continue;
                              }

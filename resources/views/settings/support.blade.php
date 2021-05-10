@@ -33,22 +33,21 @@
 					   foreach($childSupport as $supportData) { 
 					       $removedCampList[]=$supportData->camp->camp_num;
 					 ?>
- 					  <div class="col-sm-12">   
-					   <div class="SpCmpBDY column support-sorter-element ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
-                            
+ 					  <div class="col-sm-12 column">   
+					   <div class="SpCmpBDY  support-sorter-element-child ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
 							
-                            <b>{{ $supportData->support_order }}. {{ $supportData->camp->camp_name }}</b><br/>
-                            
+                            <b>{{ $supportData->support_order }}. {{ $supportData->camp->camp_name }}</b><br/>                            
                        
                         
                         </div>
 						</div>
 					 <?php } }?>	
-					 <?php if(isset($parentSupport) && !empty($parentSupport) ) { foreach($parentSupport as $supportData) { 
+					 <?php if(isset($parentSupport) && !empty($parentSupport) ) { 
+					 	foreach($parentSupport as $supportData) { 
 					       $removedCampList[]=$supportData->camp->camp_num;
 					 ?>
  					  <div class="col-sm-12">   
-					   <div class="SpCmpBDY support-sorter-element ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
+					   <div class="SpCmpBDY support-sorter-element-parent ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
                             
 							
                             <b>{{ $supportData->support_order }} . {{ $supportData->camp->camp_name }}</b><br/>
@@ -106,24 +105,23 @@
 					
 					 <div class="col-sm-6">
 					<div class="row column">
-					<?php $k = 0; $topicSupport = $supportedTopic->topic->Getsupports($supportedTopic->topic_num,[$supportedTopic->nick_name_id]);
-
-                       ?>
+					<?php $k = 0; $topicSupport = $supportedTopic->topic->Getsupports($supportedTopic->topic_num,[$supportedTopic->nick_name_id],['nofilter'=>true]);
+					?>
                        
 					   @foreach($topicSupport as $k=>$support)
 					   <?php 
 					   		
-                            $camp = \App\Model\Camp::getLiveCamp($support->topic_num,$support->camp_num);
+                            $livecamp = \App\Model\Camp::getLiveCamp($support->topic_num,$support->camp_num,['nofilter'=>true]);
 					   ?>
 					  
-                       <div class="col-sm-12">
-                            <div id="positions_{{ $support->support_id }}" class="SpCmpBDY column support-sorter-element ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
+                       <div class="col-sm-12 column">
+                            <div id="positions_{{ $support->support_id }}" class="SpCmpBDY  support-sorter-element ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
                            
 							<input type="hidden" class="final_support_order" name="support_order[{{$support->camp->camp_num}}]" id="support_order_{{ $support->support_id }}" value="{{ $support->support_order  }}">
                                 
 							<input type="hidden" name="camp[{{$support->camp->camp_num}}]" value="{{ $support->camp->camp_num }}">
 							<input type="hidden" name="delegated[{{$support->camp->camp_num}}]" value="{{ $support->delegate_nick_name_id }}">
-                            <b><span class="support_order"> {{ $support->support_order }} </span> . {{ $camp->camp_name }} </b><br/>
+                            <b><span class="support_order"> {{ $support->support_order }} </span> . {{ $livecamp->camp_name }} </b><br/>
                              
                         
 							<?php if(isset($topic->topic_num) && isset($supportedTopic->topic_num) &&  $topic->topic_num==$supportedTopic->topic_num) $lastsupportOrder++;
@@ -141,20 +139,22 @@
 					
 					<div class="col-sm-6">
 					 <div class="row column">
-                       <?php $key = 0; $topicSupport = $supportedTopic->topic->Getsupports($supportedTopic->topic_num,[$supportedTopic->nick_name_id]);
-
+                       <?php $key = 0; 
+                         $topicSupport = $supportedTopic->topic->Getsupports($supportedTopic->topic_num,[$supportedTopic->nick_name_id],['nofilter'=>true]);
+                        // echo "<pre>"; print_r($topicSupport); die;
                        ?>
+
 					   @foreach($topicSupport as $k=>$support)
 					   
 					   @if(!in_array($support->camp->camp_num,$removedCampList)) <?php $key = $key + 1; ?>
-                       <div class="col-sm-12">
-                            <div id="positions_{{ $support->support_id }}" class="SpCmpBDY column support-sorter-element ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
+                       <div class="col-sm-12 column">
+                            <div id="positions_{{ $support->support_id }}" class="SpCmpBDY  support-sorter-element ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
                             
 							<input type="hidden" class="final_support_order" name="support_order[{{$support->camp->camp_num}}]" id="support_order_{{ $support->support_id }}" value="{{ $key  }}">
                                 
 							<input type="hidden" name="camp[{{$support->camp->camp_num}}]" value="{{ $support->camp->camp_num }}">
 							<input type="hidden" name="delegated[{{$support->camp->camp_num}}]" value="{{ $support->delegate_nick_name_id }}">
-                            <b><span class="support_order">{{ $support->support_order }} </span> . {{ $support->camp->camp_name }} </b><br/>
+                            <b><span class="support_order">{{ $key }} </span> . {{ $support->camp->camp_name }} </b><br/>
                              
                         
 							<?php if(isset($topic->topic_num) && isset($supportedTopic->topic_num) &&  $topic->topic_num==$supportedTopic->topic_num) $lastsupportOrder++;
@@ -167,21 +167,22 @@
                        @endif					  
 					   @endforeach
 					  
-				  @if(Session::get('confirm') !='samecamp') 
+				  @if(Session::get('confirm') !='samecamp' && !Session::has('warningDelegate')) 
+				  <?php $lastsupportOrder++; ?>
 					   <!-- current supporting camp detail -->
-					<div class="col-sm-12">   
-					   <div id="positions_0" class="SpCmpBDY column support-sorter-element ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
+					<div class="col-sm-12 column">   
+					   <div id="positions_0" class="SpCmpBDY  support-sorter-element ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
                          
 							<input type="hidden" class="final_support_order" name="support_order[{{$camp->camp_num}}]" id="support_order_0" value="{{ $key + 1  }}">
                             
 							<input type="hidden" name="camp[{{$camp->camp_num}}]" value="{{ $camp->camp_num }}">
 							<input type="hidden" name="delegated[{{$camp->camp_num}}]" value="{{ $delegate_nick_name_id }}">
                             
-                            <b><span class="support_order">{{ $key+1 }} </span> . {{ $camp->camp_name }} <br/></b>
+                            <b><span class="support_order">{{ $key+1}} </span> . {{ $camp->camp_name }} <br/></b>
                             <span class="remove_camp">X</span>
                             
                         	
-                        <?php $lastsupportOrder++; ?>
+                        
                         
                         </div>
 					</div>	
@@ -193,9 +194,9 @@
                
                @else
 
-				   <div class="row">
-				  	<div class="col-sm-12">   
-					   <div id="positions_0" class="SpCmpBDY column support-sorter-element ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
+				   <div class="row column">
+				  	<div class="col-sm-12 column">   
+					   <div id="positions_0" class="SpCmpBDY  support-sorter-element ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
                           
 							<input type="hidden" class="final_support_order" name="support_order[{{$camp->camp_num}}]" id="support_order_0 }}" value="{{ (isset($support->support_order)) ? $support->support_order + 1 : 1 }}">
                             
@@ -288,10 +289,20 @@
                         opacity: 0.6,
                         update: function(event, ui) {
                         $( ".column" ).find('.support-sorter-element').each(function(i,v){
+                        	   console.log('i',i,'v',v);
                                 $(v).find('.support_order').text(i+1);
 								$(v).find('.final_support_order').val(i+1);
                             });
-
+                        $( ".column" ).find('.support-sorter-element-child').each(function(i,v){
+                        	   console.log('i',i,'v',v);
+                                $(v).find('.support_order').text(i+1);
+								$(v).find('.final_support_order').val(i+1);
+                            });
+                         $( ".column" ).find('.support-sorter-element-parent').each(function(i,v){
+                        	   console.log('i',i,'v',v);
+                                $(v).find('.support_order').text(i+1);
+								$(v).find('.final_support_order').val(i+1);
+                            });
                         } 
                     });
 

@@ -251,6 +251,54 @@ class Nickname extends Model {
         return $nickname = self::find($nick_id);
     }
 
+     public static function topicCampNicknameUsed($topic_num,$camp_num,$encode=null) {
+        $personNicknameArray = self::personNicknameArray();
+        $usedNickid = 0;
+        $mysupports = Support::select('nick_name_id')->where('topic_num', $topic_num)->whereIn('nick_name_id', $personNicknameArray)->groupBy('topic_num')->orderBy('support_order', 'ASC')->first();
+        if (empty($mysupports)) { 
+            $mycamps = Camp::select('submitter_nick_id')->where('topic_num', $topic_num)->where('camp_num',$camp_num)->whereIn('submitter_nick_id', $personNicknameArray)->orderBy('submit_time', 'DESC')->first();
+
+            if (empty($mycamps)) {
+                $mystatement = Statement::select('submitter_nick_id')->where('topic_num', $topic_num)->where('camp_num',$camp_num)->whereIn('submitter_nick_id', $personNicknameArray)->orderBy('submit_time', 'DESC')->first();
+                if (empty($mystatement)) {
+                    $mytopic = Topic::select('submitter_nick_id')->where('topic_num', $topic_num)->whereIn('submitter_nick_id', $personNicknameArray)->orderBy('submit_time', 'DESC')->first();
+                    if (empty($mytopic)) {
+
+                        $mythread = \App\CThread::select('user_id')->where('topic_id', $topic_num)->whereIn('user_id', $personNicknameArray)->orderBy('created_at', 'DESC')->first();
+                        if (!empty($mythread)) {
+                            $usedNickid = $mythread->user_id;
+                        }
+                    } else {
+                        $usedNickid = $mytopic->submitter_nick_id;
+                    }
+                } else {
+
+                    $usedNickid = $mystatement->submitter_nick_id;
+                }
+            } else {
+                $usedNickid = $mycamps->submitter_nick_id;
+            }
+        } else if(!empty($mysupports)) {
+            $usedNickid = $mysupports->nick_name_id;
+        }
+
+            
+        if ($usedNickid) {
+            $nickNames = self::where('id', '=', $usedNickid)->get();
+            if(empty($nickNames)){
+                $$nickNames = Nickname::where('owner_code', '=', $encode)->get();
+            }
+            return $nickNames;
+        } else{
+             $nickNames = self::personNickname();
+            if(empty($nickNames)){
+                $$nickNames = Nickname::where('owner_code', '=', $encode)->get();
+            }
+            return $nickNames;
+        }
+             
+           
+    }
     /* Enforce single nickname to be used */
 
     /* Return single nickname used in any activity for that topic and if no nickname used then it will return all user nicknames */

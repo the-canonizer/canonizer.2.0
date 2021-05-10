@@ -597,7 +597,7 @@ class Camp extends Model {
         $onecamp = self::getLiveCamp($topic_num, $camp_num);
 
         $childCamps = array_unique(self::getAllChildCamps($onecamp));
-        $mysupports = Support::where('topic_num', $topic_num)->whereIn('camp_num', $childCamps)->whereIn('nick_name_id', $userNicknames)->where('end', '=', 0)->orderBy('support_order', 'ASC')->get();
+        $mysupports = Support::where('topic_num', $topic_num)->whereIn('camp_num', $childCamps)->whereIn('nick_name_id', $userNicknames)->where('end', '=', 0)->where('delegate_nick_name_id','=',0)->orderBy('support_order', 'ASC')->groupBy('camp_num')->get();
 
         /* if($confirm_support && count($mysupports)) {
 
@@ -962,7 +962,8 @@ class Camp extends Model {
             }
         }
 
-        $topic_name = (isset($this->topic) && isset($this->topic->topic_name)) ? $this->topic->topic_name: '';
+        $topic = Topic::getLiveTopic($this->topic->topic_num,['nofilter'=>true]);//(isset($this->topic) && isset($this->topic->topic_name)) ? $this->topic->topic_name: '';
+        $topic_name = (isset($topic) && isset($topic->topic_name)) ? $topic->topic_name: '';
         $title = preg_replace('/[^A-Za-z0-9\-]/', '-', $topic_name);
         $topic_id = $this->topic_num . "-" . $title;
         $tree = [];

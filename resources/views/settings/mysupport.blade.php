@@ -37,11 +37,11 @@
                  @foreach($supportedTopic as $data)
                  <?php  
                      $link = \App\Model\Camp::getTopicCampUrl($data->topic->topic_num,1);
-
                  ?>
                        <div class="SpCmpHd"><b>For Topic : <a href="<?php echo $link; ?>">{{ $data->topic->topic_name}} </a> </b></div>
                		<div class="row column{{ $data->topic_num }}" style="padding:10px 15px;">
-					   <?php $topicSupport = $data->topic->Getsupports($data->topic_num,$userNickname);?>
+					   <?php $topicSupport = $data->topic->Getsupports($data->topic_num,$userNickname,['nofilter'=>true]);?>
+
 					   @foreach($topicSupport as $k=>$support)
                         <?php if($support->delegate_nick_name_id == 0) {
                             $camp = \App\Model\Camp::getLiveCamp($support->topic_num,$support->camp_num,['nofilter'=>true]);

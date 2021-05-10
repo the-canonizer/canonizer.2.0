@@ -168,12 +168,26 @@
                                 <b>Edit summary :</b> {{ $data->note }} <br/>
 
                                 <b>Camp About URL :</b> {{ $data->camp_about_url }} <br/>
-                                <b>Submitter Nick Name :</b> {{ isset($data->submitternickname->nick_name) ? $data->submitternickname->nick_name : 'N/A' }} <br/>
+                                <b>Submitter Nick Name :</b> 
+                                <?php
+                                  $namespace_id = 1;
+                                  $userUrl = '';
+                                  $objectUsrUrl = '';
+                                  if(isset($data->submitternickname->nick_name)){
+                                    $nickNameUser = App\Model\Nickname::getUserByNickName($data->submitternickname->id); 
+                                    $userUrl = route('user_supports',$nickNameUser->id)."?topicnum=".$data->topic_num."&campnum=".$data->camp_num."&namespace=".$namespace_id."#camp_".$data->topic_num."_".$data->camp_num;  
+                                  }
+                                  if(isset($data->objectornickname->nick_name)){
+                                    $nickNameUser = App\Model\Nickname::getUserByNickName($data->submitternickname->id); 
+                                    $objectUsrUrl = route('user_supports',$nickNameUser->id)."?topicnum=".$data->topic_num."&campnum=".$data->camp_num."&namespace=".$namespace_id."#camp_".$data->topic_num."_".$data->camp_num;  
+                                  }
+                                ?>
+                                <a href="{{$userUrl}}">{{ isset($data->submitternickname->nick_name) ? $data->submitternickname->nick_name : 'N/A' }} </a><br/>
                                 <b>Submitted on :</b> {{ to_local_time($data->submit_time) }} <br/>
                                 <b>Go live Time :</b> {{ to_local_time($data->go_live_time)}}<br/>
                                 @if($data->objector_nick_id !=null)
                                 <b>Object Reason :</b> {{ $data->object_reason}} <br/>	
-                                <b>Objector Nick Name :</b> {{ $data->objectornickname->nick_name }} <br/> 			  
+                                <b>Objector Nick Name :</b> <a href="{{$objectUsrUrl}}">{{ $data->objectornickname->nick_name }} </a><br/> 			  
                                 @endif 	 				 
                             </div>    
                             <div class="CmpHistoryPnl-footer">

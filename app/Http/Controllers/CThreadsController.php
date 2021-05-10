@@ -222,7 +222,7 @@ class CThreadsController extends Controller
         $messagesVal = [
             'title.regex' => 'Title must only contain space and alphanumeric characters.',
             'title.required' => 'Title is required.',
-            'nick_name.required' => 'Nickname is required.',
+            'nick_name.required' => 'The nick name field is required.',
         ];
         $this->validate(
             $request, [

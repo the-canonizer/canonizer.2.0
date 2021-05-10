@@ -65,13 +65,22 @@ class Topic extends Model {
         return $this->hasOne('App\Model\Namespaces', 'id', 'namespace_id');
     }
 	
-	public function scopeGetsupports($query,$topic_num,$userNickname=null) {
+	public function scopeGetsupports($query,$topic_num,$userNickname=null,$filter=array()) {
 		$as_of_time=time()+100;
+        if(isset($_REQUEST['asof']) && $_REQUEST['asof'] == "bydate"){
+                    $as_of_time = strtotime(date('Y-m-d H:i:s', strtotime($_REQUEST['asofdate'])));
+                }else if(session()->has('asofdateDefault') && session('asofdateDefault') && !isset($_REQUEST['asof'])){
+                    $as_of_time = strtotime(session('asofdateDefault'));
+                }
+         if(isset($filter['nofilter']) && $filter['nofilter']){
+                    $as_of_time  = time();
+                }
 		return $supports = Support::where('topic_num',$topic_num)		                    
 							//->where('delegate_nick_name_id',0)
 							->whereIn('nick_name_id',$userNickname)
 							->whereRaw("(start < $as_of_time) and ((end = 0) or (end > $as_of_time))")
-							->orderBy('support_order','ASC')							
+							->orderBy('support_order','ASC')
+                            ->groupBy('camp_num')							
 							->get();
 		
 	}
