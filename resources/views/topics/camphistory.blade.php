@@ -174,12 +174,10 @@
                                   $userUrl = '';
                                   $objectUsrUrl = '';
                                   if(isset($data->submitternickname->nick_name)){
-                                    $nickNameUser = App\Model\Nickname::getUserByNickName($data->submitternickname->id); 
-                                    $userUrl = route('user_supports',$nickNameUser->id)."?topicnum=".$data->topic_num."&campnum=".$data->camp_num."&namespace=".$namespace_id."#camp_".$data->topic_num."_".$data->camp_num;  
+                                     $userUrl = route('user_supports',$data->submitter_nick_id)."?topicnum=".$data->topic_num."&campnum=".$data->camp_num."&namespace=".$namespace_id."#camp_".$data->topic_num."_".$data->camp_num;  
                                   }
                                   if(isset($data->objectornickname->nick_name)){
-                                    $nickNameUser = App\Model\Nickname::getUserByNickName($data->submitternickname->id); 
-                                    $objectUsrUrl = route('user_supports',$nickNameUser->id)."?topicnum=".$data->topic_num."&campnum=".$data->camp_num."&namespace=".$namespace_id."#camp_".$data->topic_num."_".$data->camp_num;  
+                                     $objectUsrUrl = route('user_supports',$data->objector_nick_id)."?topicnum=".$data->topic_num."&campnum=".$data->camp_num."&namespace=".$namespace_id."#camp_".$data->topic_num."_".$data->camp_num;  
                                   }
                                 ?>
                                 <a href="{{$userUrl}}">{{ isset($data->submitternickname->nick_name) ? $data->submitternickname->nick_name : 'N/A' }} </a><br/>
