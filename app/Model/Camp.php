@@ -669,7 +669,9 @@ class Camp extends Model {
 				   0.25 after and half, again, for each one after that. */
 				if ($currentCampSupport) {
                     $multiSupport = false;
-                    if ($nickNameSupports->count() > 1) {
+                    if($algorithm == 'shares' || $algorithm == 'shares_sqrt'){
+                        $supportCountTotal += $supportPoint * $currentCampSupport;
+                    }else if ($nickNameSupports->count() > 1) {
                         $multiSupport = true;
                         $supportCountTotal += round($supportPoint / (2 ** ($currentCampSupport->support_order)), 2);
                     } else if ($nickNameSupports->count() == 1) {

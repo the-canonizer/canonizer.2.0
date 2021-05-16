@@ -168,29 +168,12 @@ class Algorithm{
                 return DB::select("$sql $sql2");
         });
         $total = 0;
-        
-        if($algo == 'shares'){
-           if($result[0]->support_order==1)
-                $total = $sum_of_shares;
-            else if($result[0]->support_order==2)
-                $total = $sum_of_shares / 2;
-            else if($result[0]->support_order==3)
-                $total = $sum_of_shares / 4;
-            else if($result[0]->support_order==4)
-                $total = $sum_of_shares / 6;
-            else{
-                    $total = $sum_of_shares;
-            } 
+         if($algo == 'shares'){
+           // $total = $result[0]->countTotal * $sum_of_shares;
+           $total = $sum_of_shares;
         }else{
-            if($result[0]->support_order==1)
-                $total = $sum_of_sqrt_shares;
-            else if($result[0]->support_order==2)
-                $total = $sum_of_sqrt_shares / 2;
-            else if($result[0]->support_order==3)
-                $total = $sum_of_sqrt_shares / 4;
-            else if($result[0]->support_order==4)
-                $total = $sum_of_sqrt_shares / 6;
-            else $total = $sum_of_sqrt_shares;
+            //$total = $result[0]->countTotal * $sum_of_sqrt_shares;
+            $total =  $sum_of_sqrt_shares;
         }
 
         return $total;

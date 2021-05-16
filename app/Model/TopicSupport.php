@@ -102,7 +102,6 @@ class TopicSupport extends Model {
                         ->get();
         
         $array = [];
-		//print_r($supports); die;
         foreach($supports as $key =>$support){
 
        
@@ -122,8 +121,10 @@ class TopicSupport extends Model {
             $array[$support->nick_name_id]['children'] = [];
             $array[$support->nick_name_id]['index']=$support->nick_name_id;
             $multiSupport = false;
-			if($currentCampSupport){
-				if($nickNameSupports->count() > 1){
+            if($currentCampSupport){
+                if($algorithm == 'shares' || $algorithm == 'shares_sqrt'){
+                     $array[$support->nick_name_id]['score']= $currentCampSupport * $supportPoint;
+                }else if($nickNameSupports->count() > 1){
                     $multiSupport = true;					
 					$array[$support->nick_name_id]['score']=round($supportPoint / (2 ** ($currentCampSupport->support_order)),2);
 				}else if($nickNameSupports->count() >= 1 && $support->topic_num !='54' && $algorithm == 'mormon'){ //only for mormon if selected
