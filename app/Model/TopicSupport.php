@@ -123,7 +123,7 @@ class TopicSupport extends Model {
             $multiSupport = false;
             if($currentCampSupport){
                 if($algorithm == 'shares' || $algorithm == 'shares_sqrt'){
-                     $array[$support->nick_name_id]['score']= $currentCampSupport->count() * $supportPoint;
+                     $array[$support->nick_name_id]['score']=  $supportPoint;
                 }else if($nickNameSupports->count() > 1){
                     $multiSupport = true;					
 					$array[$support->nick_name_id]['score']=round($supportPoint / (2 ** ($currentCampSupport->support_order)),2);
