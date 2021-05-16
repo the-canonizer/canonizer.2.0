@@ -670,7 +670,7 @@ class Camp extends Model {
 				if ($currentCampSupport) {
                     $multiSupport = false;
                     if($algorithm == 'shares' || $algorithm == 'shares_sqrt'){
-                        $supportCountTotal += $supportPoint * $currentCampSupport;
+                        $supportCountTotal += $supportPoint * $currentCampSupport->count();
                     }else if ($nickNameSupports->count() > 1) {
                         $multiSupport = true;
                         $supportCountTotal += round($supportPoint / (2 ** ($currentCampSupport->support_order)), 2);
