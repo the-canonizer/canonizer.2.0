@@ -245,6 +245,7 @@ class TopicController extends Controller {
                 $data['topic_link'] = \App\Model\Camp::getTopicCampUrl($topic->topic_num,1);  
                 $data['type'] = "Topic";
                 $data['object'] = $liveTopic->topic_name;
+                $data['object_type'] = ""; 
                 $data['nick_name'] = $nickName->nick_name;
                 $data['forum_link'] = 'forum/' . $topic->topic_num . '-' . $liveTopic->topic_name . '/1/threads';
                 $data['subject'] = $data['nick_name'] . " has objected to your proposed change.";
@@ -733,6 +734,7 @@ class TopicController extends Controller {
                 $data['subject'] = $data['nick_name'] . " has objected to your proposed change.";
                 $data['topic_link'] = \App\Model\Camp::getTopicCampUrl($camp->topic_num,$camp->camp_num); 
                 $data['type'] = "Camp";
+                $data['object_type'] = ""; 
                 $data['object'] = $livecamp->topic->topic_name."/".$livecamp->camp_name;
                 //$data['type'] = 'camp'; 
                 $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
@@ -890,7 +892,7 @@ class TopicController extends Controller {
             $data['topic_link'] = \App\Model\Camp::getTopicCampUrl($statement->topic_num,$statement->camp_num);
             $data['type'] = "Camp";
             $data['object'] = $livecamp->topic->topic_name . " / " . $livecamp->camp_name;
-               
+            $data['object_type'] = "statement";   
             $data['nick_name'] = $nickName->nick_name;
             $data['forum_link'] = 'forum/' . $statement->topic_num . '-statement/' . $statement->camp_num . '/threads';
             $data['subject'] = $data['nick_name'] . " has objected to your proposed change.";

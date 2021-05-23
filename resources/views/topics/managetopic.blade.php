@@ -10,6 +10,22 @@
 	</h1>
 </div> 
 
+<?php if (!empty($topic)) {
+              $topicBreadName = "";
+                $currentLive = 1;
+                $currentTime = time();
+                 $topicNum = 0;
+                 $topicBreadName = $topic->topic_name; 
+                   $topicNum = $topic->topic_num;
+                   $urltitle      = $topicNum."-".preg_replace('/[^A-Za-z0-9\-]/', '-', $data->topic_name);
+                   $url_portion = \App\Model\Camp::getSeoBasedUrlPortion($topicNum,$currentLive);
+           ?>
+<div class="camp top-head">
+    <h3><b>Topic:</b>  <a href="/topic/{{$url_portion}}" >{{ $topicBreadName}}</a></h3>
+   
+</div>
+<?php } ?>
+
 @if(Session::has('error'))
 <div class="alert alert-danger">
     <strong>Error! </strong>{{ Session::get('error')}}    

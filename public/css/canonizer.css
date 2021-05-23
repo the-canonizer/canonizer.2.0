@@ -396,11 +396,10 @@ body.sidenav-toggled .navbar-sidenav-tooltip.show {
     max-width: 40rem;
 }
 footer.sticky-footer {
-    position: relative;
+   /* position: relative;*/
     width: 100%;
     background:url(../img/bg.jpg) repeat;
     padding:40px 0px;
-    margin-top:55px;
     
 }
 .Gcolor-Pnl h3 {
