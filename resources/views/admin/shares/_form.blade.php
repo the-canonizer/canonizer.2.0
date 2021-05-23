@@ -6,7 +6,7 @@
 <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
 <fieldset>
     <div class="form-group">
-        <label>Nick Name <span style="color:red">*</span></label>
+        <label>Nick Name Id<span style="color:red">*</span></label>
         {{ Form::text('nick_name_id', old('nick_name_id'),['class'=>'form-control','id'=>'nick_name_id']) }}
          @if ($errors->has('nick_name_id')) <p class="help-block">{{ $errors->first('nick_name_id') }}</p> @endif
          @if(Session::has('nickNameError'))
@@ -15,7 +15,7 @@
     </div>
     <div class="form-group">
         <label>As Of Date<span style="color:red">*</span></label>
-        {{Form::selectMonth('as_of_date',null,['class'=>'form-control'])}}
+        {{Form::text('as_of_date',null,['class'=>'form-control','id'=>'share_as_of_date'])}}
          @if ($errors->has('as_of_date')) <p class="help-block">{{ $errors->first('as_of_date') }}</p> @endif
     </div>
 
@@ -30,3 +30,17 @@
     <button class="btn btn-primary">{{ $submitButton }}</button>
 </div>
 {{ Form::close() }}
+
+<script>
+
+     var currentYear = new Date().getFullYear();
+    var yearRange = (currentYear - 2006);
+    var newDate = new Date();
+     $("#share_as_of_date").datepicker({
+                defaultDate:newDate,
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: 'yy/mm/dd',
+                yearRange: "-"+yearRange+":+0",
+            });
+</script>

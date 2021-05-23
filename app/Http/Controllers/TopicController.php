@@ -890,7 +890,7 @@ class TopicController extends Controller {
             $data['subject'] = $data['nick_name'] . " has objected to your proposed change.";
             $data['topic_link'] = \App\Model\Camp::getTopicCampUrl($statement->topic_num,$statement->camp_num); 
             $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
-         Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new ObjectionToSubmitterMail($user, $link, $data));
+            Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new ObjectionToSubmitterMail($user, $link, $data));
         } else if ($eventtype == "UPDATE") {
 
             $directSupporter = Support::getAllDirectSupporters($statement->topic_num, $statement->camp_num);
