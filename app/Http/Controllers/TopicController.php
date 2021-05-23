@@ -242,11 +242,11 @@ class TopicController extends Controller {
                 $link = 'topic-history/' . $topic->topic_num;             
                 $data['object'] = $liveTopic->topic_name;
                 $nickName = Nickname::getNickName($all['nick_name']);
-                $data['type'] = 'topic';
+                $data['topic_link'] = \App\Model\Camp::getTopicCampUrl($topic->topic_num,1);  
+                $data['type'] = "Topic (<a href='".$data['topic_link']."'>".$liveTopic->topic_name .'</a>)';
                 $data['nick_name'] = $nickName->nick_name;
                 $data['forum_link'] = 'forum/' . $topic->topic_num . '-' . $liveTopic->topic_name . '/1/threads';
                 $data['subject'] = $data['nick_name'] . " has objected to your proposed change.";
-                $data['topic_link'] = \App\Model\Camp::getTopicCampUrl($topic->topic_num,1);  
                 $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
                  Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new ObjectionToSubmitterMail($user, $link, $data));
             } else if ($eventtype == "UPDATE") {
@@ -731,8 +731,10 @@ class TopicController extends Controller {
                 $data['nick_name'] = $nickName->nick_name;
                 $data['forum_link'] = 'forum/' . $camp->topic_num . '-' . $camp->camp_name . '/' . $camp->camp_num . '/threads';
                 $data['subject'] = $data['nick_name'] . " has objected to your proposed change.";
-                $data['type'] = 'camp';
-                $data['topic_link'] = \App\Model\Camp::getTopicCampUrl($camp->topic_num,$camp->camp_num);  
+                $data['topic_link'] = \App\Model\Camp::getTopicCampUrl($camp->topic_num,$camp->camp_num); 
+                $data['type'] = "Camp (<a href='".$data['topic_link']."'>".$livecamp->topic->topic_name."/".$livecamp->camp_name.'</a>)';
+               
+                //$data['type'] = 'camp'; 
                 $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
                 Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new ObjectionToSubmitterMail($user, $link, $data));
             } else if ($eventtype == "UPDATE") {
@@ -884,11 +886,12 @@ class TopicController extends Controller {
             $link = 'statement/history/' . $statement->topic_num . '/' . $statement->camp_num;
             $data['object'] = $statement->statement;
             $nickName = Nickname::getNickName($all['nick_name']);
-            $data['type'] = "Camp (".$livecamp->topic->topic_name . " / " . $livecamp->camp_name.') statement';
+
+            $data['topic_link'] = \App\Model\Camp::getTopicCampUrl($statement->topic_num,$statement->camp_num); 
+            $data['type'] = "Camp (<a href='".$data['topic_link']."'>".$livecamp->topic->topic_name . " / " . $livecamp->camp_name.'</a>) statement';
             $data['nick_name'] = $nickName->nick_name;
             $data['forum_link'] = 'forum/' . $statement->topic_num . '-statement/' . $statement->camp_num . '/threads';
             $data['subject'] = $data['nick_name'] . " has objected to your proposed change.";
-            $data['topic_link'] = \App\Model\Camp::getTopicCampUrl($statement->topic_num,$statement->camp_num); 
             $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
             Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new ObjectionToSubmitterMail($user, $link, $data));
         } else if ($eventtype == "UPDATE") {
