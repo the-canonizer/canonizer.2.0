@@ -243,7 +243,8 @@ class TopicController extends Controller {
                 $data['object'] = $liveTopic->topic_name;
                 $nickName = Nickname::getNickName($all['nick_name']);
                 $data['topic_link'] = \App\Model\Camp::getTopicCampUrl($topic->topic_num,1);  
-                $data['type'] = "Topic (<a href='".$data['topic_link']."'>".$liveTopic->topic_name .'</a>)';
+                $data['type'] = "Topic";
+                $data['object'] = $liveTopic->topic_name;
                 $data['nick_name'] = $nickName->nick_name;
                 $data['forum_link'] = 'forum/' . $topic->topic_num . '-' . $liveTopic->topic_name . '/1/threads';
                 $data['subject'] = $data['nick_name'] . " has objected to your proposed change.";
@@ -725,15 +726,14 @@ class TopicController extends Controller {
                 $livecamp = Camp::getLiveCamp($camp->topic_num,$camp->camp_num);
                 $link = 'camp/history/' . $camp->topic_num . '/' . $camp->camp_num;
                 // $link = 'topic/' . $camp->topic_num . '/1';
-                $data['object'] = $camp->topic->topic_name . " / " . $livecamp->camp_name;
                 $nickName = Nickname::getNickName($all['nick_name']);
 
                 $data['nick_name'] = $nickName->nick_name;
                 $data['forum_link'] = 'forum/' . $camp->topic_num . '-' . $camp->camp_name . '/' . $camp->camp_num . '/threads';
                 $data['subject'] = $data['nick_name'] . " has objected to your proposed change.";
                 $data['topic_link'] = \App\Model\Camp::getTopicCampUrl($camp->topic_num,$camp->camp_num); 
-                $data['type'] = "Camp (<a href='".$data['topic_link']."'>".$livecamp->topic->topic_name."/".$livecamp->camp_name.'</a>)';
-               
+                $data['type'] = "Camp";
+                $data['object'] = $livecamp->topic->topic_name."/".$livecamp->camp_name;
                 //$data['type'] = 'camp'; 
                 $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
                 Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new ObjectionToSubmitterMail($user, $link, $data));
@@ -884,11 +884,13 @@ class TopicController extends Controller {
             $livecamp = Camp::getLiveCamp($statement->topic_num,$statement->camp_num);
             //$link = 'topic/' . $statement->topic_num . '/1';
             $link = 'statement/history/' . $statement->topic_num . '/' . $statement->camp_num;
-            $data['object'] = $statement->statement;
+            //$data['object'] = $statement->statement;
             $nickName = Nickname::getNickName($all['nick_name']);
 
-            $data['topic_link'] = \App\Model\Camp::getTopicCampUrl($statement->topic_num,$statement->camp_num); 
-            $data['type'] = "Camp (<a href='".$data['topic_link']."'>".$livecamp->topic->topic_name . " / " . $livecamp->camp_name.'</a>) statement';
+            $data['topic_link'] = \App\Model\Camp::getTopicCampUrl($statement->topic_num,$statement->camp_num);
+            $data['type'] = "Camp";
+            $data['object'] = $livecamp->topic->topic_name . " / " . $livecamp->camp_name;
+               
             $data['nick_name'] = $nickName->nick_name;
             $data['forum_link'] = 'forum/' . $statement->topic_num . '-statement/' . $statement->camp_num . '/threads';
             $data['subject'] = $data['nick_name'] . " has objected to your proposed change.";
