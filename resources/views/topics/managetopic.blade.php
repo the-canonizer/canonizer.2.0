@@ -17,7 +17,7 @@
                  $topicNum = 0;
                  $topicBreadName = $topic->topic_name; 
                    $topicNum = $topic->topic_num;
-                   $urltitle      = $topicNum."-".preg_replace('/[^A-Za-z0-9\-]/', '-', $data->topic_name);
+                   $urltitle      = $topicNum."-".preg_replace('/[^A-Za-z0-9\-]/', '-', $topic->topic_name);
                    $url_portion = \App\Model\Camp::getSeoBasedUrlPortion($topicNum,$currentLive);
            ?>
 <div class="camp top-head">
