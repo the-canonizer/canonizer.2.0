@@ -38,6 +38,7 @@
            <thead class="thead-default">
               <tr>
                 <th>Sr.No</th>
+                <th>Unique Number</th>
                 <th>Nick Name</th>
                 <th>Visibility Status</th>
                 <!--th>Manage Actions</th-->
@@ -47,6 +48,7 @@
                  @foreach($nicknames as $k=>$nickname)
                    <tr>
                        <th scope="row">{{ $k+1 }}</th>
+                       <td>{{ $nickname->id }}</td>
                        <td>{{ $nickname->nick_name}}</td>
                        <td>{{ ($nickname->private == 1) ? 'Private' : 'Public'}}</td>
                        <!--td>

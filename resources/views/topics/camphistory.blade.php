@@ -171,6 +171,9 @@
                                 <b>Submitter Nick Name :</b> 
                                 <?php
                                   $namespace_id = 1;
+                                  if(isset($topic) && isset($topic->namespace_id)){
+                                    $namespace_id = $topic->namespace_id;
+                                  }
                                   $userUrl = '';
                                   $objectUsrUrl = '';
                                   if(isset($data->submitternickname->nick_name)){

@@ -60,7 +60,7 @@
 			         foreach($statement as $key=>$data) { 
 						   $isagreeFlag = false;
                $isGraceFlag = false;
-
+               $camp = \App\Model\Camp::where('camp_num','=',$data->camp_num)->where('topic_num','=',$data->topic_num)->get();
                 $nickNamesData = \App\Model\Nickname::personNicknameArray();
                 $supported_camps = [];
                 if(sizeof($nickNamesData) > 0){
@@ -189,8 +189,12 @@
 				  <b>Submitted on :</b> {{ to_local_time($data->submit_time) }} <br/>
           <?php
                                   $namespace_id = 1;
+                                  if(isset($topic) && isset($topic->namespace_id)){
+                                    $namespace_id = $topic->namespace_id;
+                                  }
                                   $userUrl = '';
                                   $objectUsrUrl = '';
+
                                   if(isset($data->submitternickname->nick_name)){
                                      $userUrl = route('user_supports',$data->submitter_nick_id)."?topicnum=".$data->topic_num."&campnum=".$data->camp_num."&namespace=".$namespace_id."#camp_".$data->topic_num."_".$data->camp_num;  
                                   }

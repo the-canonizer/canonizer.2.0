@@ -186,7 +186,13 @@ class SettingsController extends Controller
 
                 $user->update();
                 Session::flash('otpsent', "A 6 digit code has been sent on your phone number for verification.");
+                try{
+
                 Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new PhoneOTPMail($user, $result));
+                }catch(\Swift_TransportException $e){
+                        throw new \Swift_TransportException($e);
+                        //$response = $e->getMessage();
+                    } 
             }
         }
 
@@ -486,7 +492,13 @@ class SettingsController extends Controller
             $dataObject['sub_support_list'] = Camp::getSubscriptionList($parentUser->id, $data['topic_num'],$data['camp_num']);
         }
          $receiver = (config('app.env') == "production") ? $parentUser->email : config('app.admin_email');
+         try{
+
          Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new NewDelegatedSupporterMail($parentUser, $link, $dataObject));
+         }catch(\Swift_TransportException $e){
+                        throw new \Swift_TransportException($e);
+                        //$response = $e->getMessage() ;
+                    } 
              
     }
 
@@ -510,8 +522,12 @@ class SettingsController extends Controller
             }
 
             $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
+            try{
 
             Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new NewDelegatedSupporterMail($user, $link, $supportData));
+            }catch(\Swift_TransportException $e){
+                        throw new \Swift_TransportException($e);
+            } 
         }
         
         foreach ($subscribers as $usr) {
@@ -523,7 +539,12 @@ class SettingsController extends Controller
                 $subscriberData['support_list'] = $subscriptions_list;
                $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $userSub->email : config('app.admin_email');
                 $subscriberData['subscriber'] = 1;
+                try{
+
                 Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new NewDelegatedSupporterMail($userSub, $link, $subscriberData));
+                }catch(\Swift_TransportException $e){
+                    throw new \Swift_TransportException($e);
+                } 
             }
         }
         return;
@@ -535,7 +556,12 @@ class SettingsController extends Controller
             $user = \App\User::find($user);
             if (!in_array($user->id, $alreadyMailed, TRUE)) {
                 $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
+                try{
+
                 Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new NewDelegatedSupporterMail($user, $link, $data));
+                }catch(\Swift_TransportException $e){
+                       throw new \Swift_TransportException($e);// $response = $e->getMessage() ;
+                    } 
             }
         }
         return;
@@ -546,7 +572,12 @@ class SettingsController extends Controller
         foreach ($directSupporter as $supporter) {
             $user = Nickname::getUserByNickName($supporter->nick_name_id);
             $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
+            try{
+
             Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new NewDelegatedSupporterMail($user, $link, $data));
+            }catch(\Swift_TransportException $e){
+                       throw new \Swift_TransportException($e);// $response = $e->getMessage() ;
+                    } 
         }
         return;
     }

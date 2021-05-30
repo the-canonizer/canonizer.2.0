@@ -3,7 +3,6 @@
 
         <div class="level">
             <?php
-               // echo "<pre>"; print_r($reply); die;
                 $topic = App\Model\Topic::where('topic_num','=',$threads->topic_id)->first();
                 $namespace_id = 1;
                 if(isset($topic->topic_num)){

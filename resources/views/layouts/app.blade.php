@@ -281,6 +281,11 @@
         @show
 
         <div class="content-wrapper">
+            @if(session()->has('mailerror'))
+                <div class="alert alert-danger">
+                    {{ session()->get('mailerror') }}
+                </div>
+            @endif
             @yield('content')
         <div id="google_ads" class="homeADDright">
 			@include('partials.advertisement')

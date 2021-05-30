@@ -31,7 +31,9 @@ if(isset($topic) && count($topic) > 0 ) { ?>
          @if(count($news) > 0)
         <div class="news-pnl Scolor-Pnl">
             <h3>News Feeds
-                @if($editFlag)<a class="pull-right rgWT" href="{{  url('editnews/' . $id . '/' . $parentcampnum)}}"><i class="fa fa-pencil-square-o"></i> Edit News</a>@endif
+                @if($editFlag)
+                <a onClick="enableDeleteNews()" class="pull-right rgWT ml-3" href="javascript:void(0);"><i class="fa fa-trash"></i> Delete News</a>
+                <a class="pull-right rgWT" href="{{  url('editnews/' . $id . '/' . $parentcampnum)}}"><i class="fa fa-pencil-square-o"></i> Edit News</a>@endif
             </h3>
             <div class="content">
                 <ul>
@@ -39,7 +41,9 @@ if(isset($topic) && count($topic) > 0 ) { ?>
             <li class="news-list">
                 <a target="_blank" href="{{ $feed->link}}">
                     <span>{{$feed->display_text}}</span>
+                   
                 </a>
+                 <span style="display:none;cursor:pointer;" class="delete-newsfeeds" onClick="deleteNewsFeed({{$feed->id}})"><i class="fa fa-trash"></i></span>
             </li>
             @endforeach
             </ul>
@@ -264,6 +268,18 @@ change camps with them."><i class="fa fa-question"></i></a>
     </div>
 <?php } ?>
 <script>
+
+function enableDeleteNews(){
+    $('.delete-newsfeeds').show();
+}
+
+function deleteNewsFeed(id){
+   var crfm = confirm('Are you sure you want to delete this news feed');
+   if(crfm){
+        window.location.href="{{ url('/newsfeed/delete')}}/"+id;
+   }
+}
+
 function submitAsOfForm(){
     var dateVal = $('#asofdatenew').val();
     var dateString = new Date(dateVal * 1000).toUTCString();

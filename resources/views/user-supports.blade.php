@@ -77,7 +77,7 @@
                                 }
                             ?>
                 <ul>
-                    <li id="camp_{{$key}}_{{$camp_num}}"><a style="{{ (!isset($supports['array']) && $key == $topic_num) ? 'font-weight:bold; font-size:16px;' : '' }}" href="{{ (array_key_exists('link',$supports)  && isset($supports['link'])) ? $supports['link'] : '' }}">{{ (array_key_exists('camp_name',$supports)  && isset($supports['camp_name'])) ? ($topic_name!='')? $topic_name:$supports['camp_name'] : ''}}</a></li>
+                    <li id="camp_{{$key}}_{{$camp_num}}"><a style="{{ ((!isset($supports['array']) || $camp_num == '') && $key == $topic_num) ? 'font-weight:bold; font-size:16px;' : '' }}" href="{{ (array_key_exists('link',$supports)  && isset($supports['link'])) ? $supports['link'] : '' }}">{{ (array_key_exists('camp_name',$supports)  && isset($supports['camp_name'])) ? ($topic_name!='')? $topic_name:$supports['camp_name'] : ''}}</a></li>
                     <?php if(isset($supports['delegate_nick_name_id']) && $supports['delegate_nick_name_id'] !=0 && !isset($supports['array'])){ 
                                     $topic = \App\Model\Topic::where('objector_nick_id', '=', NULL)->where('topic_num','=',$key)->latest('submit_time')->get();
                                     $delegatedNick = new \App\Model\Nickname();

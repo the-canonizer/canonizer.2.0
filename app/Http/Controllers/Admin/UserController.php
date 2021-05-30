@@ -89,7 +89,12 @@ class UserController extends Controller {
         
         $template = Templates::find($data['template']);        
         foreach($users as  $user){
+            try{
+                
             Mail::to($user->email)->bcc('brent.allsop@canonizer.com')->send(new AdminEmailCampaign($user,$template));
+            }catch(\Swift_TransportException $e){
+                       throw new \Swift_TransportException($e);
+                    } 
         }
         $request->session()->flash('success', 'Mail sent successfully');
         return redirect('/admin/sendmail');

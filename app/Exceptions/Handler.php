@@ -44,14 +44,21 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        
+        if ($exception instanceof \Swift_TransportException){
+                return redirect()->back()->with('mailerror',"Your performed action is complete, but We have issue sending you an email");
+            }
+
         if ($this->isHttpException($exception)) {
-        if ($exception->getStatusCode() == 404) {
-                return response()->view('errors.error-404', ['prev_url'=>url('home')], 404);
-            }
-        if ($exception->getStatusCode() == 500) {
-                return response()->view('errors.error-500', [], 500);
-            }
+            if ($exception->getStatusCode() == 404) {
+                    return response()->view('errors.error-404', ['prev_url'=>url('home')], 404);
+                }
+            if ($exception->getStatusCode() == 500) {
+                
+                    return response()->view('errors.error-500', [], 500);
+                }
         }
+        
         return parent::render($request, $exception);
     }
 
