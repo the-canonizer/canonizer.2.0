@@ -118,7 +118,7 @@ class NewsFeedController extends Controller
     public function destroy(Request $request, $id)
     {
         if($id){
-            $newsData = NewsFeed::find($id)->first();
+            $newsData = NewsFeed::where('id','=',$id)->first();
             $topicnum = $newsData->topic_num;
             $campnum = $newsData->camp_num;
             NewsFeed::find($id)->delete();
