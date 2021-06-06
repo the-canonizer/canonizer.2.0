@@ -32,10 +32,18 @@
 {{ Form::close() }}
 
 <script>
+        function formatDate(userDate){
+            var date    = new Date(userDate),
+            yr      = date.getFullYear(),
+            month   = date.getMonth() < 10 ? '0' + (date.getMonth()+1) : (date.getMonth()+1),
+            day     = date.getDate()  < 10 ? '0' + date.getDate()  : date.getDate(),
+            newDate = day + '/' + month + '/' + yr;
+            return newDate;
 
+        }
      var currentYear = new Date().getFullYear();
      var newDate = new Date();
-    var date_string =  newDate.getDate() + " /" + (newDate.getMonth()+1) + " /" + newDate.getFullYear();
+    var date_string =  formatDate(new Date());
     var yearRange = (currentYear - 2021);
 
     $("#share_as_of_date").val(date_string);

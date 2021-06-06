@@ -49,10 +49,11 @@ class SharesAlgoController extends Controller {
     public function store(Request $request)
     {
         $data = $request->only('nick_name_id','as_of_date','share_value');
-
+         $todayDate = date('d/m/y');
+         $jandate = date('01/01/2021');
          $validatorArray = [ 
           'nick_name_id' => 'required',
-          'as_of_date' => 'required',
+          'as_of_date' => 'required|date|after_or_equal:'.$jandate.'|before_or_equal:'.$todayDate,
           'share_value' => 'required|numeric|min:1|max:100000'
           ];
         
