@@ -21,7 +21,7 @@
 
     <div class="form-group">
         <label>Share Value<span style="color:red">*</span></label>
-        {{ Form::text('share_value', old('share_value'),['class'=>'form-control','id'=>'share_value']) }}
+        {{ Form::number('share_value', old('share_value'),['class'=>'form-control','id'=>'share_value']) }}
          @if ($errors->has('share_value')) <p class="help-block">{{ $errors->first('share_value') }}</p> @endif
     </div>
 
