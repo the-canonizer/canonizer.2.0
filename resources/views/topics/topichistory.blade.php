@@ -72,6 +72,7 @@
                 $currentTime = time();
                 foreach ($topics as $key => $data) {
                     $nickNamesData = \App\Model\Nickname::personNicknameArray();
+                    $liveTopic = \App\Model\Topic::getLiveTopic($data->topic_num);
                     if($submit_time){
                       $support = \App\Model\Support::where('topic_num',$data->topic_num)->whereIn('nick_name_id',$nickNamesData)->where('delegate_nick_name_id',0)->where('end','=',0)->where('start','<=',$submit_time)->orderBy('support_order','ASC')->get();
                     }else{
@@ -171,7 +172,8 @@
 
                         </div> 
                         @if(Auth::check())	
-                         @if($isagreeFlag && $ifIamSupporter && Auth::user()->id != $submitterUserID)
+                         @if($isagreeFlag && $ifIamSupporter && $data->submit_time  > $liveTopic->submit_time  && Auth::user()->id != $submitterUserID)
+
                             <div class="CmpHistoryPnl-footer">
                                 <div>
                                     <input {{ (isset($isAgreed) && $isAgreed) ? 'checked' : '' }} {{ (isset($isAgreed) && $isAgreed) ? 'disabled' : '' }} class="agree-to-change" type="checkbox" name="agree" value="" onchange="agreeToChannge(this,'{{ $data->id}}')"> I agree with this topic change</form>
@@ -180,7 +182,7 @@
                          @endif
                          
                           
-                          @if(Auth::user()->id == $submitterUserID && $isGraceFlag && $data->grace_period && $interval > 0)
+                          @if(Auth::user()->id == $submitterUserID && $isGraceFlag && $data->submit_time  > $liveTopic->submit_time && $data->grace_period && $interval > 0)
                           <div class="CmpHistoryPnl-footer" id="countdowntimer_block<?php echo $data->id ;?>">
                                 <div class="grace-period-note"><b>Note: </b>This countdown timer is the grace period in which you can make minor changes to your topic before other direct supporters are notified.</div>
                                 <div style="float: right" > 

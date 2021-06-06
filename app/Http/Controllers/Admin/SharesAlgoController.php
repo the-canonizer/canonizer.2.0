@@ -49,7 +49,7 @@ class SharesAlgoController extends Controller {
     public function store(Request $request)
     {
         $data = $request->only('nick_name_id','as_of_date','share_value');
-         $todayDate = date('d/m/y');
+         $todayDate = date('Y-m-d');
          $jandate = date('01/01/2021');
          $validatorArray = [ 
           'nick_name_id' => 'required',
@@ -63,14 +63,14 @@ class SharesAlgoController extends Controller {
         }
 
         //validate if nickname id exist
-
+       // echo "<pre>"; print_r($data); die;
         $nickName = Nickname::find($data['nick_name_id']);
         if(isset($nickName) && isset($nickName->id)){
-            // echo "<pre>"; print_r($data); die;
             $share = new SharesAlgorithm();
             $share->nick_name_id = $data['nick_name_id'];
-            $share->as_of_date =  $data['as_of_date'];
+            $share->as_of_date =  date('Y-m-d',strtotime($data['as_of_date']));
             $share->share_value = $data['share_value'];
+           // echo "<pre>"; print_r($share); die;
             $share->save();
             return redirect('/admin/shares');
         }else{
@@ -117,21 +117,23 @@ class SharesAlgoController extends Controller {
     public function update(Request $request, $id)
     {
         if($id){
+            $todayDate = date('Y-m-d');
+            $jandate = date('01/01/2021');
             $data = $request->only('nick_name_id','as_of_date','share_value');
-             $share = SharesAlgorithm::find($id);
+             $share = SharesAlgorithm::where('id','=',$id)->first();
               $validatorArray = [ 
                   'nick_name_id' => 'required',
-                  'as_of_date' => 'required',
-                  'share_value' => 'required'
+                   'as_of_date' => 'required|date|after_or_equal:'.$jandate.'|before_or_equal:'.$todayDate,
+                   'share_value' => 'required|numeric|min:1|max:100000'
                   ];
              if($share->nick_name_id != $data['nick_name_id']){
                  $validatorArray['nick_name_id'] = 'required';
              }
              if($share->as_of_date != $data['as_of_date']){
-                $validatorArray['as_of_date'] = 'required';
+                $validatorArray['as_of_date'] = 'required|date|after_or_equal:'.$jandate.'|before_or_equal:'.$todayDate;
              }
              if($share->share_value != $data['share_value']){
-                $validatorArray['share_value'] = 'required';
+                $validatorArray['share_value'] = 'required|numeric|min:1|max:100000';
              }
              
              $validator = Validator::make($request->only(['nick_name_id','as_of_date','share_value']), $validatorArray);
@@ -143,7 +145,7 @@ class SharesAlgoController extends Controller {
             if(isset($nickName) && isset($nickName->id)){
                 $share = SharesAlgorithm::find($id);
                 $share->nick_name_id = $data['nick_name_id'];
-                $share->as_of_date =  $data['as_of_date'];
+                $share->as_of_date =  date('Y-m-d',strtotime($data['as_of_date']));
                 $share->share_value = $data['share_value'];
                 $share->save();
                 $request->session()->flash('success', 'Share Data Updated Successfully');
