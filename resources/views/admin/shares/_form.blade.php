@@ -41,18 +41,21 @@
             return newDate;
 
         }
-     var currentYear = new Date().getFullYear();
-     var newDate = new Date();
-    var date_string =  formatDate(new Date());
+
+     var defaultDate = '<?= ($model->id) ?  date('Y-m-d',strtotime($model->as_of_date)) :  date('Y-m-d'); ?>';
+     var newDate = '<?=  date('Y-m-d'); ?>';
+     var currentYear = new Date(newDate).getFullYear();
+     
+    var date_string =  formatDate(new Date(defaultDate));
     var yearRange = (currentYear - 2021);
 
     $("#share_as_of_date").val(date_string);
-     $("#share_as_of_date").datepicker({
-                defaultDate:newDate,
+    $("#share_as_of_date").datepicker({
+                defaultDate:defaultDate,
                 changeMonth: true,
                 changeYear: true,
-                dateFormat: 'dd/mm/yy',
+                dateFormat: 'mm/dd/yy',
                 yearRange: "-"+yearRange+":+0",
-                maxDate:  new Date()
+                maxDate:  new Date(newDate)
             });
 </script>
