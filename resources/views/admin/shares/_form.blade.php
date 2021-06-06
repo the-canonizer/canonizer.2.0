@@ -42,7 +42,7 @@
 
         }
 
-     var defaultDate = '<?= ($model->id) ?  date('Y-m-d',strtotime($model->as_of_date)) :  date('Y-m-d'); ?>';
+     var defaultDate = '<?= (isset($model) && $model->id) ?  date('Y-m-d',strtotime($model->as_of_date)) :  date('Y-m-d'); ?>';
      var newDate = '<?=  date('Y-m-d'); ?>';
      var currentYear = new Date(newDate).getFullYear();
      
