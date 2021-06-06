@@ -34,13 +34,17 @@
 <script>
 
      var currentYear = new Date().getFullYear();
-    var yearRange = (currentYear - 2006);
-    var newDate = new Date();
+     var newDate = new Date();
+    var date_string =  newDate.getDate() + " /" + (newDate.getMonth()+1) + " /" + newDate.getFullYear();
+    var yearRange = (currentYear - 2021);
+
+    $("#share_as_of_date").val(date_string);
      $("#share_as_of_date").datepicker({
                 defaultDate:newDate,
                 changeMonth: true,
                 changeYear: true,
-                dateFormat: 'yy/mm/dd',
+                dateFormat: 'dd/mm/yy',
                 yearRange: "-"+yearRange+":+0",
+                maxDate:  new Date()
             });
 </script>

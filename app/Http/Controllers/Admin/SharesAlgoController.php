@@ -53,7 +53,7 @@ class SharesAlgoController extends Controller {
          $validatorArray = [ 
           'nick_name_id' => 'required',
           'as_of_date' => 'required',
-          'share_value' => 'required|numeric|min:1|max:50'
+          'share_value' => 'required|numeric|min:1|max:100000'
           ];
         
          $validator = Validator::make($request->only(['nick_name_id','as_of_date','share_value']), $validatorArray);
