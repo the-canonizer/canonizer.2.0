@@ -164,10 +164,11 @@ Route::get(
 );
 
 Route::get(
-  '/forum/{topicid}-{topicname}/{campnum}/threads/{thread}/edit', [ 'uses' => 'CThreadsController@edit']
+  '/forum/{topicname}/{campnum}/threads/{thread}/edit', [ 'uses' => 'CThreadsController@edit']
 );
+
 Route::post(
-  '/forum/{topicid}-{topicname}/{campnum}/threads/{thread}/edit', [ 'uses' => 'CThreadsController@save_title']
+  '/forum/{topicname}/{campnum}/threads/{thread}/edit', [ 'uses' => 'CThreadsController@save_title']
 );
 
 Route::post(

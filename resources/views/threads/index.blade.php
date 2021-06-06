@@ -65,6 +65,11 @@
             ?>
           <tr>
             <td>
+              @if ($myThreads) 
+                <a href="{{ URL::to('/')}}/forum/{{ $topicname }}/{{ $campnum }}/threads/{{ $thread->id }}/edit">
+                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                </a>
+              @endif
               <a href="{{ URL::to('/')}}/forum/{{ $topicname }}/{{ $campnum }}/threads/{{ $thread->id }}">
                 {{ $thread->title }}
               </a>
