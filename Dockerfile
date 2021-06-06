@@ -25,4 +25,6 @@ WORKDIR /home/ash
 COPY . /home/ash/
 
 EXPOSE 8000/tcp
+EXPOSE 80/tcp
+EXPOSE 8080/tcp
 

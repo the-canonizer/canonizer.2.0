@@ -49,12 +49,14 @@ class CThreadsController extends Controller
         if ((camp::where('camp_num', $campnum)->where('topic_num', $topicid)->value('camp_name')))
         {
             $partcipateFlag = 0;
+            $myThreads = 0;
             if (request('by') == 'me') {
                 /**
                  * Filter out the Threads by User
                  * @var [type]
                  */
                 $userNicknames = Nickname::topicNicknameUsed($topicid);
+                $myThreads = 1;
 
                 if (count($userNicknames) > 0) {
                     $threads = CThread::where('camp_id', $campnum)->
@@ -126,6 +128,7 @@ class CThreadsController extends Controller
             $topic,
             [
                 'threads'          => $threads,
+                'myThreads'        => $myThreads,
                 // Return the name of the camp to index View
                 'campname'         => camp::where('camp_num', $campnum)
                                                     ->where('topic_num', $topicid)
@@ -287,20 +290,27 @@ class CThreadsController extends Controller
      * @parameter \App\CThread  $CThread
      * @return    \Illuminate\Http\Response
      */
-    public function edit($topicId, $topicName, $campNum, $threadId) {
+    public function edit($topicName, $campNum, $threadId) {
+    
       return view(
         'threads.edit',
         [
-          'topicid' => $topicId,
           'topicName' => $topicName,
-          'campNum' => $campNum,
-          'thread' => CThread::findOrFail($threadId)
+          'campNum'   => $campNum,
+          'thread'    => CThread::findOrFail($threadId)
         ]
       );
     }
 
-    public function save_title($topicId, $topicName, $campNum, $threadId) {
+    public function save_title($topicName, $campNum, $threadId) {
       
+      $title = request('title');
+      DB::update('update thread set title =? where id = ?', [$title, $threadId]);
+
+      $return_url = 'forum/'.$topicName.'/'.$campNum.'/threads/'.$threadId.'/edit';
+
+      return redirect($return_url)->with('success', 'Thread title updated.');
+
     }
  
 
