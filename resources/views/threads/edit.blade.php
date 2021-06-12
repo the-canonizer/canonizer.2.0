@@ -15,7 +15,7 @@
         name="title" required
         value="{{ $thread->title }}"
       >
-      <input name="thread_id" type="hidden" value={{ $thread->id }}>
+      <input name="thread_id" type="hidden" value={{ $thread->id }} required>
   
     </div>
     <div class="form-group">
