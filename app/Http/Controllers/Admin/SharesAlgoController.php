@@ -63,14 +63,12 @@ class SharesAlgoController extends Controller {
         }
 
         //validate if nickname id exist
-       // echo "<pre>"; print_r($data); die;
         $nickName = Nickname::find($data['nick_name_id']);
         if(isset($nickName) && isset($nickName->id)){
             $share = new SharesAlgorithm();
             $share->nick_name_id = $data['nick_name_id'];
             $share->as_of_date =  date('Y-m-d',strtotime($data['as_of_date']));
             $share->share_value = $data['share_value'];
-           // echo "<pre>"; print_r($share); die;
             $share->save();
             return redirect('/admin/shares');
         }else{

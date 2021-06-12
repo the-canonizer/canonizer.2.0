@@ -118,8 +118,7 @@ class LoginController extends Controller
                         $receiver = $userPhone->phone_number . "@" . $userPhone->mobile_carrier;
                         Session::flash('otpsent', "A 6 digit code has been sent on your phone number for verification.");
                         try{
-
-                        Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new PhoneOTPMail($userPhone, $result));
+                            Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new PhoneOTPMail($userPhone, $result));
                         return redirect()->route('login.otp',['user'=>base64_encode($userPhone->email)]);
                         }catch(\Swift_TransportException $e){
                             throw new \Swift_TransportException($e);

@@ -37,13 +37,13 @@
             yr      = date.getFullYear(),
             month   = date.getMonth() < 10 ? '0' + (date.getMonth()+1) : (date.getMonth()+1),
             day     = date.getDate()  < 10 ? '0' + date.getDate()  : date.getDate(),
-            newDate = day + '/' + month + '/' + yr;
+            newDate = month + '/' + day + '/' + yr;
             return newDate;
 
         }
 
-     var defaultDate = '<?= (isset($model) && $model->id) ?  date('Y-m-d',strtotime($model->as_of_date)) :  date('Y-m-d'); ?>';
-     var newDate = '<?=  date('Y-m-d'); ?>';
+     var defaultDate = '<?= (isset($model) && $model->id) ?  date('m-d-Y',strtotime($model->as_of_date)) :  date('m-d-Y'); ?>';
+     var newDate = '<?=  date('m-d-Y'); ?>';
      var currentYear = new Date(newDate).getFullYear();
      
     var date_string =  formatDate(new Date(defaultDate));

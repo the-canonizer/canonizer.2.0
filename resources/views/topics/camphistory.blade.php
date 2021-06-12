@@ -61,7 +61,7 @@
                     $currentTime = time();
 
                     foreach ($camps as $key => $data) {
-                        $liveCamp = \App\Model\Camp::getLiveCamp($topic->topic_num,$topic->camp_num);
+                        $liveCamp = \App\Model\Camp::getLiveCamp($data->topic_num,$data->camp_num);
                         $isagreeFlag = false;
                         $isGraceFlag = false;
                         $submittime = $data->submit_time;
@@ -73,7 +73,7 @@
                         $grace_minute = date('i',strtotime($intervalTime));
                         $grace_second = date('s',strtotime($intervalTime));
                         $submitterUserID = App\Model\Nickname::getUserIDByNickName($data->submitter_nick_id);
-                        $pCamp = App\Model\Camp::getLiveCamp($topic->topic_num,$data->parent_camp_num);
+                        $pCamp = App\Model\Camp::getLiveCamp($data->topic_num,$data->parent_camp_num);
                          $nickNamesData = \App\Model\Nickname::personNicknameArray();
                             $supported_camps = [];
                             if(sizeof($nickNamesData) > 0){
