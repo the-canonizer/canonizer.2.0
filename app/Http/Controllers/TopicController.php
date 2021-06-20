@@ -1149,7 +1149,8 @@ class TopicController extends Controller {
             $this->mailSubscribersAndSupporters($directSupporter,$subscribers,$link, $data);  
             return response()->json(['id' => $camp->id, 'message' => 'Your change to camp has been submitted to your supporters.']);
         } else if ($type == 'topic') {
-            $topic = Topic::where('id', '=', $id)->first();
+            $topicData = Topic::where('id', '=', $id)->first();
+            $topic = Topic::getLiveTopic($topicData->topic_num);
             $topic->grace_period = 0;
             $topic->update();
             $directSupporter = Support::getAllDirectSupporters($topic->topic_num);          
