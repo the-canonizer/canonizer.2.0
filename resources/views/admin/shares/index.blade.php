@@ -23,7 +23,7 @@
                     <!-- <label class="forl-label">Month</label> -->
                   
                     <select id="selectMonth" class="form-control" onChange="changeMonthData()">
-                        <option>Select Month</option>
+                        <option value="">Select Month</option>
                             <?php
 
                                     for($m=1; $m<=date('m'); $m++){
@@ -68,6 +68,7 @@
 </div>
 <script>
     function changeMonthData(){
+
         var val = $('#selectMonth option:selected').val();
         var csrf_token = "<?php echo csrf_token(); ?>";
         $.ajax({
@@ -80,7 +81,8 @@
         })
     }
    function deleteShare(id){
-     var delete_url = "<?php echo url('/admin/shares/delete') ?>/"+id
+    console.log('i m here');
+     var delete_url = "<?php echo url('/admin/shares/delete') ?>/"+id;
        var check = confirm("Are you sure to delete this record?");
         if(check == true){
             window.location.href = delete_url;
