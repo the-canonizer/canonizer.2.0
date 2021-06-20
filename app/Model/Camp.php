@@ -445,7 +445,6 @@ class Camp extends Model {
                     $asofdate  = time();
                 }
 
-                echo $asofdate;die;
                  
                 return self::where('topic_num', $topicnum)
                                 ->where('camp_num', '=', $campnum)
