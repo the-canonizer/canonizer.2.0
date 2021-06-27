@@ -782,7 +782,7 @@ class Camp extends Model {
             $onecamp = self::getLiveCamp($child->topic_num,$child->camp_num,['nofilter'=>true]);
             $title = preg_replace('/[^A-Za-z0-9\-]/', '-', $onecamp->camp_name);
             $topic_id = $child->topic_num . "-" . $title;
-            $array[$child->camp_num]['title'] = $child->camp_name;
+            $array[$child->camp_num]['title'] = $title;
 			$queryString = (app('request')->getQueryString()) ? '?'.app('request')->getQueryString() : "";
             $array[$child->camp_num]['link'] = self::getTopicCampUrl($child->topic_num,$child->camp_num). $queryString .'#statement';
             $array[$child->camp_num]['score'] = $this->getCamptSupportCount($algorithm, $child->topic_num, $child->camp_num);
