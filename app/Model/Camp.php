@@ -779,7 +779,8 @@ class Camp extends Model {
         $array = [];
         foreach ($childs as $key => $child) {
             //$childCount  = count($child->children($child->topic_num,$child->camp_num));
-            $title = preg_replace('/[^A-Za-z0-9\-]/', '-', $child->camp_name);
+            $onecamp = self::getLiveCamp($child->topic_num,$child->camp_num,['nofilter'=>true]);
+            $title = preg_replace('/[^A-Za-z0-9\-]/', '-', $$onecamp->camp_name);
             $topic_id = $child->topic_num . "-" . $title;
             $array[$child->camp_num]['title'] = $child->camp_name;
 			$queryString = (app('request')->getQueryString()) ? '?'.app('request')->getQueryString() : "";
