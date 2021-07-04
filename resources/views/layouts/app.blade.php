@@ -306,6 +306,11 @@
             document.documentElement.scrollTop = 0;
         }
 
+        function submitForm(e){
+            $('button[type="submit"]').attr('disabled','disabled');
+            return true;
+        }
+
 function restrictTextField(e,limitlength){
     var charLength = $(e.target).val().length;
      if (charLength >= limitlength  && e.keyCode !== 46 && e.keyCode !== 8 ) {

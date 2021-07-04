@@ -42,7 +42,7 @@
 <div class="right-whitePnl">
    <div class="row col-sm-12 justify-content-between">
     <div class="col-sm-6 margin-btm-2">
-        <form action="{{ url('/topic')}}" method="post" id="topicForm">
+        <form action="{{ url('/topic')}}" onsubmit="return submitForm(this)" method="post" id="topicForm">
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
 			<input type="hidden" id="topic_num" name="topic_num" value="{{ $topic->topic_num }}">
 			<input type="hidden" id="id" name="id" value="{{ $topic->id }}">
@@ -122,6 +122,7 @@
 </div>  <!-- /.right-whitePnl-->
 
     <script>
+       
         $(document).ready(function () {
             $("#datepicker").datepicker({
                 changeMonth: true,

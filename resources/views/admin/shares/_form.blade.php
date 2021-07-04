@@ -1,7 +1,7 @@
 @if(isset($model))
-{{ Form::model($model, ['route' => ['shares.update', $model->id], 'method' => 'patch']) }}
+{{ Form::model($model, ['route' => ['shares.update', $model->id], 'method' => 'patch','onsubmit'='submitForm(this)']) }}
 @else
-{{ Form::open(['route' => 'shares.store']) }}
+{{ Form::open(['route' => 'shares.store'],'onsubmit'='submitForm(this)') }}
 @endif
 <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
 <fieldset>
@@ -27,7 +27,7 @@
 
 </fieldset>
 <div>
-    <button class="btn btn-primary">{{ $submitButton }}</button>
+    <button type="submit" class="btn btn-primary">{{ $submitButton }}</button>
 </div>
 {{ Form::close() }}
 

@@ -20,7 +20,7 @@
 <div class="right-whitePnl">
     <div class="row col-sm-12 justify-content-between">
         <div class="col-sm-12 margin-btm-2">
-            <form action="{{ url('/newsfeed/update')}}" method="post" id="topicForm">
+            <form action="{{ url('/newsfeed/update')}}" onsubmit="submitForm(this)" method="post" id="topicForm">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                 <input type="hidden" name="topic_num" value="{{$topicnum}}"/>
                 <input type="hidden" name="camp_num" value="{{$campnum}}" />

@@ -70,7 +70,7 @@
              </div>
                  <div id="create_address" style="display:none;">
                     <h5>Update Address</h5>
-                    <form action="{{ route('settings.save-ether-address')}}" method="post">
+                    <form action="{{ route('settings.save-ether-address')}}"  onsubmit="submitForm(this)" method="post">
                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
                     <div class="row">
                         <div class="col-sm-6 margin-btm-1">
