@@ -22,7 +22,7 @@
                         </div>
                     </fieldset>
                     <div>
-                        <button id="submit" onClick="submitForm(this)" class="btn btn-primary">
+                        <button id="submit" onClick="submitLoginForm(this)" class="btn btn-primary">
                             Login
                         </button>
                         <div id="loggingin" class="btn btn-primary" style="display:none;">Logging in ..</div>
@@ -37,7 +37,7 @@
 
     <script>
         
-        function submitForm(btn){
+        function submitLoginForm(btn){
         $('#submit').hide();
         $('#loggingin').show();
         return true;

@@ -37,7 +37,7 @@
             <a href="{{ url('/forgotpassword') }}" class="pull-right">Forgot Password</a>
         </div>
         <div class="form-group">
-        <button type="submit" id="submit" onclick="submitForm(this)"  class=" form-control btn btn-login">Log in</button>
+        <button type="submit" id="submit" onclick="submitLoginForm(this)"  class=" form-control btn btn-login">Log in</button>
         <div id="loggingin" style="display:none;" class=" form-control btn btn-login">Logging in..</div>
         </div>
         <div class="form-group">
@@ -88,7 +88,7 @@
       var input = document.getElementById("email").focus();
     }
 
-    function submitForm(btn){
+    function submitLoginForm(btn){
         $('#submit').hide();
         $('#loggingin').show();
         return true;
