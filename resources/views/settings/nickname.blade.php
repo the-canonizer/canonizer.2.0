@@ -61,9 +61,6 @@
            </table>
 
          </div>
-
-
-
             <div id="myTabContent" class="add-nickname-section"> 
               <?php if(count($nicknames) == 0) { ?>
              <p class="help-block" style="color:red">Note: You have not yet added a nick name. A public or private nick name must be used whenever contributing.</p> 
