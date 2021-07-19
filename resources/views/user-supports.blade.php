@@ -53,7 +53,7 @@
             <form>
                 <input type="hidden" name="campnum" value="{{$camp_num}}" />
                 <input type="hidden" name="topicnum" value="{{$topic_num}}" />
-                <select onchange="submitForm(this)" name="namespace" id="namespace" class="namespace-select">
+                <select onchange="submitSupportForm(this)" name="namespace" id="namespace" class="namespace-select">
                     @foreach($namespaces as $namespace)
                         <option data-namespace="{{ $namespace->name }}" value="{{ $namespace->id }}" {{ isset($namespace_id) && $namespace->id == $namespace_id ? 'selected' : ''}}>{{namespace_label($namespace)}}</option>
                     @endforeach
@@ -156,7 +156,7 @@
 var camp_num = '<?php echo $camp_num; ?>';
 var topic_num = '<?php echo $topic_num; ?>';
 window.scrollTo($("#camp_"+topic_num+"_"+camp_num));
-function submitForm(element){
+function submitSupportForm(element){
     $(element).parents('form').submit();
 }
 </script>

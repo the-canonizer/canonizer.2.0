@@ -307,6 +307,7 @@
         }
 
         function submitForm(e){
+            
             $('button[type="submit"]').attr('disabled','disabled');
             return true;
         }
