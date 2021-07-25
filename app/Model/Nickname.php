@@ -206,7 +206,8 @@ class Nickname extends Model {
         foreach ($results as $rs) {
             $topic_num = $rs->topic_num;
             $camp_num = $rs->camp_num;
-            $title = preg_replace('/[^A-Za-z0-9\-]/', '-', ($rs->title != '') ? $rs->title : $rs->camp_name);
+            $livecamp = Camp::getLiveCamp($topic_num,$camp_num,['nofilter'=>true]);
+            $title = preg_replace('/[^A-Za-z0-9\-]/', '-', ($livecamp->title != '') ? $livecamp->title : $livecamp->camp_name);
             $topic_id = $topic_num . "-" . $title;
             $url = Camp::getTopicCampUrl($topic_num,$camp_num);
             if ($rs->delegate_nick_name_id && $camp_num != 1 ) {
@@ -215,7 +216,8 @@ class Nickname extends Model {
             } else if ($camp_num == 1) {
                 if($rs->title ==''){
                     $topicData = \App\Model\Topic::where('topic_num','=',$topic_num)->where('go_live_time', '<=', time())->latest('submit_time')->get();
-                    $title = preg_replace('/[^A-Za-z0-9\-]/', '-', $topicData[0]->topic_name);
+                    $liveTopic = Topic::getLiveTopic($topicnum,['nofilter'=>true]);
+                    $title = preg_replace('/[^A-Za-z0-9\-]/', '-', $liveTopic->topic_name);
                      $topic_id = $topic_num . "-" . $title;
                 }
                 $supports[$topic_num]['camp_name'] = ($rs->camp_name != "") ? $rs->camp_name : $rs->title;
