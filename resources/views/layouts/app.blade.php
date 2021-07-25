@@ -301,13 +301,13 @@
         </div>
     </div>
     <script>
+        $('button[type="submit"]').removeAttr('disabled');
         function topFunction() {
             document.body.scrollTop = 0;
             document.documentElement.scrollTop = 0;
         }
 
-        function submitForm(e){
-            
+        function submitForm(e){            
             $('button[type="submit"]').attr('disabled','disabled');
             return true;
         }
