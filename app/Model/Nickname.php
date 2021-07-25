@@ -212,7 +212,7 @@ class Nickname extends Model {
             $url = Camp::getTopicCampUrl($topic_num,$camp_num);
             if ($rs->delegate_nick_name_id && $camp_num != 1 ) {
                 //$url = Camp::getTopicCampUrl($topic_num,$camp_num);//url('topic/' . $topic_id . '/' . $camp_num)
-                $supports[$topic_num]['array'][$rs->support_order][] = ['camp_name' => $rs->camp_name, 'camp_num' => $camp_num, 'link' => $url ,'delegate_nick_name_id'=>$rs->delegate_nick_name_id];
+                $supports[$topic_num]['array'][$rs->support_order][] = ['camp_name' => $livecamp->camp_name, 'camp_num' => $camp_num, 'link' => $url ,'delegate_nick_name_id'=>$rs->delegate_nick_name_id];
             } else if ($camp_num == 1) {
                 if($rs->title ==''){
                     $topicData = \App\Model\Topic::where('topic_num','=',$topic_num)->where('go_live_time', '<=', time())->latest('submit_time')->get();
@@ -220,13 +220,13 @@ class Nickname extends Model {
                     $title = preg_replace('/[^A-Za-z0-9\-]/', '-', $liveTopic->topic_name);
                      $topic_id = $topic_num . "-" . $title;
                 }
-                $supports[$topic_num]['camp_name'] = ($rs->camp_name != "") ? $rs->camp_name : $rs->title;
+                $supports[$topic_num]['camp_name'] = ($rs->camp_name != "") ? $livecamp->camp_name : $livecamp->title;
                 $supports[$topic_num]['link'] = $url; //  url('topic/' . $topic_id . '/' . $camp_num);
                 if($rs->delegate_nick_name_id){
                     $supports[$topic_num]['delegate_nick_name_id'] = $rs->delegate_nick_name_id;
                 }
             } else {
-                $supports[$topic_num]['array'][$rs->support_order][] = ['camp_name' => $rs->camp_name, 'camp_num' => $camp_num, 'link' => $url];
+                $supports[$topic_num]['array'][$rs->support_order][] = ['camp_name' =>$livecamp->camp_name, 'camp_num' => $camp_num, 'link' => $url];
             }
         }
         return $supports;
