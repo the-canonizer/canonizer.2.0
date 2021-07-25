@@ -216,7 +216,7 @@ class Nickname extends Model {
             } else if ($camp_num == 1) {
                 if($rs->title ==''){
                     $topicData = \App\Model\Topic::where('topic_num','=',$topic_num)->where('go_live_time', '<=', time())->latest('submit_time')->get();
-                    $liveTopic = Topic::getLiveTopic($topicnum,['nofilter'=>true]);
+                    $liveTopic = Topic::getLiveTopic($topic_num,['nofilter'=>true]);
                     $title = preg_replace('/[^A-Za-z0-9\-]/', '-', $liveTopic->topic_name);
                      $topic_id = $topic_num . "-" . $title;
                 }
