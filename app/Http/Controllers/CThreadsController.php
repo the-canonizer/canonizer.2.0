@@ -55,7 +55,7 @@ class CThreadsController extends Controller
                  * Filter out the Threads by User
                  * @var [type]
                  */
-                $userNicknames = Nickname::topicNicknameUsed($topicid);
+                $userNicknames = Nickname::topicNicknameUsed($topicid)->sortBy('nick_name');
                 $myThreads = 1;
 
                 if (count($userNicknames) > 0) {
@@ -140,7 +140,7 @@ class CThreadsController extends Controller
                                              ->latest('submit_time')
                                              ->first()->topic_name,
                 'parentcamp'       => Camp::campNameWithAncestors($camp,'',$topicname),
-                'participateFlag'  => $partcipateFlag
+                'participateFlag'  => $partcipateFlag,
             ],
             compact('threads')
         );
@@ -227,12 +227,12 @@ class CThreadsController extends Controller
             'title.required' => 'Title is required.',
             'nick_name.required' => 'The nick name field is required.',
         ];
-        $this->validate(
-            $request, [
-                'title'    => 'required|max:100|regex:/^[a-zA-Z0-9\s]+$/',
-                'nick_name' => 'required'
-            ],$messagesVal
-        );
+          $this->validate(
+              $request, [
+                  'title'    => 'required|max:100|regex:/^[a-zA-Z0-9\s]+$/',
+                  'nick_name' => 'required'
+              ],$messagesVal
+          );
 
         if (count($thread_flag) > 0) {
 
@@ -302,8 +302,20 @@ class CThreadsController extends Controller
       );
     }
 
-    public function save_title($topicName, $campNum, $threadId) {
-      
+    public function save_title(Request $request, $topicName, $campNum, $threadId) {
+
+      $messagesVal = [
+        'title.regex' => 'Title must only contain space and alphanumeric characters.',
+        'title.required' => 'Title is required.',
+        'title.unique'   => 'Thread title must be unique'
+      ];
+
+      $this->validate(
+        $request, [
+          'title' => 'required|max:100|unique:thread'
+        ], $messagesVal
+      );
+
       $title = request('title');
       DB::update('update thread set title =? where id = ?', [$title, $threadId]);
 
