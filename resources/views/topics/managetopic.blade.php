@@ -1,14 +1,5 @@
 @extends('layouts.app')
 @section('content')
-<div class="page-titlePnl">
-    <h1 class="page-title">
-	 <?php if($objection=="objection") { ?> 
-	Object to this proposed update
-	 <?php } else { ?>
-	Topic Update
-	 <?php } ?>
-	</h1>
-</div> 
 
 <?php if (!empty($topic)) {
               $topicBreadName = "";
@@ -22,9 +13,17 @@
            ?>
 <div class="camp top-head">
     <h3><b>Topic:</b>  <a href="/topic/{{$url_portion}}" >{{ $topicBreadName}}</a></h3>
-   
 </div>
 <?php } ?>
+<div class="page-titlePnl">
+    <h1 class="page-title">
+	 <?php if($objection=="objection") { ?> 
+	Object to this proposed update
+	 <?php } else { ?>
+	Topic Update
+	 <?php } ?>
+	</h1>
+</div> 
 
 @if(Session::has('error'))
 <div class="alert alert-danger">
@@ -42,7 +41,7 @@
 <div class="right-whitePnl">
    <div class="row col-sm-12 justify-content-between">
     <div class="col-sm-6 margin-btm-2">
-        <form action="{{ url('/topic')}}" onsubmit="return submitForm(this)" method="post" id="topicForm">
+        <form action="{{ url('/topic')}}" onsubmit="return submitTopicForm()"  method="post" id="topicForm">
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
 			<input type="hidden" id="topic_num" name="topic_num" value="{{ $topic->topic_num }}">
 			<input type="hidden" id="id" name="id" value="{{ $topic->id }}">
@@ -141,14 +140,14 @@
             }
         }
         selectNamespace();
-        
-        $('#submit').click(function(e) {
-           // e.preventDefault();
+
+        function submitTopicForm(e){
+           $('button[type="submit"]').attr('disabled','disabled');
            var valid = true;
            var message = "";
            if($('#namespace').val() == 'other'){
                var othernamespace = ($('#create_namespace').val()).trim();
-			  othernamespace = othernamespace.toLowerCase();
+              othernamespace = othernamespace.toLowerCase();
                if(othernamespace == ''){
                    valid = false;
                    message = "The Other Namespace Name field is required when namespace is other.";
@@ -156,25 +155,30 @@
                
                $("#namespace option").each(function()
                 {
-					var thistext = $(this).text(); 
-					thistext = thistext.toLowerCase();
+                    var thistext = $(this).text(); 
+                    thistext = thistext.toLowerCase();
                     if((thistext == othernamespace) || (thistext == '/'+ othernamespace + '/' ) || (thistext == '/'+ othernamespace) || (thistext == othernamespace + '/' )){
                         valid = false;
                         message = "Namespace already exists";
                     };
                 });
            }
-           if(valid){
-               $('#topicForm').submit();
-           }else{
+           if(!valid){
                e.preventDefault();
-			   $('.help-block').text('');
+                $('button[type="submit"]').removeAttr('disabled');
+               $('.help-block').text('');
                $('#err-other-namespace').text(message);
                //alert("Error: " + message);
-               return false;
            }
+           
+            return valid;
+        }
+        
+        // $('#submit').click(function(e) {
+        //    // e.preventDefault();
+           
             
-        })
+        // })
         
         
         
