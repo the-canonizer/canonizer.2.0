@@ -1151,8 +1151,8 @@ class TopicController extends Controller {
         } else if ($type == 'topic') {
             $topicData = Topic::where('id', '=', $id)->first();
             $topic = Topic::getLiveTopic($topicData->topic_num);
-            $topic->grace_period = 0;
-            $topic->update();
+            $topicData->grace_period = 0;
+            $topicData->update();
             $directSupporter = Support::getAllDirectSupporters($topic->topic_num);          
             $subscribers = Camp::getCampSubscribers($topic->topic_num, 1);
              // $link = 'topic/' . $topic->topic_num . '/' . $topic->camp_num . '?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $topic->go_live_time);
@@ -1171,7 +1171,7 @@ class TopicController extends Controller {
             $data['subject'] = "Proposed change to topic " . $topic->topic_name . " submitted";
 
            // $this->mailSupporters($directSupporter, $link, $data);         //mail supporters  
-             $this->mailSubscribersAndSupporters($directSupporter,$subscribers,$link, $data);  
+           //  $this->mailSubscribersAndSupporters($directSupporter,$subscribers,$link, $data);  
            return response()->json(['id' => $topic->id, 'message' => 'Your change to topic has been submitted to your supporters.']);
         }
     }
