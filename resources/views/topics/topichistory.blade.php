@@ -107,7 +107,7 @@
                         
                     //grace period
                         if(Auth::check()){
-                       if(Auth::user()->id == $submitterUserID && $data->submit_time > $liveCamp->submit_time && $data->grace_period && $interval > 0){?>
+                       if(Auth::user()->id == $submitterUserID && $data->submit_time > $liveTopic->submit_time && $data->grace_period && $interval > 0){?>
                          <script>
                                $(function(){
                                  $("#countdowntimer<?php echo $data->id; ?>").countdowntimer({
