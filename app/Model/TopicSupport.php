@@ -102,7 +102,6 @@ class TopicSupport extends Model {
                         ->get();
         
         $array = [];
-		//print_r($supports); die;
         foreach($supports as $key =>$support){
 
        
@@ -122,8 +121,10 @@ class TopicSupport extends Model {
             $array[$support->nick_name_id]['children'] = [];
             $array[$support->nick_name_id]['index']=$support->nick_name_id;
             $multiSupport = false;
-			if($currentCampSupport){
-				if($nickNameSupports->count() > 1){
+            if($currentCampSupport){
+                if($algorithm == 'shares' || $algorithm == 'shares_sqrt'){
+                     $array[$support->nick_name_id]['score']=  $supportPoint;
+                }else if($nickNameSupports->count() > 1){
                     $multiSupport = true;					
 					$array[$support->nick_name_id]['score']=round($supportPoint / (2 ** ($currentCampSupport->support_order)),2);
 				}else if($nickNameSupports->count() >= 1 && $support->topic_num !='54' && $algorithm == 'mormon'){ //only for mormon if selected
@@ -148,7 +149,7 @@ class TopicSupport extends Model {
     }
 
     public static function getSupportNumber($topicnum,$campnum,$supports){
-        $i = 0;
+        $i = 1;
         $flag = false;
         if($supports && sizeof($supports) > 0){
             foreach($supports as $key => $spp){
@@ -181,6 +182,7 @@ class TopicSupport extends Model {
 
         foreach($traversedTreeArray as $array){
             $nickName = Nickname::where('id',$array['index'])->first();
+            $nickNameArr = $nickName ->personNicknameArray();
             $userFromNickname = $nickName->getUser();
             $delegatedUserID = [];
             if(is_array($array['children']) && sizeof($array['children']) > 0){
@@ -195,27 +197,28 @@ class TopicSupport extends Model {
             if(Auth::check()){
                 $userId = Auth::user()->id;
             }
-            $topicData = Topic::where('topic_num',$topicnum)->latest('submit_time')->get();
-            $namespace_id = (isset($topicData[0])) ? $topicData[0]->namespace_id:1;
+            $topicData = Topic::getLiveTopic($topicnum,['nofilter'=>true]);//
+            $namespace_id = (isset($topicData->namespace_id)) ? $topicData->namespace_id:1;
             $supports = $nickName->getSupportCampList($namespace_id);
             $support_number = self::getSupportNumber($topicnum,$campnum,$supports);
             $support_txt = ($support_number) ? $support_number.":": '';
+            $ifSupporter = Support::ifIamSupporter($topicnum,$campnum,$nickNameArr);
             $space_html = '';
-             if($add_supporter){
+            if($add_supporter){
                     $space_html='<span class="" title="Collapse"></span>';
                 }
              if($parentNode){
                
                 $html.= "<li class='main-parent'>".$space_html."<a href='".route('user_supports',$nickName->id)."?topicnum=".$topicnum."&campnum=".$campnum."&namespace=".$namespace_id."#camp_".$topicnum."_".$campnum."'>{$support_txt}{$nickName->nick_name}</a><div class='badge'>".round($array['score'],2)."</div>";
-                if($userId && $userFromNickname->id != $userId && !in_array($userId, $delegatedUserID) && !$add_supporter){
+                if($userId && $userFromNickname->id != $userId && !in_array($userId, $delegatedUserID) &&  isset($ifSupporter) && !$ifSupporter &&  !$add_supporter){
                     $urlPortion = Camp::getSeoBasedUrlPortion($topicnum,$campnum);
                     $html.='<a href="'.url('support/'.$urlPortion.'_'.$array['index']).'" class="btn btn-info">Delegate Your Support</a>';
                 }
                 
             }else{
                
-                $html.= "<li>".$space_html."<a href='".route('user_supports',$nickName->id)."?topicnum=".$topicnum."&campnum=".$campnum."&namespace=".$namespace_id."#camp_".$topicnum."_".$campnum."'>{$nickName->nick_name}</a><div class='badge'>".round($array['score'],2)."</div> ";
-                 if($userId && $userFromNickname->id != $userId && !in_array($userId, $delegatedUserID) && !$add_supporter){
+                $html.= "<li>".$space_html."<a href='".route('user_supports',$nickName->id)."?topicnum=".$topicnum."&campnum=".$campnum."&namespace=".$namespace_id."#camp_".$topicnum."_".$campnum."'>{$support_txt}{$nickName->nick_name}</a><div class='badge'>".round($array['score'],2)."</div> ";
+                 if($userId && $userFromNickname->id != $userId && !in_array($userId, $delegatedUserID) && isset($ifSupporter) && !$ifSupporter &&   !$add_supporter){
                     $urlPortion = Camp::getSeoBasedUrlPortion($topicnum,$campnum);
                      $html.='<a href="'.url('support/'.$urlPortion.'_'.$array['index']).'" class="btn btn-info">Delegate Your Support</a>';
                 }

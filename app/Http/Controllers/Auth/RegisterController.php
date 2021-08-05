@@ -115,10 +115,15 @@ class RegisterController extends Controller
         ]);
         
         //otp email
-       Mail::to($user->email)->bcc(config('app.admin_bcc'))->send(new OtpVerificationMail($user));
-      //return view('auth.verifyotp')->with('user', base64_encode($user->email));
-       return redirect()->route('register.otp', ['user' => base64_encode($user->email)]);
-      //return redirect()->to('register/verify-otp')->withInput(['user', base64_encode($user->email)]);
+        try{
+            
+           Mail::to($user->email)->bcc(config('app.admin_bcc'))->send(new OtpVerificationMail($user));
+          //return view('auth.verifyotp')->with('user', base64_encode($user->email));
+           return redirect()->route('register.otp', ['user' => base64_encode($user->email)]);
+          //return redirect()->to('register/verify-otp')->withInput(['user', base64_encode($user->email)]);
+        }catch(\Swift_TransportException $e){
+                            throw new \Swift_TransportException($e);
+                        } 
         
     }
     
@@ -135,7 +140,7 @@ class RegisterController extends Controller
         $otp = $all['otp'];
         $user = User::where('email', '=', $email)->first();
         $message = [
-          'otp.required'=>'Please enter OTP'  
+          'otp.required'=>'Please enter One Time Verification Code'  
         ];
         $validator = Validator::make($all, [
                     'otp' => 'required',
@@ -147,7 +152,7 @@ class RegisterController extends Controller
                             ->withInput();
         }
         if ($otp != $user->otp) {
-            session()->flash('error', 'Incorrect OTP Entered');
+            session()->flash('error', ' Incorrect One Time Verification Code Entered');
             return redirect()->back();
         }
         //auth response date
@@ -157,12 +162,17 @@ class RegisterController extends Controller
          session()->forget('social_user');
          session()->forget('provider');
         // send help link in email
-        $link = 'topic/132-Help/1-Agreement';		
+        $link = 'topic/132-Help/1-Agreement';	
+        try{
+            
         Mail::to($user->email)->bcc(config('app.admin_bcc'))->send(new WelcomeMail($user,$link));
         
         Auth::guard()->login($user);
         return redirect()->to('/home');
         
+        }catch(\Swift_TransportException $e){
+                            throw new \Swift_TransportException($e);
+                        }    
         //return $user;
     }
 }

@@ -24,7 +24,7 @@ class ObjectionToSubmitterMail extends Mailable
     {
         $this->user = $user;
         $this->link = $link;
-	$this->data = $data;
+	    $this->data = $data;
     }
 
     /**

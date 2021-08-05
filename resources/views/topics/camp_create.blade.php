@@ -80,8 +80,8 @@
             </div>   
             <div class="form-group">
 			   <p style="color:red">The following fields are rarely used and are for advanced users only.</p>
-                <label for="camp_about_url">Camp About URL </label>
-                <input type="text" name="camp_about_url" class="form-control" id="camp_about_url" value="{{ old('camp_about_url') }}">
+                <label for="camp_about_url">Camp About URL ( Limit 1024 Chars ) </label>
+                <input type="text" name="camp_about_url" onkeydown="restrictTextField(event,1024)" class="form-control" id="camp_about_url" value="{{ old('camp_about_url') }}">
                 @if ($errors->has('camp_about_url')) <p class="help-block">{{ $errors->first('camp_about_url') }}</p> @endif
             </div> 
 

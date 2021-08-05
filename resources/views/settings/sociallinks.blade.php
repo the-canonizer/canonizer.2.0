@@ -22,7 +22,7 @@
 @endif 
 @if(Session::has('already_exists'))
     <div id="myModal" class="modal fade" role="dialog">
-      <form method="post" action="{{ url('/deactivateuser')}}">
+      <form method="post" action="{{ url('/deactivateuser')}}" onsubmit="submitForm(this)">
       <div class="modal-dialog">
         <!-- Modal content-->
         <div class="modal-content">

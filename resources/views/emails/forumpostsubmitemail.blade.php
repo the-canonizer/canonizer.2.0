@@ -1,5 +1,5 @@
 @component('mail::message')
-<p>Hi  {{ $user->first_name }} {{ $user->last_name }}, </p>
+<p>Hello  {{ $user->first_name }} {{ $user->last_name }}, </p>
 
 <p>
     {{ $data['nick_name']->nick_name }} has made the following post to the Camp

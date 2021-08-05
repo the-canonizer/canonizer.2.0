@@ -206,25 +206,27 @@ class Nickname extends Model {
         foreach ($results as $rs) {
             $topic_num = $rs->topic_num;
             $camp_num = $rs->camp_num;
-            $title = preg_replace('/[^A-Za-z0-9\-]/', '-', ($rs->title != '') ? $rs->title : $rs->camp_name);
+            $livecamp = Camp::getLiveCamp($topic_num,$camp_num,['nofilter'=>true]);
+            $title = preg_replace('/[^A-Za-z0-9\-]/', '-', ($livecamp->title != '') ? $livecamp->title : $livecamp->camp_name);
             $topic_id = $topic_num . "-" . $title;
             $url = Camp::getTopicCampUrl($topic_num,$camp_num);
             if ($rs->delegate_nick_name_id && $camp_num != 1 ) {
                 //$url = Camp::getTopicCampUrl($topic_num,$camp_num);//url('topic/' . $topic_id . '/' . $camp_num)
-                $supports[$topic_num]['array'][$rs->support_order][] = ['camp_name' => $rs->camp_name, 'camp_num' => $camp_num, 'link' => $url ,'delegate_nick_name_id'=>$rs->delegate_nick_name_id];
+                $supports[$topic_num]['array'][$rs->support_order][] = ['camp_name' => $livecamp->camp_name, 'camp_num' => $camp_num, 'link' => $url ,'delegate_nick_name_id'=>$rs->delegate_nick_name_id];
             } else if ($camp_num == 1) {
                 if($rs->title ==''){
                     $topicData = \App\Model\Topic::where('topic_num','=',$topic_num)->where('go_live_time', '<=', time())->latest('submit_time')->get();
-                    $title = preg_replace('/[^A-Za-z0-9\-]/', '-', $topicData[0]->topic_name);
+                    $liveTopic = Topic::getLiveTopic($topic_num,['nofilter'=>true]);
+                    $title = preg_replace('/[^A-Za-z0-9\-]/', '-', $liveTopic->topic_name);
                      $topic_id = $topic_num . "-" . $title;
                 }
-                $supports[$topic_num]['camp_name'] = ($rs->camp_name != "") ? $rs->camp_name : $rs->title;
+                $supports[$topic_num]['camp_name'] = ($rs->camp_name != "") ? $livecamp->camp_name : $livecamp->title;
                 $supports[$topic_num]['link'] = $url; //  url('topic/' . $topic_id . '/' . $camp_num);
                 if($rs->delegate_nick_name_id){
                     $supports[$topic_num]['delegate_nick_name_id'] = $rs->delegate_nick_name_id;
                 }
             } else {
-                $supports[$topic_num]['array'][$rs->support_order][] = ['camp_name' => $rs->camp_name, 'camp_num' => $camp_num, 'link' => $url];
+                $supports[$topic_num]['array'][$rs->support_order][] = ['camp_name' =>$livecamp->camp_name, 'camp_num' => $camp_num, 'link' => $url];
             }
         }
         return $supports;
@@ -251,6 +253,54 @@ class Nickname extends Model {
         return $nickname = self::find($nick_id);
     }
 
+     public static function topicCampNicknameUsed($topic_num,$camp_num,$encode=null) {
+        $personNicknameArray = self::personNicknameArray();
+        $usedNickid = 0;
+        $mysupports = Support::select('nick_name_id')->where('topic_num', $topic_num)->whereIn('nick_name_id', $personNicknameArray)->groupBy('topic_num')->orderBy('support_order', 'ASC')->first();
+        if (empty($mysupports)) { 
+            $mycamps = Camp::select('submitter_nick_id')->where('topic_num', $topic_num)->where('camp_num',$camp_num)->whereIn('submitter_nick_id', $personNicknameArray)->orderBy('submit_time', 'DESC')->first();
+
+            if (empty($mycamps)) {
+                $mystatement = Statement::select('submitter_nick_id')->where('topic_num', $topic_num)->where('camp_num',$camp_num)->whereIn('submitter_nick_id', $personNicknameArray)->orderBy('submit_time', 'DESC')->first();
+                if (empty($mystatement)) {
+                    $mytopic = Topic::select('submitter_nick_id')->where('topic_num', $topic_num)->whereIn('submitter_nick_id', $personNicknameArray)->orderBy('submit_time', 'DESC')->first();
+                    if (empty($mytopic)) {
+
+                        $mythread = \App\CThread::select('user_id')->where('topic_id', $topic_num)->whereIn('user_id', $personNicknameArray)->orderBy('created_at', 'DESC')->first();
+                        if (!empty($mythread)) {
+                            $usedNickid = $mythread->user_id;
+                        }
+                    } else {
+                        $usedNickid = $mytopic->submitter_nick_id;
+                    }
+                } else {
+
+                    $usedNickid = $mystatement->submitter_nick_id;
+                }
+            } else {
+                $usedNickid = $mycamps->submitter_nick_id;
+            }
+        } else if(!empty($mysupports)) {
+            $usedNickid = $mysupports->nick_name_id;
+        }
+
+            
+        if ($usedNickid) {
+            $nickNames = self::where('id', '=', $usedNickid)->get();
+            if(empty($nickNames)){
+                $$nickNames = Nickname::where('owner_code', '=', $encode)->get();
+            }
+            return $nickNames;
+        } else{
+             $nickNames = self::personNickname();
+            if(empty($nickNames)){
+                $$nickNames = Nickname::where('owner_code', '=', $encode)->get();
+            }
+            return $nickNames;
+        }
+             
+           
+    }
     /* Enforce single nickname to be used */
 
     /* Return single nickname used in any activity for that topic and if no nickname used then it will return all user nicknames */

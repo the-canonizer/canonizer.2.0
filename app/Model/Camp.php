@@ -418,6 +418,7 @@ class Camp extends Model {
         }
     }
 
+
     public static function getLiveCamp($topicnum, $campnum, $filter = array()) {
         if ((!isset($_REQUEST['asof']) && !session()->has('asofDefault')) || (isset($_REQUEST['asof']) && $_REQUEST['asof'] == "default")  || (session()->has('asofDefault') && session('asofDefault') == 'default' && !isset($_REQUEST['asof']))) {
 
@@ -443,7 +444,8 @@ class Camp extends Model {
                 if(isset($filter['nofilter']) && $filter['nofilter']){
                     $asofdate  = time();
                 }
-                
+
+                 
                 return self::where('topic_num', $topicnum)
                                 ->where('camp_num', '=', $campnum)
                                 ->where('objector_nick_id', '=', NULL)
@@ -596,7 +598,7 @@ class Camp extends Model {
         $onecamp = self::getLiveCamp($topic_num, $camp_num);
 
         $childCamps = array_unique(self::getAllChildCamps($onecamp));
-        $mysupports = Support::where('topic_num', $topic_num)->whereIn('camp_num', $childCamps)->whereIn('nick_name_id', $userNicknames)->where('end', '=', 0)->orderBy('support_order', 'ASC')->get();
+        $mysupports = Support::where('topic_num', $topic_num)->whereIn('camp_num', $childCamps)->whereIn('nick_name_id', $userNicknames)->where('end', '=', 0)->where('delegate_nick_name_id','=',0)->orderBy('support_order', 'ASC')->groupBy('camp_num')->get();
 
         /* if($confirm_support && count($mysupports)) {
 
@@ -668,7 +670,9 @@ class Camp extends Model {
 				   0.25 after and half, again, for each one after that. */
 				if ($currentCampSupport) {
                     $multiSupport = false;
-                    if ($nickNameSupports->count() > 1) {
+                    if($algorithm == 'shares' || $algorithm == 'shares_sqrt'){
+                        $supportCountTotal += $supportPoint;
+                    }else if ($nickNameSupports->count() > 1) {
                         $multiSupport = true;
                         $supportCountTotal += round($supportPoint / (2 ** ($currentCampSupport->support_order)), 2);
                     } else if ($nickNameSupports->count() == 1) {
@@ -775,9 +779,10 @@ class Camp extends Model {
         $array = [];
         foreach ($childs as $key => $child) {
             //$childCount  = count($child->children($child->topic_num,$child->camp_num));
-            $title = preg_replace('/[^A-Za-z0-9\-]/', '-', $child->camp_name);
+            $onecamp = self::getLiveCamp($child->topic_num,$child->camp_num,['nofilter'=>true]);
+            $title = $onecamp->camp_name;//preg_replace('/[^A-Za-z0-9\-]/', '-', $onecamp->camp_name);
             $topic_id = $child->topic_num . "-" . $title;
-            $array[$child->camp_num]['title'] = $child->camp_name;
+            $array[$child->camp_num]['title'] = $title;
 			$queryString = (app('request')->getQueryString()) ? '?'.app('request')->getQueryString() : "";
             $array[$child->camp_num]['link'] = self::getTopicCampUrl($child->topic_num,$child->camp_num). $queryString .'#statement';
             $array[$child->camp_num]['score'] = $this->getCamptSupportCount($algorithm, $child->topic_num, $child->camp_num);
@@ -789,14 +794,8 @@ class Camp extends Model {
         
     }
     public static function getSeoBasedUrlPortion($topic_num,$camp_num){
-        $as_of_time = time();
-        if (isset($_REQUEST['asof']) && $_REQUEST['asof'] == 'bydate') {
-            $as_of_time = strtotime($_REQUEST['asofdate']);
-        }else if(session()->has('asofDefault') && session('asofDefault') == 'bydate' && !isset($_REQUEST['asof'])){
-            $as_of_time = strtotime(session('asofdateDefault'));
-        }
-        $topic =  \App\Model\Topic::where('topic_num','=',$topic_num)->where('go_live_time', '<=', $as_of_time)->latest('submit_time')->first();
-        $camp = self::where('topic_num','=',$topic_num)->where('camp_num','=',$camp_num)->where('go_live_time', '<=', $as_of_time)->latest('submit_time')->first();
+        $topic = \App\Model\Topic::getLiveTopic($topic_num,['nofilter'=>true]);
+        $camp = self::getLiveCamp($topic_num,$camp_num,['nofilter'=>true]);
         $topic_name = '';
         $camp_name = '';
         if($topic && isset($topic->topic_name)){
@@ -967,7 +966,8 @@ class Camp extends Model {
             }
         }
 
-        $topic_name = (isset($this->topic) && isset($this->topic->topic_name)) ? $this->topic->topic_name: '';
+        $topic = Topic::getLiveTopic($this->topic->topic_num,['nofilter'=>true]);//(isset($this->topic) && isset($this->topic->topic_name)) ? $this->topic->topic_name: '';
+        $topic_name = (isset($topic) && isset($topic->topic_name)) ? $topic->topic_name: '';
         $title = preg_replace('/[^A-Za-z0-9\-]/', '-', $topic_name);
         $topic_id = $this->topic_num . "-" . $title;
         $tree = [];

@@ -20,7 +20,7 @@
             <div class="col-md-6 pull-right">
                 <form class="row">
                 <div class="col-sm-8">
-                <select onchange="submitForm(this)" name="namespace" id="namespace" class="namespace-select">
+                <select onchange="submitBrowseForm(this)" name="namespace" id="namespace" class="namespace-select">
                     <option value="">All</option>
                     @foreach($namespaces as $namespace)
                         <option data-namespace="{{ $namespace->name }}" value="{{ $namespace->id }}" {{ $namespace->id == session('defaultNamespaceId') ? 'selected' : ''}}>{{namespace_label($namespace)}}</option>
@@ -29,7 +29,7 @@
                 </div>
                 @if(Auth::check())
                     <div class="col-sm-4 checkbox pd-2-0">
-                    <label><input type="checkbox" name="my" value="{{(session()->has('defaultNamespaceId')) ? session('defaultNamespaceId') : ''}}" {{ isset($_REQUEST['my']) &&  $_REQUEST['my'] == session('defaultNamespaceId') ? 'checked' : ''}} onchange="submitForm(this)"> Only My Topics</label>
+                    <label><input type="checkbox" name="my" value="{{(session()->has('defaultNamespaceId')) ? session('defaultNamespaceId') : ''}}" {{ isset($_REQUEST['my']) &&  $_REQUEST['my'] == session('defaultNamespaceId') ? 'checked' : ''}} onchange="submitBrowseForm(this)"> Only My Topics</label>
                     </div>
                 @endif
                 </form>
@@ -73,7 +73,7 @@
     <!-- /.container-fluid-->
 </div>  <!-- /.right-whitePnl-->
 <script>
-function submitForm(element){
+function submitBrowseForm(element){
     if(($(element).val() == null) || ($(element).val() == "")){
          $(element).parents('form').submit();
     }else{

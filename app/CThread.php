@@ -62,7 +62,7 @@ class CThread extends Model
     */
     public function camp()
     {
-        return $this->belogsTo(Camp::class);
+        return $this->belongsTo('App\Model\Camp'::class,'camp_id');
     }
 
     /*

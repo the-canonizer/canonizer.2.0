@@ -93,8 +93,13 @@ class LoginController extends Controller
                 $authCode = mt_rand(100000, 999999);
                 $user->otp = $authCode;
                 $user->update();
+                try{
                  Mail::to($user->email)->bcc(config('app.admin_bcc'))->send(new OtpVerificationMail($user,true));
-                return redirect()->route('login.otp',['user'=>base64_encode($user->email)]);
+
+                    return redirect()->route('login.otp',['user'=>base64_encode($user->email)]);
+                }catch(\Swift_TransportException $e){
+                       throw new \Swift_TransportException($e);
+                } 
             }else{
                  $userPhone = User::where('phone_number','=',$arr['email'])->first();
                 if(isset($userPhone) && isset($userPhone->email)){
@@ -112,8 +117,12 @@ class LoginController extends Controller
                         $result['subject'] = "Canonizer verification code";
                         $receiver = $userPhone->phone_number . "@" . $userPhone->mobile_carrier;
                         Session::flash('otpsent', "A 6 digit code has been sent on your phone number for verification.");
-                        Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new PhoneOTPMail($userPhone, $result));
+                        try{
+                            Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new PhoneOTPMail($userPhone, $result));
                         return redirect()->route('login.otp',['user'=>base64_encode($userPhone->email)]);
+                        }catch(\Swift_TransportException $e){
+                            throw new \Swift_TransportException($e);
+                        } 
                     }
                 }else{
                      $errors = [$this->username() => 'User does not exists.'];
@@ -172,7 +181,7 @@ class LoginController extends Controller
         $email = base64_decode($all['user']);
         $user = User::where('email', '=', $email)->first();
         $message = [
-          'otp.required'=>'Please enter OTP'  
+          'otp.required'=>'Please enter One Time Verification Code'  
         ];
         $validator = Validator::make($all, [
                     'otp' => 'required',
@@ -185,7 +194,7 @@ class LoginController extends Controller
         }
 
         if ($otp != $user->otp) {
-            session()->flash('error', 'Incorrect OTP Entered');
+            session()->flash('error', 'Incorrect One Time Verification Code Entered');
             return redirect()->back();
         }
         $user->otp = '';

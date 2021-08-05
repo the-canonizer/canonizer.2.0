@@ -12,7 +12,7 @@ class UploadController extends Controller
     //
 
     public function getUpload(Request $request){
-        $uploaded = Upload::where('user_id',$request->user()->id)->get();
+        $uploaded = Upload::where('user_id',$request->user()->id)->orderBy('created_at','DESC')->get();
         
         return view('upload',compact('uploaded'));
     }

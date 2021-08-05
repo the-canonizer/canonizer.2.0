@@ -28,7 +28,7 @@
         <p><strong>Email : </strong>{{$user->email}}</p>
         @endif
         @if(!in_array('birthday',$privateFlags))
-        <p><strong>Birthday : </strong>{{$user->birthday}}</p>
+        <p><strong>Date Of Birth : </strong>{{$user->birthday}}</p>
         @endif
         @if(!in_array('address_1',$privateFlags))
         <p><strong>Address : </strong>{{$user->address_1}}</p>
@@ -40,7 +40,7 @@
         <p><strong>State : </strong>{{$user->state}}</p>
         @endif
         @if(!in_array('postal_code',$privateFlags))
-        <p><strong>Postal Code : </strong>{{$user->postal_code}}</p>
+        <p><strong>Zip Code : </strong>{{$user->postal_code}}</p>
         @endif
         @if(!in_array('country',$privateFlags))
         <p><strong>Country : </strong>{{$user->country}}</p>
@@ -53,7 +53,7 @@
             <form>
                 <input type="hidden" name="campnum" value="{{$camp_num}}" />
                 <input type="hidden" name="topicnum" value="{{$topic_num}}" />
-                <select onchange="submitForm(this)" name="namespace" id="namespace" class="namespace-select">
+                <select onchange="submitSupportForm(this)" name="namespace" id="namespace" class="namespace-select">
                     @foreach($namespaces as $namespace)
                         <option data-namespace="{{ $namespace->name }}" value="{{ $namespace->id }}" {{ isset($namespace_id) && $namespace->id == $namespace_id ? 'selected' : ''}}>{{namespace_label($namespace)}}</option>
                     @endforeach
@@ -77,7 +77,7 @@
                                 }
                             ?>
                 <ul>
-                    <li id="camp_{{$key}}_{{$camp_num}}"><a style="{{ (!isset($supports['array']) && $key == $topic_num) ? 'font-weight:bold; font-size:16px;' : '' }}" href="{{ (array_key_exists('link',$supports)  && isset($supports['link'])) ? $supports['link'] : '' }}">{{ (array_key_exists('camp_name',$supports)  && isset($supports['camp_name'])) ? ($topic_name!='')? $topic_name:$supports['camp_name'] : ''}}</a></li>
+                    <li id="camp_{{$key}}_{{$camp_num}}"><a style="{{ ((!isset($supports['array']) || $camp_num == '') && $key == $topic_num) ? 'font-weight:bold; font-size:16px;' : '' }}" href="{{ (array_key_exists('link',$supports)  && isset($supports['link'])) ? $supports['link'] : '' }}">{{ (array_key_exists('camp_name',$supports)  && isset($supports['camp_name'])) ? ($topic_name!='')? $topic_name:$supports['camp_name'] : ''}}</a></li>
                     <?php if(isset($supports['delegate_nick_name_id']) && $supports['delegate_nick_name_id'] !=0 && !isset($supports['array'])){ 
                                     $topic = \App\Model\Topic::where('objector_nick_id', '=', NULL)->where('topic_num','=',$key)->latest('submit_time')->get();
                                     $delegatedNick = new \App\Model\Nickname();
@@ -101,11 +101,16 @@
                     <ul>
                         @if(isset($supports['array']))
                         <?php ksort($supports['array']);
+                            $sppArr = [];
                          ?>
                         @foreach($supports['array'] as $support_order)
                             @foreach($support_order as $support)
 
                             <?php 
+                             if(isset($sppArr) && in_array($support['camp_num'], $sppArr)){
+                                continue;
+                             }
+                             $sppArr[] = $support['camp_num'];
                              if(isset($support['delegate_nick_name_id']) && $support['delegate_nick_name_id'] !=0 && $delegate_flag){
                                 continue;
                              }
@@ -151,7 +156,7 @@
 var camp_num = '<?php echo $camp_num; ?>';
 var topic_num = '<?php echo $topic_num; ?>';
 window.scrollTo($("#camp_"+topic_num+"_"+camp_num));
-function submitForm(element){
+function submitSupportForm(element){
     $(element).parents('form').submit();
 }
 </script>

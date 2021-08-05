@@ -56,11 +56,12 @@
 			            $currentLive = 0; 
 				          $currentTime = time();
                                     
-                                                
+                      $stmentLength = count($statement);                  
 			         foreach($statement as $key=>$data) { 
 						   $isagreeFlag = false;
                $isGraceFlag = false;
-
+               $liveStatement = \App\Model\Statement::getLiveStatement($data->topic_num,$data->camp_num);
+               $camp = \App\Model\Camp::where('camp_num','=',$data->camp_num)->where('topic_num','=',$data->topic_num)->get();
                 $nickNamesData = \App\Model\Nickname::personNicknameArray();
                 $supported_camps = [];
                 if(sizeof($nickNamesData) > 0){
@@ -187,11 +188,26 @@
 				  </div><br/>
 				  <b>Edit summary :</b> {{ $data->note }} <br/>				 
 				  <b>Submitted on :</b> {{ to_local_time($data->submit_time) }} <br/>
-				  <b>Submitter Nick Name :</b> {{ isset($data->submitternickname->nick_name) ? $data->submitternickname->nick_name : 'N/A' }} <br/>
+          <?php
+                                  $namespace_id = 1;
+                                  if(isset($topic) && isset($topic->namespace_id)){
+                                    $namespace_id = $topic->namespace_id;
+                                  }
+                                  $userUrl = '';
+                                  $objectUsrUrl = '';
+
+                                  if(isset($data->submitternickname->nick_name)){
+                                     $userUrl = route('user_supports',$data->submitter_nick_id)."?topicnum=".$data->topic_num."&campnum=".$data->camp_num."&namespace=".$namespace_id."#camp_".$data->topic_num."_".$data->camp_num;  
+                                  }
+                                  if(isset($data->objectornickname->nick_name)){
+                                     $objectUsrUrl = route('user_supports',$data->objector_nick_id)."?topicnum=".$data->topic_num."&campnum=".$data->camp_num."&namespace=".$namespace_id."#camp_".$data->topic_num."_".$data->camp_num;  
+                                  }
+                                ?>
+				  <b>Submitter Nick Name :</b> <a href="{{$userUrl}}">{{ isset($data->submitternickname->nick_name) ? $data->submitternickname->nick_name : 'N/A' }} </a><br/>
 				  <b>Go live Time :</b> {{ to_local_time($data->go_live_time) }}<br/> 
 				  @if($data->objector_nick_id !=null)
 				  <b>Object Reason :</b> {{ $data->object_reason}} <br/>	
-                  <b>Objector Nick Name :</b> {{ $data->objectornickname->nick_name }} <br/> 			  
+                  <b>Objector Nick Name :</b><a href="{{$objectUsrUrl}}"> {{ $data->objectornickname->nick_name }}</a> <br/> 			  
                   @endif 
 				  
 				 <div class="CmpHistoryPnl-footer">
@@ -211,15 +227,17 @@
                </script>
 				 </div>
                                  @if(Auth::check())
-                                 @if($isagreeFlag && $ifIamSupporter && Auth::user()->id != $submitterUserID)
+                                 @if($isagreeFlag && $ifIamSupporter   && Auth::user()->id != $submitterUserID)
                                 <div class="CmpHistoryPnl-footer">
                                     <div>
-                                       <input {{ (isset($isAgreed) && $isAgreed) ? 'checked' : '' }} {{ (isset($isAgreed) && $isAgreed) ? 'disabled' : '' }} class="agree-to-change" type="checkbox" name="agree" value="" onchange="agreeToChannge(this,'{{ $data->id}}')"> I agree with this statement change</form>
+                                        @if($stmentLength ==1 || ($stmentLength >1 &&  $liveStatement && $data->submit_time  > $liveStatement->submit_time))
+                                       <input {{ (isset($isAgreed) && $isAgreed) ? 'checked' : '' }} {{ (isset($isAgreed) && $isAgreed) ? 'disabled' : '' }} class="agree-to-change" type="checkbox" name="agree" value="" onchange="agreeToChannge(this,'{{ $data->id}}')"> I agree with this statement change</input>
+                                       @endif
                                     </div>
                                 </div>
                                 @endif
 
-                                  @if(Auth::user()->id == $submitterUserID && $isGraceFlag && $data->grace_period && $interval > 0)
+                                  @if(Auth::user()->id == $submitterUserID && $isGraceFlag   && $data->grace_period && $interval > 0)
                                     <div class="CmpHistoryPnl-footer" id="countdowntimer_block<?php echo $data->id ;?>">
                                         <div class="grace-period-note"><b>Note: </b>This countdown timer is the grace period in which you can make minor changes to your statement before other direct supporters are notified.</div>
                                         <div style="float: right" > 

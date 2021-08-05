@@ -49,12 +49,14 @@ class CThreadsController extends Controller
         if ((camp::where('camp_num', $campnum)->where('topic_num', $topicid)->value('camp_name')))
         {
             $partcipateFlag = 0;
+            $myThreads = 0;
             if (request('by') == 'me') {
                 /**
                  * Filter out the Threads by User
                  * @var [type]
                  */
-                $userNicknames = Nickname::topicNicknameUsed($topicid);
+                $userNicknames = Nickname::topicNicknameUsed($topicid)->sortBy('nick_name');
+                $myThreads = 1;
 
                 if (count($userNicknames) > 0) {
                     $threads = CThread::where('camp_id', $campnum)->
@@ -93,22 +95,21 @@ class CThreadsController extends Controller
                  * @var [type]
                  */
                 $threads = CThread::join('post', 'thread.id', '=', 'post.c_thread_id' )->
-                                    select('thread.*', DB::raw('count(post.c_thread_id) as post_count')) ->
-                                    where('camp_id', $campnum)->
-                                    where('topic_id', $topicid)->
-                                    groupBy('thread.id')->
-                                    orderBy('post_count', 'desc')->
-                                    latest()->paginate(10);
+                  select('thread.*', DB::raw('count(post.c_thread_id) as post_count')) ->
+                  where('camp_id', $campnum)->
+                  where('topic_id', $topicid)->
+                  groupBy('thread.id')->
+                  orderBy('post_count', 'desc')->
+                  latest()->paginate(10);
             }
-
             else {
                 /**
                  * Filter out the threads on the basis of the latest creation dates
                  * @var [type]
                  */
                 $threads = CThread::where('camp_id', $campnum)->
-                                    where('topic_id', $topicid)->
-                                    latest()->paginate(10);
+                  where('topic_id', $topicid)->
+                  latest()->paginate(10);
             }
         }
         else {
@@ -127,6 +128,7 @@ class CThreadsController extends Controller
             $topic,
             [
                 'threads'          => $threads,
+                'myThreads'        => $myThreads,
                 // Return the name of the camp to index View
                 'campname'         => camp::where('camp_num', $campnum)
                                                     ->where('topic_num', $topicid)
@@ -138,7 +140,7 @@ class CThreadsController extends Controller
                                              ->latest('submit_time')
                                              ->first()->topic_name,
                 'parentcamp'       => Camp::campNameWithAncestors($camp,'',$topicname),
-                'participateFlag'  => $partcipateFlag
+                'participateFlag'  => $partcipateFlag,
             ],
             compact('threads')
         );
@@ -220,13 +222,17 @@ class CThreadsController extends Controller
         $thread_flag = CThread::where('camp_id', $campnum)->
                                 where('topic_id', $topicid)->
                                 where('title', $request->{'title'})->get();
-
-        $this->validate(
-            $request, [
-                'title'    => 'required|max:100|regex:/^[a-zA-Z0-9\s]+$/',
-                'nick_name' => 'required'
-            ]
-        );
+        $messagesVal = [
+            'title.regex' => 'Title must only contain space and alphanumeric characters.',
+            'title.required' => 'Title is required.',
+            'nick_name.required' => 'The nick name field is required.',
+        ];
+          $this->validate(
+              $request, [
+                  'title'    => 'required|max:100|regex:/^[a-zA-Z0-9\s]+$/',
+                  'nick_name' => 'required'
+              ],$messagesVal
+          );
 
         if (count($thread_flag) > 0) {
 
@@ -284,10 +290,41 @@ class CThreadsController extends Controller
      * @parameter \App\CThread  $CThread
      * @return    \Illuminate\Http\Response
      */
-    public function edit(CThread $CThread)
-    {
-        //
+    public function edit($topicName, $campNum, $threadId) {
+    
+      return view(
+        'threads.edit',
+        [
+          'topicName' => $topicName,
+          'campNum'   => $campNum,
+          'thread'    => CThread::findOrFail($threadId)
+        ]
+      );
     }
+
+    public function save_title(Request $request, $topicName, $campNum, $threadId) {
+
+      $messagesVal = [
+        'title.regex' => 'Title must only contain space and alphanumeric characters.',
+        'title.required' => 'Title is required.',
+        'title.unique'   => 'Thread title must be unique'
+      ];
+
+      $this->validate(
+        $request, [
+          'title' => 'required|max:100|unique:thread'
+        ], $messagesVal
+      );
+
+      $title = request('title');
+      DB::update('update thread set title =? where id = ?', [$title, $threadId]);
+
+      $return_url = 'forum/'.$topicName.'/'.$campNum.'/threads/'.$threadId.'/edit';
+
+      return redirect($return_url)->with('success', 'Thread title updated.');
+
+    }
+ 
 
     /**
      * Update the specified resource in storage.

@@ -30,9 +30,11 @@ class SocialController extends Controller
 	{
 
 		try{
-			if ((!$request->has('code') &&  $request->has('denied')) || ($request->has('error') && $request->has('error_description')) ) {
+			if ((!$request->has('code') &&  $request->has('denied')) || ($request->has('error') && $request->has('error_description')) || ($request->has('error_code') && $request->has('error_message')) ) {
        			 if($request->has('error') && $request->has('error_description')){
        			 	Session::flash('social_error', $request['error_description']);
+       			 }else if(($request->has('error_code') && $request->has('error_message'))){
+       			 	Session::flash('social_error', $request['error_message']);
        			 }else{
        			 	Session::flash('social_error', "Cancelled $provider login authentication");	
        			 }
@@ -99,15 +101,20 @@ class SocialController extends Controller
 					                'otp'			=> $authCode
 					            ]);
 					            $socialUser = SocialUser::create([
-					                'user_id'       => $users->id,
+					                'user_id'       => $user->id,
 					                'social_email'  => $user_email,
 					                'provider_id'   => $userSocial->getId(),
 					                'provider'      => $provider,
 					                 'social_name'   => $social_name,
 					            ]);
 					             //otp email
-						       Mail::to($user->email)->bcc(config('app.admin_bcc'))->send(new OtpVerificationMail($user));
-						       return redirect()->route('register.otp', ['user' => base64_encode($user->email)]);
+					            try{
+
+							       Mail::to($user->email)->bcc(config('app.admin_bcc'))->send(new OtpVerificationMail($user));
+							       return redirect()->route('register.otp', ['user' => base64_encode($user->email)]);
+					            }catch(\Swift_TransportException $e){
+		                            throw new \Swift_TransportException($e);
+		                        } 
 				        	
 				 	}
 	        	}
@@ -178,15 +185,21 @@ class SocialController extends Controller
     						session()->forget('provider');
 				            return redirect('/');
 				        }else if(isset($users) && isset($users->email) && $users->status ==0){
+				        	  try{
+
 				        		Mail::to($users->email)->bcc(config('app.admin_bcc'))->send(new OtpVerificationMail($users));
 						       return redirect()->route('register.otp', ['user' => base64_encode($users->email)]);
+				        	  }catch(\Swift_TransportException $e){
+	                            throw new \Swift_TransportException($e);
+	                        } 
 				        }else{
 				        	
 				        		$authCode = mt_rand(100000, 999999);
 								$user = User::create([
 					                'first_name'    => $userSocial->getName(),
 					                'email'         => $user_email,
-					                'otp'			=> $authCode
+					                'otp'			=> $authCode,
+					                'status'		=> 0
 					            ]);
 					            $socialUser = SocialUser::create([
 					                'user_id'       => $user->id,
@@ -197,8 +210,13 @@ class SocialController extends Controller
 					            ]);
 					             //otp email
 					           
+						       try{
+
 						       Mail::to($user->email)->bcc(config('app.admin_bcc'))->send(new OtpVerificationMail($user));
 						       return redirect()->route('register.otp', ['user' => base64_encode($user->email)]);
+						       }catch(\Swift_TransportException $e){
+                            throw new \Swift_TransportException($e);
+                        } 
 				        	
 				 	}
 	 }

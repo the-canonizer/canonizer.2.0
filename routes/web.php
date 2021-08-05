@@ -43,6 +43,15 @@ Route::group(['prefix' => 'admin', 'middleware' => 'adminauth'], function () {
     Route::post('/videopodcast', ['as'=>'videopodcast.store', 'uses'=>'Admin\VideoController@store']);
     Route::post('/copydatabase', ['as'=>'copydatabase', 'uses'=>'Admin\ActionController@copydatabase']);
     Route::post('/copyfiles', ['as'=>'copyfiles', 'uses'=>'Admin\ActionController@copyfiles']);
+
+    Route::get('/shares', 'Admin\SharesAlgoController@index');
+    Route::get('/shares/create', 'Admin\SharesAlgoController@create');
+    Route::get('/shares/edit/{id}', 'Admin\SharesAlgoController@edit');    
+    Route::get('/shares/delete/{id}', 'Admin\SharesAlgoController@destroy');
+    Route::patch('/shares/update/{id}', ['as'=>'shares.update', 'uses'=>'Admin\SharesAlgoController@update']);
+    Route::post('/shares/store', ['as'=>'shares.store', 'uses'=>'Admin\SharesAlgoController@store']);
+    Route::post('/shares/getshares', ['as'=>'shares.getshares', 'uses'=>'Admin\SharesAlgoController@getshares']);
+
 });
 
 Route::get('/home', ['as' => 'home', 'uses' => 'HomeController@index']);
@@ -75,7 +84,7 @@ Route::post('verify-otp', 'Auth\LoginController@validateLoginOtp');
 
 
 
-Route::get('forgetpassword', 'Auth\ForgotPasswordController@showLinkRequestForm');
+Route::get('forgotpassword', 'Auth\ForgotPasswordController@showLinkRequestForm');
 Route::post('forgetpassword', 'Auth\ForgotPasswordController@sendResetLinkEmail');
 Route::get('resetlinksent', 'Auth\ForgotPasswordController@resetLinkSent');
 Route::get('resetpassword/{token}', 'Auth\ResetPasswordController@showResetForm');
@@ -128,7 +137,8 @@ Route::group([ 'middleware' => 'auth'], function() {
     Route::get('/addnews/{topicnum}/{campnum}',['as'=>'addnews','uses'=>'NewsFeedController@create']);
     Route::post('/newsfeed/save',['as'=>'newsfeed.save','uses'=>'NewsFeedController@store']);
     Route::get('/editnews/{topicnum}/{campnum}',['as'=>'newsfeed.edit','uses'=>'NewsFeedController@edit']);
-     Route::post('/newsfeed/update',['as'=>'newsfeed.update','uses'=>'NewsFeedController@update']);
+    Route::post('/newsfeed/update',['as'=>'newsfeed.update','uses'=>'NewsFeedController@update']);
+    Route::get('/newsfeed/delete/{id}', 'NewsFeedController@destroy');
     Route::post('/camp/add_subscription',['as'=>'camp.subscription','uses'=>'TopicController@add_camp_subscription']);
     Route::post('/deactivateuser',['as'=>'social.deactivateuser','uses'=>'SocialController@deactivateuser']);
     Route::post('/delete_social_link',['as'=>'social.delete_social_link','uses'=>'SocialController@delete']);
@@ -138,27 +148,35 @@ Route::group([ 'middleware' => 'auth'], function() {
 Route::get('topic.asp/{id}', [ 'as' => 'topic', 'uses' => 'TopicController@show']);
 
 Route::get(
-        '/forum/{topicid}-{topicname}/{campnum}/threads', ['uses' => 'CThreadsController@index']
+    '/forum/{topicid}-{topicname}/{campnum}/threads', ['uses' => 'CThreadsController@index']
 );
 
 Route::get(
-        '/forum/{topicid}-{topicname}/threads', ['uses' => 'CThreadsController@topicindex']
+  '/forum/{topicid}-{topicname}/threads', ['uses' => 'CThreadsController@topicindex']
 );
 
 Route::get(
-        '/forum/{topicid}-{topicname}/{campnum}/threads/create', ['uses' => 'CThreadsController@create']
+    '/forum/{topicid}-{topicname}/{campnum}/threads/create', ['uses' => 'CThreadsController@create']
 );
 
 Route::get(
-        '/forum/{topicid}-{topicname}/{campnum}/threads/{thread}', [ 'uses' => 'CThreadsController@show']
+    '/forum/{topicid}-{topicname}/{campnum}/threads/{thread}', [ 'uses' => 'CThreadsController@show']
+);
+
+Route::get(
+  '/forum/{topicname}/{campnum}/threads/{thread}/edit', [ 'uses' => 'CThreadsController@edit']
 );
 
 Route::post(
-        '/forum/{topicid}-{topicname}/{campnum}/threads', 'CThreadsController@store'
+  '/forum/{topicname}/{campnum}/threads/{thread}/edit', [ 'uses' => 'CThreadsController@save_title']
 );
 
 Route::post(
-        '/forum/{topicid}-{topicname}/{campnum}/threads/{thread}/replies', ['uses' => 'ReplyController@store']
+    '/forum/{topicid}-{topicname}/{campnum}/threads', 'CThreadsController@store'
+);
+
+Route::post(
+    '/forum/{topicid}-{topicname}/{campnum}/threads/{thread}/replies', ['uses' => 'ReplyController@store']
 );
 
 if (env('APP_DEBUG')) {

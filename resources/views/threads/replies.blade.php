@@ -2,7 +2,15 @@
     <div class="panel-heading">
 
         <div class="level">
-            <a href="#">
+            <?php
+                $topic = App\Model\Topic::getLiveTopic($threads->topic_id); 
+                $namespace_id = 1;
+                if(isset($topic->topic_num)){
+                    $namespace_id = $topic->namespace_id;
+                }
+               $userUrl = route('user_supports',$reply->user_id)."?topicnum=".$threads->topic_id."&campnum=".$threads->camp_id."&namespace=".$namespace_id."#camp_".$threads->topic_id."_".$threads->camp_id;
+            ?>
+            <a href="{{$userUrl}}">
                 {{ $reply->owner->nick_name }}
             </a> replied on {{ date('d-m-Y', strtotime($reply->updated_at)) }}
             <br><br>

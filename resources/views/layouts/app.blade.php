@@ -81,7 +81,7 @@
 
                         </div>
                         @else
-						<a class="nav-link guestLogin">Browsing as: Guest</a>
+						<a class="nav-link guestLogin" style="cursor:default;">Browsing as: Guest</a>
                         <a class="nav-link" href="{{ url('/login')}}"><i class="fa fa-fw fa-user"></i> Log in</a>
                         <a class="nav-link" href="{{ url('/register')}}"><i class="fa fa-fw fa-user-plus"></i> Register </a>
                         @endif
@@ -157,6 +157,16 @@
 						<li class="nav-item">
                             <a class="nav-link" href="{{ url('/blog')}}">
                                 <span class="nav-link-text">Blog</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url('/topic/6-Canonizer-Jobs/1-Agreement')}}">
+                                <span class="nav-link-text">Jobs</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url('/topic/37-Canonizer-Services/1-Agreement')}}">
+                                <span class="nav-link-text">Services</span>
                             </a>
                         </li>
                     </ul>
@@ -271,6 +281,11 @@
         @show
 
         <div class="content-wrapper">
+            @if(session()->has('mailerror'))
+                <div class="alert alert-danger">
+                    {{ session()->get('mailerror') }}
+                </div>
+            @endif
             @yield('content')
         <div id="google_ads" class="homeADDright">
 			@include('partials.advertisement')
@@ -286,9 +301,15 @@
         </div>
     </div>
     <script>
+        $('button[type="submit"]').removeAttr('disabled');
         function topFunction() {
             document.body.scrollTop = 0;
             document.documentElement.scrollTop = 0;
+        }
+
+        function submitForm(e){            
+            $('button[type="submit"]').attr('disabled','disabled');
+            return true;
         }
 
 function restrictTextField(e,limitlength){

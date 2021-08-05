@@ -15,7 +15,9 @@
            <link href="{{ URL::asset('/select2/dist/css/select2.min.css') }}" rel="stylesheet">
 
         <link href="{{ URL::asset('/font-awesome/css/font-awesome.min.css') }}" rel="stylesheet" type="text/css">
+        <link rel="stylesheet" type="text/css" href="{{URL::asset('/js/jquery-ui/jquery-ui.css')}}" />
          <script src="{{ URL::asset('/js/jquery.min.js') }}"></script>
+         <script src="{{ URL::asset('/js/jquery-ui/jquery-ui.js')}}"></script>
          <script src="{{ URL::asset('/ckeditor/ckeditor.js') }}"></script>
           <script src="{{ URL::asset('/select2/dist/js/select2.min.js') }}"></script>
        
@@ -53,6 +55,7 @@
                     <li class="{{ ($route=='getNamespaceRequests') ? 'current':''}}"><a href="{{ url('/admin/namespace-requests') }}"><i class="glyphicon glyphicon-calendar"></i> Namespace Requests</a></li>
                     <li class="{{ ($route=='getIndex' & str_contains(Request::fullUrl(), 'users')) ? 'current':''}}"><a href="{{ url('/admin/users') }}"><i class="glyphicon glyphicon-calendar"></i> Users</a></li>
                     <li class="{{ ($route=='index' & str_contains(Request::fullUrl(), 'templates')) ? 'current':''}}"><a href="{{ url('/admin/templates') }}"><i class="glyphicon glyphicon-pencil"></i> Templates</a></li>
+                     <li class="{{ ($route=='index' & str_contains(Request::fullUrl(), 'shares')) ? 'current':''}}"><a href="{{ url('/admin/shares') }}"><i class="glyphicon glyphicon-pencil"></i> Shares</a></li>
                     <li class="{{ ($route=='getSendmail') ? 'current':''}}"><a href="{{ url('/admin/sendmail') }}"><i class="glyphicon glyphicon-pencil"></i> Send Email</a></li>
                     <li class="{{ ($route=='index' & str_contains(Request::fullUrl(), 'videopodcast')) ? 'current':''}}"><a href="{{ url('/admin/videopodcast') }}"><i class="glyphicon glyphicon-facetime-video"></i> Video Podcast</a></li>
                     <!--<li><a href="stats.html"><i class="glyphicon glyphicon-stats"></i> Statistics (Charts)</a></li>
@@ -80,7 +83,10 @@
          </div>
       </footer>
 <script>
-    
+     function submitForm(e){
+            $('button[type="submit"]').attr('disabled','disabled');
+            return true;
+        }
     function restrictTextField(e,limitlength){
     var charLength = $(e.target).val().length;
      if (charLength >= limitlength  && e.keyCode !== 46 && e.keyCode !== 8 ) {

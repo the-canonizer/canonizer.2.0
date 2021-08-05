@@ -13,7 +13,7 @@ use App\Mail\AdminEmailCampaign;
 class UserController extends Controller {
 
     public function getIndex(Request $request) {
-        $users = User::paginate(10);
+        $users = User::where('status','=',1)->paginate(10);
         return view('admin.users', compact('users'));
     }
 
@@ -89,7 +89,12 @@ class UserController extends Controller {
         
         $template = Templates::find($data['template']);        
         foreach($users as  $user){
+            try{
+                
             Mail::to($user->email)->bcc('brent.allsop@canonizer.com')->send(new AdminEmailCampaign($user,$template));
+            }catch(\Swift_TransportException $e){
+                       throw new \Swift_TransportException($e);
+                    } 
         }
         $request->session()->flash('success', 'Mail sent successfully');
         return redirect('/admin/sendmail');

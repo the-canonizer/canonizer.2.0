@@ -14,7 +14,7 @@
         <ul>
             <li>check spam folder</li>
             <li>verify if you typed your email correctly</li>
-            <li>if you can't resolve the issue, please contact support@canonizer.com</li>
+            <li>if you can't resolve the issue, please contact <a href="mailto:support@canonizer.com">support@canonizer.com</a></li>
         </ul>
 
 </div>

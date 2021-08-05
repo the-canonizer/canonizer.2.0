@@ -1,5 +1,5 @@
 @component('mail::message')
- Hi {{ $user->first_name}} {{ $user->last_name }},<br/>
+ Hello {{ $user->first_name}} {{ $user->last_name }},<br/>
  <p>You recently requested to reset you password, In order to complete your request click the button below</p>
      
 

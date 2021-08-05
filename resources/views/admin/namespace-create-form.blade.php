@@ -10,7 +10,7 @@
             <div class="content-box-large box-with-header">
                 
 			  				<div class="panel-body">
-			  					<form method="POST">
+			  					<form method="POST" onsubmit="return submitForm(this)">
                                   <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
                                   <input type="hidden" name="page" value="<?php echo (isset($_GET['page'])) ? $_GET['page'] : 1; ?>">
 								  @if($namespaceRequest)
@@ -35,7 +35,7 @@
 										</div>
 									</fieldset>
 									<div>
-										<button class="btn btn-primary">
+										<button type="submit" class="btn btn-primary">
 											<i class="fa fa-save"></i>
 											Submit
 										</button>
