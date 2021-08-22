@@ -462,7 +462,6 @@ class Camp extends Model {
             }else if(session()->has('asofdateDefault') && session('asofdateDefault')!='' && !isset($_REQUEST['asof'])){
                 $asofdate =  strtotime(session('asofdateDefault'));
             }
-
         } else {
 
             $asofdate = time();

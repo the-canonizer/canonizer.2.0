@@ -29,9 +29,11 @@
 					 
 					 <?php
 
+
 					  if(isset($childSupport) && !empty($childSupport) ) {
 					   foreach($childSupport as $supportData) { 
 					       $removedCampList[]=$supportData->camp->camp_num;
+
 					 ?>
  					  <div class="col-sm-12 column">   
 					   <div class="SpCmpBDY  support-sorter-element-child ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
@@ -112,6 +114,7 @@
 					   <?php 
 					   		
                             $livecamp = \App\Model\Camp::getLiveCamp($support->topic_num,$support->camp_num,['nofilter'=>true]);
+
 					   ?>
 					  
                        <div class="col-sm-12 column">
@@ -141,12 +144,15 @@
 					 <div class="row column">
                        <?php $key = 0; 
                          $topicSupport = $supportedTopic->topic->Getsupports($supportedTopic->topic_num,[$supportedTopic->nick_name_id],['nofilter'=>true]);
-                        // echo "<pre>"; print_r($topicSupport); die;
                        ?>
 
 					   @foreach($topicSupport as $k=>$support)
-					   
+					    <?php 
+					   	$liveCamp = \App\Model\Camp::getLiveCamp($support->topic_num,$support->camp_num,['nofilter'=>true]);
+					   //	echo "<pre>"; print_r($liveCamp); die;
+					   ?>
 					   @if(!in_array($support->camp->camp_num,$removedCampList)) <?php $key = $key + 1; ?>
+
                        <div class="col-sm-12 column">
                             <div id="positions_{{ $support->support_id }}" class="SpCmpBDY  support-sorter-element ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
                             
@@ -260,7 +266,7 @@
                     </div>
                      @if(!Session::has('warning'))
                      	@if(Session::get('confirm') != 'samecamp')
-	                    	<button type="submit" id="submit" class="btn btn-login">Submit</button>
+	                    	<button type="submit" id="submit" onclick="submitdelegateForm()" class="btn btn-login">Submit</button>
 	                    @endif
                      <?php  
                      $link = \App\Model\Camp::getTopicCampUrl($topic->topic_num,session('campnum'));
