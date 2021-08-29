@@ -150,14 +150,14 @@ class Algorithm{
         $year = date('Y',$as_of_time);
         $month = date('m',$as_of_time);
         $shares = SharesAlgorithm::whereYear('as_of_date', '=', $year)
-              ->whereMonth('as_of_date', '<=', $month)->where('nick_name_id',$nick_name_id)->get();
+              ->whereMonth('as_of_date', '<=', $month)->where('nick_name_id',$nick_name_id)->orderBy('as_of_date', 'ASC')->get();
         $sum_of_shares = 0;
         $sum_of_sqrt_shares = 0;
        
         if(count($shares)){
             foreach($shares as $s){
-                $sum_of_shares = $sum_of_shares + $s->share_value;
-                $sum_of_sqrt_shares = $sum_of_sqrt_shares+ number_format(sqrt($s->share_value),2);
+                $sum_of_shares = $s->share_value; //$sum_of_shares + $s->share_value;
+                $sum_of_sqrt_shares =  number_format(sqrt($s->share_value),2);//$sum_of_sqrt_shares+ number_format(sqrt($s->share_value),2);
             }
         }
         $condition = "topic_num = $topicnum and camp_num = $campnum";
