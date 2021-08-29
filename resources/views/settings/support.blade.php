@@ -130,7 +130,7 @@
 							<?php if(isset($topic->topic_num) && isset($supportedTopic->topic_num) &&  $topic->topic_num==$supportedTopic->topic_num) $lastsupportOrder++;
 								
 							?>
-							<span class="remove_camp">X</span>
+							<span rel="{{ $support->camp->camp_num }}" class="remove_camp">X</span>
                         
                            </div>
 					  </div>
@@ -166,7 +166,7 @@
 							<?php if(isset($topic->topic_num) && isset($supportedTopic->topic_num) &&  $topic->topic_num==$supportedTopic->topic_num) $lastsupportOrder++;
 								
 							?>
-							<span class="remove_camp">X</span>
+							<span rel="{{$support->camp->camp_num}}" class="remove_camp">X</span>
                         
                            </div>
 					  </div>
@@ -185,7 +185,7 @@
 							<input type="hidden" name="delegated[{{$camp->camp_num}}]" value="{{ $delegate_nick_name_id }}">
                             
                             <b><span class="support_order">{{ $key+1}} </span> . {{ $camp->camp_name }} <br/></b>
-                            <span class="remove_camp">X</span>
+                            <span rel="{{$camp->camp_num}}" class="remove_camp">X</span>
                             
                         	
                         
@@ -211,7 +211,7 @@
                             
                             <b><span class="support_order">{{ ++$lastsupportOrder }} </span> . {{ $camp->camp_name }} </b><br/>
 
-                            <span class="remove_camp">X</span>
+                            <span rel="{{ $camp->camp_num }}" class="remove_camp">X</span>
                             
                         <?php $lastsupportOrder++; ?>
                         
@@ -238,7 +238,7 @@
 					<input type="hidden" id="confirm_support" name="confirm_support" value="0">
 					@if(count($removedCampList) > 0)
 					 @foreach($removedCampList as $cmp)
-					 	<input type="hidden" id="removed_camp" name="removed_camp[]" value="{{$cmp}}">
+					 	<input type="hidden" name="removed_camp[]" value="{{$cmp}}">
 					 @endforeach
 					 @endif
                     <div class="row">
@@ -264,13 +264,19 @@
 						</div> 
                        
                     </div>
+                   	   <?php 
+                     		$btnFlag = 'none';
+                     	?>
                      @if(!Session::has('warning'))
                      	@if(Session::get('confirm') != 'samecamp')
-	                    	<button type="submit" id="submit"  class="btn btn-login">Submit</button>
+                     	<?php 
+                     		$btnFlag = 'inline-block';
+                     	?>	                    	
 	                    @endif
                      <?php  
                      $link = \App\Model\Camp::getTopicCampUrl($topic->topic_num,session('campnum'));
                  	 ?>
+                 	<button  style="display:<?= $btnFlag; ?>" type="submit" id="submit"  class="btn btn-login">Submit</button>
 				    <a  class="btn btn-login" href="<?php echo $link; ?>">Cancel</a>
 				    @elseif(Session::get('confirm') != 'samecamp')
 					<div style="display:none">	
@@ -288,6 +294,23 @@
  </div></div>
 </div>  <!-- /.right-whitePnl-->
  <script>
+ 	 jQuery.fn.preventDoubleSubmission = function() {
+              $(this).on('submit',function(e){
+                var $form = $(this);
+
+                if ($form.data('submitted') === true) {
+                  // Previously submitted - don't submit again
+                  e.preventDefault();
+                } else {
+                  // Mark it so that the next submit can be ignored
+                  $form.data('submitted', true);
+                }
+              });
+
+              // Keep chainability
+              return this;
+        };
+        $('form').preventDoubleSubmission();
 
         $( function() {
             $( ".column" ).sortable({
@@ -296,17 +319,14 @@
                 opacity: 0.6,
                 update: function(event, ui) {
                 $( ".column" ).find('.support-sorter-element').each(function(i,v){
-                	   console.log('i',i,'v',v);
                         $(v).find('.support_order').text(i+1);
 						$(v).find('.final_support_order').val(i+1);
                     });
                 $( ".column" ).find('.support-sorter-element-child').each(function(i,v){
-                	   console.log('i',i,'v',v);
                         $(v).find('.support_order').text(i+1);
 						$(v).find('.final_support_order').val(i+1);
                     });
                  $( ".column" ).find('.support-sorter-element-parent').each(function(i,v){
-                	   console.log('i',i,'v',v);
                         $(v).find('.support_order').text(i+1);
 						$(v).find('.final_support_order').val(i+1);
                     });
@@ -314,6 +334,9 @@
             });
 
              $('.remove_camp').click(function(){
+             		var camp = $(this).attr('rel');
+             		$('#submit').show();
+             		$('#myTabContent').append('<input type="hidden"  name="removed_camp[]" value="'+camp+'">');
                 	$(this).parent(".support-sorter-element").remove();
                 	$( ".column" ).find('.support-sorter-element').each(function(i,v){
                         $(v).find('.support_order').text(i+1);

@@ -59,9 +59,9 @@
                 if (!empty($camps) && !empty($topic)) { 
                     $currentLive = 0;
                     $currentTime = time();
-
                     foreach ($camps as $key => $data) {
                         $liveCamp = \App\Model\Camp::getLiveCamp($data->topic_num,$data->camp_num);
+                        // $delegatedSupport = App\Model\Support::where('delegate_nick_name_id',)
                         $isagreeFlag = false;
                         $isGraceFlag = false;
                         $submittime = $data->submit_time;
@@ -74,15 +74,17 @@
                         $grace_second = date('s',strtotime($intervalTime));
                         $submitterUserID = App\Model\Nickname::getUserIDByNickName($data->submitter_nick_id);
                         $pCamp = App\Model\Camp::getLiveCamp($data->topic_num,$data->parent_camp_num);
-                         $nickNamesData = \App\Model\Nickname::personNicknameArray();
+                        $nickNamesData = \App\Model\Nickname::personNicknameArray();
                             $supported_camps = [];
                             if(sizeof($nickNamesData) > 0){
                               foreach ($nickNamesData as $key => $value) {
                                    $nickName = \App\Model\Nickname::find($value);
                                    $supported_camp = $nickName->getSupportCampList();
-                                   $supported_camps = array_merge($supported_camps,$supported_camp);
+                                  // echo "<pre>"; print_r($supported_camp); die;
+                                   $supported_camps = $supported_camps+$supported_camp; //array_merge($supported_camps,$supported_camp);
                               }
                             }
+
                             $ifSupportingThisCamp = 0;
                             if(isset($supported_camps) && sizeof($supported_camps) > 0){
                                 $flag = false; 
@@ -104,7 +106,6 @@
                                      }                
                                 }
                             }
-                           
                          if(!$ifSupportingThisCamp){
                           $camp = \App\Model\Camp::where('camp_num','=',$data->camp_num)->where('topic_num','=',$data->topic_num)->get();
                           $allChildren = \App\Model\Camp::getAllChildCamps($camp[0]);
@@ -194,10 +195,8 @@
                             </div>    
                             <div class="CmpHistoryPnl-footer">
                                
-        <?php if ($currentTime < $data->go_live_time && $currentTime >= $data->submit_time && $ifIamSupporter) { ?> 
-                                {{--@if($isagreeFlag && $ifIamSupporter && Auth::user()->id != $submitterUserID) --}} 
+        <?php if ($currentTime < $data->go_live_time && $currentTime >= $data->submit_time && ($ifIamSupporter || $ifSupportingThisCamp) ) { ?> 
                                     <a id="object" class="btn btn-historysmt" href="<?php echo url('manage/camp/' . $data->id . '-objection'); ?>">Object</a>
-                              {{-- @endif --}}
                                 <?php } ?>
                                 <a id="update" class="btn btn-historysmt" href="<?php echo url('manage/camp/' . $data->id); ?>">Submit Camp Update Based On This</a>		  
                                 <?php

@@ -286,12 +286,15 @@ function submitAsOfForm(){
      $('#asofdatenew').val(dateString);
     $('#as_of_form').submit();
 }
-var type = window.location.hash.substr(1);
+
+<?php if(count($camp) > 0) { ?>
+    var type = window.location.hash.substr(1);
 if(type=="statement") {
   $('html, body').animate({
         scrollTop: $("#statement").offset().top
     }, 2000);
-}	
+}
+<?php } ?>	
 <?php if(isset($topic) && count($topic) > 0) { ?>
 $('#camp_subscription').click(function(){
     var isChecked = $(this).prop('checked');

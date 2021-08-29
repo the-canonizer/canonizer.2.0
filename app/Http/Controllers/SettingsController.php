@@ -362,8 +362,6 @@ class SettingsController extends Controller
             $messages = [
                 'nick_name.required' => 'The nick name field is required.',
             ];
-
-
             $validator = Validator::make($request->all(), [
                 'nick_name' => 'required',
             ], $messages);
@@ -379,15 +377,19 @@ class SettingsController extends Controller
             $userNicknames = Nickname::personNicknameArray();
             $topic_num = $data['topic_num'];
             $mysupportArray = [];
-            $mysupports = Support::where('topic_num', $topic_num)->whereIn('nick_name_id', $userNicknames)->where('delegate_nick_name_id','=',0)->where('end', '=', 0)->orderBy('support_order', 'ASC')->get();
-            if(isset($mysupports) && count($mysupports) > 0){
+            $myDelegatedSupports = [];
+            $mysupports = Support::where('topic_num', $topic_num)->whereIn('nick_name_id', $userNicknames)->where('end', '=', 0)->orderBy('support_order', 'ASC')->get();
+           if(isset($mysupports) && count($mysupports) > 0){
                 foreach ($mysupports as $spp){
-                    $mysupportArray[] =  $spp->camp_num;
+                    if($spp['delegate_nick_name_id'] == 0){
+                        $mysupportArray[] =  $spp->camp_num;  
+                    }else{
+                        $myDelegatedSupports[] =  $spp->camp_num;  
+                    }
                 }
             }
              
             if (isset($mysupports) && count($mysupports) > 0 && isset($data['removed_camp']) && count($data['removed_camp']) > 0) {
-
                 foreach ($mysupports as $singleSupport) {
                     if(in_array($singleSupport->camp_num,$data['removed_camp'])){
                         $singleSupport->end = time();
@@ -397,14 +399,27 @@ class SettingsController extends Controller
                         /* send support deleted mail to all supporter and subscribers */
                         $this->emailForSupportDeleted($mailData); 
                     }
+                 }          
+            }
+
+              /** if user is delegating to someone else or is directly supporting  then all the old delegated  supports will be removed #702 **/
+            if(isset($myDelegatedSupports) && count($myDelegatedSupports) > 0){
+                foreach ($mysupports as $singleSupport) {
+
+                     if(in_array($singleSupport->camp_num,$myDelegatedSupports)){
+                        $singleSupport->end = time();
+                        $singleSupport->save();
+                        $mailData = $data;
+                        $mailData['camp_num'] = $singleSupport->camp_num;
+                        /* send support deleted mail to all supporter and subscribers */
+                        $this->emailForSupportDeleted($mailData);    
+                    }             
                 }
-                
             }
             
             $last_camp =  $data['camp_num'];
             $newcamp_mail_flag = false;
-            
-            if (isset($data['support_order'])) {
+            if (isset($data['support_order']) && isset($data['delegate_nick_name_id']) && $data['delegate_nick_name_id'] == 0 ) {
                 foreach ($data['support_order'] as $camp_num => $support_order) {
                     $last_camp = $camp_num;
                     if(!in_array($camp_num,$mysupportArray)){
@@ -435,6 +450,27 @@ class SettingsController extends Controller
                 if($newcamp_mail_flag){
                     $this->emailForSupportAdded($data);   
                 }
+            }else if($data['delegate_nick_name_id'] !=0){
+                 $delegateUsersupports = Support::where('topic_num', $topic_num)->where('nick_name_id', $data['delegate_nick_name_id'])->where('end', '=', 0)->orderBy('support_order', 'ASC')->get();
+                 if(isset($delegateUsersupports) && count($delegateUsersupports) > 0){
+                    foreach($delegateUsersupports as $cmp){
+                        $last_camp = $cmp->camp_num;
+                        $data['camp_num'] = $cmp->camp_num;
+                        $supportTopic = new Support();
+                        $supportTopic->topic_num = $cmp->topic_num;
+                        $supportTopic->nick_name_id = $data['nick_name'];
+                        $supportTopic->delegate_nick_name_id = $data['delegate_nick_name_id'];
+                        $supportTopic->start = time();
+                        $supportTopic->camp_num = $cmp->camp_num;
+                        $supportTopic->support_order = $cmp->support_order;
+                        $supportTopic->save();   
+
+                        /* clear the existing session for the topic to get updated support count */
+                        session()->forget("topic-support-{$cmp->topic_num}");
+                        session()->forget("topic-support-nickname-{$cmp->topic_num}");
+                        session()->forget("topic-support-tree-{$cmp->topic_num}");
+                    }
+                 }                
             }
             if ($last_camp == $data['camp_num']) {
                 Session::flash('confirm', "samecamp");
@@ -444,8 +480,11 @@ class SettingsController extends Controller
                 foreach($data['delegated'] as $k=>$d){
                     if($k == $camp_num && $d !=0){
                         $support = Support::where('topic_num', $topic_num)->where('camp_num','=', $camp_num)->where('delegate_nick_name_id','=',$d)->where('end', '=', 0)->get();
-                         $support[0]->end = time();
-                         $support[0]->save();    
+                        if($support && count($support)> 0 ){
+                            $support[0]->end = time();
+                            $support[0]->save();  
+                        }
+                            
                     }
                     
                 }
@@ -634,40 +673,71 @@ class SettingsController extends Controller
         $support_id = (isset($input['support_id'])) ? $input['support_id'] : 0;
         $topic_num = (isset($input['topic_num'])) ? $input['topic_num'] : 0;
         $nick_name_id = (isset($input['nick_name_id'])) ? $input['nick_name_id'] : 0;
+        $delegate_nick_name_id = (isset($input['delegate_nick_name_id'])) ? $input['delegate_nick_name_id'] : 0;
 
         if ($id && $support_id && $topic_num) {
-            $as_of_time = time();
-            $currentSupport = Support::where('support_id', $support_id);
-            $currentSupportRec = $currentSupport->first();
-            $input['camp_num'] = $currentSupportRec->camp_num;
-            $input['nick_name'] = $currentSupportRec->nick_name_id;
-            $input['topic_num'] = $topic_num;
-            $currentSupportOrder = $currentSupportRec->support_order;
-            $remaingSupportWithHighOrder = Support::where('topic_num', $topic_num)
-                //->where('delegate_nick_name_id',0)
-                ->whereIn('nick_name_id', [$currentSupportRec->nick_name_id])
-                ->whereRaw("(start < $as_of_time) and ((end = 0) or (end > $as_of_time))")
-                ->where('support_order', '>', $currentSupportRec->support_order)
-                ->orderBy('support_order', 'ASC')
-                ->get();
+             $as_of_time = time();
+             /** removing delegated support #702 **/
+            if($delegate_nick_name_id !=0){
+                $currentDeglegateSupport = Support::where('topic_num', $topic_num)->where('delegate_nick_name_id',$delegate_nick_name_id)->whereRaw("(start < $as_of_time) and ((end = 0) or (end > $as_of_time))")->get();
+                if(isset($currentDeglegateSupport) && count($currentDeglegateSupport) > 0){
+                    foreach($currentDeglegateSupport as $spp){
+                        $currentSupportOrder = $spp->support_order;
+                        $remaingSupportWithHighOrder = Support::where('topic_num', $topic_num)
+                            ->whereIn('nick_name_id', [$spp->nick_name_id])
+                            ->whereRaw("(start < $as_of_time) and ((end = 0) or (end > $as_of_time))")
+                            ->where('support_order', '>', $spp->support_order)
+                            ->orderBy('support_order', 'ASC')
+                            ->get();
+                        $spp->end = time();
+                        $spp->save();
+                       foreach ($remaingSupportWithHighOrder as $support) {
+                            $support->support_order = $currentSupportOrder;
+                            $support->save();
+                            $currentSupportOrder++;
+                        }
+                        session()->forget("topic-support-$spp->topic_num");
+                        session()->forget("topic-support-nickname-$spp->topic_num");
+                        session()->forget("topic-support-tree-$spp->topic_num");
+                }
+            }
+                Session::flash('success', "Your delegated support has been removed successfully.");
+            }else{
+                $currentSupport = Support::where('support_id', $support_id);
+                $currentSupportRec = $currentSupport->first();
+                $input['camp_num'] = $currentSupportRec->camp_num;
+                $input['nick_name'] = $currentSupportRec->nick_name_id;
+                $input['topic_num'] = $topic_num;
+                $currentSupportOrder = $currentSupportRec->support_order;
+                $remaingSupportWithHighOrder = Support::where('topic_num', $topic_num)
+                    //->where('delegate_nick_name_id',0)
+                    ->whereIn('nick_name_id', [$currentSupportRec->nick_name_id])
+                    ->whereRaw("(start < $as_of_time) and ((end = 0) or (end > $as_of_time))")
+                    ->where('support_order', '>', $currentSupportRec->support_order)
+                    ->orderBy('support_order', 'ASC')
+                    ->get();
 
-            if ($currentSupport->update(array('end' => time()))) {
-                foreach ($remaingSupportWithHighOrder as $support) {
-                    $support->support_order = $currentSupportOrder;
-                    $support->save();
-                    $currentSupportOrder++;
+                if ($currentSupport->update(array('end' => time()))) {
+                    foreach ($remaingSupportWithHighOrder as $support) {
+                        $support->support_order = $currentSupportOrder;
+                        $support->save();
+                        $currentSupportOrder++;
+                    }
+
+                    session()->forget("topic-support-$topic_num");
+                    session()->forget("topic-support-nickname-$topic_num");
+                    session()->forget("topic-support-tree-$topic_num");
+
+                    Session::flash('success', "Your support has been removed successfully.");
+                } else {
+                    Session::flash('error', "Your support has not been removed.");
                 }
 
-                session()->forget("topic-support-$topic_num");
-                session()->forget("topic-support-nickname-$topic_num");
-                session()->forget("topic-support-tree-$topic_num");
-
-                Session::flash('success', "Your support has been removed successfully.");
-            } else {
-                Session::flash('error', "Your support has not been removed.");
+                /* send support added mail to all supporter and subscribers */
+                $this->emailForSupportDeleted($input);
             }
-            /* send support added mail to all supporter and subscribers */
-            $this->emailForSupportDeleted($input);
+           
+            
             return redirect()->back();
         }
         Session::flash('error', "Invalid access.");
