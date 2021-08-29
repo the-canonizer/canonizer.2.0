@@ -266,7 +266,7 @@
                     </div>
                      @if(!Session::has('warning'))
                      	@if(Session::get('confirm') != 'samecamp')
-	                    	<button type="submit" id="submit" onclick="submitdelegateForm()" class="btn btn-login">Submit</button>
+	                    	<button type="submit" id="submit"  class="btn btn-login">Submit</button>
 	                    @endif
                      <?php  
                      $link = \App\Model\Camp::getTopicCampUrl($topic->topic_num,session('campnum'));
@@ -288,41 +288,42 @@
  </div></div>
 </div>  <!-- /.right-whitePnl-->
  <script>
-                $( function() {
-                    $( ".column" ).sortable({
-                        connectWith: ".column",
-                        cursor: 'move',
-                        opacity: 0.6,
-                        update: function(event, ui) {
-                        $( ".column" ).find('.support-sorter-element').each(function(i,v){
-                        	   console.log('i',i,'v',v);
-                                $(v).find('.support_order').text(i+1);
-								$(v).find('.final_support_order').val(i+1);
-                            });
-                        $( ".column" ).find('.support-sorter-element-child').each(function(i,v){
-                        	   console.log('i',i,'v',v);
-                                $(v).find('.support_order').text(i+1);
-								$(v).find('.final_support_order').val(i+1);
-                            });
-                         $( ".column" ).find('.support-sorter-element-parent').each(function(i,v){
-                        	   console.log('i',i,'v',v);
-                                $(v).find('.support_order').text(i+1);
-								$(v).find('.final_support_order').val(i+1);
-                            });
-                        } 
+
+        $( function() {
+            $( ".column" ).sortable({
+                connectWith: ".column",
+                cursor: 'move',
+                opacity: 0.6,
+                update: function(event, ui) {
+                $( ".column" ).find('.support-sorter-element').each(function(i,v){
+                	   console.log('i',i,'v',v);
+                        $(v).find('.support_order').text(i+1);
+						$(v).find('.final_support_order').val(i+1);
+                    });
+                $( ".column" ).find('.support-sorter-element-child').each(function(i,v){
+                	   console.log('i',i,'v',v);
+                        $(v).find('.support_order').text(i+1);
+						$(v).find('.final_support_order').val(i+1);
+                    });
+                 $( ".column" ).find('.support-sorter-element-parent').each(function(i,v){
+                	   console.log('i',i,'v',v);
+                        $(v).find('.support_order').text(i+1);
+						$(v).find('.final_support_order').val(i+1);
+                    });
+                } 
+            });
+
+             $('.remove_camp').click(function(){
+                	$(this).parent(".support-sorter-element").remove();
+                	$( ".column" ).find('.support-sorter-element').each(function(i,v){
+                        $(v).find('.support_order').text(i+1);
+						$(v).find('.final_support_order').val(i+1);
                     });
 
-                     $('.remove_camp').click(function(){
-                        	$(this).parent(".support-sorter-element").remove();
-                        	$( ".column" ).find('.support-sorter-element').each(function(i,v){
-                                $(v).find('.support_order').text(i+1);
-								$(v).find('.final_support_order').val(i+1);
-                            });
-
-                        })
-                    
-                });
-                </script>
+                })
+            
+        });
+    </script>
     <script>
         $(document).ready(function () {
             $("#birthday").datepicker({

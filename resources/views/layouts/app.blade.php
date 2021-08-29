@@ -301,24 +301,41 @@
         </div>
     </div>
     <script>
+        jQuery.fn.preventDoubleSubmission = function() {
+              $(this).on('submit',function(e){
+                var $form = $(this);
+
+                if ($form.data('submitted') === true) {
+                  // Previously submitted - don't submit again
+                  e.preventDefault();
+                } else {
+                  // Mark it so that the next submit can be ignored
+                  $form.data('submitted', true);
+                }
+              });
+
+              // Keep chainability
+              return this;
+        };
+        $('form').preventDoubleSubmission();
         $('button[type="submit"]').removeAttr('disabled');
+          function submitForm(e){            
+            $('button[type="submit"]').attr('disabled','disabled');
+            return true;
+        }
         function topFunction() {
             document.body.scrollTop = 0;
             document.documentElement.scrollTop = 0;
         }
+     
 
-        function submitForm(e){            
-            $('button[type="submit"]').attr('disabled','disabled');
-            return true;
+        function restrictTextField(e,limitlength){
+            var charLength = $(e.target).val().length;
+             if (charLength >= limitlength  && e.keyCode !== 46 && e.keyCode !== 8 ) {
+                   e.preventDefault();
+                   $(e.target).val($(e.target).val().substring(0,limitlength));
+            }
         }
-
-function restrictTextField(e,limitlength){
-    var charLength = $(e.target).val().length;
-     if (charLength >= limitlength  && e.keyCode !== 46 && e.keyCode !== 8 ) {
-           e.preventDefault();
-           $(e.target).val($(e.target).val().substring(0,limitlength));
-    }
-}
         $(document).ready(function () {
 
             $.ajaxSetup({
