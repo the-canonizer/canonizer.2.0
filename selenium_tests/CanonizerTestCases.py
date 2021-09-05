@@ -269,7 +269,9 @@ testCases = {
     257: [low, 'On Login Page, when user request otp with a unverified phone number, user must see Error Message'],
     258: [low, 'On Camp Statement Update, Add New Nick Name link should present for users who doesn\'t have nick name yet'],
     259: [moderate, 'When user click on Add New Nick Name link from update camp statement page,user should redirect to nick name page'],
-    260: [moderate, 'When user click on Add New Nick Name link from create camp statement page,user should redirect to nick name page']
+    260: [moderate, 'When user click on Add New Nick Name link from create camp statement page,user should redirect to nick name page'],
+    261: [moderate, 'In forgot password page, When user put invalid Email format, user must see error message'],
+    262: [moderate, 'In Registration page, When user enter invalid Email, should see error message']
 }
 
 

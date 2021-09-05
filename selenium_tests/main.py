@@ -2467,6 +2467,28 @@ class TestPages(unittest.TestCase):
             if result:
                 self.assertIn("settings/nickname", result.get_url())
 
+    # 262
+    def test_forgot_password_with_invalid_email_format(self):
+        print("\n" + str(test_cases(261)))
+        # Click on the Login Page
+        CanonizerLoginPage(self.driver).click_login_page_button()
+        # Click on the Forgot Password link and check with invalid email
+        result = CanonizerForgotPasswordPage(self.driver).click_forgot_password_page_button().forgot_password_with_invalid_email_format(DEFAULT_INVALID_EMAIL_FORMAT)
+        self.assertIn("The email must be a valid email address.", result)
+
+    # 263
+    def test_registration_with_blank_invalid_email(self):
+        print("\n" + str(test_cases(262)))
+        result = CanonizerRegisterPage(self.driver).click_register_button().registration_with_blank_invalid_email(
+            DEFAULT_FIRST_NAME,
+            DEFAULT_MIDDLE_NAME,
+            DEFAULT_LAST_NAME,
+            DEFAULT_INVALID_EMAIL_FORMAT,
+            DEFAULT_PASS,
+            DEFAULT_PASS,
+            '')
+        self.assertIn("The email must be a valid email address.", result)
+
     def tearDown(self):
         self.driver.close()
 

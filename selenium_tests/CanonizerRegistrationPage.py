@@ -136,5 +136,9 @@ class CanonizerRegisterPage(Page):
         self.register(firstname, middlename, lastname, email, password, confirmpassword, captcha)
         return self.find_element(*RegistrationPageIdentifiers.ERROR_CAPTCHA).text
 
+    def registration_with_blank_invalid_email(self, firstname, middlename , lastname, email, password, confirmpassword, captcha):
+        self.register(firstname, middlename, lastname, email, password, confirmpassword, captcha)
+        return self.find_element(*RegistrationPageIdentifiers.ERROR_EMAIL).text
+
 
 

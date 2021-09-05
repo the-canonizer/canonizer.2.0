@@ -28,16 +28,17 @@ else:
     print("Unknown OS")
     exit(1)
 # Login Page Configuration Parameters
-#DEFAULT_USER = "rupali.chavan9860@gmail.com"
-#DEFAULT_PASS = "Rupali@12345"
-DEFAULT_USER = "r_canonizer_user@yopmail.com"
+DEFAULT_USER = "rupali.chavan9860@gmail.com"
 DEFAULT_PASS = "Rupali@12345"
+#DEFAULT_USER = "r_canonizer_user@yopmail.com"
+#DEFAULT_PASS = "Rupali@12345"
 DEFAULT_INVALID_USER = "invaliduser@gmail.com"
 DEFAULT_INVALID_PASSWORD = "invalid_password"
 DEFAULT_UNVERIFIED_PHONE_NUMBER = "1234567890"
 DEFAULT_INVALID_PHONE_NUMBER = "1212121212"
 DEFAULT_VALID_PHONE_NUMBER = ""
 DEFAULT_INVALID_OTP = "123456789"
+DEFAULT_INVALID_EMAIL_FORMAT = "test@test"
 
 # Registration Page Configuration Parameters
 DEFAULT_FIRST_NAME = "Rupali"
