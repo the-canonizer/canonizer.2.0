@@ -390,7 +390,7 @@ class CanonizerBrowsePage(Page):
 
     def select_by_value_organizations_united_utah_party(self):
         select = Select(self.find_element(*BrowsePageIdentifiers.NAMESPACE))
-        select.select_by_value("26")
+        select.select_by_value("25")
         time.sleep(3)
         return CanonizerBrowsePage(self.driver)
 

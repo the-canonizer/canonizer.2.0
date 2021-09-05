@@ -1,148 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="73daf555-1c66-4b71-9cef-6585f4ebe7b9" name="Default Changelist" comment="">
+    <list default="true" id="73daf555-1c66-4b71-9cef-6585f4ebe7b9" name="Default Changelist" comment="Updated test cases">
+      <change afterPath="$PROJECT_DIR$/selenium_tests/CanonizerJoinSupportCampPage.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/canonizer.2.0.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/canonizer.2.0.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/selenium_tests/CanonizerAccountSettingsPage.py" beforeDir="false" afterPath="$PROJECT_DIR$/selenium_tests/CanonizerAccountSettingsPage.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/selenium_tests/CanonizerBrokenURL.py" beforeDir="false" afterPath="$PROJECT_DIR$/selenium_tests/CanonizerBrokenURL.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/selenium_tests/CanonizerBrowsePage.py" beforeDir="false" afterPath="$PROJECT_DIR$/selenium_tests/CanonizerBrowsePage.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/selenium_tests/CanonizerCampPage.py" beforeDir="false" afterPath="$PROJECT_DIR$/selenium_tests/CanonizerCampPage.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/selenium_tests/CanonizerCampStatementPage.py" beforeDir="false" afterPath="$PROJECT_DIR$/selenium_tests/CanonizerCampStatementPage.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/selenium_tests/CanonizerCreateNewTopicPage.py" beforeDir="false" afterPath="$PROJECT_DIR$/selenium_tests/CanonizerCreateNewTopicPage.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/selenium_tests/CanonizerHelpPage.py" beforeDir="false" afterPath="$PROJECT_DIR$/selenium_tests/CanonizerHelpPage.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/selenium_tests/CanonizerHomePage.py" beforeDir="false" afterPath="$PROJECT_DIR$/selenium_tests/CanonizerHomePage.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/selenium_tests/CanonizerLoginPage.py" beforeDir="false" afterPath="$PROJECT_DIR$/selenium_tests/CanonizerLoginPage.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/selenium_tests/CanonizerNewsFeedsPage.py" beforeDir="false" afterPath="$PROJECT_DIR$/selenium_tests/CanonizerNewsFeedsPage.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/selenium_tests/CanonizerRegistrationPage.py" beforeDir="false" afterPath="$PROJECT_DIR$/selenium_tests/CanonizerRegistrationPage.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/selenium_tests/CanonizerTestCases.py" beforeDir="false" afterPath="$PROJECT_DIR$/selenium_tests/CanonizerTestCases.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/selenium_tests/CanonizerTopicUpdatePage.py" beforeDir="false" afterPath="$PROJECT_DIR$/selenium_tests/CanonizerTopicUpdatePage.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/selenium_tests/CanonizerUploadFilePage.py" beforeDir="false" afterPath="$PROJECT_DIR$/selenium_tests/CanonizerUploadFilePage.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/selenium_tests/Config.py" beforeDir="false" afterPath="$PROJECT_DIR$/selenium_tests/Config.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/selenium_tests/Identifiers.py" beforeDir="false" afterPath="$PROJECT_DIR$/selenium_tests/Identifiers.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/selenium_tests/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/selenium_tests/main.py" afterDir="false" />
     </list>
-    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="FUSProjectUsageTrigger">
-    <session id="-1607159918">
-      <usages-collector id="statistics.lifecycle.project">
-        <counts>
-          <entry key="project.closed" value="143" />
-          <entry key="project.open.time.11" value="1" />
-          <entry key="project.open.time.12" value="4" />
-          <entry key="project.open.time.13" value="5" />
-          <entry key="project.open.time.14" value="22" />
-          <entry key="project.open.time.15" value="16" />
-          <entry key="project.open.time.16" value="16" />
-          <entry key="project.open.time.17" value="9" />
-          <entry key="project.open.time.18" value="13" />
-          <entry key="project.open.time.19" value="15" />
-          <entry key="project.open.time.2" value="1" />
-          <entry key="project.open.time.20" value="5" />
-          <entry key="project.open.time.21" value="5" />
-          <entry key="project.open.time.22" value="5" />
-          <entry key="project.open.time.23" value="6" />
-          <entry key="project.open.time.24" value="1" />
-          <entry key="project.open.time.25" value="4" />
-          <entry key="project.open.time.26" value="2" />
-          <entry key="project.open.time.28" value="2" />
-          <entry key="project.open.time.33" value="1" />
-          <entry key="project.open.time.34" value="2" />
-          <entry key="project.open.time.35" value="1" />
-          <entry key="project.open.time.36" value="1" />
-          <entry key="project.open.time.4" value="2" />
-          <entry key="project.open.time.42" value="1" />
-          <entry key="project.open.time.43" value="1" />
-          <entry key="project.open.time.49" value="1" />
-          <entry key="project.open.time.5" value="1" />
-          <entry key="project.open.time.6" value="1" />
-          <entry key="project.open.time.66" value="1" />
-          <entry key="project.opened" value="145" />
-        </counts>
-      </usages-collector>
-      <usages-collector id="statistics.file.extensions.open">
-        <counts>
-          <entry key="csv" value="1" />
-          <entry key="log" value="1" />
-          <entry key="py" value="153" />
-        </counts>
-      </usages-collector>
-      <usages-collector id="statistics.file.types.open">
-        <counts>
-          <entry key="PLAIN_TEXT" value="2" />
-          <entry key="Python" value="153" />
-        </counts>
-      </usages-collector>
-      <usages-collector id="statistics.file.extensions.edit">
-        <counts>
-          <entry key="py" value="7564" />
-        </counts>
-      </usages-collector>
-      <usages-collector id="statistics.file.types.edit">
-        <counts>
-          <entry key="Python" value="7564" />
-        </counts>
-      </usages-collector>
-    </session>
-  </component>
-  <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/selenium_tests/CanonizerTestCases.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="443">
-              <caret line="241" column="1" lean-forward="true" selection-start-line="241" selection-start-column="1" selection-end-line="241" selection-end-column="1" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/selenium_tests/main.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-2594">
-              <caret line="1901" column="32" lean-forward="true" selection-start-line="1901" selection-start-column="32" selection-end-line="1901" selection-end-column="32" />
-              <folding>
-                <element signature="e#0#15#0" expanded="true" />
-                <marker date="1610101798131" expanded="true" signature="93928:93937" ph="..." />
-                <marker date="1610101798131" expanded="true" signature="94823:94832" ph="..." />
-                <marker date="1610101798131" expanded="true" signature="98356:98361" ph="..." />
-                <marker date="1610101798131" expanded="true" signature="98969:98978" ph="..." />
-                <marker date="1610101798131" expanded="true" signature="100720:100725" ph="..." />
-                <marker date="1610101798131" expanded="true" signature="104032:104037" ph="..." />
-                <marker date="1610101798131" expanded="true" signature="107013:107184" ph="..." />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/selenium_tests/Config.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="527">
-              <caret line="32" column="1" selection-start-line="32" selection-start-column="1" selection-end-line="32" selection-end-column="1" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/selenium_tests/Identifiers.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="205">
-              <caret line="46" column="17" selection-start-line="46" selection-start-column="4" selection-end-line="46" selection-end-column="17" />
-              <folding>
-                <element signature="e#0#27#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/selenium_tests/CanonizerHomePage.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="51">
-              <caret line="3" column="11" selection-start-line="3" selection-start-column="11" selection-end-line="3" selection-end-column="11" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
@@ -179,6 +71,12 @@
     </findStrings>
   </component>
   <component name="Git.Settings">
+    <option name="PUSH_TAGS">
+      <GitPushTagMode>
+        <option name="argument" value="--follow-tags" />
+        <option name="title" value="Current Branch" />
+      </GitPushTagMode>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="IdeDocumentHistory">
@@ -208,6 +106,7 @@
     <option name="width" value="1346" />
     <option name="height" value="728" />
   </component>
+  <component name="ProjectId" id="1nPoJ3ttpWQ7DCiidOuCQl6Uk1l" />
   <component name="ProjectView">
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
@@ -242,23 +141,21 @@
       <pane id="Scope" />
     </panes>
   </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
   <component name="PropertiesComponent">
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/selenium_tests" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
-  <component name="RunDashboard">
-    <option name="ruleStates">
-      <list>
-        <RuleState>
-          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
-        </RuleState>
-        <RuleState>
-          <option name="name" value="StatusDashboardGroupingRule" />
-        </RuleState>
-      </list>
-    </option>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="H:\Rupali_Work_Directory\Canonizer\Git\canonizer.2.0\selenium_tests" />
+    </key>
   </component>
-  <component name="RunManager" selected="Python tests.Unittests for main.TestPages.test_check_register_page_open_click_signup_now_link">
-    <configuration name="Unittests for main.TestPages.test_check_home_page_loaded_logo_click" type="tests" factoryName="Unittests" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="Python tests.Unittests for main.TestPages.test_click_upload_file_page_button">
+    <configuration name="Unittests for main.TestPages.test_click_browse_page_button" type="tests" factoryName="Unittests" temporary="true" nameIsGenerated="true">
       <module name="canonizer.2.0" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -268,11 +165,11 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;main.TestPages.test_check_home_page_loaded_logo_click&quot;" />
+      <option name="_new_target" value="&quot;main.TestPages.test_click_browse_page_button&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
-    <configuration name="Unittests for main.TestPages.test_check_login_page_open_click_login_here_link" type="tests" factoryName="Unittests" temporary="true" nameIsGenerated="true">
+    <configuration name="Unittests for main.TestPages.test_click_only_my_topics_button" type="tests" factoryName="Unittests" temporary="true" nameIsGenerated="true">
       <module name="canonizer.2.0" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -282,11 +179,11 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;main.TestPages.test_check_login_page_open_click_login_here_link&quot;" />
+      <option name="_new_target" value="&quot;main.TestPages.test_click_only_my_topics_button&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
-    <configuration name="Unittests for main.TestPages.test_check_register_page_open_click_signup_now_link" type="tests" factoryName="Unittests" temporary="true" nameIsGenerated="true">
+    <configuration name="Unittests for main.TestPages.test_click_upload_file_page_button" type="tests" factoryName="Unittests" temporary="true" nameIsGenerated="true">
       <module name="canonizer.2.0" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -296,11 +193,11 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;main.TestPages.test_check_register_page_open_click_signup_now_link&quot;" />
+      <option name="_new_target" value="&quot;main.TestPages.test_click_upload_file_page_button&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
-    <configuration name="Unittests for main.TestPages.test_check_scroll_to_top_click" type="tests" factoryName="Unittests" temporary="true" nameIsGenerated="true">
+    <configuration name="Unittests for main.TestPages.test_forgot_password_page_mandatory_fields_are_marked_with_asterisk" type="tests" factoryName="Unittests" temporary="true" nameIsGenerated="true">
       <module name="canonizer.2.0" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -310,11 +207,11 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;main.TestPages.test_check_scroll_to_top_click&quot;" />
+      <option name="_new_target" value="&quot;main.TestPages.test_forgot_password_page_mandatory_fields_are_marked_with_asterisk&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
-    <configuration name="Unittests for main.TestPages.test_what_is_canonizer_page_loaded_properly" type="tests" factoryName="Unittests" temporary="true" nameIsGenerated="true">
+    <configuration name="Unittests for main.TestPages.test_forgot_password_with_valid_email" type="tests" factoryName="Unittests" temporary="true" nameIsGenerated="true">
       <module name="canonizer.2.0" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -324,27 +221,28 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;main.TestPages.test_what_is_canonizer_page_loaded_properly&quot;" />
+      <option name="_new_target" value="&quot;main.TestPages.test_forgot_password_with_valid_email&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Python tests.Unittests for main.TestPages.test_check_home_page_loaded_logo_click" />
-      <item itemvalue="Python tests.Unittests for main.TestPages.test_check_register_page_open_click_signup_now_link" />
-      <item itemvalue="Python tests.Unittests for main.TestPages.test_check_login_page_open_click_login_here_link" />
-      <item itemvalue="Python tests.Unittests for main.TestPages.test_what_is_canonizer_page_loaded_properly" />
-      <item itemvalue="Python tests.Unittests for main.TestPages.test_check_scroll_to_top_click" />
+      <item itemvalue="Python tests.Unittests for main.TestPages.test_click_browse_page_button" />
+      <item itemvalue="Python tests.Unittests for main.TestPages.test_click_only_my_topics_button" />
+      <item itemvalue="Python tests.Unittests for main.TestPages.test_click_upload_file_page_button" />
+      <item itemvalue="Python tests.Unittests for main.TestPages.test_forgot_password_page_mandatory_fields_are_marked_with_asterisk" />
+      <item itemvalue="Python tests.Unittests for main.TestPages.test_forgot_password_with_valid_email" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python tests.Unittests for main.TestPages.test_check_register_page_open_click_signup_now_link" />
-        <item itemvalue="Python tests.Unittests for main.TestPages.test_check_scroll_to_top_click" />
-        <item itemvalue="Python tests.Unittests for main.TestPages.test_what_is_canonizer_page_loaded_properly" />
-        <item itemvalue="Python tests.Unittests for main.TestPages.test_check_login_page_open_click_login_here_link" />
-        <item itemvalue="Python tests.Unittests for main.TestPages.test_check_home_page_loaded_logo_click" />
+        <item itemvalue="Python tests.Unittests for main.TestPages.test_click_upload_file_page_button" />
+        <item itemvalue="Python tests.Unittests for main.TestPages.test_click_only_my_topics_button" />
+        <item itemvalue="Python tests.Unittests for main.TestPages.test_click_browse_page_button" />
+        <item itemvalue="Python tests.Unittests for main.TestPages.test_forgot_password_page_mandatory_fields_are_marked_with_asterisk" />
+        <item itemvalue="Python tests.Unittests for main.TestPages.test_forgot_password_with_valid_email" />
       </list>
     </recent_temporary>
   </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -356,6 +254,14 @@
       <option name="presentableId" value="Default" />
       <updated>1565416549102</updated>
     </task>
+    <task id="LOCAL-00001" summary="Updated test cases">
+      <created>1612284030905</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1612284030905</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -431,8 +337,24 @@
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
     </layout-to-restore>
   </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Updated test cases" />
+    <option name="LAST_COMMIT_MESSAGE" value="Updated test cases" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/selenium_tests/testCase.csv">

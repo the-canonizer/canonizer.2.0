@@ -1,5 +1,7 @@
 from CanonizerBase import Page
 from Identifiers import UploadFileIdentifiers
+import time
+from selenium.common.exceptions import NoSuchElementException
 
 
 class CanonizerUploadFilePage(Page):
@@ -19,6 +21,7 @@ class CanonizerUploadFilePage(Page):
 
         self.hover(*UploadFileIdentifiers.UPLOADFILE)
         self.find_element(*UploadFileIdentifiers.UPLOADFILE).click()
+        time.sleep(3)
         return CanonizerUploadFilePage(self.driver)
 
     def enter_originalfile_name(self, originalfilename):
@@ -57,6 +60,18 @@ class CanonizerUploadFilePage(Page):
     def upload_file_with_size_zero_bytes(self, originalfilename):
         self.upload(originalfilename)
         return self.find_element(*UploadFileIdentifiers.ERROR_ZERO_FILE_SIZE).text
+
+    def open_uploaded_file(self):
+        try:
+            self.hover(*UploadFileIdentifiers.UPLOADED_FILE)
+            self.find_element(*UploadFileIdentifiers.UPLOADED_FILE).click()
+            time.sleep(2)
+            return CanonizerUploadFilePage(self.driver)
+        except NoSuchElementException:
+            return False
+        return True
+
+
 
 
 

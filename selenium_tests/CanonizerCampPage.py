@@ -81,7 +81,6 @@ class CanonizerCampPage(Page):
             return self.find_element(*CreateNewCampPageIdentifiers.ERROR_NICK_NAME)
         except NoSuchElementException:
             return False
-
         return True
 
     def create_camp_with_blank_camp_name(self, nick_name, parent_camp_name, keywords, note, camp_about_url, camp_about_nick_name):
@@ -93,12 +92,21 @@ class CanonizerCampPage(Page):
         return self
 
     def create_new_camp_page_should_have_add_new_nick_name_link_for_new_users(self):
-        #return self.find_element(*CreateNewCampPageIdentifiers.ADDNEWNICKNAME).text
         try:
             return self.find_element(*CreateNewCampPageIdentifiers.ADDNEWNICKNAME)
         except NoSuchElementException:
             return False
+        return True
 
+    def nick_name_page_should_open_create_camp_add_new_nick_name(self):
+        try:
+            elem = self.find_element(*CreateNewCampPageIdentifiers.ADDNEWNICKNAME)
+            if elem.is_displayed():
+                elem.click()
+                time.sleep(2)
+                return CanonizerCampPage(self.driver)
+        except NoSuchElementException:
+            return False
         return True
 
     def create_camp_with_duplicate_camp_name(self, nick_name, parent_camp_name, camp_name, keywords, note, camp_about_url, camp_about_nick_name):
@@ -286,8 +294,12 @@ class CanonizerEditCampPage(Page):
         self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
         time.sleep(3)
         # Click on user nick name
-        self.hover(*CampEditPageIdentifiers.USER_NICK_NAME)
-        self.find_element(*CampEditPageIdentifiers.USER_NICK_NAME).click()
+        try:
+            self.hover(*CampEditPageIdentifiers.USER_NICK_NAME)
+            self.find_element(*CampEditPageIdentifiers.USER_NICK_NAME).click()
+            return CanonizerEditCampPage(self.driver)
+        except NoSuchElementException:
+            return False
         return CanonizerEditCampPage(self.driver)
 
     def load_camp_agreement_from_user_supports_page(self):
@@ -386,4 +398,21 @@ class CanonizerEditCampPage(Page):
         self.find_element(*CampEditPageIdentifiers.CAMP_NAME).clear()
         self.submit_update(parent_camp_name, nick_name, camp_name, keywords, note, camp_about_url, camp_about_nick_name)
         return self.find_element(*CampEditPageIdentifiers.ERROR_CAMP_NAME).text
+
+    def nick_name_page_should_open_update_camp_add_new_nick_name(self):
+        try:
+            elem = self.find_element(*CampEditPageIdentifiers.ADDNEWNICKNAME)
+            if elem.is_displayed():
+                elem.click()
+                time.sleep(2)
+                return CanonizerEditCampPage(self.driver)
+        except NoSuchElementException:
+            return False
+        return True
+
+    def submit_camp_update_with_invalid_length_camp_about_url(self, parent_camp_name, nick_name, camp_name, keywords, note, camp_about_url, camp_about_nick_name):
+        self.find_element(*CampEditPageIdentifiers.CAMP_ABOUT_URL).clear()
+        self.submit_update(parent_camp_name, nick_name, camp_name, keywords, note, camp_about_url, camp_about_nick_name)
+        return self.find_element(*CampEditPageIdentifiers.ERROR_CAMP_ABOUT_URL).text
+        time.sleep(2)
 

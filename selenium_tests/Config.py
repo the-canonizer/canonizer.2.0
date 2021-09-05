@@ -6,6 +6,7 @@ Set All Basic Configuration required for testing Framework
 """
 
 DEFAULT_BASE_URL = "https://staging.canonizer.com/"
+#DEFAULT_BASE_URL = "https://canonizer.com/"
 
 """
     Identify the Default Chrome Binary Location for different OS
@@ -27,29 +28,30 @@ else:
     print("Unknown OS")
     exit(1)
 # Login Page Configuration Parameters
-DEFAULT_USER = "rupali.chavan9860@gmail.com"
-DEFAULT_PASS = "Rupali@12345"
-#DEFAULT_USER = "r_canonizer_user@yopmail.com"
+#DEFAULT_USER = "rupali.chavan9860@gmail.com"
 #DEFAULT_PASS = "Rupali@12345"
+DEFAULT_USER = "r_canonizer_user@yopmail.com"
+DEFAULT_PASS = "Rupali@12345"
 DEFAULT_INVALID_USER = "invaliduser@gmail.com"
 DEFAULT_INVALID_PASSWORD = "invalid_password"
-DEFAULT_INVALID_PHONE_NUMBER = "1234567890"
+DEFAULT_UNVERIFIED_PHONE_NUMBER = "1234567890"
+DEFAULT_INVALID_PHONE_NUMBER = "1212121212"
 DEFAULT_VALID_PHONE_NUMBER = ""
 DEFAULT_INVALID_OTP = "123456789"
 
 # Registration Page Configuration Parameters
 DEFAULT_FIRST_NAME = "Rupali"
-DEFAULT_MIDDLE_NAME = ""
+DEFAULT_MIDDLE_NAME = "A"
 DEFAULT_LAST_NAME = "Chavan"
+INVALID_NAME_REGISTER = "invalidname!@#$%1"
 
 # File Upload Page Configuration Parameters
 DEFAULT_ORIGINAL_FILE_NAME = "H:\\Astronomy\\Images\\venera.gif"
 DEFAULT_NEW_FILE_NAME = ""
 DEFAULT_FILE_SIZE = ""
-INVALID_FILE_FORMAT = "C:\\Users\\ajay\\Desktop\\Canonizer text file.txt"
 FILE_WITH_MORE_THAN_5MB = "H:\\Astronomy\\Images\\PIA00272.jpg"
 FILE_WITH_SAME_NAME = "H:\\Astronomy\\Images\\venera.gif"
-FILE_WITH_ZERO_BYTES = "C:\\Users\\Ajay\\Desktop\\New folder\\New Bitmap Image.bmp"
+FILE_WITH_ZERO_BYTES = "C:\\Users\\Ajay\\Desktop\\Canonizer\\New Bitmap Image.bmp"
 
 # Create New Topic Configuration Parameters
 DEFAULT_NICK_NAME = ""
@@ -58,6 +60,9 @@ DEFAULT_NAMESPACE = ""
 DEFAULT_NOTE = ""
 DUPLICATE_TOPIC_NAME = "Theories of Consciousness"
 DUPLICATE_CAMP_NAME = "Levels Of Testing"
+INVALID_TOPIC_NAME = "Test@1234567"
+INVALID_CAMP_NAME = "Test@1234567"
+INVALID_CAMP_ABOUT_URL = "TestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestA1"
 
 # Change Password Configuration Parameters
 DEFAULT_CURRENT_PASSWORD = "Rupali@12345"

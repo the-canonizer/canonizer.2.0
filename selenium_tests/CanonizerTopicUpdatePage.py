@@ -151,3 +151,19 @@ class CanonizerTopicUpdatePage(Page):
         self.submit_update(nick_name, topic_name, namespace, note)
         return self.find_element(*TopicUpdatePageIdentifiers.ERROR_DUPLICATE_TOPIC_NAME).text
 
+    def submit_update_with_invalid_topic_name(self, nick_name, topic_name, namespace, note):
+        self.find_element(*TopicUpdatePageIdentifiers.TOPIC_NAME).clear()
+        self.submit_update(nick_name, topic_name, namespace, note)
+        return self.find_element(*TopicUpdatePageIdentifiers.ERROR_TOPIC_NAME).text
+
+    def nick_name_page_should_open_update_topic_add_new_nick_name(self):
+        try:
+            elem = self.find_element(*TopicUpdatePageIdentifiers.ADDNEWNICKNAME)
+            if elem.is_displayed():
+                elem.click()
+                time.sleep(2)
+                return CanonizerTopicUpdatePage(self.driver)
+        except NoSuchElementException:
+            return False
+        return True
+

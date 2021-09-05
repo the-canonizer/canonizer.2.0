@@ -23,31 +23,23 @@ class CanonizerBrokenURL(Page):
         self.click_search_button()
 
         self.find_element(*HomePageIdentifiers.BROKENURL_1).click()
-
         if requests.get(self.get_url()).status_code != 200:
             return False
-
         self.go_back()
 
         self.find_element(*HomePageIdentifiers.BROKENURL_2).click()
-
         if requests.get(self.get_url()).status_code != 200:
             return False
-
         self.go_back()
 
         self.find_element(*HomePageIdentifiers.BROKENURL_3).click()
-
         if requests.get(self.get_url()).status_code != 200:
             return False
-
         self.go_back()
 
         self.find_element(*HomePageIdentifiers.BROKENURL_4).click()
-
         if requests.get(self.get_url()).status_code != 200:
             return False
-
         self.go_back()
 
         return True

@@ -195,6 +195,22 @@ class CanonizerOpenSource(Page):
         return CanonizerOpenSource(self.driver)
 
 
+class CanonizerJobs(Page):
+    def check_jobs_page_should_open(self):
+        self.hover(*HomePageIdentifiers.JOBS)
+        self.find_element(*HomePageIdentifiers.JOBS).click()
+        time.sleep(2)
+        return CanonizerJobs(self.driver)
+
+
+class CanonizerServices(Page):
+    def check_services_page_should_open(self):
+        self.hover(*HomePageIdentifiers.SERVICES)
+        self.find_element(*HomePageIdentifiers.SERVICES).click()
+        time.sleep(2)
+        return CanonizerServices(self.driver)
+
+
 
 
 

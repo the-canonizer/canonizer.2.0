@@ -150,6 +150,10 @@ class CanonizerLoginPage(Page):
         self.request_otp(phone_number)
         return self.find_element(*LoginPageIdentifiers.ERROR_MESSAGE).text
 
+    def request_otp_with_unverified_user_phone_number(self, phone_number):
+        self.request_otp(phone_number)
+        return self.find_element(*LoginPageIdentifiers.ERROR_MESSAGE).text
+
     def request_otp_with_blank_email_or_phone_number(self):
         self.request_otp('')
         return self.find_element(*LoginPageIdentifiers.ERROR_EMAIL).text

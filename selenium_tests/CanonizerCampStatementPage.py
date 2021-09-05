@@ -20,30 +20,28 @@ class CanonizerCampStatementPage(Page):
 
         time.sleep(3)
 
-        # Click on Manage/Edit This camp
-        # self.hover(*CampStatementEditPageIdentifiers.EDIT_CAMP_STATEMENT)
-        # self.find_element(*CampStatementEditPageIdentifiers.EDIT_CAMP_STATEMENT).click()
-        # return CanonizerCampStatementPage(self.driver)
+    def load_edit_camp_statement_page(self):
+        """
+                    Go To The topic
+                """
+        # Browse to Browse Page
+        self.hover(*BrowsePageIdentifiers.BROWSE)
+        self.find_element(*BrowsePageIdentifiers.BROWSE).click()
+
+        # Browse to Topic Name
+        self.hover(*CampStatementEditPageIdentifiers.TOPIC_IDENTIFIER)
+        self.find_element(*CampStatementEditPageIdentifiers.TOPIC_IDENTIFIER).click()
+
+        time.sleep(3)
         try:
             self.hover(*CampStatementEditPageIdentifiers.EDIT_CAMP_STATEMENT)
             self.find_element(*CampStatementEditPageIdentifiers.EDIT_CAMP_STATEMENT).click()
+            self.hover(*CampStatementEditPageIdentifiers.SUBMIT_STATEMENT_UPDATE_BASED_ON_THIS)
+            self.find_element(*CampStatementEditPageIdentifiers.SUBMIT_STATEMENT_UPDATE_BASED_ON_THIS).click()
             return CanonizerCampStatementPage(self.driver)
         except NoSuchElementException:
             return False
-
         return True
-
-    def load_edit_camp_statement_page(self):
-        """
-
-        :return:
-        """
-        self.load_topic_agreement_page()
-
-        # Click on SUBMIT_CAMP_UPDATE_BASED_ON_THIS
-        self.hover(*CampStatementEditPageIdentifiers.SUBMIT_STATEMENT_UPDATE_BASED_ON_THIS)
-        self.find_element(*CampStatementEditPageIdentifiers.SUBMIT_STATEMENT_UPDATE_BASED_ON_THIS).click()
-        return CanonizerCampStatementPage(self.driver)
 
     def camp_statement_edit_page_mandatory_fields_are_marked_with_asterisk(self):
         """
@@ -80,12 +78,10 @@ class CanonizerCampStatementPage(Page):
     def submit_statement_update_with_blank_nick_name(self, statement, note):
         self.find_element(*CampStatementEditPageIdentifiers.STATEMENT).clear()
         self.submit_update('', statement, note)
-        #return self.find_element(*CampStatementEditPageIdentifiers.ERROR_NICK_NAME).text
         try:
             return self.find_element(*CampStatementEditPageIdentifiers.ERROR_NICK_NAME)
         except NoSuchElementException:
             return False
-
         return True
 
     def submit_statement_update_with_blank_statement(self, nick_name, note):
@@ -94,10 +90,26 @@ class CanonizerCampStatementPage(Page):
         return self.find_element(*CampStatementEditPageIdentifiers.ERROR_STATEMENT).text
 
     def statement_update_page_should_have_add_new_nick_name_link_for_new_users(self):
-        return self.find_element(*CampStatementEditPageIdentifiers.ADDNEWNICKNAME).text
+        try:
+            return self.find_element(*CampStatementEditPageIdentifiers.ADDNEWNICKNAME).text
+        except NoSuchElementException:
+            return False
+        return True
+
+    def nick_name_page_should_open_update_camp_statement_add_new_nick_name(self):
+        try:
+            elem = self.find_element(*CampStatementEditPageIdentifiers.ADDNEWNICKNAME)
+            if elem.is_displayed():
+                elem.click()
+                time.sleep(2)
+                return CanonizerCampStatementPage(self.driver)
+        except NoSuchElementException:
+            return False
+        return True
 
 
 class AddCampStatementPage(Page):
+
     def load_add_camp_statement_page(self):
         """
             Go To The topic
@@ -115,10 +127,10 @@ class AddCampStatementPage(Page):
         try:
             self.hover(*AddCampStatementPageIdentifiers.ADD_CAMP_STATEMENT)
             self.find_element(*AddCampStatementPageIdentifiers.ADD_CAMP_STATEMENT).click()
+            time.sleep(3)
             return AddCampStatementPage(self.driver)
         except NoSuchElementException:
             return False
-
         return True
 
     def add_camp_statement_page_mandatory_fields_are_marked_with_asterisk(self):
@@ -154,13 +166,14 @@ class AddCampStatementPage(Page):
         self.click_submit_statement_button()
 
     def submit_statement_with_blank_nick_name(self, statement, note):
-        self.submit_statement('', statement, note)
-        #return self.find_element(*AddCampStatementPageIdentifiers.ERROR_NICK_NAME).text
         try:
-            return self.find_element(*AddCampStatementPageIdentifiers.ERROR_NICK_NAME)
+            elem = self.find_element(*AddCampStatementPageIdentifiers.ADDNEWNICKNAME)
+            if elem.is_displayed():
+                self.submit_statement('', statement, note)
+                time.sleep(2)
+                return self.find_element(*AddCampStatementPageIdentifiers.ERROR_NICK_NAME)
         except NoSuchElementException:
             return False
-
         return True
 
     def submit_statement_with_blank_statement(self, nick_name, note):
@@ -172,6 +185,23 @@ class AddCampStatementPage(Page):
         return self
 
     def add_camp_statement_page_should_have_add_new_nick_name_link_for_new_users(self):
-        return self.find_element(*AddCampStatementPageIdentifiers.ADDNEWNICKNAME).text
+        try:
+            return self.find_element(*AddCampStatementPageIdentifiers.ADDNEWNICKNAME).text
+        except NoSuchElementException:
+            return False
+        return True
+
+    def nick_name_page_should_open_add_camp_statement_add_new_nick_name(self):
+        try:
+            elem = self.find_element(*AddCampStatementPageIdentifiers.ADDNEWNICKNAME)
+            if elem.is_displayed():
+                elem.click()
+                time.sleep(2)
+                return AddCampStatementPage(self.driver)
+        except NoSuchElementException:
+            return False
+        return True
+
+
 
 

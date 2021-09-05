@@ -1,5 +1,6 @@
 from CanonizerBase import Page
 from Identifiers import AccountSettingsIdentifiers, LogoutIdentifiers, AccountSettingsChangePasswordIdentifiers, AddAndManageNickNamesIdentifiers, AccountSettingsManageProfileInfoIdentifiers, MySupportsPageIdentifiers, HomePageIdentifiers
+from selenium.common.exceptions import NoSuchElementException
 
 
 class CanonizerAccountSettingsPage(Page):
@@ -123,9 +124,7 @@ class CanonizerAccountSettingsPage(Page):
         return CanonizerAccountSettingsPage(self.driver)
 
 
-
 class CanonizerAccountSettingsChangePasswordPage(Page):
-
     def enter_current_password(self, current_password):
         self.find_element(*AccountSettingsChangePasswordIdentifiers.CURRENT_PASSWORD).send_keys(current_password)
 
@@ -238,9 +237,12 @@ class AccountSettingsMySupportsPage(Page):
         This function verifies if the canonizer help page loads properly.
         :return:
         """
-
-        self.hover(*MySupportsPageIdentifiers.TOPIC_NAME)
-        self.find_element(*MySupportsPageIdentifiers.TOPIC_NAME).click()
+        try:
+            self.hover(*MySupportsPageIdentifiers.TOPIC_NAME)
+            self.find_element(*MySupportsPageIdentifiers.TOPIC_NAME).click()
+            return AccountSettingsMySupportsPage(self.driver)
+        except NoSuchElementException:
+            return False
         return AccountSettingsMySupportsPage(self.driver)
 
     def check_camp_page_from_my_supports_loaded(self):
@@ -248,9 +250,12 @@ class AccountSettingsMySupportsPage(Page):
         This function verifies if the canonizer help page loads properly.
         :return:
         """
-
-        self.hover(*MySupportsPageIdentifiers.CAMP_NAME)
-        self.find_element(*MySupportsPageIdentifiers.CAMP_NAME).click()
+        try:
+            self.hover(*MySupportsPageIdentifiers.CAMP_NAME)
+            self.find_element(*MySupportsPageIdentifiers.CAMP_NAME).click()
+            return AccountSettingsMySupportsPage(self.driver)
+        except NoSuchElementException:
+            return False
         return AccountSettingsMySupportsPage(self.driver)
 
     def check_topic_create_new_camp_page_from_my_supports_loaded(self):
@@ -258,13 +263,15 @@ class AccountSettingsMySupportsPage(Page):
         This function verifies if the canonizer help page loads properly.
         :return:
         """
+        try:
+            self.hover(*MySupportsPageIdentifiers.TOPIC_NAME)
+            self.find_element(*MySupportsPageIdentifiers.TOPIC_NAME).click()
 
-        self.hover(*MySupportsPageIdentifiers.TOPIC_NAME)
-        self.find_element(*MySupportsPageIdentifiers.TOPIC_NAME).click()
-
-        self.hover(*HomePageIdentifiers.CREATE_NEW_CAMP)
-        self.find_element(*HomePageIdentifiers.CREATE_NEW_CAMP).click()
-
+            self.hover(*HomePageIdentifiers.CREATE_NEW_CAMP)
+            self.find_element(*HomePageIdentifiers.CREATE_NEW_CAMP).click()
+            return AccountSettingsMySupportsPage(self.driver)
+        except NoSuchElementException:
+            return False
         return AccountSettingsMySupportsPage(self.driver)
 
     def check_camp_create_new_camp_page_from_my_supports_loaded(self):
@@ -379,6 +386,33 @@ class AccountSettingsManageProfileInfoPage(Page):
         self.find_element(*AccountSettingsManageProfileInfoIdentifiers.PHONE_NUMBER).clear()
         self.verify_phone_number('')
         return self.find_element(*AccountSettingsManageProfileInfoIdentifiers.ERROR_PHONE_NUMBER).text
+
+    def verify_phone_number_with_invalid_length_phone_number(self):
+        self.find_element(*AccountSettingsManageProfileInfoIdentifiers.PHONE_NUMBER).clear()
+        self.verify_phone_number('1234')
+        return self.find_element(*AccountSettingsManageProfileInfoIdentifiers.ERROR_PHONE_NUMBER).text
+
+    def update_profile_with_invalid_first_name(self, firstname, middle_name, last_name, email, language, dob, address_line1, address_line2, city, state, zip_code):
+        self.find_element(*AccountSettingsManageProfileInfoIdentifiers.FIRST_NAME).clear()
+        self.update(firstname, middle_name, last_name, email, language, dob, address_line1, address_line2, city, state, zip_code)
+        return self.find_element(*AccountSettingsManageProfileInfoIdentifiers.ERROR_FIRST_NAME).text
+
+    def update_profile_with_invalid_middle_name(self, firstname, middle_name, last_name, email, language, dob, address_line1, address_line2, city, state, zip_code):
+        self.find_element(*AccountSettingsManageProfileInfoIdentifiers.MIDDLE_NAME).clear()
+        self.update(firstname, middle_name, last_name, email, language, dob, address_line1, address_line2, city, state, zip_code)
+        return self.find_element(*AccountSettingsManageProfileInfoIdentifiers.ERROR_MIDDLE_NAME).text
+
+    def update_profile_with_invalid_last_name(self, firstname, middle_name, last_name, email, language, dob, address_line1, address_line2, city, state, zip_code):
+        self.find_element(*AccountSettingsManageProfileInfoIdentifiers.LAST_NAME).clear()
+        self.update(firstname, middle_name, last_name, email, language, dob, address_line1, address_line2, city, state, zip_code)
+        return self.find_element(*AccountSettingsManageProfileInfoIdentifiers.ERROR_LAST_NAME).text
+
+    def verify_phone_number_with_valid_length_phone_number(self):
+        self.find_element(*AccountSettingsManageProfileInfoIdentifiers.PHONE_NUMBER).clear()
+        self.verify_phone_number('1234567890')
+        return self.find_element(*AccountSettingsManageProfileInfoIdentifiers.ERROR_PHONE_NUMBER_VERIFICATION).text
+
+
 
 
 

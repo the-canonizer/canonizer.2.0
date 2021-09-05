@@ -1,5 +1,6 @@
 from CanonizerBase import Page
-from Identifiers import  BrowsePageIdentifiers, TopicUpdatePageIdentifiers, AddNewsPageIdentifiers, EditNewsPageIdentifiers
+from Identifiers import  BrowsePageIdentifiers, TopicUpdatePageIdentifiers, AddNewsPageIdentifiers, EditNewsPageIdentifiers, DeleteNewsPageIdentifiers
+from selenium.common.exceptions import NoSuchElementException
 
 
 class CanonizerAddNewsFeedsPage(Page):
@@ -26,7 +27,6 @@ class CanonizerAddNewsFeedsPage(Page):
         This Function checks, if Mandatory fields on Add News Page Marked with *
         :return: the element value
         """
-
         return \
             self.find_element(*AddNewsPageIdentifiers.DISPLAY_TEXT_ASTRK) and \
             self.find_element(*AddNewsPageIdentifiers.LINK_ASTRK)
@@ -89,12 +89,16 @@ class CanonizerEditNewsFeedsPage(Page):
         self.find_element(*TopicUpdatePageIdentifiers.TOPIC_IDENTIFIER).click()
 
         # Click on Edit News
-        self.hover(*EditNewsPageIdentifiers.EDIT_NEWS)
-        self.find_element(*EditNewsPageIdentifiers.EDIT_NEWS).click()
-        return CanonizerEditNewsFeedsPage(self.driver)
+        try:
+            self.hover(*EditNewsPageIdentifiers.EDIT_NEWS)
+            self.find_element(*EditNewsPageIdentifiers.EDIT_NEWS).click()
+            return CanonizerEditNewsFeedsPage(self.driver)
+        except NoSuchElementException:
+            return False
+        return True
 
     def click_edit_news_cancel_button(self):
-        self.load_edit_news_feed_page()
+        #self.load_edit_news_feed_page()
         # Click On Cancel Button
         self.hover(*EditNewsPageIdentifiers.CANCEL)
         self.find_element(*EditNewsPageIdentifiers.CANCEL).click()
@@ -153,3 +157,24 @@ class CanonizerEditNewsFeedsPage(Page):
         return \
             self.find_element(*EditNewsPageIdentifiers.DISPLAY_TEXT_ASTRK) and \
             self.find_element(*EditNewsPageIdentifiers.LINK_ASTRK)
+
+
+class CanonizerDeleteNewsFeedsPage(Page):
+
+    def click_delete_news_feed(self):
+        # Browse to Browse Page
+        self.hover(*BrowsePageIdentifiers.BROWSE)
+        self.find_element(*BrowsePageIdentifiers.BROWSE).click()
+
+        # Browse to Topic Name
+        self.hover(*TopicUpdatePageIdentifiers.TOPIC_IDENTIFIER)
+        self.find_element(*TopicUpdatePageIdentifiers.TOPIC_IDENTIFIER).click()
+
+        # Click on Delete News
+        try:
+            self.hover(*DeleteNewsPageIdentifiers.DELETE_NEWS)
+            self.find_element(*DeleteNewsPageIdentifiers.DELETE_NEWS).click()
+            return CanonizerDeleteNewsFeedsPage(self.driver)
+        except NoSuchElementException:
+            return False
+        return True

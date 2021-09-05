@@ -1,6 +1,7 @@
 from CanonizerBase import Page
 from Identifiers import CreateNewTopicPageIdentifiers
 from selenium.common.exceptions import NoSuchElementException
+import time
 from selenium.webdriver.support.select import Select
 
 
@@ -19,6 +20,7 @@ class CanonizerCreateNewTopicPage(Page):
 
         self.hover(*CreateNewTopicPageIdentifiers.CREATE_NEW_TOPIC)
         self.find_element(*CreateNewTopicPageIdentifiers.CREATE_NEW_TOPIC).click()
+        time.sleep(2)
         return CanonizerCreateNewTopicPage(self.driver)
 
     def enter_nick_name(self, nickname):
@@ -69,7 +71,6 @@ class CanonizerCreateNewTopicPage(Page):
         return self.find_element(*CreateNewTopicPageIdentifiers.ERROR_TOPIC_NAME).text
 
     def create_new_topic_page_should_have_add_new_nick_name_link_for_new_users(self):
-        #return self.find_element(*CreateNewTopicPageIdentifiers.ADDNEWNICKNAME).text
         try:
             return self.find_element(*CreateNewTopicPageIdentifiers.ADDNEWNICKNAME)
         except NoSuchElementException:
@@ -93,10 +94,24 @@ class CanonizerCreateNewTopicPage(Page):
         self.create_topic(nick_name, topic_name, namespace, note)
         return self.find_element(*CreateNewTopicPageIdentifiers.ERROR_DUPLICATE_TOPIC_NAME).text
 
-    def create_topic_with_invalid_topic_name_length(self, nickname, topic_name, namespace, note):
-        self.create_topic(nickname, topic_name, namespace, note)
-        return self.find_element(*CreateNewTopicPageIdentifiers.ERROR_INVALID_TOPIC_NAME_LENGTH).text
-
     def create_topic_with_valid_data(self, nickname, topic_name, namespace, note):
         self.create_topic(nickname, topic_name, namespace, note)
         return self
+
+    def create_topic_with_invalid_topic_name(self, nickname, topic_name, namespace, note):
+        self.create_topic(nickname, topic_name, namespace, note)
+        return self.find_element(*CreateNewTopicPageIdentifiers.INVALID_TOPIC_NAME).text
+
+    def nick_name_page_should_open_create_topic_add_new_nick_name(self):
+        try:
+            elem = self.find_element(*CreateNewTopicPageIdentifiers.ADDNEWNICKNAME)
+            if elem.is_displayed():
+                elem.click()
+                time.sleep(2)
+                return CanonizerCreateNewTopicPage(self.driver)
+        except NoSuchElementException:
+            return False
+        return True
+
+
+
