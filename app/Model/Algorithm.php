@@ -175,8 +175,9 @@ class Algorithm{
             //$total = $result[0]->countTotal * $sum_of_sqrt_shares;
             $total =  $sum_of_sqrt_shares;
         }
-
-        return $total;
+        $shares_return  = $total;
+        
+        return  ($shares_return > 0) ? $shares_return : 0;
 
     }
 

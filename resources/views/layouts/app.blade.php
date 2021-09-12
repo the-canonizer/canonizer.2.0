@@ -281,6 +281,9 @@
         @show
 
         <div class="content-wrapper">
+            <?php if(config('app.env') !== "production") { ?>
+            <div class="alert alert-warning col-md-12">This is not the live system.So any activity you perform here will not go to live system. Please go to <a href="https://canonizer.com" target="_blank">canonizer.com</a></div>
+        <?php } ?>
             @if(session()->has('mailerror'))
                 <div class="alert alert-danger">
                     {{ session()->get('mailerror') }}

@@ -651,14 +651,14 @@ class Camp extends Model {
     public function getCamptSupportCount($algorithm, $topicnum, $campnum) {
 
         $supportCountTotal = 0;
-
         try {
             foreach (session("topic-support-nickname-$topicnum") as $supported) {
+                
                 $nickNameSupports = session("topic-support-{$topicnum}")->filter(function ($item) use($supported) {
                     return $item->nick_name_id == $supported->nick_name_id; /* Current camp support */
                 });
                 $supportPoint = Algorithm::{$algorithm}($supported->nick_name_id,$supported->topic_num,$supported->camp_num);
-
+                
                 $currentCampSupport = $nickNameSupports->filter(function ($item) use($campnum) {
                             return $item->camp_num == $campnum; /* Current camp support */
                         })->first();
@@ -669,9 +669,7 @@ class Camp extends Model {
 				   0.25 after and half, again, for each one after that. */
 				if ($currentCampSupport) {
                     $multiSupport = false;
-                    if($algorithm == 'shares' || $algorithm == 'shares_sqrt'){
-                        $supportCountTotal += $supportPoint;
-                    }else if ($nickNameSupports->count() > 1) {
+                     if ($nickNameSupports->count() > 1) {
                         $multiSupport = true;
                         $supportCountTotal += round($supportPoint / (2 ** ($currentCampSupport->support_order)), 2);
                     } else if ($nickNameSupports->count() == 1) {
