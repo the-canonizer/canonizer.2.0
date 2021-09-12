@@ -59,6 +59,7 @@
                 if (!empty($camps) && !empty($topic)) { 
                     $currentLive = 0;
                     $currentTime = time();
+                    $ifIamDelegatedSupporter = 0;
                     foreach ($camps as $key => $data) {
                         $liveCamp = \App\Model\Camp::getLiveCamp($data->topic_num,$data->camp_num);
                         // $delegatedSupport = App\Model\Support::where('delegate_nick_name_id',)
@@ -108,6 +109,10 @@
                             }
                          if(!$ifSupportingThisCamp){
                           $camp = \App\Model\Camp::where('camp_num','=',$data->camp_num)->where('topic_num','=',$data->topic_num)->get();
+                          $delegatedUsers = \App\Model\Support::where('topic_num',$data->topic_num)->whereIn('delegate_nick_name_id',$nickNamesData)->orderBy('support_order','ASC')->first();
+                          if(count($camp) > 0 && $camp[0]->submitter_nick_id == $delegatedUsers->nick_name_id){
+                            $ifIamDelegatedSupporter =  $delegatedUsers->delegate_nick_name_id;
+                          }
                           $allChildren = \App\Model\Camp::getAllChildCamps($camp[0]);
                           if(sizeof($allChildren) > 0 ){
                           foreach($allChildren as $campnum){
@@ -125,6 +130,8 @@
                                   }
                               }
                           }
+
+                          
                         }
 
                            
@@ -196,7 +203,7 @@
                             </div>    
                             <div class="CmpHistoryPnl-footer">
                                
-        <?php if ($currentTime < $data->go_live_time && $currentTime >= $data->submit_time && ($ifIamSupporter || $ifSupportingThisCamp) ) { ?> 
+        <?php if ($currentTime < $data->go_live_time && $currentTime >= $data->submit_time && ($ifIamSupporter || $ifIamDelegatedSupporter) ) { ?> 
                                     <a id="object" class="btn btn-historysmt" href="<?php echo url('manage/camp/' . $data->id . '-objection'); ?>">Object</a>
                                 <?php } ?>
                                 <a id="update" class="btn btn-historysmt" href="<?php echo url('manage/camp/' . $data->id); ?>">Submit Camp Update Based On This</a>		  
