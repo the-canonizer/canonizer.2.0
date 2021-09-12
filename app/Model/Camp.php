@@ -490,12 +490,12 @@ class Camp extends Model {
     }
 
     public static function getAllParent($camp, $camparray = array()) {
-
+        
         if (!empty($camp)) {
             if ($camp->parent_camp_num) {
                 $camparray[] = $camp->parent_camp_num;
 
-                $pcamp = Camp::where('topic_num', $camp->topic_num)->where('camp_num', $camp->parent_camp_num)->groupBy('camp_num')->orderBy('submit_time', 'desc')->first();
+                $pcamp = self::getLiveCamp($camp->topic_num, $camp->parent_camp_num); //Camp::where('topic_num', $camp->topic_num)->where('camp_num', $camp->parent_camp_num)->groupBy('camp_num')->orderBy('submit_time', 'desc')->first();
                 return self::getAllParent($pcamp, $camparray);
             }
         }
@@ -508,13 +508,15 @@ class Camp extends Model {
         $camparray = [];
         if ($camp) {
             $key = $camp->topic_num . '-' . $camp->camp_num . '-' . $camp->parent_camp_num;
-           if (in_array($key, Camp::$chilcampArray)) {
+            $key1 = $camp->topic_num . '-' . $camp->parent_camp_num . '-' . $camp->camp_num;
+           if (in_array($key, Camp::$chilcampArray) || in_array($key1, Camp::$chilcampArray)) {
                 return [];/** Skip repeated recursions* */
             }
             Camp::$chilcampArray[] = $key;
+            Camp::$chilcampArray[] = $key1;
             $camparray[] = $camp->camp_num;
-
-            $childCamps = Camp::where('topic_num', $camp->topic_num)->where('parent_camp_num', $camp->camp_num)->groupBy('camp_num')->orderBy('submit_time', 'desc')->get();
+            $childCamps =  Camp::where('topic_num', $camp->topic_num)->where('parent_camp_num', $camp->camp_num)->groupBy('camp_num')->latest('submit_time')->get();
+            //echo "<pre>"; print_r($childCamps);
             foreach ($childCamps as $child) {
                 $camparray = array_merge($camparray, self::getAllChildCamps($child));
             }
@@ -567,7 +569,6 @@ class Camp extends Model {
     public static function validateParentsupport($topic_num, $camp_num, $userNicknames, $confirm_support) {
 
         $onecamp = self::getLiveCamp($topic_num, $camp_num);
-
         if (count($onecamp) <= 0) {
             return 'notlive';
         }

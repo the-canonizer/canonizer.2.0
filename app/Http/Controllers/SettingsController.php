@@ -239,6 +239,7 @@ class SettingsController extends Controller
     public function support($id = null, $campnums = null)
     {
 
+
         $as_of_time = time();
         if (isset($id)) {
             $topicnumArray = explode("-", $id);
@@ -285,11 +286,12 @@ class SettingsController extends Controller
 
 
             $parentSupport = Camp::validateParentsupport($topicnum, $campnum, $userNickname, $confirm_support);
-            if ($parentSupport === "notlive") {
+             if ($parentSupport === "notlive") {
                 Session::flash('warning', "You cant submit your support to this camp as its not live yet.");
                 //return redirect()->back();
             } else if ($parentSupport) {
                 if (count($parentSupport) == 1) {
+                   
                     foreach ($parentSupport as $parent){
                         
                         if ($parent->camp_num == $campnum) {
