@@ -72,11 +72,16 @@ class UploadController extends Controller
 		 }
 
          $path = $file->storeAs('files',$fullname,'public_files');
-
          //check here- file is save or not in folder
          if($path==""){
-            $request->session()->flash('error', 'The folder does not have permission to save file');
-            return redirect()->back();  
+            // Everything for owner, read and execute for others
+            if(chmod($dir, 0755)){
+                $path = $file->storeAs('files',$fullname,'public_files');
+            }
+            else{
+                $request->session()->flash('error', 'Unable to upload file. Please try again later.');
+                return redirect()->back(); 
+            } 
          }
 		 
          try{
