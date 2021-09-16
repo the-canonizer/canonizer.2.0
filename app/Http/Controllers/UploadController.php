@@ -70,11 +70,21 @@ class UploadController extends Controller
             return redirect()->back();	 
 			 
 		 }
-		 
+
+         $path = $file->storeAs('files',$fullname,'public_files');
+         //check here- file is save or not in folder
+         if($path==""){
+            // Everything for owner, read and execute for others
+            if(chmod($dir, 0755)){
+                $path = $file->storeAs('files',$fullname,'public_files');
+            }
+            else{
+                $request->session()->flash('error', 'Unable to upload file. Please try again later.');
+                return redirect()->back(); 
+            } 
+         }
 		 
          try{
-            $path = $file->storeAs('files',$fullname,'public_files');
-			
             $upload = new Upload;
             $upload->file_id = $uniquename;
             $upload->file_name = $fullname;
