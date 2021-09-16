@@ -50,23 +50,6 @@
 
   </div>
 
-  <!-- Replies To Thread -->
-  <div class="pagination">
-    <a class="active item">
-      <ul class="list-group">
-        @foreach ($replies as $reply)
-        <li class="list-group-item">
-          @include('threads.replies')
-        </li>
-        @endforeach
-      </ul>
-    </a>
-
-  </div>
-
-
-  {{ $replies->links() }}
-
   @if(auth()->check())
 
   <form method="POST"
@@ -139,6 +122,24 @@
   @else
   Please <a href="{{ url('/login') }}">Sign In</a> to comment on this Thread
   @endif
+  <!-- Replies To Thread -->
+  <div class="pagination">
+    <a class="active item">
+      <ul class="list-group">
+        @foreach ($replies as $reply)
+        <li class="list-group-item">
+          @include('threads.replies')
+        </li>
+        @endforeach
+      </ul>
+    </a>
+
+  </div>
+
+
+  {{ $replies->links() }}
+
+  
 
 </div>
 
