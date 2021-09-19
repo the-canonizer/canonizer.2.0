@@ -457,6 +457,12 @@ class SettingsController extends Controller
                  if(isset($delegateUsersupports) && count($delegateUsersupports) > 0){
                     foreach($delegateUsersupports as $cmp){
                         $last_camp = $cmp->camp_num;
+                        if(in_array($last_camp,$mysupportArray)){ // if user is also a direct supporter end that support
+                            $support = Support::where('topic_num', $topic_num)->where('camp_num','=', $last_camp)->where('nick_name_id','=',$data['nick_name'])->where('end', '=', 0)->get();
+                            $support[0]->end = time();
+                            $support[0]->save();
+                        }
+                        
                         $data['camp_num'] = $cmp->camp_num;
                         $supportTopic = new Support();
                         $supportTopic->topic_num = $cmp->topic_num;
@@ -684,6 +690,9 @@ class SettingsController extends Controller
                 $currentDeglegateSupport = Support::where('topic_num', $topic_num)->where('delegate_nick_name_id',$delegate_nick_name_id)->whereRaw("(start < $as_of_time) and ((end = 0) or (end > $as_of_time))")->get();
                 if(isset($currentDeglegateSupport) && count($currentDeglegateSupport) > 0){
                     foreach($currentDeglegateSupport as $spp){
+                        $input['camp_num'] = $spp->camp_num;
+                        $input['nick_name'] = $spp->delegate_nick_name_id;
+                        $input['topic_num'] = $topic_num;
                         $currentSupportOrder = $spp->support_order;
                         $remaingSupportWithHighOrder = Support::where('topic_num', $topic_num)
                             ->whereIn('nick_name_id', [$spp->nick_name_id])
@@ -701,9 +710,11 @@ class SettingsController extends Controller
                         session()->forget("topic-support-$spp->topic_num");
                         session()->forget("topic-support-nickname-$spp->topic_num");
                         session()->forget("topic-support-tree-$spp->topic_num");
+                        $this->emailForSupportDeleted($input);// sending email for removed support for delegated user
                 }
             }
                 Session::flash('success', "Your delegated support has been removed successfully.");
+                
             }else{
                 $currentSupport = Support::where('support_id', $support_id);
                 $currentSupportRec = $currentSupport->first();
