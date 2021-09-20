@@ -26,14 +26,15 @@ class NewsFeedController extends Controller
         $regex = "/\b(?:(?:https?|ftp):\/\/|www\.)[-a-z0-9+&@#\/%?=~_|!:,.;]*[-a-z0-9+&@#\/%=~_|]/i";
        
         $validatorArray = [
-            'display_text'=>'required|max:256',
+            'display_text'=>'required|max:256|regex:/^[a-zA-Z0-9\s]+$/',
             "link" => array("required", "regex:".$regex)
 
         ];
         $messages = [];
         $messages["display_text.required"]='Display text is required.';
+        $messages["display_text.regex"]='Display text can only contain space and alphanumeric characters';
         $messages["display_text.max"]='Display text may not be greater than 256 characters.';
-        $messages["link.regex"]='Link is invalid.';
+        $messages["link.regex"]='Link is invalid. (Example: https://www.example.com?post=1234)';
         $messages["link.required"]='Link is required.';
         
         $validator = Validator::make($request->all(), $validatorArray,$messages);
@@ -70,12 +71,12 @@ class NewsFeedController extends Controller
        $regex = "/\b(?:(?:https?|ftp):\/\/|www\.)[-a-z0-9+&@#\/%?=~_|!:,.;]*[-a-z0-9+&@#\/%=~_|]/i";
        
         $validatorArray = [
-            'display_text.*'=>'required|max:256',
+            'display_text.*'=>'required|max:256|regex:/^[a-zA-Z0-9\s]+$/',
             "link.*" => array("required", "regex:".$regex)
-
         ];
         foreach($all['news_order'] as $key=>$order){
             $messages["display_text.".$key .".required"]='Display text is required.';
+            $messages["display_text.".$key.".regex"]='Display text can only contain space and alphanumeric characters';
 			$messages["display_text.".$key .".max"]='Display text may not be greater than 256 characters.';
             $messages["link.".$key .".regex"]='Link is invalid.';
             $messages["link.".$key .".required"]='Link is required.';

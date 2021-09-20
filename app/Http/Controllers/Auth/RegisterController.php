@@ -54,10 +54,15 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         $message = [
-            'password.regex'=>'Password must be atleast 8 characters, including atleast one digit, one lower case letter and one special character(@,# !,$..)',
-            'first_name.regex' => 'First name must be in letters only',
-            'middle_name.regex' => 'Middle name must be in letters only',
-            'last_name.regex' => 'Last name must be in letters only'
+            'password.regex'=>'Password must be atleast 8 characters, including atleast one digit, one lower case letter and one special character(@,# !,$..).',
+            'first_name.regex' => 'The first name must be in alphabets and space only.',
+            'first_name.required' => 'The first Name field is required.',
+            'first_name.max' => 'The first Name can not be more than 100.',
+            'middle_name.regex' => 'The middle name must be in alphabets and space only',
+            'middle_name.max' => 'The middle Name can not be more than 100.',
+            'last_name.regex' => 'The last name must be in alphabets and space only',
+            'last_name.required' => 'The last Name field is required.',
+            'last_name.max' => 'The last Name can not be more than 100.',
         ];
         return Validator::make($data, [
             'first_name' => 'required|regex:/^[a-zA-Z ]*$/|string|max:100',
@@ -83,6 +88,7 @@ class RegisterController extends Controller
      */
     public function register(Request $request)
     {
+        
         $this->validator($request->all())->validate();
 
         return $this->create($request->all());
@@ -122,8 +128,8 @@ class RegisterController extends Controller
            return redirect()->route('register.otp', ['user' => base64_encode($user->email)]);
           //return redirect()->to('register/verify-otp')->withInput(['user', base64_encode($user->email)]);
         }catch(\Swift_TransportException $e){
-                            throw new \Swift_TransportException($e);
-                        } 
+            throw new \Swift_TransportException($e);
+        } 
         
     }
     
