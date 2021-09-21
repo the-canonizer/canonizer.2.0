@@ -98,7 +98,7 @@ class TopicController extends Controller {
          $validator = Validator::make($request->all(), $validatorArray, $message);
         if(isset($oldTopicData) && $oldTopicData!=null){
            $validator->after(function ($validator) use ($all,$oldTopicData){  
-            if (isset($all['topic_num'])) {  
+                if (isset($all['topic_num'])) {  
                     if($oldTopicData->topic_num != $all['topic_num']){
                        $validator->errors()->add('topic_name', 'The topic name has already been taken');
                     }
