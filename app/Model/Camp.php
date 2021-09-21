@@ -1138,5 +1138,12 @@ class Camp extends Model {
         self::$chilcampArray=[];
     }
 
-
+    public static function getObjectionOptionsLink(){
+        $helpLink = null;
+        $disagreementCamp = Camp::where('camp_name', 'Dealing with Disagreement')->first();
+        if(!empty($disagreementCamp)) {
+            $helpLink = 'topic/'.$disagreementCamp->topic_num.'-'.$disagreementCamp->camp_name.'/'.$disagreementCamp->camp_num;
+        }
+        return $helpLink;
+    }
 }
