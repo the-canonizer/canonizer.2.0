@@ -83,8 +83,7 @@ class TopicController extends Controller {
                             ->where('topic_name', $all['topic_name'])
                             ->where('topic.objector_nick_id',"=",null)
                             ->whereRaw('topic.go_live_time in (select max(go_live_time) from topic where objector_nick_id is null and go_live_time < "' . time() . '" group by topic_num)')
-                            ->where('topic.go_live_time', '<=', time())
-                            
+                            ->where('topic.go_live_time', '<=', time())                            
                             ->latest('submit_time')
                             ->first();
         $nonLiveTopicData = Topic::select('topic.*')
@@ -109,7 +108,6 @@ class TopicController extends Controller {
             ];
         }
          $validator = Validator::make($request->all(), $validatorArray, $message);
-
         if(isset($liveTopicData) && $liveTopicData!=null){
            $validator->after(function ($validator) use ($all,$liveTopicData){  
             if (isset($all['topic_num'])) {  
@@ -129,6 +127,7 @@ class TopicController extends Controller {
            $validator->after(function ($validator) use ($all,$nonLiveTopicData){  
             if (isset($all['topic_num'])) {  
                     if($nonLiveTopicData->topic_num != $all['topic_num']){
+
                        $validator->errors()->add('topic_name', 'The topic name has already been taken');
                     }
                     

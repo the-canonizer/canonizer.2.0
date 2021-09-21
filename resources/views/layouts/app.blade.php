@@ -282,7 +282,7 @@
 
         <div class="content-wrapper">
             <?php if(config('app.env') !== "production" && Auth::check()) { ?>
-            <div class="alert alert-warning col-md-12">This is not the live system. Any data submitted here is for testing purposes only and will be lost. Please go to <a href="https://canonizer.com" target="_blank">canonizer.com</a></div>
+            <p class="alert alert-warning col-md-12">This is not the live system. Any data submitted here is for testing purposes only and will be lost. Please go to <a href="https://canonizer.com" target="_blank">canonizer.com</a></p>
         <?php } ?>
             @if(session()->has('mailerror'))
                 <div class="alert alert-danger">
