@@ -668,7 +668,7 @@ class SettingsController extends Controller
             $result['support_camp'] = $camp->camp_name;
             $result['subject'] = $nickName->nick_name . " has removed their support from ".$result['object'].".";
             if($parentUser){
-                $result['subject'] = $nickName->nick_name . " has removed their delegated support to ". $parentUser->first_name . " " . $parentUser->last_name." from ".$result['object'].".";
+                $result['subject'] = $nickName->nick_name . " has removed their delegated support from ". $parentUser->first_name . " " . $parentUser->last_name." in ".$result['object'].".";
             }
            
             $link = \App\Model\Camp::getTopicCampUrl($data['topic_num'],$data['camp_num']);
