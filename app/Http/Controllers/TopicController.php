@@ -75,14 +75,27 @@ class TopicController extends Controller {
             'nick_name' => 'required'
             //'note' => 'required'
         ];
-         
-     $oldTopicData = Topic::select('topic.*')
+
+
+        $liveTopicData = Topic::select('topic.*')
                             ->join('camp','camp.topic_num','=','topic.topic_num')
                             ->where('camp.camp_name','=','Agreement')
-                             ->where('topic_name', $all['topic_name'])
-                             ->where('topic.objector_nick_id',"=",null)
-                             ->latest('submit_time')
-                             ->first();
+                            ->where('topic_name', $all['topic_name'])
+                            ->where('topic.objector_nick_id',"=",null)
+                            ->whereRaw('topic.go_live_time in (select max(go_live_time) from topic where objector_nick_id is null and go_live_time < "' . time() . '" group by topic_num)')
+                            ->where('topic.go_live_time', '<=', time())
+                            
+                            ->latest('submit_time')
+                            ->first();
+        $nonLiveTopicData = Topic::select('topic.*')
+                            ->join('camp','camp.topic_num','=','topic.topic_num')
+                            ->where('camp.camp_name','=','Agreement')
+                            ->where('topic_name', $all['topic_name'])
+                            ->where('topic.objector_nick_id',"=",null)
+                            ->where('topic.go_live_time',">",time())
+                            ->where('topic.grace_period',"=",1)
+                            ->first();
+                     
         $message = [
             'topic_name.required' => 'Topic name is required.',
             'topic_name.max' => 'Topic name can not be more than 30 characters.',
@@ -102,15 +115,31 @@ class TopicController extends Controller {
             ];
         }
         $validator = Validator::make($request->all(), $validatorArray, $message);
-        if(isset($oldTopicData) && $oldTopicData!=null){
-           $validator->after(function ($validator) use ($all,$oldTopicData){  
+
+        if(isset($liveTopicData) && $liveTopicData!=null){
+           $validator->after(function ($validator) use ($all,$liveTopicData){  
             if (isset($all['topic_num'])) {  
-                    if($oldTopicData->topic_num != $all['topic_num']){
+                    if($liveTopicData->topic_num != $all['topic_num']){
                        $validator->errors()->add('topic_name', 'The topic name has already been taken');
                     }
                     
                 }else{ 
-                    if($oldTopicData && isset($oldTopicData['topic_name'])){
+                    if($liveTopicData && isset($liveTopicData['topic_name'])){
+                        $validator->errors()->add('topic_name', 'The topic name has already been taken');
+                    }
+
+                }
+            }); 
+        }
+        if(isset($nonLiveTopicData) && $nonLiveTopicData!=null){
+           $validator->after(function ($validator) use ($all,$nonLiveTopicData){  
+            if (isset($all['topic_num'])) {  
+                    if($nonLiveTopicData->topic_num != $all['topic_num']){
+                       $validator->errors()->add('topic_name', 'The topic name has already been taken');
+                    }
+                    
+                }else{ 
+                    if($nonLiveTopicData && isset($nonLiveTopicData['topic_name'])){
                         $validator->errors()->add('topic_name', 'The topic name has already been taken');
                     }
 
@@ -330,7 +359,6 @@ class TopicController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function show($id, $parentcampnum = 1) {
-
         $topicnumArray = explode("-", $id);
         $topicnum = $topicnumArray[0];
         if(Auth::user() && Auth::user()->id){
@@ -519,6 +547,7 @@ class TopicController extends Controller {
         $onecamp = Camp::getLiveCamp($topicnum, $campnum);
         $parentcamp = (count($onecamp)) ? Camp::campNameWithAncestors($onecamp, '',$topic->topic_name) : "n/a";
         $camps = Camp::getCampHistory($topicnum, $campnum);
+        //echo "<pre>"; print_r($camps); exit;
         $submit_time = (count($camps)) ? $camps[0]->submit_time: null;
         $parentcampnum = (isset($onecamp->parent_camp_num)) ? $onecamp->parent_camp_num : 0;
         $nickNames = null;
@@ -636,20 +665,52 @@ class TopicController extends Controller {
         if($topicnum!=null){
 
             $old_parent_camps = Camp::getAllTopicCamp($topicnum);
-            $camp_exists = 0;
-            if($old_parent_camps && $old_parent_camps != null){
+            //livecamps
+            $liveCamps = Camp::getAllLiveCampsInTopic($topicnum);
+            //non-live camps            
+            $nonLiveCamps = Camp::getAllNonLiveCampsInTopic($topicnum);
+           // $camp_exists = 0;
+            $camp_existsLive = 0;
+            $camp_existsNL = 0;
+
+            //echo "<pre>"; print_r($all['camp_name']); exit;
+
+            if(!empty($liveCamps)){
+                foreach($liveCamps as $value){
+                    if($value->camp_name == $all['camp_name']){
+                        if(isset($all['camp_num']) && array_key_exists('camp_num', $all) && $all['camp_num'] == $value->camp_num){
+                            $camp_existsLive = 0;
+                        }else{
+                            $camp_existsLive = 1;
+                        }
+                    }
+                }
+            }
+
+            if(!empty($nonLiveCamps)){
+                foreach($nonLiveCamps as $value){
+                    if($value->camp_name == $all['camp_name']){
+                        if(isset($all['camp_num']) && array_key_exists('camp_num', $all) && $all['camp_num'] == $value->camp_num){
+                            $camp_existsNL = 0;
+                        }else{ 
+                             $camp_existsNL = 1;
+                        }
+                    }
+                }
+            }
+            /*if($old_parent_camps && $old_parent_camps != null){
                 foreach ($old_parent_camps as $key => $value) {
                    if($value->camp_name == $all['camp_name']){
                         if(isset($all['camp_num']) && array_key_exists('camp_num', $all) && $all['camp_num'] == $value->camp_num){
                             $camp_exists = 0;
-                        }else{
+                        }else{                 
                              $camp_exists = 1;
                         }
                        
                    }
                 }
-            }
-            if($camp_exists){
+            }*/
+            if($camp_existsLive || $camp_existsNL){
                $validator->after(function ($validator){
                      $validator->errors()->add('camp_name', 'The camp name has already been taken');
                 }); 
