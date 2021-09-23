@@ -13,8 +13,9 @@ use Illuminate\Support\Facades\File;
 class FileUploadTest extends TestCase
 {
     /**
-     * A basic test example.
-     *
+     * File Upload Test Case
+     * Author @Reena_talentelgia
+     * Total Tets Cases #3     
      * @return void
      */
     public function testUnauthenticatedUserNotAllowed()
@@ -27,14 +28,13 @@ class FileUploadTest extends TestCase
 
     public function testFileUpload(){
 
-        print sprintf("Uploaded File should be on server %s",PHP_EOL);
+        print sprintf("\n Uploaded File should be on server %s",PHP_EOL);
         $user = factory(\App\User::class)->create(['type'=>'user']);
         $rand = rand(1000,99999);
         $response = $this->actingAs($user)->post('/upload', [
             'file' => UploadedFile::fake()->image($rand.'.jpg')->size(10),
         ]);
         
-        //$response->assertSessionHasErrors();
         $flag = File::exists(public_path('files/'.$rand.'.jpg'));
         $this->assertTrue($flag);
         
