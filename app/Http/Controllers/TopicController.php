@@ -98,9 +98,16 @@ class TopicController extends Controller {
                             ->first();
                      
         $message = [
-            'topic_name.regex' => 'Topic name must only contain space and alphanumeric characters',
+
+            'topic_name.required' => 'Topic name is required.',
+            'topic_name.max' => 'Topic name can not be more than 30 characters.',
+            'topic_name.regex' => 'Topic name can only contain space and alphanumeric characters.',
+            'namespace.required' => 'Namespace is required,',
             'create_namespace.required_if' => 'The Other Namespace Name field is required when namespace is other.',
-            'create_namespace.max' => 'The Other Namespace Name may not be greater than 100 characters.'
+            'create_namespace.max' => 'The Other Namespace Name can not be more than 100 characters.',
+            'nick_name.required' => 'Nick name is required.',
+            'objection_reason.required' => 'Objection reason is required.',
+            'objection_reason.max' => 'Objection reason can not be more than 100.'
         ];
 
         $objection = '';
@@ -109,7 +116,8 @@ class TopicController extends Controller {
             $validatorArray = ['objection_reason' => 'required|max:100','nick_name' => 'required'
             ];
         }
-         $validator = Validator::make($request->all(), $validatorArray, $message);
+
+        $validator = Validator::make($request->all(), $validatorArray, $message);
         if(isset($liveTopicData) && $liveTopicData!=null){
            $validator->after(function ($validator) use ($all,$liveTopicData){  
                 if (isset($all['topic_num'])) {  
@@ -630,27 +638,27 @@ class TopicController extends Controller {
        //echo "<pre>"; print_r($all); exit;
         $currentTime = time();
         $messagesVal = [
-            'camp_name.regex' => 'Camp name must only contain space and alphanumeric characters.',
+            'camp_name.regex' => 'Camp name can only contain space and alphanumeric characters.',
             'nick_name.required' => 'The nick name field is required.',
             'camp_name.required' => 'Camp name is required.',
+            'camp_name.max' => 'Camp name can not be more than 30 characters',
+            'camp_about_url.max' => "Camp's about url can not be more than 1024 characters",
+            'parent_camp_num.required' => 'The parent camp name is required',
+            'objection.required' => 'Objection reason is required.',
+            'objection_reason.max' => 'Objection reason can not be more than 100.'
         ];
         $validator = Validator::make($request->all(), [
-                    'nick_name' => 'required',
-                    'camp_name' => 'required|max:30|regex:/^[a-zA-Z0-9\s]+$/',
-                    'camp_about_url' => 'max:1024'
-                   // 'note' => 'required',
+            'nick_name' => 'required',
+            'camp_name' => 'required|max:30|regex:/^[a-zA-Z0-9\s]+$/',
+            'camp_about_url' => 'max:10',
+            'parent_camp_num' => 'required'
+            // 'note' => 'required',
         ],$messagesVal);
         
 		session(['filter'=>'removed']);
         $objection = '';
         if (isset($all['objection']) && $all['objection'] == 1) {
-            $objection = 1;
-            $messagesVal = [
-            'camp_name.regex' => 'Camp name must only contain space and alphanumeric characters.',
-            'nick_name.required' => 'The nick name field is required.',
-            'camp_name.required' => 'Camp name is required.',
-            'objection.required' => 'Objection reason is required.',
-        ];
+            $objection = 1;            
             $validator = Validator::make($request->all(), [
                         'nick_name' => 'required',
                         'camp_name' => 'required|max:30|regex:/^[a-zA-Z0-9\s]+$/',
@@ -690,18 +698,6 @@ class TopicController extends Controller {
                     }
                 }
             }
-            /*if($old_parent_camps && $old_parent_camps != null){
-                foreach ($old_parent_camps as $key => $value) {
-                   if($value->camp_name == $all['camp_name']){
-                        if(isset($all['camp_num']) && array_key_exists('camp_num', $all) && $all['camp_num'] == $value->camp_num){
-                            $camp_exists = 0;
-                        }else{                 
-                             $camp_exists = 1;
-                        }
-                       
-                   }
-                }
-            }*/
             if($camp_existsLive || $camp_existsNL){
                $validator->after(function ($validator){
                      $validator->errors()->add('camp_name', 'The camp name has already been taken');
@@ -868,21 +864,27 @@ class TopicController extends Controller {
         $all = $request->all();
 
         $currentTime = time();
+        $messagesVal = [
+            'statement.required' => 'The statement field is required.',
+            'nick_name.required' => 'The nick name field is required.',
+            'objection.required' => 'Objection reason is required.',
+            'objection_reason.max' => 'Objection reason can not be more than 100.'
+        ];
         $validator = Validator::make($request->all(), [
                     'statement' => 'required',
                     //'note' => 'required',
                     'nick_name' => 'required'
-        ]);
+        ], $messagesVal);
+        
         if (isset($all['objection']) && $all['objection'] == 1) {
             $validator = Validator::make($request->all(), [
                         'nick_name' => 'required',
                         'objection_reason' => 'required|max:100',
-            ]);
+            ], $messagesVal);
         }
         if ($validator->fails()) {
             return back()->withErrors($validator->errors())->withInput($request->all());
         }
-
 
         $go_live_time = $currentTime;
         $statement = new Statement();
@@ -969,6 +971,8 @@ class TopicController extends Controller {
 
             $user = Nickname::getUserByNickName($all['submitter']);
             $livecamp = Camp::getLiveCamp($statement->topic_num,$statement->camp_num);
+            $objectionOptionsLink = Camp::getObjectionOptionsLink();
+            
             //$link = 'topic/' . $statement->topic_num . '/1';
             $link = 'statement/history/' . $statement->topic_num . '/' . $statement->camp_num;
             //$data['object'] = $statement->statement;
@@ -981,6 +985,7 @@ class TopicController extends Controller {
             $data['nick_name'] = $nickName->nick_name;
             $data['forum_link'] = 'forum/' . $statement->topic_num . '-statement/' . $statement->camp_num . '/threads';
             $data['subject'] = $data['nick_name'] . " has objected to your proposed change.";
+            $data['help_link'] = $objectionOptionsLink;
             $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
             try{
                 Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new ObjectionToSubmitterMail($user, $link, $data));
@@ -1148,8 +1153,6 @@ class TopicController extends Controller {
           Session::flash('success', "Your agreement to topic submitted successfully");
         }
 
-
-        
         return back();
     }
 

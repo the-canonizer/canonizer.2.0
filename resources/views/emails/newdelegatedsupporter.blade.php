@@ -6,7 +6,7 @@
  @elseif(isset($data['support_deleted']) && $data['support_deleted'] == 1 && $data['delegate_support_deleted'] != 1)
  {{ $data['nick_name']}} has just removed their support from this camp: <a href="{{ $link }}"><b>{{ $data['object']}}</b></a>
  @elseif(isset($data['support_deleted']) && $data['support_deleted'] == 1 && $data['delegate_support_deleted'] == 1)
- {{ $data['nick_name']}} has just removed their delegated support to {{(isset($data['delegated_user']))? $data['delegated_user'] :'you'}} in this camp: <a href="{{ $link }}"><b>{{ $data['object']}}</b></a>
+ {{ $data['nick_name']}} has just removed their delegated support from {{(isset($data['delegated_user']))? $data['delegated_user'] :'you'}} in this camp: <a href="{{ $link }}"><b>{{ $data['object']}}</b></a>
  @else
  	{{ $data['nick_name']}} has just delegated their support to {{(isset($data['delegated_user']))? $data['delegated_user'] :'you'}} in this camp: <a href="{{ $link }}"><b>{{ $data['object']}}</b></a>
  @endif
