@@ -516,7 +516,7 @@ class SettingsController extends Controller
              if(isset($data['delegated']) && count($data['delegated']) > 0 && $data['delegate_nick_name_id'] == 0){
                 foreach($data['delegated'] as $k=>$d){
                     if($d !=0){
-                        $support = Support::where('topic_num', $topic_num)->where('camp_num','=', $k)->where('delegate_nick_name_id','=',$d)->where('end', '=', 0)->get();
+                        $support = Support::where('topic_num', $topic_num)->where('camp_num','=', $k)->where('nick_name_id','=',$data['nick_name'])->where('delegate_nick_name_id','=',$d)->where('end', '=', 0)->get();
                         if($support && count($support)> 0 ){
                             $support[0]->end = time();
                             $support[0]->save();  
@@ -726,7 +726,7 @@ class SettingsController extends Controller
              $as_of_time = time();
              /** removing delegated support #702 **/
             if($delegate_nick_name_id !=0){
-                $currentDeglegateSupport = Support::where('topic_num', $topic_num)->where('delegate_nick_name_id',$delegate_nick_name_id)->whereRaw("(start < $as_of_time) and ((end = 0) or (end > $as_of_time))")->get();
+                $currentDeglegateSupport = Support::where('topic_num', $topic_num)->where('nick_name_id','=',$nick_name_id)->where('delegate_nick_name_id',$delegate_nick_name_id)->whereRaw("(start < $as_of_time) and ((end = 0) or (end > $as_of_time))")->get();
                 if(isset($currentDeglegateSupport) && count($currentDeglegateSupport) > 0){
                     foreach($currentDeglegateSupport as $spp){
                         $input['camp_num'] = $spp->camp_num;
