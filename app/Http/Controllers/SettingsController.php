@@ -44,10 +44,13 @@ class SettingsController extends Controller
         
         $messages = [
             'first_name.required' => 'First name is required.',
+            'first_name.max' => 'First name can not be more than 100 characters.',
+            'first_name.regex' => 'First name can only contain space and alphabets.',
             'last_name.required' => 'Last name is required.',
-            'first_name.regex' => 'First name must be in letters only',
-            'middle_name.regex' => 'Middle name must be in letters only',
-            'last_name.regex' => 'Last name must be in letters only'
+            'last_name.max' => 'Last name can not be more than 100 characters.',
+            'last_name.regex' => 'Last name can only contain space and alphabets.',
+            'middle_name.regex' => 'Middle name can only contain space and alphabets',
+            'middle_name.max' => 'Middle name can not be more than 100 characters.',
         ];
         
 
@@ -135,7 +138,6 @@ class SettingsController extends Controller
 
         $messages = [
             'phone_number.required' => 'Phone number is required.'
-
         ];
         $validateArr = [
             'phone_number' => 'required|digits:10',
@@ -205,7 +207,8 @@ class SettingsController extends Controller
         if ($id) {
             $messages = [
                 'private.required' => 'Visibility status is required.',
-                'nick_name.required' => 'Nick name is required.'
+                'nick_name.required' => 'Nick name is required.',
+                'nick_name.max' => 'Nick name can not be more than 50 characters.',
             ];
 
 
@@ -363,9 +366,10 @@ class SettingsController extends Controller
         if ($id) {
             $messages = [
                 'nick_name.required' => 'The nick name field is required.',
+                'nick_name.max' => 'The nick name can not be more than 50 characters.',
             ];
             $validator = Validator::make($request->all(), [
-                'nick_name' => 'required',
+                'nick_name' => 'required|max:50',
             ], $messages);
 
             if ($validator->fails()) {
@@ -516,8 +520,8 @@ class SettingsController extends Controller
                         if($support && count($support)> 0 ){
                             $support[0]->end = time();
                             $support[0]->save();  
-                        }                            
-                    }                    
+                        }
+                    }
                 }
                
              }
