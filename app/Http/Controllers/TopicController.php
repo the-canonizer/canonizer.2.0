@@ -2,29 +2,29 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Foundation\Auth\RedirectsUsers;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Http\Request;
-use App\Library\General;
-use App\Library\Wiky;
-//use App\Library\Wikiparser\wikiParser;
-use App\Model\Topic;
-use App\Model\Camp;
-use App\Model\Statement;
-use App\Model\Nickname;
-use App\Model\Support;
 use DB;
 use Validator;
-use App\Model\Namespaces;
-use App\Model\NamespaceRequest;
-use Illuminate\Support\Facades\Mail;
-use App\Mail\ThankToSubmitterMail;
-use App\Mail\PurposedToSupportersMail;
-use App\Mail\ObjectionToSubmitterMail;
-use App\Mail\NewDelegatedSupporterMail;
-use App\Model\ChangeAgreeLog;
+use App\Model\Camp;
+use App\Model\Topic;
+use App\Library\Wiky;
+use App\Model\Support;
+//use App\Library\Wikiparser\wikiParser;
 use App\Model\NewsFeed;
+use App\Model\Nickname;
+use App\Library\General;
+use App\Model\Statement;
+use App\Model\Namespaces;
+use Illuminate\Http\Request;
+use App\Model\ChangeAgreeLog;
+use App\Model\NamespaceRequest;
+use App\Mail\ThankToSubmitterMail;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ObjectionToSubmitterMail;
+use App\Mail\PurposedToSupportersMail;
+use App\Mail\NewDelegatedSupporterMail;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Foundation\Auth\RedirectsUsers;
 
 /**
  * TopicController Class Doc Comment
@@ -288,6 +288,8 @@ class TopicController extends Controller {
                 $data['nick_name'] = $nickName->nick_name;
                 $data['forum_link'] = 'forum/' . $topic->topic_num . '-' . $liveTopic->topic_name . '/1/threads';
                 $data['subject'] = $data['nick_name'] . " has objected to your proposed change.";
+                $data['help_link'] = General::getDealingWithDisagreementUrl();
+
                 $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
                 try{
                  Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new ObjectionToSubmitterMail($user, $link, $data));
@@ -817,6 +819,8 @@ class TopicController extends Controller {
                 $data['type'] = "Camp";
                 $data['object_type'] = ""; 
                 $data['object'] = $livecamp->topic->topic_name."/".$livecamp->camp_name;
+                $data['help_link'] = General::getDealingWithDisagreementUrl();
+
                 //$data['type'] = 'camp'; 
                 $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
                 try{
@@ -981,7 +985,6 @@ class TopicController extends Controller {
 
             $user = Nickname::getUserByNickName($all['submitter']);
             $livecamp = Camp::getLiveCamp($statement->topic_num,$statement->camp_num);
-            $objectionOptionsLink = Camp::getObjectionOptionsLink();
             
             //$link = 'topic/' . $statement->topic_num . '/1';
             $link = 'statement/history/' . $statement->topic_num . '/' . $statement->camp_num;
@@ -995,13 +998,14 @@ class TopicController extends Controller {
             $data['nick_name'] = $nickName->nick_name;
             $data['forum_link'] = 'forum/' . $statement->topic_num . '-statement/' . $statement->camp_num . '/threads';
             $data['subject'] = $data['nick_name'] . " has objected to your proposed change.";
-            $data['help_link'] = $objectionOptionsLink;
+            $data['help_link'] = General::getDealingWithDisagreementUrl();
+
             $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
             try{
                 Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new ObjectionToSubmitterMail($user, $link, $data));
             }catch(\Swift_TransportException $e){
-                        throw new \Swift_TransportException($e);
-                    } 
+                throw new \Swift_TransportException($e);
+            } 
         } else if ($eventtype == "UPDATE") {
 
             $directSupporter = Support::getAllDirectSupporters($statement->topic_num, $statement->camp_num);
