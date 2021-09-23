@@ -32,15 +32,9 @@ class FileUploadTest extends TestCase
         $user = factory(\App\User::class)->create(['type'=>'user']);
         $rand = rand(1000,99999);
         $response = $this->actingAs($user)->post('/upload', [
-<<<<<<< HEAD:tests/Feature/FileUploadTest.php
             'file' => UploadedFile::fake()->image($rand.'.jpg')->size(10),
         ]);
         
-        //$response->assertSessionHasErrors();
-=======
-            'file' => UploadedFile::fake()->image($rand.'.jpg')->size(10)
-        ]);
->>>>>>> reena_talentelgia:tests/Feature/UploadFileTest.php
         $flag = File::exists(public_path('files/'.$rand.'.jpg'));
         $this->assertTrue($flag);
         
@@ -52,11 +46,7 @@ class FileUploadTest extends TestCase
             chmod($file_or_dir,0755); 
             $this->assertTrue(true);
         }else{
-<<<<<<< HEAD:tests/Feature/FileUploadTest.php
             print sprintf("File Directory already has permission  %s",PHP_EOL);
-=======
-            print sprintf("\n File Directory already has permission  %s",PHP_EOL);
->>>>>>> reena_talentelgia:tests/Feature/UploadFileTest.php
             $this->assertTrue(true);
         }
         

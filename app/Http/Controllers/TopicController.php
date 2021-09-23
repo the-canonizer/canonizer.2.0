@@ -76,7 +76,9 @@ class TopicController extends Controller {
             //'note' => 'required'
         ];
 
-
+        /**
+         * @updated By Talentelgia
+         */
         $liveTopicData = Topic::select('topic.*')
                             ->join('camp','camp.topic_num','=','topic.topic_num')
                             ->where('camp.camp_name','=','Agreement')
@@ -96,7 +98,7 @@ class TopicController extends Controller {
                             ->first();
                      
         $message = [
-            'topic_name.regex' => 'Topic name must only contain space and alphanumeric characters.',
+            'topic_name.regex' => 'Topic name must only contain space and alphanumeric characters',
             'create_namespace.required_if' => 'The Other Namespace Name field is required when namespace is other.',
             'create_namespace.max' => 'The Other Namespace Name may not be greater than 100 characters.'
         ];
@@ -110,7 +112,7 @@ class TopicController extends Controller {
          $validator = Validator::make($request->all(), $validatorArray, $message);
         if(isset($liveTopicData) && $liveTopicData!=null){
            $validator->after(function ($validator) use ($all,$liveTopicData){  
-            if (isset($all['topic_num'])) {  
+                if (isset($all['topic_num'])) {  
                     if($liveTopicData->topic_num != $all['topic_num']){
                        $validator->errors()->add('topic_name', 'The topic name has already been taken');
                     }
@@ -625,6 +627,7 @@ class TopicController extends Controller {
      */
     public function store_camp(Request $request) {
         $all = $request->all();
+       //echo "<pre>"; print_r($all); exit;
         $currentTime = time();
         $messagesVal = [
             'camp_name.regex' => 'Camp name must only contain space and alphanumeric characters.',
@@ -658,16 +661,13 @@ class TopicController extends Controller {
         if($topicnum!=null){
 
             $old_parent_camps = Camp::getAllTopicCamp($topicnum);
-            //livecamps
+            /**
+             * @updated By Talentelgia
+             */
             $liveCamps = Camp::getAllLiveCampsInTopic($topicnum);
-            //non-live camps            
             $nonLiveCamps = Camp::getAllNonLiveCampsInTopic($topicnum);
-           // $camp_exists = 0;
             $camp_existsLive = 0;
             $camp_existsNL = 0;
-
-            //echo "<pre>"; print_r($all['camp_name']); exit;
-
             if(!empty($liveCamps)){
                 foreach($liveCamps as $value){
                     if($value->camp_name == $all['camp_name']){
@@ -679,7 +679,6 @@ class TopicController extends Controller {
                     }
                 }
             }
-
             if(!empty($nonLiveCamps)){
                 foreach($nonLiveCamps as $value){
                     if($value->camp_name == $all['camp_name']){
@@ -779,6 +778,7 @@ class TopicController extends Controller {
         }
 
         if ($camp->save()) {
+            Session::flash('test_case_success', 'true');
 
             if ($eventtype == "CREATE") {
 
@@ -844,6 +844,7 @@ class TopicController extends Controller {
                 // }
                 
             }
+           
             Session::flash('success', $message);
         } else {
 

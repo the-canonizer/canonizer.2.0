@@ -22,6 +22,13 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
     ];
 });
 
+$factory->define(App\Model\Topic::class, function (Faker\Generator $faker) {
+    return [
+        'topic_name' => 'PHP unit Test Topic '.substr(str_shuffle('abcdefghipjlmnopqrstuvwwxyz'),0,5),
+        'submit_time' => time(),
+    ];
+});
+
 
 
 
