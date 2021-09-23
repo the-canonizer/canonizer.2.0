@@ -53,7 +53,7 @@
                 </div>
                 <div class="col-sm-2">
                     <div class="yellow-circle"></div>
-                    <div class="circle-txt">Not Live</div>
+                    <div class="circle-txt">In Review</div>
                 </div>
                 <div class="col-sm-2">
                     <div class="yellow-circle" style="background-color:#1514ed"></div>

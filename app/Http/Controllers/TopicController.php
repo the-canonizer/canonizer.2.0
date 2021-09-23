@@ -76,15 +76,16 @@ class TopicController extends Controller {
             //'note' => 'required'
         ];
 
-
+        /**
+         * @updated By Talentelgia
+         */
         $liveTopicData = Topic::select('topic.*')
                             ->join('camp','camp.topic_num','=','topic.topic_num')
                             ->where('camp.camp_name','=','Agreement')
                             ->where('topic_name', $all['topic_name'])
                             ->where('topic.objector_nick_id',"=",null)
                             ->whereRaw('topic.go_live_time in (select max(go_live_time) from topic where objector_nick_id is null and go_live_time < "' . time() . '" group by topic_num)')
-                            ->where('topic.go_live_time', '<=', time())
-                            
+                            ->where('topic.go_live_time', '<=', time())                            
                             ->latest('submit_time')
                             ->first();
         $nonLiveTopicData = Topic::select('topic.*')
@@ -97,6 +98,7 @@ class TopicController extends Controller {
                             ->first();
                      
         $message = [
+
             'topic_name.required' => 'Topic name is required.',
             'topic_name.max' => 'Topic name can not be more than 30 characters.',
             'topic_name.regex' => 'Topic name can only contain space and alphanumeric characters.',
@@ -114,11 +116,11 @@ class TopicController extends Controller {
             $validatorArray = ['objection_reason' => 'required|max:100','nick_name' => 'required'
             ];
         }
-        $validator = Validator::make($request->all(), $validatorArray, $message);
 
+        $validator = Validator::make($request->all(), $validatorArray, $message);
         if(isset($liveTopicData) && $liveTopicData!=null){
            $validator->after(function ($validator) use ($all,$liveTopicData){  
-            if (isset($all['topic_num'])) {  
+                if (isset($all['topic_num'])) {  
                     if($liveTopicData->topic_num != $all['topic_num']){
                        $validator->errors()->add('topic_name', 'The topic name has already been taken');
                     }
@@ -135,6 +137,7 @@ class TopicController extends Controller {
            $validator->after(function ($validator) use ($all,$nonLiveTopicData){  
             if (isset($all['topic_num'])) {  
                     if($nonLiveTopicData->topic_num != $all['topic_num']){
+
                        $validator->errors()->add('topic_name', 'The topic name has already been taken');
                     }
                     
@@ -634,6 +637,7 @@ class TopicController extends Controller {
      */
     public function store_camp(Request $request) {
         $all = $request->all();
+       //echo "<pre>"; print_r($all); exit;
         $currentTime = time();
         $messagesVal = [
             'camp_name.regex' => 'Camp name can only contain space and alphanumeric characters.',
@@ -667,16 +671,13 @@ class TopicController extends Controller {
         if($topicnum!=null){
 
             $old_parent_camps = Camp::getAllTopicCamp($topicnum);
-            //livecamps
+            /**
+             * @updated By Talentelgia
+             */
             $liveCamps = Camp::getAllLiveCampsInTopic($topicnum);
-            //non-live camps            
             $nonLiveCamps = Camp::getAllNonLiveCampsInTopic($topicnum);
-           // $camp_exists = 0;
             $camp_existsLive = 0;
             $camp_existsNL = 0;
-
-            //echo "<pre>"; print_r($all['camp_name']); exit;
-
             if(!empty($liveCamps)){
                 foreach($liveCamps as $value){
                     if($value->camp_name == $all['camp_name']){
@@ -688,7 +689,6 @@ class TopicController extends Controller {
                     }
                 }
             }
-
             if(!empty($nonLiveCamps)){
                 foreach($nonLiveCamps as $value){
                     if($value->camp_name == $all['camp_name']){
@@ -700,18 +700,6 @@ class TopicController extends Controller {
                     }
                 }
             }
-            /*if($old_parent_camps && $old_parent_camps != null){
-                foreach ($old_parent_camps as $key => $value) {
-                   if($value->camp_name == $all['camp_name']){
-                        if(isset($all['camp_num']) && array_key_exists('camp_num', $all) && $all['camp_num'] == $value->camp_num){
-                            $camp_exists = 0;
-                        }else{                 
-                             $camp_exists = 1;
-                        }
-                       
-                   }
-                }
-            }*/
             if($camp_existsLive || $camp_existsNL){
                $validator->after(function ($validator){
                      $validator->errors()->add('camp_name', 'The camp name has already been taken');
@@ -788,6 +776,7 @@ class TopicController extends Controller {
         }
 
         if ($camp->save()) {
+            Session::flash('test_case_success', 'true');
 
             if ($eventtype == "CREATE") {
 
@@ -855,6 +844,7 @@ class TopicController extends Controller {
                 // }
                 
             }
+           
             Session::flash('success', $message);
         } else {
 
