@@ -724,7 +724,7 @@ class SettingsController extends Controller
              $as_of_time = time();
              /** removing delegated support #702 **/
             if($delegate_nick_name_id !=0){
-                $currentDeglegateSupport = Support::where('topic_num', $topic_num)->where('delegate_nick_name_id',$delegate_nick_name_id)->whereRaw("(start < $as_of_time) and ((end = 0) or (end > $as_of_time))")->get();
+                $currentDeglegateSupport = Support::where('topic_num', $topic_num)->where('nick_name_id','=',$nick_name_id)->where('delegate_nick_name_id',$delegate_nick_name_id)->whereRaw("(start < $as_of_time) and ((end = 0) or (end > $as_of_time))")->get();
                 if(isset($currentDeglegateSupport) && count($currentDeglegateSupport) > 0){
                     foreach($currentDeglegateSupport as $spp){
                         $input['camp_num'] = $spp->camp_num;
