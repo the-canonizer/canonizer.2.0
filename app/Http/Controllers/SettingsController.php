@@ -512,7 +512,7 @@ class SettingsController extends Controller
              if(isset($data['delegated']) && count($data['delegated']) > 0 && $data['delegate_nick_name_id'] == 0){
                 foreach($data['delegated'] as $k=>$d){
                     if($d !=0){
-                        $support = Support::where('topic_num', $topic_num)->where('camp_num','=', $k)->where('delegate_nick_name_id','=',$d)->where('end', '=', 0)->get();
+                        $support = Support::where('topic_num', $topic_num)->where('camp_num','=', $k)->where('nick_name_id','=',$data['nick_name'])->where('delegate_nick_name_id','=',$d)->where('end', '=', 0)->get();
                         if($support && count($support)> 0 ){
                             $support[0]->end = time();
                             $support[0]->save();  
