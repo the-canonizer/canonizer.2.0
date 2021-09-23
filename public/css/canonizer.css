@@ -1482,7 +1482,17 @@ a.rgWT {
     ul.mainouter li .tp-title {
         margin-left: 5px;
     }
+    ul.lowermneu.canoalgo, .lowermneu.asof {
+        padding: 0 .5rem !important;
+    }
   }
+.videopodcast_div {
+    padding: 1rem;
+}
+
+.sameHeight #namespace {
+    margin-top: 1rem;
+}
 
   .Scolor-Pnl {
     font-size: 18px;
@@ -1503,10 +1513,7 @@ a.rgWT {
 }
 
 
-ul.lowermneu.canoalgo li, ul.lowermneu.canoalgo li ul,
-.lowermneu.asof li, .lowermneu.asof li ul {
-    padding: 0 1rem;
-}
+
 .tree li .parent .fa-arrow-down {
     font-size: 10px;
 }
