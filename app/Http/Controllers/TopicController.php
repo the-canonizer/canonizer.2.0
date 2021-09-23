@@ -958,8 +958,8 @@ class TopicController extends Controller {
 
             Mail::to(Auth::user()->email)->bcc(config('app.admin_bcc'))->send(new ThankToSubmitterMail(Auth::user(), $link,$data));
             }catch(\Swift_TransportException $e){
-                        throw new \Swift_TransportException($e);
-                    } 
+                throw new \Swift_TransportException($e);
+            } 
             // mail to direct supporters on new statement creation
             $directSupporter = Support::getAllDirectSupporters($statement->topic_num, $statement->camp_num);
             $subscribers = Camp::getCampSubscribers($statement->topic_num, $statement->camp_num);
@@ -1028,8 +1028,6 @@ class TopicController extends Controller {
             //     }
             // }
         }
-
-
         return redirect('statement/history/' . $statement->topic_num . '/' . $statement->camp_num)->with(['success' => $message, 'go_live_time' => $go_live_time]);
     }
 
