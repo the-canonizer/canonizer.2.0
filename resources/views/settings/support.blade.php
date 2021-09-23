@@ -1,5 +1,6 @@
 @extends('layouts.app')
 @section('content')
+
 <div class="page-titlePnl">
     <h1 class="page-title">Supported Camps</h1>
 </div> 
@@ -29,14 +30,16 @@
 					 
 					 <?php
 
+
 					  if(isset($childSupport) && !empty($childSupport) ) {
 					   foreach($childSupport as $supportData) { 
 					       $removedCampList[]=$supportData->camp->camp_num;
+						   $livecamp = \App\Model\Camp::getLiveCamp($supportData->topic_num,$supportData->camp_num,['nofilter'=>true]);
 					 ?>
  					  <div class="col-sm-12 column">   
 					   <div class="SpCmpBDY  support-sorter-element-child ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
 							
-                            <b>{{ $supportData->support_order }}. {{ $supportData->camp->camp_name }}</b><br/>                            
+                            <b>{{ $supportData->support_order }}. {{ $livecamp->camp_name }}</b><br/>                            
                        
                         
                         </div>
@@ -45,12 +48,14 @@
 					 <?php if(isset($parentSupport) && !empty($parentSupport) ) { 
 					 	foreach($parentSupport as $supportData) { 
 					       $removedCampList[]=$supportData->camp->camp_num;
+						   $livecamp = \App\Model\Camp::getLiveCamp($supportData->topic_num,$supportData->camp_num,['nofilter'=>true]);
+					
 					 ?>
  					  <div class="col-sm-12">   
 					   <div class="SpCmpBDY support-sorter-element-parent ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
                             
 							
-                            <b>{{ $supportData->support_order }} . {{ $supportData->camp->camp_name }}</b><br/>
+                            <b>{{ $supportData->support_order }} . {{ $livecamp->camp_name }}</b><br/>
                             
                        
                         
@@ -112,6 +117,7 @@
 					   <?php 
 					   		
                             $livecamp = \App\Model\Camp::getLiveCamp($support->topic_num,$support->camp_num,['nofilter'=>true]);
+
 					   ?>
 					  
                        <div class="col-sm-12 column">
@@ -127,7 +133,7 @@
 							<?php if(isset($topic->topic_num) && isset($supportedTopic->topic_num) &&  $topic->topic_num==$supportedTopic->topic_num) $lastsupportOrder++;
 								
 							?>
-							<span class="remove_camp">X</span>
+							<span rel="{{ $support->camp->camp_num }}" class="remove_camp">X</span>
                         
                            </div>
 					  </div>
@@ -141,12 +147,15 @@
 					 <div class="row column">
                        <?php $key = 0; 
                          $topicSupport = $supportedTopic->topic->Getsupports($supportedTopic->topic_num,[$supportedTopic->nick_name_id],['nofilter'=>true]);
-                        // echo "<pre>"; print_r($topicSupport); die;
                        ?>
 
 					   @foreach($topicSupport as $k=>$support)
-					   
+					    <?php 
+					   	$liveCamp = \App\Model\Camp::getLiveCamp($support->topic_num,$support->camp_num,['nofilter'=>true]);
+					   //	echo "<pre>"; print_r($liveCamp); die;
+					   ?>
 					   @if(!in_array($support->camp->camp_num,$removedCampList)) <?php $key = $key + 1; ?>
+
                        <div class="col-sm-12 column">
                             <div id="positions_{{ $support->support_id }}" class="SpCmpBDY  support-sorter-element ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
                             
@@ -160,7 +169,7 @@
 							<?php if(isset($topic->topic_num) && isset($supportedTopic->topic_num) &&  $topic->topic_num==$supportedTopic->topic_num) $lastsupportOrder++;
 								
 							?>
-							<span class="remove_camp">X</span>
+							<span rel="{{$support->camp->camp_num}}" class="remove_camp">X</span>
                         
                            </div>
 					  </div>
@@ -179,7 +188,7 @@
 							<input type="hidden" name="delegated[{{$camp->camp_num}}]" value="{{ $delegate_nick_name_id }}">
                             
                             <b><span class="support_order">{{ $key+1}} </span> . {{ $camp->camp_name }} <br/></b>
-                            <span class="remove_camp">X</span>
+                            <span rel="{{$camp->camp_num}}" class="remove_camp">X</span>
                             
                         	
                         
@@ -205,7 +214,7 @@
                             
                             <b><span class="support_order">{{ ++$lastsupportOrder }} </span> . {{ $camp->camp_name }} </b><br/>
 
-                            <span class="remove_camp">X</span>
+                            <span rel="{{ $camp->camp_num }}" class="remove_camp">X</span>
                             
                         <?php $lastsupportOrder++; ?>
                         
@@ -232,7 +241,7 @@
 					<input type="hidden" id="confirm_support" name="confirm_support" value="0">
 					@if(count($removedCampList) > 0)
 					 @foreach($removedCampList as $cmp)
-					 	<input type="hidden" id="removed_camp" name="removed_camp[]" value="{{$cmp}}">
+					 	<input type="hidden" name="removed_camp[]" value="{{$cmp}}">
 					 @endforeach
 					 @endif
                     <div class="row">
@@ -258,13 +267,19 @@
 						</div> 
                        
                     </div>
+                   	   <?php 
+                     		$btnFlag = 'none';
+                     	?>
                      @if(!Session::has('warning'))
                      	@if(Session::get('confirm') != 'samecamp')
-	                    	<button type="submit" id="submit" class="btn btn-login">Submit</button>
+                     	<?php 
+                     		$btnFlag = 'inline-block';
+                     	?>	                    	
 	                    @endif
                      <?php  
                      $link = \App\Model\Camp::getTopicCampUrl($topic->topic_num,session('campnum'));
                  	 ?>
+                 	<button  style="display:<?= $btnFlag; ?>" type="submit" id="submit"  class="btn btn-login">Submit</button>
 				    <a  class="btn btn-login" href="<?php echo $link; ?>">Cancel</a>
 				    @elseif(Session::get('confirm') != 'samecamp')
 					<div style="display:none">	
@@ -282,41 +297,59 @@
  </div></div>
 </div>  <!-- /.right-whitePnl-->
  <script>
-                $( function() {
-                    $( ".column" ).sortable({
-                        connectWith: ".column",
-                        cursor: 'move',
-                        opacity: 0.6,
-                        update: function(event, ui) {
-                        $( ".column" ).find('.support-sorter-element').each(function(i,v){
-                        	   console.log('i',i,'v',v);
-                                $(v).find('.support_order').text(i+1);
-								$(v).find('.final_support_order').val(i+1);
-                            });
-                        $( ".column" ).find('.support-sorter-element-child').each(function(i,v){
-                        	   console.log('i',i,'v',v);
-                                $(v).find('.support_order').text(i+1);
-								$(v).find('.final_support_order').val(i+1);
-                            });
-                         $( ".column" ).find('.support-sorter-element-parent').each(function(i,v){
-                        	   console.log('i',i,'v',v);
-                                $(v).find('.support_order').text(i+1);
-								$(v).find('.final_support_order').val(i+1);
-                            });
-                        } 
+ 	 jQuery.fn.preventDoubleSubmission = function() {
+              $(this).on('submit',function(e){
+                var $form = $(this);
+
+                if ($form.data('submitted') === true) {
+                  // Previously submitted - don't submit again
+                  e.preventDefault();
+                } else {
+                  // Mark it so that the next submit can be ignored
+                  $form.data('submitted', true);
+                }
+              });
+
+              // Keep chainability
+              return this;
+        };
+        $('form').preventDoubleSubmission();
+
+        $( function() {
+            $( ".column" ).sortable({
+                connectWith: ".column",
+                cursor: 'move',
+                opacity: 0.6,
+                update: function(event, ui) {
+                $( ".column" ).find('.support-sorter-element').each(function(i,v){
+                        $(v).find('.support_order').text(i+1);
+						$(v).find('.final_support_order').val(i+1);
+                    });
+                $( ".column" ).find('.support-sorter-element-child').each(function(i,v){
+                        $(v).find('.support_order').text(i+1);
+						$(v).find('.final_support_order').val(i+1);
+                    });
+                 $( ".column" ).find('.support-sorter-element-parent').each(function(i,v){
+                        $(v).find('.support_order').text(i+1);
+						$(v).find('.final_support_order').val(i+1);
+                    });
+                } 
+            });
+
+             $('.remove_camp').click(function(){
+             		var camp = $(this).attr('rel');
+             		$('#submit').show();
+             		$('#myTabContent').append('<input type="hidden"  name="removed_camp[]" value="'+camp+'">');
+                	$(this).parent(".support-sorter-element").remove();
+                	$( ".column" ).find('.support-sorter-element').each(function(i,v){
+                        $(v).find('.support_order').text(i+1);
+						$(v).find('.final_support_order').val(i+1);
                     });
 
-                     $('.remove_camp').click(function(){
-                        	$(this).parent(".support-sorter-element").remove();
-                        	$( ".column" ).find('.support-sorter-element').each(function(i,v){
-                                $(v).find('.support_order').text(i+1);
-								$(v).find('.final_support_order').val(i+1);
-                            });
-
-                        })
-                    
-                });
-                </script>
+                })
+            
+        });
+    </script>
     <script>
         $(document).ready(function () {
             $("#birthday").datepicker({

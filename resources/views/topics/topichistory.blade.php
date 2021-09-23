@@ -70,6 +70,7 @@
             if (!empty($topics)) {
                 $currentLive = 0;
                 $currentTime = time();
+                $ifIamDelegatedSupporter= 0;
                 foreach ($topics as $key => $data) {
                     $nickNamesData = \App\Model\Nickname::personNicknameArray();
                     $liveTopic = \App\Model\Topic::getLiveTopic($data->topic_num);
@@ -84,6 +85,14 @@
                             $ifIamSupporter = $support[0]->nick_name_id;
                           }
                       }
+                      $delegatedUsers = \App\Model\Support::where('topic_num',$data->topic_num)->where('delegate_nick_name_id','!=',0)->orderBy('support_order','ASC')->get();
+                        if(count($delegatedUsers) > 0){
+                            foreach ($delegatedUsers as $key => $value) {
+                                if(in_array($value->nick_name_id,$nickNamesData)){
+                                    $ifIamDelegatedSupporter =  $nickNamesData[array_search($value->nick_name_id,$nickNamesData,true)];
+                                }
+                            }
+                        }
                     $isagreeFlag = false;
                     $isGraceFlag = false;
                     $submittime = $data->submit_time;
@@ -155,7 +164,7 @@
                             @endif 	 				 
                         </div>    
                         <div class="CmpHistoryPnl-footer">
-        <?php if ($currentTime < $data->go_live_time && $currentTime >= $data->submit_time && $ifIamSupporter) { ?>
+        <?php if ($currentTime < $data->go_live_time && $currentTime >= $data->submit_time && ($ifIamSupporter || $ifIamDelegatedSupporter)) { ?>
                                 <a id="object" class="btn btn-historysmt" href="<?php echo url('manage/topic/' . $data->id . '-objection'); ?>">Object</a>
                             <?php } ?>  
                             <a id="update" class="btn btn-historysmt" href="<?php echo url('manage/topic/' . $data->id); ?>">Submit Topic Update Based On This</a>		
