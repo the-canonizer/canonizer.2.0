@@ -102,7 +102,7 @@ class TopicController extends Controller {
             'topic_name.required' => 'Topic name is required.',
             'topic_name.max' => 'Topic name can not be more than 30 characters.',
             'topic_name.regex' => 'Topic name can only contain space and alphanumeric characters.',
-            'namespace.required' => 'Namespace is required,',
+            'namespace.required' => 'Namespace is required.',
             'create_namespace.required_if' => 'The Other Namespace Name field is required when namespace is other.',
             'create_namespace.max' => 'The Other Namespace Name can not be more than 100 characters.',
             'nick_name.required' => 'Nick name is required.',
@@ -122,12 +122,12 @@ class TopicController extends Controller {
            $validator->after(function ($validator) use ($all,$liveTopicData){  
                 if (isset($all['topic_num'])) {  
                     if($liveTopicData->topic_num != $all['topic_num']){
-                       $validator->errors()->add('topic_name', 'The topic name has already been taken');
+                       $validator->errors()->add('topic_name', 'The topic name has already been taken.');
                     }
                     
                 }else{ 
                     if($liveTopicData && isset($liveTopicData['topic_name'])){
-                        $validator->errors()->add('topic_name', 'The topic name has already been taken');
+                        $validator->errors()->add('topic_name', 'The topic name has already been taken.');
                     }
 
                 }
@@ -138,12 +138,12 @@ class TopicController extends Controller {
             if (isset($all['topic_num'])) {  
                     if($nonLiveTopicData->topic_num != $all['topic_num']){
 
-                       $validator->errors()->add('topic_name', 'The topic name has already been taken');
+                       $validator->errors()->add('topic_name', 'The topic name has already been taken.');
                     }
                     
                 }else{ 
                     if($nonLiveTopicData && isset($nonLiveTopicData['topic_name'])){
-                        $validator->errors()->add('topic_name', 'The topic name has already been taken');
+                        $validator->errors()->add('topic_name', 'The topic name has already been taken.');
                     }
 
                 }
@@ -643,9 +643,9 @@ class TopicController extends Controller {
             'camp_name.regex' => 'Camp name can only contain space and alphanumeric characters.',
             'nick_name.required' => 'The nick name field is required.',
             'camp_name.required' => 'Camp name is required.',
-            'camp_name.max' => 'Camp name can not be more than 30 characters',
-            'camp_about_url.max' => "Camp's about url can not be more than 1024 characters",
-            'parent_camp_num.required' => 'The parent camp name is required',
+            'camp_name.max' => 'Camp name can not be more than 30 characters.',
+            'camp_about_url.max' => "Camp's about url can not be more than 1024 characters.",
+            'parent_camp_num.required' => 'The parent camp name is required.',
             'objection.required' => 'Objection reason is required.',
             'objection_reason.max' => 'Objection reason can not be more than 100.'
         ];
