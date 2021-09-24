@@ -43,14 +43,14 @@ class SettingsController extends Controller
         $private_flags = array();
         
         $messages = [
-            'first_name.required' => 'First name is required.',
-            'first_name.max' => 'First name can not be more than 100 characters.',
-            'first_name.regex' => 'First name can only contain space and alphabets.',
-            'last_name.required' => 'Last name is required.',
-            'last_name.max' => 'Last name can not be more than 100 characters.',
-            'last_name.regex' => 'Last name can only contain space and alphabets.',
-            'middle_name.regex' => 'Middle name can only contain space and alphabets',
-            'middle_name.max' => 'Middle name can not be more than 100 characters.',
+            'first_name.required' => 'The first name field is required.',
+            'first_name.max' => 'The first name can not be more than 100.',
+            'first_name.regex' => 'The first name must be in alphabets and space only.',
+            'last_name.required' => 'The last name field is required.',
+            'last_name.max' => 'The last name can not be more than 100.',
+            'last_name.regex' => 'The last name must be in alphabets and space only.',
+            'middle_name.regex' => 'The middle name must be in alphabets and space only.',
+            'middle_name.max' => 'The middle name can not be more than 100.',
         ];
         
 
