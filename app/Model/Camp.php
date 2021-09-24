@@ -1163,7 +1163,6 @@ class Camp extends Model {
                         ->where('camp_name', '!=', 'Agreement')
                         ->where('objector_nick_id', '=', NULL)
                         ->where('go_live_time',">",time())
-                        ->where('grace_period',"=",1)
                         ->groupBy('camp_num')
                         ->orderBy('submit_time', 'desc')
                         ->get();
