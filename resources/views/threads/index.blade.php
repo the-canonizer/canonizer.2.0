@@ -15,6 +15,7 @@
     <div class="panel panel-title">
       <h5>List of All Camp Threads</h5>
     </div>
+    @if(count($threads))
     <div>
       <a class="btn btn-primary" href="{{ URL::to('/')}}/forum/{{ $topicname }}/{{ $campnum }}/threads"> 
         All Threads
@@ -32,25 +33,17 @@
       <a class="btn btn-primary" href="{{ URL::to('/')}}/forum/{{ $topicname }}/{{ $campnum }}/threads?by=most_replies">
         Top 10 
       </a>
-
+      @endif
       <a class="btn btn-primary" href="{{ URL::to('/')}}/forum/{{ $topicname }}/{{ $campnum }}/threads/create"> 
         Create Thread 
       </a>
-
-      @endif
     </div>
+    @endif
     <br>
 
     <div class="panel-body">
-      <table class="table">
-
-        @if (count($threads) == 0)
-        <hr>
-        <p>No threads available for this topic.
-          Start <a href="{{ URL::to('/')}}/forum/{{ $topicname }}/{{ $campnum }}/threads/create">New Thread.
-          </a>
-        </p>
-        @endif
+      @if(count($threads) > 0)
+      <table class="table">       
         <thead>
           <th>Thread Name</th>
           <th>Replies</th>
@@ -79,8 +72,14 @@
           </tr>
           @endforeach
         </tbody>
-
       </table>
+      @else 
+        <hr>
+        <p>No threads available for this topic.
+          Start <a href="{{ URL::to('/')}}/forum/{{ $topicname }}/{{ $campnum }}/threads/create">New Thread.
+          </a>
+        </p>
+        @endif
       <!-- For Pagination -->
       @if (count($threads) > 0)
       {{ $threads->links() }}

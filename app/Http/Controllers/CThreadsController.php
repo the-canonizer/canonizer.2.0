@@ -44,7 +44,7 @@ class CThreadsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index($topicid, $topicname, $campnum)
-    {
+    { 
 
         if ((camp::where('camp_num', $campnum)->where('topic_num', $topicid)->value('camp_name')))
         {
