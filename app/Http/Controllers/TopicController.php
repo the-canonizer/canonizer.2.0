@@ -94,7 +94,6 @@ class TopicController extends Controller {
                             ->where('topic_name', $all['topic_name'])
                             ->where('topic.objector_nick_id',"=",null)
                             ->where('topic.go_live_time',">",time())
-                            ->where('topic.grace_period',"=",1)
                             ->first();
                      
         $message = [
