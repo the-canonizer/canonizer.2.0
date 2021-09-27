@@ -552,19 +552,20 @@ class TopicController extends Controller {
         $onecamp = Camp::getLiveCamp($topicnum, $campnum);
         $parentcamp = (count($onecamp)) ? Camp::campNameWithAncestors($onecamp, '',$topic->topic_name) : "n/a";
         $camps = Camp::getCampHistory($topicnum, $campnum);
-        //echo "<pre>"; print_r($camps); exit;
         $submit_time = (count($camps)) ? $camps[0]->submit_time: null;
         $parentcampnum = (isset($onecamp->parent_camp_num)) ? $onecamp->parent_camp_num : 0;
         $nickNames = null;
         $ifIamSupporter = null;
+        $ifSupportDelayed = NULL;
         if (Auth::check()) {
             $nickNames = Nickname::personNicknameArray();
             $ifIamSupporter = Support::ifIamSupporter($topicnum, $campnum, $nickNames,$submit_time);
+            $ifSupportDelayed = Support::ifIamSupporter($topicnum, $campnum, $nickNames,$submit_time,$delayed=true); //if support provided after Camp submitted for IN-Review
         }
 
         //if(!count($onecamp)) return back();
         $wiky = new Wiky;
-        return view('topics.camphistory', compact('topic', 'camps', 'parentcampnum', 'onecamp', 'parentcamp', 'wiky', 'ifIamSupporter','submit_time'));
+        return view('topics.camphistory', compact('topic', 'camps', 'parentcampnum', 'onecamp', 'parentcamp', 'wiky', 'ifIamSupporter','submit_time','ifSupportDelayed'));
     }
 
     /**
@@ -591,12 +592,14 @@ class TopicController extends Controller {
         $submit_time = (count($statement)) ? $statement[0]->submit_time: null; 
         $nickNames = null;
         $ifIamSupporter = null;
+        $ifSupportDelayed = null;
         if (Auth::check()) {
             $nickNames = Nickname::personNicknameArray();
             $ifIamSupporter = Support::ifIamSupporter($topicnum, $campnum, $nickNames,$submit_time);
+            $ifSupportDelayed = Support::ifIamSupporter($topicnum, $campnum, $nickNames,$submit_time, $delayed=true);
         }
         $wiky = new Wiky;
-        return view('topics.statementhistory', compact('topic', 'statement', 'parentcampnum', 'onecamp', 'parentcamp', 'wiky', 'ifIamSupporter','submit_time'));
+        return view('topics.statementhistory', compact('topic', 'statement', 'parentcampnum', 'onecamp', 'parentcamp', 'wiky', 'ifIamSupporter','submit_time','ifSupportDelayed'));
     }
 
     /**
@@ -621,12 +624,14 @@ class TopicController extends Controller {
         $wiky = new Wiky;
         $nickNames = null;
         $ifIamSupporter = null;
+        $ifSupportDelayed = null;
         if (Auth::check()) {
             $nickNames = Nickname::personNicknameArray();
             $ifIamSupporter = Support::ifIamSupporter($topicnum, 1, $nickNames,$submit_time);
+            $ifSupportDelayed = Support::ifIamSupporter($topicnum, 1, $nickNames,$submit_time,$delayed=true);
         }
 
-        return view('topics.topichistory', compact('topics', 'wiky', 'ifIamSupporter', 'topicnum','parentTopic','submit_time'));
+        return view('topics.topichistory', compact('topics', 'wiky', 'ifIamSupporter', 'topicnum','parentTopic','submit_time', 'ifSupportDelayed'));
     }
 
     /**
