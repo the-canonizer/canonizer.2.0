@@ -41,12 +41,16 @@ class ReplyController extends Controller
      */
     public function store($topicid, $topicname, $campnum, $threadId, request $request)
     {
-
+        $valMessages = [
+            'body.required' => 'Body field is required.',
+            'nick_name.required' => 'Nick name field is required.',
+        ];
          $this->validate(
              $request, [
                 'body' => 'required',
                 'nick_name' => 'required'
-             ]
+             ],
+             $valMessages
          );
         /**
         * The below code is used to save the data into the database.

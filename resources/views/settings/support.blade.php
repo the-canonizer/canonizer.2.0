@@ -1,5 +1,6 @@
 @extends('layouts.app')
 @section('content')
+
 <div class="page-titlePnl">
     <h1 class="page-title">Supported Camps</h1>
 </div> 
@@ -33,12 +34,12 @@
 					  if(isset($childSupport) && !empty($childSupport) ) {
 					   foreach($childSupport as $supportData) { 
 					       $removedCampList[]=$supportData->camp->camp_num;
-
+						   $livecamp = \App\Model\Camp::getLiveCamp($supportData->topic_num,$supportData->camp_num,['nofilter'=>true]);
 					 ?>
  					  <div class="col-sm-12 column">   
 					   <div class="SpCmpBDY  support-sorter-element-child ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
 							
-                            <b>{{ $supportData->support_order }}. {{ $supportData->camp->camp_name }}</b><br/>                            
+                            <b>{{ $supportData->support_order }}. {{ $livecamp->camp_name }}</b><br/>                            
                        
                         
                         </div>
@@ -47,12 +48,14 @@
 					 <?php if(isset($parentSupport) && !empty($parentSupport) ) { 
 					 	foreach($parentSupport as $supportData) { 
 					       $removedCampList[]=$supportData->camp->camp_num;
+						   $livecamp = \App\Model\Camp::getLiveCamp($supportData->topic_num,$supportData->camp_num,['nofilter'=>true]);
+					
 					 ?>
  					  <div class="col-sm-12">   
 					   <div class="SpCmpBDY support-sorter-element-parent ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
                             
 							
-                            <b>{{ $supportData->support_order }} . {{ $supportData->camp->camp_name }}</b><br/>
+                            <b>{{ $supportData->support_order }} . {{ $livecamp->camp_name }}</b><br/>
                             
                        
                         

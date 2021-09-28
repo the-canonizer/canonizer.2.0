@@ -39,7 +39,7 @@
                 </div>
                 <div class="col-sm-2">
                     <div class="yellow-circle"></div>
-                    <div class="circle-txt">Not Live</div>
+                    <div class="circle-txt">In Review</div>
                 </div>
                 <div class="col-sm-2">
                     <div class="yellow-circle" style="background-color:#1514ed"></div>
@@ -62,7 +62,6 @@
                     $ifIamDelegatedSupporter = 0;
                     foreach ($camps as $key => $data) {
                         $liveCamp = \App\Model\Camp::getLiveCamp($data->topic_num,$data->camp_num);
-                        // $delegatedSupport = App\Model\Support::where('delegate_nick_name_id',)
                         $isagreeFlag = false;
                         $isGraceFlag = false;
                         $submittime = $data->submit_time;
@@ -109,10 +108,15 @@
                             }
                          if(!$ifSupportingThisCamp){
                           $camp = \App\Model\Camp::where('camp_num','=',$data->camp_num)->where('topic_num','=',$data->topic_num)->get();
-                          $delegatedUsers = \App\Model\Support::where('topic_num',$data->topic_num)->whereIn('delegate_nick_name_id',$nickNamesData)->orderBy('support_order','ASC')->first();
-                          if(count($camp) > 0 && $camp[0]->submitter_nick_id == $delegatedUsers->nick_name_id){
-                            $ifIamDelegatedSupporter =  $delegatedUsers->delegate_nick_name_id;
+                          $delegatedUsers = \App\Model\Support::where('topic_num',$data->topic_num)->where('delegate_nick_name_id','!=',0)->orderBy('support_order','ASC')->get();
+                          if(count($delegatedUsers) > 0){
+                              foreach ($delegatedUsers as $key => $value) {
+                                  if(in_array($value->nick_name_id,$nickNamesData)){
+                                        $ifIamDelegatedSupporter =  $nickNamesData[array_search($value->nick_name_id,$nickNamesData,true)];
+                                  }
+                              }
                           }
+                          
                           $allChildren = \App\Model\Camp::getAllChildCamps($camp[0]);
                           if(sizeof($allChildren) > 0 ){
                           foreach($allChildren as $campnum){

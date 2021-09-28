@@ -2,29 +2,29 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Foundation\Auth\RedirectsUsers;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Http\Request;
-use App\Library\General;
-use App\Library\Wiky;
-//use App\Library\Wikiparser\wikiParser;
-use App\Model\Topic;
-use App\Model\Camp;
-use App\Model\Statement;
-use App\Model\Nickname;
-use App\Model\Support;
 use DB;
 use Validator;
-use App\Model\Namespaces;
-use App\Model\NamespaceRequest;
-use Illuminate\Support\Facades\Mail;
-use App\Mail\ThankToSubmitterMail;
-use App\Mail\PurposedToSupportersMail;
-use App\Mail\ObjectionToSubmitterMail;
-use App\Mail\NewDelegatedSupporterMail;
-use App\Model\ChangeAgreeLog;
+use App\Model\Camp;
+use App\Model\Topic;
+use App\Library\Wiky;
+use App\Model\Support;
+//use App\Library\Wikiparser\wikiParser;
 use App\Model\NewsFeed;
+use App\Model\Nickname;
+use App\Library\General;
+use App\Model\Statement;
+use App\Model\Namespaces;
+use Illuminate\Http\Request;
+use App\Model\ChangeAgreeLog;
+use App\Model\NamespaceRequest;
+use App\Mail\ThankToSubmitterMail;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ObjectionToSubmitterMail;
+use App\Mail\PurposedToSupportersMail;
+use App\Mail\NewDelegatedSupporterMail;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Foundation\Auth\RedirectsUsers;
 
 /**
  * TopicController Class Doc Comment
@@ -75,18 +75,38 @@ class TopicController extends Controller {
             'nick_name' => 'required'
             //'note' => 'required'
         ];
-         
-     $oldTopicData = Topic::select('topic.*')
+
+        /**
+         * @updated By Talentelgia
+         */
+        $liveTopicData = Topic::select('topic.*')
                             ->join('camp','camp.topic_num','=','topic.topic_num')
                             ->where('camp.camp_name','=','Agreement')
-                             ->where('topic_name', $all['topic_name'])
-                             ->where('topic.objector_nick_id',"=",null)
-                             ->latest('submit_time')
-                             ->first();
+                            ->where('topic_name', $all['topic_name'])
+                            ->where('topic.objector_nick_id',"=",null)
+                            ->whereRaw('topic.go_live_time in (select max(go_live_time) from topic where objector_nick_id is null and go_live_time < "' . time() . '" group by topic_num)')
+                            ->where('topic.go_live_time', '<=', time())                            
+                            ->latest('submit_time')
+                            ->first();
+        $nonLiveTopicData = Topic::select('topic.*')
+                            ->join('camp','camp.topic_num','=','topic.topic_num')
+                            ->where('camp.camp_name','=','Agreement')
+                            ->where('topic_name', $all['topic_name'])
+                            ->where('topic.objector_nick_id',"=",null)
+                            ->where('topic.go_live_time',">",time())
+                            ->first();
+                     
         $message = [
-            'topic_name.regex' => 'Topic name must only contain space and alphanumeric characters.',
+
+            'topic_name.required' => 'Topic name is required.',
+            'topic_name.max' => 'Topic name can not be more than 30 characters.',
+            'topic_name.regex' => 'Topic name can only contain space and alphanumeric characters.',
+            'namespace.required' => 'Namespace is required.',
             'create_namespace.required_if' => 'The Other Namespace Name field is required when namespace is other.',
-            'create_namespace.max' => 'The Other Namespace Name may not be greater than 100 characters.'
+            'create_namespace.max' => 'The Other Namespace Name can not be more than 100 characters.',
+            'nick_name.required' => 'Nick name is required.',
+            'objection_reason.required' => 'Objection reason is required.',
+            'objection_reason.max' => 'Objection reason can not be more than 100.'
         ];
 
         $objection = '';
@@ -95,17 +115,34 @@ class TopicController extends Controller {
             $validatorArray = ['objection_reason' => 'required|max:100','nick_name' => 'required'
             ];
         }
-         $validator = Validator::make($request->all(), $validatorArray, $message);
-        if(isset($oldTopicData) && $oldTopicData!=null){
-           $validator->after(function ($validator) use ($all,$oldTopicData){  
-            if (isset($all['topic_num'])) {  
-                    if($oldTopicData->topic_num != $all['topic_num']){
-                       $validator->errors()->add('topic_name', 'The topic name has already been taken');
+
+        $validator = Validator::make($request->all(), $validatorArray, $message);
+        if(isset($liveTopicData) && $liveTopicData!=null){
+           $validator->after(function ($validator) use ($all,$liveTopicData){  
+                if (isset($all['topic_num'])) {  
+                    if($liveTopicData->topic_num != $all['topic_num']){
+                       $validator->errors()->add('topic_name', 'The topic name has already been taken.');
                     }
                     
                 }else{ 
-                    if($oldTopicData && isset($oldTopicData['topic_name'])){
-                        $validator->errors()->add('topic_name', 'The topic name has already been taken');
+                    if($liveTopicData && isset($liveTopicData['topic_name'])){
+                        $validator->errors()->add('topic_name', 'The topic name has already been taken.');
+                    }
+
+                }
+            }); 
+        }
+        if(isset($nonLiveTopicData) && $nonLiveTopicData!=null){
+           $validator->after(function ($validator) use ($all,$nonLiveTopicData){  
+            if (isset($all['topic_num'])) {  
+                    if($nonLiveTopicData->topic_num != $all['topic_num']){
+
+                       $validator->errors()->add('topic_name', 'The topic name has already been taken.');
+                    }
+                    
+                }else{ 
+                    if($nonLiveTopicData && isset($nonLiveTopicData['topic_name'])){
+                        $validator->errors()->add('topic_name', 'The topic name has already been taken.');
                     }
 
                 }
@@ -253,6 +290,8 @@ class TopicController extends Controller {
                 $data['nick_name'] = $nickName->nick_name;
                 $data['forum_link'] = 'forum/' . $topic->topic_num . '-' . $liveTopic->topic_name . '/1/threads';
                 $data['subject'] = $data['nick_name'] . " has objected to your proposed change.";
+                $data['help_link'] = General::getDealingWithDisagreementUrl();
+
                 $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
                 try{
                  Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new ObjectionToSubmitterMail($user, $link, $data));
@@ -324,7 +363,6 @@ class TopicController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function show($id, $parentcampnum = 1) {
-
         $topicnumArray = explode("-", $id);
         $topicnum = $topicnumArray[0];
         if(Auth::user() && Auth::user()->id){
@@ -513,6 +551,7 @@ class TopicController extends Controller {
         $onecamp = Camp::getLiveCamp($topicnum, $campnum);
         $parentcamp = (count($onecamp)) ? Camp::campNameWithAncestors($onecamp, '',$topic->topic_name) : "n/a";
         $camps = Camp::getCampHistory($topicnum, $campnum);
+        //echo "<pre>"; print_r($camps); exit;
         $submit_time = (count($camps)) ? $camps[0]->submit_time: null;
         $parentcampnum = (isset($onecamp->parent_camp_num)) ? $onecamp->parent_camp_num : 0;
         $nickNames = null;
@@ -597,29 +636,30 @@ class TopicController extends Controller {
      */
     public function store_camp(Request $request) {
         $all = $request->all();
+       //echo "<pre>"; print_r($all); exit;
         $currentTime = time();
         $messagesVal = [
-            'camp_name.regex' => 'Camp name must only contain space and alphanumeric characters.',
+            'camp_name.regex' => 'Camp name can only contain space and alphanumeric characters.',
             'nick_name.required' => 'The nick name field is required.',
             'camp_name.required' => 'Camp name is required.',
+            'camp_name.max' => 'Camp name can not be more than 30 characters.',
+            'camp_about_url.max' => "Camp's about url can not be more than 1024 characters.",
+            'parent_camp_num.required' => 'The parent camp name is required.',
+            'objection.required' => 'Objection reason is required.',
+            'objection_reason.max' => 'Objection reason can not be more than 100.'
         ];
         $validator = Validator::make($request->all(), [
-                    'nick_name' => 'required',
-                    'camp_name' => 'required|max:30|regex:/^[a-zA-Z0-9\s]+$/',
-                    'camp_about_url' => 'max:1024'
-                   // 'note' => 'required',
+            'nick_name' => 'required',
+            'camp_name' => 'required|max:30|regex:/^[a-zA-Z0-9\s]+$/',
+            'camp_about_url' => 'max:10',
+            'parent_camp_num' => 'required'
+            // 'note' => 'required',
         ],$messagesVal);
         
 		session(['filter'=>'removed']);
         $objection = '';
         if (isset($all['objection']) && $all['objection'] == 1) {
-            $objection = 1;
-            $messagesVal = [
-            'camp_name.regex' => 'Camp name must only contain space and alphanumeric characters.',
-            'nick_name.required' => 'The nick name field is required.',
-            'camp_name.required' => 'Camp name is required.',
-            'objection.required' => 'Objection reason is required.',
-        ];
+            $objection = 1;            
             $validator = Validator::make($request->all(), [
                         'nick_name' => 'required',
                         'camp_name' => 'required|max:30|regex:/^[a-zA-Z0-9\s]+$/',
@@ -630,20 +670,36 @@ class TopicController extends Controller {
         if($topicnum!=null){
 
             $old_parent_camps = Camp::getAllTopicCamp($topicnum);
-            $camp_exists = 0;
-            if($old_parent_camps && $old_parent_camps != null){
-                foreach ($old_parent_camps as $key => $value) {
-                   if($value->camp_name == $all['camp_name']){
+            /**
+             * @updated By Talentelgia
+             */
+            $liveCamps = Camp::getAllLiveCampsInTopic($topicnum);
+            $nonLiveCamps = Camp::getAllNonLiveCampsInTopic($topicnum);
+            $camp_existsLive = 0;
+            $camp_existsNL = 0;
+            if(!empty($liveCamps)){
+                foreach($liveCamps as $value){
+                    if($value->camp_name == $all['camp_name']){
                         if(isset($all['camp_num']) && array_key_exists('camp_num', $all) && $all['camp_num'] == $value->camp_num){
-                            $camp_exists = 0;
+                            $camp_existsLive = 0;
                         }else{
-                             $camp_exists = 1;
+                            $camp_existsLive = 1;
                         }
-                       
-                   }
+                    }
                 }
             }
-            if($camp_exists){
+            if(!empty($nonLiveCamps)){
+                foreach($nonLiveCamps as $value){
+                    if($value->camp_name == $all['camp_name']){
+                        if(isset($all['camp_num']) && array_key_exists('camp_num', $all) && $all['camp_num'] == $value->camp_num){
+                            $camp_existsNL = 0;
+                        }else{ 
+                             $camp_existsNL = 1;
+                        }
+                    }
+                }
+            }
+            if($camp_existsLive || $camp_existsNL){
                $validator->after(function ($validator){
                      $validator->errors()->add('camp_name', 'The camp name has already been taken');
                 }); 
@@ -719,6 +775,7 @@ class TopicController extends Controller {
         }
 
         if ($camp->save()) {
+            Session::flash('test_case_success', 'true');
 
             if ($eventtype == "CREATE") {
 
@@ -750,6 +807,8 @@ class TopicController extends Controller {
                 $data['type'] = "Camp";
                 $data['object_type'] = ""; 
                 $data['object'] = $livecamp->topic->topic_name."/".$livecamp->camp_name;
+                $data['help_link'] = General::getDealingWithDisagreementUrl();
+
                 //$data['type'] = 'camp'; 
                 $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
                 try{
@@ -784,6 +843,7 @@ class TopicController extends Controller {
                 // }
                 
             }
+           
             Session::flash('success', $message);
         } else {
 
@@ -807,21 +867,27 @@ class TopicController extends Controller {
         $all = $request->all();
 
         $currentTime = time();
+        $messagesVal = [
+            'statement.required' => 'The statement field is required.',
+            'nick_name.required' => 'The nick name field is required.',
+            'objection.required' => 'Objection reason is required.',
+            'objection_reason.max' => 'Objection reason can not be more than 100.'
+        ];
         $validator = Validator::make($request->all(), [
                     'statement' => 'required',
                     //'note' => 'required',
                     'nick_name' => 'required'
-        ]);
+        ], $messagesVal);
+        
         if (isset($all['objection']) && $all['objection'] == 1) {
             $validator = Validator::make($request->all(), [
                         'nick_name' => 'required',
                         'objection_reason' => 'required|max:100',
-            ]);
+            ], $messagesVal);
         }
         if ($validator->fails()) {
             return back()->withErrors($validator->errors())->withInput($request->all());
         }
-
 
         $go_live_time = $currentTime;
         $statement = new Statement();
@@ -885,8 +951,8 @@ class TopicController extends Controller {
 
             Mail::to(Auth::user()->email)->bcc(config('app.admin_bcc'))->send(new ThankToSubmitterMail(Auth::user(), $link,$data));
             }catch(\Swift_TransportException $e){
-                        throw new \Swift_TransportException($e);
-                    } 
+                throw new \Swift_TransportException($e);
+            } 
             // mail to direct supporters on new statement creation
             $directSupporter = Support::getAllDirectSupporters($statement->topic_num, $statement->camp_num);
             $subscribers = Camp::getCampSubscribers($statement->topic_num, $statement->camp_num);
@@ -908,6 +974,7 @@ class TopicController extends Controller {
 
             $user = Nickname::getUserByNickName($all['submitter']);
             $livecamp = Camp::getLiveCamp($statement->topic_num,$statement->camp_num);
+            
             //$link = 'topic/' . $statement->topic_num . '/1';
             $link = 'statement/history/' . $statement->topic_num . '/' . $statement->camp_num;
             //$data['object'] = $statement->statement;
@@ -920,12 +987,14 @@ class TopicController extends Controller {
             $data['nick_name'] = $nickName->nick_name;
             $data['forum_link'] = 'forum/' . $statement->topic_num . '-statement/' . $statement->camp_num . '/threads';
             $data['subject'] = $data['nick_name'] . " has objected to your proposed change.";
+            $data['help_link'] = General::getDealingWithDisagreementUrl();
+
             $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
             try{
                 Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new ObjectionToSubmitterMail($user, $link, $data));
             }catch(\Swift_TransportException $e){
-                        throw new \Swift_TransportException($e);
-                    } 
+                throw new \Swift_TransportException($e);
+            } 
         } else if ($eventtype == "UPDATE") {
 
             $directSupporter = Support::getAllDirectSupporters($statement->topic_num, $statement->camp_num);
@@ -952,8 +1021,6 @@ class TopicController extends Controller {
             //     }
             // }
         }
-
-
         return redirect('statement/history/' . $statement->topic_num . '/' . $statement->camp_num)->with(['success' => $message, 'go_live_time' => $go_live_time]);
     }
 
@@ -1087,8 +1154,6 @@ class TopicController extends Controller {
           Session::flash('success', "Your agreement to topic submitted successfully");
         }
 
-
-        
         return back();
     }
 

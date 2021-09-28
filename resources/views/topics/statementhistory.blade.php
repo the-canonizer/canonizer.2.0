@@ -39,7 +39,7 @@
             </div>
             <div class="col-sm-2">
                 <div class="yellow-circle"></div>
-                <div class="circle-txt">Not Live</div>
+                <div class="circle-txt">In Review</div>
             </div>
 			<div class="col-sm-2">
                 <div class="yellow-circle" style="background-color:#1514ed"></div>
@@ -55,23 +55,23 @@
 			        if(!empty($statement)) { 
 			            $currentLive = 0; 
 				          $currentTime = time();
-                                    
+                          $ifIamDelegatedSupporter = 0;             
                       $stmentLength = count($statement);                  
 			         foreach($statement as $key=>$data) { 
 						   $isagreeFlag = false;
-               $isGraceFlag = false;
-               $liveStatement = \App\Model\Statement::getLiveStatement($data->topic_num,$data->camp_num);
-               $camp = \App\Model\Camp::where('camp_num','=',$data->camp_num)->where('topic_num','=',$data->topic_num)->get();
-                $nickNamesData = \App\Model\Nickname::personNicknameArray();
-                $supported_camps = [];
-                if(sizeof($nickNamesData) > 0){
-                  foreach ($nickNamesData as $key => $value) {
-                       $nickName = \App\Model\Nickname::find($value);
-                       $supported_camp = $nickName->getSupportCampList();
-                       $supported_camps = array_merge($supported_camps,$supported_camp);
-                  }
-                }
-               $ifSupportingThisCampOrChild = 0;
+                        $isGraceFlag = false;
+                        $liveStatement = \App\Model\Statement::getLiveStatement($data->topic_num,$data->camp_num);
+                        $camp = \App\Model\Camp::where('camp_num','=',$data->camp_num)->where('topic_num','=',$data->topic_num)->get();
+                        $nickNamesData = \App\Model\Nickname::personNicknameArray();
+                        $supported_camps = [];
+                         if(sizeof($nickNamesData) > 0){
+                            foreach ($nickNamesData as $key => $value) {
+                                $nickName = \App\Model\Nickname::find($value);
+                                $supported_camp = $nickName->getSupportCampList();
+                                $supported_camps = array_merge($supported_camps,$supported_camp);
+                            }
+                        }
+                $ifSupportingThisCampOrChild = 0;
                 if(isset($supported_camps) && sizeof($supported_camps) > 0){ 
                      foreach ($supported_camps as $key => $value) {
                          if($key == $data->topic_num){
@@ -93,6 +93,14 @@
                 }
 
                 if(!$ifSupportingThisCampOrChild){
+                $delegatedUsers = \App\Model\Support::where('topic_num',$data->topic_num)->where('delegate_nick_name_id','!=',0)->orderBy('support_order','ASC')->get();
+                        if(count($delegatedUsers) > 0){
+                            foreach ($delegatedUsers as $key => $value) {
+                                if(in_array($value->nick_name_id,$nickNamesData)){
+                                    $ifIamDelegatedSupporter =  $nickNamesData[array_search($value->nick_name_id,$nickNamesData,true)];
+                                }
+                            }
+                        }
                   $camp = \App\Model\Camp::where('camp_num','=',$data->camp_num)->where('topic_num','=',$data->topic_num)->get();
                   $allChildren = \App\Model\Camp::getAllChildCamps($camp[0]);
                   if(sizeof($allChildren) > 0 ){
@@ -211,7 +219,7 @@
                   @endif 
 				  
 				 <div class="CmpHistoryPnl-footer">
-				  <?php if($currentTime < $data->go_live_time && $currentTime >= $data->submit_time && $ifIamSupporter) { ?>
+				  <?php if($currentTime < $data->go_live_time && $currentTime >= $data->submit_time && ($ifIamSupporter || $ifIamDelegatedSupporter)) { ?>
             <a id="object" class="btn btn-historysmt" href="<?php echo url('manage/statement/'.$data->id.'-objection');?>">Object</a>
           <?php } ?>	
 					<a id="update" class="btn btn-historysmt" href="<?php echo url('manage/statement/'.$data->id);?>">Submit Statement Update Based On This</a>
