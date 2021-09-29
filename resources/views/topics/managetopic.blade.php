@@ -71,7 +71,7 @@
              </div> 
 			<div class="form-group">
                 <label for="topic name">Topic Name ( Limit 30 Chars ) <span style="color:red">*</span></label>
-                <input type="text" name="topic_name" onkeydown="restrictTextField(event,30)" class="form-control" id="topic_name" value="{{ $topic->topic_name}}">
+                <input type="text" name="topic_name" onkeydown="restrictTextField(event,30)" class="form-control" id="topic_name" value="{{ $topic->topic_name}}" <?php if($objection=="objection") { ?> readonly="true" <?php } ?>>
 				@if ($errors->has('topic_name')) <p class="help-block">{{ $errors->first('topic_name') }}</p> @endif
             </div> 
 			<?php if($objection=="objection") { ?>			
