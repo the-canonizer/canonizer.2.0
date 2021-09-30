@@ -279,7 +279,6 @@ class TopicSupport extends Model {
           
             $query->orderBy('start','DESC')->select(['support_order','camp_num','topic_num','nick_name_id','delegate_nick_name_id']);
             $data = $query->get();
-			
             session(["topic-support-tree-$topicnum"=>$data]);
         }
        
