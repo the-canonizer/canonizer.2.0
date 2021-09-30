@@ -67,9 +67,14 @@ class ResetPasswordController extends Controller {
 			// send help link in email
 			//$link = 'topic/38-Canonized-help-statement-text/1';
 			$link = 'topic/132-Help/1';
+            try{
+                
 			Mail::to($user->email)->send(new RecoverAccountMail($user,$link));
 			
             return $this->sendResetResponse("Password Reset Successfully");
+            }catch(\Swift_TransportException $e){
+                            throw new \Swift_TransportException($e);
+                        } 
         }
 
 

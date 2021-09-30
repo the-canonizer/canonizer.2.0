@@ -15,7 +15,9 @@
            <link href="{{ URL::asset('/select2/dist/css/select2.min.css') }}" rel="stylesheet">
 
         <link href="{{ URL::asset('/font-awesome/css/font-awesome.min.css') }}" rel="stylesheet" type="text/css">
+        <link rel="stylesheet" type="text/css" href="{{URL::asset('/js/jquery-ui/jquery-ui.css')}}" />
          <script src="{{ URL::asset('/js/jquery.min.js') }}"></script>
+         <script src="{{ URL::asset('/js/jquery-ui/jquery-ui.js')}}"></script>
          <script src="{{ URL::asset('/ckeditor/ckeditor.js') }}"></script>
           <script src="{{ URL::asset('/select2/dist/js/select2.min.js') }}"></script>
        
@@ -81,7 +83,10 @@
          </div>
       </footer>
 <script>
-    
+     function submitForm(e){
+            $('button[type="submit"]').attr('disabled','disabled');
+            return true;
+        }
     function restrictTextField(e,limitlength){
     var charLength = $(e.target).val().length;
      if (charLength >= limitlength  && e.keyCode !== 46 && e.keyCode !== 8 ) {

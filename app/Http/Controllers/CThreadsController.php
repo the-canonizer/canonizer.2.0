@@ -223,8 +223,9 @@ class CThreadsController extends Controller
                                 where('topic_id', $topicid)->
                                 where('title', $request->{'title'})->get();
         $messagesVal = [
-            'title.regex' => 'Title must only contain space and alphanumeric characters.',
+            'title.regex' => 'Title can only contain space and alphanumeric characters.',
             'title.required' => 'Title is required.',
+            'title.max' => 'Title can not be more than 100 characters.',
             'nick_name.required' => 'The nick name field is required.',
         ];
           $this->validate(
@@ -274,7 +275,7 @@ class CThreadsController extends Controller
         return view(
             'threads.show',
              $topic, [
-                'parentcamp'       => Camp::campNameWithAncestors($camp,'',$topicname),
+                'parentcamp'    => Camp::campNameWithAncestors($camp,'',$topicname),
                 'userNicknames' => (auth()->check()) ? Nickname::topicNicknameUsed($topicid) : array(),
                 'threads' => CThread::findOrFail($CThread),
                 'replies' => CThread::findOrFail($CThread)->replies()->paginate(10),
@@ -302,6 +303,7 @@ class CThreadsController extends Controller
 
     public function save_title(Request $request, $topicName, $campNum, $threadId) {
 
+
         $campArr = preg_split("/[-]/", $campNum);
         $topicArr = preg_split("/[-]/", $topicName);
 
@@ -321,6 +323,7 @@ class CThreadsController extends Controller
                 ],
             ], $messagesVal
           );
+
 
           $title = request('title');
           DB::update('update thread set title =? where id = ?', [$title, $threadId]);

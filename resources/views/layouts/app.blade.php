@@ -281,6 +281,14 @@
         @show
 
         <div class="content-wrapper">
+            <?php if(config('app.env') !== "production" && Auth::check()) { ?>
+            <p class="alert alert-warning col-md-12">This is not the live system. Any data submitted here is for testing purposes only and will be lost. Please go to <a href="https://canonizer.com" target="_blank">canonizer.com</a></p>
+        <?php } ?>
+            @if(session()->has('mailerror'))
+                <div class="alert alert-danger">
+                    {{ session()->get('mailerror') }}
+                </div>
+            @endif
             @yield('content')
         <div id="google_ads" class="homeADDright">
 			@include('partials.advertisement')
@@ -296,18 +304,25 @@
         </div>
     </div>
     <script>
+        
+        $('button[type="submit"]').removeAttr('disabled');
+          function submitForm(e){            
+            $('button[type="submit"]').attr('disabled','disabled');
+            return true;
+        }
         function topFunction() {
             document.body.scrollTop = 0;
             document.documentElement.scrollTop = 0;
         }
+     
 
-function restrictTextField(e,limitlength){
-    var charLength = $(e.target).val().length;
-     if (charLength >= limitlength  && e.keyCode !== 46 && e.keyCode !== 8 ) {
-           e.preventDefault();
-           $(e.target).val($(e.target).val().substring(0,limitlength));
-    }
-}
+        function restrictTextField(e,limitlength){
+            var charLength = $(e.target).val().length;
+             if (charLength >= limitlength  && e.keyCode !== 46 && e.keyCode !== 8 ) {
+                   e.preventDefault();
+                   $(e.target).val($(e.target).val().substring(0,limitlength));
+            }
+        }
         $(document).ready(function () {
 
             $.ajaxSetup({

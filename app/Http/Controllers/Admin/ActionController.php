@@ -13,11 +13,11 @@ class ActionController extends Controller
   
    public function copydatabase(){
    		ini_set('max_execution_time', 0);
-   		$dbhost = 'canoniser-db.czjgaatug9jz.us-east-2.rds.amazonaws.com';
-		$dbuser = 'dbinstanceuser';
-		$dbpass = '!C+4niZ3rDB!2329#';
-		$dbname = 'production';
-		$dbport = '3306';
+   		$dbhost = getenv('PDB_HOST');
+		$dbuser = getenv('PDB_USER');
+		$dbpass = getenv('PDB_PASS');
+		$dbname = getenv('PDB_NAME');
+		$dbport = getenv('PDB_PORT');
 		$dbexportPath = "$dbname.sql";
 		if(function_exists('exec')) {
 			
@@ -46,11 +46,11 @@ class ActionController extends Controller
 	}
 
 	public function importDatabase($file){
-		$dbhost = 'canoniser-db.czjgaatug9jz.us-east-2.rds.amazonaws.com';
-		$dbuser = 'dbinstanceuser';
-		$dbpass = '!C+4niZ3rDB!2329#';
-		$dbname = 'staging';
-		$dbport = '3306';
+		$dbhost = getenv('SGDB_HOST');
+		$dbuser = getenv('SGDB_USER');
+		$dbpass = getenv('SGDB_PASS');
+		$dbname = getenv('SGDB_NAME');
+		$dbport = getenv('SGDB_PORT');
 		$query = "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME =  '$dbname'";
         $db = DB::select($query);
         $link = mysqli_connect($dbhost, $dbuser, $dbpass);

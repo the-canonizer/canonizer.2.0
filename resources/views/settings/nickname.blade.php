@@ -38,6 +38,7 @@
            <thead class="thead-default">
               <tr>
                 <th>Sr.No</th>
+                <th>Unique Number</th>
                 <th>Nick Name</th>
                 <th>Visibility Status</th>
                 <!--th>Manage Actions</th-->
@@ -47,6 +48,7 @@
                  @foreach($nicknames as $k=>$nickname)
                    <tr>
                        <th scope="row">{{ $k+1 }}</th>
+                       <td>{{ $nickname->id }}</td>
                        <td>{{ $nickname->nick_name}}</td>
                        <td>{{ ($nickname->private == 1) ? 'Private' : 'Public'}}</td>
                        <!--td>
@@ -59,15 +61,12 @@
            </table>
 
          </div>
-
-
-
             <div id="myTabContent" class="add-nickname-section"> 
               <?php if(count($nicknames) == 0) { ?>
              <p class="help-block" style="color:red">Note: You have not yet added a nick name. A public or private nick name must be used whenever contributing.</p> 
                 <?php } ?>
                  <h5>Add New Nick Name </h5>
-                <form action="{{ route('settings.nickname.add')}}" method="post">
+                <form action="{{ route('settings.nickname.add')}}" onsubmit="submitForm(this)" method="post">
                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
                     <div class="row">
                         <div class="col-sm-6 margin-btm-1">

@@ -53,7 +53,7 @@
                 </div>
                 <div class="col-sm-2">
                     <div class="yellow-circle"></div>
-                    <div class="circle-txt">Not Live</div>
+                    <div class="circle-txt">In Review</div>
                 </div>
                 <div class="col-sm-2">
                     <div class="yellow-circle" style="background-color:#1514ed"></div>
@@ -70,8 +70,10 @@
             if (!empty($topics)) {
                 $currentLive = 0;
                 $currentTime = time();
+                $ifIamDelegatedSupporter= 0;
                 foreach ($topics as $key => $data) {
                     $nickNamesData = \App\Model\Nickname::personNicknameArray();
+                    $liveTopic = \App\Model\Topic::getLiveTopic($data->topic_num);
                     if($submit_time){
                       $support = \App\Model\Support::where('topic_num',$data->topic_num)->whereIn('nick_name_id',$nickNamesData)->where('delegate_nick_name_id',0)->where('end','=',0)->where('start','<=',$submit_time)->orderBy('support_order','ASC')->get();
                     }else{
@@ -83,6 +85,14 @@
                             $ifIamSupporter = $support[0]->nick_name_id;
                           }
                       }
+                      $delegatedUsers = \App\Model\Support::where('topic_num',$data->topic_num)->where('delegate_nick_name_id','!=',0)->orderBy('support_order','ASC')->get();
+                        if(count($delegatedUsers) > 0){
+                            foreach ($delegatedUsers as $key => $value) {
+                                if(in_array($value->nick_name_id,$nickNamesData)){
+                                    $ifIamDelegatedSupporter =  $nickNamesData[array_search($value->nick_name_id,$nickNamesData,true)];
+                                }
+                            }
+                        }
                     $isagreeFlag = false;
                     $isGraceFlag = false;
                     $submittime = $data->submit_time;
@@ -106,7 +116,7 @@
                         
                     //grace period
                         if(Auth::check()){
-                       if(Auth::user()->id == $submitterUserID && $data->grace_period && $interval > 0){?>
+                       if(Auth::user()->id == $submitterUserID && $data->submit_time > $liveTopic->submit_time && $data->grace_period && $interval > 0){?>
                          <script>
                                $(function(){
                                  $("#countdowntimer<?php echo $data->id; ?>").countdowntimer({
@@ -139,12 +149,10 @@
                                   $userUrl = '';
                                   $objectUsrUrl = '';
                                   if(isset($data->submitternickname->nick_name)){
-                                    $nickNameUser = App\Model\Nickname::getUserByNickName($data->submitternickname->id); 
-                                    $userUrl = route('user_supports',$nickNameUser->id)."?topicnum=".$data->topic_num."&campnum=".$data->camp_num."&namespace=".$namespace_id."#camp_".$data->topic_num."_".$data->camp_num;  
+                                    $userUrl = route('user_supports',$data->submitter_nick_id)."?topicnum=".$data->topic_num."&campnum=".$data->camp_num."&namespace=".$namespace_id."#camp_".$data->topic_num."_".$data->camp_num;  
                                   }
                                   if(isset($data->objectornickname->nick_name)){
-                                    $nickNameUser = App\Model\Nickname::getUserByNickName($data->submitternickname->id); 
-                                    $objectUsrUrl = route('user_supports',$nickNameUser->id)."?topicnum=".$data->topic_num."&campnum=".$data->camp_num."&namespace=".$namespace_id."#camp_".$data->topic_num."_".$data->camp_num;  
+                                     $objectUsrUrl = route('user_supports',$data->objector_nick_id)."?topicnum=".$data->topic_num."&campnum=".$data->camp_num."&namespace=".$namespace_id."#camp_".$data->topic_num."_".$data->camp_num;  
                                   }
                                 ?>
                             <b>Submitter Nick Name :</b> <a href="{{$userUrl}}">{{ isset($data->submitternickname->nick_name) ? $data->submitternickname->nick_name : 'N/A' }} </a><br/>
@@ -156,7 +164,7 @@
                             @endif 	 				 
                         </div>    
                         <div class="CmpHistoryPnl-footer">
-        <?php if ($currentTime < $data->go_live_time && $currentTime >= $data->submit_time && $ifIamSupporter) { ?>
+        <?php if ($currentTime < $data->go_live_time && $currentTime >= $data->submit_time && ($ifIamSupporter || $ifIamDelegatedSupporter)) { ?>
                                 <a id="object" class="btn btn-historysmt" href="<?php echo url('manage/topic/' . $data->id . '-objection'); ?>">Object</a>
                             <?php } ?>  
                             <a id="update" class="btn btn-historysmt" href="<?php echo url('manage/topic/' . $data->id); ?>">Submit Topic Update Based On This</a>		
@@ -173,7 +181,8 @@
 
                         </div> 
                         @if(Auth::check())	
-                         @if($isagreeFlag && $ifIamSupporter && Auth::user()->id != $submitterUserID)
+                         @if($isagreeFlag && $ifIamSupporter && $data->submit_time  > $liveTopic->submit_time  && Auth::user()->id != $submitterUserID)
+
                             <div class="CmpHistoryPnl-footer">
                                 <div>
                                     <input {{ (isset($isAgreed) && $isAgreed) ? 'checked' : '' }} {{ (isset($isAgreed) && $isAgreed) ? 'disabled' : '' }} class="agree-to-change" type="checkbox" name="agree" value="" onchange="agreeToChannge(this,'{{ $data->id}}')"> I agree with this topic change</form>
@@ -181,8 +190,7 @@
                             </div>
                          @endif
                          
-                          
-                          @if(Auth::user()->id == $submitterUserID && $isGraceFlag && $data->grace_period && $interval > 0)
+                          @if(Auth::user()->id == $submitterUserID && $isGraceFlag && $data->submit_time  > $liveTopic->submit_time && $data->grace_period && $interval > 0)
                           <div class="CmpHistoryPnl-footer" id="countdowntimer_block<?php echo $data->id ;?>">
                                 <div class="grace-period-note"><b>Note: </b>This countdown timer is the grace period in which you can make minor changes to your topic before other direct supporters are notified.</div>
                                 <div style="float: right" > 

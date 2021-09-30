@@ -444,7 +444,8 @@ class Camp extends Model {
                 if(isset($filter['nofilter']) && $filter['nofilter']){
                     $asofdate  = time();
                 }
-                
+
+                 
                 return self::where('topic_num', $topicnum)
                                 ->where('camp_num', '=', $campnum)
                                 ->where('objector_nick_id', '=', NULL)
@@ -461,7 +462,6 @@ class Camp extends Model {
             }else if(session()->has('asofdateDefault') && session('asofdateDefault')!='' && !isset($_REQUEST['asof'])){
                 $asofdate =  strtotime(session('asofdateDefault'));
             }
-
         } else {
 
             $asofdate = time();
@@ -490,12 +490,12 @@ class Camp extends Model {
     }
 
     public static function getAllParent($camp, $camparray = array()) {
-
+        
         if (!empty($camp)) {
             if ($camp->parent_camp_num) {
                 $camparray[] = $camp->parent_camp_num;
 
-                $pcamp = Camp::where('topic_num', $camp->topic_num)->where('camp_num', $camp->parent_camp_num)->groupBy('camp_num')->orderBy('submit_time', 'desc')->first();
+                $pcamp = self::getLiveCamp($camp->topic_num, $camp->parent_camp_num); //Camp::where('topic_num', $camp->topic_num)->where('camp_num', $camp->parent_camp_num)->groupBy('camp_num')->orderBy('submit_time', 'desc')->first();
                 return self::getAllParent($pcamp, $camparray);
             }
         }
@@ -508,13 +508,15 @@ class Camp extends Model {
         $camparray = [];
         if ($camp) {
             $key = $camp->topic_num . '-' . $camp->camp_num . '-' . $camp->parent_camp_num;
-           if (in_array($key, Camp::$chilcampArray)) {
+            $key1 = $camp->topic_num . '-' . $camp->parent_camp_num . '-' . $camp->camp_num;
+           if (in_array($key, Camp::$chilcampArray) || in_array($key1, Camp::$chilcampArray)) {
                 return [];/** Skip repeated recursions* */
             }
             Camp::$chilcampArray[] = $key;
+            Camp::$chilcampArray[] = $key1;
             $camparray[] = $camp->camp_num;
-
-            $childCamps = Camp::where('topic_num', $camp->topic_num)->where('parent_camp_num', $camp->camp_num)->groupBy('camp_num')->orderBy('submit_time', 'desc')->get();
+            $childCamps =  Camp::where('topic_num', $camp->topic_num)->where('parent_camp_num', $camp->camp_num)->groupBy('camp_num')->latest('submit_time')->get();
+            //echo "<pre>"; print_r($childCamps);
             foreach ($childCamps as $child) {
                 $camparray = array_merge($camparray, self::getAllChildCamps($child));
             }
@@ -567,7 +569,6 @@ class Camp extends Model {
     public static function validateParentsupport($topic_num, $camp_num, $userNicknames, $confirm_support) {
 
         $onecamp = self::getLiveCamp($topic_num, $camp_num);
-
         if (count($onecamp) <= 0) {
             return 'notlive';
         }
@@ -651,14 +652,14 @@ class Camp extends Model {
     public function getCamptSupportCount($algorithm, $topicnum, $campnum) {
 
         $supportCountTotal = 0;
-
         try {
             foreach (session("topic-support-nickname-$topicnum") as $supported) {
+                
                 $nickNameSupports = session("topic-support-{$topicnum}")->filter(function ($item) use($supported) {
                     return $item->nick_name_id == $supported->nick_name_id; /* Current camp support */
                 });
                 $supportPoint = Algorithm::{$algorithm}($supported->nick_name_id,$supported->topic_num,$supported->camp_num);
-
+                
                 $currentCampSupport = $nickNameSupports->filter(function ($item) use($campnum) {
                             return $item->camp_num == $campnum; /* Current camp support */
                         })->first();
@@ -669,7 +670,7 @@ class Camp extends Model {
 				   0.25 after and half, again, for each one after that. */
 				if ($currentCampSupport) {
                     $multiSupport = false;
-                    if ($nickNameSupports->count() > 1) {
+                     if ($nickNameSupports->count() > 1) {
                         $multiSupport = true;
                         $supportCountTotal += round($supportPoint / (2 ** ($currentCampSupport->support_order)), 2);
                     } else if ($nickNameSupports->count() == 1) {
@@ -776,9 +777,10 @@ class Camp extends Model {
         $array = [];
         foreach ($childs as $key => $child) {
             //$childCount  = count($child->children($child->topic_num,$child->camp_num));
-            $title = preg_replace('/[^A-Za-z0-9\-]/', '-', $child->camp_name);
+            $onecamp = self::getLiveCamp($child->topic_num,$child->camp_num,['nofilter'=>true]);
+            $title = $onecamp->camp_name;//preg_replace('/[^A-Za-z0-9\-]/', '-', $onecamp->camp_name);
             $topic_id = $child->topic_num . "-" . $title;
-            $array[$child->camp_num]['title'] = $child->camp_name;
+            $array[$child->camp_num]['title'] = $title;
 			$queryString = (app('request')->getQueryString()) ? '?'.app('request')->getQueryString() : "";
             $array[$child->camp_num]['link'] = self::getTopicCampUrl($child->topic_num,$child->camp_num). $queryString .'#statement';
             $array[$child->camp_num]['score'] = $this->getCamptSupportCount($algorithm, $child->topic_num, $child->camp_num);
@@ -1134,6 +1136,36 @@ class Camp extends Model {
 
     public static function clearChildCampArray(){
         self::$chilcampArray=[];
+    }
+
+    public static function getObjectionOptionsLink(){
+        $helpLink = null;
+        $disagreementCamp = Camp::where('camp_name', 'Dealing with Disagreement')->first();
+        if(!empty($disagreementCamp)) {
+            $helpLink = 'topic/'.$disagreementCamp->topic_num.'-'.$disagreementCamp->camp_name.'/'.$disagreementCamp->camp_num;
+        }
+        return $helpLink;
+    }
+    
+    public static function getAllLiveCampsInTopic($topicnum){ 
+        return self::where('topic_num', '=', $topicnum)
+                        ->where('camp_name', '!=', 'Agreement')
+                        ->where('objector_nick_id', '=', NULL)
+                        ->whereRaw('go_live_time in (select max(go_live_time) from camp where topic_num=' . $topicnum . ' and objector_nick_id is null and go_live_time < "' . time() . '" group by camp_num)')
+                        ->where('go_live_time', '<=', time())
+                        ->groupBy('camp_num')
+                        ->orderBy('submit_time', 'desc')
+                        ->get();
+    }
+
+    public static function getAllNonLiveCampsInTopic($topicnum){ 
+        return self::where('topic_num', '=', $topicnum)
+                        ->where('camp_name', '!=', 'Agreement')
+                        ->where('objector_nick_id', '=', NULL)
+                        ->where('go_live_time',">",time())
+                        ->groupBy('camp_num')
+                        ->orderBy('submit_time', 'desc')
+                        ->get();
     }
 
 

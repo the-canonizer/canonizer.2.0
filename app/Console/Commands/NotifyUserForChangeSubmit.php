@@ -137,7 +137,13 @@ class NotifyUserForChangeSubmit extends Command {
         foreach ($directSupporter as $supporter) {
             $user = Nickname::getUserByNickName($supporter->nick_name_id);
             $receiver = (config('app.env') == "production") ? $user->email : config('app.admin_email');
+            try{
+
             Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new PurposedToSupportersMail($user, $link, $data));
+            }catch(\Swift_TransportException $e){
+                    echo "<pre>"; print_r($e->getMessag());
+                    //       throw new \Swift_TransportException($e);
+                    } 
         }
         return;
     }
@@ -162,7 +168,12 @@ class NotifyUserForChangeSubmit extends Command {
          }
          
          $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
+         try{
+
          Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new PurposedToSupportersMail($user, $link, $supportData));
+         }catch(\Swift_TransportException $e){
+                       echo "<pre>"; print_r($e->getMessage());
+                    } 
         }
 
         foreach ($subscribers as $usr) {            
@@ -174,7 +185,11 @@ class NotifyUserForChangeSubmit extends Command {
                 $subscriberData['support_list'] = $subscriptions_list; 
                 $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $userSub->email : config('app.admin_email');
                 $subscriberData['subscriber'] = 1;
-              Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new PurposedToSupportersMail($userSub, $link, $subscriberData));
+                try{                    
+                    Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new PurposedToSupportersMail($userSub, $link, $subscriberData));
+                }catch(\Swift_TransportException $e){
+                       echo "<pre>"; print_r($e->getMessage());
+                    } 
             }
             
         }

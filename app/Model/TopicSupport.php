@@ -86,12 +86,6 @@ class TopicSupport extends Model {
 			$as_of_time = strtotime($_REQUEST['asofdate']);
 		}
 
-        /*Fetching direct support to camp*/
-
-       /* $supports = session("topic-support-nickname-$topicnum")->filter(function($item) use ($campnum,$delegateNickId){
-                return $item->delegate_nick_name_id == 0 && $item->camp_num == $campnum;
-        });*/
-		
 		$supports = Support::where('topic_num', '=', $topicnum)
                         ->where('delegate_nick_name_id', 0)
 						->where('camp_num', $campnum)
@@ -102,7 +96,6 @@ class TopicSupport extends Model {
                         ->get();
         
         $array = [];
-		//print_r($supports); die;
         foreach($supports as $key =>$support){
 
        
@@ -122,8 +115,8 @@ class TopicSupport extends Model {
             $array[$support->nick_name_id]['children'] = [];
             $array[$support->nick_name_id]['index']=$support->nick_name_id;
             $multiSupport = false;
-			if($currentCampSupport){
-				if($nickNameSupports->count() > 1){
+            if($currentCampSupport){
+                if($nickNameSupports->count() > 1){
                     $multiSupport = true;					
 					$array[$support->nick_name_id]['score']=round($supportPoint / (2 ** ($currentCampSupport->support_order)),2);
 				}else if($nickNameSupports->count() >= 1 && $support->topic_num !='54' && $algorithm == 'mormon'){ //only for mormon if selected
@@ -280,19 +273,11 @@ class TopicSupport extends Model {
                 $as_of_time = strtotime(session('asofdateDefault'));
              }
         }
-		// if(isset($_REQUEST['asof']) && $_REQUEST['asof']=='bydate'){
-  //          $as_of_time = strtotime($_REQUEST['asofdate']);
-		// }
         if(!session("topic-support-tree-$topicnum")){ 
             $query = Support::where('topic_num','=',$topicnum)
-            //->where('delegate_nick_name_id',$delegateNickId)
             ->whereRaw("(start <= $as_of_time) and ((end = 0) or (end >= $as_of_time))");
-            if($campnum){
-                   // $query->where('camp_num',$campnum);             
-            }
-            
+          
             $query->orderBy('start','DESC')->select(['support_order','camp_num','topic_num','nick_name_id','delegate_nick_name_id']);
-            //->select(['support_order','camp_num'])
             $data = $query->get();
 			
             session(["topic-support-tree-$topicnum"=>$data]);

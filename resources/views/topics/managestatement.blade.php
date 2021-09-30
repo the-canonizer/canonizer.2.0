@@ -33,7 +33,7 @@
 <div class="right-whitePnl">
 <div class="row col-sm-12 justify-content-between">
     <div class="col-sm-5 margin-btm-2">
-        <form action="{{ route('statement.save')}}" method="post">
+        <form action="{{ route('statement.save')}}" onsubmit="return submitForm(this)" method="post">
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
             <input type="hidden" id="topic_num" name="topic_num" value="{{ $topic->topic_num }}">
             <input type="hidden" id="parent_camp_num" name="parent_camp_num" value="{{ $parentcampnum }}">
@@ -120,6 +120,7 @@
     
 
     <script>
+        
         $(document).ready(function () {
             $("#datepicker").datepicker({
                 changeMonth: true,

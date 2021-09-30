@@ -51,7 +51,12 @@ class ForgotPasswordController extends Controller {
 
         // send resetlink in email
         $link = 'resetpassword/' . base64_encode($user->email);
+        try{
+
         Mail::to($user->email)->send(new PasswordResetMail($user,$link));
+        }catch(\Swift_TransportException $e){
+                       throw new \Swift_TransportException($e);
+                    } 
         
         return redirect('resetlinksent');
     }

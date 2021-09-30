@@ -30,13 +30,6 @@ class SharesAlgoController extends Controller {
     public function create()
     {
 
-        // $nickNames = Nickname::all();
-        // $nick_names = [];
-        // if(count($nickNames) > 0){
-        //     foreach($nickNames as $n){
-        //        $nick_names[$n->id] = $n->nick_name; 
-        //     }
-        // }
         return view('admin.shares.create');
     }
 
@@ -49,11 +42,12 @@ class SharesAlgoController extends Controller {
     public function store(Request $request)
     {
         $data = $request->only('nick_name_id','as_of_date','share_value');
-
+         $todayDate = date('Y-m-d');
+         $jandate = date('01/01/2021');
          $validatorArray = [ 
           'nick_name_id' => 'required',
-          'as_of_date' => 'required',
-          'share_value' => 'required'
+          'as_of_date' => 'required|date|after_or_equal:'.$jandate.'|before_or_equal:'.$todayDate,
+          'share_value' => 'required|numeric|min:1|max:100000'
           ];
         
          $validator = Validator::make($request->only(['nick_name_id','as_of_date','share_value']), $validatorArray);
@@ -62,13 +56,11 @@ class SharesAlgoController extends Controller {
         }
 
         //validate if nickname id exist
-
         $nickName = Nickname::find($data['nick_name_id']);
         if(isset($nickName) && isset($nickName->id)){
-            // echo "<pre>"; print_r($data); die;
             $share = new SharesAlgorithm();
             $share->nick_name_id = $data['nick_name_id'];
-            $share->as_of_date =  date('Y-'.$data['as_of_date'].'-01');
+            $share->as_of_date =  date('Y-m-d',strtotime($data['as_of_date']));
             $share->share_value = $data['share_value'];
             $share->save();
             return redirect('/admin/shares');
@@ -116,21 +108,23 @@ class SharesAlgoController extends Controller {
     public function update(Request $request, $id)
     {
         if($id){
+            $todayDate = date('Y-m-d');
+            $jandate = date('01/01/2021');
             $data = $request->only('nick_name_id','as_of_date','share_value');
-             $share = SharesAlgorithm::find($id);
+             $share = SharesAlgorithm::where('id','=',$id)->first();
               $validatorArray = [ 
                   'nick_name_id' => 'required',
-                  'as_of_date' => 'required',
-                  'share_value' => 'required'
+                   'as_of_date' => 'required|date|after_or_equal:'.$jandate.'|before_or_equal:'.$todayDate,
+                   'share_value' => 'required|numeric|min:1|max:100000'
                   ];
              if($share->nick_name_id != $data['nick_name_id']){
                  $validatorArray['nick_name_id'] = 'required';
              }
              if($share->as_of_date != $data['as_of_date']){
-                $validatorArray['as_of_date'] = 'required';
+                $validatorArray['as_of_date'] = 'required|date|after_or_equal:'.$jandate.'|before_or_equal:'.$todayDate;
              }
              if($share->share_value != $data['share_value']){
-                $validatorArray['share_value'] = 'required';
+                $validatorArray['share_value'] = 'required|numeric|min:1|max:100000';
              }
              
              $validator = Validator::make($request->only(['nick_name_id','as_of_date','share_value']), $validatorArray);
@@ -142,7 +136,7 @@ class SharesAlgoController extends Controller {
             if(isset($nickName) && isset($nickName->id)){
                 $share = SharesAlgorithm::find($id);
                 $share->nick_name_id = $data['nick_name_id'];
-                $share->as_of_date = date('Y-'.$data['as_of_date'].'-01');
+                $share->as_of_date =  date('Y-m-d',strtotime($data['as_of_date']));
                 $share->share_value = $data['share_value'];
                 $share->save();
                 $request->session()->flash('success', 'Share Data Updated Successfully');
@@ -171,7 +165,7 @@ class SharesAlgoController extends Controller {
     }
 
     public function getshares(Request $request){
-        $data = $request->only('month');
+         $data = $request->only('month');
          $table = "<table class='table table-row'><tr>
                     <th>Nick Name</th>
                     <th>Date</th>
@@ -180,20 +174,24 @@ class SharesAlgoController extends Controller {
                     <th>Action</th>
                 </tr>";
         if(isset($data['month']) && $data['month']!=''){
-            $year = date('Y',strtotime($data['month']));
-            $month = date('m',strtotime($data['month']));
-            $dataShares = SharesAlgorithm::whereYear('as_of_date', '=', $year)
-              ->whereMonth('as_of_date', '=', $month)->paginate(10);
-            //echo "<pre>"; print_r($dataShares); die;
-           
+                $year = date('Y',strtotime($data['month']));
+                $month = date('m',strtotime($data['month']));
+                $dataShares = SharesAlgorithm::whereYear('as_of_date', '=', $year)
+                  ->whereMonth('as_of_date', '=', $month)->paginate(10);
+               
+            }else{
 
+                $dataShares = SharesAlgorithm::paginate(10);
+           
+            }
+            
             if(count($dataShares) > 0){
                 foreach($dataShares as $d){
                     $table.="<tr>";
                     $table.="<td>".$d->usernickname->nick_name."</td><td>".date("F,Y",strtotime($d->as_of_date))."</td><td>".$d->share_value."</td><td>".number_format(sqrt($d->share_value),2)."</td>";
                     $table.="<td>
                         <a href='".url('/admin/shares/edit/'.$d->id) ."'><i class='fa fa-edit'></i>&nbsp;&nbsp;Edit</a>
-                        &nbsp;&nbsp;<a href='javascript:void(0)' onClick='deleteShare('".$d->id."')'><i class='fa fa-trash'></i>&nbsp;&nbsp;Delete</a>
+                        &nbsp;&nbsp;<a href='javascript:void(0)' onClick='deleteShare(".$d->id.")'><i class='fa fa-trash'></i>&nbsp;&nbsp;Delete</a>
                     </td>";
                     $table.="</tr>";
                 }
@@ -205,16 +203,7 @@ class SharesAlgoController extends Controller {
 
             $table.="</table>";
             $table.=$dataShares->links();
-
-
-        }else{
-                $table.="<tr>";
-                $table.="<td colspan='5'><span>No Share data found!</span></td>";
-                $table.="</tr>";
-         }
-
-            $table.="</table>";
-        echo $table; exit;
+          echo $table; exit;
         
 
     }

@@ -41,10 +41,12 @@
                        <div class="SpCmpHd"><b>For Topic : <a href="<?php echo $link; ?>">{{ $data->topic->topic_name}} </a> </b></div>
                		<div class="row column{{ $data->topic_num }}" style="padding:10px 15px;">
 					   <?php $topicSupport = $data->topic->Getsupports($data->topic_num,$userNickname,['nofilter'=>true]);?>
-
+                       
 					   @foreach($topicSupport as $k=>$support)
                         <?php if($support->delegate_nick_name_id == 0) {
                             $camp = \App\Model\Camp::getLiveCamp($support->topic_num,$support->camp_num,['nofilter'=>true]);
+
+                           
                          ?>
 					   <div id="positions_{{ $support->support_id }}" class="SpCmpBDY support_camp support-sorter-element ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
 					     <form onsubmit="return confirm('Do you really want to remove this support ?');" action="{{ route('settings.support.delete')}}" id="support-{{$support->support_id}}" method="post">
@@ -71,7 +73,14 @@
                             $supported_camp_list = $nickName->getSupportCampListNames($supported_camp,$data->topic_num);
 						 ?>
 						 <div id="positions" class="SpCmpBDY delegate_support support-sorter-element ui-widget">
-					   
+					        <form onsubmit="return confirm('Do you really want to remove this support ?');" action="{{ route('settings.support.delete')}}" id="support-{{$support->support_id}}" method="post">
+                            <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                            <input type="hidden" id="support_id_{{ $support->support_id }}" name="support_id" value="{{ $support->support_id }}">
+                            <input type="hidden" id= "topic_num_{{ $support->support_id }}" name="topic_num" value="{{ $data->topic_num }}">
+                            <input type="hidden" id= "nick_name_id_{{ $support->support_id }}" name="nick_name_id" value="{{ $support->nick_name_id }}">
+                            <input type="hidden" id= "delegate_nick_name_id_{{ $support->support_id }}" name="delegate_nick_name_id" value="{{ $support->delegate_nick_name_id }}">
+                          <button type="submit" id="submit_{{ $support->support_id }}" class="btn-sptclose" title="Remove Support"><i class="fa fa-close"></i></button>
+                         </form>
 						  Support delegated to {{$delegatedNickDetail->nick_name }}
                           
 						</div>

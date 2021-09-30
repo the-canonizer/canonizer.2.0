@@ -108,8 +108,13 @@ class SocialController extends Controller
 					                 'social_name'   => $social_name,
 					            ]);
 					             //otp email
-						       Mail::to($user->email)->bcc(config('app.admin_bcc'))->send(new OtpVerificationMail($user));
-						       return redirect()->route('register.otp', ['user' => base64_encode($user->email)]);
+					            try{
+
+							       Mail::to($user->email)->bcc(config('app.admin_bcc'))->send(new OtpVerificationMail($user));
+							       return redirect()->route('register.otp', ['user' => base64_encode($user->email)]);
+					            }catch(\Swift_TransportException $e){
+		                            throw new \Swift_TransportException($e);
+		                        } 
 				        	
 				 	}
 	        	}
@@ -180,8 +185,13 @@ class SocialController extends Controller
     						session()->forget('provider');
 				            return redirect('/');
 				        }else if(isset($users) && isset($users->email) && $users->status ==0){
+				        	  try{
+
 				        		Mail::to($users->email)->bcc(config('app.admin_bcc'))->send(new OtpVerificationMail($users));
 						       return redirect()->route('register.otp', ['user' => base64_encode($users->email)]);
+				        	  }catch(\Swift_TransportException $e){
+	                            throw new \Swift_TransportException($e);
+	                        } 
 				        }else{
 				        	
 				        		$authCode = mt_rand(100000, 999999);
@@ -200,8 +210,13 @@ class SocialController extends Controller
 					            ]);
 					             //otp email
 					           
+						       try{
+
 						       Mail::to($user->email)->bcc(config('app.admin_bcc'))->send(new OtpVerificationMail($user));
 						       return redirect()->route('register.otp', ['user' => base64_encode($user->email)]);
+						       }catch(\Swift_TransportException $e){
+                            throw new \Swift_TransportException($e);
+                        } 
 				        	
 				 	}
 	 }

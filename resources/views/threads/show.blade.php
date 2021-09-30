@@ -12,7 +12,7 @@
     </b>
   </h3>
   <?php
-      $topic = App\Model\Topic::where('topic_num','=',$threads->topic_id)->first();
+      $topic = App\Model\Topic::getLiveTopic($threads->topic_id); 
       $namespace_id = 1;
       if(isset($topic->topic_num)){
           $namespace_id = $topic->namespace_id;
@@ -49,23 +49,6 @@
       </div>
 
   </div>
-
-  <!-- Replies To Thread -->
-  <div class="pagination">
-    <a class="active item">
-      <ul class="list-group">
-        @foreach ($replies as $reply)
-        <li class="list-group-item">
-          @include('threads.replies')
-        </li>
-        @endforeach
-      </ul>
-    </a>
-
-  </div>
-
-
-  {{ $replies->links() }}
 
   @if(auth()->check())
 
@@ -139,6 +122,24 @@
   @else
   Please <a href="{{ url('/login') }}">Sign In</a> to comment on this Thread
   @endif
+  <!-- Replies To Thread -->
+  <div class="pagination">
+    <a class="active item">
+      <ul class="list-group">
+        @foreach ($replies as $reply)
+        <li class="list-group-item">
+          @include('threads.replies')
+        </li>
+        @endforeach
+      </ul>
+    </a>
+
+  </div>
+
+
+  {{ $replies->links() }}
+
+  
 
 </div>
 
