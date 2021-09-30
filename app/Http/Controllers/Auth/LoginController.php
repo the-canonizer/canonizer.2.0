@@ -198,6 +198,7 @@ class LoginController extends Controller
             return redirect()->back();
         }
         $user->otp = '';
+        $user->status = 1;
         $user->update();
         Auth::guard()->login($user);
         return redirect()->to('/home');
