@@ -277,9 +277,7 @@ class CThreadsController extends Controller
                 'parentcamp'       => Camp::campNameWithAncestors($camp,'',$topicname),
                 'userNicknames' => (auth()->check()) ? Nickname::topicNicknameUsed($topicid) : array(),
                 'threads' => CThread::findOrFail($CThread),
-                'replies' => CThread::findOrFail($CThread)
-                                            ->replies()
-                                            ->paginate(10),
+                'replies' => CThread::findOrFail($CThread)->replies()->paginate(10),
             ]
         );
     }
@@ -304,24 +302,32 @@ class CThreadsController extends Controller
 
     public function save_title(Request $request, $topicName, $campNum, $threadId) {
 
-      $messagesVal = [
-        'title.regex' => 'Title must only contain space and alphanumeric characters.',
-        'title.required' => 'Title is required.',
-        'title.unique'   => 'Thread title must be unique'
-      ];
+        $campArr = preg_split("/[-]/", $campNum);
+        $topicArr = preg_split("/[-]/", $topicName);
 
-      $this->validate(
-        $request, [
-          'title' => 'required|max:100|unique:thread'
-        ], $messagesVal
-      );
+        $messagesVal = [
+            'title.regex' => 'Title must only contain space and alphanumeric characters.',
+            'title.required' => 'Title is required.',
+            'title.unique'   => 'Thread title must be unique'
+        ];
 
-      $title = request('title');
-      DB::update('update thread set title =? where id = ?', [$title, $threadId]);
+          $this->validate(
+            $request, [
+                'title' => [
+                    'required', 'max:100', Rule::unique('thread')
+                        ->where(function ($query) use ($campArr, $topicArr) {
+                            return $query->where('camp_id', $campArr[0])->where('topic_id', $topicArr[0]);
+                        })
+                ],
+            ], $messagesVal
+          );
 
-      $return_url = 'forum/'.$topicName.'/'.$campNum.'/threads/'.$threadId.'/edit';
+          $title = request('title');
+          DB::update('update thread set title =? where id = ?', [$title, $threadId]);
 
-      return redirect($return_url)->with('success', 'Thread title updated.');
+          $return_url = 'forum/'.$topicName.'/'.$campNum.'/threads/'.$threadId.'/edit';
+
+          return redirect($return_url)->with('success', 'Thread title updated.');
 
     }
  
