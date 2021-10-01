@@ -384,6 +384,7 @@ class SettingsController extends Controller
             $topic_num = $data['topic_num'];
             $mysupportArray = [];
             $myDelegatedSupports = [];
+            $myDelegator = Support::where('topic_num', $topic_num)->whereIn('delegate_nick_name_id', $userNicknames)->where('end', '=', 0)->groupBy('nick_name_id')->get();
             $mysupports = Support::where('topic_num', $topic_num)->whereIn('nick_name_id', $userNicknames)->where('end', '=', 0)->orderBy('support_order', 'ASC')->get();
            if(isset($mysupports) && count($mysupports) > 0){
                 foreach ($mysupports as $spp){
@@ -394,9 +395,6 @@ class SettingsController extends Controller
                     }
                 }
             }
-
-
-           
              
             if (isset($mysupports) && count($mysupports) > 0 && isset($data['removed_camp']) && count($data['removed_camp']) > 0) {
                 foreach ($mysupports as $singleSupport) {
@@ -464,6 +462,18 @@ class SettingsController extends Controller
                         $supportTopic->camp_num = $camp_num;
                         $supportTopic->support_order = $support_order;
                         $supportTopic->save();
+
+                        /** If any user hase delegated their support to this user, enter there delegated support #749 */
+                        foreach($myDelegator as $delegator){
+                            $supportTopic = new Support();
+                            $supportTopic->topic_num = $topic_num;
+                            $supportTopic->nick_name_id = $delegator->nick_name_id;
+                            $supportTopic->delegate_nick_name_id = $data['nick_name'];;
+                            $supportTopic->start = time();
+                            $supportTopic->camp_num = $camp_num;
+                            $supportTopic->support_order = $support_order;
+                            $supportTopic->save();
+                        }
                     }else{
                         $support = Support::where('topic_num', $topic_num)->where('camp_num','=', $camp_num)->where('nick_name_id','=',$data['nick_name'])->where('end', '=', 0)->get();
                          $support[0]->support_order = $support_order;
