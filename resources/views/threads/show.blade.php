@@ -52,7 +52,7 @@
 
   @if(auth()->check())
 
-  <form method="POST"
+  <form method="POST" id="postForm"
     action="{{ URL::to('/')}}/forum/{{ $topicname }}/{{ $campnum }}/threads/{{ $threads->id }}/replies">
     {{ csrf_field() }}
 
@@ -81,14 +81,25 @@
       <?php } ?>
     </div>
 
-    <button type="submit" class="btn btn-primary">Submit</button>
+    <button type="submit" id="postSubmitBtn" class="btn btn-primary">Submit</button>
 
   </form>
   <!-- Added Here -->
 
   <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/summernote-bs4.css" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/summernote-bs4.js"></script>
+  <script>
+    $(document).ready(function () {
 
+        $("#postForm").submit(function (e) {          
+            //disable the submit button
+            $("#postSubmitBtn").attr("disabled", true);
+
+            return true;
+
+        });
+    });
+</script>
   <script>
     $(document).ready(function () {
       $('#body').summernote({
