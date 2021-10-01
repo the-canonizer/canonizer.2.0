@@ -20,7 +20,7 @@
   <div class="panel panel-group">
 
     <div class="panel-body">
-      <form method="POST" action="{{ URL::to('/')}}/forum/{{ $topicname }}/{{ $campnum }}/threads">
+      <form id="threadForm" method="POST" action="{{ URL::to('/')}}/forum/{{ $topicname }}/{{ $campnum }}/threads">
         {{ csrf_field() }}
 
         <div class="form-group">
@@ -52,7 +52,7 @@
         </div>
 
         <div class="form-group">
-          <button type="submit" class="btn btn-primary">Submit</button>
+          <button type="submit" id="threadSubmitBtn" class="btn btn-primary">Submit</button>
         </div>
 
         @if (count($errors))
@@ -76,6 +76,18 @@
   </div>
 
 </div>
+
+<script>
+    $(document).ready(function () {
+
+        $("#threadForm").submit(function (e) {          
+            //disable the submit button
+            $("#threadSubmitBtn").attr("disabled", true);
+            return true;
+
+        });
+    });
+</script>
 
 
 @endsection

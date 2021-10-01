@@ -12,7 +12,7 @@
             ?>
             <a href="{{$userUrl}}">
                 {{ $reply->owner->nick_name }}
-            </a> replied on {{ date('d-m-Y', strtotime($reply->updated_at)) }}
+            </a> replied on {{ date('d-m-Y H:i:s', strtotime($reply->updated_at)) }}
             <br><br>
         </div>
 
