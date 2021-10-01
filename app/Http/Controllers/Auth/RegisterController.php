@@ -3,15 +3,19 @@
 namespace App\Http\Controllers\Auth;
 
 use App\User;
+use Exception;
+use App\Model\Nickname;
+use App\Library\General;
+use App\Mail\WelcomeMail;
+use Illuminate\Http\Request;
+use App\Mail\OtpVerificationMail;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
-use Illuminate\Support\Facades\Mail;
-use App\Mail\WelcomeMail;
-use App\Mail\OtpVerificationMail;
-use Illuminate\Http\Request;
-use Illuminate\Auth\Events\Registered;
-use Illuminate\Support\Facades\Auth;
 
 class RegisterController extends Controller
 {
@@ -119,6 +123,11 @@ class RegisterController extends Controller
             'middle_name' =>$data['middle_name'],
             'otp'=>$authCode
         ]);
+        // Create nickname
+        if(!empty($user)) {
+            $nickname = $user->first_name."-".$user->last_name;
+            $this->createNickname($user->id, $nickname);
+        }
         
         //otp email
         try{
@@ -180,5 +189,40 @@ class RegisterController extends Controller
                             throw new \Swift_TransportException($e);
                         }    
         //return $user;
+    }
+
+    protected function createNickname($userID, $nickname) {
+        $nicknameCreated = false;
+        if(empty($userID) || empty($nickname)) {
+            return $nicknameCreated;
+        }
+        // Check whether user exists or not for the given id
+        $user = User::getById($userID);
+        if(empty($user)) {
+            return $nicknameCreated;
+        }
+
+        // Check whether nickname exists for the given nickname
+        $isExists = Nickname::isNicknameExists($nickname);
+        Log::info("IsNickNameExists ".$isExists);
+        if($isExists === true) {
+            $randNumber = mt_rand(000, 999);
+            $nickname = $nickname.$randNumber;
+        }
+
+        try {
+            // Create nickname
+            $nicknameObj = new Nickname();
+            $nicknameObj->owner_code = General::canon_encode($userID);
+            $nicknameObj->nick_name = $nickname;
+            $nicknameObj->private = 0;
+            $nicknameObj->create_time = time();
+            $nicknameObj->save();
+            $nicknameCreated = true;
+
+        } catch(Exception $ex) {
+            $nicknameCreated = false;
+        }
+        return $nicknameCreated;
     }
 }

@@ -41,4 +41,13 @@ class User extends Authenticatable implements CanResetPasswordContract
     public function getNameAttribute(){
        return ucwords ($this->first_name.' '.$this->last_name);
     }
+
+    /**
+     * Get user by user id
+     * @param interger $id
+     * @return User 
+     */
+    public static function getById($id) {
+        return User::where('id', $id)->first();
+    }
 }
