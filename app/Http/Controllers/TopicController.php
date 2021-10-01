@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ObjectionToSubmitterMail;
 use App\Mail\PurposedToSupportersMail;
+use App\Mail\ProposedChangeMail;
 use App\Mail\NewDelegatedSupporterMail;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Foundation\Auth\RedirectsUsers;
@@ -319,7 +320,16 @@ class TopicController extends Controller {
 
                   $receiver = (config('app.env') == "production") ? $user->email : config('app.admin_email');
                   Mail::to($receiver)->send(new PurposedToSupportersMail($user, $link, $data));
-                  } */
+                } */
+
+                // send history link in email
+                $data['link'] = \App\Model\Camp::getTopicCampUrl($topic->topic_num,1); 
+                try{
+                    Mail::to(Auth::user()->email)->bcc(config('app.admin_bcc'))->send(new ProposedChangeMail(Auth::user(), $link,$data));
+                }catch(\Swift_TransportException $e){
+                       throw new \Swift_TransportException($e);
+                }
+
             }
         } catch (Exception $e) {
 
