@@ -1138,6 +1138,15 @@ class Camp extends Model {
         self::$chilcampArray=[];
     }
 
+    public static function getObjectionOptionsLink(){
+        $helpLink = null;
+        $disagreementCamp = Camp::where('camp_name', 'Dealing with Disagreement')->first();
+        if(!empty($disagreementCamp)) {
+            $helpLink = 'topic/'.$disagreementCamp->topic_num.'-'.$disagreementCamp->camp_name.'/'.$disagreementCamp->camp_num;
+        }
+        return $helpLink;
+    }
+    
     public static function getAllLiveCampsInTopic($topicnum){ 
         return self::where('topic_num', '=', $topicnum)
                         ->where('camp_name', '!=', 'Agreement')
@@ -1154,7 +1163,6 @@ class Camp extends Model {
                         ->where('camp_name', '!=', 'Agreement')
                         ->where('objector_nick_id', '=', NULL)
                         ->where('go_live_time',">",time())
-                        ->where('grace_period',"=",1)
                         ->groupBy('camp_num')
                         ->orderBy('submit_time', 'desc')
                         ->get();

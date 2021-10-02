@@ -12,5 +12,8 @@
 			return (int) $code=str_replace("Malia","",$code);
         }
 		
+        public static function getDealingWithDisagreementUrl(){
+            return 'topic/132-Dealing-with-disagreement/4';
+        }
     }
 }

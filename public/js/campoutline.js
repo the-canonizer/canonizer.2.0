@@ -1,4 +1,4 @@
-jQuery('head').append('<link rel="stylesheet" href="https://canonizer.com/css/canonizer.css" type="text/css" />');
+//jQuery('head').append('<link rel="stylesheet" href="https://canonizer.com/css/canonizer.css" type="text/css" />');
 
 
 /* Following function will call REST getcamoutline API to get the complete tree outline */

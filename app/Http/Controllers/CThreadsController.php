@@ -44,7 +44,7 @@ class CThreadsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index($topicid, $topicname, $campnum)
-    {
+    { 
 
         if ((camp::where('camp_num', $campnum)->where('topic_num', $topicid)->value('camp_name')))
         {
@@ -223,8 +223,9 @@ class CThreadsController extends Controller
                                 where('topic_id', $topicid)->
                                 where('title', $request->{'title'})->get();
         $messagesVal = [
-            'title.regex' => 'Title must only contain space and alphanumeric characters.',
+            'title.regex' => 'Title can only contain space and alphanumeric characters.',
             'title.required' => 'Title is required.',
+            'title.max' => 'Title can not be more than 100 characters.',
             'nick_name.required' => 'The nick name field is required.',
         ];
           $this->validate(
@@ -274,12 +275,10 @@ class CThreadsController extends Controller
         return view(
             'threads.show',
              $topic, [
-                'parentcamp'       => Camp::campNameWithAncestors($camp,'',$topicname),
+                'parentcamp'    => Camp::campNameWithAncestors($camp,'',$topicname),
                 'userNicknames' => (auth()->check()) ? Nickname::topicNicknameUsed($topicid) : array(),
                 'threads' => CThread::findOrFail($CThread),
-                'replies' => CThread::findOrFail($CThread)
-                                            ->replies()
-                                            ->paginate(10),
+                'replies' => CThread::findOrFail($CThread)->replies()->paginate(10),
             ]
         );
     }
@@ -304,24 +303,34 @@ class CThreadsController extends Controller
 
     public function save_title(Request $request, $topicName, $campNum, $threadId) {
 
-      $messagesVal = [
-        'title.regex' => 'Title must only contain space and alphanumeric characters.',
-        'title.required' => 'Title is required.',
-        'title.unique'   => 'Thread title must be unique'
-      ];
 
-      $this->validate(
-        $request, [
-          'title' => 'required|max:100|unique:thread'
-        ], $messagesVal
-      );
+        $campArr = preg_split("/[-]/", $campNum);
+        $topicArr = preg_split("/[-]/", $topicName);
 
-      $title = request('title');
-      DB::update('update thread set title =? where id = ?', [$title, $threadId]);
+        $messagesVal = [
+            'title.regex' => 'Title must only contain space and alphanumeric characters.',
+            'title.required' => 'Title is required.',
+            'title.unique'   => 'Thread title must be unique'
+        ];
 
-      $return_url = 'forum/'.$topicName.'/'.$campNum.'/threads/'.$threadId.'/edit';
+          $this->validate(
+            $request, [
+                'title' => [
+                    'required', 'max:100', Rule::unique('thread')
+                        ->where(function ($query) use ($campArr, $topicArr) {
+                            return $query->where('camp_id', $campArr[0])->where('topic_id', $topicArr[0]);
+                        })
+                ],
+            ], $messagesVal
+          );
 
-      return redirect($return_url)->with('success', 'Thread title updated.');
+
+          $title = request('title');
+          DB::update('update thread set title =? where id = ?', [$title, $threadId]);
+
+          $return_url = 'forum/'.$topicName.'/'.$campNum.'/threads/'.$threadId.'/edit';
+
+          return redirect($return_url)->with('success', 'Thread title updated.');
 
     }
  

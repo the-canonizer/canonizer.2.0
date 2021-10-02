@@ -159,7 +159,7 @@ if(isset($topic) && count($topic) > 0 ) { ?>
             <h3 class="row">
             <div class="col-md-6">Support Tree for "<?php echo $camp->camp_name;?>" Camp</div>
              <div class="col-md-6">
-                 <a href="#" class="pull-right" data-toggle="tooltip" data-placement="left" title="Supporters can delegate their support to others.  Direct supporters
+                 <a  class="pull-right" data-toggle="tooltip" data-placement="left" title="Supporters can delegate their support to others.  Direct supporters
 receive email notifications of proposed camp changes, while delegated
 supporters don’t.  People delegating their support to others are shown
 below and indented from their delegates in an outline form.  If a
