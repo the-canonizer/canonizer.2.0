@@ -26,10 +26,10 @@ class RegisterUserTest extends TestCase
             'first_name' =>'unit',
             'last_name' =>'test',
             'middle_name' =>'first',
-            //'CaptchaCode' => 'ML1234',
+            'CaptchaCode' => 'ML1234',
             'otp'=>$authCode
-        ]);
-        dd($response);
+        ]);        
+        
         $response->assertStatus(302);
     }
 
@@ -44,10 +44,9 @@ class RegisterUserTest extends TestCase
             'first_name' =>'unit',
             'last_name' =>'test',
             'middle_name' =>'second',
-            //'CaptchaCode' => 'ML1234',
+            'CaptchaCode' => 'ML1234',
             'otp'=>$authCode
-        ]);
-        
+        ]);        
         $response->assertStatus(302);
     }
 }
