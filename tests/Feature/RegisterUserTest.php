@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
+use Illuminate\Foundation\Http\Kernel;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -16,9 +17,9 @@ class RegisterUserTest extends TestCase
      */
     public function testRegisterUser()
     {
-        print sprintf("Register user - %d %s", 302,PHP_EOL);
+        print sprintf("Register user a new user - %d %s", 302,PHP_EOL);
         $authCode = mt_rand(100000, 999999);
-        
+
         $response = $this->post('/register', [
             'email' => 'unit.test2@example.com',
             'password' => 'Test@123',
@@ -26,7 +27,7 @@ class RegisterUserTest extends TestCase
             'first_name' =>'unit',
             'last_name' =>'test',
             'middle_name' =>'first',
-            'CaptchaCode' => 'ML1234',
+            'CaptchaCode' => 1,
             'otp'=>$authCode
         ]);        
         
