@@ -63,7 +63,7 @@
                     <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                 </a>
               @endif
-              <a href="{{ URL::to('/')}}/forum/{{ $topicname }}/{{ $campnum }}/threads/{{ $thread->id }}">
+              <a href="{{ URL::to('/')}}/forum/{{ $topicname }}/{{ $campnum }}/threads/{{ $thread->id }}" class="forum-thread-title">
                 {{ $thread->title }}
               </a>
             </td>

@@ -26,7 +26,7 @@
     <hr />
 
     <a href="{{$userUrl}}">{{ $threads->creator->nick_name }}
-    </a> started this thread : "{{ $threads->title }}"
+    </a> started this thread : <span class="forum-thread-title">"{{ $threads->title }}"</span>
   </h3>
 
 
