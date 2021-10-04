@@ -1526,6 +1526,13 @@ a.rgWT {
     line-height: 1.5;
 }
 
+
 .forum-thread-title {
+    max-width: 88%;
+    display: block  ;
+    word-break: break-all;
+}
+
+.thread-title a {
     word-break: break-all;
 }
