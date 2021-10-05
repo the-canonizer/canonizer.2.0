@@ -212,7 +212,7 @@
                                 <?php }else if($currentTime < $data->go_live_time && $currentTime >= $data->submit_time && $ifSupportDelayed){ ?>
                                     <button id="object" class="btn btn-historysmt"  disabled>Object &nbsp;<i title="You can not object this camp because you supported this camp after updation was submitted" class="fa fa-info-circle" aria-hidden="true"></i></button>
                                 <?php }else if($currentTime < $data->go_live_time && $currentTime >= $data->submit_time){ ?>
-                                    <button id="object" class="btn btn-historysmt"  disabled>Object &nbsp;<i title="Only supported have access to object the camp." class="fa fa-info-circle" aria-hidden="true"></i></button>
+                                    <button id="object" class="btn btn-historysmt"  disabled>Object &nbsp;<i title="Only supporter have access to object the camp." class="fa fa-info-circle" aria-hidden="true"></i></button>
                                 <?php } ?>
                                 <a id="update" class="btn btn-historysmt" href="<?php echo url('manage/camp/' . $data->id); ?>">Submit Camp Update Based On This</a>		  
                                 <?php
