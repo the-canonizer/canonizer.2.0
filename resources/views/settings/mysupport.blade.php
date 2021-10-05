@@ -29,7 +29,7 @@
                 <li><a class="" href="{{ route('settings.nickname')}}" >Nick Names</a></li>
                 <li class="active"><a class="" href="{{ route('settings.support')}}" >Supported Camps</a></li>
                 <!-- <li><a class="" href="{{ route('settings.algo-preferences')}}">Default Algorithm</a></li> -->
-                <li class=""><a class="" href="{{ route('settings.blockchain')}}">Crypto Verification (was Metamask Account)</a></li>
+                <li class=""><a class="" href="{{ route('settings.blockchain')}}">Crypto Verification (was MetaMask Account)</a></li>
             </ul>
          <div class="SupportCmp">
 		        <p style="margin-left: 15px;color:red">Note : To change support order of camp, drag & drop the camp box on your choice position. </p>
