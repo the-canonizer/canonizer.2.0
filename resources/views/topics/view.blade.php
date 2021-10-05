@@ -30,10 +30,11 @@ if(isset($topic) && count($topic) > 0 ) { ?>
     <div class="container-fluid">
          @if(count($news) > 0)
         <div class="news-pnl Scolor-Pnl">
-            <h3>News Feeds
+            <h3 class="news_feeds_wrap">News Feeds
+                
                 @if($editFlag)
-                <a onClick="enableDeleteNews()" class="pull-right rgWT ml-3" href="javascript:void(0);"><i class="fa fa-trash"></i> Delete News</a>
-                <a class="pull-right rgWT" href="{{  url('editnews/' . $id . '/' . $parentcampnum)}}"><i class="fa fa-pencil-square-o"></i> Edit News</a>@endif
+                <a onClick="enableDeleteNews()" class="pull-right rgWT delete_news ml-sm-3" href="javascript:void(0);"><i class="fa fa-trash"></i> Delete News</a>
+                <a  class="pull-right rgWT" href="{{  url('editnews/' . $id . '/' . $parentcampnum)}}"><i class="fa fa-pencil-square-o"></i> Edit News</a>@endif
             </h3>
             <div class="content">
                 <ul>
@@ -159,7 +160,7 @@ if(isset($topic) && count($topic) > 0 ) { ?>
             <h3 class="row">
             <div class="col-md-6">Support Tree for "<?php echo $camp->camp_name;?>" Camp</div>
              <div class="col-md-6">
-                 <a  class="pull-right" data-toggle="tooltip" data-placement="left" title="Supporters can delegate their support to others.  Direct supporters
+                 <a style="color: #0000ff;" class="pull-right" data-toggle="tooltip" data-placement="left" title="Supporters can delegate their support to others.  Direct supporters
 receive email notifications of proposed camp changes, while delegated
 supporters don’t.  People delegating their support to others are shown
 below and indented from their delegates in an outline form.  If a
@@ -267,6 +268,15 @@ change camps with them."><i class="fa fa-question"></i></a>
     </div>              
     </div>
 <?php } ?>
+
+<style>
+@media screen and (max-width: 600px) 
+{ .news_feeds_wrap { display:flex; align-items:center; justify-content: space-between; } 
+.news_feeds_wrap a.rgWT {font-size:12px;} 
+.news_feeds_wrap a.rgWT.delete_news{margin-left: 0.5rem; margin-right: 0.5rem}}
+
+
+</style>
 <script>
 
 function enableDeleteNews(){
