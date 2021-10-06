@@ -297,6 +297,7 @@
  </div></div>
 </div>  <!-- /.right-whitePnl-->
  <script>
+$('#widget').draggable();
  	 jQuery.fn.preventDoubleSubmission = function() {
               $(this).on('submit',function(e){
                 var $form = $(this);
