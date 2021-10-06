@@ -54,7 +54,7 @@
 			<?php } else { ?>
 			<div class="form-group">
                 <label for="parent_camp_num">Parent Camp <span style="color:red">*</span></label>
-                <select  name="parent_camp_num" id="parent_camp_num" class="form-control">
+                <select  name="parent_camp_num" id="parent_camp_num" class="form-control" <?php if($objection=="objection") { ?> disabled <?php } ?>>
                     @foreach($parentcampsData as $parent)
 					<?php if($camp->camp_num != $parent->camp_num) { ?>
                     <option <?php if($camp->parent_camp_num==$parent->camp_num) echo "selected=selected";?> value="{{ $parent->camp_num }}">{{ $parent->camp_name}}</option>
