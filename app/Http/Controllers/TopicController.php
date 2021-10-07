@@ -652,7 +652,7 @@ class TopicController extends Controller {
             'nick_name' => 'required',
             'camp_name' => 'required|max:30|regex:/^[a-zA-Z0-9\s]+$/',
             'camp_about_url' => 'max:10',
-            'parent_camp_num' => 'required'
+            'parent_camp_num' => 'nullable'
             // 'note' => 'required',
         ],$messagesVal);
         
