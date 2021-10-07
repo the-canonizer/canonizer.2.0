@@ -22,7 +22,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ObjectionToSubmitterMail;
 use App\Mail\PurposedToSupportersMail;
-use App\Mail\ProposedChangeMail;
 use App\Mail\NewDelegatedSupporterMail;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Foundation\Auth\RedirectsUsers;
@@ -320,16 +319,7 @@ class TopicController extends Controller {
 
                   $receiver = (config('app.env') == "production") ? $user->email : config('app.admin_email');
                   Mail::to($receiver)->send(new PurposedToSupportersMail($user, $link, $data));
-                } */
-
-                // send history link in email
-                $data['link'] = \App\Model\Camp::getTopicCampUrl($topic->topic_num,1); 
-                try{
-                    Mail::to(Auth::user()->email)->bcc(config('app.admin_bcc'))->send(new ProposedChangeMail(Auth::user(), $link,$data));
-                }catch(\Swift_TransportException $e){
-                       throw new \Swift_TransportException($e);
-                }
-
+                  } */
             }
         } catch (Exception $e) {
 
@@ -561,20 +551,19 @@ class TopicController extends Controller {
         $onecamp = Camp::getLiveCamp($topicnum, $campnum);
         $parentcamp = (count($onecamp)) ? Camp::campNameWithAncestors($onecamp, '',$topic->topic_name) : "n/a";
         $camps = Camp::getCampHistory($topicnum, $campnum);
+        //echo "<pre>"; print_r($camps); exit;
         $submit_time = (count($camps)) ? $camps[0]->submit_time: null;
         $parentcampnum = (isset($onecamp->parent_camp_num)) ? $onecamp->parent_camp_num : 0;
         $nickNames = null;
         $ifIamSupporter = null;
-        $ifSupportDelayed = NULL;
         if (Auth::check()) {
             $nickNames = Nickname::personNicknameArray();
             $ifIamSupporter = Support::ifIamSupporter($topicnum, $campnum, $nickNames,$submit_time);
-            $ifSupportDelayed = Support::ifIamSupporter($topicnum, $campnum, $nickNames,$submit_time,$delayed=true); //if support provided after Camp submitted for IN-Review
         }
 
         //if(!count($onecamp)) return back();
         $wiky = new Wiky;
-        return view('topics.camphistory', compact('topic', 'camps', 'parentcampnum', 'onecamp', 'parentcamp', 'wiky', 'ifIamSupporter','submit_time','ifSupportDelayed'));
+        return view('topics.camphistory', compact('topic', 'camps', 'parentcampnum', 'onecamp', 'parentcamp', 'wiky', 'ifIamSupporter','submit_time'));
     }
 
     /**
@@ -601,14 +590,12 @@ class TopicController extends Controller {
         $submit_time = (count($statement)) ? $statement[0]->submit_time: null; 
         $nickNames = null;
         $ifIamSupporter = null;
-        $ifSupportDelayed = null;
         if (Auth::check()) {
             $nickNames = Nickname::personNicknameArray();
             $ifIamSupporter = Support::ifIamSupporter($topicnum, $campnum, $nickNames,$submit_time);
-            $ifSupportDelayed = Support::ifIamSupporter($topicnum, $campnum, $nickNames,$submit_time, $delayed=true);
         }
         $wiky = new Wiky;
-        return view('topics.statementhistory', compact('topic', 'statement', 'parentcampnum', 'onecamp', 'parentcamp', 'wiky', 'ifIamSupporter','submit_time','ifSupportDelayed'));
+        return view('topics.statementhistory', compact('topic', 'statement', 'parentcampnum', 'onecamp', 'parentcamp', 'wiky', 'ifIamSupporter','submit_time'));
     }
 
     /**
@@ -633,14 +620,12 @@ class TopicController extends Controller {
         $wiky = new Wiky;
         $nickNames = null;
         $ifIamSupporter = null;
-        $ifSupportDelayed = null;
         if (Auth::check()) {
             $nickNames = Nickname::personNicknameArray();
             $ifIamSupporter = Support::ifIamSupporter($topicnum, 1, $nickNames,$submit_time);
-            $ifSupportDelayed = Support::ifIamSupporter($topicnum, 1, $nickNames,$submit_time,$delayed=true);
         }
 
-        return view('topics.topichistory', compact('topics', 'wiky', 'ifIamSupporter', 'topicnum','parentTopic','submit_time', 'ifSupportDelayed'));
+        return view('topics.topichistory', compact('topics', 'wiky', 'ifIamSupporter', 'topicnum','parentTopic','submit_time'));
     }
 
     /**
