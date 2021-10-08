@@ -27,7 +27,7 @@
                 <li><a class="" href="{{ route('settings.nickname')}}" >Nick Names</a></li>
                 <li class=""><a class="" href="{{ route('settings.support')}}" >Supported Camps</a></li>
                 <!-- <li><a class="" href="{{ route('settings.algo-preferences')}}">Default Algorithm</a></li> -->
-                <li class="active"><a class="" href="{{ route('settings.blockchain')}}">Crypto Verification (was Metamask Account)</a></li>
+                <li class="active"><a class="" href="{{ route('settings.blockchain')}}">Crypto Verification (was MetaMask Account)</a></li>
                 
                 
             </ul>
@@ -99,18 +99,18 @@
                    
                         <div class="App" class="col-md-12">
                             <div id="enable_metamask">
-                                    <p>Please Enable your metamask first.</p>
+                                    <p>Please enable your MetaMask first.</p>
                                     <button class="btn btn-login" onClick="enableMetamask()">Enable MetaMask</button>
                              </div>
                             <div class="App-intro" id="login_div" style="display:none;">
                                 <div>
-                                    <p>Please login with metamask credentials to get the details.</p>
+                                    <p>Please login with MetaMask credentials to get the details.</p>
                                     <button class="btn btn-login" onClick="loginMetamask()">Login with MetaMask</button>
                                 </div>
                             </div>
                             <div id="download_metamask" style="display:none;">
                                 <a href="https://metamask.io">
-                                    <img src="https://raw.githubusercontent.com/MetaMask/faq/master/images/download-metamask.png" alt="DownLoad Metamask">
+                                    <img src="https://raw.githubusercontent.com/MetaMask/faq/master/images/download-metamask.png" alt="Download MetaMask">
                                 </a>
                             </div>
                         </div>
@@ -119,8 +119,9 @@
     </div>   
  </div></div>
 </div>  <!-- /.right-whitePnl-->
-
-    <script>
+    <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+    <script>        
+    let web3 = new Web3(Web3.givenProvider || "ws://localhost:8545");
     var accountsData = [];
     var isMetamaskLocked = false;
     var isLoggedIn = localStorage.getItem('userLoggedIn') || false;
@@ -143,19 +144,12 @@
        <?php }
      }?>
      var key = <?php echo $i; ?>;
-    if(isInstalled()){ 
+    if(isInstalled()){  
         if(isLoggedIn){ 
-            web3.eth.getAccounts(function(err, accounts){
-                if(err != null){ 
-                    localStorage.removeItem('userLoggedIn');
-                    isMetamaskLocked = true;
-                    isLoggedIn = false;
-                    $('#enable_metamask').show();
-                    $('#login_div').hide();
-                    $('#download_metamask').hide();                     
-                    $('#savedAddress').hide();
-                }
-                if(accounts.length == 0){ console.log('i m here');
+             window.ethereum
+                .request({ method: 'eth_accounts' })
+                .then(function(accounts){
+                 if(accounts.length == 0){ 
                     localStorage.removeItem('userLoggedIn');
                     isMetamaskLocked = true;
                     isLoggedIn = false;
@@ -172,9 +166,9 @@
                              var name = ""; 
                              html = html + "<tr><td>"+sr+"</td><td>"+name+"</td><td>"+publicAddress+"</td>";
                              web3.eth.getBalance(publicAddress,function(err,balance){
-                                var acBalance = web3.fromWei(balance, "ether")+"";
+                                var acBalance =web3.utils.fromWei(balance, "ether")+"";
                                 dbAddresses[publicAddress] = { name:'',address:publicAddress,balance:acBalance};
-                                html = html + "<td>"+web3.fromWei(balance, "ether") + " ETH"+"</td>";
+                                html = html + "<td>"+web3.utils.fromWei(balance, "ether") + " ETH"+"</td>";
                                 html = html + "<td><button class='btn btn-primary btn-xs' onClick=editAddress('"+publicAddress+"')>Edit</button></td></tr>";
                                 if(addressLenth){
                                         $('#userAddresses').append(html);
@@ -186,16 +180,25 @@
                         }
                      $('#savedAddress').show();
                    }
-                if(!isMetamaskLocked){ 
-                    $('#enable_metamask').hide();
-                    (isLoggedIn) ? $('#login_div').hide(): $('#login_div').show();
-                    $('#download_metamask').hide(); 
-                    $('#savedAddress').show();
-                }
-                   
-            });
-            
-            
+                    if(!isMetamaskLocked){ 
+                        $('#enable_metamask').hide();
+                        (isLoggedIn) ? $('#login_div').hide(): $('#login_div').show();
+                        $('#download_metamask').hide(); 
+                        $('#savedAddress').show();
+                    }
+                })
+                .catch((err) => {
+                    console.error(err);
+                    if(err != null){ 
+                        localStorage.removeItem('userLoggedIn');
+                        isMetamaskLocked = true;
+                        isLoggedIn = false;
+                        $('#enable_metamask').show();
+                        $('#login_div').hide();
+                        $('#download_metamask').hide();                     
+                        $('#savedAddress').hide();
+                    }
+                });
         }else{ 
             isLocked().then(function(r){
                 if(isMetamaskLocked){ 
@@ -213,7 +216,7 @@
             
         }
        
-    }else{
+    }else{ 
       if(addressLenth){
             $('#login_div').hide();
             $('#enable_metamask').hide()
@@ -230,10 +233,9 @@
     }
     //var web3 = window.Web3;
     async function enableEther(){
-        return await ethereum.enable();
-    }
-
+        return await window.ethereum.request({ method: 'eth_requestAccounts' })
     
+    }
     function enableMetamask(){
         enableEther().then(function(r){
                 $('#enable_metamask').hide();
@@ -255,25 +257,26 @@
 
     async function isLocked() {
             return new Promise((resolve,reject)=>{
-                web3.eth.getAccounts(function(err, accounts){
-                 if (err != null) {
-                    console.log(err)
-                    isMetamaskLocked =  true;
-                    resolve(true);
-                }
-                else if (accounts.length === 0) {
-                    console.log('MetaMask is locked');
-                    isMetamaskLocked =  true;
-                    resolve(true);
-                }
-                else {
-                    accountsData = accounts;
-                    console.log('MetaMask is unlocked')
-                    isMetamaskLocked = false;
-                    resolve(false);
-                }
-            });
-            
+                window.ethereum
+                .request({ method: 'eth_accounts' }).then((accounts)=>{
+                    if (accounts.length === 0) {
+                        console.log('MetaMask is locked');
+                        isMetamaskLocked =  true;
+                        resolve(true);
+                    }
+                    else {
+                        accountsData = accounts;
+                        console.log('MetaMask is unlocked')
+                        isMetamaskLocked = false;
+                        resolve(false);
+                    }
+                }).catch((err)=>{
+                    if (err != null) {
+                        console.log(err)
+                        isMetamaskLocked =  true;
+                        resolve(true);
+                    }
+                });            
             });
     }
    function editAddress(address){
@@ -290,16 +293,21 @@
         $("#create_address").hide();
    }
    function loginMetamask() {
-                var publicAddress = web3.eth.accounts[0];
-                var msg = web3.sha3('0x879a053d4800c6354e76c7985a865d2922c82fb5b3f4577b2fe08b998954f2e0');             
-                var params = [msg,publicAddress];
-                var method = "personal_sign";
-                web3.currentProvider.sendAsync({
-                    method,
-                    params,
-                    publicAddress,
-                },function(err,result){
-                    web3.personal.ecRecover(msg, result.result, function(error, signing_address) {
+        console.log('web3.personal',web3)
+                window.ethereum
+                .request({ method: 'eth_accounts' }).then((accounts)=>{
+                    var publicAddress = accounts[0];
+                    console.log('web',window.ethereum);
+                    var msg = web3.utils.sha3('0x879a053d4800c6354e76c7985a865d2922c82fb5b3f4577b2fe08b998954f2e0');             
+                    var params = [msg,publicAddress];
+                    var method = "personal_sign";
+                    console.log('params',params,msg);
+                    window.ethereum.sendAsync({
+                        method,
+                        params,
+                        publicAddress,
+                    },function(err,result){
+                        web3.eth.personal.ecRecover(msg, result.result, function(error, signing_address) {
                          if(signing_address == publicAddress){
                             localStorage.setItem('userLoggedIn',true);
                             var sr = key + 1;
@@ -309,9 +317,9 @@
                              if(typeof(dbAddresses[publicAddress]) =='undefined') {
                                 html = html + "<tr><td>"+sr+"</td><td>"+name+"</td><td>"+publicAddress+"</td>";
                                 web3.eth.getBalance(publicAddress,function(err,balance){
-                                    var acBalance = web3.fromWei(balance, "ether")+"";
+                                    var acBalance = web3.utils.fromWei(balance, "ether")+"";
                                         dbAddresses[publicAddress] = { name:'',address:publicAddress,balance:acBalance};
-                                    html = html + "<td>"+web3.fromWei(balance, "ether") + " ETH"+"</td>";
+                                    html = html + "<td>"+web3.utils.fromWei(balance, "ether") + " ETH"+"</td>";
                                     html = html + "<td><button class='btn btn-primary btn-xs' onClick=editAddress('"+publicAddress+"')>Edit</button></td><</tr>";
                                      if(addressLenth){
                                         $('#userAddresses').append(html);
@@ -325,8 +333,12 @@
                             $('#login_div').hide();
                             $('#download_metamask').hide();
                         }   
-                    })
+                   })
                 });
+                }).catch(err=>{
+                    
+                })
+                
            
        
     }

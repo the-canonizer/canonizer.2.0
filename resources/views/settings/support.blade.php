@@ -93,7 +93,7 @@
                 <li><a class="" href="{{ route('settings.nickname')}}" >Nick Names</a></li>
                 <li class="active"><a class="" href="{{ route('settings.support')}}" >Supported Camps</a></li>
                 <!-- <li><a class="" href="{{ route('settings.algo-preferences')}}">Default Algorithm</a></li> -->
-                <li ><a class="" href="{{ route('settings.blockchain')}}">Crypto Verification (was Metamask Account)</a></li>
+                <li ><a class="" href="{{ route('settings.blockchain')}}">Crypto Verification (was MetaMask Account)</a></li>
             </ul>
 		<form id="support_form" action="{{ route('settings.support.add')}}" method="post">	
          <div class="SupportCmp">
@@ -149,21 +149,20 @@
                          $topicSupport = $supportedTopic->topic->Getsupports($supportedTopic->topic_num,[$supportedTopic->nick_name_id],['nofilter'=>true]);
                        ?>
 
-					   @foreach($topicSupport as $k=>$support)
+					   @foreach($topicSupport as $k=>$support)					   
 					    <?php 
 					   	$liveCamp = \App\Model\Camp::getLiveCamp($support->topic_num,$support->camp_num,['nofilter'=>true]);
-					   //	echo "<pre>"; print_r($liveCamp); die;
+					   
 					   ?>
 					   @if(!in_array($support->camp->camp_num,$removedCampList)) <?php $key = $key + 1; ?>
-
-                       <div class="col-sm-12 column">
+						<div class="col-sm-12 column">
                             <div id="positions_{{ $support->support_id }}" class="SpCmpBDY  support-sorter-element ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
                             
 							<input type="hidden" class="final_support_order" name="support_order[{{$support->camp->camp_num}}]" id="support_order_{{ $support->support_id }}" value="{{ $key  }}">
                                 
 							<input type="hidden" name="camp[{{$support->camp->camp_num}}]" value="{{ $support->camp->camp_num }}">
 							<input type="hidden" name="delegated[{{$support->camp->camp_num}}]" value="{{ $support->delegate_nick_name_id }}">
-                            <b><span class="support_order">{{ $key }} </span> . {{ $support->camp->camp_name }} </b><br/>
+                            <b><span class="support_order">{{ $key }} </span> . {{ $liveCamp->camp_name }} </b><br/>
                              
                         
 							<?php if(isset($topic->topic_num) && isset($supportedTopic->topic_num) &&  $topic->topic_num==$supportedTopic->topic_num) $lastsupportOrder++;

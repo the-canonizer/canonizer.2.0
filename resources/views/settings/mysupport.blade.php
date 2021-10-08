@@ -29,7 +29,7 @@
                 <li><a class="" href="{{ route('settings.nickname')}}" >Nick Names</a></li>
                 <li class="active"><a class="" href="{{ route('settings.support')}}" >Supported Camps</a></li>
                 <!-- <li><a class="" href="{{ route('settings.algo-preferences')}}">Default Algorithm</a></li> -->
-                <li class=""><a class="" href="{{ route('settings.blockchain')}}">Crypto Verification (was Metamask Account)</a></li>
+                <li class=""><a class="" href="{{ route('settings.blockchain')}}">Crypto Verification (was MetaMask Account)</a></li>
             </ul>
          <div class="SupportCmp">
 		        <p style="margin-left: 15px;color:red">Note : To change support order of camp, drag & drop the camp box on your choice position. </p>
@@ -69,7 +69,7 @@
                             $topic_name_space_id = isset($topic[0]) ? $topic[0]->namespace_id:1;
                             $delegatedNickDetail  = $delegatedNick->getNickName($support->delegate_nick_name_id);
                             $nickName = \App\Model\Nickname::find($support->delegate_nick_name_id);
-                            $supported_camp = $nickName->getDelegatedSupportCampList($topic_name_space_id,$support->nick_name_id);
+                            $supported_camp = $nickName->getDelegatedSupportCampList($topic_name_space_id,$support->nick_name_id,['nofilter'=>true]);
                             $supported_camp_list = $nickName->getSupportCampListNames($supported_camp,$data->topic_num);
 						 ?>
 						 <div id="positions" class="SpCmpBDY delegate_support support-sorter-element ui-widget">

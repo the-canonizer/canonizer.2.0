@@ -29,7 +29,7 @@
                 <li><a class="" href="{{ route('settings.nickname')}}" >Nick Names</a></li>
                 <li class=""><a class="" href="{{ route('settings.support')}}" >Supported Camps</a></li>
                 <!-- <li><a class="" href="{{ route('settings.algo-preferences')}}">Default Algorithm</a></li> -->
-                <li class="active"><a class="" href="{{ route('settings.blockchain')}}">Crypto Verification (was Metamask Account)</a></li>
+                <li class="active"><a class="" href="{{ route('settings.blockchain')}}">Crypto Verification (was MetaMask Account)</a></li>
             </ul>
          
         
