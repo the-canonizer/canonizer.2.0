@@ -313,12 +313,22 @@ class TopicController extends Controller {
                 $data['forum_link'] = 'forum/' . $topic->topic_num . '-' . $topic->topic_name . '/1/threads';
                 $data['subject'] = "Proposed change to " . $topic->topic_name . " submitted";
                 
-                /** #771 issue solved**/
+                /** #771 issue solved
+                ** sent mail to all direct supporters in case someone updates in the supported topic
+                **/
                 foreach ($directSupporter as $supporter) {
 
                   $user = Nickname::getUserByNickName($supporter->nick_name_id);
                   $receiver = (config('app.env') == "production") ? $user->email : config('app.admin_email');
                   Mail::to($receiver)->send(new PurposedToSupportersMail($user, $link, $data));
+                }
+
+                /** #771 Topic submitter is  getting "proposed changed to topic**/
+                $data['link'] = \App\Model\Camp::getTopicCampUrl($topic->topic_num,1); 
+                try{
+                    Mail::to(Auth::user()->email)->bcc(config('app.admin_bcc'))->send(new ProposedChangeMail(Auth::user(), $link,$data));
+                }catch(\Swift_TransportException $e){
+                       throw new \Swift_TransportException($e);
                 }
 
             }
