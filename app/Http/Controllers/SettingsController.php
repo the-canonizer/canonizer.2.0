@@ -727,6 +727,7 @@ class SettingsController extends Controller
 
         $id = Auth::user()->id;
         $input = $request->all();
+        //echo "<pre>"; print_r($input); exit;
         $support_id = (isset($input['support_id'])) ? $input['support_id'] : 0;
         $topic_num = (isset($input['topic_num'])) ? $input['topic_num'] : 0;
         $nick_name_id = (isset($input['nick_name_id'])) ? $input['nick_name_id'] : 0;
@@ -761,8 +762,8 @@ class SettingsController extends Controller
                         session()->forget("topic-support-nickname-$spp->topic_num");
                         session()->forget("topic-support-tree-$spp->topic_num");
                         $this->emailForSupportDeleted($input);// sending email for removed support for delegated user
+                    }
                 }
-            }
                 Session::flash('success', "Your delegated support has been removed successfully.");
                 
             }else{
@@ -778,12 +779,25 @@ class SettingsController extends Controller
                     ->whereRaw("(start < $as_of_time) and ((end = 0) or (end > $as_of_time))")
                     ->where('support_order', '>', $currentSupportRec->support_order)
                     ->orderBy('support_order', 'ASC')
-                    ->get();
+                    ->get();                
+                
 
                 if ($currentSupport->update(array('end' => time()))) {
+                    /** #790 By Reena Talentelia , 8th oct,21  */
+                    Support::where('topic_num', $topic_num) 
+                            ->where('camp_num',$currentSupportRec->camp_num)
+                            ->where('delegate_nick_name_id','=',$nick_name_id)
+                            ->update(array('end' => time()));
+                    /** Comment ends */                    
                     foreach ($remaingSupportWithHighOrder as $support) {
                         $support->support_order = $currentSupportOrder;
                         $support->save();
+                         /** #790 By Reena Talentelia , 8th oct,21  */
+                        Support::where('topic_num', $topic_num) 
+                            ->where('camp_num',$support->camp_num)
+                            ->where('delegate_nick_name_id','=',$nick_name_id)
+                            ->update(array('support_order' => $currentSupportOrder));
+                        /** Comment ends */
                         $currentSupportOrder++;
                     }
 
