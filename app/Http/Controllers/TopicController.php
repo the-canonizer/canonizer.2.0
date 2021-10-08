@@ -302,8 +302,8 @@ class TopicController extends Controller {
             } else if ($eventtype == "UPDATE") {
 
                 $directSupporter = Support::getAllDirectSupporters($topic->topic_num);
-                $link = 'topic-history/' . $topic->topic_num;
-                // $link = 'topic/' . $topic->topic_num . '/' . $topic->camp_num . '?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $topic->go_live_time);
+                $link_history = 'topic-history/' . $topic->topic_num;
+                $link = 'topic/' . $topic->topic_num . '/' . $topic->camp_num . '?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $topic->go_live_time);
                 $data['object'] = $topic->topic_name;
                 $data['go_live_time'] = $topic->go_live_time;
                 $data['type'] = 'topic';
@@ -312,22 +312,13 @@ class TopicController extends Controller {
                 $data['nick_name'] = $nickName->nick_name;
                 $data['forum_link'] = 'forum/' . $topic->topic_num . '-' . $topic->topic_name . '/1/threads';
                 $data['subject'] = "Proposed change to " . $topic->topic_name . " submitted";
-
-                /* foreach ($directSupporter as $supporter) {
+                
+                /** #771 issue solved**/
+                foreach ($directSupporter as $supporter) {
 
                   $user = Nickname::getUserByNickName($supporter->nick_name_id);
-
-
                   $receiver = (config('app.env') == "production") ? $user->email : config('app.admin_email');
                   Mail::to($receiver)->send(new PurposedToSupportersMail($user, $link, $data));
-                } */
-
-                // send history link in email
-                $data['link'] = \App\Model\Camp::getTopicCampUrl($topic->topic_num,1); 
-                try{
-                    Mail::to(Auth::user()->email)->bcc(config('app.admin_bcc'))->send(new ProposedChangeMail(Auth::user(), $link,$data));
-                }catch(\Swift_TransportException $e){
-                       throw new \Swift_TransportException($e);
                 }
 
             }
