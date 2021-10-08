@@ -627,25 +627,26 @@ class Camp extends Model {
     public function getDeletegatedSupportCount($algorithm, $topicnum, $campnum, $delegateNickId, $parent_support_order, $multiSupport) {
 
         /* Delegated Support */
-
         $delegatedSupports = session("topic-support-{$topicnum}")->filter(function($item) use ($delegateNickId) {
             return $item->delegate_nick_name_id == $delegateNickId;
         });
 
         $score = 0;
-
         foreach ($delegatedSupports as $support) {
+
             $supportPoint = Algorithm::{$algorithm}($support->nick_name_id,$support->topic_num, $support->camp_num);
-
-            if ($multiSupport) {
-                $score += round($supportPoint / (2 ** ($parent_support_order)), 2);
-            } else {
-                $score += $supportPoint;
+            //Check for campnum
+            if($campnum == $support['camp_num']){
+                if ($multiSupport) {
+                    $score += round($supportPoint / (2 ** ($parent_support_order)), 2);
+                } else {
+                    $score += $supportPoint;
+                }
+                $score += $this->getDeletegatedSupportCount($algorithm, $topicnum, $campnum, $support->nick_name_id, $parent_support_order, $multiSupport);
             }
-
-            $score += $this->getDeletegatedSupportCount($algorithm, $topicnum, $campnum, $support->nick_name_id, $parent_support_order, $multiSupport);
+            
         }
-
+        
         return $score;
     }
 
