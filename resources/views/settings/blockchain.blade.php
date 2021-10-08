@@ -27,7 +27,7 @@
                 <li><a class="" href="{{ route('settings.nickname')}}" >Nick Names</a></li>
                 <li class=""><a class="" href="{{ route('settings.support')}}" >Supported Camps</a></li>
                 <!-- <li><a class="" href="{{ route('settings.algo-preferences')}}">Default Algorithm</a></li> -->
-                <li class="active"><a class="" href="{{ route('settings.blockchain')}}">Crypto Verification (was Metamask Account)</a></li>
+                <li class="active"><a class="" href="{{ route('settings.blockchain')}}">Crypto Verification (was MetaMask Account)</a></li>
                 
                 
             </ul>
@@ -99,18 +99,18 @@
                    
                         <div class="App" class="col-md-12">
                             <div id="enable_metamask">
-                                    <p>Please Enable your metamask first.</p>
+                                    <p>Please enable your MetaMask first.</p>
                                     <button class="btn btn-login" onClick="enableMetamask()">Enable MetaMask</button>
                              </div>
                             <div class="App-intro" id="login_div" style="display:none;">
                                 <div>
-                                    <p>Please login with metamask credentials to get the details.</p>
+                                    <p>Please login with MetaMask credentials to get the details.</p>
                                     <button class="btn btn-login" onClick="loginMetamask()">Login with MetaMask</button>
                                 </div>
                             </div>
                             <div id="download_metamask" style="display:none;">
                                 <a href="https://metamask.io">
-                                    <img src="https://raw.githubusercontent.com/MetaMask/faq/master/images/download-metamask.png" alt="DownLoad Metamask">
+                                    <img src="https://raw.githubusercontent.com/MetaMask/faq/master/images/download-metamask.png" alt="Download MetaMask">
                                 </a>
                             </div>
                         </div>
