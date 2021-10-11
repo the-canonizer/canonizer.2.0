@@ -20,6 +20,7 @@
             $camp_num = app('request')->input('campnum');
             $topic_num = app('request')->input('topicnum');
          ?>
+         @if($nickName->private === 0)
          <address class="user-address">
          @if(!in_array('last_name',$privateFlags) || !in_array('first_name',$privateFlags))
         <p><strong>Name : </strong>{{ !in_array('first_name',$privateFlags) ? $user->first_name : '' }} {{ !in_array('last_name',$privateFlags) ? $user->last_name : '' }}</p>
@@ -46,6 +47,7 @@
         <p><strong>Country : </strong>{{$user->country}}</p>
         @endif
         </address>
+        @endif
         <div class="Gcolor-Pnl">
             <h3 style="word-break: break-all; min-height: 60px;">
 			<div class="pull-left">Nick Name : {{ $nickName->nick_name}} </div>

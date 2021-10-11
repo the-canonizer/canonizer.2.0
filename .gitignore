@@ -8,3 +8,4 @@ public/robots.txt
 .bashrc
 .profile
 storage/logs/laravel.log
+.DS_Store
