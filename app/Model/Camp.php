@@ -180,7 +180,7 @@ class Camp extends Model {
     }
 
     public function scopeCampNameWithAncestors($query, $camp, $campname = '',$title = '') {
-         $as_of_time = time();
+        $as_of_time = time();
         if (isset($_REQUEST['asof']) && $_REQUEST['asof'] == 'bydate') {
             $as_of_time = strtotime($_REQUEST['asofdate']);
         }
@@ -1169,5 +1169,12 @@ class Camp extends Model {
                         ->get();
     }
 
-
+    public static function getCampNameByTopicIdCampId($topic_num,$campnum,$as_of_time){
+        $parentCampName ="";
+        $campDetails=Camp::where('topic_num', $topic_num)->where('camp_num', '=', $campnum)->where('objector_nick_id', '=', NULL)->where('go_live_time', '<=', $as_of_time)->orderBy('submit_time', 'DESC')->first();
+        if(!empty($campDetails)) {
+            $parentCampName = $campDetails->camp_name;
+        }
+        return $parentCampName;
+    }
 }
