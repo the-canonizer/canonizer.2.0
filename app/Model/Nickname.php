@@ -68,6 +68,7 @@ class Nickname extends Model {
         }       
       return $returnHtml;                  
     }
+
     public function getSupportCampListNamesEmail($supported_camp = [],$topic_num,$camp_num = 1){
         $returnHtml = [];
         //echo $camp_num; die;
@@ -163,6 +164,7 @@ class Nickname extends Model {
         }
         return $supports;
     }
+
     public function getSupportCampList($namespace = 1,$filter = array()) {
 
         $as_of_time = time();
@@ -257,6 +259,7 @@ class Nickname extends Model {
         $personNicknameArray = self::personNicknameArray();
         $usedNickid = 0;
         $mysupports = Support::select('nick_name_id')->where('topic_num', $topic_num)->whereIn('nick_name_id', $personNicknameArray)->groupBy('topic_num')->orderBy('support_order', 'ASC')->first();
+        
         if (empty($mysupports)) { 
             $mycamps = Camp::select('submitter_nick_id')->where('topic_num', $topic_num)->where('camp_num',$camp_num)->whereIn('submitter_nick_id', $personNicknameArray)->orderBy('submit_time', 'DESC')->first();
 
@@ -284,7 +287,6 @@ class Nickname extends Model {
             $usedNickid = $mysupports->nick_name_id;
         }
 
-            
         if ($usedNickid) {
             $nickNames = self::where('id', '=', $usedNickid)->get();
             if(empty($nickNames)){
@@ -367,4 +369,17 @@ class Nickname extends Model {
         return null;
     }
 
+    /**
+     * Check whether nick already exists or not
+     * @param string $nickname
+     * @return boolean 
+     */
+    public static function isNicknameExists($nickname) {
+        $nickname = self::where('nick_name', $nickname)->first();
+        if(empty($nickname)) {
+            return false;
+        } else {
+            return true;
+        }
+    }
 }
