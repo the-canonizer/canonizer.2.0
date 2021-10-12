@@ -29,6 +29,14 @@ blockquote {
     text-align: left;
 }
 
+li{
+    color: #74787E;
+    font-size: 16px;
+    line-height: 1.5em;
+    margin-top: 0;
+    text-align: left;
+}
+
 a {
     color: #3869D4;
 }

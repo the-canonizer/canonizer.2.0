@@ -627,25 +627,26 @@ class Camp extends Model {
     public function getDeletegatedSupportCount($algorithm, $topicnum, $campnum, $delegateNickId, $parent_support_order, $multiSupport) {
 
         /* Delegated Support */
-
         $delegatedSupports = session("topic-support-{$topicnum}")->filter(function($item) use ($delegateNickId) {
             return $item->delegate_nick_name_id == $delegateNickId;
         });
 
         $score = 0;
-
         foreach ($delegatedSupports as $support) {
+
             $supportPoint = Algorithm::{$algorithm}($support->nick_name_id,$support->topic_num, $support->camp_num);
-
-            if ($multiSupport) {
-                $score += round($supportPoint / (2 ** ($parent_support_order)), 2);
-            } else {
-                $score += $supportPoint;
+            //Check for campnum
+            if($campnum == $support['camp_num']){
+                if ($multiSupport) {
+                    $score += round($supportPoint / (2 ** ($parent_support_order)), 2);
+                } else {
+                    $score += $supportPoint;
+                }
+                $score += $this->getDeletegatedSupportCount($algorithm, $topicnum, $campnum, $support->nick_name_id, $parent_support_order, $multiSupport);
             }
-
-            $score += $this->getDeletegatedSupportCount($algorithm, $topicnum, $campnum, $support->nick_name_id, $parent_support_order, $multiSupport);
+            
         }
-
+        
         return $score;
     }
 
@@ -1138,6 +1139,15 @@ class Camp extends Model {
         self::$chilcampArray=[];
     }
 
+    public static function getObjectionOptionsLink(){
+        $helpLink = null;
+        $disagreementCamp = Camp::where('camp_name', 'Dealing with Disagreement')->first();
+        if(!empty($disagreementCamp)) {
+            $helpLink = 'topic/'.$disagreementCamp->topic_num.'-'.$disagreementCamp->camp_name.'/'.$disagreementCamp->camp_num;
+        }
+        return $helpLink;
+    }
+    
     public static function getAllLiveCampsInTopic($topicnum){ 
         return self::where('topic_num', '=', $topicnum)
                         ->where('camp_name', '!=', 'Agreement')
@@ -1154,7 +1164,6 @@ class Camp extends Model {
                         ->where('camp_name', '!=', 'Agreement')
                         ->where('objector_nick_id', '=', NULL)
                         ->where('go_live_time',">",time())
-                        ->where('grace_period',"=",1)
                         ->groupBy('camp_num')
                         ->orderBy('submit_time', 'desc')
                         ->get();

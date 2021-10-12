@@ -15,6 +15,7 @@
     <div class="panel panel-title">
       <h5>List of All Camp Threads</h5>
     </div>
+    @if(count($threads))
     <div>
       <a class="btn btn-primary" href="{{ URL::to('/')}}/forum/{{ $topicname }}/{{ $campnum }}/threads"> 
         All Threads
@@ -32,25 +33,17 @@
       <a class="btn btn-primary" href="{{ URL::to('/')}}/forum/{{ $topicname }}/{{ $campnum }}/threads?by=most_replies">
         Top 10 
       </a>
-
+      @endif
       <a class="btn btn-primary" href="{{ URL::to('/')}}/forum/{{ $topicname }}/{{ $campnum }}/threads/create"> 
         Create Thread 
       </a>
-
-      @endif
     </div>
+    @endif
     <br>
 
     <div class="panel-body">
-      <table class="table">
-
-        @if (count($threads) == 0)
-        <hr>
-        <p>No threads available for this topic.
-          Start <a href="{{ URL::to('/')}}/forum/{{ $topicname }}/{{ $campnum }}/threads/create">New Thread.
-          </a>
-        </p>
-        @endif
+      @if(count($threads) > 0)
+      <table class="table">       
         <thead>
           <th>Thread Name</th>
           <th>Replies</th>
@@ -64,23 +57,29 @@
               }
             ?>
           <tr>
-            <td>
+            <td class="thread-title">
               @if ($myThreads) 
                 <a href="{{ URL::to('/')}}/forum/{{ $topicname }}/{{ $campnum }}/threads/{{ $thread->id }}/edit">
                     <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                 </a>
               @endif
-              <a href="{{ URL::to('/')}}/forum/{{ $topicname }}/{{ $campnum }}/threads/{{ $thread->id }}">
+              <a href="{{ URL::to('/')}}/forum/{{ $topicname }}/{{ $campnum }}/threads/{{ $thread->id }}" >
                 {{ $thread->title }}
               </a>
             </td>
             <td>{{ $thread->replies->count() }}</td>
-            <td>{{ date('d-m-Y', strtotime($date))}}</td>
+            <td>replied on {{ date('d/m/Y, H:i:s', strtotime($date)) }}</td>
           </tr>
           @endforeach
         </tbody>
-
       </table>
+      @else 
+        <hr>
+        <p>No threads available for this topic.
+          Start <a href="{{ URL::to('/')}}/forum/{{ $topicname }}/{{ $campnum }}/threads/create">New Thread.
+          </a>
+        </p>
+        @endif
       <!-- For Pagination -->
       @if (count($threads) > 0)
       {{ $threads->links() }}

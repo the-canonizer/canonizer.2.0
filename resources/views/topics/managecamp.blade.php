@@ -54,7 +54,7 @@
 			<?php } else { ?>
 			<div class="form-group">
                 <label for="parent_camp_num">Parent Camp <span style="color:red">*</span></label>
-                <select  name="parent_camp_num" id="parent_camp_num" class="form-control">
+                <select  name="parent_camp_num" id="parent_camp_num" class="form-control" <?php if($objection=="objection") { ?> disabled <?php } ?>>
                     @foreach($parentcampsData as $parent)
 					<?php if($camp->camp_num != $parent->camp_num) { ?>
                     <option <?php if($camp->parent_camp_num==$parent->camp_num) echo "selected=selected";?> value="{{ $parent->camp_num }}">{{ $parent->camp_name}}</option>
@@ -83,7 +83,7 @@
             
              <div class="form-group">
                 <label for="camp_name">Camp Name ( Limit 30 Chars ) <span style="color:red">*</span></label>
-                <input type="text" maxlength="30" onkeydown="restrictTextField(event,30)" name="camp_name" <?php if($camp->camp_name=="Agreement") echo "readonly";?> class="form-control" id="camp_name" value="{{ $camp->camp_name}}">
+                <input type="text" maxlength="30" onkeydown="restrictTextField(event,30)" name="camp_name" <?php if($camp->camp_name=="Agreement") echo "readonly";?> class="form-control" id="camp_name" value="{{ $camp->camp_name}}" <?php if($objection=="objection") { ?> readonly="true" <?php } ?>>
                  @if ($errors->has('camp_name')) <p class="help-block">{{ $errors->first('camp_name') }}</p> @endif
              </div> 
              		

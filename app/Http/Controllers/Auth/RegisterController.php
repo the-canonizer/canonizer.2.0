@@ -3,15 +3,19 @@
 namespace App\Http\Controllers\Auth;
 
 use App\User;
+use Exception;
+use App\Model\Nickname;
+use App\Library\General;
+use App\Mail\WelcomeMail;
+use Illuminate\Http\Request;
+use App\Mail\OtpVerificationMail;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
-use Illuminate\Support\Facades\Mail;
-use App\Mail\WelcomeMail;
-use App\Mail\OtpVerificationMail;
-use Illuminate\Http\Request;
-use Illuminate\Auth\Events\Registered;
-use Illuminate\Support\Facades\Auth;
 
 class RegisterController extends Controller
 {
@@ -54,10 +58,15 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         $message = [
-            'password.regex'=>'Password must be atleast 8 characters, including atleast one digit, one lower case letter and one special character(@,# !,$..)',
-            'first_name.regex' => 'First name must be in letters only',
-            'middle_name.regex' => 'Middle name must be in letters only',
-            'last_name.regex' => 'Last name must be in letters only'
+            'password.regex'=>'Password must be atleast 8 characters, including atleast one digit, one lower case letter and one special character(@,# !,$..).',
+            'first_name.regex' => 'The first name must be in alphabets and space only.',
+            'first_name.required' => 'The first name field is required.',
+            'first_name.max' => 'The first name can not be more than 100.',
+            'middle_name.regex' => 'The middle name must be in alphabets and space only.',
+            'middle_name.max' => 'The middle name can not be more than 100.',
+            'last_name.regex' => 'The last name must be in alphabets and space only.',
+            'last_name.required' => 'The last name field is required.',
+            'last_name.max' => 'The last name can not be more than 100.',
         ];
         return Validator::make($data, [
             'first_name' => 'required|regex:/^[a-zA-Z ]*$/|string|max:100',
@@ -83,6 +92,7 @@ class RegisterController extends Controller
      */
     public function register(Request $request)
     {
+        
         $this->validator($request->all())->validate();
 
         return $this->create($request->all());
@@ -113,6 +123,11 @@ class RegisterController extends Controller
             'middle_name' =>$data['middle_name'],
             'otp'=>$authCode
         ]);
+        // Create nickname
+        if(!empty($user)) {
+            $nickname = $user->first_name."-".$user->last_name;
+            $this->createNickname($user->id, $nickname);
+        }
         
         //otp email
         try{
@@ -122,8 +137,8 @@ class RegisterController extends Controller
            return redirect()->route('register.otp', ['user' => base64_encode($user->email)]);
           //return redirect()->to('register/verify-otp')->withInput(['user', base64_encode($user->email)]);
         }catch(\Swift_TransportException $e){
-                            throw new \Swift_TransportException($e);
-                        } 
+            throw new \Swift_TransportException($e);
+        } 
         
     }
     
@@ -174,5 +189,40 @@ class RegisterController extends Controller
                             throw new \Swift_TransportException($e);
                         }    
         //return $user;
+    }
+
+    protected function createNickname($userID, $nickname) {
+        $nicknameCreated = false;
+        if(empty($userID) || empty($nickname)) {
+            return $nicknameCreated;
+        }
+        // Check whether user exists or not for the given id
+        $user = User::getById($userID);
+        if(empty($user)) {
+            return $nicknameCreated;
+        }
+
+        // Check whether nickname exists for the given nickname
+        $isExists = Nickname::isNicknameExists($nickname);
+        Log::info("IsNickNameExists ".$isExists);
+        if($isExists === true) {
+            $randNumber = mt_rand(000, 999);
+            $nickname = $nickname.$randNumber;
+        }
+
+        try {
+            // Create nickname
+            $nicknameObj = new Nickname();
+            $nicknameObj->owner_code = General::canon_encode($userID);
+            $nicknameObj->nick_name = $nickname;
+            $nicknameObj->private = 0;
+            $nicknameObj->create_time = time();
+            $nicknameObj->save();
+            $nicknameCreated = true;
+
+        } catch(Exception $ex) {
+            $nicknameCreated = false;
+        }
+        return $nicknameCreated;
     }
 }

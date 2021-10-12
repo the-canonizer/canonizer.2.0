@@ -73,7 +73,7 @@
                 <li><a class="" href="{{ route('settings.nickname')}}" >Nick Names</a></li>
                 <li class=""><a class="" href="{{ route('settings.support')}}" >Supported Camps</a></li>
                 <!-- <li><a class="" href="{{ route('settings.algo-preferences')}}">Default Algorithm</a></li> -->
-                <li><a class="" href="{{ route('settings.blockchain')}}">Crypto Verification (was Metamask Account)</a></li>
+                <li><a class="" href="{{ route('settings.blockchain')}}">Crypto Verification (was MetaMask Account)</a></li>
                 
             </ul>
              
@@ -109,7 +109,7 @@
                                             <form method="post" class="form-group" action="{{ url('/delete_social_link/') }}">
                                               <input name="_token" type="hidden" value="{{csrf_token()}}" />
                                               <input type="hidden" name="id" value="{{$sociallinks[$provider]['id']}}" />
-                                               <button  type="submit" onClick="submitForm(event)" class="btn btn-sm btn-danger">Unlink</button>
+                                               <button  type="submit" onClick="socialSubmitForm(event)" class="btn btn-sm btn-danger">Unlink</button>
                                               </form>  
                                           </div>
                                       
@@ -159,7 +159,7 @@
  </div></div>
 </div>  <!-- /.right-whitePnl-->
 <script type="text/javascript">
-  function submitForm(e){
+  function socialSubmitForm(e){
     $(e.target).attr("disabled", true);
     $(e.target).parent('form').submit();
     return true;

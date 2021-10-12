@@ -562,6 +562,7 @@ i.supporter.fa.fa-arrow-right , i.supporter.fa.fa-arrow-down {
     z-index: 1;
     top: 0px;
 }
+
 .tree li.parent_li>span {
     cursor:pointer
 }
@@ -742,6 +743,7 @@ i.supporter.fa.fa-arrow-right , i.supporter.fa.fa-arrow-down {
         margin-left: 250px;
         /*margin-top:-25px;*/
     }
+
     body.sidenav-toggled .right-whitePnl {
         margin-left: 55px;
     }
@@ -948,21 +950,23 @@ i.supporter.fa.fa-arrow-right , i.supporter.fa.fa-arrow-down {
     border: 1px solid #0100ff;
     border-bottom: none;
 }
+
+
 ul.mainouter li .tp-title {
     display:inline-block;
-    font-size:13px;
+    font-size: 16px;
     position: relative;
 }
-.supporter_list_tree{
-   /* position: absolute;
+/* .supporter_list_tree{
+   position: absolute;
     width: 100%;
     min-width:500px;
     height: 115px;
     display: block;
     z-index: 99;
     left: 100%;
-    top:0px;*/
-}
+    top:0px;
+} */
 /*.supporter_list_tree ul ul{
     background: #fff;
 }*/
@@ -995,8 +999,12 @@ ul.mainouter li .tp-title {
 .Scolor-Pnl .content {
     background-color: #e5ebf0;
     padding: .75rem 1rem;
-    font-size: 15px;
+    font-size: 16px;
     margin-bottom: 2rem;
+    line-height: 1.7;
+}
+.Scolor-Pnl .content img {
+    margin: 16px 0;
 }
 .Scolor-Pnl .footer{
     width: 100%;
@@ -1451,4 +1459,80 @@ a.rgWT {
     z-index: 99;
     position: absolute;
     top: 3px;
+}
+
+
+
+
+
+
+
+.content-wrapper .camp.top-head {
+    padding: 1rem 1rem 1rem 0;
+}
+
+/* .parent_li {
+    font-size: 20px;
+}  */
+
+@media screen and (max-width: 992px) {
+    .content-wrapper .camp.top-head {
+        padding-left: 1rem;
+    }
+    ul.mainouter li .tp-title {
+        margin-left: 5px;
+    }
+    ul.lowermneu.canoalgo, .lowermneu.asof {
+        padding: 0 .5rem !important;
+    }
+  }
+.videopodcast_div {
+    padding: 1rem;
+}
+
+.sameHeight #namespace {
+    margin-top: 1rem;
+}
+
+  .Scolor-Pnl {
+    font-size: 18px;
+    line-height: 1.7;
+}
+
+.Scolor-Pnl h3 {
+    font-size: 18px;
+    line-height: 1.5;
+}
+
+.Scolor-Pnl .content {
+    font-size: 16px;
+}
+
+.Scolor-Pnl .content img {
+    margin: 1rem 0;
+}
+
+
+
+.tree li .parent .fa-arrow-down {
+    font-size: 10px;
+}
+
+.tp-title {
+    margin-left: 5px;
+    font-size: 16px !important;
+}
+.camp.top-head > h3 {
+    line-height: 1.5;
+}
+
+
+.forum-thread-title {
+    max-width: 88%;
+    display: block  ;
+    word-break: break-all;
+}
+
+.thread-title a {
+    word-break: break-all;
 }

@@ -18,7 +18,8 @@ class CheckStatus
         //If the status is not approved redirect to login 
         if(Auth::check() && Auth::user()->status ==0 ){
             Auth::logout();
-            return redirect('/login')->with('erro_login', 'User is no longer active on canonizer');
+            // return redirect('/login')->with('erro_login', 'User is no longer active on canonizer');
+            return redirect('/login')->with('erro_login', 'Your account is not verified');
         }
         return $response;
     }

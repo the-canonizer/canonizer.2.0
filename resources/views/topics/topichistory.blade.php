@@ -53,7 +53,7 @@
                 </div>
                 <div class="col-sm-2">
                     <div class="yellow-circle"></div>
-                    <div class="circle-txt">Not Live</div>
+                    <div class="circle-txt">In Review</div>
                 </div>
                 <div class="col-sm-2">
                     <div class="yellow-circle" style="background-color:#1514ed"></div>
@@ -166,6 +166,10 @@
                         <div class="CmpHistoryPnl-footer">
         <?php if ($currentTime < $data->go_live_time && $currentTime >= $data->submit_time && ($ifIamSupporter || $ifIamDelegatedSupporter)) { ?>
                                 <a id="object" class="btn btn-historysmt" href="<?php echo url('manage/topic/' . $data->id . '-objection'); ?>">Object</a>
+                            <?php }else if($currentTime < $data->go_live_time && $currentTime >= $data->submit_time && $ifSupportDelayed){ ?>
+                                <button id="object" class="btn btn-historysmt"  disabled>Object &nbsp;<i title="You can not object this topic because you supported this camp after updation was submitted" class="fa fa-info-circle" aria-hidden="true"></i></button>
+                            <?php }else if($currentTime < $data->go_live_time && $currentTime >= $data->submit_time){ ?>
+                                <button id="object" class="btn btn-historysmt"  disabled>Object &nbsp;<i title="Only supporter have access to object the topic." class="fa fa-info-circle" aria-hidden="true"></i></button>
                             <?php } ?>  
                             <a id="update" class="btn btn-historysmt" href="<?php echo url('manage/topic/' . $data->id); ?>">Submit Topic Update Based On This</a>		
                             <?php

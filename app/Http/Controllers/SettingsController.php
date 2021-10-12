@@ -43,11 +43,14 @@ class SettingsController extends Controller
         $private_flags = array();
         
         $messages = [
-            'first_name.required' => 'First name is required.',
-            'last_name.required' => 'Last name is required.',
-            'first_name.regex' => 'First name must be in letters only',
-            'middle_name.regex' => 'Middle name must be in letters only',
-            'last_name.regex' => 'Last name must be in letters only'
+            'first_name.required' => 'The first name field is required.',
+            'first_name.max' => 'The first name can not be more than 100.',
+            'first_name.regex' => 'The first name must be in alphabets and space only.',
+            'last_name.required' => 'The last name field is required.',
+            'last_name.max' => 'The last name can not be more than 100.',
+            'last_name.regex' => 'The last name must be in alphabets and space only.',
+            'middle_name.regex' => 'The middle name must be in alphabets and space only.',
+            'middle_name.max' => 'The middle name can not be more than 100.',
         ];
         
 
@@ -137,7 +140,6 @@ class SettingsController extends Controller
 
         $messages = [
             'phone_number.required' => 'Phone number is required.'
-
         ];
         $validateArr = [
             'phone_number' => 'required|digits:10',
@@ -207,7 +209,8 @@ class SettingsController extends Controller
         if ($id) {
             $messages = [
                 'private.required' => 'Visibility status is required.',
-                'nick_name.required' => 'Nick name is required.'
+                'nick_name.required' => 'Nick name is required.',
+                'nick_name.max' => 'Nick name can not be more than 50 characters.',
             ];
 
 
@@ -365,9 +368,10 @@ class SettingsController extends Controller
         if ($id) {
             $messages = [
                 'nick_name.required' => 'The nick name field is required.',
+                'nick_name.max' => 'The nick name can not be more than 50 characters.',
             ];
             $validator = Validator::make($request->all(), [
-                'nick_name' => 'required',
+                'nick_name' => 'required|max:50',
             ], $messages);
 
             if ($validator->fails()) {
@@ -382,6 +386,7 @@ class SettingsController extends Controller
             $topic_num = $data['topic_num'];
             $mysupportArray = [];
             $myDelegatedSupports = [];
+            $myDelegator = Support::where('topic_num', $topic_num)->whereIn('delegate_nick_name_id', $userNicknames)->where('end', '=', 0)->groupBy('nick_name_id')->get();
             $mysupports = Support::where('topic_num', $topic_num)->whereIn('nick_name_id', $userNicknames)->where('end', '=', 0)->orderBy('support_order', 'ASC')->get();
            if(isset($mysupports) && count($mysupports) > 0){
                 foreach ($mysupports as $spp){
@@ -392,9 +397,6 @@ class SettingsController extends Controller
                     }
                 }
             }
-
-
-           
              
             if (isset($mysupports) && count($mysupports) > 0 && isset($data['removed_camp']) && count($data['removed_camp']) > 0) {
                 foreach ($mysupports as $singleSupport) {
@@ -462,6 +464,18 @@ class SettingsController extends Controller
                         $supportTopic->camp_num = $camp_num;
                         $supportTopic->support_order = $support_order;
                         $supportTopic->save();
+
+                        /** If any user hase delegated their support to this user, enter there delegated support #749 */
+                        foreach($myDelegator as $delegator){
+                            $supportTopic = new Support();
+                            $supportTopic->topic_num = $topic_num;
+                            $supportTopic->nick_name_id = $delegator->nick_name_id;
+                            $supportTopic->delegate_nick_name_id = $data['nick_name'];;
+                            $supportTopic->start = time();
+                            $supportTopic->camp_num = $camp_num;
+                            $supportTopic->support_order = $support_order;
+                            $supportTopic->save();
+                        }
                     }else{
                         $support = Support::where('topic_num', $topic_num)->where('camp_num','=', $camp_num)->where('nick_name_id','=',$data['nick_name'])->where('end', '=', 0)->get();
                          $support[0]->support_order = $support_order;
@@ -518,8 +532,8 @@ class SettingsController extends Controller
                         if($support && count($support)> 0 ){
                             $support[0]->end = time();
                             $support[0]->save();  
-                        }                            
-                    }                    
+                        }
+                    }
                 }
                
              }
