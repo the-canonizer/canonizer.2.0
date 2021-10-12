@@ -241,8 +241,6 @@ class SettingsController extends Controller
 
     public function support($id = null, $campnums = null)
     {
-
-
         $as_of_time = time();
         if (isset($id)) {
             $topicnumArray = explode("-", $id);
@@ -476,8 +474,13 @@ class SettingsController extends Controller
                         }
                     }else{
                         $support = Support::where('topic_num', $topic_num)->where('camp_num','=', $camp_num)->where('nick_name_id','=',$data['nick_name'])->where('end', '=', 0)->get();
-                         $support[0]->support_order = $support_order;
-                         $support[0]->save();
+                        $support[0]->support_order = $support_order;
+                        $support[0]->save();
+
+                        /** By Reena Nalwa Talentelgia 11th Oct #749 II Part(Re-ordering Case)  */
+                        $delegateSupport = Support::where('topic_num', $topic_num)->where('camp_num','=', $camp_num)->where('delegate_nick_name_id','=',$data['nick_name'])->where('end', '=', 0)->get();
+                        $delegateSupport[0]->support_order = $support_order;
+                        $delegateSupport[0]->save();
                     }
                     
 
@@ -840,10 +843,13 @@ class SettingsController extends Controller
 
     public function supportReorder(Request $request)
     {
-
         $data = $request->only(['positions', 'topicnum']);
         if (isset($data['positions']) && !empty($data['positions'])) {
             foreach ($data['positions'] as $position => $support_id) {
+                /** By Reena Nalwa Talentelgia #749 II part (re-order) */ 
+                $support = Support::where('support_id', $support_id)->first();                               
+                Support::where('camp_num', $support->camp_num)->where('topic_num', $support->topic_num)->where('delegate_nick_name_id', $support->nick_name_id)->update(array('support_order' => $position + 1));
+                /** ends */
                 Support::where('support_id', $support_id)->update(array('support_order' => $position + 1));
             }
             $topic_num = $data['topicnum'];
