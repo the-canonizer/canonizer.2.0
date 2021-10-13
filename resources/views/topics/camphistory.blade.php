@@ -236,9 +236,12 @@
                                 </div>
                             </div>
                             @endif
-                            
+                              
+                              @php
+                                //$data->submit_time > $liveCamp->submit_time
+                              @endphp
                              
-                                @if(Auth::user()->id == $submitterUserID && $data->submit_time > $liveCamp->submit_time  &&  $isGraceFlag &&  $data->grace_period && $interval > 0)
+                                @if(Auth::user()->id == $submitterUserID  &&  $isGraceFlag &&  $data->grace_period && $interval > 0)
                                 <div class="CmpHistoryPnl-footer" id="countdowntimer_block<?php echo $data->id ;?>">
                                     <div class="grace-period-note"><b>Note: </b>This countdown timer is the grace period in which you can make minor changes to your camp before other direct supporters are notified.</div>
                                    <div style="float: right"> 

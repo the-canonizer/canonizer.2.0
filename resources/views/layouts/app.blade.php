@@ -21,7 +21,9 @@
         <!-- jquery  -->
         <script src="{{ URL::asset('/js/jquery.min.js') }}"></script>
         <script src="{{ URL::asset('/js/jquery.min.js') }}"></script>
+        
         <script src="{{ URL::asset('/js/jquery-ui/jquery-ui.js') }}"></script>
+        <script src="{{ URL::asset('/js/jquery.ui.touch-punch.min.js') }}"></script>
         <script type="text/javascript" src="{{URL::asset('js/campoutline.js')}}"></script>
         <link href="{{ URL::asset('/js/jquery-ui/jquery-ui.css') }}" rel="stylesheet" type="text/css">
 
@@ -218,7 +220,7 @@
 
                                 <li>
                                  <?php
-								 $filter = '0.001';
+								 $filter = '0.000';
 								 if(session('filter')==="removed") {
 					
 								   $filter = '0.00';	
@@ -228,7 +230,7 @@
                                     $filter = $_REQUEST['filter'];										
 									session()->forget('filter');
 								 } else if(session('filter')!="removed") {
-									$filter = (isset($_SESSION['filterchange'])) ? $_SESSION['filterchange'] : '0.001';	 
+									$filter = (isset($_SESSION['filterchange'])) ? $_SESSION['filterchange'] : '0.000';	 
 								 }
 								 ?>
                                     <div class="filter">Filter < <input onkeypress="changeFilterOnEnter(this,event)" onblur="changeFilter(this)" type="number" value="{{ $filter }}"/></div>
