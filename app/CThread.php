@@ -18,11 +18,47 @@ class CThread extends Model
 {
     protected $table = 'thread';
     protected $guarded = [];
+    public $timestamps = false; /** By Reena Nalwa Talentelgia */
     /**
      * The Below functions is for defining
      * Many to Many Relation with Replies
      */
     public $primaryKey = 'id';
+
+
+    /**
+     * By Reena Nalwa
+     * Talentelgia #780
+     */
+    public static function boot()
+    {
+        parent::boot();
+
+        self::creating(function($model){
+            $model->created_at = time();
+            $model->updated_at = time();
+        });
+
+        self::created(function($model){
+            // ... code here
+        });
+
+        self::updating(function($model){
+            $model->updated_at = time();
+        });
+
+        self::updated(function($model){
+            // ... code here
+        });
+
+        self::deleting(function($model){
+            $model->updated_at = time();
+        });
+
+        self::deleted(function($model){
+            // ... code here
+        });
+    }
 
     /**
      * Path of the Forum
