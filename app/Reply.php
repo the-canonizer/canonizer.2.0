@@ -8,8 +8,12 @@ class Reply extends Model
 {
     protected $table = 'post';
     protected $guarded = [];
-    public $timestamps = false;
+    public $timestamps = false; /** By Reena Nalwa Talentelgia */
 
+     /**
+     * By Reena Nalwa
+     * Talentelgia #780
+     */
     public static function boot()
     {
         parent::boot();

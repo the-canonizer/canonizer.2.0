@@ -18,7 +18,7 @@ class CThread extends Model
 {
     protected $table = 'thread';
     protected $guarded = [];
-    public $timestamps = false;
+    public $timestamps = false; /** By Reena Nalwa Talentelgia */
     /**
      * The Below functions is for defining
      * Many to Many Relation with Replies
@@ -26,7 +26,10 @@ class CThread extends Model
     public $primaryKey = 'id';
 
 
-
+    /**
+     * By Reena Nalwa
+     * Talentelgia #780
+     */
     public static function boot()
     {
         parent::boot();
