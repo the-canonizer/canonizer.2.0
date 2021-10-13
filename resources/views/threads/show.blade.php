@@ -38,7 +38,7 @@
 
     <div class="panel panel-default">
       <div class="panel-body">
-        <span> Thread Created at {{ date('d/m/Y H:i:s', strtotime($threads->created_at))}}
+        <span> Thread Created at {{ to_local_time($threads->created_at)}}
           by <a href="{{$userUrl}}"> {{ $threads->creator->nick_name }} </a>
         </span><br />
 

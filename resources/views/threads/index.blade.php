@@ -68,7 +68,7 @@
               </a>
             </td>
             <td>{{ $thread->replies->count() }}</td>
-            <td>replied on {{ date('d/m/Y, H:i:s', strtotime($date)) }}</td>
+            <td>replied on {{ to_local_time($date)}}</td>
           </tr>
           @endforeach
         </tbody>
