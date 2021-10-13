@@ -107,7 +107,7 @@
            
             <div class="form-group">
                 <label for="">Edit summary (Briefly describe your changes)</label>
-                <textarea class="form-control" rows="4" name="note" id="note"> </textarea>
+                <textarea class="form-control" rows="4" name="note" id="note">{{$topicupdate == 'update'? $topic->note : ""}}</textarea>
 				@if ($errors->has('note')) <p class="help-block">{{ $errors->first('note') }}</p> @endif
             </div>
             <?php } ?>
