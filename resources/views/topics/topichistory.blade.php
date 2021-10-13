@@ -1,7 +1,8 @@
 @extends('layouts.app')
 @section('content')
 
-<?php if (!empty($topics)) {
+<?php 
+if (!empty($topics)) {
 	            $topicBreadName = "";
                 $currentLive = 0;
                 $currentTime = time();
@@ -116,7 +117,8 @@
                         
                     //grace period
                         if(Auth::check()){
-                       if(Auth::user()->id == $submitterUserID && $data->submit_time > $liveTopic->submit_time && $data->grace_period && $interval > 0){?>
+                   // if(Auth::user()->id == $submitterUserID && $data->submit_time  > $liveTopic->submit_time && $data->grace_period && $interval > 0){
+                       if(Auth::user()->id == $submitterUserID  && $data->grace_period && $interval > 0){?>
                          <script>
                                $(function(){
                                  $("#countdowntimer<?php echo $data->id; ?>").countdowntimer({
@@ -194,7 +196,10 @@
                             </div>
                          @endif
                          
-                          @if(Auth::user()->id == $submitterUserID && $isGraceFlag && $data->submit_time  > $liveTopic->submit_time && $data->grace_period && $interval > 0)
+                       @php 
+                       //if(Auth::user()->id == $submitterUserID && $data->submit_time  > $liveTopic->submit_time && $data->grace_period && $interval > 0){ 
+                         @endphp
+                        @if(Auth::user()->id == $submitterUserID && $isGraceFlag && $data->grace_period && $interval > 0)
                           <div class="CmpHistoryPnl-footer" id="countdowntimer_block<?php echo $data->id ;?>">
                                 <div class="grace-period-note"><b>Note: </b>This countdown timer is the grace period in which you can make minor changes to your topic before other direct supporters are notified.</div>
                                 <div style="float: right" > 

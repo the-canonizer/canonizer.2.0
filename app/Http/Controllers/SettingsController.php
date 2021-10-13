@@ -243,8 +243,6 @@ class SettingsController extends Controller
 
     public function support($id = null, $campnums = null)
     {
-
-
         $as_of_time = time();
         if (isset($id)) {
             $topicnumArray = explode("-", $id);
@@ -299,11 +297,13 @@ class SettingsController extends Controller
                    
                     foreach ($parentSupport as $parent){
                         
+                        $parentCampName = Camp::getCampNameByTopicIdCampId($onecamp->topic_num, $onecamp->parent_camp_num, $as_of_time);
                         if ($parent->camp_num == $campnum) {
                             //Session::flash('warning', "You are already supporting this camp. You can't submit support again.");
                             Session::flash('confirm', 'samecamp');
                         } else {
-                            Session::flash('warning', 'The following  camp is parent camp to "' . $onecamp->camp_name . '" and will be removed if you commit this support.');
+                            Session::flash('warning', '"'.$onecamp->camp_name .'" is a child camp to "' .$parentCampName .'", so if you commit support to "' . $onecamp->camp_name . '" the support of parent camp "' .$parentCampName .'" will be removed.');
+                            //Session::flash('warning', 'The following  camp is parent camp to "' . $onecamp->camp_name . '" and will be removed if you commit this support.');
                             Session::flash('confirm', 1);
                         }
                     }
@@ -319,15 +319,20 @@ class SettingsController extends Controller
             if ($childSupport) {
                 if (count($childSupport) == 1) {
                     foreach ($childSupport as $child)
+                    {
+                        $parentCampName = Camp::getCampNameByTopicIdCampId($topicnum, $child->camp_num, $as_of_time);
                         if ($child->camp_num == $campnum && $child->delegate_nick_name_id == 0) {
                             // Session::flash('warning', "You are already supporting this camp. You cant submit support again.");
                             Session::flash('confirm', 'samecamp');
                         } else {
-                            Session::flash('warning', 'The following  camp is child camp to "' . $onecamp->camp_name . '" and will be removed if you commit this support.');
+                            //Session::flash('warning', 'The following  camp is child camp to "'. $onecamp->camp_name . '" and will be removed if you commit this support.');
+                            Session::flash('warning', '"'.$onecamp->camp_name .'" is a parent camp to "'. $parentCampName. '", so if you commit support to "'.$onecamp->camp_name .'" the support of the child camp "'. $parentCampName . '" will be removed.');
                             Session::flash('confirm', 1);
                         }
+                    }
                 } else {
-                    Session::flash('warning', 'The following  camps are child camps to "' . $onecamp->camp_name . '" and will be removed if you commit this support.');
+                    //Session::flash('warning', 'The following  camps are child camps to "' . $onecamp->camp_name . '" and will be removed if you commit this support.');
+                    Session::flash('warning', '"'.$onecamp->camp_name .'"  is a parent camp to this list of children camps.  If you commit support to "'.$onecamp->camp_name .'" the support of the camps in this list will be removed.');
 
                     Session::flash('confirm', 1);
                 }
@@ -478,8 +483,13 @@ class SettingsController extends Controller
                         }
                     }else{
                         $support = Support::where('topic_num', $topic_num)->where('camp_num','=', $camp_num)->where('nick_name_id','=',$data['nick_name'])->where('end', '=', 0)->get();
-                         $support[0]->support_order = $support_order;
-                         $support[0]->save();
+                        $support[0]->support_order = $support_order;
+                        $support[0]->save();
+
+                        /** By Reena Nalwa Talentelgia 11th Oct #749 II Part(Re-ordering Case)  */
+                        $delegateSupport = Support::where('topic_num', $topic_num)->where('camp_num','=', $camp_num)->where('delegate_nick_name_id','=',$data['nick_name'])->where('end', '=', 0)->get();
+                        $delegateSupport[0]->support_order = $support_order;
+                        $delegateSupport[0]->save();
                     }
                     
 
@@ -729,6 +739,7 @@ class SettingsController extends Controller
 
         $id = Auth::user()->id;
         $input = $request->all();
+        //echo "<pre>"; print_r($input); exit;
         $support_id = (isset($input['support_id'])) ? $input['support_id'] : 0;
         $topic_num = (isset($input['topic_num'])) ? $input['topic_num'] : 0;
         $nick_name_id = (isset($input['nick_name_id'])) ? $input['nick_name_id'] : 0;
@@ -763,8 +774,8 @@ class SettingsController extends Controller
                         session()->forget("topic-support-nickname-$spp->topic_num");
                         session()->forget("topic-support-tree-$spp->topic_num");
                         $this->emailForSupportDeleted($input);// sending email for removed support for delegated user
+                    }
                 }
-            }
                 Session::flash('success', "Your delegated support has been removed successfully.");
                 
             }else{
@@ -780,12 +791,25 @@ class SettingsController extends Controller
                     ->whereRaw("(start < $as_of_time) and ((end = 0) or (end > $as_of_time))")
                     ->where('support_order', '>', $currentSupportRec->support_order)
                     ->orderBy('support_order', 'ASC')
-                    ->get();
+                    ->get();                
+                
 
                 if ($currentSupport->update(array('end' => time()))) {
+                    /** #790 By Reena Talentelia , 8th oct,21  */
+                    Support::where('topic_num', $topic_num) 
+                            ->where('camp_num',$currentSupportRec->camp_num)
+                            ->where('delegate_nick_name_id','=',$nick_name_id)
+                            ->update(array('end' => time()));
+                    /** Comment ends */                    
                     foreach ($remaingSupportWithHighOrder as $support) {
                         $support->support_order = $currentSupportOrder;
                         $support->save();
+                         /** #790 By Reena Talentelia , 8th oct,21  */
+                        Support::where('topic_num', $topic_num) 
+                            ->where('camp_num',$support->camp_num)
+                            ->where('delegate_nick_name_id','=',$nick_name_id)
+                            ->update(array('support_order' => $currentSupportOrder));
+                        /** Comment ends */
                         $currentSupportOrder++;
                     }
 
@@ -828,10 +852,13 @@ class SettingsController extends Controller
 
     public function supportReorder(Request $request)
     {
-
         $data = $request->only(['positions', 'topicnum']);
         if (isset($data['positions']) && !empty($data['positions'])) {
             foreach ($data['positions'] as $position => $support_id) {
+                /** By Reena Nalwa Talentelgia #749 II part (re-order) */ 
+                $support = Support::where('support_id', $support_id)->first();                               
+                Support::where('camp_num', $support->camp_num)->where('topic_num', $support->topic_num)->where('delegate_nick_name_id', $support->nick_name_id)->update(array('support_order' => $position + 1));
+                /** ends */
                 Support::where('support_id', $support_id)->update(array('support_order' => $position + 1));
             }
             $topic_num = $data['topicnum'];

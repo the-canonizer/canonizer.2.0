@@ -23,9 +23,14 @@ class UploadController extends Controller
         //     'file' => 'required|mimes:jpeg,bmp,png,jpg,gif|max:5120|min:1'
         // ];
          $validatorArray = [
-            'file' => 'required|max:5120|min:1'
+            'file' => 'required|max:5120|min:1',
+            'file_name' => 'required'
         ];
-        $validator = Validator::make($request->all(),$validatorArray);
+        $messages = array(
+            'file_name.required' => 'File name is required.'
+        );
+        $validator = Validator::make($request->all(),$validatorArray, $messages);
+
         if($validator->fails()) {
              return redirect()->back()->withErrors($validator);
         }
