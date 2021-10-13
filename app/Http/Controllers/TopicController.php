@@ -306,21 +306,22 @@ class TopicController extends Controller {
                 $link = 'topic/' . $topic->topic_num . '/' . $topic->camp_num . '?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $topic->go_live_time);
                 $data['object'] = $topic->topic_name;
                 $data['go_live_time'] = $topic->go_live_time;
-                $data['type'] = 'topic';
+                $data['type'] = 'topic : ';
+                $data['typeobject'] = 'topic';
+                //$data['note'] = "";
+                $data['support_camp'] = $topic->topic_name;
+                $data['camp_num'] = $topic->topic_num;
+                $data['topic_num'] = $topic->topic_num;
                 $nickName = Nickname::getNickName($all['nick_name']);
-
                 $data['nick_name'] = $nickName->nick_name;
                 $data['forum_link'] = 'forum/' . $topic->topic_num . '-' . $topic->topic_name . '/1/threads';
                 $data['subject'] = "Proposed change to " . $topic->topic_name . " submitted";
-                
                 /** #771 issue solved
                 ** sent mail to all direct supporters in case someone updates in the supported topic
                 **/
-                foreach ($directSupporter as $supporter) {
-
-                  $user = Nickname::getUserByNickName($supporter->nick_name_id);
-                  $receiver = (config('app.env') == "production") ? $user->email : config('app.admin_email');
-                  Mail::to($receiver)->send(new PurposedToSupportersMail($user, $link, $data));
+                if(!empty($directSupporter)){
+                    
+                    $this->mailSupporters($directSupporter, $link, $data);
                 }
 
                 /** #771 Topic submitter is  getting "proposed changed to topic**/
@@ -1208,7 +1209,7 @@ class TopicController extends Controller {
 
             $directSupporter = Support::getAllDirectSupporters($camp->topic_num, $camp->camp_num);
             $subscribers = Camp::getCampSubscribers($camp->topic_num, $camp->camp_num);
-             $livecamp = Camp::getLiveCamp($camp->topic_num,$camp->camp_num);
+            $livecamp = Camp::getLiveCamp($camp->topic_num,$camp->camp_num);
            
             //$link = 'camp/history/' . $id . '/' . $camp->camp_num . '?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $camp->go_live_time);
             $link = 'camp/history/' . $livecamp->topic_num . '/' . $livecamp->camp_num;
@@ -1311,11 +1312,11 @@ class TopicController extends Controller {
         foreach ($directSupporter as $supporter) {
             $user = Nickname::getUserByNickName($supporter->nick_name_id);
             $topic = \App\Model\Topic::where('topic_num','=',$data['topic_num'])->latest('submit_time')->get();
-             $topic_name_space_id = isset($topic[0]) ? $topic[0]->namespace_id:1;
-             $nickName = \App\Model\Nickname::find($supporter->nick_name_id);
-             $supported_camp = $nickName->getSupportCampList($topic_name_space_id,['nofilter'=>true]);
-             $supported_camp_list = $nickName->getSupportCampListNamesEmail($supported_camp,$data['topic_num'],$data['camp_num']);
-             $data['support_list'] = $supported_camp_list; 
+            $topic_name_space_id = isset($topic[0]) ? $topic[0]->namespace_id:1;
+            $nickName = \App\Model\Nickname::find($supporter->nick_name_id);
+            $supported_camp = $nickName->getSupportCampList($topic_name_space_id,['nofilter'=>true]);
+            $supported_camp_list = $nickName->getSupportCampListNamesEmail($supported_camp,$data['topic_num'],$data['camp_num']);
+            $data['support_list'] = $supported_camp_list; 
             $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
             try{
 
