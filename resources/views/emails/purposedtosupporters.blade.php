@@ -3,7 +3,9 @@
 <p>
  
 {{ $data['nick_name'] }} has proposed a change to this {{$data['type']}} <a href="{{ url('/') . '/' . $link }}">{{ $data['object']}} </a> which you currently {{(isset($data['subscriber']) && $data['subscriber'] == 1) ? 'subscribed' :'directly support'}}.  If no supporters of this {{$data['type']}} object to this change, it will go live in {{ config('app.go_live_text') }}.
-<p>Edit summary : {{ $data['note'] }}</p>
+@if(isset($data['note']))
+	<p>Edit summary : {{ $data['note'] }}</p>
+@endif	
 </p>
 <p>
 @if(isset($data['subscriber']) && $data['subscriber'] == 1)
@@ -48,6 +50,5 @@
 
 Sincerely,<br>
 {{ config('app.email_signature') }}
- 
 @endcomponent
 
