@@ -220,7 +220,7 @@
 
                                 <li>
                                  <?php
-								 $filter = '0.001';
+								 $filter = '0.000';
 								 if(session('filter')==="removed") {
 					
 								   $filter = '0.00';	
@@ -230,7 +230,7 @@
                                     $filter = $_REQUEST['filter'];										
 									session()->forget('filter');
 								 } else if(session('filter')!="removed") {
-									$filter = (isset($_SESSION['filterchange'])) ? $_SESSION['filterchange'] : '0.001';	 
+									$filter = (isset($_SESSION['filterchange'])) ? $_SESSION['filterchange'] : '0.000';	 
 								 }
 								 ?>
                                     <div class="filter">Filter < <input onkeypress="changeFilterOnEnter(this,event)" onblur="changeFilter(this)" type="number" value="{{ $filter }}"/></div>
