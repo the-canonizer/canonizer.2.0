@@ -180,7 +180,7 @@ class Camp extends Model {
     }
 
     public function scopeCampNameWithAncestors($query, $camp, $campname = '',$title = '') {
-         $as_of_time = time();
+        $as_of_time = time();
         if (isset($_REQUEST['asof']) && $_REQUEST['asof'] == 'bydate') {
             $as_of_time = strtotime($_REQUEST['asofdate']);
         }
@@ -654,6 +654,7 @@ class Camp extends Model {
 
         $supportCountTotal = 0;
         try {
+           
             foreach (session("topic-support-nickname-$topicnum") as $supported) {
                 
                 $nickNameSupports = session("topic-support-{$topicnum}")->filter(function ($item) use($supported) {
@@ -664,6 +665,7 @@ class Camp extends Model {
                 $currentCampSupport = $nickNameSupports->filter(function ($item) use($campnum) {
                             return $item->camp_num == $campnum; /* Current camp support */
                         })->first();
+                        
                 
 			   /*The canonizer value should be the same as their value supporting that camp. 
 				   1 if they only support one party, 
@@ -679,7 +681,8 @@ class Camp extends Model {
                     }
                     $supportCountTotal += $this->getDeletegatedSupportCount($algorithm, $topicnum, $campnum, $supported->nick_name_id, $currentCampSupport->support_order, $multiSupport);
                 }
-            }
+               
+            } 
         } catch (\Exception $e) {
             echo "topic-support-nickname-$topicnum" . $e->getMessage();
         }
@@ -907,6 +910,7 @@ class Camp extends Model {
         }else if((session()->has('asof') && session('asof') == 'bydate' && !isset($_REQUEST['asof']))){
             $as_of_time = strtotime(session('asofdateDefault'));
         }
+       
         if (!session("topic-support-nickname-{$this->topic_num}")) { 
             session(["topic-support-nickname-{$this->topic_num}" => Support::where('topic_num', '=', $this->topic_num)
                         ->where('delegate_nick_name_id', 0)
@@ -925,7 +929,6 @@ class Camp extends Model {
                         ->select(['support_order', 'camp_num', 'nick_name_id', 'delegate_nick_name_id', 'topic_num'])
                         ->get()]);
         }
-
         if ((!isset($_REQUEST['asof']) && !(session()->has('asofDefault'))) || (isset($_REQUEST['asof']) && $_REQUEST['asof'] == "default") || (session()->has('asofDefault') && session('asofDefault') == 'default' && !isset($_REQUEST['asof']))) {
                 session(["topic-child-{$this->topic_num}" => self::where('topic_num', '=', $this->topic_num)
                         ->where('camp_name', '!=', 'Agreement')
@@ -974,12 +977,10 @@ class Camp extends Model {
         $tree[$this->camp_num]['link'] = self::getTopicCampUrl($this->topic_num,$this->camp_num);//  url('topic/' . $topic_id . '/' . $this->camp_num.'#statement');
         $tree[$this->camp_num]['score'] = $this->getCamptSupportCount($algorithm, $this->topic_num, $this->camp_num);
         $tree[$this->camp_num]['children'] = $this->traverseCampTree($algorithm, $this->topic_num, $this->camp_num);
-        
         return $reducedTree = TopicSupport::sumTranversedArraySupportCount($tree);
     }
 
     public function campTreeHtml($activeCamp = null, $activeCampDefault = false,$add_supporter = false) {
-
         $reducedTree = $this->campTree(session('defaultAlgo', 'blind_popularity'), $activeAcamp = null, $supportCampCount = 0, $needSelected = 0);
         $filter = isset($_REQUEST['filter']) && is_numeric($_REQUEST['filter']) ? $_REQUEST['filter'] : 0.001;
         
@@ -1169,5 +1170,12 @@ class Camp extends Model {
                         ->get();
     }
 
-
+    public static function getCampNameByTopicIdCampId($topic_num,$campnum,$as_of_time){
+        $parentCampName ="";
+        $campDetails=Camp::where('topic_num', $topic_num)->where('camp_num', '=', $campnum)->where('objector_nick_id', '=', NULL)->where('go_live_time', '<=', $as_of_time)->orderBy('submit_time', 'DESC')->first();
+        if(!empty($campDetails)) {
+            $parentCampName = $campDetails->camp_name;
+        }
+        return $parentCampName;
+    }
 }
