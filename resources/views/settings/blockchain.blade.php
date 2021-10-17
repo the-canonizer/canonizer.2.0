@@ -246,7 +246,7 @@
     }
     
     function isInstalled() {
-         if (typeof web3 !== 'undefined'){
+         if (typeof web3 !== 'undefined' && web3.givenProvider != null){
                 console.log('MetaMask is installed')
                 ethereum.autoRefreshOnNetworkChange = false;
                 return true;
