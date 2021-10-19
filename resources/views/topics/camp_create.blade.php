@@ -35,8 +35,12 @@
             <div class="form-group">
                 <label for="camp_name">Nick Name <span style="color:red">*</span></label>
                 <select name="nick_name" id="nick_name" class="form-control">
-                    @foreach($nickNames as $nick)
+                    @foreach($userNicknames as $nick)
+                    @if(isset($nickNames) && count($nickNames) > 0 && $nickNames[0]->id  == $nick->id)
+                    <option value="{{ $nick->id }}" selected="selected">{{ $nick->nick_name}}</option>
+                    @else
                     <option value="{{ $nick->id }}">{{ $nick->nick_name}}</option>
+                    @endif
                     @endforeach
 					
                 </select>
