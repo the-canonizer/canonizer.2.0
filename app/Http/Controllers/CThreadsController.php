@@ -326,7 +326,7 @@ class CThreadsController extends Controller
 
 
           $title = request('title');
-          DB::update('update thread set title =? where id = ?', [$title, $threadId]);
+          DB::update('update thread set title =?, updated_at = ? where id = ?', [$title, time(), $threadId]);
 
           $return_url = 'forum/'.$topicName.'/'.$campNum.'/threads/'.$threadId.'/edit';
 

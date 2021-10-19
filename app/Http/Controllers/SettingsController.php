@@ -487,9 +487,11 @@ class SettingsController extends Controller
                         $support[0]->save();
 
                         /** By Reena Nalwa Talentelgia 11th Oct #749 II Part(Re-ordering Case)  */
-                        $delegateSupport = Support::where('topic_num', $topic_num)->where('camp_num','=', $camp_num)->where('delegate_nick_name_id','=',$data['nick_name'])->where('end', '=', 0)->get();
-                        $delegateSupport[0]->support_order = $support_order;
-                        $delegateSupport[0]->save();
+                        $delegateSupport = Support::where('topic_num', $topic_num)->where('camp_num','=', $camp_num)->where('delegate_nick_name_id','=',$data['nick_name'])->where('end', '=', 0)->update(array('support_order' => $support_order));
+                        /*if(count($delegateSupport) > 0){
+                            $delegateSupport[0]->support_order = $support_order;
+                            $delegateSupport[0]->save();
+                        }*/
                     }
                     
 
@@ -857,7 +859,7 @@ class SettingsController extends Controller
             foreach ($data['positions'] as $position => $support_id) {
                 /** By Reena Nalwa Talentelgia #749 II part (re-order) */ 
                 $support = Support::where('support_id', $support_id)->first();                               
-                Support::where('camp_num', $support->camp_num)->where('topic_num', $support->topic_num)->where('delegate_nick_name_id', $support->nick_name_id)->update(array('support_order' => $position + 1));
+                Support::where('camp_num', $support->camp_num)->where('topic_num', $support->topic_num)->where('delegate_nick_name_id', $support->nick_name_id)->where('end', '=', 0)->update(array('support_order' => $position + 1));
                 /** ends */
                 Support::where('support_id', $support_id)->update(array('support_order' => $position + 1));
             }
