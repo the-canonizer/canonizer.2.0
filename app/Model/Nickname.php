@@ -28,18 +28,22 @@ class Nickname extends Model {
 
     public static function personNickname() {
          if (Auth::check()) {
-        $userid = Auth::user()->id;
-        $encode = General::canon_encode($userid);
+            $userid = Auth::user()->id;
+            $encode = General::canon_encode($userid);
 
         return DB::table('nick_name')->select('id', 'nick_name')->where('owner_code', $encode)->orderBy('nick_name', 'ASC')->get();
        }
        return [];
     }
 
-    public static function personNicknameArray() {
+    public static function personNicknameArray($nickId = '') {
 
         $userNickname = array();
-        $nicknames = self::personNickname();
+        if(isset($nickId) && !empty($nickId)){
+            $nicknames = self::personAllNicknamesByAnyNickId($nickId);
+        }else{
+            $nicknames = self::personNickname();
+        }
 
         foreach ($nicknames as $nickname) {
             $userNickname[] = $nickname->id;
@@ -382,4 +386,33 @@ class Nickname extends Model {
             return true;
         }
     }
+
+    /**
+     * By Reena Nalwa
+     * Talentelgia
+     * Return owner code
+     */
+    public static function getOwnerCodeBynickId($nick_id){
+        $nickname = self::find($nick_id);
+        if (!empty($nickname) && count($nickname) > 0) {
+            return $ownerCode = $nickname->owner_code;;
+        }
+        return null;
+    }
+
+    /**
+     * By Reena Nalwa
+     * Talentelgia
+     * @nickId is nick name ID of a user
+     * return all nick names associated with that user
+     */
+    public static function personAllNicknamesByAnyNickId($nickId) {
+       $ownerCode = self::getOwnerCodeBynickId($nickId);
+       if(!empty($ownerCode)){
+        return DB::table('nick_name')->select('id', 'nick_name')->where('owner_code', $ownerCode)->orderBy('nick_name', 'ASC')->get();
+       }else{
+        return [];
+       }  
+    }
+
 }

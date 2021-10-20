@@ -623,7 +623,6 @@ class Camp extends Model {
             return 0;
         return ($a > $b) ? -1 : 1;
     }
-
     public function getDeletegatedSupportCount($algorithm, $topicnum, $campnum, $delegateNickId, $parent_support_order, $multiSupport) {
 
         /* Delegated Support */
@@ -656,11 +655,10 @@ class Camp extends Model {
         try {
            
             foreach (session("topic-support-nickname-$topicnum") as $supported) {
-                
                 $nickNameSupports = session("topic-support-{$topicnum}")->filter(function ($item) use($supported) {
                     return $item->nick_name_id == $supported->nick_name_id; /* Current camp support */
                 });
-                $supportPoint = Algorithm::{$algorithm}($supported->nick_name_id,$supported->topic_num,$supported->camp_num);
+                $supportPoint = Algorithm::{$algorithm}($supported->nick_name_id,$supported->topic_num,$supported->camp_num);                
                 
                 $currentCampSupport = $nickNameSupports->filter(function ($item) use($campnum) {
                             return $item->camp_num == $campnum; /* Current camp support */
@@ -672,7 +670,7 @@ class Camp extends Model {
 				   0.5 for their first, if they support 2, 
 				   0.25 after and half, again, for each one after that. */
 				if ($currentCampSupport) {
-                    $multiSupport = false;
+                    $multiSupport = false; //default
                      if ($nickNameSupports->count() > 1) {
                         $multiSupport = true;
                         $supportCountTotal += round($supportPoint / (2 ** ($currentCampSupport->support_order)), 2);
@@ -910,6 +908,7 @@ class Camp extends Model {
         }else if((session()->has('asof') && session('asof') == 'bydate' && !isset($_REQUEST['asof']))){
             $as_of_time = strtotime(session('asofdateDefault'));
         }
+        
        
         if (!session("topic-support-nickname-{$this->topic_num}")) { 
             session(["topic-support-nickname-{$this->topic_num}" => Support::where('topic_num', '=', $this->topic_num)
@@ -929,6 +928,7 @@ class Camp extends Model {
                         ->select(['support_order', 'camp_num', 'nick_name_id', 'delegate_nick_name_id', 'topic_num'])
                         ->get()]);
         }
+        
         if ((!isset($_REQUEST['asof']) && !(session()->has('asofDefault'))) || (isset($_REQUEST['asof']) && $_REQUEST['asof'] == "default") || (session()->has('asofDefault') && session('asofDefault') == 'default' && !isset($_REQUEST['asof']))) {
                 session(["topic-child-{$this->topic_num}" => self::where('topic_num', '=', $this->topic_num)
                         ->where('camp_name', '!=', 'Agreement')
@@ -967,7 +967,6 @@ class Camp extends Model {
 							
             }
         }
-
         $topic = Topic::getLiveTopic($this->topic->topic_num,['nofilter'=>true]);//(isset($this->topic) && isset($this->topic->topic_name)) ? $this->topic->topic_name: '';
         $topic_name = (isset($topic) && isset($topic->topic_name)) ? $topic->topic_name: '';
         $title = preg_replace('/[^A-Za-z0-9\-]/', '-', $topic_name);

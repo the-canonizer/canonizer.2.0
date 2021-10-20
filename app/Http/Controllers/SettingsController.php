@@ -22,6 +22,7 @@ use App\Model\EtherAddresses;
 use App\Model\SocialUser;
 use Hash;
 
+
 class SettingsController extends Controller
 {
 
@@ -224,8 +225,6 @@ class SettingsController extends Controller
                     ->withErrors($validator)
                     ->withInput();
             }
-
-
             $input = $request->all();
             $nickname = new Nickname();
             $nickname->owner_code = General::canon_encode($id);
@@ -470,33 +469,17 @@ class SettingsController extends Controller
                         $supportTopic->support_order = $support_order;
                         $supportTopic->save();
 
-                        /** If any user hase delegated their support to this user, enter there delegated support #749 */
-                        foreach($myDelegator as $delegator){
-                            $supportTopic = new Support();
-                            $supportTopic->topic_num = $topic_num;
-                            $supportTopic->nick_name_id = $delegator->nick_name_id;
-                            $supportTopic->delegate_nick_name_id = $data['nick_name'];;
-                            $supportTopic->start = time();
-                            $supportTopic->camp_num = $camp_num;
-                            $supportTopic->support_order = $support_order;
-                            $supportTopic->save();
-                        }
+                        /** If any user hase delegated their support to this user, enter there delegated support #749 includin sub-level delegates(&49 II Part) */
+                        $this->addDelegatedSupport($myDelegator,$topic_num,$camp_num,$support_order,$data['nick_name']);
+                        
                     }else{
                         $support = Support::where('topic_num', $topic_num)->where('camp_num','=', $camp_num)->where('nick_name_id','=',$data['nick_name'])->where('end', '=', 0)->get();
                         $support[0]->support_order = $support_order;
                         $support[0]->save();
-
-                        /** By Reena Nalwa Talentelgia 11th Oct #749 II Part(Re-ordering Case)  */
-                        $delegateSupport = Support::where('topic_num', $topic_num)->where('camp_num','=', $camp_num)->where('delegate_nick_name_id','=',$data['nick_name'])->where('end', '=', 0)->update(array('support_order' => $support_order));
-                        /*if(count($delegateSupport) > 0){
-                            $delegateSupport[0]->support_order = $support_order;
-                            $delegateSupport[0]->save();
-                        }*/
+                        /** By Reena Nalwa Talentelgia 11th Oct #749 II Part(Re-ordering Case)  And #790 All sub-level delegates */
+                        $this->reorderDelegateSupport($camp_num,$topic_num,$data['nick_name'],$support_order);
                     }
-                    
-
                     /* clear the existing session for the topic to get updated support count */
-
                     session()->forget("topic-support-{$topic_num}");
                     session()->forget("topic-support-nickname-{$topic_num}");
                     session()->forget("topic-support-tree-{$topic_num}");
@@ -741,7 +724,6 @@ class SettingsController extends Controller
 
         $id = Auth::user()->id;
         $input = $request->all();
-        //echo "<pre>"; print_r($input); exit;
         $support_id = (isset($input['support_id'])) ? $input['support_id'] : 0;
         $topic_num = (isset($input['topic_num'])) ? $input['topic_num'] : 0;
         $nick_name_id = (isset($input['nick_name_id'])) ? $input['nick_name_id'] : 0;
@@ -793,27 +775,15 @@ class SettingsController extends Controller
                     ->whereRaw("(start < $as_of_time) and ((end = 0) or (end > $as_of_time))")
                     ->where('support_order', '>', $currentSupportRec->support_order)
                     ->orderBy('support_order', 'ASC')
-                    ->get();                
-                
+                    ->get(); 
 
                 if ($currentSupport->update(array('end' => time()))) {
-                    /** #790 By Reena Talentelia , 8th oct,21  */
-                    Support::where('topic_num', $topic_num) 
-                            ->where('camp_num',$currentSupportRec->camp_num)
-                            ->where('delegate_nick_name_id','=',$nick_name_id)
-                            ->update(array('end' => time()));
-                    /** Comment ends */                    
                     foreach ($remaingSupportWithHighOrder as $support) {
                         $support->support_order = $currentSupportOrder;
                         $support->save();
-                         /** #790 By Reena Talentelia , 8th oct,21  */
-                        Support::where('topic_num', $topic_num) 
-                            ->where('camp_num',$support->camp_num)
-                            ->where('delegate_nick_name_id','=',$nick_name_id)
-                            ->update(array('support_order' => $currentSupportOrder));
-                        /** Comment ends */
-                        $currentSupportOrder++;
+                        $currentSupportOrder++;                 
                     }
+                    $this->deleteDelegateSupport($topic_num,$currentSupportRec->camp_num,$nick_name_id,$remaingSupportWithHighOrder,$currentSupportRec->support_order);
 
                     session()->forget("topic-support-$topic_num");
                     session()->forget("topic-support-nickname-$topic_num");
@@ -858,8 +828,9 @@ class SettingsController extends Controller
         if (isset($data['positions']) && !empty($data['positions'])) {
             foreach ($data['positions'] as $position => $support_id) {
                 /** By Reena Nalwa Talentelgia #749 II part (re-order) */ 
-                $support = Support::where('support_id', $support_id)->first();                               
-                Support::where('camp_num', $support->camp_num)->where('topic_num', $support->topic_num)->where('delegate_nick_name_id', $support->nick_name_id)->where('end', '=', 0)->update(array('support_order' => $position + 1));
+                $support = Support::where('support_id', $support_id)->first();
+                $supportOrder = $position + 1;                
+                $this->reorderDelegateSupport($support->camp_num,$support->topic_num,$support->nick_name_id, $supportOrder);
                 /** ends */
                 Support::where('support_id', $support_id)->update(array('support_order' => $position + 1));
             }
@@ -1035,5 +1006,76 @@ class SettingsController extends Controller
         } else {
             return redirect()->route('login');
         }
+    }
+
+    /**
+     * By Reena Nalwa
+     * Talentelgia
+     * #790 Re-order delegates including all Sub-level
+     */
+    public function reorderDelegateSupport($campNum,$topicNum,$nickNameId,$supportOrder){        
+        Support::where('camp_num', $campNum)->where('topic_num', $topicNum)->where('delegate_nick_name_id', $nickNameId)->where('end', '=', 0)->update(array('support_order' => $supportOrder));
+        $subLevelDelegates = Support::where('camp_num', $campNum)->where('topic_num', $topicNum)->where('delegate_nick_name_id', $nickNameId)->where('end', '=', 0)->get();
+        if(count($subLevelDelegates) > 0){
+            foreach($subLevelDelegates as $delegates){
+                $this->reorderDelegateSupport($campNum,$topicNum,$delegates->nick_name_id,$supportOrder);
+            }
+        }
+        return;
+    }
+
+    /**
+     * By Reena Nalwa
+     * Talentelgia
+     * #790 Add delegates support including all Sub-level
+     */
+    public function addDelegatedSupport($myDelegator,$topic_num,$camp_num,$support_order,$delegatedTo){
+        foreach($myDelegator as $delegator){
+            $supportTopic = new Support();
+            $supportTopic->topic_num = $topic_num;
+            $supportTopic->nick_name_id = $delegator->nick_name_id;
+            $supportTopic->delegate_nick_name_id = $delegatedTo;
+            $supportTopic->start = time();
+            $supportTopic->camp_num = $camp_num;
+            $supportTopic->support_order = $support_order;
+            $supportTopic->save();
+
+            //get sublevel of delgates
+            $userNicknames = Nickname::personNicknameArray($delegator->nick_name_id);
+            $subLevelDelegates = Support::where('topic_num', $topic_num)->whereIn('delegate_nick_name_id', $userNicknames)->where('end', '=', 0)->groupBy('nick_name_id')->get();
+            if(count($subLevelDelegates) > 0){
+                $this->addDelegatedSupport($subLevelDelegates,$topic_num,$camp_num,$support_order,$delegator->nick_name_id);
+            }
+        }
+        return;
+    }
+
+    /**
+     * Reena Nalwa
+     * Talentelgia
+     * #790 delegates & sub-level delegates
+     * Delete  All delegates support including all sub-levels
+     */
+
+    public function deleteDelegateSupport($topic_num,$camp_num,$delegatedTo,$remaingSupportWithHighOrder,$currentSupportOrder){
+        $orderRestart = $currentSupportOrder;
+        $subLevelDelegates = Support::where('topic_num', $topic_num)->where('delegate_nick_name_id', $delegatedTo)->where('end', '=', 0)->get();
+        Support::where('topic_num', $topic_num) 
+                ->where('camp_num',$camp_num)
+                ->where('delegate_nick_name_id','=',$delegatedTo)
+                ->update(array('end' => time()));                          
+        foreach ($remaingSupportWithHighOrder as $support) {
+            Support::where('topic_num', $topic_num) 
+                ->where('camp_num',$support->camp_num)
+                ->where('delegate_nick_name_id','=',$delegatedTo)
+                ->update(array('support_order' => $orderRestart));
+            $orderRestart++;
+        }
+        if(count($subLevelDelegates) > 0){
+            foreach($subLevelDelegates as $delegates){
+                $this->deleteDelegateSupport($topic_num,$camp_num,$delegates->nick_name_id,$remaingSupportWithHighOrder,$currentSupportOrder);
+            }
+        }
+        return;
     }
 }
