@@ -192,6 +192,8 @@ return [
         LaravelCaptcha\Providers\LaravelCaptchaServiceProvider::class,
         //Laravel\Socialite\SocialiteServiceProvider::class,
         App\Library\Socialite\SocialiteServiceProvider::class,
+        Barryvdh\Debugbar\ServiceProvider::class,
+
     ],
 
     /*
@@ -244,6 +246,7 @@ return [
         'Html' => Collective\Html\HtmlFacade::class,
         //'Socialite' => Laravel\Socialite\Facades\Socialite::class,
         'Socialite' => App\Library\Socialite\Facades\Socialite::class,
+        'Debugbar' => Barryvdh\Debugbar\Facade::class,
         
     ],
 
