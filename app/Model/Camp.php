@@ -655,13 +655,15 @@ class Camp extends Model {
         $supportCountTotal = 0;
         try {
            
+            /* Session(“topic-support-nickname-$topicnum”) basically queries the support table (does not include value of support because that’s computed at run time) and gives us all of the support for this topic grouped by nick name (so it is an array of arrays) */
             foreach (session("topic-support-nickname-$topicnum") as $supported) {
                 
+                /* Get all the support for a particular nick name for this topic */
                 $nickNameSupports = session("topic-support-{$topicnum}")->filter(function ($item) use($supported) {
                     return $item->nick_name_id == $supported->nick_name_id; /* Current camp support */
                 });
                 $supportPoint = Algorithm::{$algorithm}($supported->nick_name_id,$supported->topic_num,$supported->camp_num);
-                
+
                 $currentCampSupport = $nickNameSupports->filter(function ($item) use($campnum) {
                             return $item->camp_num == $campnum; /* Current camp support */
                         })->first();
