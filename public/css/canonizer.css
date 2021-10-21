@@ -607,7 +607,7 @@ i.supporter.fa.fa-arrow-right , i.supporter.fa.fa-arrow-down {
     font-size: 14px;
     width:auto;
 }
-.search-box .nav-item .nav-link:hover{
+.search-box .nav-item .nav-link:hover, .search-box .nav-item .nav-link.active{
     color: #0100ff;
 }
 .search-box .dropdown_li i.fa-user{
