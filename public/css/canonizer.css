@@ -1536,3 +1536,7 @@ a.rgWT {
 .thread-title a {
     word-break: break-all;
 }
+
+a.site-regular-text {
+    color: #212529;
+}

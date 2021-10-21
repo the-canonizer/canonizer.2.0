@@ -10,9 +10,9 @@
                 }
                $userUrl = route('user_supports',$reply->user_id)."?topicnum=".$threads->topic_id."&campnum=".$threads->camp_id."&namespace=".$namespace_id."#camp_".$threads->topic_id."_".$threads->camp_id;
             ?>
-            <a href="{{$userUrl}}">
+            <a href="{{ $userUrl }}">
                 {{ $reply->owner->nick_name }}
-            </a> replied on {{ to_local_time($reply->updated_at)}} <!-- By Reena Nalwa Talentelgia #780 -->
+            </a> replied on {{ Carbon\Carbon::createFromTimestamp( $reply->updated_at )->diffForHumans() }}
             <br><br>
         </div>
 
