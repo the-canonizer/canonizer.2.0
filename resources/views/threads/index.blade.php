@@ -68,7 +68,8 @@
               </a>
             </td>
             <td>{{ $thread->replies->count() }}</td>
-            <td>replied on {{ to_local_time($date)}}</td> <!-- By Reena Nalwa Talentelgia #780 -->
+            <td>
+              replied on {{ Carbon\Carbon::createFromTimestamp( $date )->diffForHumans() }} </td>
           </tr>
           @endforeach
         </tbody>
