@@ -38,7 +38,7 @@
 
     <div class="panel panel-default">
       <div class="panel-body">
-        <span> Thread Created at {{ to_local_time($threads->created_at)}} <!-- By Reena Nalwa Talentelgia #780 -->
+        <span> Thread Created at {{ to_local_time($threads->created_at) }}
           by <a href="{{$userUrl}}"> {{ $threads->creator->nick_name }} </a>
         </span><br />
 
