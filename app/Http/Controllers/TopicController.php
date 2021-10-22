@@ -461,8 +461,9 @@ class TopicController extends Controller {
 		$parentcampsData = Camp::getAllParentCamp($topicnum,['nofilter'=>true]);
 
         $nickNames = Nickname::topicNicknameUsed($topicnum);
+        $userNicknames =  Nickname::personNickname();
         $allNicknames = Nickname::orderBy('nick_name', 'ASC')->get();
-        return view('topics.camp_create', compact('camp','parentcampsData','topic', 'parentcampnum', 'parentcamp', 'nickNames', 'allNicknames'));
+        return view('topics.camp_create', compact('camp','parentcampsData','topic', 'parentcampnum', 'parentcamp', 'nickNames','userNicknames', 'allNicknames'));
     }
 
     /**

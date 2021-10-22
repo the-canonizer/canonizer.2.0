@@ -211,7 +211,7 @@
                                      $objectUsrUrl = route('user_supports',$data->objector_nick_id)."?topicnum=".$data->topic_num."&campnum=".$data->camp_num."&namespace=".$namespace_id."#camp_".$data->topic_num."_".$data->camp_num;  
                                   }
                                 ?>
-				  <b>Submitter Nick Name :</b> <a href="{{$userUrl}}">{{ isset($data->submitternickname->nick_name) ? $data->submitternickname->nick_name : 'N/A' }} </a><br/>
+				  <b>Submitter Nick Name :</b> <a href="{{$userUrl}}" class="site-regular-text">{{ isset($data->submitternickname->nick_name) ? $data->submitternickname->nick_name : 'N/A' }} </a><br/>
 				  <b>Go live Time :</b> {{ to_local_time($data->go_live_time) }}<br/> 
 				  @if($data->objector_nick_id !=null)
 				  <b>Object Reason :</b> {{ $data->object_reason}} <br/>	

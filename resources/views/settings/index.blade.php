@@ -543,7 +543,7 @@
     <div class="post"> </div>
  </div></div>
 </div>  <!-- /.right-whitePnl-->
-  <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB9KjPwjqnwoqvXVV3POGI0_hMXKcPxvDM&libraries=places"></script>
+  <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=<?php echo getenv('GOOGLE_API_KEY') ?>&libraries=places"></script>
     <script>
     	var ifAddressSelected = false;
     	var oldAddressVal = document.getElementById("address_1").value;
