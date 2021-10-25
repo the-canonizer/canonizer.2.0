@@ -12,7 +12,9 @@
             ?>
             <a href="{{ $userUrl }}">
                 {{ $reply->owner->nick_name }}
-            </a> replied on {{ Carbon\Carbon::createFromTimestamp( $reply->updated_at )->diffForHumans() }}
+            </a>
+                replied on {{ Carbon\Carbon::createFromTimestamp( $reply->updated_at )->diffForHumans() }}
+                at  {{ to_local_time( $reply->updated_at )  }}
             <br><br>
         </div>
 
