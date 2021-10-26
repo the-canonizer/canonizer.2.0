@@ -120,7 +120,28 @@ git push origin dev-jackson
 
    7. create a database in your mysql, set the same name in .env file and  run the migrations in the project( go to var/www/html/canonizer in terminal and run php artisan migrate)
 
+## Solving Database Deployment Fix
 
+Quick fix is:
+
+
+https://github.com/the-canonizer/canonizer.2.0/tree/development-50/database
+
+1. canonizer2.sql
+
+2. c_threads.sql
+
+3. replies.sql
+
+
+
+Then copy the rest of the migrations to a folder then apply it (Other than problematic one)
+
+----------------------------------------------------------------------------------------------------
+
+Ashutosh indicated "Schema is already in the migrations. But some files are unordered I believe"
+
+and: "I think we need to delete user_id (migrations) to the user migration table then it'll fix the issue. But need to test that. I am travelling tomorrow. Will try to look into this today "
 
 Thats it!
 
