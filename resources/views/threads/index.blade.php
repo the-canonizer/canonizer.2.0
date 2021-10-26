@@ -69,8 +69,12 @@
             </td>
             <td>{{ $thread->replies->count() }}</td>
             <td>
-              {{ $thread->replies[0]->owner->nick_name }} replied {{ Carbon\Carbon::createFromTimestamp( $date )->diffForHumans() }}
+              @if ( $thread->replies->count() )
+                {{ $thread->replies[0]->owner->nick_name }} replied {{ Carbon\Carbon::createFromTimestamp( $date )->diffForHumans() }}
               ({{ to_local_time( $date )  }})
+              @else
+                This thread doesn't have any posts yet.
+              @endif
             </td>
           </tr>
           @endforeach
