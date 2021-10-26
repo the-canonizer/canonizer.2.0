@@ -69,8 +69,8 @@
             </td>
             <td>{{ $thread->replies->count() }}</td>
             <td>
-              replied on {{ Carbon\Carbon::createFromTimestamp( $date )->diffForHumans() }} at
-              {{ to_local_time( $date )  }}
+              {{ $thread->replies[0]->owner->nick_name }} replied {{ Carbon\Carbon::createFromTimestamp( $date )->diffForHumans() }}
+              ({{ to_local_time( $date )  }})
             </td>
           </tr>
           @endforeach
