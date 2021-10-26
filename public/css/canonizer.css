@@ -1886,11 +1886,34 @@ a.rgWT {
 
 a.site-regular-text {
     color: #212529;
+    text-decoration: underline;
 }
 
 @media screen and (max-width:768px) {
     a.rgWT {
         font-size: 13px;
         margin-top: 5px;
+    }
+}
+
+.news-feeds-heading {
+    display: flex;
+    justify-content: space-between;
+}
+
+@media screen and (max-width: 360px) {
+    .news-feeds-heading {
+        flex-direction: column;
+    }
+    .nf-button-wrap {
+        display: flex;
+        justify-content: flex-start;
+    }
+    .delete-news-btn {
+        margin-left: 0 !important;
+        margin-right: 1rem;
+    }
+    .news-feeds-heading a.rgWT {
+        font-size: 14px;
     }
 }
