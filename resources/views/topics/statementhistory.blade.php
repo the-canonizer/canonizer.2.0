@@ -215,7 +215,7 @@
 				  <b>Go live Time :</b> {{ to_local_time($data->go_live_time) }}<br/> 
 				  @if($data->objector_nick_id !=null)
 				  <b>Object Reason :</b> {{ $data->object_reason}} <br/>	
-                  <b>Objector Nick Name :</b><a href="{{$objectUsrUrl}}"> {{ $data->objectornickname->nick_name }}</a> <br/> 			  
+                  <b>Objector Nick Name :</b><a href="{{$objectUsrUrl}}" class="site-regular-text"> {{ $data->objectornickname->nick_name }}</a> <br/> 			  
                   @endif 
 				  
 				 <div class="CmpHistoryPnl-footer">

@@ -1886,6 +1886,7 @@ a.rgWT {
 
 a.site-regular-text {
     color: #212529;
+    text-decoration: underline;
 }
 
 @media screen and (max-width:768px) {
