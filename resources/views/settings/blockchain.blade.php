@@ -124,6 +124,7 @@
     let web3 = new Web3(Web3.givenProvider || "ws://localhost:8545");
     var accountsData = [];
     var isMetamaskLocked = false;
+    var isMetamaskInstalled = false;
     var isLoggedIn = localStorage.getItem('userLoggedIn') || false;
     var dbAddresses ={};
     var addressLenth = <?php echo count($addresses); ?>;
@@ -217,16 +218,26 @@
         }
        
     }else{ 
-      if(addressLenth){
+      if(addressLenth){ 
             $('#login_div').hide();
             $('#enable_metamask').hide()
-            $('#download_metamask').hide();
-            $('#savedAddress').show();
+            if(!isMetamaskInstalled){
+                $('#download_metamask').show();
+                $('#savedAddress').hide();
+            }else{
+                $('#download_metamask').hide();
+                $('#savedAddress').show();
+            }
       }else{
             $('#login_div').hide();
             $('#enable_metamask').hide()
-            $('#download_metamask').show();
-            $('#savedAddress').hide();
+            if(!isMetamaskInstalled){
+                $('#download_metamask').show();
+                $('#savedAddress').hide();
+            }else{
+                $('#download_metamask').hide();
+                $('#savedAddress').show();
+            }
       } 
         
         
@@ -246,9 +257,11 @@
     }
     
     function isInstalled() {
-         if (typeof web3 !== 'undefined'){
+        console.log('web3',web3);
+         if (typeof web3 !== 'undefined' && typeof ethereum !== 'undefined'){
                 console.log('MetaMask is installed')
                 ethereum.autoRefreshOnNetworkChange = false;
+                isMetamaskInstalled = true;
                 return true;
             }
            

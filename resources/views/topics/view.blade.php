@@ -30,10 +30,13 @@ if(isset($topic) && count($topic) > 0 ) { ?>
     <div class="container-fluid">
          @if(count($news) > 0)
         <div class="news-pnl Scolor-Pnl">
-            <h3>News Feeds
+            <h3 class="news-feeds-heading">
+                <span>News Feeds</span>
                 @if($editFlag)
-                <a onClick="enableDeleteNews()" class="pull-right rgWT ml-3" href="javascript:void(0);"><i class="fa fa-trash"></i> Delete News</a>
-                <a class="pull-right rgWT" href="{{  url('editnews/' . $id . '/' . $parentcampnum)}}"><i class="fa fa-pencil-square-o"></i> Edit News</a>@endif
+                <div class="nf-button-wrap">
+                    <a onClick="enableDeleteNews()" class="pull-right rgWT ml-3 delete-news-btn" href="javascript:void(0);"><i class="fa fa-trash"></i> Delete News</a>
+                    <a class="pull-right rgWT" href="{{  url('editnews/' . $id . '/' . $parentcampnum)}}"><i class="fa fa-pencil-square-o"></i> Edit News</a>@endif
+                </div>
             </h3>
             <div class="content">
                 <ul>
