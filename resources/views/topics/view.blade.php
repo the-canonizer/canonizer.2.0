@@ -34,8 +34,9 @@ if(isset($topic) && count($topic) > 0 ) { ?>
                 <span>News Feeds</span>
                 @if($editFlag)
                 <div class="nf-button-wrap">
-                    <a onClick="enableDeleteNews()" class="pull-right rgWT ml-3 delete-news-btn" href="javascript:void(0);"><i class="fa fa-trash"></i> Delete News</a>
-                    <a class="pull-right rgWT" href="{{  url('editnews/' . $id . '/' . $parentcampnum)}}"><i class="fa fa-pencil-square-o"></i> Edit News</a>@endif
+                    <a class="rgWT mr-3" href="{{  url('editnews/' . $id . '/' . $parentcampnum)}}"><i class="fa fa-pencil-square-o"></i> Edit News</a>
+                    <a onClick="enableDeleteNews()" class="pull-right rgWT delete-news-btn" href="javascript:void(0);"><i class="fa fa-trash"></i> Delete News</a>
+                    @endif
                 </div>
             </h3>
             <div class="content">
