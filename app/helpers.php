@@ -5,7 +5,7 @@
         document.write( 
             ( new Date($unixtime * 1000) ).toLocaleTimeString(
                 'en-US', 
-                { weekday: 'short', year: 'numeric', month:'short', day:'numeric' }
+                { year: 'numeric', month:'short', day:'numeric' }
             ) 
          )
     </script>";
