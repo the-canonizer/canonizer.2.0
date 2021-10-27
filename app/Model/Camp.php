@@ -702,7 +702,8 @@ class Camp extends Model {
   
         if (is_array($traversedTreeArray)) {
             foreach ($traversedTreeArray as $campnum => $array) {
-                $filter = isset($_REQUEST['filter']) && is_numeric($_REQUEST['filter']) ? $_REQUEST['filter'] : 0.001;
+                /* ticket 846 sunil */
+                $filter = isset($_REQUEST['filter']) && is_numeric($_REQUEST['filter']) ? $_REQUEST['filter'] : 0.000;
 				if(isset($_REQUEST['filter']) && !empty($_REQUEST['filter'])) {
 									
 					session()->forget('filter');
@@ -982,7 +983,8 @@ class Camp extends Model {
 
     public function campTreeHtml($activeCamp = null, $activeCampDefault = false,$add_supporter = false, $arrowposition ='fa-arrow-down') {
         $reducedTree = $this->campTree(session('defaultAlgo', 'blind_popularity'), $activeAcamp = null, $supportCampCount = 0, $needSelected = 0);
-        $filter = isset($_REQUEST['filter']) && is_numeric($_REQUEST['filter']) ? $_REQUEST['filter'] : 0.001;
+        /* ticket 846 sunil */
+        $filter = isset($_REQUEST['filter']) && is_numeric($_REQUEST['filter']) ? $_REQUEST['filter'] : 0.000;
             if(session('filter')==="removed") {
     			
     		 $filter = 0.000;	
