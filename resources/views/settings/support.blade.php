@@ -316,7 +316,7 @@ $('#widget').draggable();
         $('form').preventDoubleSubmission();
 
         $( function() {
-            $( ".column" ).sortable({
+            $( ".column.sortCamp" ).sortable({
                 connectWith: ".column",
                 cursor: 'move',
                 opacity: 0.6,
