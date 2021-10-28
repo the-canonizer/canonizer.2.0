@@ -770,7 +770,8 @@ i.supporter.fa.fa-arrow-down {
     font-size: 14px;
     width: auto;
 }
-.search-box .nav-item .nav-link:hover, .search-box .nav-item .nav-link.active{
+
+.search-box .nav-item .nav-link:hover {
     color: #0100ff;
 }
 
@@ -854,7 +855,7 @@ i.supporter.fa.fa-arrow-down {
         flex-direction: column;
         margin-top: 56px;
         padding: 0em 1em;
-        width: 240px;
+        width: 225px;
     }
     #mainNav .navbar-collapse .navbar-sidenav>.nav-item {
         width: 250px;
