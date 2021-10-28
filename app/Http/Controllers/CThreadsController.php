@@ -191,7 +191,6 @@ class CThreadsController extends Controller
      */
     public function create($topicid, $topicname, $campnum)
     {
-
         $userNicknames = Nickname::topicNicknameUsed($topicid);
 
         $topic = getArray($topicid, $topicname, $campnum);
@@ -268,17 +267,24 @@ class CThreadsController extends Controller
      * @parameter $CThread
      * @return    \Illuminate\Http\Response
      */
-    public function show($topicid, $topicname, $campnum, $CThread)
+    public function show($topicid, $topicname, $campnum, $CThread,$reply_id=null)
     {
         $topic = getArray($topicid, $topicname, $campnum);
         $camp  = Camp::getLiveCamp($topicid,$campnum);
+        if($reply_id!=null){
+          $replies=Reply::findOrFail($reply_id);
+        }
+        else{
+          $replies=CThread::findOrFail($CThread)->replies()->paginate(10);
+        }
         return view(
             'threads.show',
              $topic, [
                 'parentcamp'    => Camp::campNameWithAncestors($camp,'',$topicname),
                 'userNicknames' => (auth()->check()) ? Nickname::topicNicknameUsed($topicid) : array(),
                 'threads' => CThread::findOrFail($CThread),
-                'replies' => CThread::findOrFail($CThread)->replies()->paginate(10),
+                'replies' => $replies,
+                'reply_id' => $reply_id,
             ]
         );
     }
@@ -290,7 +296,6 @@ class CThreadsController extends Controller
      * @return    \Illuminate\Http\Response
      */
     public function edit($topicName, $campNum, $threadId) {
-    
       return view(
         'threads.edit',
         [
@@ -356,7 +361,7 @@ class CThreadsController extends Controller
     public function destroy(CThread $CThread)
     {
         //
-    }
+    } 
 }
 
 /**
