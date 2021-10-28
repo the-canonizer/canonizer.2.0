@@ -48,17 +48,21 @@
 
       </div>
 
-  </div>
+  </div> 
 
   @if(auth()->check())
 
   <form method="POST" id="postForm"
     action="{{ URL::to('/')}}/forum/{{ $topicname }}/{{ $campnum }}/threads/{{ $threads->id }}/replies">
-    {{ csrf_field() }}
-
+    {{ csrf_field() }} 
+    @if($reply_id!=null)
+      <input name="reply_id" type="hidden" value="{{$reply_id}}"  required>
+    @else
+      <input name="reply_id" type="hidden" value="" required>
+    @endif 
     <div class="form-group">
       <br>
-      <textarea name="body" id="body" class="form-control" placeholder="Reply to thread Here" rows="5"></textarea>
+      <textarea name="body" id="body" class="form-control" placeholder="Reply to thread Here" rows="5">@if($reply_id!=null){{$replies->body}} @endif</textarea>
       @if ($errors->has('body')) <p class="help-block">The reply field is required.</p> @endif
     </div>
 
@@ -71,7 +75,6 @@
         @foreach($userNicknames as $nick)
         <option value="{{ $nick->id }}">{{ $nick->nick_name}}</option>
         @endforeach
-
       </select>
       @if ($errors->has('nick_name')) <p class="help-block">{{ $errors->first('nick_name') }}</p> @endif
       <?php if(count($userNicknames) == 0) { ?>
@@ -81,7 +84,7 @@
       <?php } ?>
     </div>
 
-    <button type="submit" id="postSubmitBtn" class="btn btn-primary">Submit</button>
+    <button type="submit" id="postSubmitBtn" class="btn btn-primary"><?php if($reply_id==null) { ?> Submit <?php } else {?> Update <?php }?></button>
 
   </form>
   <!-- Added Here -->
@@ -90,7 +93,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/summernote-bs4.js"></script>
   <script>
     $(document).ready(function () {
-
+      $('#postSubmitBtn').css('cursor', 'pointer');
         $("#postForm").submit(function (e) {          
             //disable the submit button
             $("#postSubmitBtn").attr("disabled", true);
@@ -133,24 +136,21 @@
   @else
   Please <a href="{{ url('/login') }}">Sign In</a> to comment on this Thread
   @endif
-  <!-- Replies To Thread -->
-  <div class="pagination">
-    <a class="active item">
-      <ul class="list-group">
-        @foreach ($replies as $reply)
-        <li class="list-group-item">
-          @include('threads.replies')
-        </li>
-        @endforeach
-      </ul>
-    </a>
-
-  </div>
-
-
-  {{ $replies->links() }}
-
-  
+  @if($reply_id==null)
+    <!-- Replies To Thread -->
+    <div class="pagination">
+      <a class="active item">
+        <ul class="list-group">
+          @foreach ($replies as $reply)
+          <li class="list-group-item">
+            @include('threads.replies')
+          </li>
+          @endforeach
+        </ul>
+      </a>
+    </div>
+    {{ $replies->links() }}
+  @endif
 
 </div>
 
