@@ -15,7 +15,7 @@
     <div class="panel panel-title">
       <h5>List of All Camp Threads</h5>
     </div>
-    @if(count($threads))
+    @if(count($threads) >= 0)
     <div>
       <a class="btn btn-primary" href="{{ URL::to('/')}}/forum/{{ $topicname }}/{{ $campnum }}/threads"> 
         All Threads
@@ -68,7 +68,14 @@
               </a>
             </td>
             <td>{{ $thread->replies->count() }}</td>
-            <td>replied on {{ to_local_time($date)}}</td> <!-- By Reena Nalwa Talentelgia #780 -->
+            <td>
+              @if ( $thread->replies->count() )
+                {{ $thread->replies[0]->owner->nick_name }} replied {{ Carbon\Carbon::createFromTimestamp( $date )->diffForHumans() }}
+              ({{ to_local_time( $date )  }})
+              @else
+                This thread doesn't have any posts yet.
+              @endif
+            </td>
           </tr>
           @endforeach
         </tbody>

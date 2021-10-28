@@ -35,7 +35,7 @@
             <div class="form-group">
                 <label for="camp_name">Nick Name <span style="color:red">*</span></label>
                 <select name="nick_name" id="nick_name" class="form-control">
-                    @foreach($nickNames as $nick)
+                    @foreach($nickNames as $nick)                   
                     <option value="{{ $nick->id }}">{{ $nick->nick_name}}</option>
                     @endforeach
 					

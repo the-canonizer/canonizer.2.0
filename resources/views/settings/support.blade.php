@@ -96,7 +96,7 @@
                 <li ><a class="" href="{{ route('settings.blockchain')}}">Crypto Verification (was MetaMask Account)</a></li>
             </ul>
 		<form id="support_form" action="{{ route('settings.support.add')}}" method="post">	
-         <div class="SupportCmp">
+         <div class="SupportCmp" id="draggable-area">
 		        <p style="margin-left: 15px;color:red">Note : To change support order of camp, drag & drop the camp box on your choice position. </p>
 		        <?php $lastsupportOrder = 0;
 				
@@ -155,7 +155,7 @@
 					   
 					   ?>
 					   @if(!in_array($support->camp->camp_num,$removedCampList)) <?php $key = $key + 1; ?>
-						<div class="col-sm-12 column">
+						<div class="col-sm-12 column sortCamp">
                             <div id="positions_{{ $support->support_id }}" class="SpCmpBDY  support-sorter-element ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
                             
 							<input type="hidden" class="final_support_order" name="support_order[{{$support->camp->camp_num}}]" id="support_order_{{ $support->support_id }}" value="{{ $key  }}">
@@ -178,7 +178,7 @@
 				  @if(Session::get('confirm') !='samecamp' && !Session::has('warningDelegate')) 
 				  <?php $lastsupportOrder++; ?>
 					   <!-- current supporting camp detail -->
-					<div class="col-sm-12 column">   
+					<div class="col-sm-12 column sortCamp">   
 					   <div id="positions_0" class="SpCmpBDY  support-sorter-element ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
                          
 							<input type="hidden" class="final_support_order" name="support_order[{{$camp->camp_num}}]" id="support_order_0" value="{{ $key + 1  }}">
@@ -316,10 +316,14 @@ $('#widget').draggable();
         $('form').preventDoubleSubmission();
 
         $( function() {
-            $( ".column" ).sortable({
+            $( ".column.sortCamp" ).sortable({
                 connectWith: ".column",
                 cursor: 'move',
                 opacity: 0.6,
+				axis: "y",
+				scroll: false,
+				containment: "#draggable-area",
+				
                 update: function(event, ui) {
                 $( ".column" ).find('.support-sorter-element').each(function(i,v){
                         $(v).find('.support_order').text(i+1);
