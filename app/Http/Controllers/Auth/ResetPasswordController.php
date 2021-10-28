@@ -68,12 +68,16 @@ class ResetPasswordController extends Controller {
 			//$link = 'topic/38-Canonized-help-statement-text/1';
 			$link = 'topic/132-Help/1';
             try{
-			    Mail::to($user->email)->send(new RecoverAccountMail($user,$link));			
-                return $this->sendResetResponse("Password Reset Successfully");
+                
+			Mail::to($user->email)->send(new RecoverAccountMail($user,$link));
+			
+            return $this->sendResetResponse("Password Reset Successfully");
             }catch(\Swift_TransportException $e){
-                throw new \Swift_TransportException($e);
-            } 
+                            throw new \Swift_TransportException($e);
+                        } 
         }
+
+
         return $this->sendResetFailedResponse($request, $response);
     }
 
@@ -137,7 +141,8 @@ class ResetPasswordController extends Controller {
      * @return \Illuminate\Http\RedirectResponse
      */
     protected function sendResetResponse($response) {
-        return redirect($this->redirectPath())->with('success', trans($response));
+        return redirect($this->redirectPath())
+                        ->with('status', trans($response));
     }
 
     /**
