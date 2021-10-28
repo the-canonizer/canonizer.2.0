@@ -15,7 +15,7 @@
     <div class="panel panel-title">
       <h5>List of All Camp Threads</h5>
     </div>
-    @if(count($threads))
+    @if(count($threads) >= 0)
     <div>
       <a class="btn btn-primary" href="{{ URL::to('/')}}/forum/{{ $topicname }}/{{ $campnum }}/threads"> 
         All Threads
