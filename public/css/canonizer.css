@@ -1917,3 +1917,18 @@ a.site-regular-text {
         font-size: 14px;
     }
 }
+
+.notifySignPNL.topic-status {
+    display: flex;
+    margin-bottom: 15px;
+    flex-flow: wrap;
+  }
+  .notifySignPNL.topic-status .col {
+    width: 100%;
+    flex: auto;
+  }
+  @media screen and (min-width: 600px) {
+    .notifySignPNL.topic-status .col {
+      width: calc(100% / 4);
+    }
+  }
