@@ -71,7 +71,7 @@
                             $as_of_time = strtotime($_REQUEST['asofdate']);
                         } 
                        ?>
-                         {!! $campData->campTreeHtml($createCamp,false,false,'fa-arrow-right') !!}
+                         {!! $campData->campTreeHtml($createCamp) !!}
                          <?php $createCamp = 0;?>
                        @endforeach
                     <a id="btn-more" class="remove-row" data-id="{{ $topic->id }}"></a>
