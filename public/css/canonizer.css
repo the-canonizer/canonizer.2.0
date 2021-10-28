@@ -1040,7 +1040,7 @@ i.supporter.fa.fa-arrow-down {
         margin-bottom: 20px;
     }
     .right-whitePnl {
-        padding: 1rem 0rem 0px;
+        padding: 1rem 1rem 0px;
     }
     .Lcolor-Pnl .content {
         font-size: 12px;
@@ -1053,6 +1053,19 @@ i.supporter.fa.fa-arrow-down {
         column-count: 1;
     }
 }
+@media (max-width:575px) {
+    .add-nickname-section .social-oauth-table.table {
+        font-size: 10px;
+    }
+    .social-oauth-table.table td, .social-oauth-table.table th {
+        padding: 0.45rem;
+    }
+    .social-oauth-table.table .col-md-12 .col-sm-4 {
+        padding-right: 0;
+        padding-left: 0;
+    }
+}
+
 
 .help-block {
     color: red;
