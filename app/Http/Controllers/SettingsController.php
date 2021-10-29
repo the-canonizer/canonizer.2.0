@@ -303,7 +303,7 @@ class SettingsController extends Controller
                             Session::flash('confirm', 'samecamp');
                         } else {
                             //Session::flash('warning', '"'.$onecamp->camp_name .'" is a child camp to "' .$parentCampName .'", so if you commit support to "' . $onecamp->camp_name . '" the support of parent camp "' .$parentCampName .'" will be removed.');
-                            Session::flash('warning', 'Already supporting a parent camp: "'.$onecamp->camp_name .'" is a child camp to "' .$parentCampName .'", so if you commit support to "'.$onecamp->camp_name .'", the support of the parent camp "' .$parentCampName .'" will be removed.');
+                            Session::flash('warning', '"'.$onecamp->camp_name .'" is a child camp to "' .$parentCampName .'", so if you commit support to "'.$onecamp->camp_name .'", the support of the parent camp "' .$parentCampName .'" will be removed.');
                             Session::flash('confirm', 1);
                         }
                     }
@@ -326,7 +326,7 @@ class SettingsController extends Controller
                             Session::flash('confirm', 'samecamp');
                         } else {
                                 //Session::flash('warning', '"'.$onecamp->camp_name .'" is a parent camp to "'. $parentCampName. '", so if you commit support to "'.$onecamp->camp_name .'" the support of the child camp "'. $parentCampName . '" will be removed.');
-                                Session::flash('warning', 'Already supporting a child camp: "'.$onecamp->camp_name .'" is a parent camp to "'. $childCampName. '", so if you commit support to "'.$onecamp->camp_name .'", the support of the child camp "'. $childCampName. '" will be removed.
+                                Session::flash('warning', '"'.$onecamp->camp_name .'" is a parent camp to "'. $childCampName. '", so if you commit support to "'.$onecamp->camp_name .'", the support of the child camp "'. $childCampName. '" will be removed.
 
 ');
                                 Session::flash('confirm', 1);
@@ -334,7 +334,7 @@ class SettingsController extends Controller
                     }
                 } else {
                         //Session::flash('warning', '"'.$onecamp->camp_name .'"  is a parent camp to this list of children camps.  If you commit support to "'.$onecamp->camp_name .'" the support of the camps in this list will be removed.');
-                        Session::flash('warning', 'Already supporting multiple child camps: "'.$onecamp->camp_name .'" is a parent camp to this list of child camps. If you commit support to "'.$onecamp->camp_name .'", the support of the camps in this list will be removed.');
+                        Session::flash('warning', '"'.$onecamp->camp_name .'" is a parent camp to this list of child camps. If you commit support to "'.$onecamp->camp_name .'", the support of the camps in this list will be removed.');
 
                         Session::flash('confirm', 1);
                 }
