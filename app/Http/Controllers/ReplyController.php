@@ -73,7 +73,7 @@ class ReplyController extends Controller
         // Return Url after creating thread Successfully
         $return_url = '/forum/'.$topicid.'-'.$topicname.'/'.$campnum.'/threads/'.$threadId;
 
-        CommonForumFunctions::sendEmailToSupportersForumPost($topicid, $campnum, $return_url,request('body'), $threadId, request('nick_name'), $topicname);
+        CommonForumFunctions::sendEmailToSupportersForumPost($topicid, $campnum, $return_url,request('body'), $threadId, request('nick_name'), $topicname,request('reply_id'));
         return redirect($return_url)->with('success', $msg);
 
        // return back();
