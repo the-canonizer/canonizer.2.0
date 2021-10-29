@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use DB;
 use App\Model\Camp;
 use Illuminate\Support\Facades\Auth;
-
+use Carbon\Carbon;
 class Topic extends Model {
 
     protected $table = 'topic';
@@ -90,7 +90,7 @@ class Topic extends Model {
 		return self::where('topic_num',$topicnum)->latest('submit_time')->get();
 	}
 
-      public static function getLiveTopic($topicnum, $filter = array()) {
+    public static function getLiveTopic($topicnum, $filter = array()) {
         if ((!isset($_REQUEST['asof']) && !session()->has('asofDefault')) || (isset($_REQUEST['asof']) && $_REQUEST['asof'] == "default")  || (session()->has('asofDefault') && session('asofDefault') == 'default' && !isset($_REQUEST['asof']))) {
 
             return self::where('topic_num', $topicnum)
@@ -122,5 +122,13 @@ class Topic extends Model {
         }
     }
 	
+
+    public static function checkDateNotEql($d1, $d2) {
+        $date1 = Carbon::createFromTimestamp($d1);
+        $date2 = Carbon::createFromTimestamp($d2);
+
+        return $result = $date1->ne($date2);
+        //ne() function returns true if $date1 is not equal to $date2.
+    }
 
 }
