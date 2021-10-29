@@ -11,7 +11,7 @@
         <input type="hidden" name="_token" value="{{ csrf_token() }}">
         <div class="form-group">
             <label for="email"> Email <span style="color:red">*</span></label>
-            <input type="email" disable name="email" class="form-control" id="email" value="{{ $email }}">
+            <input type="email" disable name="email" class="form-control" id="email" value="{{ $email }}" placeholder="Email">
             @if ($errors->has('email')) <p class="help-block">{{ $errors->first('email') }}</p> @endif
         </div>
         <div class="form-group">
@@ -20,12 +20,12 @@
                     <ul class="ps_tooltp"><li>Password must be atleast 8 characters</li><li>Must have atleast one lower case letter</li><li>Must have atleast one digit</li><li>Must have atleast one special character(@,# !,$..)</li></ul>
                 </div>
             </label>
-            <input type="password"  name="password" class="form-control" id="password" >
+            <input type="password"  name="password" class="form-control" id="password" placeholder="New Password">
             @if ($errors->has('password')) <p class="help-block">{{ $errors->first('password') }}</p> @endif
         </div>
         <div class="form-group">
             <label for="password_confirmation">Confirm Password <span style="color:red">*</span></label>
-            <input type="password" name="password_confirmation" class="form-control" id="password_confirmation">
+            <input type="password" name="password_confirmation" class="form-control" id="password_confirmation" placeholder="Confirm Password">
             @if ($errors->has('password_confirmation')) <p class="help-block">{{ $errors->first('password_confirmation') }}</p> @endif
         </div>
         <button type="submit" id="submit" class="btn btn-login">Reset</button>
