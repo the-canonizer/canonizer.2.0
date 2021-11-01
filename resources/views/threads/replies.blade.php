@@ -15,7 +15,7 @@
             <a href="{{ $userUrl }}">
                 {{ $reply->owner->nick_name }}
             </a>
-            @if($checkdate){{ updated }}@else{{ replied }}@endif
+            <?php if($checkdate){ echo "updated"; } else{ echo "replied"; } ?>
                  {{ Carbon\Carbon::createFromTimestamp( $reply->updated_at )->diffForHumans() }}
                 ({{ to_local_time( $reply->updated_at )  }})
                 @if($userNicknames[0]->id==$reply->user_id) 
