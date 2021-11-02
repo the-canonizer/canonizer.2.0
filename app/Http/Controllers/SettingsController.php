@@ -816,7 +816,7 @@ class SettingsController extends Controller
                             ->update(['delegate_nick_name_id' => 0]);
 
                         //mail
-                        $this->mailToDelegatesOnPushingUpHierachy($directDelegates,$topic_num,$currentSupportRec->camp_num);
+                        $this->mailToDelegatesOnPushingUpHierachy($directDelegates,$topic_num,$currentSupportRec->camp_num,$nick_name_id);
                     }else{
                         foreach ($remaingSupportWithHighOrder as $support) {
                             $support->support_order = $currentSupportOrder;
@@ -1120,7 +1120,7 @@ class SettingsController extends Controller
         return;
     }
 
-    public function mailToDelegatesOnPushingUpHierachy($directSupporter,$topicNum,$campNum){
+    public function mailToDelegatesOnPushingUpHierachy($directSupporter,$topicNum,$campNum,$nick_name_id){
         $to = [];
         $as_of_time = time();
         $topic = Camp::getAgreementTopic($topicNum,['nofilter'=>true]);
@@ -1128,17 +1128,19 @@ class SettingsController extends Controller
 
         $data['topic_num'] = $topicNum;
         $data['camp_num'] = $campNum;
-        $data['nick_name'] = $removalSupporter;
+        $data['nick_name'] = $nick_name_id;
         $data['object'] = $topic->topic_name ." / ".$camp->camp_name;
         $data['camp-name'] = $camp->camp_name;
         $data['subject'] ="You have been  assigned as a direct supporter of ".$result['object'].".";
-        $link = \App\Model\Camp::getTopicCampUrl($topicNum,$data['camp_num']);
-            
+        $data['link'] = \App\Model\Camp::getTopicCampUrl($topicNum,$data['camp_num']);        
         foreach ($directSupporter as $supporter) {
             $user = Nickname::getUserByNickName($supporter->nick_name_id);
             $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
             array_push($to,$receiver);
         }
+        echo "<pre>"; print_r($data); 
+        echo "<pre>"; print_r($to);
+        exit;
 
         try{
         Mail::to($to)->bcc(config('app.admin_bcc'))->send(new PushingUpDelegatesHierachyMail($link, $data));
