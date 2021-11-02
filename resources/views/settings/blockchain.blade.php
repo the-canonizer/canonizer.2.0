@@ -110,7 +110,7 @@
                             </div>
                             <div id="download_metamask" style="display:none;">
                                 <a href="https://metamask.io">
-                                    <img src="https://raw.githubusercontent.com/MetaMask/faq/master/images/download-metamask.png" alt="Download MetaMask">
+                                    <img src="{{ URL::asset('/img/metamask.svg') }}" height="100" width="100" alt=""> <span style="font-size:40px;">Download MetaMask</span>
                                 </a>
                             </div>
                         </div>
@@ -257,8 +257,7 @@
     }
     
     function isInstalled() {
-        console.log('web3',web3);
-         if (typeof web3 !== 'undefined' && typeof ethereum !== 'undefined'){
+         if (typeof web3 !== 'undefined' && web3.givenProvider != null){
                 console.log('MetaMask is installed')
                 ethereum.autoRefreshOnNetworkChange = false;
                 isMetamaskInstalled = true;

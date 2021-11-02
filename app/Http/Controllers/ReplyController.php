@@ -38,7 +38,7 @@ class ReplyController extends Controller
      *
      * @parameter \App\CThread  $CThread
      * @return    \Illuminate\Http\Response
-     */
+     */  
     public function store($topicid, $topicname, $campnum, $threadId, request $request)
     {
         $valMessages = [
@@ -55,7 +55,15 @@ class ReplyController extends Controller
         /**
         * The below code is used to save the data into the database.
         */
-        $reply = new Reply;
+
+        if($request['reply_id']!=""){
+            $reply = reply::where('id', $request['reply_id'])->first();
+            $msg= "Post Updated Successfully!'";
+        }
+        else{
+            $reply = new reply;
+            $msg= "Post Created Successfully!'";
+        }
 
         $reply->body = request('body');
         $reply->user_id = request('nick_name');
@@ -63,13 +71,11 @@ class ReplyController extends Controller
         $reply->save();
 
         // Return Url after creating thread Successfully
-        $return_url = 'forum/'.$topicid.'-'.$topicname.'/'.$campnum.'/threads/'.
-                       $threadId;
+        $return_url = '/forum/'.$topicid.'-'.$topicname.'/'.$campnum.'/threads/'.$threadId;
 
-        CommonForumFunctions::sendEmailToSupportersForumPost($topicid, $campnum, $return_url,
-                              request('body'), $threadId, request('nick_name'), $topicname
-                          );
+        CommonForumFunctions::sendEmailToSupportersForumPost($topicid, $campnum, $return_url,request('body'), $threadId, request('nick_name'), $topicname,request('reply_id'));
+        return redirect($return_url)->with('success', $msg);
 
-        return back();
+       // return back();
     }
 }

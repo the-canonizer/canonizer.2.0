@@ -159,7 +159,7 @@ Route::get(
 );
 
 Route::get(
-    '/forum/{topicid}-{topicname}/{campnum}/threads/{thread}', [ 'uses' => 'CThreadsController@show']
+    '/forum/{topicid}-{topicname}/{campnum}/threads/{thread}-{reply_id?}', [ 'uses' => 'CThreadsController@show']
 );
 
 Route::get(

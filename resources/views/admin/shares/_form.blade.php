@@ -35,8 +35,8 @@
         function formatDate(userDate){
             var date    = new Date(userDate),
             yr      = date.getFullYear(),
-            month   = date.getMonth() < 10 ? '0' + (date.getMonth()+1) : (date.getMonth()+1),
-            day     = date.getDate()  < 10 ? '0' + date.getDate()  : date.getDate(),
+            month   = date.getMonth() < 9 ? '0' + (date.getMonth()+1) : (date.getMonth()+1),
+            day     = date.getDate()  < 9 ? '0' + date.getDate()  : date.getDate(),
             newDate = month + '/' + day + '/' + yr;
             return newDate;
 
