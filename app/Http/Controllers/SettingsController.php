@@ -369,6 +369,7 @@ class SettingsController extends Controller
     {
         $id = Auth::user()->id;
         $alreadyMailed = [];
+        $as_of_time = time();
         if ($id) {
             $messages = [
                 'nick_name.required' => 'The nick name field is required.',
@@ -401,18 +402,49 @@ class SettingsController extends Controller
                     }
                 }
             }
-             
+
+                       
             if (isset($mysupports) && count($mysupports) > 0 && isset($data['removed_camp']) && count($data['removed_camp']) > 0) {
-                foreach ($mysupports as $singleSupport) {
+                foreach ($mysupports as $singleSupport) { 
                     if(in_array($singleSupport->camp_num,$data['removed_camp'])){
+                       /** By Reena Nalwa Talentelgia #790 III part
+                        * Pushing delegating hierarchy up if direct supporter remove all his/her support
+                        */
+                       if(count($mysupports) == count($data['removed_camp'])){
+                            Support::where('topic_num', $topic_num)->where('camp_num','=', $singleSupport->camp_num)->where('delegate_nick_name_id', $singleSupport->nick_name_id)->where('end', '=', 0)
+                            ->update(['delegate_nick_name_id' => 0]);
+                            //send email to all direct delegates promted as direct supportes
+                        }else{ 
+                            //remove delegation from camp including sub-elevel
+                            $currentSupportOrder = $singleSupport->support_order;
+                            $remaingSupportWithHighOrder = Support::where('topic_num', $topic_num)
+                                //->where('delegate_nick_name_id',0)
+                                ->whereIn('nick_name_id', [$singleSupport->nick_name_id])
+                                ->whereRaw("(start < $as_of_time) and ((end = 0) or (end > $as_of_time))")
+                                ->where('support_order', '>', $singleSupport->support_order)
+                                ->orderBy('support_order', 'ASC')
+                                ->get(); 
+
+                            foreach ($remaingSupportWithHighOrder as $support) {
+                                $support->support_order = $currentSupportOrder;
+                                $support->save();
+                                $currentSupportOrder++;                 
+                            }
+                             $this->deleteDelegateSupport($topic_num,$singleSupport->camp_num,$singleSupport->nick_name_id,$remaingSupportWithHighOrder,$singleSupport->support_order);
+                        }
+
                         $singleSupport->end = time();
                         $singleSupport->save();
                         $mailData = $data;
                         $mailData['camp_num'] = $singleSupport->camp_num;
-                        /* send support deleted mail to all supporter and subscribers */
-                       $this->emailForSupportDeleted($mailData); 
-                    }
-                 }          
+                         /* send support deleted mail to all supporter and subscribers */
+                         try{
+                         $this->emailForSupportDeleted($mailData); 
+                         }catch(Exception $e){
+                             
+                         }
+                    } 
+                 }    
             }
 
               /** if user is delegating to someone else or is directly supporting  then all the old delegated  supports will be removed #702 **/
@@ -469,7 +501,7 @@ class SettingsController extends Controller
                         $supportTopic->support_order = $support_order;
                         $supportTopic->save();
 
-                        /** If any user hase delegated their support to this user, enter there delegated support #749 includin sub-level delegates(&49 II Part) */
+                        /** If any user hase delegated their support to this user, record/add there delegated support #749 including sub-level delegates(&49 II Part) */
                         $this->addDelegatedSupport($myDelegator,$topic_num,$camp_num,$support_order,$data['nick_name']);
                         
                     }else{
@@ -715,7 +747,6 @@ class SettingsController extends Controller
             $directSupporter = Support::getAllDirectSupporters($data['topic_num'], $data['camp_num']);
             $supportsDirect = array_push($directSupporter,$deletedSupport[0]);
             $result['support_deleted'] = 1;
-            
             $this->mailSubscribersAndSupporters($directSupporter,$subscribers, $link, $result);   
     }
 
@@ -778,13 +809,23 @@ class SettingsController extends Controller
                     ->get(); 
 
                 if ($currentSupport->update(array('end' => time()))) {
-                    foreach ($remaingSupportWithHighOrder as $support) {
-                        $support->support_order = $currentSupportOrder;
-                        $support->save();
-                        $currentSupportOrder++;                 
-                    }
-                    $this->deleteDelegateSupport($topic_num,$currentSupportRec->camp_num,$nick_name_id,$remaingSupportWithHighOrder,$currentSupportRec->support_order);
 
+                    if(count($remaingSupportWithHighOrder) == 0){ //By Reena Talentelgia #790 pushing up hierachy of deleagtes
+                        $directDelegates = Support::where('topic_num', $topic_num)->where('camp_num','=', $currentSupportRec->camp_num)->where('delegate_nick_name_id', $nick_name_id)->where('end', '=', 0)->get();
+                        Support::where('topic_num', $topic_num)->where('camp_num','=', $currentSupportRec->camp_num)->where('delegate_nick_name_id', $nick_name_id)->where('end', '=', 0)
+                            ->update(['delegate_nick_name_id' => 0]);
+
+                        //mail
+                        $this->mailToDelegatesOnPushingUpHierachy($directDelegates,$topic_num,$currentSupportRec->camp_num);
+                    }else{
+                        foreach ($remaingSupportWithHighOrder as $support) {
+                            $support->support_order = $currentSupportOrder;
+                            $support->save();
+                            $currentSupportOrder++;                 
+                        }
+                        $this->deleteDelegateSupport($topic_num,$currentSupportRec->camp_num,$nick_name_id,$remaingSupportWithHighOrder,$currentSupportRec->support_order);
+    
+                    }                    
                     session()->forget("topic-support-$topic_num");
                     session()->forget("topic-support-nickname-$topic_num");
                     session()->forget("topic-support-tree-$topic_num");
@@ -1077,5 +1118,32 @@ class SettingsController extends Controller
             }
         }
         return;
+    }
+
+    public function mailToDelegatesOnPushingUpHierachy($directSupporter,$topicNum,$campNum){
+        $to = [];
+        $as_of_time = time();
+        $topic = Camp::getAgreementTopic($topicNum,['nofilter'=>true]);
+        $camp = Camp::where('topic_num', $topicNum)->where('camp_num', '=', $campNum)->where('go_live_time', '<=', time())->latest('submit_time')->first();
+
+        $data['topic_num'] = $topicNum;
+        $data['camp_num'] = $campNum;
+        $data['nick_name'] = $removalSupporter;
+        $data['object'] = $topic->topic_name ." / ".$camp->camp_name;
+        $data['camp-name'] = $camp->camp_name;
+        $data['subject'] ="You have been  assigned as a direct supporter of ".$result['object'].".";
+        $link = \App\Model\Camp::getTopicCampUrl($topicNum,$data['camp_num']);
+            
+        foreach ($directSupporter as $supporter) {
+            $user = Nickname::getUserByNickName($supporter->nick_name_id);
+            $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
+            array_push($to,$receiver);
+        }
+
+        try{
+        Mail::to($to)->bcc(config('app.admin_bcc'))->send(new PushingUpDelegatesHierachyMail($link, $data));
+        }catch(\Swift_TransportException $e){
+                    throw new \Swift_TransportException($e);// $response = $e->getMessage() ;
+        } 
     }
 }
