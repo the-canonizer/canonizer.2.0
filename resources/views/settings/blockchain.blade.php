@@ -104,8 +104,8 @@
                              </div>
                             <div class="App-intro" id="login_div" style="display:none;">
                                 <div>
-                                    <p>Please login with MetaMask credentials to get the details.</p>
-                                    <button class="btn btn-login" onClick="loginMetamask()">Login with MetaMask</button>
+                                    <p>Please log in with MetaMask credentials to get the details.</p>
+                                    <button class="btn btn-login" onClick="loginMetamask()">Log in with MetaMask</button>
                                 </div>
                             </div>
                             <div id="download_metamask" style="display:none;">
