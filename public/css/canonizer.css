@@ -1935,13 +1935,33 @@ a.site-regular-text {
     display: flex;
     margin-bottom: 15px;
     flex-flow: wrap;
-  }
-  .notifySignPNL.topic-status .col {
+}
+.notifySignPNL.topic-status .col {
     width: 100%;
     flex: auto;
-  }
-  @media screen and (min-width: 600px) {
+}
+@media screen and (min-width: 600px) {
     .notifySignPNL.topic-status .col {
       width: calc(100% / 4);
     }
-  }
+}
+.error-section {
+    width: 88%;
+}
+a.verification-link:link {
+    color: #721c24!important;
+    font-weight: 600!important;
+}
+a.verification-link:visited {
+    color: #721c24!important;
+    font-weight: 600!important;
+}
+a.verification-link:hover {
+    color: #721c24!important;
+    font-weight: 600!important;
+    text-decoration: underline;
+}
+a.verification-link:active {
+    color: #721c24!important;
+    font-weight: 600!important;
+}

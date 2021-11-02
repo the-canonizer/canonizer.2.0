@@ -2,25 +2,28 @@
 @section('content')
 <div class="page-titlePnl">
     <h1 class="page-title">Login</h1>
+</div>
+<div class="error-section">
+    @if(Session::has('social_error'))
+    <div class="alert alert-danger">
+        <strong>Error! </strong>{{ Session::get('social_error')}} 
+    </div>
+    @endif
+    
+    @if(Session::has('erro_login'))
+    <div class="alert alert-danger">
+        <strong>Error! </strong>{{Session::get('erro_login')}} 
+    </div>
+    @endif
 </div>     
-@if(Session::has('social_error'))
-<div class="alert alert-danger">
-    <strong>Error! </strong>{{ Session::get('social_error')}} 
-</div>
-@endif
-
-@if(Session::has('erro_login'))
-<div class="alert alert-danger">
-    <strong>Error! </strong>{{Session::get('erro_login')}} 
-</div>
-@endif  	
+  	
 <div class="right-whitePnl">
 <div class="col-sm-5 margin-btm-2">
     <form id="login_form" action="{{ url('/login')}}" method="post">
         <input type="hidden" name="_token" value="{{ csrf_token() }}">
         <div class="form-group">
-            <label for="firstname">Enter Email / Phone Number <span style="color:red">*</span></label>
-            <input id="email" type="text" name="email" class="form-control" id="email" value="{{ old('email')}}">
+            <label for="firstname">Enter Email/Phone Number <span style="color:red">*</span></label>
+            <input id="email" type="text" name="email" class="form-control" id="email" value="{{ old('email')}}" placeholder="Email/Phone Number">
             @if ($errors->has('email')) <p class="help-block">{{ $errors->first('email') }}</p> @endif
         </div>
 

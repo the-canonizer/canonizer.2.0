@@ -82,13 +82,12 @@ Route::get('login/{provider}/callback','SocialController@Callback');
 Route::get('verify-otp', ['as' => 'login.otp', 'uses' => 'Auth\LoginController@getOtpForm']);
 Route::post('verify-otp', 'Auth\LoginController@validateLoginOtp');
 
-
-
 Route::get('forgotpassword', 'Auth\ForgotPasswordController@showLinkRequestForm');
 Route::post('forgetpassword', 'Auth\ForgotPasswordController@sendResetLinkEmail');
 Route::get('resetlinksent', 'Auth\ForgotPasswordController@resetLinkSent');
 Route::get('resetpassword/{token}', 'Auth\ResetPasswordController@showResetForm');
 Route::post('reset', 'Auth\ResetPasswordController@reset');
+
 Route::get('topic/{id}/{campnum}', [ 'as' => 'topic', 'uses' => 'TopicController@show']);
 Route::get('topic.asp/{id}/{campnum}', [ 'as' => 'topic', 'uses' => 'TopicController@show']);
 Route::get('topic/{id}', [ 'as' => 'topic', 'uses' => 'TopicController@show']);
@@ -125,11 +124,11 @@ Route::group([ 'middleware' => 'auth'], function() {
     Route::post('settings/algo-preferences', [ 'as' => 'settings.algo-preferences-save', 'uses' => 'SettingsController@postAlgo']);
     Route::post('statement/preview', [ 'as' => 'statement.preview', 'uses' => 'TopicController@preview_statement']);
     //change password
-     Route::get('settings/changepassword', [ 'as' => 'settings.changepassword', 'uses' => 'SettingsController@getChangePassword']);
-     Route::post('settings/changepassword', [ 'as' => 'settings.changepassword.save', 'uses' => 'SettingsController@postChangePassword']);
-     Route::get('settings/blockchain', [ 'as' => 'settings.blockchain', 'uses' => 'SettingsController@blockchain']);
-     Route::get('settings/sociallinks', [ 'as' => 'settings.sociallinks', 'uses' => 'SettingsController@sociallinks']);
-     Route::post('settings/save-ether-address', [ 'as' => 'settings.save-ether-address', 'uses' => 'SettingsController@postSaveEtherAddress']);
+    Route::get('settings/changepassword', [ 'as' => 'settings.changepassword', 'uses' => 'SettingsController@getChangePassword']);
+    Route::post('settings/changepassword', [ 'as' => 'settings.changepassword.save', 'uses' => 'SettingsController@postChangePassword']);
+    Route::get('settings/blockchain', [ 'as' => 'settings.blockchain', 'uses' => 'SettingsController@blockchain']);
+    Route::get('settings/sociallinks', [ 'as' => 'settings.sociallinks', 'uses' => 'SettingsController@sociallinks']);
+    Route::post('settings/save-ether-address', [ 'as' => 'settings.save-ether-address', 'uses' => 'SettingsController@postSaveEtherAddress']);
     Route::post('statement/agreetochange', 'TopicController@statement_agreetochange');
     Route::post('graceperiod/notify_change', 'TopicController@notify_change');
     
@@ -189,3 +188,6 @@ Route::get('user/supports/{user_id}', 'TopicController@usersupports')->name('use
 Route::get('/topic/notifysupporter',function(){
     \Artisan::call('notify:supporters');
 });
+
+Route::get('getVerificationCode', 'Auth\ForgotPasswordController@showVerificationCodeForm');
+Route::post('verifyCode', 'Auth\ForgotPasswordController@getVerificationCode');
