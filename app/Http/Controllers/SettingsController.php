@@ -814,9 +814,8 @@ class SettingsController extends Controller
                         $directDelegates = Support::where('topic_num', $topic_num)->where('camp_num','=', $currentSupportRec->camp_num)->where('delegate_nick_name_id', $nick_name_id)->where('end', '=', 0)->get();
                         Support::where('topic_num', $topic_num)->where('camp_num','=', $currentSupportRec->camp_num)->where('delegate_nick_name_id', $nick_name_id)->where('end', '=', 0)
                             ->update(['delegate_nick_name_id' => 0]);
-
                         //mail
-                        $this->mailToDelegatesOnPushingUpHierachy($directDelegates,$topic_num,$currentSupportRec->camp_num,$nick_name_id);
+                        //$this->mailToDelegatesOnPushingUpHierachy($directDelegates,$topic_num,$currentSupportRec->camp_num,$nick_name_id);
                     }else{
                         foreach ($remaingSupportWithHighOrder as $support) {
                             $support->support_order = $currentSupportOrder;
