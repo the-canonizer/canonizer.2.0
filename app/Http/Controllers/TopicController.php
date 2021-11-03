@@ -24,6 +24,7 @@ use App\Mail\ObjectionToSubmitterMail;
 use App\Mail\PurposedToSupportersMail;
 use App\Mail\ProposedChangeMail;
 use App\Mail\NewDelegatedSupporterMail;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Foundation\Auth\RedirectsUsers;
 
@@ -300,7 +301,6 @@ class TopicController extends Controller {
                         throw new \Swift_TransportException($e);
                     } 
             } else if ($eventtype == "UPDATE") {
-
                 $directSupporter = Support::getAllDirectSupporters($topic->topic_num);
                 $link_history = 'topic-history/' . $topic->topic_num;
                 $link = 'topic/' . $topic->topic_num . '/' . $topic->camp_num . '?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $topic->go_live_time);
@@ -316,6 +316,19 @@ class TopicController extends Controller {
                 $data['nick_name'] = $nickName->nick_name;
                 $data['forum_link'] = 'forum/' . $topic->topic_num . '-' . $topic->topic_name . '/1/threads';
                 $data['subject'] = "Proposed change to " . $topic->topic_name . " submitted";
+                
+                #821 : In review topic name is displaying in Proposed change to topic email
+
+                $liveTopic = Topic::select('topic.*')
+                    ->where('topic.topic_num', $topic->topic_num)
+                    ->where('topic.objector_nick_id',"=",null)
+                    ->where('topic.go_live_time',"<",Carbon::now()->timestamp)
+                    ->latest('topic.submit_time')
+                    ->first();
+                if(!empty($liveTopic)){
+                    $data['object'] = $liveTopic->topic_name;
+                    $data['subject'] = "Proposed change to " . $liveTopic->topic_name . " submitted";
+                }
                 /** #771 issue solved
                 ** sent mail to all direct supporters in case someone updates in the supported topic
                 **/
@@ -327,7 +340,7 @@ class TopicController extends Controller {
                 /** #771 Topic submitter is  getting "proposed changed to topic**/
                 $data['link'] = \App\Model\Camp::getTopicCampUrl($topic->topic_num,1); 
                 try{
-                    Mail::to(Auth::user()->email)->bcc(config('app.admin_bcc'))->send(new ProposedChangeMail(Auth::user(), $link,$data));
+                    Mail::to(Auth::user()->email)->bcc(config('app.admin_bcc'))->send(new ProposedChangeMail(Auth::user(), $link_history,$data));
                 }catch(\Swift_TransportException $e){
                        throw new \Swift_TransportException($e);
                 }
