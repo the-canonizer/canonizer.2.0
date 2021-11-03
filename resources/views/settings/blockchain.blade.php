@@ -109,7 +109,7 @@
                                 </div>
                             </div>
                             <div id="download_metamask" style="display:none;">
-                                <a href="https://metamask.io">
+                                <a href="https://metamask.io" target="_blank">
                                     <img src="{{ URL::asset('/img/metamask.svg') }}" height="100" width="100" alt=""> <span style="font-size:40px;">Download MetaMask</span>
                                 </a>
                             </div>
@@ -248,7 +248,11 @@
     
     }
     function enableMetamask(){
+        $('#enable_metamask button').hide();
+        $('#enable_metamask p').text('Processing...');
         enableEther().then(function(r){
+                $('#enable_metamask button').show();
+                $('#enable_metamask p').text('Please enable your MetaMask first.');
                 $('#enable_metamask').hide();
                  (isLoggedIn) ? $('#login_div').hide(): $('#login_div').show();
                 $('#download_metamask').hide();
