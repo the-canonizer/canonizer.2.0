@@ -10,5 +10,6 @@ Disallow: https://mail.canonizer.com/
 Disallow: /topic-*/*
 Disallow:/camp/*
 Disallow:/statement/*
+Disallow:/browse/*
 Disallow:/*.js
 Disallow:/*.css
