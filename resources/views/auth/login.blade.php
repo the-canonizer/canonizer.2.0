@@ -19,8 +19,8 @@
     <form id="login_form" action="{{ url('/login')}}" method="post">
         <input type="hidden" name="_token" value="{{ csrf_token() }}">
         <div class="form-group">
-            <label for="firstname">Enter Email <span style="color:red">*</span></label>
-            <input id="email" type="text" name="email" class="form-control" id="email" value="{{ old('email')}}" placeholder="Email">
+            <label for="firstname">Enter Email / Phone Number <span style="color:red">*</span></label>
+            <input id="email" type="text" name="email" class="form-control" id="email" value="{{ old('email')}}" placeholder="Email / Phone Number">
             @if ($errors->has('email')) <p class="help-block">{{ $errors->first('email') }}</p> @endif
         </div>
 
