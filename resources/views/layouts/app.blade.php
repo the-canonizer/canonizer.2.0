@@ -166,11 +166,11 @@
                                 <span class="nav-link-text">Jobs</span>
                             </a>
                         </li>
-                        <li class="nav-item">
+                        {{-- <li class="nav-item">
                             <a class="nav-link" href="{{ url('/topic/37-Canonizer-Services/1-Agreement')}}">
                                 <span class="nav-link-text">Services</span>
                             </a>
-                        </li>
+                        </li> --}}
                     </ul>
 					<?php
 					$routeArray = app('request')->route()->getAction();

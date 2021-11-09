@@ -55,7 +55,7 @@
            <div >Don't have an account? <a href="{{ url('/register') }}">Signup Now</a></div>
      </div>
  <div class="col-sm-12 margin-btm-2 ">
-    <p>Login or Signup with social accounts.</p>
+    <p>Log in or Signup with social accounts.</p>
      <div class="form-group row">
             <div class="col-md-2 mt-1">
                 <a href="{{ url('/login/google') }}" class="btn google btn-google-plus"><i class="fa fa-google fa-fw">
