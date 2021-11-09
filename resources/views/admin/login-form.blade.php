@@ -1,7 +1,7 @@
 <div class="row">
         <div class="col-md-4 panel-warning" style="margin:0px auto;">
             <div class="content-box-header panel-heading">
-                <div class="panel-title ">Login</div>
+                <div class="panel-title ">Log in</div>
                 
                 
             </div>
