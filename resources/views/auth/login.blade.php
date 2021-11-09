@@ -19,8 +19,8 @@
     <form id="login_form" action="{{ url('/login')}}" method="post">
         <input type="hidden" name="_token" value="{{ csrf_token() }}">
         <div class="form-group">
-            <label for="firstname">Enter Email <span style="color:red">*</span></label>
-            <input id="email" type="text" name="email" class="form-control" id="email" value="{{ old('email')}}" placeholder="Email">
+            <label for="firstname">Enter Email / Phone Number <span style="color:red">*</span></label>
+            <input id="email" type="text" name="email" class="form-control" id="email" value="{{ old('email')}}" placeholder="Email / Phone Number">
             @if ($errors->has('email')) <p class="help-block">{{ $errors->first('email') }}</p> @endif
         </div>
 
@@ -55,7 +55,7 @@
            <div >Don't have an account? <a href="{{ url('/register') }}">Signup Now</a></div>
      </div>
  <div class="col-sm-12 margin-btm-2 ">
-    <p>Login or Signup with social accounts.</p>
+    <p>Log in or Signup with social accounts.</p>
      <div class="form-group row">
             <div class="col-md-2 mt-1">
                 <a href="{{ url('/login/google') }}" class="btn google btn-google-plus"><i class="fa fa-google fa-fw">
