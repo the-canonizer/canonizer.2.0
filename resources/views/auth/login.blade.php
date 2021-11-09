@@ -37,16 +37,16 @@
             <a href="{{ url('/forgotpassword') }}" class="pull-right">Forgot Password</a>
         </div>
         <div class="form-group">
-        <button type="submit" id="submit" onclick="submitLoginForm(this)"  class=" form-control btn btn-login">Log in</button>
+        <button type="submit" id="submit" onclick="submitLoginForm(this)"  class=" form-control btn btn-login responsive-width">Log in</button>
         <div id="loggingin" style="display:none;" class=" form-control btn btn-login">Logging in..</div>
         </div>
         <div class="form-group">
             <label class="text-center col-sm-12">OR <input style="display:none;" type="checkbox"  name="request_opt"  id="request_opt_checkbox"></label>
         </div>
         <div class="form-group">
-        <button type="submit"  id="request_opt" class="form-control btn btn-login">Request One Time Verification Code</button>
+        <button type="submit"  id="request_opt" class="form-control btn btn-login responsive-width">Request One Time Verification Code</button>
         
-        <div id="requesting_otp" style="display:none;" class="form-control btn btn-login">Requesting One Time Verification Code..</div>
+        <div id="requesting_otp" style="display:none;" class="form-control btn btn-login responsive-width">Requesting One Time Verification Code..</div>
     </div>
     </form>
  </div>
