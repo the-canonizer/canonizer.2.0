@@ -673,15 +673,17 @@ class TopicController extends Controller {
             'nick_name.required' => 'The nick name field is required.',
             'camp_name.required' => 'Camp name is required.',
             'camp_name.max' => 'Camp name can not be more than 30 characters.',
-            'camp_about_url.max' => "Camp's about url can not be more than 1024 characters.",
+            'camp_about_url.max' => "Camp's about url is invlalid.",
             'parent_camp_num.required' => 'The parent camp name is required.',
             'objection.required' => 'Objection reason is required.',
             'objection_reason.max' => 'Objection reason can not be more than 100.'
         ];
+        //Reena Talentelgia #850
+        $regex = '/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/';
         $validator = Validator::make($request->all(), [
             'nick_name' => 'required',
             'camp_name' => 'required|max:30|regex:/^[a-zA-Z0-9\s]+$/',
-            'camp_about_url' => 'max:10',
+            'camp_about_url' => 'regex:'.$regex,
             'parent_camp_num' => 'nullable'
             // 'note' => 'required',
         ],$messagesVal);
