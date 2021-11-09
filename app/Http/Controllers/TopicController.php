@@ -309,8 +309,8 @@ class TopicController extends Controller {
                 $data['type'] = 'topic : ';
                 $data['typeobject'] = 'topic';
                 //$data['note'] = "";
-                $data['support_camp'] = $topic->topic_name;
-                $data['camp_num'] = $topic->topic_num;
+                $data['support_camp'] = "Agreement";
+                $data['camp_num'] = 1;
                 $data['topic_num'] = $topic->topic_num;
                 $nickName = Nickname::getNickName($all['nick_name']);
                 $data['nick_name'] = $nickName->nick_name;
