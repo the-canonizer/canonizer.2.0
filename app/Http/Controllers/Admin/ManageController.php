@@ -41,7 +41,7 @@ class ManageController extends Controller {
          	'name.required' => 'Namespace field is required.',
          	'name.unique' => 'Namespace must be unique.',
          	'name.max' => 'Namespace Name may not be greater than 100 characters.',
-         	'name.regex' => 'Namespace Name may only contain letters, numbers, underscore and backslashes at begining and end only.'
+         	'name.regex' => 'Namespace Name may only contain letters, numbers, underscore and forward slashes(/) at beginning and end only.'
          ];
 
          $validator = Validator::make($data, $validatorArray, $message);
