@@ -45,6 +45,10 @@ class Handler extends ExceptionHandler
     public function render($request, Exception $exception)
     {
         
+        if ( $exception instanceof \Illuminate\Session\TokenMismatchException ) {
+            return redirect()->back()->with('tokenerror',"Your action could not performed due to TokenMismatchException, please try again");
+        } 
+        
         if ($exception instanceof \Swift_TransportException){
                 return redirect()->back()->with('mailerror',"Your performed action is complete, but We have issue sending you an email");
             }
