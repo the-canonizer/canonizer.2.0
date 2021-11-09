@@ -39,24 +39,42 @@
             
 			<input type="hidden" id="camp_num" name="camp_num" value="{{ $camp->camp_num }}">
 			<input type="hidden" id="submitter" name="submitter" value="{{ $camp->submitter_nick_id }}">
-			<?php if($objection=="objection") { ?>
-			 <input type="hidden" name="objection" id="objection" value="1">
-			 <input type="hidden" name="objection_id" id="objection_id" value="{{ $camp->id }}">
-			<?php } ?>
+			<?php if($objection=="objection") 
+            { 
+            ?>
+    		 <input type="hidden" name="objection" id="objection" value="1">
+    		 <input type="hidden" name="objection_id" id="objection_id" value="{{ $camp->id }}">
+			<?php 
+            } 
+            ?>
                          
-                        <?php if($campupdate=="update") { ?>
-                            <input type="hidden" id="camp_update" name="camp_update" value="1">
-                            <input type="hidden" id="camp_id" name="camp_id" value="{{ $camp->id }}">
-                        <?php } ?>
+            <?php if($campupdate=="update") 
+            { 
+            ?>
+                <input type="hidden" id="camp_update" name="camp_update" value="1">
+                <input type="hidden" id="camp_id" name="camp_id" value="{{ $camp->id }}">
+            <?php 
+            } 
+            ?>
            
-            <?php if($camp->camp_name=="Agreement") { ?>
-			<input type="hidden" id="parent_camp_num" name="parent_camp_num" value="{{ $parentcampnum }}">
-			<?php } else { ?>
-			<div class="form-group">
+            <?php if($camp->camp_name=="Agreement") 
+            {
+            ?>
+			 <input type="hidden" id="parent_camp_num" name="parent_camp_num" value="{{ $parentcampnum }}">
+			<?php 
+            } 
+            else 
+            { 
+            ?>
+			 <div class="form-group">
                 <label for="parent_camp_num">Parent Camp <span style="color:red">*</span></label>
                 <select  name="parent_camp_num" id="parent_camp_num" class="form-control" <?php if($objection=="objection") { ?> disabled <?php } ?>>
                     @foreach($parentcampsData as $parent)
-					<?php if($camp->camp_num != $parent->camp_num) { ?>
+					<?php if(($camp->camp_num != $parent->camp_num ) && ($parent->parent_camp_num<=$parentcampnum)) { 
+                    //#787
+                    //($parent->parent_camp_num<=$parentcampnum) /*siblings and parent both show */
+                    //($parent->camp_num<=$parentcampnum) /*only parent show */
+                    ?>
                     <option <?php if($camp->parent_camp_num==$parent->camp_num) echo "selected=selected";?> value="{{ $parent->camp_num }}">{{ $parent->camp_name}}</option>
                     <?php } ?>
 					@endforeach
