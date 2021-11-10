@@ -743,12 +743,20 @@ class TopicController extends Controller {
         }
         $message = null;
         $go_live_time = "";
+        $campOldData = Camp::getLiveCamp($all['topic_num'],$all['camp_num']);// #834
+        if(isset($all['parent_camp_num']) && $all['parent_camp_num']!='' && $all['parent_camp_num'] != $campOldData->parent_camp_num){
+         // get new parent direct supports and remove it #834
+            $supportData = Support::where('topic_num','=',$all['topic_num'])->where('camp_num','=',$all['parent_camp_num'])->get();
+            if(count($supportData) > 0){
+                foreach($supportData as $value){
+                    $value->end = time();
+                    $value->save();
+                }
+            }
+        }
         $camp = new Camp();
         $camp->topic_num = $all['topic_num'];
-
-
         $camp->parent_camp_num = isset($all['parent_camp_num']) ? $all['parent_camp_num'] : "";
-
         $camp->camp_name = isset($all['camp_name']) ? $all['camp_name'] : "";
         $camp->submit_time = strtotime(date('Y-m-d H:i:s'));
         $camp->go_live_time = $currentTime; //strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
