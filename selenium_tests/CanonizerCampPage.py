@@ -142,7 +142,7 @@ class CanonizerCampPage(Page):
 
     def load_agreement_page_from_bread_crumb_forum_agreement_camp_link(self):
         self.load_topic_page()
-
+        self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
         # Click on agreement camp on bread crumbs
         self.hover(*BreadCrumbsLinksIdentifiers.CAMP_FORUM)
         self.find_element(*BreadCrumbsLinksIdentifiers.CAMP_FORUM).click()

@@ -71,6 +71,10 @@ class CanonizerUploadFilePage(Page):
             return False
         return True
 
+    def upload_file_with_invalid_file_name_format(self, originalfilename):
+        self.upload(originalfilename)
+        return self.find_element(*UploadFileIdentifiers.SAME_FILE_NAME_ERROR).text
+
 
 
 

@@ -102,12 +102,12 @@ class CanonizerRegisterPage(Page):
             self.find_element(*RegistrationPageIdentifiers.PASSWORD_ASTRK) and \
             self.find_element(*RegistrationPageIdentifiers.CNFM_PSSWD_ASTRK)
 
-    def registration_with_duplicate_email(self, firstname, middlename , lastname, email, password, confirmpassword, captcha):
-        self.register(firstname, middlename, lastname, email, password, confirmpassword, captcha)
+    def registration_with_duplicate_email(self, firstname, middlename , lastname, user, password, confirmpassword, captcha):
+        self.register(firstname, middlename, lastname, user, password, confirmpassword, captcha)
         return self.find_element(*RegistrationPageIdentifiers.ERROR_DUPLICATE_EMAIL).text
 
-    def registration_with_blank_spaces_first_name(self, firstname, middlename, lastname, email, password, confirmpassword, captcha):
-        self.register(firstname, middlename, lastname, email, password, confirmpassword, captcha)
+    def registration_with_blank_spaces_first_name(self, firstname, middlename, lastname, user, password, confirmpassword, captcha):
+        self.register(firstname, middlename, lastname, user, password, confirmpassword, captcha)
         return self.find_element(*RegistrationPageIdentifiers.ERROR_FIRST_NAME).text
 
     def check_login_page_open_click_login_here_link(self):
@@ -116,28 +116,28 @@ class CanonizerRegisterPage(Page):
         self.find_element(*RegistrationPageIdentifiers.LOGINOPTION).click()
         return CanonizerRegisterPage(self.driver)
 
-    def registration_with_blank_captcha(self, firstname, middlename, lastname, email, password, confirmpassword):
-        self.register(firstname, middlename, lastname, email, password, confirmpassword, '')
+    def registration_with_blank_captcha(self, firstname, middlename, lastname, user, password, confirmpassword):
+        self.register(firstname, middlename, lastname, user, password, confirmpassword, '')
         return self.find_element(*RegistrationPageIdentifiers.ERROR_CAPTCHA).text
 
-    def registration_with_invalid_first_name(self, firstname, middlename, lastname, email, password, confirmpassword, captcha):
-        self.register(firstname, middlename, lastname, email, password, confirmpassword, captcha)
+    def registration_with_invalid_first_name(self, firstname, middlename, lastname, user, password, confirmpassword, captcha):
+        self.register(firstname, middlename, lastname, user, password, confirmpassword, captcha)
         return self.find_element(*RegistrationPageIdentifiers.ERROR_FIRST_NAME).text
 
-    def registration_with_invalid_last_name(self, firstname,middlename, lastname, email, password, confirmpassword, captcha):
-        self.register(firstname, middlename, lastname, email, password, confirmpassword, captcha)
+    def registration_with_invalid_last_name(self, firstname,middlename, lastname, user, password, confirmpassword, captcha):
+        self.register(firstname, middlename, lastname, user, password, confirmpassword, captcha)
         return self.find_element(*RegistrationPageIdentifiers.ERROR_LAST_NAME).text
 
-    def registration_with_invalid_middle_name(self, firstname,middlename, lastname, email, password, confirmpassword, captcha):
-        self.register(firstname, middlename, lastname, email, password, confirmpassword, captcha)
+    def registration_with_invalid_middle_name(self, firstname,middlename, lastname, user, password, confirmpassword, captcha):
+        self.register(firstname, middlename, lastname, user, password, confirmpassword, captcha)
         return self.find_element(*RegistrationPageIdentifiers.ERROR_MIDDLE_NAME).text
 
-    def registration_with_invalid_captcha(self, firstname,middlename, lastname, email, password, confirmpassword, captcha):
-        self.register(firstname, middlename, lastname, email, password, confirmpassword, captcha)
+    def registration_with_invalid_captcha(self, firstname, middlename, lastname, user, password, confirmpassword, captcha):
+        self.register(firstname, middlename, lastname, user, password, confirmpassword, captcha)
         return self.find_element(*RegistrationPageIdentifiers.ERROR_CAPTCHA).text
 
-    def registration_with_blank_invalid_email(self, firstname, middlename , lastname, email, password, confirmpassword, captcha):
-        self.register(firstname, middlename, lastname, email, password, confirmpassword, captcha)
+    def registration_with_invalid_email(self, firstname, middlename , lastname, user, password, confirmpassword, captcha):
+        self.register(firstname, middlename, lastname, user, password, confirmpassword, captcha)
         return self.find_element(*RegistrationPageIdentifiers.ERROR_EMAIL).text
 
 

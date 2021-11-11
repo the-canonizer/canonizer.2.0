@@ -17,18 +17,15 @@ class HomePageIdentifiers(object):
     This Class holds the Home Page Element Identifiers.
     """
     BODY            = (By.ID, 'mainNav')
-    LOGIN           = (By.XPATH, '//*[@id="navbarResponsive"]/ul[1]/li[2]/a[2]/i')
+    LOGIN           = (By.XPATH, '//*[@id="navbarResponsive"]/ul[1]/li[2]/a[2]')
     REGISTER        = (By.XPATH, '//*[@id="navbarResponsive"]/ul[1]/li[2]/a[3]')
     WHATISCANONIZER = (By.XPATH, '//*[@id="exampleAccordion"]/ul[1]/li[2]/a')
     WHATISCANONIZERHEADING = (By.XPATH, '//*[@id="exampleAccordion"]/ul[1]/li[1]/a/span')
     LOADALLTOPICS   = (By.ID, 'loadtopic')
     CREATE_NEW_CAMP = (By.XPATH, '//*[@id="exampleAccordion"]/ul[1]/li[4]/a/span')
     UPLOADFILE = (By.XPATH, '//*[@id="exampleAccordion"]/ul[1]/li[4]/a/span')
-    #UPLOADFILE = (By.XPATH, '//*[@id="exampleAccordion"]/ul[1]/li[5]/a/span')
     WHITE_PAPER = (By.XPATH, '//*[@id="exampleAccordion"]/ul[1]/li[6]/a/span')
-    #WHITE_PAPER = (By.XPATH, '//*[@id="exampleAccordion"]/ul[1]/li[7]/a/span')
     BLOG = (By.XPATH, '//*[@id="exampleAccordion"]/ul[1]/li[7]/a/span')
-    #BLOG = (By.XPATH, '//*[@id="exampleAccordion"]/ul[1]/li[8]/a/span')
     GOOGLESEARCH = (By.ID, 'sbi')
     GOOGLESEARCHSUBMIT = (By.ID, 'sbb')
     # Broken URL XPATH
@@ -54,7 +51,7 @@ class LoginPageIdentifiers(object):
     EMAIL         = (By.ID, 'email')
     PASSWORD      = (By.ID, 'password')
     SUBMIT        = (By.ID, 'submit')
-    ERROR_MESSAGE = (By.XPATH, '/html/body/div[1]/div[2]/div/form/div[1]/p')
+    ERROR_MESSAGE = (By.XPATH, '//*[@id="login_form"]/div[1]/p')
     SIGNUPNOW     = (By.XPATH, '/html/body/div/div[2]/div[3]/div/a')
     ERROR_EMAIL = (By.XPATH, '//*[@id="login_form"]/div[1]/p')
     ERROR_PASSWORD = (By.XPATH, '/html/body/div/div[2]/div[1]/form/div[2]/p')
@@ -97,7 +94,7 @@ class RegistrationPageIdentifiers(object):
     ERROR_MIDDLE_NAME = (By.XPATH, '/html/body/div/div[2]/div[1]/form/div[2]/p')
     ERROR_LAST_NAME  = (By.XPATH, '/html/body/div[1]/div[2]/div/form/div[3]/p')
     ERROR_EMAIL      = (By.XPATH, '/html/body/div/div[2]/div[1]/form/div[4]/p')
-    ERROR_PASSWORD   = (By.XPATH, '/html/body/div/div[2]/div/form/div[5]/p')
+    ERROR_PASSWORD   = (By.XPATH, '/html/body/div/div[2]/div[1]/form/div[5]/p[2]')
     ERROR_DUPLICATE_EMAIL = (By.XPATH, '/html/body/div/div[2]/div[1]/form/div[4]/p')
     CAPTCHA = (By.ID, 'CaptchaCode')
     ERROR_CAPTCHA = (By.XPATH, '/html/body/div/div[2]/div[1]/form/div[7]/p')
@@ -167,7 +164,7 @@ class BrowsePageIdentifiers(object):
     Class to hold the Browse Page Identifiers
     """
     BROWSE = (By.XPATH, '//*[@id="exampleAccordion"]/ul[1]/li[2]/a/span')
-    ONLY_MY_TOPICS = (By.XPATH, '/html/body/div[1]/div[1]/div/div/h3/div/form/div[2]/label/input')
+    ONLY_MY_TOPICS = (By.XPATH, '/html/body/div[1]/div[1]/div/div/h3/div[2]/form/div[2]/label/input')
     NAMESPACE = (By.ID, 'namespace')
     GENERAL = (By.XPATH, '//*[@id="namespace"]/option[2]')
     ALL = (By.XPATH, '//*[@id="namespace"]/option[1]')
@@ -312,7 +309,7 @@ class TopicUpdatePageIdentifiers(object):
     """
     Class to hold the Topic Update Page Identifiers
     """
-    #TOPIC_IDENTIFIER = (By.XPATH, '//*[@id="outline_224"]/a')
+    #TOPIC_IDENTIFIER = (By.XPATH, '//*[@id="outline_224"]/a')//*[@id="outline_173"]/a
     TOPIC_IDENTIFIER = (By.XPATH, '//*[@id="outline_173"]/a')
     MANAGE_EDIT_TOPIC = (By.XPATH, '//*[@id="edit_topic"]')
     SUBMIT_TOPIC_UPDATE_BASED_ON_THIS = (By.XPATH, '//*[@id="update"]')
@@ -395,7 +392,7 @@ class CampEditPageIdentifiers(object):
     SUBMIT_UPDATE = (By.ID, 'submit')
     ERROR_DUPLICATE_CAMP_NAME = (By.XPATH, '/html/body/div/div[3]/div/div/form/div[3]/p')
     CAMP_IDENTIFIER = (By.XPATH, '//*[@id="tree_173_1_2"]/div/a')
-    USER_NICK_NAME = (By.XPATH, '//*[@id="support-tree"]/li[2]/a')
+    USER_NICK_NAME = (By.XPATH, '//*[@id="support-tree"]/li/a')
     USER_SUPPORTS_CAMP_NAME = (By.XPATH, '//*[@id="camp_173_2"]/a')
     ERROR_CAMP_ABOUT_URL = (By.XPATH, '/html/body/div/div[3]/div/div/form/div[6]/p[2]')
 

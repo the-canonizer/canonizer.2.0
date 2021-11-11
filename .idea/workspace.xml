@@ -3,11 +3,13 @@
   <component name="ChangeListManager">
     <list default="true" id="73daf555-1c66-4b71-9cef-6585f4ebe7b9" name="Default Changelist" comment="Updated test cases">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/selenium_tests/CanonizerForgotPasswordPage.py" beforeDir="false" afterPath="$PROJECT_DIR$/selenium_tests/CanonizerForgotPasswordPage.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/selenium_tests/CanonizerLogoutPage.py" beforeDir="false" afterPath="$PROJECT_DIR$/selenium_tests/CanonizerLogoutPage.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/selenium_tests/CanonizerBrowsePage.py" beforeDir="false" afterPath="$PROJECT_DIR$/selenium_tests/CanonizerBrowsePage.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/selenium_tests/CanonizerCampPage.py" beforeDir="false" afterPath="$PROJECT_DIR$/selenium_tests/CanonizerCampPage.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/selenium_tests/CanonizerRegistrationPage.py" beforeDir="false" afterPath="$PROJECT_DIR$/selenium_tests/CanonizerRegistrationPage.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/selenium_tests/CanonizerTestCases.py" beforeDir="false" afterPath="$PROJECT_DIR$/selenium_tests/CanonizerTestCases.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/selenium_tests/CanonizerUploadFilePage.py" beforeDir="false" afterPath="$PROJECT_DIR$/selenium_tests/CanonizerUploadFilePage.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/selenium_tests/Config.py" beforeDir="false" afterPath="$PROJECT_DIR$/selenium_tests/Config.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/selenium_tests/Identifiers.py" beforeDir="false" afterPath="$PROJECT_DIR$/selenium_tests/Identifiers.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/selenium_tests/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/selenium_tests/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -140,8 +142,8 @@
       <recent name="H:\Rupali_Work_Directory\Canonizer\Git\canonizer.2.0\selenium_tests" />
     </key>
   </component>
-  <component name="RunManager" selected="Python tests.Unittests for main.TestPages.test_broken_url">
-    <configuration name="Unittests for main.TestPages.test_broken_url" type="tests" factoryName="Unittests" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="Python tests.Unittests for main.TestPages.test_select_by_value_government_sandy_city_only_my_topics">
+    <configuration name="Unittests for main.TestPages.test_registration_with_blank_captcha" type="tests" factoryName="Unittests" temporary="true" nameIsGenerated="true">
       <module name="canonizer.2.0" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -151,11 +153,11 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;main.TestPages.test_broken_url&quot;" />
+      <option name="_new_target" value="&quot;main.TestPages.test_registration_with_blank_captcha&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
-    <configuration name="Unittests for main.TestPages.test_forgot_password_with_invalid_email_format" type="tests" factoryName="Unittests" temporary="true" nameIsGenerated="true">
+    <configuration name="Unittests for main.TestPages.test_registration_with_blank_email" type="tests" factoryName="Unittests" temporary="true" nameIsGenerated="true">
       <module name="canonizer.2.0" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -165,11 +167,11 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;main.TestPages.test_forgot_password_with_invalid_email_format&quot;" />
+      <option name="_new_target" value="&quot;main.TestPages.test_registration_with_blank_email&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
-    <configuration name="Unittests for main.TestPages.test_load_join_support_camp_page_with_login" type="tests" factoryName="Unittests" temporary="true" nameIsGenerated="true">
+    <configuration name="Unittests for main.TestPages.test_registration_with_blank_password" type="tests" factoryName="Unittests" temporary="true" nameIsGenerated="true">
       <module name="canonizer.2.0" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -179,11 +181,11 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;main.TestPages.test_load_join_support_camp_page_with_login&quot;" />
+      <option name="_new_target" value="&quot;main.TestPages.test_registration_with_blank_password&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
-    <configuration name="Unittests for main.TestPages.test_nick_name_page_should_open_join_support_camp_add_new_nick_name" type="tests" factoryName="Unittests" temporary="true" nameIsGenerated="true">
+    <configuration name="Unittests for main.TestPages.test_registration_with_duplicate_email" type="tests" factoryName="Unittests" temporary="true" nameIsGenerated="true">
       <module name="canonizer.2.0" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -193,11 +195,11 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;main.TestPages.test_nick_name_page_should_open_join_support_camp_add_new_nick_name&quot;" />
+      <option name="_new_target" value="&quot;main.TestPages.test_registration_with_duplicate_email&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
-    <configuration name="Unittests for main.TestPages.test_registration_with_blank_invalid_email" type="tests" factoryName="Unittests" temporary="true" nameIsGenerated="true">
+    <configuration name="Unittests for main.TestPages.test_select_by_value_government_sandy_city_only_my_topics" type="tests" factoryName="Unittests" temporary="true" nameIsGenerated="true">
       <module name="canonizer.2.0" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -207,24 +209,24 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;main.TestPages.test_registration_with_blank_invalid_email&quot;" />
+      <option name="_new_target" value="&quot;main.TestPages.test_select_by_value_government_sandy_city_only_my_topics&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Python tests.Unittests for main.TestPages.test_nick_name_page_should_open_join_support_camp_add_new_nick_name" />
-      <item itemvalue="Python tests.Unittests for main.TestPages.test_load_join_support_camp_page_with_login" />
-      <item itemvalue="Python tests.Unittests for main.TestPages.test_forgot_password_with_invalid_email_format" />
-      <item itemvalue="Python tests.Unittests for main.TestPages.test_registration_with_blank_invalid_email" />
-      <item itemvalue="Python tests.Unittests for main.TestPages.test_broken_url" />
+      <item itemvalue="Python tests.Unittests for main.TestPages.test_registration_with_blank_captcha" />
+      <item itemvalue="Python tests.Unittests for main.TestPages.test_registration_with_blank_email" />
+      <item itemvalue="Python tests.Unittests for main.TestPages.test_registration_with_blank_password" />
+      <item itemvalue="Python tests.Unittests for main.TestPages.test_registration_with_duplicate_email" />
+      <item itemvalue="Python tests.Unittests for main.TestPages.test_select_by_value_government_sandy_city_only_my_topics" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python tests.Unittests for main.TestPages.test_broken_url" />
-        <item itemvalue="Python tests.Unittests for main.TestPages.test_registration_with_blank_invalid_email" />
-        <item itemvalue="Python tests.Unittests for main.TestPages.test_forgot_password_with_invalid_email_format" />
-        <item itemvalue="Python tests.Unittests for main.TestPages.test_load_join_support_camp_page_with_login" />
-        <item itemvalue="Python tests.Unittests for main.TestPages.test_nick_name_page_should_open_join_support_camp_add_new_nick_name" />
+        <item itemvalue="Python tests.Unittests for main.TestPages.test_select_by_value_government_sandy_city_only_my_topics" />
+        <item itemvalue="Python tests.Unittests for main.TestPages.test_registration_with_duplicate_email" />
+        <item itemvalue="Python tests.Unittests for main.TestPages.test_registration_with_blank_captcha" />
+        <item itemvalue="Python tests.Unittests for main.TestPages.test_registration_with_blank_password" />
+        <item itemvalue="Python tests.Unittests for main.TestPages.test_registration_with_blank_email" />
       </list>
     </recent_temporary>
   </component>

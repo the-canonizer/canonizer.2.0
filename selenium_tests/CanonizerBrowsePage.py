@@ -404,6 +404,38 @@ class CanonizerBrowsePage(Page):
         time.sleep(3)
         return CanonizerBrowsePage(self.driver)
 
+    def select_by_value_government(self):
+        select = Select(self.find_element(*BrowsePageIdentifiers.NAMESPACE))
+        select.select_by_value("26")
+        time.sleep(3)
+        return CanonizerBrowsePage(self.driver)
+
+    def select_by_value_government_only_my_topics(self):
+        self.click_browse_page_button()
+        self.select_dropdown_value()
+        self.select_by_value_government()
+        time.sleep(3)
+        self.hover(*BrowsePageIdentifiers.ONLY_MY_TOPICS)
+        self.find_element(*BrowsePageIdentifiers.ONLY_MY_TOPICS).click()
+        time.sleep(3)
+        return CanonizerBrowsePage(self.driver)
+
+    def select_by_value_government_sandy_city(self):
+        select = Select(self.find_element(*BrowsePageIdentifiers.NAMESPACE))
+        select.select_by_value("27")
+        time.sleep(3)
+        return CanonizerBrowsePage(self.driver)
+
+    def select_by_value_government_sandy_city_only_my_topics(self):
+        self.click_browse_page_button()
+        self.select_dropdown_value()
+        self.select_by_value_government_sandy_city()
+        time.sleep(3)
+        self.hover(*BrowsePageIdentifiers.ONLY_MY_TOPICS)
+        self.find_element(*BrowsePageIdentifiers.ONLY_MY_TOPICS).click()
+        time.sleep(3)
+        return CanonizerBrowsePage(self.driver)
+
 
 
 

@@ -271,7 +271,11 @@ testCases = {
     259: [moderate, 'When user click on Add New Nick Name link from update camp statement page,user should redirect to nick name page'],
     260: [moderate, 'When user click on Add New Nick Name link from create camp statement page,user should redirect to nick name page'],
     261: [moderate, 'In forgot password page, When user put invalid Email format, user must see error message'],
-    262: [moderate, 'In Registration page, When user enter invalid Email, should see error message']
+    262: [moderate, 'In Registration page, When user enter invalid Email, should see error message'],
+    263: [low, 'On Browse Page,When user select /government/ namespace from drop down, User must see topics under /government/ namespace'],
+    264: [low, 'On Browse Page,When user select /government/ namespace from drop down and Only My Topics, User must see own topics under /government/ namespace'],
+    265: [low, 'On Browse Page,When user select /government/sandy_city/ namespace from drop down, User must see topics under /government/sandy_city/ namespace'],
+    266: [low, 'On Browse Page,When user select /government/sandy_city namespace from drop down and Only My Topics, User must see own topics under /government/sandy_city/ namespace']
 }
 
 

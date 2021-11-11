@@ -76,7 +76,8 @@ class TestPages(unittest.TestCase):
     # 05
     def test_login_with_invalid_user(self):
         print("\n" + str(test_cases(4)))
-        loginPage = CanonizerLoginPage(self.driver).click_login_page_button()
+        page = CanonizerLoginPage(self.driver)
+        loginPage = page.click_login_page_button()
         result = loginPage.login_with_invalid_user(DEFAULT_INVALID_USER, DEFAULT_INVALID_PASSWORD)
         self.assertIn("These credentials do not match our records.", result)
 
@@ -264,7 +265,7 @@ class TestPages(unittest.TestCase):
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         result = CanonizerUploadFilePage(self.driver).click_upload_file_page_button().upload_file_with_blank_file()
-        self.assertIn("Error! The file field is required.", result)
+        self.assertIn("Error! The file field is required", result)
 
     # ----- Upload File Page Test Cases End -----
     # ----- Create New Topic Test Cases Start -----
@@ -299,7 +300,7 @@ class TestPages(unittest.TestCase):
             DEFAULT_NICK_NAME,
             DEFAULT_NAMESPACE,
             DEFAULT_NOTE)
-        self.assertIn("The topic name field is required.", result)
+        self.assertIn("Topic name is required.", result)
 
     # 30
     def test_create_topic_with_blank_spaces_topic_name(self):
@@ -312,7 +313,7 @@ class TestPages(unittest.TestCase):
             DEFAULT_NICK_NAME,
             DEFAULT_NAMESPACE,
             DEFAULT_NOTE)
-        self.assertIn("The topic name field is required.", result)
+        self.assertIn("Topic name is required.", result)
 
     # 31
     def test_create_new_topic_page_mandatory_fields_are_marked_with_asterisk(self):
@@ -599,16 +600,6 @@ class TestPages(unittest.TestCase):
         self.assertIn("Nick name is required.", result)
 
     # 62
-    #def test_create_with_valid_nick_name(self):
-        #print("\n" + str(test_cases(61)))
-        # Click on the Login Page and Create a Login Session and for further actions.
-        #self.login_to_canonizer_app()
-        # Click on Username->Account Settings->Nick Names sub tab
-        #CanonizerAccountSettingsPage(self.driver).click_username_link_button().click_account_settings_page_button().click_account_settings_add_manage_nick_names_page_button()
-        #result = CanonizerAccountSettingsNickNamesPage(self.driver).create_with_valid_nick_name('Rupali Chavan Selenium')
-        #self.assertIn("/settings/nickname", result.get_url())
-
-    # 62
     def test_click_browse_page_button_without_login(self):
         print("\n" + str(test_cases(61)))
         # Click on the Browse link
@@ -643,7 +634,7 @@ class TestPages(unittest.TestCase):
             '',
             '',
             '')
-        self.assertIn("First name is required.", result)
+        self.assertIn("The first name field is required.", result)
 
     # 65
     def test_update_profile_with_blank_last_name(self):
@@ -664,7 +655,7 @@ class TestPages(unittest.TestCase):
             '',
             '',
             '')
-        self.assertIn("Last name is required.", result)
+        self.assertIn("The last name field is required.", result)
     # ----- My Profile Page Test Cases End -----
 
     # ----- Browse Page Test Cases Start -----
@@ -800,7 +791,7 @@ class TestPages(unittest.TestCase):
     def test_select_by_value_terminology(self):
         print("\n" + str(test_cases(81)))
         # Click on the Login Page and Create a Login Session and for further actions.
-        self.login_2to_canonizer_app()
+        self.login_to_canonizer_app()
         # Click on the Browse link
         self.assertIn("/browse?namespace=17", CanonizerBrowsePage(self.driver).click_browse_page_button().select_dropdown_value().select_by_value_terminology().get_url())
 
@@ -1187,12 +1178,12 @@ class TestPages(unittest.TestCase):
     # ----- Create New Camp Statement and Edit Camp Statement Test Cases Start -----
     # 127
     def test_load_edit_camp_statement_page(self):
-            # Click on the Login Page and Create a Login Session and for further actions.
-            self.login_to_canonizer_app()
-            print("\n" + str(test_cases(126)))
-            result = CanonizerCampStatementPage(self.driver).load_edit_camp_statement_page()
-            if result:
-                self.assertIn("manage/statement", result.get_url())
+        # Click on the Login Page and Create a Login Session and for further actions.
+        self.login_to_canonizer_app()
+        print("\n" + str(test_cases(126)))
+        result = CanonizerCampStatementPage(self.driver).load_edit_camp_statement_page()
+        if result:
+            self.assertIn("manage/statement", result.get_url())
 
     # 128
     def test_camp_statement_edit_page_mandatory_fields_are_marked_with_asterisk(self):
@@ -1202,7 +1193,7 @@ class TestPages(unittest.TestCase):
         # Click on the Manage/Edit Camp Statement  link
         result = CanonizerCampStatementPage(self.driver).load_edit_camp_statement_page()
         if result:
-         self.assertTrue(CanonizerCampStatementPage(self.driver).load_edit_camp_statement_page().camp_statement_edit_page_mandatory_fields_are_marked_with_asterisk())
+            self.assertTrue(CanonizerCampStatementPage(self.driver).load_edit_camp_statement_page().camp_statement_edit_page_mandatory_fields_are_marked_with_asterisk())
 
     # 129
     def test_submit_statement_update_with_blank_nick_name(self):
@@ -1776,7 +1767,7 @@ class TestPages(unittest.TestCase):
         print("\n" + str(test_cases(183)))
         result = CanonizerEditCampPage(self.driver).load_camp_user_supports_page()
         if result:
-            self.assertIn("user/supports/348?topicnum=173&campnum=2&namespace=16#camp_173_2", result.get_url())
+            self.assertIn("user/supports/347?topicnum=173&campnum=2&namespace=16#camp_173_2", result.get_url())
 
     # 185
     def test_load_camp_agreement_from_user_supports_page(self):
@@ -1898,7 +1889,7 @@ class TestPages(unittest.TestCase):
             "",
             "",
             "")
-        self.assertIn("Camp name must only contain space and alphanumeric characters.", result)
+        self.assertIn("Camp name can only contain space and alphanumeric characters.", result)
 
     # 201
     def test_submit_camp_update_with_invalid_camp_name(self):
@@ -1914,7 +1905,7 @@ class TestPages(unittest.TestCase):
             "",
             "",
             "")
-        self.assertIn("Camp name must only contain space and alphanumeric characters.", result)
+        self.assertIn("Camp name can only contain space and alphanumeric characters.", result)
 
     # 202
     def test_submit_camp_update_with_blank_camp_name(self):
@@ -1997,7 +1988,7 @@ class TestPages(unittest.TestCase):
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the Browse link
-        self.assertIn("/browse?namespace=26", CanonizerBrowsePage(self.driver).click_browse_page_button().select_dropdown_value().select_by_value_organizations_united_utah_party().get_url())
+        self.assertIn("/browse?namespace=25", CanonizerBrowsePage(self.driver).click_browse_page_button().select_dropdown_value().select_by_value_organizations_united_utah_party().get_url())
 
     # 212
     def test_create_new_topic_page_should_have_add_new_nick_name_link_for_new_users(self):
@@ -2166,7 +2157,7 @@ class TestPages(unittest.TestCase):
             DEFAULT_PASS,
             DEFAULT_PASS,
             '')
-        self.assertIn("First name must be in letters only", result)
+        self.assertIn("The first name must be in alphabets and space only.", result)
 
     # 234
     def test_registration_with_invalid_last_name(self):
@@ -2179,7 +2170,7 @@ class TestPages(unittest.TestCase):
             DEFAULT_PASS,
             DEFAULT_PASS,
             '')
-        self.assertIn("Last name must be in letters only", result)
+        self.assertIn("The last name must be in alphabets and space only.", result)
 
     # 235
     def test_registration_with_invalid_middle_name(self):
@@ -2192,7 +2183,7 @@ class TestPages(unittest.TestCase):
             DEFAULT_PASS,
             DEFAULT_PASS,
             '')
-        self.assertIn("Middle name must be in letters only", result)
+        self.assertIn("The middle name must be in alphabets and space only.", result)
 
     # 236
     def test_open_uploaded_file(self):
@@ -2216,7 +2207,7 @@ class TestPages(unittest.TestCase):
             INVALID_TOPIC_NAME,
             DEFAULT_NAMESPACE,
             DEFAULT_NOTE)
-        self.assertIn("Topic name must only contain space and alphanumeric characters.", result)
+        self.assertIn("Topic name can only contain space and alphanumeric characters.", result)
 
     # 239
     def test_verify_phone_number_with_invalid_length_phone_number(self):
@@ -2245,7 +2236,7 @@ class TestPages(unittest.TestCase):
             '',
             '',
             '')
-        self.assertIn("First name must be in letters only", result)
+        self.assertIn("The first name must be in alphabets and space only.", result)
 
     # 241
     def test_update_profile_with_invalid_middle_name(self):
@@ -2265,7 +2256,7 @@ class TestPages(unittest.TestCase):
             '',
             '',
             '')
-        self.assertIn("Middle name must be in letters only", result)
+        self.assertIn("The middle name must be in alphabets and space only.", result)
 
     # 242
     def test_update_profile_with_invalid_last_name(self):
@@ -2285,7 +2276,7 @@ class TestPages(unittest.TestCase):
             '',
             '',
             '')
-        self.assertIn("Last name must be in letters only", result)
+        self.assertIn("The last name must be in alphabets and space only.", result)
 
     # 243
     def test_submit_update_with_invalid_topic_name(self):
@@ -2297,7 +2288,7 @@ class TestPages(unittest.TestCase):
             INVALID_TOPIC_NAME,
             "",
             "")
-        self.assertIn("Topic name must only contain space and alphanumeric characters.", result)
+        self.assertIn("Topic name can only contain space and alphanumeric characters.", result)
 
     # 244
     def test_nick_name_page_should_open_create_topic_add_new_nick_name(self):
@@ -2425,7 +2416,7 @@ class TestPages(unittest.TestCase):
             "",
             INVALID_CAMP_ABOUT_URL,
             "")
-        self.assertIn("The camp about url may not be greater than 1024 characters.", result)
+        self.assertIn("Camp's about url can not be more than 1024 characters.", result)
 
     # 258
     def test_request_otp_with_unverified_user_phone_number(self):
@@ -2457,7 +2448,7 @@ class TestPages(unittest.TestCase):
                 self.assertIn("settings/nickname", result.get_url())
 
     # 261
-    def test_nick_name_page_should_open_add_camp_statement_add_new_nick_name(self):
+    def test_nick_ame_page_should_open_add_camp_statement_add_new_nick_name(self):
         print("\n" + str(test_cases(260)))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
@@ -2477,9 +2468,9 @@ class TestPages(unittest.TestCase):
         self.assertIn("The email must be a valid email address.", result)
 
     # 263
-    def test_registration_with_blank_invalid_email(self):
+    def test_registration_with_invalid_email(self):
         print("\n" + str(test_cases(262)))
-        result = CanonizerRegisterPage(self.driver).click_register_button().registration_with_blank_invalid_email(
+        result = CanonizerRegisterPage(self.driver).click_register_button().registration_with_invalid_email(
             DEFAULT_FIRST_NAME,
             DEFAULT_MIDDLE_NAME,
             DEFAULT_LAST_NAME,
@@ -2489,6 +2480,41 @@ class TestPages(unittest.TestCase):
             '')
         self.assertIn("The email must be a valid email address.", result)
 
+    # 264
+    def test_select_by_value_government(self):
+        print("\n" + str(test_cases(263)))
+        # Click on the Login Page and Create a Login Session and for further actions.
+        self.login_to_canonizer_app()
+        # Click on the Browse link
+        self.assertIn("/browse?namespace=26", CanonizerBrowsePage(self.driver).click_browse_page_button().select_dropdown_value().select_by_value_government().get_url())
+
+    # 265
+    def test_select_by_value_government_only_my_topics(self):
+        print("\n" + str(test_cases(264)))
+        # Click on the Login Page and Create a Login Session and for further actions.
+        self.login_to_canonizer_app()
+        # Click on the Browse link
+        self.assertIn("/browse?namespace=26&my=26", CanonizerBrowsePage(
+            self.driver).select_by_value_government_only_my_topics().get_url())
+
+    # 266
+    def test_select_by_value_government_sandy_city(self):
+        print("\n" + str(test_cases(265)))
+        # Click on the Login Page and Create a Login Session and for further actions.
+        self.login_to_canonizer_app()
+        # Click on the Browse link
+        self.assertIn("/browse?namespace=27", CanonizerBrowsePage(
+            self.driver).click_browse_page_button().select_dropdown_value().select_by_value_government_sandy_city().get_url())
+
+    # 267
+    def test_select_by_value_government_sandy_city_only_my_topics(self):
+        print("\n" + str(test_cases(266)))
+        # Click on the Login Page and Create a Login Session and for further actions.
+        self.login_to_canonizer_app()
+        # Click on the Browse link
+        self.assertIn("/browse?namespace=27&my=27", CanonizerBrowsePage(
+            self.driver).select_by_value_government_sandy_city_only_my_topics().get_url())
+
     def tearDown(self):
         self.driver.close()
 
@@ -2496,3 +2522,5 @@ class TestPages(unittest.TestCase):
 if __name__ == "__main__":
     suite = unittest.TestLoader().loadTestsFromTestCase(TestPages)
     unittest.TextTestRunner(verbosity=2).run(suite)
+
+
