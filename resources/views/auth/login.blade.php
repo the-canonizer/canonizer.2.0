@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
 <div class="page-titlePnl">
-    <h1 class="page-title">Login</h1>
+    <h1 class="page-title">Log in</h1>
 </div>     
 @if(Session::has('social_error'))
 <div class="alert alert-danger">
