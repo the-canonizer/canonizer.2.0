@@ -23,7 +23,7 @@
                     </fieldset>
                     <div>
                         <button id="submit" onClick="submitLoginForm(this)" class="btn btn-primary">
-                            Login
+                            Log in
                         </button>
                         <div id="loggingin" class="btn btn-primary" style="display:none;">Logging in ..</div>
                     </div>
