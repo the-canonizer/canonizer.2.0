@@ -58,7 +58,7 @@ if(isset($topic) && count($topic) > 0 ) { ?>
             <h3 class="row">
             <div class="col-md-4">Canonizer Sorted Camp Tree</div>
             <div class="col-md-8">
-                <a href="#" class="pull-right" data-toggle="tooltip" data-placement="left" title="This section is a table of contents for this topic. It is in outline or tree form, with supporting sub camps indented from the
+                <a href="#" class="pull-right" data-toggle="tooltip" data-placement="auto" title="This section is a table of contents for this topic. It is in outline or tree form, with supporting sub camps indented from the
             parent camp.  If you are in a sub camp, you are also counted in all
             parent camps including the agreement camp at the top.  The numbers are
             canonized scores derived from the people in the camps based on your
@@ -162,7 +162,7 @@ if(isset($topic) && count($topic) > 0 ) { ?>
             <h3 class="row">
             <div class="col-md-6">Support Tree for "<?php echo $camp->camp_name;?>" Camp</div>
              <div class="col-md-6">
-                 <a  style="color:#0000ff;" class="pull-right" data-toggle="tooltip" data-placement="left" title="Supporters can delegate their support to others.  Direct supporters
+                 <a  style="color:#0000ff;" class="pull-right" data-toggle="tooltip" data-placement="auto" title="Supporters can delegate their support to others.  Direct supporters
 receive email notifications of proposed camp changes, while delegated
 supporters don’t.  People delegating their support to others are shown
 below and indented from their delegates in an outline form.  If a
