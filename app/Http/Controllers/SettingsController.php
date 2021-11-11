@@ -754,7 +754,7 @@ class SettingsController extends Controller
 
     public function delete_support(Request $request)
     {
-
+        
         $id = Auth::user()->id;
         $input = $request->all();
         $support_id = (isset($input['support_id'])) ? $input['support_id'] : 0;
