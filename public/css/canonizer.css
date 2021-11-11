@@ -692,7 +692,7 @@ h1.page-title {
     z-index: 1;
     top: 0px;
 }
-.tree li span.noCampArrow .fa {
+.tree li span.noCampArrow .fa-minus{
     background-color: #757272;
 }
 
@@ -713,7 +713,10 @@ i.supporter.fa.fa-arrow-down {
 }
 
 .tree li.parent_li>span {
-    cursor: pointer
+    cursor: pointer;
+}
+.noCampArrow{
+    cursor:context-menu !important;
 }
 
 .tree>ul>li::before,
