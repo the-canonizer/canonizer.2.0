@@ -683,7 +683,7 @@ class TopicController extends Controller {
         $validator = Validator::make($request->all(), [
             'nick_name' => 'required',
             'camp_name' => 'required|max:30|regex:/^[a-zA-Z0-9\s]+$/',
-            'camp_about_url' => 'regex:'.$regex,
+            'camp_about_url' => 'nullable|regex:'.$regex,
             'parent_camp_num' => 'nullable'
             // 'note' => 'required',
         ],$messagesVal);
