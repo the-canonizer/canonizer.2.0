@@ -936,9 +936,10 @@ class TopicController extends Controller {
 
         $eventtype = "CREATE";
         $message = "Statement submitted successfully.";
-
         if (isset($all['camp_num'])) {
-            $eventtype = "UPDATE";
+            //check statement is created or updated #885
+            $eventtype = isset($all['statement_event_type'])? $all['statement_event_type']: "UPDATE"; 
+
 		    $statement->camp_num = $all['camp_num'];
             $statement->submitter_nick_id = $all['nick_name'];
 
