@@ -35,13 +35,6 @@
 
 
   <div style="margin-bottom:20px;">
-
-    @if (Session::has('tokenerror'))
-      <div class="alert alert-danger">
-        {{Session::get('tokenerror')}}
-      </div>
-    @endif
-
     <div class="panel panel-default">
       <div class="panel-body">
         <span> Thread Created at {{ to_local_time($threads->created_at) }}
