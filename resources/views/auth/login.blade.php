@@ -1,7 +1,17 @@
 @extends('layouts.app')
 @section('content')
 <div class="page-titlePnl">
-    <h1 class="page-title">Login</h1>
+    <h1 class="page-title">Log in</h1>
+</div>     
+@if(Session::has('social_error'))
+<div class="alert alert-danger">
+    <strong>Error! </strong>{{ Session::get('social_error')}} 
+</div>
+@endif
+
+@if(Session::has('erro_login'))
+<div class="alert alert-danger">
+    <strong>Error! </strong>{{Session::get('erro_login')}} 
 </div>
 <div class="error-section">
     @if(Session::has('social_error'))
@@ -58,7 +68,7 @@
            <div >Don't have an account? <a href="{{ url('/register') }}">Signup Now</a></div>
      </div>
  <div class="col-sm-12 margin-btm-2 ">
-    <p>Login or Signup with social accounts.</p>
+    <p>Log in or Signup with social accounts.</p>
      <div class="form-group row">
             <div class="col-md-2 mt-1">
                 <a href="{{ url('/login/google') }}" class="btn google btn-google-plus"><i class="fa fa-google fa-fw">

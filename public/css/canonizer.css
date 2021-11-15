@@ -692,6 +692,9 @@ h1.page-title {
     z-index: 1;
     top: 0px;
 }
+.tree li span.noCampArrow .fa {
+    background-color: #757272;
+}
 
 i.supporter.fa.fa-arrow-right,
 i.supporter.fa.fa-arrow-down {

@@ -624,7 +624,6 @@ class Camp extends Model {
             return 0;
         return ($a > $b) ? -1 : 1;
     }
-
     public function getDeletegatedSupportCount($algorithm, $topicnum, $campnum, $delegateNickId, $parent_support_order, $multiSupport) {
 
         /* Delegated Support */
@@ -657,11 +656,10 @@ class Camp extends Model {
         try {
            
             foreach (session("topic-support-nickname-$topicnum") as $supported) {
-                
                 $nickNameSupports = session("topic-support-{$topicnum}")->filter(function ($item) use($supported) {
                     return $item->nick_name_id == $supported->nick_name_id; /* Current camp support */
                 });
-                $supportPoint = Algorithm::{$algorithm}($supported->nick_name_id,$supported->topic_num,$supported->camp_num);
+                $supportPoint = Algorithm::{$algorithm}($supported->nick_name_id,$supported->topic_num,$supported->camp_num);                
                 
                 $currentCampSupport = $nickNameSupports->filter(function ($item) use($campnum) {
                             return $item->camp_num == $campnum; /* Current camp support */
@@ -673,7 +671,7 @@ class Camp extends Model {
 				   0.5 for their first, if they support 2, 
 				   0.25 after and half, again, for each one after that. */
 				if ($currentCampSupport) {
-                    $multiSupport = false;
+                    $multiSupport = false; //default
                      if ($nickNameSupports->count() > 1) {
                         $multiSupport = true;
                         $supportCountTotal += round($supportPoint / (2 ** ($currentCampSupport->support_order)), 2);
@@ -912,6 +910,7 @@ class Camp extends Model {
         }else if((session()->has('asof') && session('asof') == 'bydate' && !isset($_REQUEST['asof']))){
             $as_of_time = strtotime(session('asofdateDefault'));
         }
+        
        
         if (!session("topic-support-nickname-{$this->topic_num}")) { 
             session(["topic-support-nickname-{$this->topic_num}" => Support::where('topic_num', '=', $this->topic_num)

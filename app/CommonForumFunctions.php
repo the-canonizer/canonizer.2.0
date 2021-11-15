@@ -40,8 +40,10 @@ class CommonForumFunctions
         $topic_name = CommonForumFunctions::getTopicName($topicid);
         $camp_name = CommonForumFunctions::getCampName($topicid, $campnum);
         $post_msg = " submitted.";
+        $data['post_type'] = " has made";
         if($reply_id!=""){
             $post_msg = " updated.";
+            $data['post_type'] = " has updated";
         }
         $data['post'] = $post;
         $data['camp_name'] = $camp_name;
