@@ -28,7 +28,7 @@ if(isset($topic) && count($topic) > 0 ) { ?>
 </div>      	
 <div class="right-whitePnl">
     <div class="container-fluid">
-         @if(count($news) > 0)
+        @if(count($news) > 0)
         <div class="news-pnl Scolor-Pnl">
             <h3 class="news-feeds-heading">
                 <span>News Feeds</span>
@@ -41,16 +41,15 @@ if(isset($topic) && count($topic) > 0 ) { ?>
             </h3>
             <div class="content">
                 <ul>
-            @foreach($news as $feed)
-            <li class="news-list">
-                <a target="_blank" href="{{ $feed->link}}">
-                    <span>{{$feed->display_text}}</span>
-                   
-                </a>
-                 <span style="display:none;cursor:pointer;" class="delete-newsfeeds" onClick="deleteNewsFeed({{$feed->id}})"><i class="fa fa-trash"></i></span>
-            </li>
-            @endforeach
-            </ul>
+                    @foreach($news as $feed)
+                    <li class="news-list">
+                        <a target="_blank" href="{{ ( strpos ($feed->link, 'http') === 0 ) ? $feed->link : 'https://' . $feed->link  }}">
+                            <span>{{$feed->display_text}}</span>
+                        </a>
+                         <span style="display:none;cursor:pointer;" class="delete-newsfeeds" onClick="deleteNewsFeed({{$feed->id}})"><i class="fa fa-trash"></i></span>
+                    </li>
+                    @endforeach
+                </ul>
             </div>
         </div>
          @endif
@@ -222,9 +221,8 @@ change camps with them."><i class="fa fa-question"></i></a>
                 <div class="tree col-sm-12">
                     Camp Name : <?php echo $camp->camp_name;?> <br/>
 					Keywords : <?php echo $camp->key_words;?><br/>
-					Camp About URL : <?php echo $camp->camp_about_url;?><br/>
-					
-					
+                    Camp About URL : {{ ( strpos ($camp->camp_about_url, 'http') === 0 ) ? $camp->camp_about_url : 'https://' . $camp->camp_about_url  }} <br/>
+{{--					Camp About URL : <?php echo $camp->camp_about_url;?><br/>--}}
 					Camp About Nick Name : <?php echo (isset($camp->nickname->nick_name)) ? $camp->nickname->nick_name : "No nickname associated";?> <br/>
                 </div>
               
