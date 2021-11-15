@@ -9,3 +9,8 @@ public/robots.txt
 .profile
 storage/logs/laravel.log
 .DS_Store
+/.idea/
+/node_modules/
+/composer.json.org
+/package-lock.json
+/production_01122019.sql
