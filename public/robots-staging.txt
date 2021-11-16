@@ -1,2 +1,18 @@
 User-agent: *
-Disallow: /
+Allow:https://canonizer.com/
+Allow:/topic/*
+Allow:/forum/*
+Allow:/blog/*
+Allow:/video/*
+
+User-agent: * 
+Disallow: https://mail.canonizer.com/
+Disallow: /topic-*/*
+Disallow:/camp/*
+Disallow:/statement/*
+Disallow:/browse/*
+Disallow: /history/*
+Disallow: /settings/*
+Disallow: /admin/*
+Disallow:/*.js
+Disallow:/*.css
