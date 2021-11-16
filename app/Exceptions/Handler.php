@@ -51,6 +51,7 @@ class Handler extends ExceptionHandler
         if ( $exception instanceof \Illuminate\Session\TokenMismatchException ) {
 
             $this->guard()->logout();
+            
             $request->session()->invalidate();
 
             $redirectRoute = "login";
