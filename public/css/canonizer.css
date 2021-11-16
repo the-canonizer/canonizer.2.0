@@ -1967,3 +1967,29 @@ a.verification-link:active {
     color: #721c24!important;
     font-weight: 600!important;
 }
+
+.bwsr-row {
+    display: flex;
+    width:100%;
+    justify-content: space-around;
+    text-align-center;
+    flex-flow: wrap;
+  }
+  .bwsr-row .br-col {
+    max-width: 120px
+  }
+  .bwsr-row .br-col p{
+    text-align: center;
+    margin-top: 5px;
+  }
+  
+  .bwsr-row .br-col img {
+    max-width: 20px;
+  }
+  
+  .supported-browser-wrapper {
+    position: relative;
+    bottom: -30px;
+  }
+
+  .sub-title {font-size: .7rem}
