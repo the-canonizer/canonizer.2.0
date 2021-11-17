@@ -17,26 +17,27 @@
     </div>
     @if(count($threads) >= 0)
     <div>
-      <a class="btn btn-primary" href="{{ URL::to('/')}}/forum/{{ $topicname }}/{{ $campnum }}/threads"> 
+      <a class="btn btn-primary btn-margin" href="{{ URL::to('/')}}/forum/{{ $topicname }}/{{ $campnum }}/threads"> 
         All Threads
       </a>
 
       @if(Auth::check())
-      <a class="btn btn-primary" href="{{ URL::to('/')}}/forum/{{ $topicname }}/{{ $campnum }}/threads?by=me"> 
+      <a class="btn btn-primary btn-margin" href="{{ URL::to('/')}}/forum/{{ $topicname }}/{{ $campnum }}/threads?by=me"> 
         My Threads 
       </a>
 
-      <a class="btn btn-primary" href="{{ URL::to('/')}}/forum/{{ $topicname }}/{{ $campnum }}/threads?by=participate">
+      <a class="btn btn-primary btn-margin" href="{{ URL::to('/')}}/forum/{{ $topicname }}/{{ $campnum }}/threads?by=participate">
         My Participation 
       </a>
 
-      <a class="btn btn-primary" href="{{ URL::to('/')}}/forum/{{ $topicname }}/{{ $campnum }}/threads?by=most_replies">
+      <a class="btn btn-primary btn-margin" href="{{ URL::to('/')}}/forum/{{ $topicname }}/{{ $campnum }}/threads?by=most_replies">
         Top 10 
       </a>
       @endif
-      <a class="btn btn-primary" href="{{ URL::to('/')}}/forum/{{ $topicname }}/{{ $campnum }}/threads/create"> 
+      <a class="btn btn-primary btn-margin" href="{{ URL::to('/')}}/forum/{{ $topicname }}/{{ $campnum }}/threads/create"> 
         Create Thread 
       </a>
+      
     </div>
     @endif
     <br>
