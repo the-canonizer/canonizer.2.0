@@ -674,7 +674,7 @@ class TopicController extends Controller {
             'nick_name.required' => 'The nick name field is required.',
             'camp_name.required' => 'Camp name is required.',
             'camp_name.max' => 'Camp name can not be more than 30 characters.',
-            'camp_about_url.max' => "Camp's about url is invlalid.",
+            'camp_about_url.max' => "Camp's about url can not be more than 1024 characters.",
             'parent_camp_num.required' => 'The parent camp name is required.',
             'objection.required' => 'Objection reason is required.',
             'objection_reason.max' => 'Objection reason can not be more than 100.'
@@ -684,7 +684,7 @@ class TopicController extends Controller {
         $validator = Validator::make($request->all(), [
             'nick_name' => 'required',
             'camp_name' => 'required|max:30|regex:/^[a-zA-Z0-9\s]+$/',
-            'camp_about_url' => 'nullable|regex:'.$regex,
+            'camp_about_url' => 'nullable|max:1024|regex:'.$regex,
             'parent_camp_num' => 'nullable'
             // 'note' => 'required',
         ],$messagesVal);
@@ -744,12 +744,20 @@ class TopicController extends Controller {
         }
         $message = null;
         $go_live_time = "";
+        $campOldData = Camp::getLiveCamp($all['topic_num'],$all['camp_num']);// #834
+        if(isset($all['parent_camp_num']) && $all['parent_camp_num']!='' && $all['parent_camp_num'] != $campOldData->parent_camp_num){
+         // get new parent direct supports and remove it #834
+            $supportData = Support::where('topic_num','=',$all['topic_num'])->where('camp_num','=',$all['parent_camp_num'])->get();
+            if(count($supportData) > 0){
+                foreach($supportData as $value){
+                    $value->end = time();
+                    $value->save();
+                }
+            }
+        }
         $camp = new Camp();
         $camp->topic_num = $all['topic_num'];
-
-
         $camp->parent_camp_num = isset($all['parent_camp_num']) ? $all['parent_camp_num'] : "";
-
         $camp->camp_name = isset($all['camp_name']) ? $all['camp_name'] : "";
         $camp->submit_time = strtotime(date('Y-m-d H:i:s'));
         $camp->go_live_time = $currentTime; //strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
@@ -815,10 +823,10 @@ class TopicController extends Controller {
                 // send history link in email
                 $link = 'camp/history/' . $camp->topic_num . '/' . $camp->camp_num;
                 $data['type'] = "camp";
-
+                $camp_id= isset($camp->camp_num) ? $camp->camp_num:1;
                 $livecamp = Camp::getLiveCamp($camp->topic_num,$camp->camp_num);
 				$data['object'] = $livecamp->topic->topic_name . " / " . $camp->camp_name;
-				$data['link'] = \App\Model\Camp::getTopicCampUrl($camp->topic_num,1);
+				$data['link'] = \App\Model\Camp::getTopicCampUrl($camp->topic_num,$camp_id);
                 try{
 
                 Mail::to(Auth::user()->email)->bcc(config('app.admin_bcc'))->send(new ThankToSubmitterMail(Auth::user(), $link,$data));
@@ -937,9 +945,10 @@ class TopicController extends Controller {
 
         $eventtype = "CREATE";
         $message = "Statement submitted successfully.";
-
         if (isset($all['camp_num'])) {
-            $eventtype = "UPDATE";
+            //check statement is created or updated #885
+            $eventtype = isset($all['statement_event_type'])? $all['statement_event_type']: "UPDATE"; 
+
 		    $statement->camp_num = $all['camp_num'];
             $statement->submitter_nick_id = $all['nick_name'];
 

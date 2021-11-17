@@ -1,7 +1,5 @@
 from CanonizerBase import Page
-from Identifiers import LoginPageIdentifiers, HomePageIdentifiers
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.ui import WebDriverWait
+from Identifiers import LoginPageIdentifiers, HomePageIdentifiers, ForgotPasswordIdentifiers, LoginOTPVerificationIdentifiers
 
 
 class CanonizerLoginPage(Page):
@@ -58,19 +56,9 @@ class CanonizerLoginPage(Page):
         """
         self.find_element(*LoginPageIdentifiers.SUBMIT).click()
 
-    def click_logout_button(self):
-        """
-            Function is to logout from the canonizer application
-        :return:
-        """
-        self.find_element(*LoginPageIdentifiers.PROFILE).click()
-
-        self.find_element(*LoginPageIdentifiers.LOGOUT_OPTION).click()
-
     def login(self, user, password):
         """
         This function is to click the login button and return result to the main program.
-
         Args:
             :param user: Email ID of the User
             :param password: Password of the User
@@ -116,3 +104,94 @@ class CanonizerLoginPage(Page):
             Return the result to the main program.
         """
         return self.find_element(*LoginPageIdentifiers.SIGNUPNOW).text
+
+    def login_with_blank_email(self, password):
+        self.login('', password)
+        return self.find_element(*LoginPageIdentifiers.ERROR_EMAIL).text
+
+    def login_with_blank_password(self, email):
+        self.login(email, '')
+        return self.find_element(*LoginPageIdentifiers.ERROR_PASSWORD).text
+
+    def login_page_mandatory_fields_are_marked_with_asterisk(self):
+        """
+        This Function checks, if Mandatory fields on Register Page Marked with *
+        First Name, Last Name, Email, Password, Confirm Password are Mandatory Fields
+
+        :return: the element value
+        """
+        return \
+            self.find_element(*LoginPageIdentifiers.EMAIL_ASTRK) and \
+            self.find_element(*LoginPageIdentifiers.PASSWORD_ASTRK)
+
+    def login_should_have_forgot_password_link(self):
+        return self.find_element(*LoginPageIdentifiers.FORGOTPASSWORD).text
+
+    def click_request_otp_button(self):
+        self.find_element(*LoginPageIdentifiers.REQUEST_OTP).click()
+
+    def request_otp(self, user):
+        self.enter_email(user)
+        self.click_request_otp_button()
+
+    def request_otp_with_valid_user_email(self, user):
+        self.request_otp(user)
+        return self
+
+    def request_otp_with_invalid_user_email(self, user):
+        self.request_otp(user)
+        return self.find_element(*LoginPageIdentifiers.ERROR_MESSAGE).text
+
+    def request_otp_with_valid_user_phone_number(self, phone_number):
+        self.request_otp(phone_number)
+        return self
+
+    def request_otp_with_invalid_user_phone_number(self, phone_number):
+        self.request_otp(phone_number)
+        return self.find_element(*LoginPageIdentifiers.ERROR_MESSAGE).text
+
+    def request_otp_with_unverified_user_phone_number(self, phone_number):
+        self.request_otp(phone_number)
+        return self.find_element(*LoginPageIdentifiers.ERROR_MESSAGE).text
+
+    def request_otp_with_blank_email_or_phone_number(self):
+        self.request_otp('')
+        return self.find_element(*LoginPageIdentifiers.ERROR_EMAIL).text
+
+    def enter_otp(self, otp):
+        self.find_element(*LoginOTPVerificationIdentifiers.OTP).send_keys(otp)
+
+    def click_submit_otp_button(self):
+        self.find_element(*LoginOTPVerificationIdentifiers.SUBMIT).click()
+
+    def click_submit_otp(self, otp):
+        self. enter_otp(otp)
+        self.click_submit_otp_button()
+
+    def login_with_valid_otp(self, otp):
+
+        self.click_submit_otp(otp)
+        return self
+
+    def login_with_invalid_otp(self, otp):
+        self.click_submit_otp(otp)
+        return self.find_element(*LoginOTPVerificationIdentifiers.ERROR_INVALID_OTP).text
+
+    def login_otp_verification_page_mandatory_fields_are_marked_with_asterisk(self):
+        """
+        This Function checks, if Mandatory fields on Register Page Marked with *
+
+        :return: the element value
+        """
+        return \
+            self.find_element(*LoginOTPVerificationIdentifiers.OTP_ASTRK)
+
+    def login_with_blank_otp(self):
+        self.click_submit_otp('')
+        return self.find_element(*LoginOTPVerificationIdentifiers.ERROR_OTP).text
+
+    def check_register_page_open_click_signup_now_link(self):
+
+        self.hover(*LoginPageIdentifiers.SIGNUPNOW)
+        self.find_element(*LoginPageIdentifiers.SIGNUPNOW).click()
+        return CanonizerLoginPage(self.driver)

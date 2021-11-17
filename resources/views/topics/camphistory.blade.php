@@ -181,7 +181,12 @@
                                 <b>Keywords :</b> {{ $data->key_words }} <br/>
                                 <b>Edit summary :</b> {{ $data->note }} <br/>
 
-                                <b>Camp About URL :</b> {{ $data->camp_about_url }} <br/>
+                                <b>Camp About URL :</b> 
+                                <?php if(isset($data->camp_about_url) && $data->camp_about_url){?>
+                                <a href="<?=$data->camp_about_url; ?>" target="_blank" >{{  $data->camp_about_url }} </a>
+                                <?php } ?>
+                                
+                                <br/>
                                 <b>Submitter Nick Name :</b> 
                                 <?php
                                   $namespace_id = 1;

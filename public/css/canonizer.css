@@ -692,7 +692,7 @@ h1.page-title {
     z-index: 1;
     top: 0px;
 }
-.tree li span.noCampArrow .fa {
+.tree li span.noCampArrow .fa-minus{
     background-color: #757272;
 }
 
@@ -713,7 +713,10 @@ i.supporter.fa.fa-arrow-down {
 }
 
 .tree li.parent_li>span {
-    cursor: pointer
+    cursor: pointer;
+}
+.noCampArrow{
+    cursor:context-menu !important;
 }
 
 .tree>ul>li::before,
@@ -1591,13 +1594,14 @@ span.brsr-name {
     display: inline-block;
 }
 
+
 .ps_tooltp {
     position: absolute;
     display: none;
     background-color: #333;
     color: #fff;
     padding: 10px 10px 10px 25px;
-    width: 300px;
+    width: 180px;
     left: -10px;
     border-radius: 3px;
     font-size: 12px;
@@ -1902,6 +1906,18 @@ a.rgWT {
 a.site-regular-text {
     color: #212529;
     text-decoration: underline;
+}
+
+.responsive-width {
+    font-size: 13px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.btn-margin{
+    margin-bottom: 5px;
+    margin-left: 2px;
+    margin-right: 2px;
 }
 
 @media screen and (max-width:768px) {
