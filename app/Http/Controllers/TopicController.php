@@ -401,8 +401,10 @@ class TopicController extends Controller {
 			return redirect()->refresh();
 		}
         $topicData = [];
+        
         $topic = Camp::getAgreementTopic($topicnum, $_REQUEST);
-         if(!(isset($topic) && count($topic) > 0)){
+        
+        if(!(isset($topic) && count($topic) > 0)){
               $topicData = Topic::where('topic_num','=',$topicnum)->get();
         }
         $camp = Camp::getLiveCamp($topicnum, $parentcampnum);
@@ -451,7 +453,6 @@ class TopicController extends Controller {
                         ->orderBy('order_id', 'ASC')->get();
             $editFlag = false;
         }
-        
         return view('topics.view', compact('topic', 'parentcampnum','camp_subscriptions','camp_subscription_data','subscribedCamp', 'parentcamp', 'camp', 'wiky', 'id','news','editFlag','topicData','campData'));
     }
 

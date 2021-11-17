@@ -2,14 +2,17 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
-use Illuminate\Http\Request;
-use Validator;
 use App\User;
-use Illuminate\Support\Facades\Mail;
+use Validator;
+use App\Mail\PhoneOTPMail;
+use Illuminate\Http\Request;
 use App\Mail\PasswordResetMail;
+use App\Mail\OtpVerificationMail;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
 
 class ForgotPasswordController extends Controller {
     /*
@@ -49,14 +52,17 @@ class ForgotPasswordController extends Controller {
             return back()->withErrors(['email' => 'Email not found in our record']);
         }
 
+        if(!isset($user->status) || $user->status === 0) {
+            return back()->with(['forgot_password_error' => 'Your account is not verified yet. Click on the link <span ><a href="/getVerificationCode" class="verification-link">Request for Verification Code</a></span> to get a new code on you registered email or mobile.']);
+        }
+
         // send resetlink in email
         $link = 'resetpassword/' . base64_encode($user->email);
         try{
-
-        Mail::to($user->email)->send(new PasswordResetMail($user,$link));
+            Mail::to($user->email)->send(new PasswordResetMail($user,$link));
         }catch(\Swift_TransportException $e){
-                       throw new \Swift_TransportException($e);
-                    } 
+            throw new \Swift_TransportException($e);
+        } 
         
         return redirect('resetlinksent');
     }
@@ -78,4 +84,63 @@ class ForgotPasswordController extends Controller {
         return view('auth.passwords.resetlinksent');
     }
 
+    public function showVerificationCodeForm() {
+        return view('auth.reqVerificationCode');
+    }
+
+    public function getVerificationCode(Request $request) {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return back()->withErrors($validator->errors());
+        }
+        $data = $request->all();
+        
+        if(isset($data['email'])) {
+            $tempUser = User::where('email', $data['email'])->first();
+            if(isset($tempUser)) {
+                $authCode = mt_rand(100000, 999999);
+                $tempUser->otp = $authCode;
+                $tempUser->update();
+                try{
+                    Mail::to($tempUser->email)->bcc(config('app.admin_bcc'))->send(new OtpVerificationMail($tempUser,true));
+                    $user = base64_encode($tempUser->email);
+                    return view('auth.verifyotp', compact('user'));
+                }catch(\Swift_TransportException $e){
+                    throw new \Swift_TransportException($e);
+                } 
+            } else {
+                $tempUser = User::where('phone_number', $data['email'])->first();
+                if(isset($tempUser)) {
+                    if($tempUser->mobile_verified === 0) {
+                        return back()->with(['verification_code_error' => 'Your mobile number is not verified.']);
+                    }
+                    $authCode = mt_rand(100000, 999999);
+                    $tempUser->otp = $authCode;
+                    $tempUser->update();
+                    $result= [];
+                    $result['otp'] = $authCode;
+                    $result['subject'] = "Canonizer verification code";
+                    $receiver = $tempUser->phone_number . "@" . $tempUser->mobile_carrier;
+                    Session::flash('otpsent', "A 6 digit code has been sent on your phone number for verification.");
+                    try{
+                        Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new PhoneOTPMail($tempUser, $result));
+                        $user = base64_encode($tempUser->email);
+                        return view('auth.verifyotp', compact('user'));
+                    }catch(\Swift_TransportException $e){
+                        throw new \Swift_TransportException($e);
+                    } 
+                } else {
+                    return redirect()->back()->withErrors(['email' => 'Email/Phone Number does not exists in our record']);
+                }
+            }            
+        } else {
+            $errors = [$this->username() => 'Email is required.'];
+            return redirect()->back()
+            ->withInput($request->only($this->username(), 'Email is required.'))
+            ->withErrors($errors);
+        }
+    }
 }

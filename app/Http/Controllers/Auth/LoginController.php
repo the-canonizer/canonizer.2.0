@@ -58,34 +58,39 @@ class LoginController extends Controller
             session(['url.intended' => url()->previous()]);
         }
 
-    return view('auth.login');
+        return view('auth.login');
     }
 
-     public function logout(Request $request)
-        {
-            $this->guard()->logout();
+    public function logout(Request $request)
+    {
+        $this->guard()->logout();
 
-            $request->session()->invalidate();
-            if($request->query('from') == 'admin'){
-                    return redirect('/admin');
-            }
-            return redirect('/');
+        $request->session()->invalidate();
+        if($request->query('from') == 'admin'){
+                return redirect('/admin');
         }
+        return redirect('/');
+    }
+
     public function validateLogin(Request $request)
     {
         $all= $request->all();
         $arr = [
             $this->username() => 'required|string'
         ];
+
         if(isset($all['password']) || !(isset($all['request_opt']) && $all['request_opt'] == 'on')){
-            $arr['password']= 'required|string';
+            $arr['password'] = 'required|string';
         }
-       $msgs =  [
-        'email.required' => 'The Email/Phone Number field is required.',
-        'password.required' => 'The password is required.'
-       ];
+        
+        $msgs =  [
+            'email.required' => 'The Email/Phone Number field is required.',
+            'password.required' => 'The password is required.'
+        ];
         $this->validate($request, $arr,$msgs);
+
     }
+
     public function request_otp($request,$arr){
         if($arr && isset($arr['email'])){
             $user = User::where('email','=',$arr['email'])->first();
@@ -95,10 +100,9 @@ class LoginController extends Controller
                 $user->update();
                 try{
                  Mail::to($user->email)->bcc(config('app.admin_bcc'))->send(new OtpVerificationMail($user,true));
-
                     return redirect()->route('login.otp',['user'=>base64_encode($user->email)]);
                 }catch(\Swift_TransportException $e){
-                       throw new \Swift_TransportException($e);
+                    throw new \Swift_TransportException($e);
                 } 
             }else{
                  $userPhone = User::where('phone_number','=',$arr['email'])->first();
@@ -119,7 +123,7 @@ class LoginController extends Controller
                         Session::flash('otpsent', "A 6 digit code has been sent on your phone number for verification.");
                         try{
                             Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new PhoneOTPMail($userPhone, $result));
-                        return redirect()->route('login.otp',['user'=>base64_encode($userPhone->email)]);
+                            return redirect()->route('login.otp',['user'=>base64_encode($userPhone->email)]);
                         }catch(\Swift_TransportException $e){
                             throw new \Swift_TransportException($e);
                         } 
@@ -127,8 +131,8 @@ class LoginController extends Controller
                 }else{
                      $errors = [$this->username() => 'User does not exists.'];
                     return redirect()->back()
-                ->withInput($request->only($this->username(), 'User does not exists.'))
-                ->withErrors($errors);    
+                    ->withInput($request->only($this->username(), 'User does not exists.'))
+                    ->withErrors($errors);    
                 }
                  
             }
@@ -139,12 +143,14 @@ class LoginController extends Controller
             ->withErrors($errors);
         }
     }
+
     public function getOtpForm(Request $request){
-        $user = $request->get('user');
+        $user = $request->get('user');        
         return view('auth.loginotp', compact('user'));
     }
-     public function login(Request $request)
-     {
+
+    public function login(Request $request)
+    {
         $all = $request->all();
         $this->validateLogin($request);
         if(isset($all['request_opt']) && $all['request_opt'] == 'on'){
@@ -156,7 +162,6 @@ class LoginController extends Controller
             // the IP address of the client making these requests into this application.
             if ($this->hasTooManyLoginAttempts($request)) {
                 $this->fireLockoutEvent($request);
-
                 return $this->sendLockoutResponse($request);
             }
 
@@ -171,8 +176,6 @@ class LoginController extends Controller
 
             return $this->sendFailedLoginResponse($request); 
         }
-        
-
     }
 
     public function validateLoginOtp(Request $request){

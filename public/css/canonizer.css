@@ -1045,7 +1045,7 @@ i.supporter.fa.fa-arrow-down {
         margin-bottom: 20px;
     }
     .right-whitePnl {
-        padding: 1rem 0rem 0px;
+        padding: 1rem 1rem 0px;
     }
     .Lcolor-Pnl .content {
         font-size: 12px;
@@ -1058,6 +1058,19 @@ i.supporter.fa.fa-arrow-down {
         column-count: 1;
     }
 }
+@media (max-width:575px) {
+    .add-nickname-section .social-oauth-table.table {
+        font-size: 10px;
+    }
+    .social-oauth-table.table td, .social-oauth-table.table th {
+        padding: 0.45rem;
+    }
+    .social-oauth-table.table .col-md-12 .col-sm-4 {
+        padding-right: 0;
+        padding-left: 0;
+    }
+}
+
 
 .help-block {
     color: red;
@@ -1940,13 +1953,59 @@ a.site-regular-text {
     display: flex;
     margin-bottom: 15px;
     flex-flow: wrap;
-  }
-  .notifySignPNL.topic-status .col {
+}
+.notifySignPNL.topic-status .col {
     width: 100%;
     flex: auto;
-  }
-  @media screen and (min-width: 600px) {
+}
+@media screen and (min-width: 600px) {
     .notifySignPNL.topic-status .col {
       width: calc(100% / 4);
     }
+}
+.error-section {
+    width: 88%;
+}
+a.verification-link:link {
+    color: #721c24!important;
+    font-weight: 600!important;
+}
+a.verification-link:visited {
+    color: #721c24!important;
+    font-weight: 600!important;
+}
+a.verification-link:hover {
+    color: #721c24!important;
+    font-weight: 600!important;
+    text-decoration: underline;
+}
+a.verification-link:active {
+    color: #721c24!important;
+    font-weight: 600!important;
+}
+
+.bwsr-row {
+    display: flex;
+    width:100%;
+    justify-content: space-around;
+    text-align-center;
+    flex-flow: wrap;
   }
+  .bwsr-row .br-col {
+    max-width: 120px
+  }
+  .bwsr-row .br-col p{
+    text-align: center;
+    margin-top: 5px;
+  }
+  
+  .bwsr-row .br-col img {
+    max-width: 20px;
+  }
+  
+  .supported-browser-wrapper {
+    position: relative;
+    bottom: -30px;
+  }
+
+  .sub-title {font-size: .7rem}
