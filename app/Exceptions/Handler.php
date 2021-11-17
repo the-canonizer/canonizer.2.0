@@ -5,9 +5,12 @@ namespace App\Exceptions;
 use Exception;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
 class Handler extends ExceptionHandler
 {
+
+    use AuthenticatesUsers;
     /**
      * A list of the exception types that should not be reported.
      *
@@ -44,6 +47,21 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+       
+        if ( $exception instanceof \Illuminate\Session\TokenMismatchException ) {
+
+            $this->guard()->logout();
+            
+            $request->session()->invalidate();
+
+            $redirectRoute = "login";
+
+            if($request->is('admin/*')){
+                $redirectRoute = "admin/login";
+            }
+
+            return redirect($redirectRoute)->with('tokenerror',"Your action could not performed due to mismatch token, please log in again");
+        } 
         
         if ($exception instanceof \Swift_TransportException){
                 return redirect()->back()->with('mailerror',"Your performed action is complete, but We have issue sending you an email");

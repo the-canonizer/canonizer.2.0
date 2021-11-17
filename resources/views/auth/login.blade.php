@@ -16,6 +16,11 @@
 @endif  	
 <div class="right-whitePnl">
 <div class="col-sm-5 margin-btm-2">
+    @if (Session::has('tokenerror'))
+      <div class="alert alert-danger">
+        {{Session::get('tokenerror')}}
+      </div>
+    @endif
     <form id="login_form" action="{{ url('/login')}}" method="post">
         <input type="hidden" name="_token" value="{{ csrf_token() }}">
         <div class="form-group">

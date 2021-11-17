@@ -35,7 +35,6 @@
 
 
   <div style="margin-bottom:20px;">
-
     <div class="panel panel-default">
       <div class="panel-body">
         <span> Thread Created at {{ to_local_time($threads->created_at) }}
