@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
 <div class="page-titlePnl">
-    <h1 class="page-title">Login</h1>
+    <h1 class="page-title">Log in</h1>
 </div>     
 @if(Session::has('social_error'))
 <div class="alert alert-danger">
@@ -20,14 +20,14 @@
         <input type="hidden" name="_token" value="{{ csrf_token() }}">
         <div class="form-group">
             <label for="firstname">Enter Email / Phone Number <span style="color:red">*</span></label>
-            <input id="email" type="text" name="email" class="form-control" id="email" value="{{ old('email')}}">
+            <input id="email" type="text" name="email" class="form-control" id="email" value="{{ old('email')}}" placeholder="Email / Phone Number">
             @if ($errors->has('email')) <p class="help-block">{{ $errors->first('email') }}</p> @endif
         </div>
 
         <div class="form-group">
             <label>Password <span style="color:red">*</span></label>
            <!--  <label><input type="checkbox"  name="request_opt"  id="request_opt">Request OTP</label> -->
-            <input type="password" name="password" class="form-control" id="password" value="{{ old('password')}}">
+            <input type="password" name="password" class="form-control" id="password" value="{{ old('password')}}" placeholder="Password">
             @if ($errors->has('password')) <p class="help-block">{{ $errors->first('password') }}</p> @endif
         </div>
         
@@ -55,7 +55,7 @@
            <div >Don't have an account? <a href="{{ url('/register') }}">Signup Now</a></div>
      </div>
  <div class="col-sm-12 margin-btm-2 ">
-    <p>Login or Signup with social accounts.</p>
+    <p>Log in or Signup with social accounts.</p>
      <div class="form-group row">
             <div class="col-md-2 mt-1">
                 <a href="{{ url('/login/google') }}" class="btn google btn-google-plus"><i class="fa fa-google fa-fw">

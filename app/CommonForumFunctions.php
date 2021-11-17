@@ -24,7 +24,7 @@ class CommonForumFunctions
      * @param  [type] $nick_id  [description]
      * @return [type]           [description]
      */
-    public static function sendEmailToSupportersForumPost($topicid, $campnum, $link, $post, $threadId, $nick_id, $topic_name_encoded)
+    public static function sendEmailToSupportersForumPost($topicid, $campnum, $link, $post, $threadId, $nick_id, $topic_name_encoded,$reply_id)
     {
         $bcc_email = [];
         $subscriber_bcc_email = [];
@@ -39,11 +39,16 @@ class CommonForumFunctions
 
         $topic_name = CommonForumFunctions::getTopicName($topicid);
         $camp_name = CommonForumFunctions::getCampName($topicid, $campnum);
-
+        $post_msg = " submitted.";
+        $data['post_type'] = " has made";
+        if($reply_id!=""){
+            $post_msg = " updated.";
+            $data['post_type'] = " has updated";
+        }
         $data['post'] = $post;
         $data['camp_name'] = $camp_name;
         $data['thread'] = CThread::where('id', $threadId)->latest()->get();
-        $data['subject'] = $topic_name." / ".$camp_name. " / ". $data['thread'][0]->title." post submitted.";
+        $data['subject'] = $topic_name." / ".$camp_name. " / ". $data['thread'][0]->title." post ". $post_msg;
         $data['camp_url'] = "topic/".$topicid."-".$topic_name_encoded."/".$campnum."?";
         $data['nick_name'] = CommonForumFunctions::getForumNickName($nick_id);
         foreach ($subCampIds as $camp_id) {

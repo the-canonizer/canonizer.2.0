@@ -1,7 +1,7 @@
 <div class="row">
         <div class="col-md-4 panel-warning" style="margin:0px auto;">
             <div class="content-box-header panel-heading">
-                <div class="panel-title ">Login</div>
+                <div class="panel-title ">Log in</div>
                 
                 
             </div>
@@ -23,7 +23,7 @@
                     </fieldset>
                     <div>
                         <button id="submit" onClick="submitLoginForm(this)" class="btn btn-primary">
-                            Login
+                            Log in
                         </button>
                         <div id="loggingin" class="btn btn-primary" style="display:none;">Logging in ..</div>
                     </div>

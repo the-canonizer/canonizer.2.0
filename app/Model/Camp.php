@@ -623,7 +623,6 @@ class Camp extends Model {
             return 0;
         return ($a > $b) ? -1 : 1;
     }
-
     public function getDeletegatedSupportCount($algorithm, $topicnum, $campnum, $delegateNickId, $parent_support_order, $multiSupport) {
 
         /* Delegated Support */
@@ -656,11 +655,10 @@ class Camp extends Model {
         try {
            
             foreach (session("topic-support-nickname-$topicnum") as $supported) {
-                
                 $nickNameSupports = session("topic-support-{$topicnum}")->filter(function ($item) use($supported) {
                     return $item->nick_name_id == $supported->nick_name_id; /* Current camp support */
                 });
-                $supportPoint = Algorithm::{$algorithm}($supported->nick_name_id,$supported->topic_num,$supported->camp_num);
+                $supportPoint = Algorithm::{$algorithm}($supported->nick_name_id,$supported->topic_num,$supported->camp_num);                
                 
                 $currentCampSupport = $nickNameSupports->filter(function ($item) use($campnum) {
                             return $item->camp_num == $campnum; /* Current camp support */
@@ -672,7 +670,7 @@ class Camp extends Model {
 				   0.5 for their first, if they support 2, 
 				   0.25 after and half, again, for each one after that. */
 				if ($currentCampSupport) {
-                    $multiSupport = false;
+                    $multiSupport = false; //default
                      if ($nickNameSupports->count() > 1) {
                         $multiSupport = true;
                         $supportCountTotal += round($supportPoint / (2 ** ($currentCampSupport->support_order)), 2);
@@ -690,8 +688,8 @@ class Camp extends Model {
         return $supportCountTotal;
     }
 
-    public function buildCampTree($traversedTreeArray, $currentCamp = null, $activeCamp = null, $activeCampDefault = false,$add_supporter = false) {
-        $html = '<ul>';
+    public function buildCampTree($traversedTreeArray, $currentCamp = null, $activeCamp = null, $activeCampDefault = false,$add_supporter = false, $arrowposition) {
+        $html = '<ul class="childrenNode">';
 		$action = Route::getCurrentRoute()->getActionMethod();
         $onecamp =  self::getLiveCamp($this->topic_num, $activeCamp);
         
@@ -702,14 +700,15 @@ class Camp extends Model {
   
         if (is_array($traversedTreeArray)) {
             foreach ($traversedTreeArray as $campnum => $array) {
-                $filter = isset($_REQUEST['filter']) && is_numeric($_REQUEST['filter']) ? $_REQUEST['filter'] : 0.001;
+                /* ticket 846 sunil */
+                $filter = isset($_REQUEST['filter']) && is_numeric($_REQUEST['filter']) ? $_REQUEST['filter'] : 0.000;
 				if(isset($_REQUEST['filter']) && !empty($_REQUEST['filter'])) {
 									
 					session()->forget('filter');
 				}
 			    if(session('filter')==="removed") {
 					
-				 $filter = 0.00;	
+				 $filter = 0.000;	
 				} else if(isset($_SESSION['filterchange'])) {
 					
 				  $filter = $_SESSION['filterchange'];
@@ -719,7 +718,7 @@ class Camp extends Model {
                 }
                 $childCount = is_array($array['children']) ? count($array['children']) : 0;
                 $class = is_array($array['children']) && count($array['children']) > 0 ? 'parent' : '';
-                $icon = ($childCount || ($campnum == $activeCamp)) ?  '<i class="fa fa-arrow-down"></i>' : '';
+                $icon = ($childCount || ($campnum == $activeCamp)) ?  '<i class="fa '.$arrowposition.'"></i>' : '';
 				
                 $html .= "<li id='tree_" . $this->topic_num . "_" . $currentCamp . "_" . $campnum . "'>";
                 //$selected = '';
@@ -734,14 +733,14 @@ class Camp extends Model {
                 $support_tree_html = '';
                  if($support_tree !=''){
                     $support_tree_html .=  "<div class='supporter_list_tree'><ul><li class='supportLI' id='support_tree_" . $this->topic_num . "_" . $currentCamp . "_" . $campnum . "'>";
-                    $support_tree_html .= '<span class="'.$class.'"><i class="supporter fa fa-arrow-down"></i></span>';
+                    $support_tree_html .= '<span class="'.$class.'"><i class="supporter fa '.$arrowposition.'"></i></span>';
                     $support_tree_html.= '<ul>'.$support_tree.'</ul>';
                     $support_tree_html .= '</li></ul></div>';
                 }
                 $html .= '<span class="' . $class . '">' . $icon . '</span><div class="tp-title"><a style="' . $selected . '" href="' . $array['link'] . '">' . $array['title'] . '</a> <div class="badge">' . $array['score'] .'</div>'.$support_tree_html;
                
                 $html .= '</div>';
-                $html .= $this->buildCampTree($array['children'], $campnum, $activeCamp, $activeCampDefault,$add_supporter);
+                $html .= $this->buildCampTree($array['children'], $campnum, $activeCamp, $activeCampDefault,$add_supporter,$arrowposition);
                 $html .= '</li>';
             }
         }
@@ -910,6 +909,7 @@ class Camp extends Model {
         }else if((session()->has('asof') && session('asof') == 'bydate' && !isset($_REQUEST['asof']))){
             $as_of_time = strtotime(session('asofdateDefault'));
         }
+        
        
         if (!session("topic-support-nickname-{$this->topic_num}")) { 
             session(["topic-support-nickname-{$this->topic_num}" => Support::where('topic_num', '=', $this->topic_num)
@@ -929,6 +929,7 @@ class Camp extends Model {
                         ->select(['support_order', 'camp_num', 'nick_name_id', 'delegate_nick_name_id', 'topic_num'])
                         ->get()]);
         }
+        
         if ((!isset($_REQUEST['asof']) && !(session()->has('asofDefault'))) || (isset($_REQUEST['asof']) && $_REQUEST['asof'] == "default") || (session()->has('asofDefault') && session('asofDefault') == 'default' && !isset($_REQUEST['asof']))) {
                 session(["topic-child-{$this->topic_num}" => self::where('topic_num', '=', $this->topic_num)
                         ->where('camp_name', '!=', 'Agreement')
@@ -967,7 +968,6 @@ class Camp extends Model {
 							
             }
         }
-
         $topic = Topic::getLiveTopic($this->topic->topic_num,['nofilter'=>true]);//(isset($this->topic) && isset($this->topic->topic_name)) ? $this->topic->topic_name: '';
         $topic_name = (isset($topic) && isset($topic->topic_name)) ? $topic->topic_name: '';
         $title = preg_replace('/[^A-Za-z0-9\-]/', '-', $topic_name);
@@ -980,22 +980,22 @@ class Camp extends Model {
         return $reducedTree = TopicSupport::sumTranversedArraySupportCount($tree);
     }
 
-    public function campTreeHtml($activeCamp = null, $activeCampDefault = false,$add_supporter = false) {
+    public function campTreeHtml($activeCamp = null, $activeCampDefault = false,$add_supporter = false, $arrowposition ='fa-arrow-down') {
         $reducedTree = $this->campTree(session('defaultAlgo', 'blind_popularity'), $activeAcamp = null, $supportCampCount = 0, $needSelected = 0);
-        $filter = isset($_REQUEST['filter']) && is_numeric($_REQUEST['filter']) ? $_REQUEST['filter'] : 0.001;
-        
-		       if(session('filter')==="removed") {
-					
-				 $filter = 0.00;	
-				} else if(isset($_SESSION['filterchange'])) {
-					
-				 $filter = $_SESSION['filterchange'];
-				}
+        /* ticket 846 sunil */
+        $filter = isset($_REQUEST['filter']) && is_numeric($_REQUEST['filter']) ? $_REQUEST['filter'] : 0.000;
+            if(session('filter')==="removed") {
+    			
+    		 $filter = 0.000;	
+    		} else if(isset($_SESSION['filterchange'])) {
+    			
+    		 $filter = $_SESSION['filterchange'];
+    		}
 		
         if ($reducedTree[$this->camp_num]['score'] < $filter) {
-             $val = session('topic_on_page');
-             session(['topic_on_page' => $val+1]);
-              return;
+            $val = session('topic_on_page');
+            session(['topic_on_page' => $val+1]);
+            return;
         }
 
 
@@ -1010,24 +1010,24 @@ class Camp extends Model {
         $support_tree_html = '';
          if($support_tree !=''){
             $support_tree_html .=  "<div class='supporter_list_tree'><ul><li class='supportLI' id='support_tree_" . $this->topic_num . "_" . $activeCamp . "_" . $this->camp_num . "'>";
-            $support_tree_html .= '<span class="'.$class.'"><i class="supporter fa fa-arrow-down"></i></span>';
+            $support_tree_html .= '<span class="'.$class.'"><i class="supporter fa '.$arrowposition.'"></i></span>';
             $support_tree_html.= '<ul>'.$support_tree.'</ul>';
             $support_tree_html .= '</li></ul></div>';
         }
         $html = "<li id='tree_" . $this->topic_num . "_" . $activeCamp . "_" . $this->camp_num . "'>";
-        $parentClass = is_array($reducedTree[$this->camp_num]['children']) && count($reducedTree[$this->camp_num]['children']) > 0 ? 'parent' : '';
-        $icon = is_array($reducedTree[$this->camp_num]['children']) && count($reducedTree[$this->camp_num]['children']) > 0 ? '<i class="fa fa-arrow-down"></i>' : '';
+        $parentClass = is_array($reducedTree[$this->camp_num]['children']) && count($reducedTree[$this->camp_num]['children']) > 0 ? 'parent' : 'noCampArrow';
+        $icon = is_array($reducedTree[$this->camp_num]['children']) && count($reducedTree[$this->camp_num]['children']) > 0 ? '<i class="fa '.$arrowposition.'"></i>' : '';
         if(count($reducedTree[$this->camp_num]['children']) == 0 )
-		$icon = '<i class="fa fa-arrow-down"></i>';
+		$icon = '<i class="fa '.$arrowposition.'"></i>';
 	  
         $action = Route::getCurrentRoute()->getActionMethod();
 
         if($action =="index" || $action =="loadtopic")		
- 	      $icon = '<i class="fa fa-arrow-right"></i>';
+ 	      $icon = '<i class="fa '.$arrowposition.'"></i>';
 	  
 		$html .= '<span class="' . $parentClass . '">'. $icon.' </span>';
         $html .= '<div class="tp-title"><a style="' . $selected . '" href="' . $reducedTree[$this->camp_num]['link'] . '">' . $reducedTree[$this->camp_num]['title'] . '</a><div class="badge">' . round($reducedTree[$this->camp_num]['score'], 2) . '</div>'.$support_tree_html.'</div>';
-        $html .= $this->buildCampTree($reducedTree[$this->camp_num]['children'], $this->camp_num, $activeCamp, $activeCampDefault,$add_supporter);
+        $html .= $this->buildCampTree($reducedTree[$this->camp_num]['children'], $this->camp_num, $activeCamp, $activeCampDefault,$add_supporter,$arrowposition);
         $html .= "</li>";
         return $html;
     }

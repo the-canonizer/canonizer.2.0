@@ -2,7 +2,7 @@
 <p>Hello  {{ $user->first_name }} {{ $user->last_name }}, </p>
 
 <p>
-    {{ $data['nick_name']->nick_name }} has made the following post to the Camp
+    {{ $data['nick_name']->nick_name }} {{$data['post_type']}} the following post to the Camp
     <a href="{{ url('/').'/'.$data['camp_url'] }}"> {{ $data['camp_name'] }} </a> forum:
 
 </p>

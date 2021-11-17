@@ -104,13 +104,13 @@
                              </div>
                             <div class="App-intro" id="login_div" style="display:none;">
                                 <div>
-                                    <p>Please login with MetaMask credentials to get the details.</p>
-                                    <button class="btn btn-login" onClick="loginMetamask()">Login with MetaMask</button>
+                                    <p>Please log in with MetaMask credentials to get the details.</p>
+                                    <button class="btn btn-login" onClick="loginMetamask()">Log in with MetaMask</button>
                                 </div>
                             </div>
                             <div id="download_metamask" style="display:none;">
-                                <a href="https://metamask.io">
-                                    <img src="https://raw.githubusercontent.com/MetaMask/faq/master/images/download-metamask.png" alt="Download MetaMask">
+                                <a href="https://metamask.io" target="_blank">
+                                    <img src="{{ URL::asset('/img/metamask.svg') }}" height="100" width="100" alt=""> <span style="font-size:40px;">Download MetaMask</span>
                                 </a>
                             </div>
                         </div>
@@ -248,7 +248,11 @@
     
     }
     function enableMetamask(){
+        $('#enable_metamask button').hide();
+        $('#enable_metamask p').text('Processing...');
         enableEther().then(function(r){
+                $('#enable_metamask button').show();
+                $('#enable_metamask p').text('Please enable your MetaMask first.');
                 $('#enable_metamask').hide();
                  (isLoggedIn) ? $('#login_div').hide(): $('#login_div').show();
                 $('#download_metamask').hide();
@@ -257,8 +261,7 @@
     }
     
     function isInstalled() {
-        console.log('web3',web3);
-         if (typeof web3 !== 'undefined' && typeof ethereum !== 'undefined'){
+         if (typeof web3 !== 'undefined' && web3.givenProvider != null){
                 console.log('MetaMask is installed')
                 ethereum.autoRefreshOnNetworkChange = false;
                 isMetamaskInstalled = true;
