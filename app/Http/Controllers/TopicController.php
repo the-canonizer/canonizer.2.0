@@ -822,10 +822,10 @@ class TopicController extends Controller {
                 // send history link in email
                 $link = 'camp/history/' . $camp->topic_num . '/' . $camp->camp_num;
                 $data['type'] = "camp";
-
+                $camp_id= isset($camp->camp_num) ? $camp->camp_num:1;
                 $livecamp = Camp::getLiveCamp($camp->topic_num,$camp->camp_num);
 				$data['object'] = $livecamp->topic->topic_name . " / " . $camp->camp_name;
-				$data['link'] = \App\Model\Camp::getTopicCampUrl($camp->topic_num,1);
+				$data['link'] = \App\Model\Camp::getTopicCampUrl($camp->topic_num,$camp_id);
                 try{
 
                 Mail::to(Auth::user()->email)->bcc(config('app.admin_bcc'))->send(new ThankToSubmitterMail(Auth::user(), $link,$data));
@@ -944,9 +944,10 @@ class TopicController extends Controller {
 
         $eventtype = "CREATE";
         $message = "Statement submitted successfully.";
-
         if (isset($all['camp_num'])) {
-            $eventtype = "UPDATE";
+            //check statement is created or updated #885
+            $eventtype = isset($all['statement_event_type'])? $all['statement_event_type']: "UPDATE"; 
+
 		    $statement->camp_num = $all['camp_num'];
             $statement->submitter_nick_id = $all['nick_name'];
 
