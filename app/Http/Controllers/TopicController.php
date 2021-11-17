@@ -673,7 +673,7 @@ class TopicController extends Controller {
             'nick_name.required' => 'The nick name field is required.',
             'camp_name.required' => 'Camp name is required.',
             'camp_name.max' => 'Camp name can not be more than 30 characters.',
-            'camp_about_url.max' => "Camp's about url is invlalid.",
+            'camp_about_url.max' => "Camp's about url can not be more than 1024 characters.",
             'parent_camp_num.required' => 'The parent camp name is required.',
             'objection.required' => 'Objection reason is required.',
             'objection_reason.max' => 'Objection reason can not be more than 100.'
@@ -683,7 +683,7 @@ class TopicController extends Controller {
         $validator = Validator::make($request->all(), [
             'nick_name' => 'required',
             'camp_name' => 'required|max:30|regex:/^[a-zA-Z0-9\s]+$/',
-            'camp_about_url' => 'nullable|regex:'.$regex,
+            'camp_about_url' => 'nullable|max:1024|regex:'.$regex,
             'parent_camp_num' => 'nullable'
             // 'note' => 'required',
         ],$messagesVal);
