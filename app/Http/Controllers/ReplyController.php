@@ -47,7 +47,7 @@ class ReplyController extends Controller
         ];
          $this->validate(
              $request, [
-                'body' => 'required',
+                'body' => 'regex:/(^[A-Za-z0-9 ]+$)+/',
                 'nick_name' => 'required'
              ],
              $valMessages
