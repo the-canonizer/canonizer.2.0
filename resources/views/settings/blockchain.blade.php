@@ -113,7 +113,7 @@
                                     <img src="{{ URL::asset('/img/metamask.svg') }}" height="100" width="100" alt=""> <span style="font-size:40px;">Download MetaMask</span>
                                 </a>
                                 <div class="supported-browser-wrapper text-center">
-                                    <p class="title">Suported Browsers</p>
+                                    <p class="title">Supported Browsers</p>
                                     <div class="bwsr-row">
                                         <div class="br-col">
                                             <img src="{{ URL::asset('/img/chrome.png') }}" alt="chrome">
