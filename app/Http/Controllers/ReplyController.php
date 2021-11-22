@@ -42,25 +42,33 @@ class ReplyController extends Controller
     public function store($topicid, $topicname, $campnum, $threadId, request $request)
     {
         $valMessages = [
-            'body.required' => 'Body field is required.',
+            'body.regex' => 'Body field is required.',
             'nick_name.required' => 'Nick name field is required.',
         ];
-         $this->validate(
+        $body_text = strip_tags( trim( html_entity_decode( $request->body ) ) );
+
+        $this->validate(
              $request, [
-                'body' => 'regex:/(^[A-Za-z0-9 ]+$)+/',
+                'body' => 'required',
                 'nick_name' => 'required'
              ],
              $valMessages
          );
+
+        // If $body_text only contains spaces
+        if ( ! preg_replace('/\s+/u', '', $body_text) ) {
+            // $request->headers->get('referer')
+            return redirect()->back()->withErrors([ 'body' => 'This field is required' ]);
+        }
         /**
         * The below code is used to save the data into the database.
         */
 
-        if($request['reply_id']!=""){
+        if ( $request['reply_id'] != "" ) {
             $reply = reply::where('id', $request['reply_id'])->first();
             $msg= "Post Updated Successfully!'";
         }
-        else{
+        else {
             $reply = new reply;
             $msg= "Post Created Successfully!'";
         }
@@ -75,7 +83,5 @@ class ReplyController extends Controller
 
         CommonForumFunctions::sendEmailToSupportersForumPost($topicid, $campnum, $return_url,request('body'), $threadId, request('nick_name'), $topicname,request('reply_id'));
         return redirect($return_url)->with('success', $msg);
-
-       // return back();
     }
 }
