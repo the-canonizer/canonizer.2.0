@@ -55,15 +55,19 @@
   <form method="POST" id="postForm"
     action="{{ URL::to('/')}}/forum/{{ $topicname }}/{{ $campnum }}/threads/{{ $threads->id }}/replies">
     {{ csrf_field() }} 
-    @if($reply_id!=null)
+    @if($reply_id != null)
       <input name="reply_id" type="hidden" value="{{$reply_id}}"  required>
     @else
       <input name="reply_id" type="hidden" value="" required>
     @endif 
     <div class="form-group">
       <br>
-      <textarea name="body" id="body" class="form-control" placeholder="Reply to thread Here" rows="5">@if($reply_id!=null){{$replies->body}} @endif</textarea>
-      @if ($errors->has('body')) <p class="help-block">The reply field is required.</p> @endif
+      <textarea name="body" id="body" class="form-control" placeholder="Reply to thread Here" rows="5">
+        @if($reply_id != null){{ $replies->body }} @endif</textarea>
+        @if ($errors->has('body')) <p class="help-block">The reply field is required.</p> @endif
+
+
+
     </div>
 
     <div class="form-group">
