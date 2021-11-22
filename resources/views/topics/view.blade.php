@@ -222,7 +222,6 @@ change camps with them."><i class="fa fa-question"></i></a>
                     Camp Name : <?php echo $camp->camp_name;?> <br/>
 					Keywords : <?php echo $camp->key_words;?><br/>
                     Camp About URL : {{ ( strpos ($camp->camp_about_url, 'http') === 0 ) ? $camp->camp_about_url : 'https://' . $camp->camp_about_url  }} <br/>
-{{--					Camp About URL : <?php echo $camp->camp_about_url;?><br/>--}}
 					Camp About Nick Name : <?php echo (isset($camp->nickname->nick_name)) ? $camp->nickname->nick_name : "No nickname associated";?> <br/>
                 </div>
               
