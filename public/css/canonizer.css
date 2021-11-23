@@ -2014,3 +2014,7 @@ a.verification-link:active {
       max-width: 100%;
       white-space: unset;
   }
+  .btn-default{
+    background-color: #efefef;
+    color: #212529;
+  }
