@@ -4,18 +4,6 @@
         <h1 class="page-title">Log in</h1>
     </div>
 
-    @if (Session::has('social_error'))
-        <div class="alert alert-danger">
-            <strong>Error! </strong>{{ Session::get('social_error') }}
-        </div>
-    @endif
-
-    @if (Session::has('erro_login'))
-        <div class="alert alert-danger">
-            <strong>Error! </strong>{{ Session::get('erro_login') }}
-        </div>
-    @endif
-
     <div class="error-section">
         @if (Session::has('social_error'))
             <div class="alert alert-danger">
