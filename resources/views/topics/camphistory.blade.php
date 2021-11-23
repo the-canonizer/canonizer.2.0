@@ -213,11 +213,11 @@
                             <div class="CmpHistoryPnl-footer">
                                
         <?php if ($currentTime < $data->go_live_time && $currentTime >= $data->submit_time && ($ifIamSupporter || $ifIamDelegatedSupporter) ) { ?> 
-                                    <a id="object" class="btn btn-historysmt" href="<?php echo url('manage/camp/' . $data->id . '-objection'); ?>">Object</a>
+                                    <a id="object" class="btn btn-historysmt mb-1" href="<?php echo url('manage/camp/' . $data->id . '-objection'); ?>">Object</a>
                                 <?php }else if($currentTime < $data->go_live_time && $currentTime >= $data->submit_time && $ifSupportDelayed){ ?>
-                                    <button id="object" class="btn btn-historysmt"  disabled>Object &nbsp;<i title="You can not object this camp because you supported this camp after updation was submitted" class="fa fa-info-circle" aria-hidden="true"></i></button>
+                                    <button id="object" class="btn btn-historysmt mb-1"  disabled>Object &nbsp;<i title="You can not object this camp because you supported this camp after updation was submitted" class="fa fa-info-circle" aria-hidden="true"></i></button>
                                 <?php }else if($currentTime < $data->go_live_time && $currentTime >= $data->submit_time){ ?>
-                                    <button id="object" class="btn btn-historysmt"  disabled>Object &nbsp;<i title="Only supporter have access to object the camp." class="fa fa-info-circle" aria-hidden="true"></i></button>
+                                    <button id="object" class="btn btn-historysmt mb-1"  disabled>Object &nbsp;<i title="Only supporter have access to object the camp." class="fa fa-info-circle" aria-hidden="true"></i></button>
                                 <?php } ?>
                                 <a id="update" class="btn btn-historysmt mb-1" href="<?php echo url('manage/camp/' . $data->id); ?>">Submit Camp Update Based On This</a>		  
                                 <?php
@@ -251,8 +251,8 @@
                                     <div class="grace-period-note"><b>Note: </b>This countdown timer is the grace period in which you can make minor changes to your camp before other direct supporters are notified.</div>
                                    <div style="float: right"> 
                                        <div class="timer-dial" id="countdowntimer<?php echo $data->id ;?>"></div>
-                                      <a href="<?php echo url('manage/camp/'.$data->id.'-update');?>" class="btn btn-historysmt">Edit Change</a>
-                                      <a href="javascript:void(0)" onclick="notifyAndCloseTimer('<?php echo $data->id ;?>')"class="btn btn-historysmt">Commit Change</a>
+                                      <a href="<?php echo url('manage/camp/'.$data->id.'-update');?>" class="btn btn-historysmt mb-1">Edit Change</a>
+                                      <a href="javascript:void(0)" onclick="notifyAndCloseTimer('<?php echo $data->id ;?>')"class="btn btn-historysmt mb-1">Commit Change</a>
                                    </div>
                                 </div>
                                 @endif

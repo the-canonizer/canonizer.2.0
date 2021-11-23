@@ -599,7 +599,9 @@ class Camp extends Model {
         $onecamp = self::getLiveCamp($topic_num, $camp_num);
 
         $childCamps = array_unique(self::getAllChildCamps($onecamp));
-        $mysupports = Support::where('topic_num', $topic_num)->whereIn('camp_num', $childCamps)->whereIn('nick_name_id', $userNicknames)->where('end', '=', 0)->where('delegate_nick_name_id','=',0)->orderBy('support_order', 'ASC')->groupBy('camp_num')->get();
+        // $mysupports = Support::where('topic_num', $topic_num)->whereIn('camp_num', $childCamps)->whereIn('nick_name_id', $userNicknames)->where('end', '=', 0)->where('delegate_nick_name_id','=',0)->orderBy('support_order', 'ASC')->groupBy('camp_num')->get();
+        // Fixes #912: Warning is missing while supporting agreement camp (after delegate support)
+        $mysupports = Support::where('topic_num', $topic_num)->whereIn('camp_num', $childCamps)->whereIn('nick_name_id', $userNicknames)->where('end', '=', 0)->orderBy('support_order', 'ASC')->groupBy('camp_num')->get();
 
         /* if($confirm_support && count($mysupports)) {
 
