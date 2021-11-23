@@ -128,7 +128,7 @@
             </div>   
             <div class="form-group">
 			     <p style="color:red">The following fields are rarely used and are for advanced users only.</p>
-                <label for="camp_about_url">Camp About URL </label>
+                <label for="camp_about_url">Camp About URL ( Limit 1024 Chars ) </label>
                 <input type="text" name="camp_about_url" class="form-control" id="camp_about_url" value="{{ $camp->camp_about_url }}">
                 @if ($errors->has('camp_about_url')) <p class="help-block">{{ $errors->first('camp_about_url') }}</p> @endif
             </div>
@@ -210,11 +210,21 @@
             $('#pre_nickname').text((nicknameid != 0) ? nickname : 'No nickname associated');
        
             $('#pre_keywords').text(keywords);
-            $('#pre_related_url').text(related_url);
+            var urlNew = validateURL(related_url);
+            $('#pre_related_url').html("<a href='"+urlNew+"' target='_blank'>"+urlNew+"</a>");
             
             $('#previewModal').modal('show');
             
             
+        }
+        function validateURL(link)
+        {
+            if (link.indexOf("http://") == 0 || link.indexOf("https://") == 0) {
+                return link;
+            }
+            else{
+                return "http://"+link;
+            }
         }
     </script>
 
