@@ -744,17 +744,7 @@ class TopicController extends Controller {
         }
         $message = null;
         $go_live_time = "";
-        $campOldData = Camp::getLiveCamp($all['topic_num'],$all['camp_num']);// #834
-        if(isset($all['parent_camp_num']) && $all['parent_camp_num']!='' && $all['parent_camp_num'] != $campOldData->parent_camp_num){
-         // get new parent direct supports and remove it #834
-            $supportData = Support::where('topic_num','=',$all['topic_num'])->where('camp_num','=',$all['parent_camp_num'])->get();
-            if(count($supportData) > 0){
-                foreach($supportData as $value){
-                    $value->end = time();
-                    $value->save();
-                }
-            }
-        }
+        
         $camp = new Camp();
         $camp->topic_num = $all['topic_num'];
         $camp->parent_camp_num = isset($all['parent_camp_num']) ? $all['parent_camp_num'] : "";
@@ -772,6 +762,18 @@ class TopicController extends Controller {
 
         $eventtype = "CREATE";
         if (isset($all['camp_num'])) {
+            // while updating camp check if any old support then remove it if parent camp changed #834
+            $campOldData = Camp::getLiveCamp($all['topic_num'],$all['camp_num']);// #834
+            if(isset($all['parent_camp_num']) && $all['parent_camp_num']!='' && $all['parent_camp_num'] != $campOldData->parent_camp_num){
+            // get new parent direct supports and remove it #834
+                $supportData = Support::where('topic_num','=',$all['topic_num'])->where('camp_num','=',$all['parent_camp_num'])->get();
+                if(count($supportData) > 0){
+                    foreach($supportData as $value){
+                        $value->end = time();
+                        $value->save();
+                    }
+                }
+            }
             $eventtype = "UPDATE";
             $camp->camp_num = $all['camp_num'];
             $camp->submitter_nick_id = $all['nick_name'];
@@ -999,6 +1001,7 @@ class TopicController extends Controller {
             $directSupporter = Support::getAllDirectSupporters($statement->topic_num, $statement->camp_num);
             $subscribers = Camp::getCampSubscribers($statement->topic_num, $statement->camp_num);
             $dataObject['topic_num'] = $statement->topic_num;
+            $dataObject['camp_num'] = $statement->camp_num;
             $dataObject['object'] = $livecamp->topic->topic_name . " / " . $livecamp->camp_name;
             $dataObject['support_camp'] = $livecamp->camp_name;
             $dataObject['go_live_time'] = $statement->go_live_time;
@@ -1044,6 +1047,7 @@ class TopicController extends Controller {
              $livecamp = Camp::getLiveCamp($statement->topic_num,$statement->camp_num);
              //$link = 'topic/' . $statement->topic_num . '/' . $statement->camp_num . '?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $statement->go_live_time);
             $dataObject['topic_num'] = $statement->topic_num;
+            $dataObject['camp_num'] = $statement->camp_num;
             $dataObject['object'] = $livecamp->topic->topic_name . " / " . $livecamp->camp_name;
             $dataObject['support_camp'] = $livecamp->camp_name;
             $dataObject['go_live_time'] = $statement->go_live_time;
@@ -1294,7 +1298,6 @@ class TopicController extends Controller {
          $topic_name_space_id = isset($topic[0]) ? $topic[0]->namespace_id:1;
          $nickName = \App\Model\Nickname::find($supporter->nick_name_id);
          $supported_camp = $nickName->getSupportCampList($topic_name_space_id,['nofilter'=>true]);
-         //echo "<pre> camp data"; print_r($supported_camp);
          $supported_camp_list = $nickName->getSupportCampListNamesEmail($supported_camp,$supportData['topic_num'],$supportData['camp_num']);
          $supportData['support_list'] = $supported_camp_list; 
           $ifalsoSubscriber = Camp::checkifSubscriber($subscribers,$user);

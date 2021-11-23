@@ -60,7 +60,7 @@ class Handler extends ExceptionHandler
                 $redirectRoute = "admin/login";
             }
 
-            return redirect($redirectRoute)->with('tokenerror',"Your action could not performed due to mismatch token, please log in again");
+            return redirect($redirectRoute)->with('tokenerror',"Your session has expired, please log in again");
         } 
         
         if ($exception instanceof \Swift_TransportException){
