@@ -2009,3 +2009,8 @@ a.verification-link:active {
   }
 
   .sub-title {font-size: .7rem}
+
+  .btn-historysmt {
+      max-width: 100%;
+      white-space: unset;
+  }
