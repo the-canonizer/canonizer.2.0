@@ -2046,3 +2046,9 @@ a.verification-link:active {
   .tp-title {
       margin-top: unset !important;
   }
+  ul.pagination {
+    flex-wrap: wrap;
+  }
+  ul.pagination li{
+      margin-bottom: 0.25rem;
+  }
