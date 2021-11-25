@@ -2018,3 +2018,8 @@ a.verification-link:active {
     background-color: #efefef;
     color: #212529;
   }
+  .social-login-btn {
+    width: 118px;
+    margin-right: 0.5rem;
+    margin-bottom: 1rem
+  }

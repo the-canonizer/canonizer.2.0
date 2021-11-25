@@ -54,7 +54,7 @@
                 <label class="text-center col-sm-12">OR <input style="display:none;" type="checkbox"  name="request_opt"  id="request_opt_checkbox"></label>
             </div>
             <div class="form-group">
-                <button type="submit"  id="request_opt" class="form-control btn btn-login">Request One Time Verification Code</button>
+                <button type="submit" style="white-space: unset"  id="request_opt" class="form-control btn btn-login">Request One Time Verification Code</button>
             
                 <div id="requesting_otp" style="display:none;" class="form-control btn btn-login">Requesting One Time Verification Code..</div>
             </div>
@@ -66,24 +66,15 @@
         <div >Don't have an account? <a href="{{ url('/register') }}">Signup Now</a></div>
     </div>
 
-    <div class="col-sm-12 margin-btm-2 ">
+    <div class="col-12 margin-btm-2 ">
         <p>Log in or Signup with social accounts.</p>
         <div class="form-group row">
-            <div class="col-xl-2 mt-1">
-                <a href="{{ url('/login/google') }}" class="btn google btn-google-plus"><i class="fa fa-google fa-fw">
-                </i> Google+</a>                 
-            </div>
-            <div class="col-xl-2 mt-1">
-                <a href="{{ url('/login/facebook') }}" class="btn facebook btn-facebook"> <i class="fa fa-facebook fa-fw"></i> Facebook</a>                 
-            </div>
-            <div class="col-xl-2 mt-1">
-                <a href="{{ url('/login/twitter') }}" class="btn twitter btn-twitter"><i class="fa fa-twitter fa-fw"></i> Twitter</a>
-            </div>
-            <div class="col-xl-2 mt-1">
-                <a href="{{ url('/login/github') }}" class="btn github btn-github"><i class="fa fa-github fa-fw"></i> GitHub</a>
-            </div>
-            <div class="col-xl-2 mt-1">
-                <a href="{{ url('/login/linkedin') }}" class="btn linkedin btn-linkedin"><i class="fa fa-linkedin fa-fw"></i> Linkedin</a>
+            <div class="col-12">
+                <a href="{{ url('/login/google') }}" class="btn google btn-google-plus social-login-btn"><i class="fa fa-google fa-fw"></i> Google+</a>
+                <a href="{{ url('/login/facebook') }}" class="btn facebook btn-facebook social-login-btn"> <i class="fa fa-facebook fa-fw"></i> Facebook</a>
+                <a href="{{ url('/login/twitter') }}" class="btn twitter btn-twitter social-login-btn"><i class="fa fa-twitter fa-fw"></i> Twitter</a>
+                <a href="{{ url('/login/github') }}" class="btn github btn-github social-login-btn"><i class="fa fa-github fa-fw"></i> GitHub</a>
+                <a href="{{ url('/login/linkedin') }}" class="btn linkedin btn-linkedin social-login-btn"><i class="fa fa-linkedin fa-fw"></i> Linkedin</a>
             </div>
         </div>
     </div>
