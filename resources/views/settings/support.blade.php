@@ -4,22 +4,25 @@
 <div class="page-titlePnl">
     <h1 class="page-title">Supported Camps</h1>
 </div> 
-@if(!Session::has('success') && Session::has('warning'))
+
+@if(!Session::has('success') && Session::has('warning') && !Session::has('warningDelegate'))
 <div class="alert alert-danger">
     <strong>Warning! </strong>{{ Session::get('warning')}} 
 </div>
 @endif
+
 @if(Session::has('confirm') && Session::get('confirm') =='samecamp')
 <div class="alert alert-danger">
     <strong>Warning! </strong>You are already supporting this camp. You can't submit support again.
 </div>
-	
 @endif
+
 @if(Session::has('warningDelegate'))
 <div class="alert alert-danger">
     <strong>Warning! </strong>{{ Session::get('warningDelegate')}} 
 </div>
 @endif
+
 <?php $removedCampList = array(); ?>
 @if(Session::has('confirm') && Session::has('warning') && Session::get('confirm') !='samecamp')
 	
