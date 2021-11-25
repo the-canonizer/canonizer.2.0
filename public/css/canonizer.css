@@ -2040,9 +2040,11 @@ a.verification-link:active {
       min-width: unset !important;
       max-width: calc(100% - 10px);
   }
-  .mainouter li{
-      display: flex;
-  }
+
+  /*.mainouter li{*/
+  /*    display: flex;*/
+  /*}*/
+
   .tp-title {
       margin-top: unset !important;
   }
