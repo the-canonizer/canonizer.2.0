@@ -1602,7 +1602,7 @@ span.brsr-name {
     color: #fff;
     padding: 10px 10px 10px 25px;
     width: 180px;
-    left: -10px;
+    left: -84px;
     border-radius: 3px;
     font-size: 12px;
 }
@@ -1611,9 +1611,19 @@ span.brsr-name {
     display: block;
 }
 
-.ps_tooltp li {
+.ps_tooltp li::after{
     list-style: disc;
+    content: "";
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent transparent black transparent;
 }
+
+
 
 .checkbox label {
     font-size: 15px;
