@@ -2033,3 +2033,7 @@ a.verification-link:active {
     margin-right: 0.5rem;
     margin-bottom: 1rem
   }
+
+  ul {
+      display: grid;
+  }
