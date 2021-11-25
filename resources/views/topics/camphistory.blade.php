@@ -183,7 +183,9 @@
 
                                 <b>Camp About URL :</b> 
                                 <?php if(isset($data->camp_about_url) && $data->camp_about_url){?>
-                                <a href="<?=$data->camp_about_url; ?>" target="_blank" >{{  $data->camp_about_url }} </a>
+                                <a href="<?php echo (( strpos ($data->camp_about_url, 'http') === 0 ) ||( strpos ($data->camp_about_url, 'https') === 0 )) ? $data->camp_about_url : 'http://' . $data->camp_about_url; ?>" target="_blank" >
+                                  {{ (( strpos ($data->camp_about_url, 'http') === 0 ) ||( strpos ($data->camp_about_url, 'https') === 0 )) ? $data->camp_about_url : 'http://' . $data->camp_about_url  }}
+                                </a>
                                 <?php } ?>
                                 
                                 <br/>
