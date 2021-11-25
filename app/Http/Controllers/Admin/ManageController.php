@@ -36,12 +36,16 @@ class ManageController extends Controller {
 		$all = $request->all();
 		$page_no  = isset($all['page']) ? $all['page'] : 1 ; 
 		$data = $request->only(['name','parent_id']);
-		 $validatorArray = ['name' => 'required|regex:"^[/]?[a-zA-Z0-9_]*[/]?$"|unique:namespace|max:100'];
+		$name = $data['name'];
+		if((isset($name[0]) && $name[0] =='/') || ((!empty($name) && $name[strlen($name) - 1] == '/'))){
+			$data['name'] = str_replace('/', "", $name);	
+		}
+		 $validatorArray = ['name' => 'required|unique:namespace|regex:"^[/]?[a-zA-Z0-9_]*[/]?$"|max:100'];
          $message = [
          	'name.required' => 'Namespace field is required.',
          	'name.unique' => 'Namespace must be unique.',
          	'name.max' => 'Namespace Name may not be greater than 100 characters.',
-         	'name.regex' => 'Namespace Name may only contain letters, numbers, underscore and backslashes at begining and end only.'
+         	'name.regex' => 'Namespace Name may only contain letters, numbers, underscore and forward slashes(/) at beginning and end only.'
          ];
 
          $validator = Validator::make($data, $validatorArray, $message);
@@ -89,7 +93,10 @@ class ManageController extends Controller {
 		$all = $request->all();
 		$page_no  = isset($all['page']) ? $all['page'] : 1 ;  
 		$oldNamespace = Namespaces::find($id);
-		
+		$name = $data['name'];
+		if((isset($name[0]) && $name[0] =='/') || ((!empty($name) && $name[strlen($name) - 1] == '/'))){
+			$data['name'] = str_replace('/', "", $name);	
+		}
 		if(strtolower($oldNamespace->name) != strtolower($data['name'])){
 			$validatorArray = [  'name' => 'required|unique:namespace|max:100|regex:"^[/]?[a-zA-Z0-9_]*[/]?$"'];
 		}else{
@@ -99,7 +106,7 @@ class ManageController extends Controller {
          	'name.required' => 'Namespace field is required.',
          	'name.unique' => 'Namespace must be unique.',
          	'name.max' => 'Namespace Name may not be greater than 100 characters.',
-         	'name.regex' => 'Namespace Name may only contain letters, numbers, underscore and backslashes at begining and end only.'
+         	'name.regex' => 'Namespace Name may only contain letters, numbers, underscore and forward slashes(/) at beginning and end only.'
          ];
          $validator = Validator::make($data, $validatorArray, $message);
          if ($validator->fails()) {  

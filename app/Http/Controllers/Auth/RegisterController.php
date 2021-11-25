@@ -174,20 +174,17 @@ class RegisterController extends Controller
         $user->status = 1;
         $user->otp='';
         $user->update();
-         session()->forget('social_user');
-         session()->forget('provider');
+        session()->forget('social_user');
+        session()->forget('provider');
         // send help link in email
         $link = 'topic/132-Help/1-Agreement';	
         try{
-            
-        Mail::to($user->email)->bcc(config('app.admin_bcc'))->send(new WelcomeMail($user,$link));
-        
-        Auth::guard()->login($user);
-        return redirect()->to('/home');
-        
+            Mail::to($user->email)->bcc(config('app.admin_bcc'))->send(new WelcomeMail($user,$link));
+            Auth::guard()->login($user);
+            return redirect()->to('/home');
         }catch(\Swift_TransportException $e){
-                            throw new \Swift_TransportException($e);
-                        }    
+            throw new \Swift_TransportException($e);
+        }    
         //return $user;
     }
 

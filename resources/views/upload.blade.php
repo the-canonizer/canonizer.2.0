@@ -52,7 +52,7 @@
                             <tr>
                                 <th>File Name</th>
                                 <th>Short Code</th>
-                                <th style="width:20%">Uploaded Date </th>
+                                <th style="width:30%">Uploaded Date </th>
                             </tr>
                             @foreach ($uploaded as $upload)
                                 <tr>
@@ -60,7 +60,7 @@
                                             target="_blank" href="{{ url('files/' . $upload->file_name) }}"><i
                                                 title="View file" class="fa fa-external-link"></i></a></td>
                                     <td style="word-break:break-all">{{ $upload->getShortCode() }}</td>
-                                    <td>{{ $upload->created_at }}</td>
+                                    <td>{{ to_local_time($upload->created_at) }}</td>
                                 </tr>
                             @endforeach
                         </table>

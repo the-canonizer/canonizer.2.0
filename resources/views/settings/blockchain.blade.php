@@ -94,7 +94,7 @@
                     <div  id="cencel_create" onClick="cancelCreate()"  style="cursor:pointer;" class="btn btn-login">Cancel</div>
                 </form>
                  </div>
-                     <div id="root" class="row">
+                     <div id="root" class="row justify-content-center">
                         <noscript>You need to enable JavaScript to run this app.</noscript>
                    
                         <div class="App" class="col-md-12">
@@ -104,14 +104,35 @@
                              </div>
                             <div class="App-intro" id="login_div" style="display:none;">
                                 <div>
-                                    <p>Please login with MetaMask credentials to get the details.</p>
-                                    <button class="btn btn-login" onClick="loginMetamask()">Login with MetaMask</button>
+                                    <p>Please log in with MetaMask credentials to get the details.</p>
+                                    <button class="btn btn-login" onClick="loginMetamask()">Log in with MetaMask</button>
                                 </div>
                             </div>
                             <div id="download_metamask" style="display:none;">
                                 <a href="https://metamask.io" target="_blank">
                                     <img src="{{ URL::asset('/img/metamask.svg') }}" height="100" width="100" alt=""> <span style="font-size:40px;">Download MetaMask</span>
                                 </a>
+                                <div class="supported-browser-wrapper text-center">
+                                    <p class="title">Supported Browsers</p>
+                                    <div class="bwsr-row">
+                                        <div class="br-col">
+                                            <img src="{{ URL::asset('/img/chrome.png') }}" alt="chrome">
+                                            <p class="sub-title">Chrome</p>
+                                        </div>
+                                        <div class="br-col">
+                                            <img src="{{ URL::asset('/img/firefox.png') }}" alt="chrome">
+                                            <p class="sub-title">Firefox</p>
+                                        </div>
+                                        <div class="br-col">
+                                            <img src="{{ URL::asset('/img/edge.png') }}" alt="chrome">
+                                            <p class="sub-title">Edge</p>
+                                        </div>
+                                        <div class="br-col">
+                                            <img src="{{ URL::asset('/img/brave.png') }}" alt="chrome">
+                                            <p class="sub-title">Brave</p>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

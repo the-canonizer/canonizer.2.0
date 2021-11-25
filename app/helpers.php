@@ -1,6 +1,11 @@
 <?php
 
- function to_local_time($unixtime) {
+use Carbon\Carbon;
+
+function to_local_time($unixtime) {
+    if(!is_numeric($unixtime)){
+        $unixtime = Carbon::parse($unixtime)->timestamp;
+    }
     echo "<script>
         document.write( 
             ( new Date($unixtime * 1000) ).toLocaleTimeString(

@@ -167,17 +167,17 @@ if (!empty($topics)) {
                         </div>    
                         <div class="CmpHistoryPnl-footer">
         <?php if ($currentTime < $data->go_live_time && $currentTime >= $data->submit_time && ($ifIamSupporter || $ifIamDelegatedSupporter)) { ?>
-                                <a id="object" class="btn btn-historysmt" href="<?php echo url('manage/topic/' . $data->id . '-objection'); ?>">Object</a>
+                                <a id="object" class="btn btn-historysmt mb-1" href="<?php echo url('manage/topic/' . $data->id . '-objection'); ?>">Object</a>
                             <?php }else if($currentTime < $data->go_live_time && $currentTime >= $data->submit_time && $ifSupportDelayed){ ?>
-                                <button id="object" class="btn btn-historysmt"  disabled>Object &nbsp;<i title="You can not object this topic because you supported this camp after updation was submitted" class="fa fa-info-circle" aria-hidden="true"></i></button>
+                                <button id="object" class="btn btn-historysmt mb-1"  disabled>Object &nbsp;<i title="You can not object this topic because you supported this camp after updation was submitted" class="fa fa-info-circle" aria-hidden="true"></i></button>
                             <?php }else if($currentTime < $data->go_live_time && $currentTime >= $data->submit_time){ ?>
-                                <button id="object" class="btn btn-historysmt"  disabled>Object &nbsp;<i title="Only supporter have access to object the topic." class="fa fa-info-circle" aria-hidden="true"></i></button>
+                                <button id="object" class="btn btn-historysmt mb-1"  disabled>Object &nbsp;<i title="Only supporter have access to object the topic." class="fa fa-info-circle" aria-hidden="true"></i></button>
                             <?php } ?>  
-                            <a id="update" class="btn btn-historysmt" href="<?php echo url('manage/topic/' . $data->id); ?>">Submit Topic Update Based On This</a>		
+                            <a id="update" class="btn btn-historysmt mb-1" href="<?php echo url('manage/topic/' . $data->id); ?>">Submit Topic Update Based On This</a>		
                             <?php
                               $link = \App\Model\Camp::getTopicCampUrl($data->topic_num,1);
                             ?>		  
-                            <a id="version" class="btn btn-historysmt" href="<?php echo $link.'?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $data->go_live_time); ?>">View This Version</a>
+                            <a id="version" class="btn btn-historysmt mb-1" href="<?php echo $link.'?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $data->go_live_time); ?>">View This Version</a>
                                <script>
                                      var href = $('#version').attr('href');
                                      var date = new Date(<?= $data->go_live_time ?> * 1000).toLocaleString();
@@ -204,8 +204,8 @@ if (!empty($topics)) {
                                 <div class="grace-period-note"><b>Note: </b>This countdown timer is the grace period in which you can make minor changes to your topic before other direct supporters are notified.</div>
                                 <div style="float: right" > 
                                     <div class="timer-dial" id="countdowntimer<?php echo $data->id ;?>"></div>
-                                   <a href="<?php echo url('manage/topic/'.$data->id.'-update');?>" class="btn btn-historysmt">Edit Change</a>
-                                   <a href="javascript:void(0)" onclick="notifyAndCloseTimer('<?php echo $data->id ;?>')"class="btn btn-historysmt">Commit Change</a>
+                                   <a href="<?php echo url('manage/topic/'.$data->id.'-update');?>" class="btn btn-historysmt mb-1">Edit Change</a>
+                                   <a href="javascript:void(0)" onclick="notifyAndCloseTimer('<?php echo $data->id ;?>')"class="btn btn-historysmt mb-1">Commit Change</a>
                                 </div>
                           </div>
                           @endif

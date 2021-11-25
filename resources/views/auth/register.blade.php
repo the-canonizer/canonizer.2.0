@@ -65,7 +65,7 @@
 </div> 
 <div class="col-sm-2 margin-btm-2"></div>
  <div class="col-sm-5 margin-btm-2 lg-signup">
-           <div >Already have an account?  <a href="{{ url('/login') }}">Login Here</a></div>
+           <div >Already have an account?  <a href="{{ url('/login') }}">Log in Here</a></div>
      </div>
 
 </div>  <!-- /.right-whitePnl-->
