@@ -2028,3 +2028,29 @@ a.verification-link:active {
     background-color: #efefef;
     color: #212529;
   }
+  .social-login-btn {
+    width: 118px;
+    margin-right: 0.5rem;
+    margin-bottom: 1rem
+  }
+  ul {
+      display: grid;
+  }
+  select.namespace-selector{
+      min-width: unset !important;
+      max-width: calc(100% - 10px);
+  }
+
+  /*.mainouter li{*/
+  /*    display: flex;*/
+  /*}*/
+
+  .tp-title {
+      margin-top: unset !important;
+  }
+  ul.pagination {
+    flex-wrap: wrap;
+  }
+  ul.pagination li{
+      margin-bottom: 0.25rem;
+  }
