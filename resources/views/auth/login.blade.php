@@ -63,11 +63,11 @@
 
     <div class="col-xl-2 margin-btm-2"></div>
     <div class="col-xl-5 margin-btm-2 lg-signup">
-        <div >Don't have an account? <a href="{{ url('/register') }}">Signup Now</a></div>
+        <div >Don't have an account? <a href="{{ url('/register') }}">Sign up Now</a></div>
     </div>
 
     <div class="col-12 margin-btm-2 ">
-        <p>Log in or Signup with social accounts.</p>
+        <p>Log in or Sign up with social accounts.</p>
         <div class="form-group row">
             <div class="col-12">
                 <a href="{{ url('/login/google') }}" class="btn google btn-google-plus social-login-btn"><i class="fa fa-google fa-fw"></i> Google+</a>
