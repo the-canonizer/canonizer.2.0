@@ -40,7 +40,7 @@
                             <div class="col-sm-6 margin-btm-1">
                                 <label for="phone_number">Phone Number <span style="color:red;">*</span></label>
 								</br>
-                                <div style="width:300px;float:left">
+                                <div style="width:calc(100% - 105px);float:left">
 								<input type="text" onkeydown="restrictTextField(event,10);" onkeyup="onlyNumbers(event);" name="phone_number" class="form-control" id="phone_number" value="{{ old('phone_number',$user->phone_number)}}">
 								@if ($errors->has('phone_number')) <p class="help-block">{{ $errors->first('phone_number') }}</p> @endif
 								
@@ -54,7 +54,7 @@
                             </div>
 							<div class="col-sm-6 margin-btm-1">
                                 <label for="mobile_carrier">Mobile Carrier <span style="color:red;">*</span></label></br>
-                                <div style="width:300px;float:left">
+                                <div style="width:calc(100% - 105px);float:left">
 								 <select class="form-control" id="mobile_carrier"  name="mobile_carrier">
 								 <option value="sms.alltelwireless.com" <?php echo ($user->mobile_carrier=="sms.alltelwireless.com") ? "selected='selected'" : ""; ?> >Alltel</option>
 								 <option value="txt.att.net" <?php echo ($user->mobile_carrier=="txt.att.net") ? "selected='selected'" : ""; ?>>AT&T</option>
@@ -105,9 +105,9 @@
                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
 						<?php $private_flags = explode(",",$user->private_flags); ?>
                         <div class="row">
-                            <div class="col-sm-6 margin-btm-1">
+                            <div class="col-md-6 margin-btm-1">
                                 <label for="topic name">First Name ( Limit 100 Chars ) <span style="color:red;">*</span></label></br>
-                                <div style="width:300px;float:left">
+                                <div style="width:calc(100% - 105px);float:left">
 								<input type="text" onkeydown="restrictTextField(event,100)" name="first_name" class="form-control" id="first_name" value="{{ old('firstname',$user->first_name)}}">
 								@if ($errors->has('first_name')) <p class="help-block">{{ $errors->first('first_name') }}</p> @endif
 								</div>
@@ -119,9 +119,9 @@
 								</select> 
 								</div>
                             </div>
-                            <div class="col-sm-6 margin-btm-1">
+                            <div class="col-md-6 margin-btm-1">
                                 <label for="namespace">Middle Name ( Limit 100 Chars )</label><br/>
-                                <div style="width:300px;float:left">
+                                <div style="width:calc(100% - 105px);float:left">
 								<input type="text" onkeydown="restrictTextField(event,100)" name="middle_name" class="form-control" id="middle_name" value="{{ old('middle_name', $user->middle_name)}}">
                                 @if ($errors->has('middle_name')) <p class="help-block">{{ $errors->first('middle_name') }}</p> @endif
 								</div>
@@ -133,9 +133,9 @@
 								</select> 
 								</div> 
 							</div>   
-                            <div class="col-sm-6 margin-btm-1">
+                            <div class="col-md-6 margin-btm-1">
                                 <label for="last_name">Last Name ( Limit 100 Chars ) <span style="color:red;">*</span></label></br>
-								<div style="width:300px;float:left">
+								<div style="width:calc(100% - 105px);float:left">
                                 <input type="text"  onkeydown="restrictTextField(event,100)" name="last_name" class="form-control" id="last_name" value="{{ old('last_name', $user->last_name)}}">
                                 @if ($errors->has('last_name')) <p class="help-block">{{ $errors->first('last_name') }}</p> @endif
 								</div>
@@ -147,9 +147,9 @@
 								</select> 
 								</div> 
 							</div>
-                            <div class="col-sm-6 margin-btm-1">
+                            <div class="col-md-6 margin-btm-1">
                                 <label for="last_name">Email</label></br>
-								<div style="width:300px;float:left">
+								<div style="width:calc(100% - 105px);float:left">
                                 <input type="text" name="email" readonly="readonly" class="form-control" id="email" value="{{ old('email', $user->email)}}">
                                 </div>
 								<div style="width:95px;float:right">
@@ -160,14 +160,14 @@
 								</select> 
 								</div> 
 							</div>
-                            <div class="col-sm-6 margin-btm-1">
+                            <div class="col-md-6 margin-btm-1">
                                 <label for="last_name">Gender</label><br/>
                                 <input type="radio" id="gender_male" name="gender" value="1" {{ (old('gender',$user->gender) == '1') ? 'checked' : ''}}/> Male
                                 <input type="radio" id="gender_female" name="gender" value="2" {{ (old('gender',$user->gender) == '2') ? 'checked' : ''}}/> Female
                                 <input type="radio" id="gender_other" name="gender" value="3" {{ (old('gender',$user->gender) == '3') ? 'checked' : ''}}/> Other
                                
 							</div>
-                            <div class="col-sm-6 margin-btm-1">
+                            <div class="col-md-6 margin-btm-1">
                                 <label for="language">Language</label>
                                 <select name="language" id="language" class="form-control">
                                     <option value="English" {{ (old('language',$user->language) == 'English') ? 'selected' : ''}}>English</option>
@@ -176,10 +176,10 @@
 									 <option value="Spanish" {{ (old('language',$user->language) == 'Spanish') ? 'selected' : ''}}>Spanish</option>
                                 </select>
                             </div>
-                            <div class="col-sm-6 margin-btm-1">
+                            <div class="col-md-6 margin-btm-1">
                                 <label for="dob">Date Of Birth</label>
 								</br>
-								<div style="width:300px;float:left">
+								<div style="width:calc(100% - 105px);float:left">
                                 @if(old('birthday') != '')
                                 <input type="text" readonly name="birthday" id="birthday" class="form-control" id="" value="{{ date('m/d/Y',strtotime(old('birthday')))}}">
                                 @else
@@ -194,10 +194,10 @@
 								</select> 
 								</div> 
                             </div>
-                            <div class="col-sm-6 margin-btm-1">
+                            <div class="col-md-6 margin-btm-1">
                                 <label for="address_1">Address Line 1 (Limit 255 Chars) </label>
 								</br>
-								<div style="width:300px;float:left">
+								<div style="width:calc(100% - 105px);float:left">
                                 <input type="text" onkeyup="blankAddress();" onkeydown="restrictTextField(event,255);" onfocus="initAutocomplete()" onfocusout="emptyAddress()" name="address_1" class="form-control" id="address_1" value="{{ old('address_1', $user->address_1)}}">
                                 <span style="color:red;">Note*: To update address please select a address from suggestion box</span>
                                 </div>
@@ -209,10 +209,10 @@
 								</select> 
 								</div> 
 							</div>
-                            <div class="col-sm-6 margin-btm-1">
+                            <div class="col-md-6 margin-btm-1">
                                 <label for="address_2">Address Line 2 (Limit 255 Chars)</label>
 								</br>
-								<div style="width:300px;float:left">
+								<div style="width:calc(100% - 105px);float:left">
                                 <input type="text" readonly name="address_2" onkeydown="restrictTextField(event,255)" class="form-control" id="address_2" value="{{ old('address_2', $user->address_2)}}">
                                 </div>
 								<div style="width:95px;float:right">
@@ -223,11 +223,11 @@
 								</select> 
 								</div>  
 							</div>
-                            <div class="col-sm-6 margin-btm-1">
+                            <div class="col-md-6 margin-btm-1">
 
                                 <label for="city">City (Limit 255 Chars)</label>
 								</br>
-								<div style="width:300px;float:left">
+								<div style="width:calc(100% - 105px);float:left">
                                 <input type="text" readonly onkeydown="restrictTextField(event,255)" name="city" class="form-control" id="city" value="{{ old('city', $user->city)}}">
                                 </div>
 								<div style="width:95px;float:right">
@@ -238,10 +238,10 @@
 								</select> 
 								</div> 
 							</div>
-                            <div class="col-sm-6 margin-btm-1">
+                            <div class="col-md-6 margin-btm-1">
                                 <label for="state">State (Limit 255 Chars) </label>
 								</br>
-								<div style="width:300px;float:left">
+								<div style="width:calc(100% - 105px);float:left">
                                 <input type="text" readonly onkeydown="restrictTextField(event,255)" name="state" class="form-control" id="state" value="{{ old('state', $user->state)}}">
                                 </div>
 								<div style="width:95px;float:right">
@@ -252,10 +252,10 @@
 								</select> 
 								</div>  
 							</div>
-                            <div class="col-sm-6 margin-btm-1">
+                            <div class="col-md-6 margin-btm-1">
                                 <label for="country">Country <span style="color:red;"></span></label>
 								</br>
-								<div style="width:300px;float:left">
+								<div style="width:calc(100% - 105px);float:left">
 							    <input type="hidden" name="country" id="country" value="{{$user->country}}" />
                                 <select name="country_select" disabled id="country_select" class="form-control">
                                 	<option value="">  </option>
@@ -508,10 +508,10 @@
 								</select> 
 								</div> 
 							</div>
-                            <div class="col-sm-6 margin-btm-1">
+                            <div class="col-md-6 margin-btm-1">
                                 <label for="postal_code">Zip Code (Limit 255 Chars)</label>
 								</br>
-								<div style="width:300px;float:left">
+								<div style="width:calc(100% - 105px);float:left">
                                 <input type="text" readonly name="postal_code"  onkeydown="restrictTextField(event,255)" class="form-control" id="postal_code" value="{{ old('postal_code', $user->postal_code)}}">
                                  @if ($errors->has('postal_code')) <p class="help-block">{{ $errors->first('postal_code') }}</p> @endif
                                </div>
@@ -524,7 +524,7 @@
 								</div> 
 							</div>
 
-							<div class="col-sm-6 margin-btm-1">
+							<div class="col-md-6 margin-btm-1">
                                 <div class="form-group">
 			                        <label>Choose default algorithm preferences</label>
 			                        <select name="default_algo" id="default_algo" class="form-control">

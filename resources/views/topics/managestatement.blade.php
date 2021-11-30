@@ -65,9 +65,9 @@
              </div> 			   
              <div class="form-group">
                 <label for="">Statement <span style="color:red">*</span></label>
-                <textarea <?php if($objection=="objection") { ?> readonly <?php } ?> class="form-control" rows="6" id="name" name="statement">{{ $statement->value}}</textarea>
+                <textarea <?php if($objection=="objection") { ?> readonly <?php } ?> class="form-control" rows="6" id="name" name="statement">{!! htmlspecialchars($statement->value) !!} </textarea>
                 @if ($errors->has('statement')) <p class="help-block">{{ $errors->first('statement') }}</p> @endif
-             </div> 
+             </div>
             
            
            

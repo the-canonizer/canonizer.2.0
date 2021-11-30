@@ -79,7 +79,7 @@
              
             <div id="myTabContent" class="add-nickname-section" style="margin-top:20px;">
             <div id="savedAddress">
-               <table class="table table-responsive">
+               <table class="table table-responsive social-oauth-table">
                <thead class="thead-default">
                 <tr>
                     <th>Sr</th>                    

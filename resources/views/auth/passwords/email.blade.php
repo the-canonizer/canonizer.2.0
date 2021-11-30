@@ -2,7 +2,14 @@
 @section('content')
 <div class="page-titlePnl">
     <h1 class="page-title">Forgot Password</h1>
-</div>       	
+</div>
+<div class="error-section">
+    @if(Session::has('forgot_password_error'))
+        <div class="alert alert-danger">
+            <strong>Error! </strong>{!! Session::get('forgot_password_error') !!} 
+        </div>
+    @endif
+</div>
 <div class="right-whitePnl">
 <div class="col-sm-5 margin-btm-2">
     <form action="{{ url('/forgetpassword')}}" method="post">

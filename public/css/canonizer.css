@@ -692,7 +692,7 @@ h1.page-title {
     z-index: 1;
     top: 0px;
 }
-.tree li span.noCampArrow .fa {
+.tree li span.noCampArrow .fa-minus{
     background-color: #757272;
 }
 
@@ -713,7 +713,10 @@ i.supporter.fa.fa-arrow-down {
 }
 
 .tree li.parent_li>span {
-    cursor: pointer
+    cursor: pointer;
+}
+.noCampArrow{
+    cursor:context-menu !important;
 }
 
 .tree>ul>li::before,
@@ -1042,7 +1045,7 @@ i.supporter.fa.fa-arrow-down {
         margin-bottom: 20px;
     }
     .right-whitePnl {
-        padding: 1rem 0rem 0px;
+        padding: 1rem 1rem 0px;
     }
     .Lcolor-Pnl .content {
         font-size: 12px;
@@ -1055,6 +1058,19 @@ i.supporter.fa.fa-arrow-down {
         column-count: 1;
     }
 }
+@media (max-width:575px) {
+    .add-nickname-section .social-oauth-table.table {
+        font-size: 10px;
+    }
+    .social-oauth-table.table td, .social-oauth-table.table th {
+        padding: 0.45rem;
+    }
+    .social-oauth-table.table .col-md-12 .col-sm-4 {
+        padding-right: 0;
+        padding-left: 0;
+    }
+}
+
 
 .help-block {
     color: red;
@@ -1578,14 +1594,15 @@ span.brsr-name {
     display: inline-block;
 }
 
+
 .ps_tooltp {
     position: absolute;
     display: none;
     background-color: #333;
     color: #fff;
     padding: 10px 10px 10px 25px;
-    width: 300px;
-    left: -10px;
+    width: 180px;
+    left: -84px;
     border-radius: 3px;
     font-size: 12px;
 }
@@ -1594,9 +1611,19 @@ span.brsr-name {
     display: block;
 }
 
-.ps_tooltp li {
+.ps_tooltp li::after{
     list-style: disc;
+    content: "";
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent transparent black transparent;
 }
+
+
 
 .checkbox label {
     font-size: 15px;
@@ -1891,6 +1918,18 @@ a.site-regular-text {
     text-decoration: underline;
 }
 
+.responsive-width {
+    font-size: 13px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.btn-margin{
+    margin-bottom: 5px;
+    margin-left: 2px;
+    margin-right: 2px;
+}
+
 @media screen and (max-width:768px) {
     a.rgWT {
         font-size: 13px;
@@ -1924,13 +1963,98 @@ a.site-regular-text {
     display: flex;
     margin-bottom: 15px;
     flex-flow: wrap;
-  }
-  .notifySignPNL.topic-status .col {
+}
+.notifySignPNL.topic-status .col {
     width: 100%;
     flex: auto;
-  }
-  @media screen and (min-width: 600px) {
+}
+@media screen and (min-width: 600px) {
     .notifySignPNL.topic-status .col {
       width: calc(100% / 4);
     }
+}
+.error-section {
+    width: 88%;
+}
+a.verification-link:link {
+    color: #721c24!important;
+    font-weight: 600!important;
+}
+a.verification-link:visited {
+    color: #721c24!important;
+    font-weight: 600!important;
+}
+a.verification-link:hover {
+    color: #721c24!important;
+    font-weight: 600!important;
+    text-decoration: underline;
+}
+a.verification-link:active {
+    color: #721c24!important;
+    font-weight: 600!important;
+}
+
+.bwsr-row {
+    display: flex;
+    width:100%;
+    justify-content: space-around;
+    text-align-center;
+    flex-flow: wrap;
+  }
+  .bwsr-row .br-col {
+    max-width: 120px
+  }
+  .bwsr-row .br-col p{
+    text-align: center;
+    margin-top: 5px;
+  }
+  
+  .bwsr-row .br-col img {
+    max-width: 20px;
+  }
+  
+  .supported-browser-wrapper {
+    position: relative;
+    bottom: -30px;
+  }
+
+  .sub-title {font-size: .7rem}
+
+  .btn-historysmt {
+      max-width: 100%;
+      white-space: unset;
+  }
+  .btn-default{
+    background-color: #efefef;
+    color: #212529;
+  }
+  .social-login-btn {
+    width: 118px;
+    margin-right: 0.5rem;
+    margin-bottom: 1rem
+  }
+  .supported_camp ul {
+      display: grid;
+  }
+  select.namespace-selector{
+      min-width: unset !important;
+      max-width: calc(100% - 10px);
+  }
+
+  /*.mainouter li{*/
+  /*    display: flex;*/
+  /*}*/
+
+  .tp-title {
+      margin-top: unset !important;
+      margin-left: 20px !important;
+  }
+  ul.pagination {
+    flex-wrap: wrap;
+  }
+  ul.pagination li{
+      margin-bottom: 0.25rem;
+  }
+  .tree li.parent_li>span{
+      display: block;
   }
