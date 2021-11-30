@@ -211,7 +211,7 @@
        
             $('#pre_keywords').text(keywords);
             var urlNew = validateURL(related_url);
-            $('#pre_related_url').html("<a href='"+urlNew+"' target='_blank'>"+urlNew+"</a>");
+            $('#pre_related_url').html("<a href='"+urlNew+"' target='_blank'>"+related_url+"</a>");
             
             $('#previewModal').modal('show');
             
@@ -219,12 +219,15 @@
         }
         function validateURL(link)
         {
-            if (link.indexOf("http://") == 0 || link.indexOf("https://") == 0) {
-                return link;
+            if(link!=""){
+                if (link.indexOf("http://") == 0 || link.indexOf("https://") == 0) {
+                    return link;
+                }
+                else{
+                    return "http://"+link;
+                }
             }
-            else{
-                return "http://"+link;
-            }
+            return "";
         }
     </script>
 
