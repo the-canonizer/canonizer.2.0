@@ -1,20 +1,22 @@
 @extends('layouts.app')
 @section('content')
 
+
 <div class="page-titlePnl">
-    <h1 class="page-title">Supported Camps</h1>
-</div> 
+    <h1 class="page-title">Supported Camps</h1>	
+</div>
+<h6>{!! $parentcamp !!}</h6> 
 @if(!Session::has('success') && Session::has('warning'))
 <div class="alert alert-danger">
     <strong>Warning! </strong>{{ Session::get('warning')}} 
 </div>
 @endif
 @if(Session::has('confirm') && Session::get('confirm') =='samecamp')
-<div class="alert alert-danger">
+<!--div class="alert alert-danger">
     <strong>Warning! </strong>You are already supporting this camp. You can't submit support again.
-</div>
-	
+</div-->	
 @endif
+
 @if(Session::has('warningDelegate'))
 <div class="alert alert-danger">
     <strong>Warning! </strong>{{ Session::get('warningDelegate')}} 
@@ -25,8 +27,7 @@
 	
 <div class="row">
 <div class="col-sm-6">
-					<div class="row">
-					
+					<div class="row">				
 					 
 					 <?php
 
@@ -133,7 +134,7 @@
 							<?php if(isset($topic->topic_num) && isset($supportedTopic->topic_num) &&  $topic->topic_num==$supportedTopic->topic_num) $lastsupportOrder++;
 								
 							?>
-							<span rel="{{ $support->camp->camp_num }}" class="remove_camp">X</span>
+							<span rel="{{ $support->camp->camp_num }}" class="x-btn remove_camp">X</span>
                         
                            </div>
 					  </div>
@@ -168,7 +169,7 @@
 							<?php if(isset($topic->topic_num) && isset($supportedTopic->topic_num) &&  $topic->topic_num==$supportedTopic->topic_num) $lastsupportOrder++;
 								
 							?>
-							<span rel="{{$support->camp->camp_num}}" class="remove_camp">X</span>
+							<span rel="{{$support->camp->camp_num}}" class="x-btn remove_camp">X</span>
                         
                            </div>
 					  </div>
@@ -187,7 +188,7 @@
 							<input type="hidden" name="delegated[{{$camp->camp_num}}]" value="{{ $delegate_nick_name_id }}">
                             
                             <b><span class="support_order">{{ $key+1}} </span> . {{ $camp->camp_name }} <br/></b>
-                            <span rel="{{$camp->camp_num}}" class="remove_camp">X</span>
+                            <span rel="{{$camp->camp_num}}" class="x-btn remove_camp">X</span>
                             
                         	
                         
@@ -213,19 +214,15 @@
                             
                             <b><span class="support_order">{{ ++$lastsupportOrder }} </span> . {{ $camp->camp_name }} </b><br/>
 
-                            <span rel="{{ $camp->camp_num }}" class="remove_camp">X</span>
+                            <span rel="{{ $camp->camp_num }}" class="x-btn remove_camp">X</span>
                             
                         <?php $lastsupportOrder++; ?>
                         
                         </div>
 					</div>
 				 </div>	
-               @endif			  
-
-
-         </div>
-		            
-					
+               @endif
+         </div>	
 					 
         @if(isset($topic))
          <div id="myTabContent" class="add-nickname-section">  
@@ -265,26 +262,20 @@
 						 <?php } ?>
 						</div> 
                        
-                    </div>
-                   	   <?php 
-                     		$btnFlag = 'none';
-                     	?>
-                     @if(!Session::has('warning'))
-                     	@if(Session::get('confirm') != 'samecamp')
-                     	<?php 
-                     		$btnFlag = 'inline-block';
-                     	?>	                    	
-	                    @endif
+                    </div>	
+
                      <?php  
-                     $link = \App\Model\Camp::getTopicCampUrl($topic->topic_num,session('campnum'));
+                     	$link = \App\Model\Camp::getTopicCampUrl($topic->topic_num,session('campnum'));
                  	 ?>
-                 	<button  style="display:<?= $btnFlag; ?>" type="submit" id="submit"  class="btn btn-login">Submit</button>
-				    <a  class="btn btn-login" href="<?php echo $link; ?>">Cancel</a>
-				    @elseif(Session::get('confirm') != 'samecamp')
-					<div style="display:none">	
-					<button type="submit" id="submit" class="btn btn-login"></button>	
-					</div>
-					@endif
+
+					<!-- button Section -->
+                 		<button type="submit" id="submit"  class="btn btn-success">Submit</button>
+						 <a  class="btn btn-login" href="<?php echo $link; ?>">Cancel</a>
+						<button id="clear_temp_chnages" class="btn btn-warning">Clear temporary changes</button>
+						<button id="clear_temp_chnages" class="btn btn-danger">Delete all supported camps</button>
+				    	
+					<!-- ends here -->
+				   
                     
                 
         </div>
@@ -340,19 +331,31 @@ $('#widget').draggable();
                 } 
             });
 
-             $('.remove_camp').click(function(){
+			$('.SupportCmp').delegate('.x-btn','click',function(){
              		var camp = $(this).attr('rel');
              		$('#submit').show();
              		$('#myTabContent').append('<input type="hidden"  name="removed_camp[]" value="'+camp+'">');
-                	$(this).parent(".support-sorter-element").remove();
+                	//$(this).parent(".support-sorter-element").remove();
+					$(this).parent(".support-sorter-element").addClass('greay-out');
+					$(this).parent(".support-sorter-element").find('.remove_camp').html('undo');
+					$(this).parent(".support-sorter-element").find('.remove_camp').removeClass('x-btn');
+					$(this).parent(".support-sorter-element").find('.remove_camp').addClass('undo_camp');
                 	$( ".column" ).find('.support-sorter-element').each(function(i,v){
                         $(v).find('.support_order').text(i+1);
 						$(v).find('.final_support_order').val(i+1);
                     });
 
-                })
+              });
+			  $('.SupportCmp').delegate('.undo_camp','click',function(){
+				var camp = $(this).attr('rel');
+				undoCampRemove(camp);
+			  })
             
         });
+
+		function undoCampRemove(camp){
+			
+		}
     </script>
     <script>
         $(document).ready(function () {
@@ -376,6 +379,10 @@ $('#widget').draggable();
 		    top: 2px;
 		    right: 5px;
 		    cursor: pointer;
+	}
+
+	.greay-out{
+		background: #ECECE5;
 	}
 </style>
 

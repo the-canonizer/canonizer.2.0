@@ -392,8 +392,13 @@ class TopicController extends Controller {
         $topicnum = $topicnumArray[0];
         if(Auth::user() && Auth::user()->id){
             $userid = Auth::user()->id;
+             //check if logged in user supporting this cam
+            $userNicknames = Nickname::personNicknameArray();
+            $ifIamSupporter = Support::ifIamSupporter($topicnum,$parentcampnum,$userNicknames);
+            //echo "<pre>"; print_r($ifIamSupporter); exit;            
         }else{
             $userid = null;
+            $ifIamSupporter = false;
         }
 
         if(session('campnum')) {
@@ -453,7 +458,9 @@ class TopicController extends Controller {
                         ->orderBy('order_id', 'ASC')->get();
             $editFlag = false;
         }
-        return view('topics.view', compact('topic', 'parentcampnum','camp_subscriptions','camp_subscription_data','subscribedCamp', 'parentcamp', 'camp', 'wiky', 'id','news','editFlag','topicData','campData'));
+       
+
+        return view('topics.view', compact('topic', 'parentcampnum','camp_subscriptions','camp_subscription_data','subscribedCamp', 'parentcamp', 'camp', 'wiky', 'id','news','editFlag','topicData','campData','ifIamSupporter'));
     }
 
     /**

@@ -261,18 +261,14 @@ class SettingsController extends Controller
             $topicData = Camp::getAgreementTopic($topicnum,['nofilter'=>true]);
             //$camp = Camp::where('topic_num',$topicnum)->where('camp_num','=', $campnum)->latest('submit_time','objector')->get();
             $onecamp = Camp::where('topic_num', $topicnum)->where('camp_num', '=', $campnum)->where('go_live_time', '<=', $as_of_time)->latest('submit_time')->first();
-            $campWithParents = Camp::campNameWithAncestors($onecamp, '', $topicData->topic_name);
+            $campWithParents = Camp::campNameWithAncestors($onecamp, '', $topicData->topic_name,true);
             if (!count($onecamp)) {
                 return back();
             }
-
             //get nicknames
-            //$nicknames = Nickname::where('owner_code', '=', $encode)->get();
             $nicknames = Nickname::topicCampNicknameUsed($topicnum,$campnum,$encode);
             $userNickname = Nickname::personNicknameArray();
-
             $confirm_support = 0;
-
             $alreadySupport = Support::where('topic_num', $topicnum)->where('camp_num', $campnum)->where('end', '=', 0)->whereIn('nick_name_id', $userNickname)->get();
             if ($alreadySupport->count() > 0) {
                 if($alreadySupport[0]->delegate_nick_name_id!=0){
@@ -281,12 +277,7 @@ class SettingsController extends Controller
                     Session::flash('warningDelegate', "You have already delegated your support for this camp to user ".$userFromNickname->first_name." ".$userFromNickname->last_name.". If you continue your delegated support will be removed.");
 
                 }
-                //Session::flash('warning', "You have already supported this camp, you can't submit your support again.");
-                // return redirect()->back();
             }
-
-
-
             $parentSupport = Camp::validateParentsupport($topicnum, $campnum, $userNickname, $confirm_support);
              if ($parentSupport === "notlive") {
                 Session::flash('warning', "You cant submit your support to this camp as its not live yet.");
@@ -343,8 +334,10 @@ class SettingsController extends Controller
                 ->whereIn('nick_name_id', $userNickname)
                 ->whereRaw("(start <= " . $as_of_time . ") and ((end = 0) or (end >= " . $as_of_time . "))")
                 ->groupBy('topic_num')->orderBy('start', 'DESC')->first();
-
-        
+           
+            //echo "<pre>"; print_r($supportedTopic); exit;
+            //$breadcrum = Camp::campNameWithAncestors($onecamp,'',$topic->topic_name,1); //breadcrum = true
+            //echo "<pre>"; print_r($breadcrum); exit;
             return view('settings.support', ['parentSupport' => $parentSupport, 'childSupport' => $childSupport, 'userNickname' => $userNickname, 'supportedTopic' => $supportedTopic, 'topic' => $topic, 'nicknames' => $nicknames, 'camp' => $onecamp, 'parentcamp' => $campWithParents, 'delegate_nick_name_id' => $delegate_nick_name_id]);
         } else {
             $id = Auth::user()->id;
