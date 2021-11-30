@@ -348,14 +348,12 @@ $('#widget').draggable();
               });
 			  $('.SupportCmp').delegate('.undo_camp','click',function(){
 				var camp = $(this).attr('rel');
-				undoCampRemove(camp);
+				undoCampRemove
 			  })
+
+			  /** Undo action on camp */
             
         });
-
-		function undoCampRemove(camp){
-			
-		}
     </script>
     <script>
         $(document).ready(function () {
