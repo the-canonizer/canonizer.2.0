@@ -38,7 +38,7 @@
            <thead class="thead-default">
               <tr>
                 <th>Sr.No</th>
-                <th>Unique Number</th>
+                <th>Nick Name ID</th>
                 <th>Nick Name</th>
                 <th>Visibility Status</th>
                 <!--th>Manage Actions</th-->
