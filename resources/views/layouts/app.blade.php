@@ -85,7 +85,7 @@
                         @else
 						<a class="nav-link guestLogin" style="cursor:default;">Browsing as: Guest</a>
                         <a class="nav-link @if(Request::url() == url('/login')) active @endif" href="{{ url('/login')}}"><i class="fa fa-fw fa-user"></i> Log in</a>
-                        <a class="nav-link @if(Request::url() == url('/register')) active @endif" href="{{ url('/register')}}"><i class="fa fa-fw fa-user-plus"></i> Register </a>
+                        <a class="nav-link @if(Request::url() == url('/register')) active @endif" href="{{ url('/register')}}"><i class="fa fa-fw fa-user-plus"></i> Sign up </a>
                         @endif
                     </li>
                 </ul>
@@ -127,7 +127,7 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url('/create/topic')}}">
 
-                                <span class="nav-link-text {{ ($route=='topic' & str_contains(Request::fullUrl(), 'topic') ) ? 'menu-active':''}}">Create New Topic</span>
+                                <span class="nav-link-text {{ ($route=='create' & str_contains(Request::fullUrl(), 'topic') ) ? 'menu-active':''}}">Create New Topic</span>
                             </a>
                         </li>
 
@@ -163,7 +163,7 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url('/topic/6-Canonizer-Jobs/1-Agreement')}}">
-                                <span class="nav-link-text">Jobs</span>
+                                <span class="nav-link-text {{ (Request::getRequestUri() =='/topic/6-Canonizer-Jobs/1-Agreement') ? 'menu-active':''}}">Jobs</span>
                             </a>
                         </li>
                         {{-- <li class="nav-item">
@@ -216,7 +216,7 @@
                                         <option value="{{ $key }}" {{ session('defaultAlgo') == $key ? 'selected' : ''}}>{{$value}}</option>
                                     @endforeach
                                     </select>
-									<a href="<?php echo url('topic/53-Canonizer-Algorithms/1-Agreement') ?>"><span>Algorithm Information</span></a>
+									<a href="<?php echo url('topic/53-Canonizer-Algorithms/1-Agreement') ?>"><span class="{{ (Request::getRequestUri() =='/topic/53-Canonizer-Algorithms/1-Agreement') ? 'menu-active':''}}">Algorithm Information</span></a>
                                 </li>
 
                                 <li>

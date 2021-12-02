@@ -31,8 +31,9 @@
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
             <input type="hidden" id="topic_num" name="topic_num" value="{{ $topic->topic_num }}">
             <input type="hidden" id="parent_camp_num" name="parent_camp_num" value="{{ $parentcampnum }}">
-			<input type="hidden" id="camp_num" name="camp_num" value="{{ $camp->camp_num }}">
-			<input type="hidden" id="submitter" name="submitter" value="{{ $camp->submitter_nick_id }}">
+			      <input type="hidden" id="camp_num" name="camp_num" value="{{ $camp->camp_num }}">
+			      <input type="hidden" id="submitter" name="submitter" value="{{ $camp->submitter_nick_id }}">
+            <input type="hidden" id="statement_event_type" name="statement_event_type" value="CREATE">
            
              <div class="form-group">
                 <label for="camp_name">Nick Name <span style="color:red">*</span></label>

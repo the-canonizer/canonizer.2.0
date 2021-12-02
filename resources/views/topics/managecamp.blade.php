@@ -39,24 +39,42 @@
             
 			<input type="hidden" id="camp_num" name="camp_num" value="{{ $camp->camp_num }}">
 			<input type="hidden" id="submitter" name="submitter" value="{{ $camp->submitter_nick_id }}">
-			<?php if($objection=="objection") { ?>
-			 <input type="hidden" name="objection" id="objection" value="1">
-			 <input type="hidden" name="objection_id" id="objection_id" value="{{ $camp->id }}">
-			<?php } ?>
+			<?php if($objection=="objection") 
+            { 
+            ?>
+    		 <input type="hidden" name="objection" id="objection" value="1">
+    		 <input type="hidden" name="objection_id" id="objection_id" value="{{ $camp->id }}">
+			<?php 
+            } 
+            ?>
                          
-                        <?php if($campupdate=="update") { ?>
-                            <input type="hidden" id="camp_update" name="camp_update" value="1">
-                            <input type="hidden" id="camp_id" name="camp_id" value="{{ $camp->id }}">
-                        <?php } ?>
+            <?php if($campupdate=="update") 
+            { 
+            ?>
+                <input type="hidden" id="camp_update" name="camp_update" value="1">
+                <input type="hidden" id="camp_id" name="camp_id" value="{{ $camp->id }}">
+            <?php 
+            } 
+            ?>
            
-            <?php if($camp->camp_name=="Agreement") { ?>
-			<input type="hidden" id="parent_camp_num" name="parent_camp_num" value="{{ $parentcampnum }}">
-			<?php } else { ?>
-			<div class="form-group">
+            <?php if($camp->camp_name=="Agreement") 
+            {
+            ?>
+			 <input type="hidden" id="parent_camp_num" name="parent_camp_num" value="{{ $parentcampnum }}">
+			<?php 
+            } 
+            else 
+            { 
+            ?>
+			 <div class="form-group">
                 <label for="parent_camp_num">Parent Camp <span style="color:red">*</span></label>
                 <select  name="parent_camp_num" id="parent_camp_num" class="form-control" <?php if($objection=="objection") { ?> disabled <?php } ?>>
                     @foreach($parentcampsData as $parent)
-					<?php if($camp->camp_num != $parent->camp_num) { ?>
+					<?php if(($camp->camp_num != $parent->camp_num ) && ($parent->parent_camp_num<=$parentcampnum)) { 
+                    //#787 #861 both
+                    //($parent->parent_camp_num<=$parentcampnum) /*siblings and parent both show */
+                    //($parent->camp_num<=$parentcampnum) /*only parent show */
+                    ?>
                     <option <?php if($camp->parent_camp_num==$parent->camp_num) echo "selected=selected";?> value="{{ $parent->camp_num }}">{{ $parent->camp_name}}</option>
                     <?php } ?>
 					@endforeach
@@ -110,7 +128,7 @@
             </div>   
             <div class="form-group">
 			     <p style="color:red">The following fields are rarely used and are for advanced users only.</p>
-                <label for="camp_about_url">Camp About URL </label>
+                <label for="camp_about_url">Camp About URL ( Limit 1024 Chars ) </label>
                 <input type="text" name="camp_about_url" class="form-control" id="camp_about_url" value="{{ $camp->camp_about_url }}">
                 @if ($errors->has('camp_about_url')) <p class="help-block">{{ $errors->first('camp_about_url') }}</p> @endif
             </div>
@@ -139,26 +157,29 @@
 
                 <!-- Modal content-->
                 <div class="modal-content">
-                  <div class="modal-header">
-                    <h4 class="modal-title">Updated camp record preview</h4>
-                  </div>
-                  <div class="modal-body">
-                    <div class="tree col-sm-12">
-                        Parent Camp : <span id="parent_camp_name">{!! $parentcamp !!}</span> <br/>
-                        Camp Name : <span id="pre_camp_name"></span> <br/>
-                        Keywords : <span id="pre_keywords"></span><br/>
-                        Camp About URL : <span id="pre_related_url"></span><br/>
-                        Camp About Nick Name : <span id="pre_nickname"></span><br/>
-                </div>
-                  </div>
-                  <div class="modal-footer">
+                    <div class="modal-header">
+                     <h4 class="modal-title">Updated camp record preview</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="tree col-sm-12">
+                            <!--#903 issue -->
+                            @if($camp->camp_name!="Agreement")
+                            Parent Camp : <span id="parent_camp_name">{!! $parentcamp !!}</span> <br/>
+                            @endif
+                            Camp Name : <span id="pre_camp_name"></span> <br/>
+                            Keywords : <span id="pre_keywords"></span><br/>
+                            Camp About URL : <span id="pre_related_url"></span><br/>
+                            Camp About Nick Name : <span id="pre_nickname"></span><br/>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
                       <button type="submit" id="submit" class="btn btn-login">Submit Update</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                  </div>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    </div>
                 </div>
 
-              </div>
             </div>
+        </div>
             <!--ends preview -->
         </form>
 </div>
@@ -189,11 +210,24 @@
             $('#pre_nickname').text((nicknameid != 0) ? nickname : 'No nickname associated');
        
             $('#pre_keywords').text(keywords);
-            $('#pre_related_url').text(related_url);
+            var urlNew = validateURL(related_url);
+            $('#pre_related_url').html("<a href='"+urlNew+"' target='_blank'>"+related_url+"</a>");
             
             $('#previewModal').modal('show');
             
             
+        }
+        function validateURL(link)
+        {
+            if(link!=""){
+                if (link.indexOf("http://") == 0 || link.indexOf("https://") == 0) {
+                    return link;
+                }
+                else{
+                    return "http://"+link;
+                }
+            }
+            return "";
         }
     </script>
 

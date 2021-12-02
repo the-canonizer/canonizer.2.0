@@ -113,7 +113,6 @@ class ApiController extends Controller {
         //
     }
 
-
     public function usersupports(Request $request,$id){
     
         $nickName = Nickname::find($id);
