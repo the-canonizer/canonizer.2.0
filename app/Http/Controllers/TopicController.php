@@ -301,49 +301,49 @@ class TopicController extends Controller {
                         throw new \Swift_TransportException($e);
                     } 
             } else if ($eventtype == "UPDATE") {
-                $directSupporter = Support::getAllDirectSupporters($topic->topic_num);
-                $link_history = 'topic-history/' . $topic->topic_num;
-                $link = 'topic/' . $topic->topic_num . '/' . $topic->camp_num . '?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $topic->go_live_time);
-                $data['object'] = $topic->topic_name;
-                $data['go_live_time'] = $topic->go_live_time;
-                $data['type'] = 'topic : ';
-                $data['typeobject'] = 'topic';
-                //$data['note'] = "";
-                $data['support_camp'] = "Agreement";
-                $data['camp_num'] = 1;
-                $data['topic_num'] = $topic->topic_num;
-                $nickName = Nickname::getNickName($all['nick_name']);
-                $data['nick_name'] = $nickName->nick_name;
-                $data['forum_link'] = 'forum/' . $topic->topic_num . '-' . $topic->topic_name . '/1/threads';
-                $data['subject'] = "Proposed change to " . $topic->topic_name . " submitted";
+                // $directSupporter = Support::getAllDirectSupporters($topic->topic_num);
+                // $link_history = 'topic-history/' . $topic->topic_num;
+                // $link = 'topic/' . $topic->topic_num . '/' . $topic->camp_num . '?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $topic->go_live_time);
+                // $data['object'] = $topic->topic_name;
+                // $data['go_live_time'] = $topic->go_live_time;
+                // $data['type'] = 'topic : ';
+                // $data['typeobject'] = 'topic';
+                // //$data['note'] = "";
+                // $data['support_camp'] = "Agreement";
+                // $data['camp_num'] = 1;
+                // $data['topic_num'] = $topic->topic_num;
+                // $nickName = Nickname::getNickName($all['nick_name']);
+                // $data['nick_name'] = $nickName->nick_name;
+                // $data['forum_link'] = 'forum/' . $topic->topic_num . '-' . $topic->topic_name . '/1/threads';
+                // $data['subject'] = "Proposed change to " . $topic->topic_name . " submitted";
                 
-                #821 : In review topic name is displaying in Proposed change to topic email
+                // #821 : In review topic name is displaying in Proposed change to topic email
 
-                $liveTopic = Topic::select('topic.*')
-                    ->where('topic.topic_num', $topic->topic_num)
-                    ->where('topic.objector_nick_id',"=",null)
-                    ->where('topic.go_live_time',"<",Carbon::now()->timestamp)
-                    ->latest('topic.submit_time')
-                    ->first();
-                if(!empty($liveTopic)){
-                    $data['object'] = $liveTopic->topic_name;
-                    $data['subject'] = "Proposed change to " . $liveTopic->topic_name . " submitted";
-                }
+                // $liveTopic = Topic::select('topic.*')
+                //     ->where('topic.topic_num', $topic->topic_num)
+                //     ->where('topic.objector_nick_id',"=",null)
+                //     ->where('topic.go_live_time',"<",Carbon::now()->timestamp)
+                //     ->latest('topic.submit_time')
+                //     ->first();
+                // if(!empty($liveTopic)){
+                //     $data['object'] = $liveTopic->topic_name;
+                //     $data['subject'] = "Proposed change to " . $liveTopic->topic_name . " submitted";
+                // }
                 /** #771 issue solved
                 ** sent mail to all direct supporters in case someone updates in the supported topic
                 **/
-                if(!empty($directSupporter)){
+                // if(!empty($directSupporter)){
                     
-                    $this->mailSupporters($directSupporter, $link, $data);
-                }
+                //     $this->mailSupporters($directSupporter, $link, $data);
+                // }
 
                 /** #771 Topic submitter is  getting "proposed changed to topic**/
-                $data['link'] = \App\Model\Camp::getTopicCampUrl($topic->topic_num,1); 
-                try{
-                    Mail::to(Auth::user()->email)->bcc(config('app.admin_bcc'))->send(new ProposedChangeMail(Auth::user(), $link_history,$data));
-                }catch(\Swift_TransportException $e){
-                       throw new \Swift_TransportException($e);
-                }
+                // $data['link'] = \App\Model\Camp::getTopicCampUrl($topic->topic_num,1); 
+                // try{
+                //     Mail::to(Auth::user()->email)->bcc(config('app.admin_bcc'))->send(new ProposedChangeMail(Auth::user(), $link_history,$data));
+                // }catch(\Swift_TransportException $e){
+                //        throw new \Swift_TransportException($e);
+                // }
 
             }
         } catch (Exception $e) {
@@ -867,21 +867,21 @@ class TopicController extends Controller {
                     } 
             } else if ($eventtype == "UPDATE") {
 
-                $directSupporter = Support::getAllDirectSupporters($camp->topic_num, $camp->camp_num);
-                $link = 'camp/history/' . $camp->topic_num . '/' . $camp->camp_num;
-                $data['object'] = $camp->topic->topic_name . ' / ' . $camp->camp_name;
-                $data['support_camp'] = $camp->camp_name;
-                $data['type'] = 'camp : ';
-                $data['typeobject'] = 'camp';
-                $data['go_live_time'] = $camp->go_live_time;
-                $data['note'] = $camp->note;
-                $nickName = Nickname::getNickName($camp->submitter_nick_id);
-                $data['topic_num'] = $camp->topic_num;
-                $data['nick_name'] = $nickName->nick_name;
-                $data['forum_link'] = 'forum/' . $camp->topic_num . '-' . $camp->camp_name . '/' . $camp->camp_num . '/threads';
-                $data['subject'] = "Proposed change to " . $camp->topic->topic_name . ' / ' . $camp->camp_name . " submitted";
+                // $directSupporter = Support::getAllDirectSupporters($camp->topic_num, $camp->camp_num);
+                // $link = 'camp/history/' . $camp->topic_num . '/' . $camp->camp_num;
+                // $data['object'] = $camp->topic->topic_name . ' / ' . $camp->camp_name;
+                // $data['support_camp'] = $camp->camp_name;
+                // $data['type'] = 'camp : ';
+                // $data['typeobject'] = 'camp';
+                // $data['go_live_time'] = $camp->go_live_time;
+                // $data['note'] = $camp->note;
+                // $nickName = Nickname::getNickName($camp->submitter_nick_id);
+                // $data['topic_num'] = $camp->topic_num;
+                // $data['nick_name'] = $nickName->nick_name;
+                // $data['forum_link'] = 'forum/' . $camp->topic_num . '-' . $camp->camp_name . '/' . $camp->camp_num . '/threads';
+                // $data['subject'] = "Proposed change to " . $camp->topic->topic_name . ' / ' . $camp->camp_name . " submitted";
 
-                $nickNames = Nickname::personNicknameArray();
+                // $nickNames = Nickname::personNicknameArray();
                 // $ifIamSingleSupporter = Support::ifIamSingleSupporter($all['topic_num'], $all['camp_num'], $nickNames);
                 // if($ifIamSingleSupporter){
                 //     $subscribers = Camp::getCampSubscribers($camp->topic_num, $camp->camp_num);
@@ -1047,23 +1047,23 @@ class TopicController extends Controller {
             } 
         } else if ($eventtype == "UPDATE") {
 
-            $directSupporter = Support::getAllDirectSupporters($statement->topic_num, $statement->camp_num);
-             $link = 'statement/history/' . $statement->topic_num . '/' . $statement->camp_num;
-             $livecamp = Camp::getLiveCamp($statement->topic_num,$statement->camp_num);
-             //$link = 'topic/' . $statement->topic_num . '/' . $statement->camp_num . '?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $statement->go_live_time);
-            $dataObject['topic_num'] = $statement->topic_num;
-            $dataObject['camp_num'] = $statement->camp_num;
-            $dataObject['object'] = $livecamp->topic->topic_name . " / " . $livecamp->camp_name;
-            $dataObject['support_camp'] = $livecamp->camp_name;
-            $dataObject['go_live_time'] = $statement->go_live_time;
-            $dataObject['type'] = 'statement : for camp ';
-            $dataObject['typeobject'] = 'statement';
-            $dataObject['note'] = $statement->note;
-            $nickName = Nickname::getNickName($statement->submitter_nick_id);
-            $dataObject['nick_name'] = $nickName->nick_name;
-            $dataObject['forum_link'] = 'forum/' . $statement->topic_num . '-statement/' . $statement->camp_num . '/threads';
-            $dataObject['subject'] = "Proposed change to statement for camp " . $livecamp->topic->topic_name . " / " . $livecamp->camp_name. " submitted";
-            $nickNames = Nickname::personNicknameArray();
+            // $directSupporter = Support::getAllDirectSupporters($statement->topic_num, $statement->camp_num);
+            //  $link = 'statement/history/' . $statement->topic_num . '/' . $statement->camp_num;
+            //  $livecamp = Camp::getLiveCamp($statement->topic_num,$statement->camp_num);
+            //  //$link = 'topic/' . $statement->topic_num . '/' . $statement->camp_num . '?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $statement->go_live_time);
+            // $dataObject['topic_num'] = $statement->topic_num;
+            // $dataObject['camp_num'] = $statement->camp_num;
+            // $dataObject['object'] = $livecamp->topic->topic_name . " / " . $livecamp->camp_name;
+            // $dataObject['support_camp'] = $livecamp->camp_name;
+            // $dataObject['go_live_time'] = $statement->go_live_time;
+            // $dataObject['type'] = 'statement : for camp ';
+            // $dataObject['typeobject'] = 'statement';
+            // $dataObject['note'] = $statement->note;
+            // $nickName = Nickname::getNickName($statement->submitter_nick_id);
+            // $dataObject['nick_name'] = $nickName->nick_name;
+            // $dataObject['forum_link'] = 'forum/' . $statement->topic_num . '-statement/' . $statement->camp_num . '/threads';
+            // $dataObject['subject'] = "Proposed change to statement for camp " . $livecamp->topic->topic_name . " / " . $livecamp->camp_name. " submitted";
+            // $nickNames = Nickname::personNicknameArray();
             // $ifIamSingleSupporter = Support::ifIamSingleSupporter($all['topic_num'], $all['camp_num'], $nickNames);
             // if($ifIamSingleSupporter){
             //     $subscribers = Camp::getCampSubscribers($statement->topic_num, $statement->camp_num);
