@@ -217,10 +217,10 @@
         <?php if ($currentTime < $data->go_live_time && $currentTime >= $data->submit_time && ($ifIamSupporter || $ifIamDelegatedSupporter) ) { ?> 
                                     <a id="object" class="btn btn-historysmt mb-1" href="<?php echo url('manage/camp/' . $data->id . '-objection'); ?>">Object</a>
                                 <?php }else if($currentTime < $data->go_live_time && $currentTime >= $data->submit_time && $ifSupportDelayed){ ?>
-                                    <button id="object" class="btn btn-historysmt mb-1"  disabled>Object &nbsp;<i title="You can not object this camp because you supported this camp after updation was submitted" class="fa fa-info-circle" aria-hidden="true"></i></button>
+                                    <button type="button" onClick="disagreementPopup()" class="btn btn-historysmt mb-1 disable-btn"  >Object &nbsp;<i title="You can not object to this topic change" class="fa fa-info-circle" aria-hidden="true"></i></button>
                                 <?php }else if($currentTime < $data->go_live_time && $currentTime >= $data->submit_time){ ?>
-                                    <button id="object" class="btn btn-historysmt mb-1"  disabled>Object &nbsp;<i title="Only supporter have access to object the camp." class="fa fa-info-circle" aria-hidden="true"></i></button>
-                                <?php } ?>
+                                    <button type="button" onClick="disagreementPopup()"  class="btn btn-historysmt mb-1 disable-btn"  >Object &nbsp;<i title="You can not object to this topic change." class="fa fa-info-circle" aria-hidden="true"></i></button>
+                                <?php } ?> 
                                 <a id="update" class="btn btn-historysmt mb-1" href="<?php echo url('manage/camp/' . $data->id); ?>">Submit Camp Update Based On This</a>		  
                                 <?php
                                   $link = \App\Model\Camp::getTopicCampUrl($data->topic_num,$data->camp_num);

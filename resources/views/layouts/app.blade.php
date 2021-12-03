@@ -305,6 +305,38 @@
             <!-- Logout Modal-->
         </div>
     </div>
+
+    <!-- disagreemetn popup -->
+    <div id="dsiagreementPopup" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">                    
+                    <h4 class="modal-title">Why can't I object?
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    To object to this change, you should be a direct supporter of the topic/camp and should have supported it before the change was submitted.
+                    <br/>For more information about disagreement, please read topic:<br/>
+                    <a href="https://canonizer.com/statement/history/132-Help/4-Dealing-with-Disagreement" target="_blank">https://canonizer.com/statement/history/132-Help/4-Dealing-with-Disagreement</a>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">
+                        Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
     <script>
         
         $('button[type="submit"]').removeAttr('disabled');
@@ -393,6 +425,11 @@
 
             $('#as_of').submit();
 		  }
+        }
+
+        function disagreementPopup(e){
+           $("#dsiagreementPopup").modal('show');
+           return false;
         }
     </script>
 
