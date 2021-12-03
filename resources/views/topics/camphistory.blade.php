@@ -177,7 +177,7 @@
                         <div class="form-group CmpHistoryPnl" style="background-color:{{ $bgcolor }}">
                             <div>
                                 <b>Camp Name :</b> {{ $data->camp_name }} <br/>
-								 @if(!empty($pCamp))<b>Parent Camp: </b>{{$pCamp->camp_name }}<br>@endif
+								 @if(!empty($pCamp))<b>Parent Camp : </b>{{$pCamp->camp_name }}<br>@endif
                                 <b>Keywords :</b> {{ $data->key_words }} <br/>
                                 <b>Edit summary :</b> {{ $data->note }} <br/>
 

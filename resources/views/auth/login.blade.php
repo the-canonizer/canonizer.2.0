@@ -63,7 +63,7 @@
 
     <div class="col-xl-2 margin-btm-2"></div>
     <div class="col-xl-5 margin-btm-2 lg-signup">
-        <div >Don't have an account? <a href="{{ url('/register') }}">Sign up Now</a></div>
+        <div >Don't have an account? <a href="{{ url('/signup') }}">Sign up Now</a></div>
     </div>
 
     <div class="col-12 margin-btm-2 ">
