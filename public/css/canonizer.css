@@ -2058,3 +2058,7 @@ a.verification-link:active {
   .tree li.parent_li>span{
       display: block;
   }
+
+  .disable-btn, .disable-btn:hover{
+    background-color: #a3a3a3;
+  }
