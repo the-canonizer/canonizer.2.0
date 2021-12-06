@@ -517,9 +517,18 @@ class Camp extends Model {
             Camp::$chilcampArray[] = $key1;
             $camparray[] = $camp->camp_num;
             $childCamps =  Camp::where('topic_num', $camp->topic_num)->where('parent_camp_num', $camp->camp_num)->groupBy('camp_num')->latest('submit_time')->get();
-            //echo "<pre>"; print_r($childCamps);
             foreach ($childCamps as $child) {
-                $camparray = array_merge($camparray, self::getAllChildCamps($child));
+                $ifParentChanged = false;
+                $latestParent = Camp::where('camp_num', $camp->camp_num)->latest('submit_time')->first();
+                if($camp->camp_num == 1){
+                    $ifParentChanged = true;
+                }else{
+                    $ifParentChanged =  $latestParent->parent_camp_num == $camp->camp_num;
+                }
+                if($ifParentChanged){
+                    $camparray = array_merge($camparray, self::getAllChildCamps($child)); 
+                }
+                
             }
         }
 
