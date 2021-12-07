@@ -54,7 +54,7 @@
                 </li>
                 <li>
                     <span>Canonizer Algorithm:</span>
-                    <div class="filter">Filter < <input type="number" value="0.001"/></div>
+                    <div class="filter">Filter < <input type="number" value="0.000"/></div>
                 </li>
             </ul>
         </li>
