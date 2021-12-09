@@ -501,7 +501,7 @@ class TopicController extends Controller {
 
         $parentcamp = Camp::campNameWithAncestors($camp, '',$topic->topic_name);
 
-        $parentcampsData = Camp::getAllParentCamp($camp->topic_num);
+        $parentcampsData = Camp::getAllParentCamp($camp->topic_num,['nofilter' => true]);
 
         $nickNames = Nickname::topicNicknameUsed($camp->topic_num);
 
