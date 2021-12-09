@@ -53,7 +53,13 @@ class ForgotPasswordController extends Controller {
         }
 
         if(!isset($user->status) || $user->status === 0) {
-            return back()->with(['forgot_password_error' => 'Your account is not verified yet. Click on the link <span ><a href="/getVerificationCode" class="verification-link">Request for Verification Code</a></span> to get a new code on you registered email or mobile.']);
+            $verify_link = url('getVerificationCode');
+            $email = $request->get('email',null);
+            if(!empty($email)){
+                $verify_link .= '?user='.base64_encode($email);
+            }
+
+            return back()->with(['forgot_password_error' => 'Your account is not verified yet. Click on the link <span ><a href="'.$verify_link.'" class="verification-link">Request for Verification Code</a></span> to get a new code on you registered email or mobile.']);
         }
 
         // send resetlink in email
@@ -84,7 +90,47 @@ class ForgotPasswordController extends Controller {
         return view('auth.passwords.resetlinksent');
     }
 
-    public function showVerificationCodeForm() {
+    public function showVerificationCodeForm(Request $request) {
+        $email = $request->get('user',null);
+        if(!empty($email)){
+            $email = base64_decode($email);
+            $tempUser = User::where('email', $email)->first();
+            if(!empty($tempUser)){
+                $authCode = mt_rand(100000, 999999);
+                $tempUser->otp = $authCode;
+                $tempUser->update();
+                Session::flash('otpsent', "One Time Verification Code has been sent to your registered email address.");
+                try{
+                    Mail::to($tempUser->email)->bcc(config('app.admin_bcc'))->send(new OtpVerificationMail($tempUser,true));
+                    $user = base64_encode($tempUser->email);
+                    return view('auth.verifyotp', compact('user'));
+                }catch(\Swift_TransportException $e){
+                    throw new \Swift_TransportException($e);
+                }
+            }else {
+                $tempUser = User::where('phone_number', $email)->first();
+                if(!empty($tempUser)){
+                    if($tempUser->mobile_verified === 0) {
+                        return back()->with(['verification_code_error' => 'Your mobile number is not verified.']);
+                    }
+                    $authCode = mt_rand(100000, 999999);
+                    $tempUser->otp = $authCode;
+                    $tempUser->update();
+                    $result= [];
+                    $result['otp'] = $authCode;
+                    $result['subject'] = "Canonizer verification code";
+                    $receiver = $tempUser->phone_number . "@" . $tempUser->mobile_carrier;
+                    Session::flash('otpsent', "A 6 digit code has been sent on your phone number for verification.");
+                    try{
+                        Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new PhoneOTPMail($tempUser, $result));
+                        $user = base64_encode($tempUser->email);
+                        return view('auth.verifyotp', compact('user'));
+                    }catch(\Swift_TransportException $e){
+                        throw new \Swift_TransportException($e);
+                    }
+                }
+            }
+        }
         return view('auth.reqVerificationCode');
     }
 
