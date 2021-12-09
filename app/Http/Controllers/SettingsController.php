@@ -715,7 +715,8 @@ class SettingsController extends Controller
     }
 
     private function emailForSupportDeleted($data){
-            $parentUser = null;
+            // $parentUser = null;
+            $parentUserNickName = null;
             $result['delegate_support_deleted'] = 0;
             if(isset($data['delegate_nick_name_id']) && $data['delegate_nick_name_id']!=0){
                 // $parentUser = Nickname::getUserByNickName($data['delegate_nick_name_id']);
@@ -733,7 +734,7 @@ class SettingsController extends Controller
             $result['object'] = $topic->topic_name ." / ".$camp->camp_name;
             $result['support_camp'] = $camp->camp_name;
             $result['subject'] = $nickName->nick_name . " has removed their support from ".$result['object'].".";
-            if($parentUser){
+            if($parentUserNickName){
                 $result['subject'] = $nickName->nick_name . " has removed their delegated support from ". $parentUserNickName->nick_name." in ".$result['object'].".";
             }
            

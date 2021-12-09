@@ -256,7 +256,7 @@ class Nickname extends Model {
 
     public static function getNickName($nick_id) {
 
-        return $nickname = self::find($nick_id);
+        return self::find($nick_id);
     }
 
      public static function topicCampNicknameUsed($topic_num,$camp_num,$encode=null) {
