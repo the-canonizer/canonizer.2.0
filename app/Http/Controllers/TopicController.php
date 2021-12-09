@@ -675,6 +675,7 @@ class TopicController extends Controller {
             'camp_name.required' => 'Camp name is required.',
             'camp_name.max' => 'Camp name can not be more than 30 characters.',
             'camp_about_url.max' => "Camp's about url can not be more than 1024 characters.",
+            'camp_about_url.regex' => "The camp about url format is invalid. (Example: https://www.example.com?post=1234)",
             'parent_camp_num.required' => 'The parent camp name is required.',
             'objection.required' => 'Objection reason is required.',
             'objection_reason.max' => 'Objection reason can not be more than 100.'
