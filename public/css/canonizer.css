@@ -1350,6 +1350,7 @@ ul.mainouter li .tp-title {
     padding: 20px;
     font-size: 14px;
     word-break: break-word;
+    color: black;
 }
 
 .CmpHistoryPnl-footer {
@@ -2061,4 +2062,8 @@ a.verification-link:active {
 
   .disable-btn, .disable-btn:hover{
     background-color: #a3a3a3;
+  }
+  
+  .CmpHistoryPnl_a{
+    color: black;
   }
