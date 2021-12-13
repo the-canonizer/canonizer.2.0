@@ -2067,3 +2067,7 @@ a.verification-link:active {
   .CmpHistoryPnl_a{
     color: black;
   }
+
+  .CmpHistoryPnl_a:hover{
+    color: black;
+  }
