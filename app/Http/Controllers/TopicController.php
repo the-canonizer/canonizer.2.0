@@ -501,7 +501,7 @@ class TopicController extends Controller {
 
         $parentcamp = Camp::campNameWithAncestors($camp, '',$topic->topic_name);
 
-        $parentcampsData = Camp::getAllParentCamp($camp->topic_num,['nofilter' => true]);
+        $parentcampsData = Camp::getAllParentCampNew($camp->topic_num);
 
         $childCamps = array_unique(Camp::getAllChildCamps($camp));
 
