@@ -501,13 +501,15 @@ class TopicController extends Controller {
 
         $parentcamp = Camp::campNameWithAncestors($camp, '',$topic->topic_name);
 
-        $parentcampsData = Camp::getAllParentCamp($camp->topic_num,['nofilter' => true]);
+        $parentcampsData = Camp::getAllParentCampNew($camp->topic_num);
+
+        $childCamps = Camp::getAllChildCamps($camp);
 
         $nickNames = Nickname::topicNicknameUsed($camp->topic_num);
 
         $allNicknames = Nickname::orderBy('nick_name', 'ASC')->get();
 
-        return view('topics.managecamp', compact('parentcampsData', 'objection', 'topic', 'camp', 'parentcampnum', 'parentcamp', 'nickNames', 'allNicknames', 'campupdate'));
+        return view('topics.managecamp', compact('parentcampsData', 'objection', 'topic', 'camp', 'parentcampnum', 'parentcamp', 'nickNames', 'allNicknames', 'campupdate', 'childCamps'));
     }
 
     /**
