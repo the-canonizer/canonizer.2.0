@@ -183,7 +183,7 @@
 
                                 <b>Camp About URL :</b> 
                                 <?php if(isset($data->camp_about_url) && $data->camp_about_url){?>
-                                <a href="<?php echo (( strpos ($data->camp_about_url, 'http') === 0 ) ||( strpos ($data->camp_about_url, 'https') === 0 )) ? $data->camp_about_url : 'http://' . $data->camp_about_url; ?>" target="_blank" >
+                                <a href="<?php echo (( strpos ($data->camp_about_url, 'http') === 0 ) ||( strpos ($data->camp_about_url, 'https') === 0 )) ? $data->camp_about_url : 'http://' . $data->camp_about_url; ?>" target="_blank" class="CmpHistoryPnl_a">
                                   {{ (( strpos ($data->camp_about_url, 'http') === 0 ) ||( strpos ($data->camp_about_url, 'https') === 0 )) ? $data->camp_about_url : 'http://' . $data->camp_about_url  }}
                                 </a>
                                 <?php } ?>
