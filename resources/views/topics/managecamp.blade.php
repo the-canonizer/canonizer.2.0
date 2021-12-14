@@ -70,7 +70,7 @@
                 <label for="parent_camp_num">Parent Camp <span style="color:red">*</span></label>
                 <select  name="parent_camp_num" id="parent_camp_num" class="form-control" <?php if($objection=="objection") { ?> disabled <?php } ?>>
                     @foreach($parentcampsData as $parent)
-					<?php if(($camp->camp_num != $parent->camp_num ) && ($parent->parent_camp_num<=$parentcampnum)) { 
+					<?php if(($camp->camp_num != $parent->camp_num ) && (  !in_array($parent->camp_num, $childCamps))) { 
                     //#787 #861 both
                     //($parent->parent_camp_num<=$parentcampnum) /*siblings and parent both show */
                     //($parent->camp_num<=$parentcampnum) /*only parent show */
