@@ -15,8 +15,8 @@
 
 <div id="camp_subscription_notify"  style="display:none;" class="alert alert-success">
     <div calss="row">
-                <strong>Success!</strong> <span id="subscription_msg" ></span>
-        </div>       
+        <strong>Success!</strong><span id="subscription_msg" ></span>
+    </div>       
 </div>
 
 <?php 

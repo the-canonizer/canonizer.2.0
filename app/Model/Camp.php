@@ -1091,7 +1091,7 @@ class Camp extends Model {
         return $list;
     }
 
-    public static function getCampSubscribers($topic_num,$camp_num){
+    public static function getCampSubscribers($topic_num,$camp_num=1){
         $users_data = [];
         $users = \App\Model\CampSubscription::select('user_id')->where('topic_num','=',$topic_num)
                 ->where('camp_num','=',$camp_num)->get();
@@ -1167,5 +1167,21 @@ class Camp extends Model {
             $parentCampName = $campDetails->camp_name;
         }
         return $parentCampName;
+    }
+
+    /**
+     * By Reena Nalwa Talentelgia
+     * Return Users subscribing that topic directly or through childs
+     */
+    public static function getSubscribersInTopic($topicNum){
+        $users_data = [];
+        $users = \App\Model\CampSubscription::select('*')->where('topic_num','=',$topicNum)
+                ->get();
+        if(count($users)){
+            foreach($users as $user){
+                array_push($users_data, $user->user_id);
+            }
+        }        
+        return $users_data;
     }
 }
