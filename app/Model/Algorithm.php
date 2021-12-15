@@ -405,7 +405,7 @@ class Algorithm{
             ->get();
 
             if ( $ret_camp->count() ) {
-                $num_of_camps_supported++;
+                $num_of_camps_supported = $ret_camp->count();
             }
 
 
