@@ -503,14 +503,16 @@ class TopicController extends Controller {
 
         $parentcampsData = Camp::getAllParentCampNew($camp->topic_num);
 
-        $childCamps = Camp::getAllChildCamps($camp);
+        $childCamps = array_unique(Camp::getAllChildCamps($camp));
 
         $nickNames = Nickname::topicNicknameUsed($camp->topic_num);
 
         $allNicknames = Nickname::orderBy('nick_name', 'ASC')->get();
 
-        return view('topics.managecamp', compact('parentcampsData', 'objection', 'topic', 'camp', 'parentcampnum', 'parentcamp', 'nickNames', 'allNicknames', 'campupdate', 'childCamps'));
+        return view('topics.managecamp', compact('parentcampsData', 'objection', 'topic', 'camp', 'parentcampnum', 'parentcamp', 'nickNames', 'allNicknames', 'campupdate','childCamps'));
     }
+
+
 
     /**
      * Show the form for submiting update to camp statement,object a camp statement.
