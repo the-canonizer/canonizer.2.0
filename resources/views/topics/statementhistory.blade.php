@@ -171,7 +171,10 @@
 						   } else {
 							   $bgcolor ="#4e4ef3;"; //blue
 						   }
-                   $input=$data->value;						   
+                   $input=$data->value;		
+                    if($ifIamSupporter && $interval > 0 && $data->grace_period > 0  && Auth::user()->id != $submitterUserID){
+                            continue;
+                        }				   
 			   ?>
 			    <div class="form-group CmpHistoryPnl" style="background-color:{{ $bgcolor }}; width:100%;">
                   <div class="statement"><b>Statement :</b> 
