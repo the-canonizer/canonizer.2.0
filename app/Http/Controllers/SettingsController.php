@@ -449,7 +449,6 @@ class SettingsController extends Controller
                     } 
                  }    
             }
-
               /** if user is delegating to someone else or is directly supporting  then all the old delegated  supports will be removed #702 **/
             if(isset($myDelegatedSupports) && count($myDelegatedSupports) > 0){
                 foreach ($mysupports as $singleSupport) {
