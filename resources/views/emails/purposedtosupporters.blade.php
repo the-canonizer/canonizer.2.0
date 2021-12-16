@@ -29,7 +29,6 @@
 			 @foreach($data['support_list'] as $support)
 			 	<li>You are directly supporting {!!$support!!}</li>
 			 @endforeach
-			
 			@else
 			<li>You are directly supporting <a href="{{ url('/') . '/' . $link }}">{{ $data['support_camp']}} </a></li>
 			@endif

@@ -65,6 +65,7 @@ Route::post('/change-namespace', 'HomeController@changeNamespace')->name('change
 
 
 Route::get('register', 'Auth\RegisterController@showRegistrationForm');
+Route::get('signup', 'Auth\RegisterController@showRegistrationForm');
 Route::post('register', 'Auth\RegisterController@register');
 Route::get('logout', 'Auth\LoginController@logout');
 //Route::get('register/verify-otp', 'Auth\RegisterController@getOtpForm');

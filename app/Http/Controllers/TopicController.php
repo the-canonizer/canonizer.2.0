@@ -501,14 +501,18 @@ class TopicController extends Controller {
 
         $parentcamp = Camp::campNameWithAncestors($camp, '',$topic->topic_name);
 
-        $parentcampsData = Camp::getAllParentCamp($camp->topic_num);
+        $parentcampsData = Camp::getAllParentCampNew($camp->topic_num);
+
+        $childCamps = array_unique(Camp::getAllChildCamps($camp));
 
         $nickNames = Nickname::topicNicknameUsed($camp->topic_num);
 
         $allNicknames = Nickname::orderBy('nick_name', 'ASC')->get();
 
-        return view('topics.managecamp', compact('parentcampsData', 'objection', 'topic', 'camp', 'parentcampnum', 'parentcamp', 'nickNames', 'allNicknames', 'campupdate'));
+        return view('topics.managecamp', compact('parentcampsData', 'objection', 'topic', 'camp', 'parentcampnum', 'parentcamp', 'nickNames', 'allNicknames', 'campupdate','childCamps'));
     }
+
+
 
     /**
      * Show the form for submiting update to camp statement,object a camp statement.
@@ -675,6 +679,7 @@ class TopicController extends Controller {
             'camp_name.required' => 'Camp name is required.',
             'camp_name.max' => 'Camp name can not be more than 30 characters.',
             'camp_about_url.max' => "Camp's about url can not be more than 1024 characters.",
+            'camp_about_url.regex' => "The camp about url format is invalid. (Example: https://www.example.com?post=1234)",
             'parent_camp_num.required' => 'The parent camp name is required.',
             'objection.required' => 'Objection reason is required.',
             'objection_reason.max' => 'Objection reason can not be more than 100.'
@@ -993,9 +998,9 @@ class TopicController extends Controller {
 			$data['link'] = \App\Model\Camp::getTopicCampUrl($statement->topic_num,1);
             try{
 
-            Mail::to(Auth::user()->email)->bcc(config('app.admin_bcc'))->send(new ThankToSubmitterMail(Auth::user(), $link,$data));
+            //Mail::to(Auth::user()->email)->bcc(config('app.admin_bcc'))->send(new ThankToSubmitterMail(Auth::user(), $link,$data));
             }catch(\Swift_TransportException $e){
-                throw new \Swift_TransportException($e);
+               // throw new \Swift_TransportException($e);
             } 
             // mail to direct supporters on new statement creation
             $directSupporter = Support::getAllDirectSupporters($statement->topic_num, $statement->camp_num);
@@ -1290,48 +1295,48 @@ class TopicController extends Controller {
     private function mailSubscribersAndSupporters($directSupporter,$subscribers,$link, $dataObject){
         $alreadyMailed = [];
         $i=0;
-        foreach ($directSupporter as $supporter) {            
-        $supportData = $dataObject;
-         $user = Nickname::getUserByNickName($supporter->nick_name_id);
-         $alreadyMailed[] = $user->id;
-         $topic = \App\Model\Topic::where('topic_num','=',$supportData['topic_num'])->latest('submit_time')->get();
-         $topic_name_space_id = isset($topic[0]) ? $topic[0]->namespace_id:1;
-         $nickName = \App\Model\Nickname::find($supporter->nick_name_id);
-         $supported_camp = $nickName->getSupportCampList($topic_name_space_id,['nofilter'=>true]);
-         $supported_camp_list = $nickName->getSupportCampListNamesEmail($supported_camp,$supportData['topic_num'],$supportData['camp_num']);
-         $supportData['support_list'] = $supported_camp_list; 
-          $ifalsoSubscriber = Camp::checkifSubscriber($subscribers,$user);
-          if($ifalsoSubscriber){
-            $supportData['also_subscriber'] = 1;
-            $supportData['sub_support_list'] = Camp::getSubscriptionList($user->id,$supportData['topic_num'],$supportData['camp_num']);      
-         }
-         
-         $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
-         try{
-
-         Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new PurposedToSupportersMail($user, $link, $supportData));
-         }catch(\Swift_TransportException $e){
-                        throw new \Swift_TransportException($e);
-                    } 
-        }
-
-        foreach ($subscribers as $usr) {            
-            $subscriberData = $dataObject;
-            $userSub = \App\User::find($usr);
-            if(!in_array($userSub->id, $alreadyMailed,TRUE)){
-                $alreadyMailed[] = $userSub->id;
-                $subscriptions_list = Camp::getSubscriptionList($userSub->id,$subscriberData['topic_num'],$subscriberData['camp_num']);
-                $subscriberData['support_list'] = $subscriptions_list; 
-                $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $userSub->email : config('app.admin_email');
-                $subscriberData['subscriber'] = 1;
-                try{
-
-              Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new PurposedToSupportersMail($userSub, $link, $subscriberData));
-                }catch(\Swift_TransportException $e){
+        if(!empty($directSupporter)) {
+            foreach ($directSupporter as $supporter) {            
+                $supportData = $dataObject;
+                $user = Nickname::getUserByNickName($supporter->nick_name_id);
+                $alreadyMailed[] = $user->id;
+                $topic = \App\Model\Topic::where('topic_num','=',$supportData['topic_num'])->latest('submit_time')->get();
+                $topic_name_space_id = isset($topic[0]) ? $topic[0]->namespace_id:1;
+                $nickName = \App\Model\Nickname::find($supporter->nick_name_id);
+                $supported_camp = $nickName->getSupportCampList($topic_name_space_id,['nofilter'=>true]);
+                $supported_camp_list = $nickName->getSupportCampListNamesEmail($supported_camp,$supportData['topic_num'],$supportData['camp_num']);
+                $supportData['support_list'] = $supported_camp_list; 
+                $ifalsoSubscriber = Camp::checkifSubscriber($subscribers,$user);
+                if($ifalsoSubscriber) {
+                    $supportData['also_subscriber'] = 1;
+                    $supportData['sub_support_list'] = Camp::getSubscriptionList($user->id,$supportData['topic_num'],$supportData['camp_num']);      
+                }
+                 
+                $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
+                   try{
+                    Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new PurposedToSupportersMail($user, $link, $supportData));
+                    }catch(\Swift_TransportException $e){
                         throw new \Swift_TransportException($e);
                     } 
             }
-            
+        }
+        if(!empty($subscribers)){
+            foreach ($subscribers as $usr) {            
+                $subscriberData = $dataObject;
+                $userSub = \App\User::find($usr);
+                if(!in_array($userSub->id, $alreadyMailed,TRUE)) {
+                    $alreadyMailed[] = $userSub->id;
+                    $subscriptions_list = Camp::getSubscriptionList($userSub->id,$subscriberData['topic_num'],$subscriberData['camp_num']);
+                    $subscriberData['support_list'] = $subscriptions_list; 
+                    $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $userSub->email : config('app.admin_email');
+                    $subscriberData['subscriber'] = 1;
+                    try{
+                        Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new PurposedToSupportersMail($userSub, $link, $subscriberData));
+                    }catch(\Swift_TransportException $e){
+                        throw new \Swift_TransportException($e);
+                    } 
+                }
+            }
         }
         return;
     }
