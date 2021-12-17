@@ -61,6 +61,7 @@
                     $currentTime = time();
                     $ifIamDelegatedSupporter = 0;
                     foreach ($camps as $key => $data) {
+                        
                         $liveCamp = \App\Model\Camp::getLiveCamp($data->topic_num,$data->camp_num);
                         $isagreeFlag = false;
                         $isGraceFlag = false;
@@ -173,17 +174,22 @@
                         } else {
                             $bgcolor = "#4e4ef3;"; //blue
                         }
+                      if($ifIamSupporter && $interval > 0 && $data->grace_period > 0  && Auth::user()->id != $submitterUserID){
+                            continue;
+                        }
                         ?>
                         <div class="form-group CmpHistoryPnl" style="background-color:{{ $bgcolor }}">
                             <div>
                                 <b>Camp Name :</b> {{ $data->camp_name }} <br/>
-								 @if(!empty($pCamp))<b>Parent Camp: </b>{{$pCamp->camp_name }}<br>@endif
+								 @if(!empty($pCamp))<b>Parent Camp : </b>{{$pCamp->camp_name }}<br>@endif
                                 <b>Keywords :</b> {{ $data->key_words }} <br/>
                                 <b>Edit summary :</b> {{ $data->note }} <br/>
 
                                 <b>Camp About URL :</b> 
                                 <?php if(isset($data->camp_about_url) && $data->camp_about_url){?>
-                                <a href="<?=$data->camp_about_url; ?>" target="_blank" >{{  $data->camp_about_url }} </a>
+                                <a href="<?php echo (( strpos ($data->camp_about_url, 'http') === 0 ) ||( strpos ($data->camp_about_url, 'https') === 0 )) ? $data->camp_about_url : 'http://' . $data->camp_about_url; ?>" target="_blank" class="CmpHistoryPnl_a">
+                                  {{ (( strpos ($data->camp_about_url, 'http') === 0 ) ||( strpos ($data->camp_about_url, 'https') === 0 )) ? $data->camp_about_url : 'http://' . $data->camp_about_url  }}
+                                </a>
                                 <?php } ?>
                                 
                                 <br/>
@@ -215,10 +221,10 @@
         <?php if ($currentTime < $data->go_live_time && $currentTime >= $data->submit_time && ($ifIamSupporter || $ifIamDelegatedSupporter) ) { ?> 
                                     <a id="object" class="btn btn-historysmt mb-1" href="<?php echo url('manage/camp/' . $data->id . '-objection'); ?>">Object</a>
                                 <?php }else if($currentTime < $data->go_live_time && $currentTime >= $data->submit_time && $ifSupportDelayed){ ?>
-                                    <button id="object" class="btn btn-historysmt mb-1"  disabled>Object &nbsp;<i title="You can not object this camp because you supported this camp after updation was submitted" class="fa fa-info-circle" aria-hidden="true"></i></button>
+                                    <button type="button" onClick="disagreementPopup()" class="btn btn-historysmt mb-1 disable-btn"  >Object &nbsp;<i title="You can not object to this topic change" class="fa fa-info-circle" aria-hidden="true"></i></button>
                                 <?php }else if($currentTime < $data->go_live_time && $currentTime >= $data->submit_time){ ?>
-                                    <button id="object" class="btn btn-historysmt mb-1"  disabled>Object &nbsp;<i title="Only supporter have access to object the camp." class="fa fa-info-circle" aria-hidden="true"></i></button>
-                                <?php } ?>
+                                    <button type="button" onClick="disagreementPopup()"  class="btn btn-historysmt mb-1 disable-btn"  >Object &nbsp;<i title="You can not object to this topic change." class="fa fa-info-circle" aria-hidden="true"></i></button>
+                                <?php } ?> 
                                 <a id="update" class="btn btn-historysmt mb-1" href="<?php echo url('manage/camp/' . $data->id); ?>">Submit Camp Update Based On This</a>		  
                                 <?php
                                   $link = \App\Model\Camp::getTopicCampUrl($data->topic_num,$data->camp_num);

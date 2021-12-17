@@ -23,6 +23,6 @@
     </li>
     <li class="nav-item">
         <a class="nav-link" href="#">
-            <i class="fa fa-fw fa-user"></i>Register or Sign in</a>
+            <i class="fa fa-fw fa-user"></i>Sign up or Sign in</a>
     </li>
 </ul>

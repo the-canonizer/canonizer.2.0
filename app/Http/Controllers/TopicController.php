@@ -235,34 +235,21 @@ class TopicController extends Controller {
 
 
             if (isset($all['namespace']) && $all['namespace'] == 'other') { /* Create new namespace request */
-                //$topic->submitter_nick_id = $all['submitter'];
-
                 $othernamespace = trim($all['create_namespace'], '/');
                 $namespace = new Namespaces();
                 $namespace->parent_id = 0;
                 $namespace->name = '/' .$othernamespace . '/';
-               // $namespace->label = '/' . $othernamespace . '/';
                 $namespace->save();
 
                 //update namespace id
                 $topic->namespace_id = $namespace->id;
                 $topic->update();
-
-                /*
-                  $namespace_request = new NamespaceRequest;
-                  $namespace_request->user_id = Auth::user()->id;
-                  $namespace_request->name = $all['create_namespace'];
-                  $namespace_request->topic_num = $topic->topic_num;
-                  $namespace_request->save();
-                  $topic->namespace_id = 1;
-                  $topic->save(); */
             }
             DB::commit();
 
             Session::flash('success', $message);
 
             if ($eventtype == "CREATE") {
-
                 // send history link in email
                 $link = 'topic-history/' . $topic->topic_num;
 				$data['type'] = "topic";
@@ -281,7 +268,6 @@ class TopicController extends Controller {
                              ->where('topic.objector_nick_id',"=",null)
                              ->latest('topic.submit_time')
                              ->first();
-                //$link = 'topic/' . $topic->topic_num . '/1';
                 $link = 'topic-history/' . $topic->topic_num;             
                 $data['object'] = $liveTopic->topic_name;
                 $nickName = Nickname::getNickName($all['nick_name']);
@@ -300,54 +286,8 @@ class TopicController extends Controller {
                 }catch(\Swift_TransportException $e){
                         throw new \Swift_TransportException($e);
                     } 
-            } else if ($eventtype == "UPDATE") {
-                $directSupporter = Support::getAllDirectSupporters($topic->topic_num);
-                $link_history = 'topic-history/' . $topic->topic_num;
-                $link = 'topic/' . $topic->topic_num . '/' . $topic->camp_num . '?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $topic->go_live_time);
-                $data['object'] = $topic->topic_name;
-                $data['go_live_time'] = $topic->go_live_time;
-                $data['type'] = 'topic : ';
-                $data['typeobject'] = 'topic';
-                //$data['note'] = "";
-                $data['support_camp'] = "Agreement";
-                $data['camp_num'] = 1;
-                $data['topic_num'] = $topic->topic_num;
-                $nickName = Nickname::getNickName($all['nick_name']);
-                $data['nick_name'] = $nickName->nick_name;
-                $data['forum_link'] = 'forum/' . $topic->topic_num . '-' . $topic->topic_name . '/1/threads';
-                $data['subject'] = "Proposed change to " . $topic->topic_name . " submitted";
-                
-                #821 : In review topic name is displaying in Proposed change to topic email
-
-                $liveTopic = Topic::select('topic.*')
-                    ->where('topic.topic_num', $topic->topic_num)
-                    ->where('topic.objector_nick_id',"=",null)
-                    ->where('topic.go_live_time',"<",Carbon::now()->timestamp)
-                    ->latest('topic.submit_time')
-                    ->first();
-                if(!empty($liveTopic)){
-                    $data['object'] = $liveTopic->topic_name;
-                    $data['subject'] = "Proposed change to " . $liveTopic->topic_name . " submitted";
-                }
-                /** #771 issue solved
-                ** sent mail to all direct supporters in case someone updates in the supported topic
-                **/
-                if(!empty($directSupporter)){
-                    
-                    $this->mailSupporters($directSupporter, $link, $data);
-                }
-
-                /** #771 Topic submitter is  getting "proposed changed to topic**/
-                $data['link'] = \App\Model\Camp::getTopicCampUrl($topic->topic_num,1); 
-                try{
-                    Mail::to(Auth::user()->email)->bcc(config('app.admin_bcc'))->send(new ProposedChangeMail(Auth::user(), $link_history,$data));
-                }catch(\Swift_TransportException $e){
-                       throw new \Swift_TransportException($e);
-                }
-
-            }
+            } // #951 removed the update email event from here as we will send email after commit or after one hour refer notify_change or console->command->notifyUser classs 
         } catch (Exception $e) {
-
             DB::rollback();
             Session::flash('error', "Fail to create topic, please try later.");
         }
@@ -430,19 +370,7 @@ class TopicController extends Controller {
 			
 		 $parentcamp = "N/A";	
 		}
-        $wiky = new Wiky;
-
-        //$WikiParser  = new wikiParser;
-        if (count($topic) <= 0) {
-
-            //Session::flash('error', "Topic does not exist.");
-          // return back();
-        }
-        if (count($camp) <= 0) {
-
-            //Session::flash('error', "Camp does not exist.");
-            //return back();
-        }
+        $wiky = new Wiky;        
         //news feeds
         $editFlag = true;
         $news = NewsFeed::where('topic_num', '=', $topicnum)
@@ -508,14 +436,18 @@ class TopicController extends Controller {
 
         $parentcamp = Camp::campNameWithAncestors($camp, '',$topic->topic_name);
 
-        $parentcampsData = Camp::getAllParentCamp($camp->topic_num);
+        $parentcampsData = Camp::getAllParentCampNew($camp->topic_num);
+
+        $childCamps = array_unique(Camp::getAllChildCamps($camp));
 
         $nickNames = Nickname::topicNicknameUsed($camp->topic_num);
 
         $allNicknames = Nickname::orderBy('nick_name', 'ASC')->get();
 
-        return view('topics.managecamp', compact('parentcampsData', 'objection', 'topic', 'camp', 'parentcampnum', 'parentcamp', 'nickNames', 'allNicknames', 'campupdate'));
+        return view('topics.managecamp', compact('parentcampsData', 'objection', 'topic', 'camp', 'parentcampnum', 'parentcamp', 'nickNames', 'allNicknames', 'campupdate','childCamps'));
     }
+
+
 
     /**
      * Show the form for submiting update to camp statement,object a camp statement.
@@ -600,6 +532,7 @@ class TopicController extends Controller {
         return view('topics.camphistory', compact('topic', 'camps', 'parentcampnum', 'onecamp', 'parentcamp', 'wiky', 'ifIamSupporter','submit_time','ifSupportDelayed'));
     }
 
+    
     /**
      * Show camp statement history.
      *
@@ -620,7 +553,9 @@ class TopicController extends Controller {
 
         $parentcampnum = isset($onecamp->parent_camp_num) ? $onecamp->parent_camp_num : 0;
 
+        // $statementHistory = Statement::getHistory($topicnum, $campnum);
         $statement = Statement::getHistory($topicnum, $campnum);
+        // $statement=[];
         $submit_time = (count($statement)) ? $statement[0]->submit_time: null; 
         $nickNames = null;
         $ifIamSupporter = null;
@@ -629,7 +564,21 @@ class TopicController extends Controller {
             $nickNames = Nickname::personNicknameArray();
             $ifIamSupporter = Support::ifIamSupporter($topicnum, $campnum, $nickNames,$submit_time);
             $ifSupportDelayed = Support::ifIamSupporter($topicnum, $campnum, $nickNames,$submit_time, $delayed=true);
-        }
+            // if(count($statementHistory) > 0){
+            //     foreach($statementHistory as $val){
+            //         $submitterUserID = Nickname::getUserIDByNickName($val->submitter_nick_id);
+            //         $submittime = $val->submit_time;
+            //         $starttime = time();
+            //         $endtime = $submittime + 60*60;
+            //         $interval = $endtime - $starttime;
+            //         if($ifIamSupporter && $interval > 0 && $val->grace_period > 0  && Auth::user()->id != $submitterUserID){
+            //            continue;
+            //         }else{
+            //             array_push($statement,$val);
+            //         }
+            //     }
+            // }
+        };
         $wiky = new Wiky;
         return view('topics.statementhistory', compact('topic', 'statement', 'parentcampnum', 'onecamp', 'parentcamp', 'wiky', 'ifIamSupporter','submit_time','ifSupportDelayed'));
     }
@@ -674,7 +623,6 @@ class TopicController extends Controller {
      */
     public function store_camp(Request $request) {
         $all = $request->all();
-       //echo "<pre>"; print_r($all); exit;
         $currentTime = time();
         $messagesVal = [
             'camp_name.regex' => 'Camp name can only contain space and alphanumeric characters.',
@@ -682,6 +630,7 @@ class TopicController extends Controller {
             'camp_name.required' => 'Camp name is required.',
             'camp_name.max' => 'Camp name can not be more than 30 characters.',
             'camp_about_url.max' => "Camp's about url can not be more than 1024 characters.",
+            'camp_about_url.regex' => "The camp about url format is invalid. (Example: https://www.example.com?post=1234)",
             'parent_camp_num.required' => 'The parent camp name is required.',
             'objection.required' => 'Objection reason is required.',
             'objection_reason.max' => 'Objection reason can not be more than 100.'
@@ -847,7 +796,6 @@ class TopicController extends Controller {
                 $user = Nickname::getUserByNickName($all['submitter']);
                 $livecamp = Camp::getLiveCamp($camp->topic_num,$camp->camp_num);
                 $link = 'camp/history/' . $camp->topic_num . '/' . $camp->camp_num;
-                // $link = 'topic/' . $camp->topic_num . '/1';
                 $nickName = Nickname::getNickName($all['nick_name']);
 
                 $data['nick_name'] = $nickName->nick_name;
@@ -858,8 +806,6 @@ class TopicController extends Controller {
                 $data['object_type'] = ""; 
                 $data['object'] = $livecamp->topic->topic_name."/".$livecamp->camp_name;
                 $data['help_link'] = General::getDealingWithDisagreementUrl();
-
-                //$data['type'] = 'camp'; 
                 $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
                 try{
 
@@ -867,32 +813,7 @@ class TopicController extends Controller {
                 }catch(\Swift_TransportException $e){
                         throw new \Swift_TransportException($e);
                     } 
-            } else if ($eventtype == "UPDATE") {
-
-                $directSupporter = Support::getAllDirectSupporters($camp->topic_num, $camp->camp_num);
-                $link = 'camp/history/' . $camp->topic_num . '/' . $camp->camp_num;
-                $data['object'] = $camp->topic->topic_name . ' / ' . $camp->camp_name;
-                $data['support_camp'] = $camp->camp_name;
-                $data['type'] = 'camp : ';
-                $data['typeobject'] = 'camp';
-                $data['go_live_time'] = $camp->go_live_time;
-                $data['note'] = $camp->note;
-                $nickName = Nickname::getNickName($camp->submitter_nick_id);
-                $data['topic_num'] = $camp->topic_num;
-                $data['nick_name'] = $nickName->nick_name;
-                $data['forum_link'] = 'forum/' . $camp->topic_num . '-' . $camp->camp_name . '/' . $camp->camp_num . '/threads';
-                $data['subject'] = "Proposed change to " . $camp->topic->topic_name . ' / ' . $camp->camp_name . " submitted";
-
-                $nickNames = Nickname::personNicknameArray();
-                // $ifIamSingleSupporter = Support::ifIamSingleSupporter($all['topic_num'], $all['camp_num'], $nickNames);
-                // if($ifIamSingleSupporter){
-                //     $subscribers = Camp::getCampSubscribers($camp->topic_num, $camp->camp_num);
-                //     if(isset($subscribers) && count($subscribers) > 0){
-                //         $this->mailSubscribers($subscribers, $link, $data);
-                //     }
-                // }
-                
-            }
+            } // #951 removed the update email event from here as we will send email after commit or after one hour refer notify_change or console->command->notifyUser classs
            
             Session::flash('success', $message);
         } else {
@@ -1000,9 +921,9 @@ class TopicController extends Controller {
 			$data['link'] = \App\Model\Camp::getTopicCampUrl($statement->topic_num,1);
             try{
 
-            Mail::to(Auth::user()->email)->bcc(config('app.admin_bcc'))->send(new ThankToSubmitterMail(Auth::user(), $link,$data));
+            //Mail::to(Auth::user()->email)->bcc(config('app.admin_bcc'))->send(new ThankToSubmitterMail(Auth::user(), $link,$data));
             }catch(\Swift_TransportException $e){
-                throw new \Swift_TransportException($e);
+               // throw new \Swift_TransportException($e);
             } 
             // mail to direct supporters on new statement creation
             $directSupporter = Support::getAllDirectSupporters($statement->topic_num, $statement->camp_num);
@@ -1026,10 +947,7 @@ class TopicController extends Controller {
 
             $user = Nickname::getUserByNickName($all['submitter']);
             $livecamp = Camp::getLiveCamp($statement->topic_num,$statement->camp_num);
-            
-            //$link = 'topic/' . $statement->topic_num . '/1';
             $link = 'statement/history/' . $statement->topic_num . '/' . $statement->camp_num;
-            //$data['object'] = $statement->statement;
             $nickName = Nickname::getNickName($all['nick_name']);
 
             $data['topic_link'] = \App\Model\Camp::getTopicCampUrl($statement->topic_num,$statement->camp_num);
@@ -1047,33 +965,7 @@ class TopicController extends Controller {
             }catch(\Swift_TransportException $e){
                 throw new \Swift_TransportException($e);
             } 
-        } else if ($eventtype == "UPDATE") {
-
-            $directSupporter = Support::getAllDirectSupporters($statement->topic_num, $statement->camp_num);
-             $link = 'statement/history/' . $statement->topic_num . '/' . $statement->camp_num;
-             $livecamp = Camp::getLiveCamp($statement->topic_num,$statement->camp_num);
-             //$link = 'topic/' . $statement->topic_num . '/' . $statement->camp_num . '?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $statement->go_live_time);
-            $dataObject['topic_num'] = $statement->topic_num;
-            $dataObject['camp_num'] = $statement->camp_num;
-            $dataObject['object'] = $livecamp->topic->topic_name . " / " . $livecamp->camp_name;
-            $dataObject['support_camp'] = $livecamp->camp_name;
-            $dataObject['go_live_time'] = $statement->go_live_time;
-            $dataObject['type'] = 'statement : for camp ';
-            $dataObject['typeobject'] = 'statement';
-            $dataObject['note'] = $statement->note;
-            $nickName = Nickname::getNickName($statement->submitter_nick_id);
-            $dataObject['nick_name'] = $nickName->nick_name;
-            $dataObject['forum_link'] = 'forum/' . $statement->topic_num . '-statement/' . $statement->camp_num . '/threads';
-            $dataObject['subject'] = "Proposed change to statement for camp " . $livecamp->topic->topic_name . " / " . $livecamp->camp_name. " submitted";
-            $nickNames = Nickname::personNicknameArray();
-            // $ifIamSingleSupporter = Support::ifIamSingleSupporter($all['topic_num'], $all['camp_num'], $nickNames);
-            // if($ifIamSingleSupporter){
-            //     $subscribers = Camp::getCampSubscribers($statement->topic_num, $statement->camp_num);
-            //     if(isset($subscribers) && count($subscribers) > 0){
-            //         $this->mailSubscribers($subscribers, $link, $dataObject);
-            //     }
-            // }
-        }
+        } // #951 removedthe update email event from here as we will send email after commit or after one hour refer notify_change or console->command->notifyUser classs
         return redirect('statement/history/' . $statement->topic_num . '/' . $statement->camp_num)->with(['success' => $message, 'go_live_time' => $go_live_time]);
     }
 
@@ -1221,7 +1113,6 @@ class TopicController extends Controller {
             $statement->update();
             $directSupporter = Support::getAllDirectSupporters($statement->topic_num, $statement->camp_num);
             $subscribers = Camp::getCampSubscribers($statement->topic_num, $statement->camp_num);
-            // $link = 'statement/history/' . $id . '/' . $statement->camp_num . '?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $statement->go_live_time);
             $link = 'statement/history/' . $statement->topic_num . '/' . $statement->camp_num;
             $livecamp = Camp::getLiveCamp($statement->topic_num,$statement->camp_num);
             $data['object'] = $livecamp->topic->topic_name . " / " . $livecamp->camp_name;
@@ -1236,7 +1127,7 @@ class TopicController extends Controller {
             $data['nick_name'] = $nickName->nick_name;
             $data['forum_link'] = 'forum/' . $statement->topic_num . '-statement/' . $statement->camp_num . '/threads';
             $data['subject'] = "Proposed change to statement for camp " . $livecamp->topic->topic_name . " / " . $livecamp->camp_name. " submitted";
-           $this->mailSubscribersAndSupporters($directSupporter,$subscribers,$link, $data);
+            $this->mailSubscribersAndSupporters($directSupporter,$subscribers,$link, $data);
             return response()->json(['id' => $statement->id, 'message' => 'Your change to statement has been submitted to your supporters.']);
         } else if ($type == 'camp') {
             $camp = Camp::where('id', '=', $id)->first();
@@ -1246,8 +1137,6 @@ class TopicController extends Controller {
             $directSupporter = Support::getAllDirectSupporters($camp->topic_num, $camp->camp_num);
             $subscribers = Camp::getCampSubscribers($camp->topic_num, $camp->camp_num);
             $livecamp = Camp::getLiveCamp($camp->topic_num,$camp->camp_num);
-           
-            //$link = 'camp/history/' . $id . '/' . $camp->camp_num . '?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $camp->go_live_time);
             $link = 'camp/history/' . $livecamp->topic_num . '/' . $livecamp->camp_num;
             $data['object'] = $livecamp->topic->topic_name . ' / ' . $livecamp->camp_name;
             $data['support_camp'] = $camp->camp_name;
@@ -1261,9 +1150,6 @@ class TopicController extends Controller {
             $data['nick_name'] = $nickName->nick_name;
             $data['forum_link'] = 'forum/' . $livecamp->topic_num . '-' . $livecamp->camp_name . '/' . $livecamp->camp_num . '/threads';
             $data['subject'] = "Proposed change to " . $livecamp->topic->topic_name . ' / ' . $livecamp->camp_name . " submitted";
-
-            //$this->mailSupporters($directSupporter, $link, $data);         //mail supporters             
-            //$this->mailSubscribers($subscribers, $link, $data);         // mail subscribers  
             $this->mailSubscribersAndSupporters($directSupporter,$subscribers,$link, $data);  
             return response()->json(['id' => $camp->id, 'message' => 'Your change to camp has been submitted to your supporters.']);
         } else if ($type == 'topic') {
@@ -1273,7 +1159,6 @@ class TopicController extends Controller {
             $topicData->update();
             $directSupporter = Support::getAllDirectSupporters($topic->topic_num);          
             $subscribers = Camp::getCampSubscribers($topic->topic_num, 1);
-             // $link = 'topic/' . $topic->topic_num . '/' . $topic->camp_num . '?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $topic->go_live_time);
             $link = 'topic-history/' . $topic->topic_num;
             $data['object'] = $topic->topic_name;
             $data['support_camp'] = $topic->topic_name;
@@ -1287,8 +1172,7 @@ class TopicController extends Controller {
             $data['nick_name'] = $nickName->nick_name;
             $data['forum_link'] = 'forum/' . $topic->topic_num . '-' . $topic->topic_name . '/1/threads';
             $data['subject'] = "Proposed change to topic " . $topic->topic_name . " submitted";
-
-           // $this->mailSupporters($directSupporter, $link, $data);         //mail supporters  
+            $this->mailSupporters($directSupporter, $link, $data);         //mail supporters  
            //  $this->mailSubscribersAndSupporters($directSupporter,$subscribers,$link, $data);  
            return response()->json(['id' => $topic->id, 'message' => 'Your change to topic has been submitted to your supporters.']);
         }
@@ -1297,48 +1181,48 @@ class TopicController extends Controller {
     private function mailSubscribersAndSupporters($directSupporter,$subscribers,$link, $dataObject){
         $alreadyMailed = [];
         $i=0;
-        foreach ($directSupporter as $supporter) {            
-        $supportData = $dataObject;
-         $user = Nickname::getUserByNickName($supporter->nick_name_id);
-         $alreadyMailed[] = $user->id;
-         $topic = \App\Model\Topic::where('topic_num','=',$supportData['topic_num'])->latest('submit_time')->get();
-         $topic_name_space_id = isset($topic[0]) ? $topic[0]->namespace_id:1;
-         $nickName = \App\Model\Nickname::find($supporter->nick_name_id);
-         $supported_camp = $nickName->getSupportCampList($topic_name_space_id,['nofilter'=>true]);
-         $supported_camp_list = $nickName->getSupportCampListNamesEmail($supported_camp,$supportData['topic_num'],$supportData['camp_num']);
-         $supportData['support_list'] = $supported_camp_list; 
-          $ifalsoSubscriber = Camp::checkifSubscriber($subscribers,$user);
-          if($ifalsoSubscriber){
-            $supportData['also_subscriber'] = 1;
-            $supportData['sub_support_list'] = Camp::getSubscriptionList($user->id,$supportData['topic_num'],$supportData['camp_num']);      
-         }
-         
-         $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
-         try{
-
-         Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new PurposedToSupportersMail($user, $link, $supportData));
-         }catch(\Swift_TransportException $e){
-                        throw new \Swift_TransportException($e);
-                    } 
-        }
-
-        foreach ($subscribers as $usr) {            
-            $subscriberData = $dataObject;
-            $userSub = \App\User::find($usr);
-            if(!in_array($userSub->id, $alreadyMailed,TRUE)){
-                $alreadyMailed[] = $userSub->id;
-                $subscriptions_list = Camp::getSubscriptionList($userSub->id,$subscriberData['topic_num'],$subscriberData['camp_num']);
-                $subscriberData['support_list'] = $subscriptions_list; 
-                $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $userSub->email : config('app.admin_email');
-                $subscriberData['subscriber'] = 1;
-                try{
-
-              Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new PurposedToSupportersMail($userSub, $link, $subscriberData));
-                }catch(\Swift_TransportException $e){
+        if(!empty($directSupporter)) {
+            foreach ($directSupporter as $supporter) {            
+                $supportData = $dataObject;
+                $user = Nickname::getUserByNickName($supporter->nick_name_id);
+                $alreadyMailed[] = $user->id;
+                $topic = \App\Model\Topic::where('topic_num','=',$supportData['topic_num'])->latest('submit_time')->get();
+                $topic_name_space_id = isset($topic[0]) ? $topic[0]->namespace_id:1;
+                $nickName = \App\Model\Nickname::find($supporter->nick_name_id);
+                $supported_camp = $nickName->getSupportCampList($topic_name_space_id,['nofilter'=>true]);
+                $supported_camp_list = $nickName->getSupportCampListNamesEmail($supported_camp,$supportData['topic_num'],$supportData['camp_num']);
+                $supportData['support_list'] = $supported_camp_list; 
+                $ifalsoSubscriber = Camp::checkifSubscriber($subscribers,$user);
+                if($ifalsoSubscriber) {
+                    $supportData['also_subscriber'] = 1;
+                    $supportData['sub_support_list'] = Camp::getSubscriptionList($user->id,$supportData['topic_num'],$supportData['camp_num']);      
+                }
+                 
+                $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
+                   try{
+                    Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new PurposedToSupportersMail($user, $link, $supportData));
+                    }catch(\Swift_TransportException $e){
                         throw new \Swift_TransportException($e);
                     } 
             }
-            
+        }
+        if(!empty($subscribers)){
+            foreach ($subscribers as $usr) {            
+                $subscriberData = $dataObject;
+                $userSub = \App\User::find($usr);
+                if(!in_array($userSub->id, $alreadyMailed,TRUE)) {
+                    $alreadyMailed[] = $userSub->id;
+                    $subscriptions_list = Camp::getSubscriptionList($userSub->id,$subscriberData['topic_num'],$subscriberData['camp_num']);
+                    $subscriberData['support_list'] = $subscriptions_list; 
+                    $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $userSub->email : config('app.admin_email');
+                    $subscriberData['subscriber'] = 1;
+                    try{
+                        Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new PurposedToSupportersMail($userSub, $link, $subscriberData));
+                    }catch(\Swift_TransportException $e){
+                        throw new \Swift_TransportException($e);
+                    } 
+                }
+            }
         }
         return;
     }

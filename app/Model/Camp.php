@@ -461,6 +461,14 @@ class Camp extends Model {
                         ->whereRaw('go_live_time in (select max(go_live_time) from camp where topic_num=' . $topicnum . ' and objector_nick_id is null and go_live_time < "' . $asofdate . '" group by camp_num)')
                         ->orderBy('submit_time', 'camp_name')->groupBy('camp_num')->get();
     }
+
+    public static function getAllParentCampNew($topicnum) {
+        return self::where('topic_num', $topicnum)
+                        ->where('objector_nick_id', '=', NULL)
+                        ->whereRaw('go_live_time in (select max(go_live_time) from camp where topic_num=' . $topicnum . ' and objector_nick_id is null  group by camp_num)')
+                        ->orderBy('submit_time', 'camp_name')->groupBy('camp_num')->get();
+    }
+
 	public static function getAllTopicCamp($topicnum) {
        
           
@@ -502,9 +510,21 @@ class Camp extends Model {
             Camp::$chilcampArray[] = $key1;
             $camparray[] = $camp->camp_num;
             $childCamps =  Camp::where('topic_num', $camp->topic_num)->where('parent_camp_num', $camp->camp_num)->groupBy('camp_num')->latest('submit_time')->get();
-            //echo "<pre>"; print_r($childCamps);
             foreach ($childCamps as $child) {
-                $camparray = array_merge($camparray, self::getAllChildCamps($child));
+                $latestParent = Camp::where('topic_num', $child->topic_num)->where('camp_num', $child->camp_num)->latest('submit_time')->first();
+                if($latestParent->parent_camp_num == $camp->camp_num ){ 
+                    $camparray = array_merge($camparray, self::getAllChildCamps($child)); 
+
+                }
+               /* if($camp->camp_num == 1){
+                    $ifParentChanged = true;
+                }else{
+                    $ifParentChanged =  $latestParent->parent_camp_num == $camp->camp_num;
+                }
+                if($ifParentChanged){
+                    $camparray = array_merge($camparray, self::getAllChildCamps($child)); 
+                }*/
+                
             }
         }
 
@@ -1084,7 +1104,8 @@ class Camp extends Model {
                 $topic = self::getLiveCamp($subs->topic_num,$subs->camp_num,['nofilter'=>true]);
                 $title = preg_replace('/[^A-Za-z0-9\-]/', '-', ($topic->title != '') ? $topic->title : $topic->camp_name);
                 $topic_id =$subs->topic_num . "-" . $title;
-                $link = self::getTopicCampUrl($topic_num,$camp_num); //url('topic/' . $topic_id . '/' . $subs->camp_num);
+                $link = self::getTopicCampUrl($topic_num,$subs->camp_num); //$camp_num change to $subs->camp_num for #934 
+                //url('topic/' . $topic_id . '/' . $subs->camp_num);
                 $list[]= '<a href="'.$link.'">'.$topic->camp_name.'</a>';
             }
         }

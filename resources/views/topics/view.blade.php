@@ -227,7 +227,10 @@ change camps with them."><i class="fa fa-question"></i></a>
                     Camp Name : <?php echo $camp->camp_name;?> <br/>
 					Keywords : <?php echo $camp->key_words;?><br/>
                     @if( $camp->camp_about_url )
-                        Camp About URL : {{ ( strpos ($camp->camp_about_url, 'http') === 0 ) ? $camp->camp_about_url : 'https://' . $camp->camp_about_url  }} <br/>
+                        Camp About URL : <a href="<?php echo (( strpos ($camp->camp_about_url, 'http') === 0 ) ||( strpos ($camp->camp_about_url, 'https') === 0 )) ? $camp->camp_about_url : 'http://' . $camp->camp_about_url; ?>" target="_blank" >
+                        {{ (( strpos ($camp->camp_about_url, 'http') === 0 ) ||( strpos ($camp->camp_about_url, 'https') === 0 )) ? $camp->camp_about_url : 'http://' . $camp->camp_about_url  }} 
+                        </a>
+                        <br/>
                     @else
                         Camp About URL :  <br/>
                     @endif

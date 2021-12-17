@@ -140,6 +140,9 @@ if (!empty($topics)) {
                     } else {
                         $bgcolor = "#4e4ef3;"; //blue
                     }
+                     if($ifIamSupporter && $interval > 0 && $data->grace_period > 0  && Auth::user()->id != $submitterUserID){
+                            continue;
+                        }
                     ?>
                     <div class="form-group CmpHistoryPnl" style="background-color:{{ $bgcolor }}">
                         <div>
@@ -169,9 +172,9 @@ if (!empty($topics)) {
         <?php if ($currentTime < $data->go_live_time && $currentTime >= $data->submit_time && ($ifIamSupporter || $ifIamDelegatedSupporter)) { ?>
                                 <a id="object" class="btn btn-historysmt mb-1" href="<?php echo url('manage/topic/' . $data->id . '-objection'); ?>">Object</a>
                             <?php }else if($currentTime < $data->go_live_time && $currentTime >= $data->submit_time && $ifSupportDelayed){ ?>
-                                <button id="object" class="btn btn-historysmt mb-1"  disabled>Object &nbsp;<i title="You can not object this topic because you supported this camp after updation was submitted" class="fa fa-info-circle" aria-hidden="true"></i></button>
+                                <button type="button" onClick="disagreementPopup()" class="btn btn-historysmt mb-1 disable-btn"  >Object &nbsp;<i title="You can not object to this camp change" class="fa fa-info-circle" aria-hidden="true"></i></button>
                             <?php }else if($currentTime < $data->go_live_time && $currentTime >= $data->submit_time){ ?>
-                                <button id="object" class="btn btn-historysmt mb-1"  disabled>Object &nbsp;<i title="Only supporter have access to object the topic." class="fa fa-info-circle" aria-hidden="true"></i></button>
+                                <button type="button" onClick="disagreementPopup()"  class="btn btn-historysmt mb-1 disable-btn"  >Object &nbsp;<i title="You can not object to this camp change." class="fa fa-info-circle" aria-hidden="true"></i></button>
                             <?php } ?>  
                             <a id="update" class="btn btn-historysmt mb-1" href="<?php echo url('manage/topic/' . $data->id); ?>">Submit Topic Update Based On This</a>		
                             <?php
