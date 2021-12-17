@@ -248,7 +248,7 @@ class SettingsController extends Controller
     public function support($id = null, $campnums = null)
     {
         $as_of_time = time();
-        if (isset($id)) {
+        if (isset($id)) { 
             $topicnumArray = explode("-", $id);
             $topicnum = $topicnumArray[0];
             // get deligated nickname if exist
@@ -479,6 +479,7 @@ class SettingsController extends Controller
                 session()->forget("topic-support-{$topic_num}");
                 session()->forget("topic-support-nickname-{$topic_num}");
                 session()->forget("topic-support-tree-{$topic_num}");
+                Session::save();
                 /* send support added mail to all supporter and subscribers */
                 if($newcamp_mail_flag){
                     $this->emailForSupportAdded($data);   
@@ -514,6 +515,7 @@ class SettingsController extends Controller
                     session()->forget("topic-support-{$topic_num}");
                     session()->forget("topic-support-nickname-{$topic_num}");
                     session()->forget("topic-support-tree-{$topic_num}");
+                    Session::save();
                 }
                 /* send support added mail to all supporter and subscribers */
                 if($newcamp_mail_flag){
@@ -544,6 +546,7 @@ class SettingsController extends Controller
                         session()->forget("topic-support-{$cmp->topic_num}");
                         session()->forget("topic-support-nickname-{$cmp->topic_num}");
                         session()->forget("topic-support-tree-{$cmp->topic_num}");
+                        Session::save();
                     }
                  }                
             }
@@ -583,6 +586,7 @@ class SettingsController extends Controller
                 $result['delegated_user'] = $parentUser->first_name . " " . $parentUser->last_name;
                 $this->mailSubscribersAndSupporters($directSupporter,$subscribers, $link, $result);
             }
+            Session::save();
             Session::flash('success', "Your support update has been submitted successfully.");
             return redirect(\App\Model\Camp::getTopicCampUrl($data['topic_num'],session('campnum')));
         } else {
@@ -1151,8 +1155,8 @@ class SettingsController extends Controller
         if($delegateNickNameId){  //A delegate supporter is removing its support
             $alldirectDelegates = Support::where('topic_num', $topicNum)->where('delegate_nick_name_id', $nickNameId)->where('end', '=', 0)->get();
             $campList = Support::where('topic_num','=',$topicNum)->where('nick_name_id', $nickNameId)->where('end', '=', 0)->pluck('camp_num')->toArray();
-            //Support::where('topic_num', $topicNum)->where('nick_name_id', $nickNameId)->where('end', '=', 0)->update(array('end' => time()));
-            //Support::where('topic_num', $topicNum)->where('delegate_nick_name_id', $nickNameId)->where('end', '=', 0)->update(array('delegate_nick_name_id' => $delegateNickNameId));
+            Support::where('topic_num', $topicNum)->where('nick_name_id', $nickNameId)->where('end', '=', 0)->update(array('end' => time()));
+            Support::where('topic_num', $topicNum)->where('delegate_nick_name_id', $nickNameId)->where('end', '=', 0)->update(array('delegate_nick_name_id' => $delegateNickNameId));
             session()->forget("topic-support-$topicNum");
             session()->forget("topic-support-nickname-$topicNum");
             session()->forget("topic-support-tree-$topicNum");

@@ -134,7 +134,7 @@
 							<?php if(isset($topic->topic_num) && isset($supportedTopic->topic_num) &&  $topic->topic_num==$supportedTopic->topic_num) $lastsupportOrder++;
 								
 							?>
-							<span rel="{{ $support->camp->camp_num }}" class="x-btn remove_camp">X</span>
+							<span rel="{{ $support->camp->camp_num }}" order="{{ $support->support_order }}" delegated="{{ $support->delegate_nick_name_id }}" class="x-btn remove_camp">X</span>
 						
 							</div>
 						</div>
@@ -171,7 +171,7 @@
 							<?php if(isset($topic->topic_num) && isset($supportedTopic->topic_num) &&  $topic->topic_num==$supportedTopic->topic_num) $lastsupportOrder++;
 								
 							?>
-							<span rel="{{$support->camp->camp_num}}" class="x-btn remove_camp">X</span>
+							<span rel="{{$support->camp->camp_num}}" order="{{ $key }}" delegated="{{ $support->delegate_nick_name_id }}" class="x-btn remove_camp">X</span>
 						
 							</div>
 						</div>
@@ -192,7 +192,7 @@
 							<input type="hidden" name="delegated[{{$camp->camp_num}}]" value="{{ $delegate_nick_name_id }}">
 							
 							<b><a href="<?= $url; ?>"><span class="support_order">{{ $key+1}} </span> . {{ $camp->camp_name }} </a></b><br/>
-							<span rel="{{$camp->camp_num}}" class="x-btn remove_camp">X</span>                        
+							<span rel="{{$camp->camp_num}}" order="{{ $key + 1  }}" delegated="{{ $delegate_nick_name_id }}" class="x-btn remove_camp">X</span>                        
 						</div>
 					</div>	
 					@endif 
@@ -209,11 +209,11 @@
 					<div class="row column">
 						<div class="col-sm-12 column">   
 							<div id="positions_0" class="SpCmpBDY  support-sorter-element ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
-								<input type="hidden" class="final_support_order" name="support_order[{{$camp->camp_num}}]" id="support_order_0 }}" value="{{ (isset($support->support_order)) ? $support->support_order + 1 : 1 }}">
+								<input type="hidden" class="final_support_order" name="support_order[{{$camp->camp_num}}]" id="support_order_0" value="{{ (isset($support->support_order)) ? $support->support_order + 1 : 1 }}">
 								<input type="hidden" name="camp[{{$camp->camp_num}}]" value="{{ $camp->camp_num }}">
 								<input type="hidden" name="delegated[{{$camp->camp_num}}]" value="{{ $delegate_nick_name_id }}">
 								<b><a href="<?= $url; ?>"><span class="support_order">{{ ++$lastsupportOrder }} </span> . {{ $camp->camp_name }} </a></b><br/>
-								<span rel="{{ $camp->camp_num }}" class="x-btn remove_camp">X</span>
+								<span rel="{{ $camp->camp_num }}" order="{{ (isset($support->support_order)) ? $support->support_order + 1 : 1 }}" delegated="{{ $delegate_nick_name_id }}"  class="x-btn remove_camp">X</span>
 								<?php $lastsupportOrder++; ?>							
 							</div>
 						</div>
@@ -333,19 +333,23 @@ $('#widget').draggable();
             });
 
 			$('.SupportCmp').delegate('.undo_camp','click',function(){
-				var camp = $(this).attr('rel');
-				undoCampRemove(camp,this);
+				var camp = $(this).attr('rel');	
+				var order = $(this).attr('order');	
+				var delegated = $(this).attr('delegated');				
+				undoCampRemove(camp,this,order,delegated);
 
 			})
 
 			$('#remove_all').click(function(){
 				$('.support-sorter-element').each(function(){
 					var camp = $(this).find('.remove_camp').attr('rel');
+					var order = $(this).find('.remove_camp').attr('order');
+					var delegated = $(this).find('.remove_camp').attr('delegated');
 					var ref = $(this).find('.remove_camp');
 					if($('#remove_all').is(':checked')) { 
 						removeCamp(camp, ref);
 					}else{
-						undoCampRemove(camp,ref)
+						undoCampRemove(camp,ref,order,delegated);
 					}
 				})
 				
@@ -359,18 +363,21 @@ $('#widget').draggable();
         
 		function removeCamp(camp, ref){
 			$('#myTabContent').append('<input type="hidden"  name="removed_camp[]" value="'+camp+'">');
+			$('input[name="support_order['+camp+']"]').remove();
+			$('input[name="camp['+camp+']"]').remove();
+			$('input[name="delegated['+camp+']"]').remove();
 			//$(this).parent(".support-sorter-element").remove();
 			$(ref).parent(".support-sorter-element").addClass('greay-out');
 			$(ref).parent(".support-sorter-element").find('.remove_camp').html('undo');
 			$(ref).parent(".support-sorter-element").find('.remove_camp').removeClass('x-btn');
 			$(ref).parent(".support-sorter-element").find('.remove_camp').addClass('undo_camp');
-			$( ".column" ).find('.support-sorter-element').each(function(i,v){
-				$(v).find('.support_order').text(i+1);
-				$(v).find('.final_support_order').val(i+1);
+			$( ".column" ).find('.x-btn').each(function(i,v){ 
+				$(v).parent(".support-sorter-element").find('.support_order').text(i+1);
+				$(v).parent(".support-sorter-element").find('.final_support_order').val(i+1);
 			});
 			activateClearBtn();
 		}
-		function undoCampRemove(camp,ref){
+		function undoCampRemove(camp,ref,order,delegated){
 			$(ref).parent(".support-sorter-element").removeClass('greay-out');
 			$(ref).parent(".support-sorter-element").find('.remove_camp').html('X');
 			$(ref).parent(".support-sorter-element").find('.remove_camp').removeClass('undo_camp');
@@ -381,6 +388,10 @@ $('#widget').draggable();
 				}
 			});
 
+			$(ref).parent(".support-sorter-element").append('<input type="hidden"  name="support_order['+camp+']" value="'+order+'">');
+			$(ref).parent(".support-sorter-element").append('<input type="hidden"  name="camp['+camp+']" value="'+camp+'">');
+			$(ref).parent(".support-sorter-element").append('<input type="hidden"  name="delegated['+camp+']" value="'+delegated+'">');
+			
 			$('#remove_all').prop('checked', false); // Unchecks it
 		}
 
