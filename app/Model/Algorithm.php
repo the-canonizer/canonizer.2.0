@@ -37,7 +37,7 @@ class Algorithm{
     }
 	
 	/**
-    @return all the available algorithm key values
+        @return all the available algorithm key values
     */
     public static function getKeyList(){
         return array('blind_popularity','mind_experts','computer_science_experts','PhD','christian','secular','mormon','uu','atheist','transhumanist','united_utah','republican','democrat', 'ether','shares','shares_sqrt'
