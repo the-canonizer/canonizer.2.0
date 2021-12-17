@@ -204,7 +204,7 @@
                         <ul class="lowermneu canoalgo">
 
                         <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Components">
-                            <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#canoalgo">
+                            <a class="nav-link nav-link-collapse" data-toggle="collapse" href="#canoalgo">
                                 <span class="nav-link-text">Canonizer</span>
                             </a>
                             <ul class="sidenav-second-level collapse show" id="canoalgo">
@@ -242,7 +242,7 @@
                       <?php } ?>
                     <ul class="lowermneu asof">
                         <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Components">
-                            <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#asof">
+                            <a class="nav-link nav-link-collapse" data-toggle="collapse" href="#asof">
                                 <span class="nav-link-text">As Of</span>
                             </a>
                             <ul class="sidenav-second-level collapse show" id="asof">
