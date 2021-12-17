@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Str;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use App\User;
-use Illuminate\Foundation\Auth\RedirectsUsers;
-use Illuminate\Support\Facades\Mail;
+use Carbon\Carbon;
+use Illuminate\Support\Str;
+use App\Model\ResetPassword;
+use Illuminate\Http\Request;
 use App\Mail\RecoverAccountMail;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Foundation\Auth\RedirectsUsers;
 
 class ResetPasswordController extends Controller {
 
@@ -44,9 +46,27 @@ class ResetPasswordController extends Controller {
     }
 
     public function showResetForm(Request $request, $token = null) {
-        
+        if (empty($token)) {
+            return view('auth.passwords.resetlinkinvalid')->with(['error' => 'Your password reset link is not valid']);
+        }
+
+        $checkToken = ResetPassword::where("id", $token)->first();
+        if (empty($checkToken)) {
+            return view('auth.passwords.resetlinkinvalid')->with(['error' => 'Your password reset link is not valid, or already used']);
+        }
+
+        if (!empty($checkToken->reset_at)) {
+            return view('auth.passwords.resetlinkinvalid')->with(['error' => 'Your password reset link has already been used']);
+        }
+
+        $isExpired = Carbon::now()->gt(Carbon::parse($checkToken->expires_at));
+
+        if ($isExpired) {
+            return view('auth.passwords.resetlinkinvalid')->with(['error' => 'Your password reset link has expired']);
+        }
+
         return view('auth.passwords.reset')->with(
-                        ['email' => base64_decode($token)]
+                        ['token' => $token]
         );
     }
 
@@ -60,11 +80,31 @@ class ResetPasswordController extends Controller {
 
         $this->validate($request, $this->rules(), $this->validationErrorMessages());
 
-        $email = $request->get('email');
+        $token = $request->get('reset_token');
         $password = $request->get('password');
-        $user = User::getByEmail($email);
-        if ($this->resetPassword($user, $password)) {
-			
+        if (empty($token)) {
+            return back()->with(['forgot_password_error' => 'Your password reset link is not valid']);
+        }
+
+        $checkToken = ResetPassword::where("id", $token)->first();
+        if (empty($checkToken)) {
+            return back()->with(['forgot_password_error' => 'Your password reset link is not valid, or already used']);
+        }
+
+        if (!empty($checkToken->reset_at)) {
+            return back()->with(['forgot_password_error' => 'Your password reset link has already been used']);
+        }
+
+        $isExpired = Carbon::now()->gt(Carbon::parse($checkToken->expires_at));
+
+        if ($isExpired) {
+            return back()->with(['forgot_password_error' => 'Your password reset link has expired']);
+        }
+
+        $user = User::getById($checkToken->user_id);
+        $response = $this->resetPassword($user, $password);
+        if ($response) {
+			$checkToken->update(['reset_at' => Carbon::now()]);
 			// send help link in email
 			//$link = 'topic/38-Canonized-help-statement-text/1';
 			$link = 'topic/132-Help/1';
@@ -85,7 +125,6 @@ class ResetPasswordController extends Controller {
      */
     protected function rules() {
         return [
-            'email' => 'required|email',
             'password' => ['required','regex:/^(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^\w\s]).{8,}$/','confirmed'
                 ],
         ];
