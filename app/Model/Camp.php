@@ -179,39 +179,24 @@ class Camp extends Model {
         return $support;
     }
 
-    public function scopeCampNameWithAncestors($query, $camp, $campname = '',$title = '') {
-        $as_of_time = time();
+    public function scopeCampNameWithAncestors($query, $camp, $campname = '',$title = '', $breadcrum = false) {
+      $as_of_time = time();
         if (isset($_REQUEST['asof']) && $_REQUEST['asof'] == 'bydate') {
             $as_of_time = strtotime($_REQUEST['asofdate']);
         }
         if (!empty($camp)) {
-            if ($campname != '') {
-                if($title==''){
-                    $titleAppend      = preg_replace('/[^A-Za-z0-9\-]/', '-', $camp->camp_name);
-                }else{
-                    if($camp->parent_camp_num){
-                            $titleAppend      = preg_replace('/[^A-Za-z0-9\-]/', '-', $camp->camp_name);
-                    }else {
-                       $titleAppend      = preg_replace('/[^A-Za-z0-9\-]/', '-', $title); 
-                    }
-                     
-                }				
-                //$url = url('topic/' . $camp->topic_num . '-'.$titleAppend.'/' . $camp->camp_num);
+            if ($campname != '') { 
                 $url = self::getTopicCampUrl($camp->topic_num,$camp->camp_num);
-                $campname = "<a href='" . $url . "'>" . $camp->camp_name . '</a> / ' . $campname;
-            } else {
-                if($title ==''){
-                        $titleAppend      = preg_replace('/[^A-Za-z0-9\-]/', '-', $camp->camp_name);
-                }else{
-                    if($camp->parent_camp_num){
-                            $titleAppend      = preg_replace('/[^A-Za-z0-9\-]/', '-', $camp->camp_name);
-                    }else {
-                       $titleAppend      = preg_replace('/[^A-Za-z0-9\-]/', '-', $title); 
-                    }
-                }
-				//$url = url('topic/' . $camp->topic_num .'-'.$titleAppend. '/' . $camp->camp_num);
+                if($breadcrum){
+                    $campname = "<a href='" . $url . "'>" . ucfirst($title) . '</a> / ' . ucfirst($campname);
+                }else
+                $campname = "<a href='" . $url . "'>" . ucfirst($camp->camp_name) . '</a> / ' . ucfirst($campname);
+            } else { 
                 $url = self::getTopicCampUrl($camp->topic_num,$camp->camp_num);
-                $campname = "<a href='" . $url . "'>" . $camp->camp_name . '</a>';
+                if($breadcrum){
+                    $campname = "<a href='" . $url . "'>" . ucfirst($camp->camp_name) . '</a>';
+                }else
+                $campname = "<a href='" . $url . "'>" . ucfirst($camp->camp_name) . '</a>';
             }
 
             if (isset($camp) && $camp->parent_camp_num) {
@@ -224,7 +209,7 @@ class Camp extends Model {
                                 ->where('go_live_time', '<=', $as_of_time)
                                 ->orderBy('submit_time', 'DESC')->first();
 
-                return self::campNameWithAncestors($pcamp, $campname,$title);
+                return self::campNameWithAncestors($pcamp, $campname,$title,$breadcrum);
             }
         }
         return $campname;
@@ -1127,7 +1112,7 @@ class Camp extends Model {
         return $list;
     }
 
-    public static function getCampSubscribers($topic_num,$camp_num){
+    public static function getCampSubscribers($topic_num,$camp_num=1){
         $users_data = [];
         $users = \App\Model\CampSubscription::select('user_id')->where('topic_num','=',$topic_num)
                 ->where('camp_num','=',$camp_num)->get();
@@ -1203,5 +1188,21 @@ class Camp extends Model {
             $parentCampName = $campDetails->camp_name;
         }
         return $parentCampName;
+    }
+
+    /**
+     * By Reena Nalwa Talentelgia
+     * Return Users subscribing that topic directly or through childs
+     */
+    public static function getSubscribersInTopic($topicNum){
+        $users_data = [];
+        $users = \App\Model\CampSubscription::select('*')->where('topic_num','=',$topicNum)
+                ->get();
+        if(count($users)){
+            foreach($users as $user){
+                array_push($users_data, $user->user_id);
+            }
+        }        
+        return $users_data;
     }
 }

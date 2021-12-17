@@ -131,8 +131,7 @@ Route::group([ 'middleware' => 'auth'], function() {
     Route::get('settings/sociallinks', [ 'as' => 'settings.sociallinks', 'uses' => 'SettingsController@sociallinks']);
     Route::post('settings/save-ether-address', [ 'as' => 'settings.save-ether-address', 'uses' => 'SettingsController@postSaveEtherAddress']);
     Route::post('statement/agreetochange', 'TopicController@statement_agreetochange');
-    Route::post('graceperiod/notify_change', 'TopicController@notify_change');
-    
+    Route::post('graceperiod/notify_change', 'TopicController@notify_change');    
     //news feed
     Route::get('/addnews/{topicnum}/{campnum}',['as'=>'addnews','uses'=>'NewsFeedController@create']);
     Route::post('/newsfeed/save',['as'=>'newsfeed.save','uses'=>'NewsFeedController@store']);
@@ -142,7 +141,7 @@ Route::group([ 'middleware' => 'auth'], function() {
     Route::post('/camp/add_subscription',['as'=>'camp.subscription','uses'=>'TopicController@add_camp_subscription']);
     Route::post('/deactivateuser',['as'=>'social.deactivateuser','uses'=>'SocialController@deactivateuser']);
     Route::post('/delete_social_link',['as'=>'social.delete_social_link','uses'=>'SocialController@delete']);
-     
+    Route::get('remove/mysupport/{topicnum}/{campnum}/{nickid}', [ 'as' => 'settings.support.remove', 'uses' => 'SettingsController@remove_support']);
 });
 
 Route::get('topic.asp/{id}', [ 'as' => 'topic', 'uses' => 'TopicController@show']);

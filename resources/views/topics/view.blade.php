@@ -15,12 +15,12 @@
 
 <div id="camp_subscription_notify"  style="display:none;" class="alert alert-success">
     <div calss="row">
-                <strong>Success!</strong> <span id="subscription_msg" ></span>
-        </div>       
+        <strong>Success!</strong><span id="subscription_msg" ></span>
+    </div>       
 </div>
 
 <?php 
-if(isset($topic) && count($topic) > 0 ) { ?>
+if(isset($topic) && count($topic) > 0 ) {?>
 
 <div class="camp top-head">
     <h3><b>Topic:</b> {{ $topic->topic_name}}</h3>
@@ -191,7 +191,12 @@ change camps with them."><i class="fa fa-question"></i></a>
             </div>    
             </div>
             <div class="footer">
-               <a id="join_support_camp" class="btn btn-warning" href="<?php echo url('support/'.$url_portion );?>">Directly Join or Manage Support</a>
+                <?php if(isset($ifIamSupporter) && !($ifIamSupporter)){ ?>
+                    <a id="join_support_camp" class="btn btn-warning" href="<?php echo url('support/'.$url_portion );?>">Directly Join and Support</a>
+                <?php }else{ ?>
+                    <a id="join_support_camp" class="btn btn-warning" href="<?php echo url('support/'.$url_portion );?>">Manage Support</a>
+                <?php } ?>
+               
             </div>
         </div>
    
