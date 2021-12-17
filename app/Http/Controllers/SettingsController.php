@@ -857,7 +857,6 @@ class SettingsController extends Controller
         $user = User::find(Auth::user()->id);
         $user->default_algo = $request->input('default_algo');
         $user->save();
-
         session(['defaultAlgo' => $user->default_algo]);
         Session::flash('success', "Your default algorithm preference updated successfully.");
         return redirect()->back();

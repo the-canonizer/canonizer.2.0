@@ -61,6 +61,7 @@
                     $currentTime = time();
                     $ifIamDelegatedSupporter = 0;
                     foreach ($camps as $key => $data) {
+                        
                         $liveCamp = \App\Model\Camp::getLiveCamp($data->topic_num,$data->camp_num);
                         $isagreeFlag = false;
                         $isGraceFlag = false;
@@ -172,6 +173,9 @@
                             $bgcolor = "rgba(0, 128, 0, 0.5);"; // green
                         } else {
                             $bgcolor = "#4e4ef3;"; //blue
+                        }
+                      if($ifIamSupporter && $interval > 0 && $data->grace_period > 0  && Auth::user()->id != $submitterUserID){
+                            continue;
                         }
                         ?>
                         <div class="form-group CmpHistoryPnl" style="background-color:{{ $bgcolor }}">
