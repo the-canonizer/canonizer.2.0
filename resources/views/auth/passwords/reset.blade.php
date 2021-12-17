@@ -3,17 +3,20 @@
 
 
 <div class="page-titlePnl">
-    <h1 class="page-title">Reset New Password</h1>
+    <h1 class="page-title">Reset Password</h1>
+</div>
+<div class="error-section">
+    @if(Session::has('forgot_password_error'))
+        <div class="alert alert-danger">
+            <strong>Error! </strong>{!! Session::get('forgot_password_error') !!} 
+        </div>
+    @endif
 </div>       	
 <div class="right-whitePnl reset-link-sent">
 <div class="col-sm-5 margin-btm-2">
     <form action="{{ url('/reset')}}" method="post">
         <input type="hidden" name="_token" value="{{ csrf_token() }}">
-        <div class="form-group">
-            <label for="email"> Email <span style="color:red">*</span></label>
-            <input type="email" disable name="email" class="form-control" id="email" value="{{ $email }}" placeholder="Email">
-            @if ($errors->has('email')) <p class="help-block">{{ $errors->first('email') }}</p> @endif
-        </div>
+        <input type="hidden" name="reset_token" value="{{ $token }}">
         <div class="form-group">
             <label for="password">Enter New Password <span style="color:red">*</span>
             <div class="pass_info"><i class="fa fa-info-circle" aria-hidden="true"></i>
