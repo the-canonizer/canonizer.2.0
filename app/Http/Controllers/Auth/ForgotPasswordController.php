@@ -4,7 +4,11 @@ namespace App\Http\Controllers\Auth;
 
 use App\User;
 use Validator;
+use Carbon\Carbon;
+use Ramsey\Uuid\Uuid;
 use App\Mail\PhoneOTPMail;
+use Illuminate\Support\Str;
+use App\Model\ResetPassword;
 use Illuminate\Http\Request;
 use App\Mail\PasswordResetMail;
 use App\Mail\OtpVerificationMail;
@@ -73,7 +77,13 @@ class ForgotPasswordController extends Controller {
         }
 
         // send resetlink in email
-        $link = 'resetpassword/' . base64_encode($user->email);
+        $token = Uuid::uuid4();
+        ResetPassword::create([
+            "id" => $token,
+            "user_id" => $user->id,
+            "expires_at" => Carbon::now()->addDays(2)
+        ]);
+        $link = 'resetpassword/' . $token;
         try{
             Mail::to($user->email)->send(new PasswordResetMail($user,$link));
         }catch(\Swift_TransportException $e){
