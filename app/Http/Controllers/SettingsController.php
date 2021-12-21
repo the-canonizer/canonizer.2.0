@@ -601,10 +601,10 @@ class SettingsController extends Controller
          $receiver = (config('app.env') == "production") ? $parentUser->email : config('app.admin_email');
          try{
             Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new NewDelegatedSupporterMail($parentUser, $link, $dataObject));
-         }catch(\Swift_TransportException $e){
-                        throw new \Swift_TransportException($e);
-                        //$response = $e->getMessage() ;
-            } 
+         }catch(\Swift_TransportException $e) {
+            throw new \Swift_TransportException($e);
+            //$response = $e->getMessage() ;
+        } 
              
     }
 
@@ -662,11 +662,10 @@ class SettingsController extends Controller
             if (!in_array($user->id, $alreadyMailed, TRUE)) {
                 $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
                 try{
-
-                Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new NewDelegatedSupporterMail($user, $link, $data));
+                    Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new NewDelegatedSupporterMail($user, $link, $data));
                 }catch(\Swift_TransportException $e){
-                       throw new \Swift_TransportException($e);// $response = $e->getMessage() ;
-                    } 
+                    throw new \Swift_TransportException($e);// $response = $e->getMessage() ;
+                } 
             }
         }
         return;
@@ -1065,9 +1064,35 @@ class SettingsController extends Controller
         session()->forget("topic-support-nickname-$topicNum");
         session()->forget("topic-support-tree-$topicNum");
         Session::save();
+
+        // Prepare data for dispatching to the job (canonizer-service)
+        $topic = Topic::where('topic_num', $topicNum)->get()->last();            
+        $selectedAlgo = 'blind_popularity';
+        if(session('defaultAlgo')) {
+            $selectedAlgo = session('defaultAlgo');
+        }
+
+        $asOf = 'default';
+        if(session('asofDefault')) {
+            $asOf = session('asofDefault');
+        }
+
+        $asOfDefaultDate = time();
+        $canonizerServiceData = [
+            'topic_num' =>  $topicNum,
+            'algorithm' => $selectedAlgo,
+            'asOfDate' => $asOfDefaultDate,
+            'asOf' => $asOf
+        ];
+        // Dispact job when create a camp
+        CanonizerService::dispatch($canonizerServiceData)
+            ->onQueue('canonizer-service')
+            ->unique(Topic::class, $topic->id);
+
         return redirect(\App\Model\Camp::getTopicCampUrl($topicNum ,$campNum));
 
     }
+    
     /**
      * By Reena Nalwa 
      * If delegate supporter is removing its support it well end by promoting its delegates to their place
