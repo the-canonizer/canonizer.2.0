@@ -20,13 +20,10 @@ use App\Model\SupportInstance;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\NewDelegatedSupporterMail;
-use App\Mail\PhoneOTPMail;
-use App\Model\EtherAddresses;
-use App\Model\SocialUser;
-use Hash;
 use App\Mail\PromotedDelegatesMail;
 use App\Mail\PromotedDirectSupporterMail;
-
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Validator;
 
 class SettingsController extends Controller
 {
