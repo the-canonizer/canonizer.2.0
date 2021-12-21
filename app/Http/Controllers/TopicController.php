@@ -327,6 +327,12 @@ class TopicController extends Controller {
                     throw new \Swift_TransportException($e);
                 } 
             } // #951 removed the update email event from here as we will send email after commit or after one hour refer notify_change or console->command->notifyUser classs 
+            else if ($eventtype == "UPDATE") {
+                // Dispatch job while updating a topic
+                CanonizerService::dispatch($canonizerServiceData)
+                    ->onQueue('canonizer-service')
+                    ->unique(Topic::class, $topic->id);
+            }
         } catch (Exception $e) {
             DB::rollback();
             Session::flash('error', "Fail to create topic, please try later.");
@@ -486,8 +492,6 @@ class TopicController extends Controller {
 
         return view('topics.managecamp', compact('parentcampsData', 'objection', 'topic', 'camp', 'parentcampnum', 'parentcamp', 'nickNames', 'allNicknames', 'campupdate','childCamps'));
     }
-
-
 
     /**
      * Show the form for submiting update to camp statement,object a camp statement.
