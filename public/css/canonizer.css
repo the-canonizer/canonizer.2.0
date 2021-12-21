@@ -2069,7 +2069,45 @@ a.verification-link:active {
     text-decoration:underline;
   }
 
-  .CmpHistoryPnl_a:hover{
+  .CmpHistoryPnl_a:hover, .CmpHistoryPnl_a:focus {
     color: black;
     text-decoration:underline;
   }
+
+  @media screen and (max-width: 575px){
+    .nickname-table thead{
+        display: none;
+      
+    }
+    .nickname-table tbody th,
+    .nickname-table tbody td{
+        position: relative;
+        display: flex;
+        padding: 0;
+        word-break: break-word;align-items: center;
+    }
+    .nickname-table tbody tr{
+        border: 1px solid #e9ecef;
+        margin-bottom: 20px;
+        display: flex;
+        flex-flow: column;
+    }
+    .nickname-table tbody tr:last-of-type{
+        margin-bottom: 0;
+    }
+    .nickname-table tbody th::before,
+    .nickname-table tbody td::before{
+        font-weight: bold;
+        max-width: 150px;
+        content: attr(data-content);
+        color: #495057;
+        border-bottom: 1px solid white;
+        background-color: #e9ecef;
+        width: 50%;
+        padding: 0.75rem;
+        margin-right: 10px;
+    }
+    .nickname-table tbody td:last-of-type::before{
+        border-bottom:none;
+    }
+  } 
