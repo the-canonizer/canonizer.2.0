@@ -1086,7 +1086,7 @@ class SettingsController extends Controller
                     if(count($alldirectDelegates) > 0){
                         Support::where('topic_num', $topicNum)->where('camp_num','=', $campNum)->where('delegate_nick_name_id', $nickNameId)->where('end', '=', 0)
                             ->update(['delegate_nick_name_id' => 0]);
-                       // $this->notifyPromotedDirectSupporter($topicNum,$campNum,$nickNameId,$alldirectDelegates);
+                       $this->notifyPromotedDirectSupporter($topicNum,$campNum,$nickNameId,$alldirectDelegates);
                     }
                 }else{ 
                     foreach ($remaingSupportWithHighOrder as $support) {
@@ -1106,7 +1106,8 @@ class SettingsController extends Controller
     public function notifiyPromotedDelegates($topicNum,$campNum='',$nickNameId,$delegateNickNameId,$alldirectDelegates){
         $to = [];
         $topic = Camp::getAgreementTopic($topicNum,['nofilter'=>true]);
-        $camp = Camp::where('topic_num', $topicNum)->where('nick_name_id', '=', $promotedTo)->where('go_live_time', '<=', time())->where('support_order',1)->latest('submit_time')->first();
+        $fistChoiceCamp = Support::where('topic_num', $topicNum)->where('nick_name_id', '=', $delegateNickNameId)->where('end', '=', 0)->where('support_order',1)->first();
+        $camp = Camp::where('topic_num', $topicNum)->where('camp_num', '=', $fistChoiceCamp->camp_num)->where('go_live_time', '<=', time())->latest('submit_time')->first();
         $promotedFrom = Nickname::getNickName($nickNameId);
         $promotedTo = Nickname::getNickName($delegateNickNameId);       
         $data['topic_num'] = $topicNum;
