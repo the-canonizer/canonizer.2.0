@@ -236,10 +236,6 @@ class TopicController extends Controller {
                     }
                     
                     $asOfDefaultDate = time();
-                    if(session('asofdateDefault')) {
-                        $asOfDefaultDate = strtotime(session('asofdateDefault'));
-                    }
-                    
                     $canonizerServiceData = [
                         'topic_num' =>  $topic->topic_num,
                         'algorithm' => $selectedAlgo,
@@ -281,10 +277,6 @@ class TopicController extends Controller {
             }
             
             $asOfDefaultDate = time();
-            if(session('asofdateDefault')) {
-                $asOfDefaultDate = strtotime(session('asofdateDefault'));
-            }
-            
             $canonizerServiceData = [
                 'topic_num' =>  $topic->topic_num,
                 'algorithm' => $selectedAlgo,
@@ -874,10 +866,6 @@ class TopicController extends Controller {
             }
 
             $asOfDefaultDate = time();
-            if(session('asofdateDefault')) {
-                $asOfDefaultDate = strtotime(session('asofdateDefault'));
-            }
-            
             $canonizerServiceData = [
                 'topic_num' =>  $topic->topic_num,
                 'algorithm' => $selectedAlgo,

@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Facades\Util;
+use App\Model\ProcessedJob;
 use Illuminate\Bus\Queueable;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Queue\SerializesModels;
@@ -35,6 +36,8 @@ class CanonizerService implements ShouldQueue
     public function handle()
     {
         
+        $jobPayload = $this->job->getRawBody();
+        
         if(!$this->validateRequestData($this->canonizerData)) {
             return;
         }
@@ -57,11 +60,18 @@ class CanonizerService implements ShouldQueue
         $response = Util::execute('POST', $endpoint, $headers, $requestBody);
         
         if(isset($response)) {
-            if((bool)$response['success'] === true) {
-                Log::info("Success:: ".json_encode($response['data']));  
+            $responseData = json_decode($response, true)['data'];
+            if(isset($responseData)) {
+                $responseData = json_encode($responseData[0]);
             } else {
-                Log::info("Failed:: ");  
+                $responseData = null;
             }
+            ProcessedJob::create([
+                'payload'   => $jobPayload,
+                'status'    => (bool)$response['success'] === true ? 'Success' : 'Failed',
+                'code'      => $response['code'],
+                'response'  => $responseData
+            ]);
         } else {
             Log::error("Empty response, something went wrong");
         }
