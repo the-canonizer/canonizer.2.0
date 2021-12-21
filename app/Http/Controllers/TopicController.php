@@ -322,10 +322,10 @@ class TopicController extends Controller {
 
                 $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
                 try{
-                 Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new ObjectionToSubmitterMail($user, $link, $data));
+                    Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new ObjectionToSubmitterMail($user, $link, $data));
                 }catch(\Swift_TransportException $e){
-                        throw new \Swift_TransportException($e);
-                    } 
+                    throw new \Swift_TransportException($e);
+                } 
             } // #951 removed the update email event from here as we will send email after commit or after one hour refer notify_change or console->command->notifyUser classs 
         } catch (Exception $e) {
             DB::rollback();
@@ -812,7 +812,6 @@ class TopicController extends Controller {
                 $message = "Updation in your changed camp made successfully.";
             }
         } else {
-
             $message = 'Camp created successfully.';
         }
 
@@ -883,7 +882,13 @@ class TopicController extends Controller {
                         throw new \Swift_TransportException($e);
                     } 
             } // #951 removed the update email event from here as we will send email after commit or after one hour refer notify_change or console->command->notifyUser classs
-           
+            else if ($eventtype == "UPDATE") {
+                // Dispact job when create a camp
+                CanonizerService::dispatch($canonizerServiceData)
+                    ->onQueue('canonizer-service')
+                    ->unique(Topic::class, $topic->id);                
+            }
+
             Session::flash('success', $message);
         } else {
             $message = 'Camp not added, please try again.';
