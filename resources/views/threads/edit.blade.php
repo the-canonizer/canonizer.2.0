@@ -3,6 +3,11 @@
 @section('content')
 <div class="right-whitePnl" style="height: 10px; width: 68%;">
   <h3 class="text-center">Edit title of the thread</h3>
+  @if(Session::has('success'))
+    <div class="alert alert-success">
+        <strong>Success! </strong>{{ Session::get('success')}}    
+    </div>
+  @endif
   <form class="form-inline mt-5" method="POST" action="{{ URL::to('/')}}/forum/{{ $topicName }}/{{ $campNum }}/threads/{{ $thread->id }}/edit">
     {{ csrf_field() }}
     <div class="form-group  col-sm-8 mb-2">
@@ -16,6 +21,7 @@
         value="{{ $thread->title }}"
       >
       <input name="thread_id" type="hidden" value={{ $thread->id }} required>
+      <input name="thread_title_name" type="hidden" value="{{ $thread->title }}">
   
     </div>
     <div class="form-group">

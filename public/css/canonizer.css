@@ -2069,7 +2069,7 @@ a.verification-link:active {
     text-decoration:underline;
   }
 
-  .CmpHistoryPnl_a:hover{
+  .CmpHistoryPnl_a:hover, .CmpHistoryPnl_a:focus {
     color: black;
     text-decoration:underline;
   }
