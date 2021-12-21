@@ -1350,6 +1350,7 @@ ul.mainouter li .tp-title {
     padding: 20px;
     font-size: 14px;
     word-break: break-word;
+    color: black;
 }
 
 .CmpHistoryPnl-footer {
@@ -1602,7 +1603,7 @@ span.brsr-name {
     color: #fff;
     padding: 10px 10px 10px 25px;
     width: 180px;
-    left: -10px;
+    left: -84px;
     border-radius: 3px;
     font-size: 12px;
 }
@@ -1611,9 +1612,19 @@ span.brsr-name {
     display: block;
 }
 
-.ps_tooltp li {
+.ps_tooltp li::after{
     list-style: disc;
+    content: "";
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent transparent black transparent;
 }
+
+
 
 .checkbox label {
     font-size: 15px;
@@ -2009,3 +2020,94 @@ a.verification-link:active {
   }
 
   .sub-title {font-size: .7rem}
+
+  .btn-historysmt {
+      max-width: 100%;
+      white-space: unset;
+  }
+  .btn-default{
+    background-color: #efefef;
+    color: #212529;
+  }
+  .social-login-btn {
+    width: 118px;
+    margin-right: 0.5rem;
+    margin-bottom: 1rem
+  }
+  .supported_camp ul {
+      display: grid;
+  }
+  select.namespace-selector{
+      min-width: unset !important;
+      max-width: calc(100% - 10px);
+  }
+
+  /*.mainouter li{*/
+  /*    display: flex;*/
+  /*}*/
+
+  .tp-title {
+      margin-top: unset !important;
+      margin-left: 20px !important;
+  }
+  ul.pagination {
+    flex-wrap: wrap;
+  }
+  ul.pagination li{
+      margin-bottom: 0.25rem;
+  }
+  .tree li.parent_li>span{
+      display: block;
+  }
+
+  .disable-btn, .disable-btn:hover{
+    background-color: #a3a3a3;
+  }
+  
+  .CmpHistoryPnl_a{
+    color: black;
+    text-decoration:underline;
+  }
+
+  .CmpHistoryPnl_a:hover, .CmpHistoryPnl_a:focus {
+    color: black;
+    text-decoration:underline;
+  }
+
+  @media screen and (max-width: 575px){
+    .nickname-table thead{
+        display: none;
+      
+    }
+    .nickname-table tbody th,
+    .nickname-table tbody td{
+        position: relative;
+        display: flex;
+        padding: 0;
+        word-break: break-word;align-items: center;
+    }
+    .nickname-table tbody tr{
+        border: 1px solid #e9ecef;
+        margin-bottom: 20px;
+        display: flex;
+        flex-flow: column;
+    }
+    .nickname-table tbody tr:last-of-type{
+        margin-bottom: 0;
+    }
+    .nickname-table tbody th::before,
+    .nickname-table tbody td::before{
+        font-weight: bold;
+        max-width: 150px;
+        content: attr(data-content);
+        color: #495057;
+        border-bottom: 1px solid white;
+        background-color: #e9ecef;
+        width: 50%;
+        padding: 0.75rem;
+        margin-right: 10px;
+    }
+    .nickname-table tbody td:last-of-type::before{
+        border-bottom:none;
+    }
+  } 

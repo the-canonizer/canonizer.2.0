@@ -15,12 +15,12 @@
 
 <div id="camp_subscription_notify"  style="display:none;" class="alert alert-success">
     <div calss="row">
-                <strong>Success!</strong> <span id="subscription_msg" ></span>
-        </div>       
+        <strong>Success!</strong><span id="subscription_msg" ></span>
+    </div>       
 </div>
 
 <?php 
-if(isset($topic) && count($topic) > 0 ) { ?>
+if(isset($topic) && count($topic) > 0 ) {?>
 
 <div class="camp top-head">
     <h3><b>Topic:</b> {{ $topic->topic_name}}</h3>
@@ -36,8 +36,8 @@ if(isset($topic) && count($topic) > 0 ) { ?>
                 <div class="nf-button-wrap">
                     <a class="rgWT mr-3" href="{{  url('editnews/' . $id . '/' . $parentcampnum)}}"><i class="fa fa-pencil-square-o"></i> Edit News</a>
                     <a onClick="enableDeleteNews()" class="pull-right rgWT delete-news-btn" href="javascript:void(0);"><i class="fa fa-trash"></i> Delete News</a>
-                    @endif
                 </div>
+                @endif
             </h3>
             <div class="content">
                 <ul>
@@ -191,7 +191,12 @@ change camps with them."><i class="fa fa-question"></i></a>
             </div>    
             </div>
             <div class="footer">
-               <a id="join_support_camp" class="btn btn-warning" href="<?php echo url('support/'.$url_portion );?>">Directly Join or Manage Support</a>
+                <?php if(isset($ifIamSupporter) && !($ifIamSupporter)){ ?>
+                    <a id="join_support_camp" class="btn btn-warning" href="<?php echo url('support/'.$url_portion );?>">Directly Join and Support</a>
+                <?php }else{ ?>
+                    <a id="join_support_camp" class="btn btn-warning" href="<?php echo url('support/'.$url_portion );?>">Manage Support</a>
+                <?php } ?>
+               
             </div>
         </div>
    
@@ -221,8 +226,15 @@ change camps with them."><i class="fa fa-question"></i></a>
                 <div class="tree col-sm-12">
                     Camp Name : <?php echo $camp->camp_name;?> <br/>
 					Keywords : <?php echo $camp->key_words;?><br/>
-                    Camp About URL : {{ ( strpos ($camp->camp_about_url, 'http') === 0 ) ? $camp->camp_about_url : 'https://' . $camp->camp_about_url  }} <br/>
-{{--					Camp About URL : <?php echo $camp->camp_about_url;?><br/>--}}
+                    @if( $camp->camp_about_url )
+                        Camp About URL : <a href="<?php echo (( strpos ($camp->camp_about_url, 'http') === 0 ) ||( strpos ($camp->camp_about_url, 'https') === 0 )) ? $camp->camp_about_url : 'http://' . $camp->camp_about_url; ?>" target="_blank" >
+                        {{ (( strpos ($camp->camp_about_url, 'http') === 0 ) ||( strpos ($camp->camp_about_url, 'https') === 0 )) ? $camp->camp_about_url : 'http://' . $camp->camp_about_url  }} 
+                        </a>
+                        <br/>
+                    @else
+                        Camp About URL :  <br/>
+                    @endif
+
 					Camp About Nick Name : <?php echo (isset($camp->nickname->nick_name)) ? $camp->nickname->nick_name : "No nickname associated";?> <br/>
                 </div>
               

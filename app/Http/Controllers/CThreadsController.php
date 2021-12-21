@@ -1,5 +1,5 @@
 <?php
-namespace App\Http\Controllers;
+namespace App\Http\Controllers; 
 
 use DB;
 use App\CThread;
@@ -253,7 +253,7 @@ class CThreadsController extends Controller
         );
 
         // Return Url after creating thread Successfully
-        $return_url = 'forum/'.$topicid.'-'.$topicname.'/'.$campnum.'/threads';
+        $return_url = 'forum/'.$topicid.'-'.$topicname.'/'.$campnum.'/threads'; //create
 
         CommonForumFunctions::sendEmailToSupportersForumThread($topicid, $campnum,
                               $return_url, request('title'), request('nick_name'), $topicname);
@@ -311,7 +311,6 @@ class CThreadsController extends Controller
 
         $campArr = preg_split("/[-]/", $campNum);
         $topicArr = preg_split("/[-]/", $topicName);
-
         $messagesVal = [
             'title.regex' => 'Title must only contain space and alphanumeric characters.',
             'title.required' => 'Title is required.',
@@ -321,21 +320,27 @@ class CThreadsController extends Controller
           $this->validate(
             $request, [
                 'title' => [
-                    'required', 'max:100', Rule::unique('thread')
+                    'required', 'max:100', Rule::unique('thread')->ignore($threadId)
                         ->where(function ($query) use ($campArr, $topicArr) {
                             return $query->where('camp_id', $campArr[0])->where('topic_id', $topicArr[0]);
                         })
                 ],
             ], $messagesVal
           );
-
+          
 
           $title = request('title');
+          $old_title = request('thread_title_name');
           DB::update('update thread set title =?, updated_at = ? where id = ?', [$title, time(), $threadId]);
 
           $return_url = 'forum/'.$topicName.'/'.$campNum.'/threads/'.$threadId.'/edit';
-
-          return redirect($return_url)->with('success', 'Thread title updated.');
+          if (strcmp($title, $old_title) !== 0) {
+            return redirect($return_url)->with('success', 'Thread title updated.');
+          }
+          else {
+            return redirect($return_url);
+          }
+          //return redirect($return_url)->with('success', 'Thread title updated.');
 
     }
  

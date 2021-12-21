@@ -128,39 +128,24 @@ class Camp extends Model {
         return $support;
     }
 
-    public function scopeCampNameWithAncestors($query, $camp, $campname = '',$title = '') {
-        $as_of_time = time();
+    public function scopeCampNameWithAncestors($query, $camp, $campname = '',$title = '', $breadcrum = false) {
+      $as_of_time = time();
         if (isset($_REQUEST['asof']) && $_REQUEST['asof'] == 'bydate') {
             $as_of_time = strtotime($_REQUEST['asofdate']);
         }
         if (!empty($camp)) {
-            if ($campname != '') {
-                if($title==''){
-                    $titleAppend      = preg_replace('/[^A-Za-z0-9\-]/', '-', $camp->camp_name);
-                }else{
-                    if($camp->parent_camp_num){
-                            $titleAppend      = preg_replace('/[^A-Za-z0-9\-]/', '-', $camp->camp_name);
-                    }else {
-                       $titleAppend      = preg_replace('/[^A-Za-z0-9\-]/', '-', $title); 
-                    }
-                     
-                }				
-                //$url = url('topic/' . $camp->topic_num . '-'.$titleAppend.'/' . $camp->camp_num);
+            if ($campname != '') { 
                 $url = self::getTopicCampUrl($camp->topic_num,$camp->camp_num);
-                $campname = "<a href='" . $url . "'>" . $camp->camp_name . '</a> / ' . $campname;
-            } else {
-                if($title ==''){
-                        $titleAppend      = preg_replace('/[^A-Za-z0-9\-]/', '-', $camp->camp_name);
-                }else{
-                    if($camp->parent_camp_num){
-                            $titleAppend      = preg_replace('/[^A-Za-z0-9\-]/', '-', $camp->camp_name);
-                    }else {
-                       $titleAppend      = preg_replace('/[^A-Za-z0-9\-]/', '-', $title); 
-                    }
-                }
-				//$url = url('topic/' . $camp->topic_num .'-'.$titleAppend. '/' . $camp->camp_num);
+                if($breadcrum){
+                    $campname = "<a href='" . $url . "'>" . ucfirst($title) . '</a> / ' . ucfirst($campname);
+                }else
+                $campname = "<a href='" . $url . "'>" . ucfirst($camp->camp_name) . '</a> / ' . ucfirst($campname);
+            } else { 
                 $url = self::getTopicCampUrl($camp->topic_num,$camp->camp_num);
-                $campname = "<a href='" . $url . "'>" . $camp->camp_name . '</a>';
+                if($breadcrum){
+                    $campname = "<a href='" . $url . "'>" . ucfirst($camp->camp_name) . '</a>';
+                }else
+                $campname = "<a href='" . $url . "'>" . ucfirst($camp->camp_name) . '</a>';
             }
 
             if (isset($camp) && $camp->parent_camp_num) {
@@ -173,7 +158,7 @@ class Camp extends Model {
                     ->where('go_live_time', '<=', $as_of_time)
                     ->orderBy('submit_time', 'DESC')->first();
 
-                return self::campNameWithAncestors($pcamp, $campname,$title);
+                return self::campNameWithAncestors($pcamp, $campname,$title,$breadcrum);
             }
         }
         return $campname;
@@ -395,6 +380,13 @@ class Camp extends Model {
                         ->orderBy('submit_time', 'camp_name')->groupBy('camp_num')->get();
     }
 
+    public static function getAllParentCampNew($topicnum) {
+        return self::where('topic_num', $topicnum)
+                        ->where('objector_nick_id', '=', NULL)
+                        ->whereRaw('go_live_time in (select max(go_live_time) from camp where topic_num=' . $topicnum . ' and objector_nick_id is null  group by camp_num)')
+                        ->orderBy('submit_time', 'camp_name')->groupBy('camp_num')->get();
+    }
+
 	public static function getAllTopicCamp($topicnum) {
         return self::where('topic_num', $topicnum)
                         ->where('objector_nick_id', '=', NULL)
@@ -430,9 +422,21 @@ class Camp extends Model {
             Camp::$chilcampArray[] = $key1;
             $camparray[] = $camp->camp_num;
             $childCamps =  Camp::where('topic_num', $camp->topic_num)->where('parent_camp_num', $camp->camp_num)->groupBy('camp_num')->latest('submit_time')->get();
-            //echo "<pre>"; print_r($childCamps);
             foreach ($childCamps as $child) {
-                $camparray = array_merge($camparray, self::getAllChildCamps($child));
+                $latestParent = Camp::where('topic_num', $child->topic_num)->where('camp_num', $child->camp_num)->latest('submit_time')->first();
+                if($latestParent->parent_camp_num == $camp->camp_num ){ 
+                    $camparray = array_merge($camparray, self::getAllChildCamps($child)); 
+
+                }
+               /* if($camp->camp_num == 1){
+                    $ifParentChanged = true;
+                }else{
+                    $ifParentChanged =  $latestParent->parent_camp_num == $camp->camp_num;
+                }
+                if($ifParentChanged){
+                    $camparray = array_merge($camparray, self::getAllChildCamps($child)); 
+                }*/
+                
             }
         }
 
@@ -512,7 +516,9 @@ class Camp extends Model {
         $onecamp = self::getLiveCamp($topic_num, $camp_num);
 
         $childCamps = array_unique(self::getAllChildCamps($onecamp));
-        $mysupports = Support::where('topic_num', $topic_num)->whereIn('camp_num', $childCamps)->whereIn('nick_name_id', $userNicknames)->where('end', '=', 0)->where('delegate_nick_name_id','=',0)->orderBy('support_order', 'ASC')->groupBy('camp_num')->get();
+        // $mysupports = Support::where('topic_num', $topic_num)->whereIn('camp_num', $childCamps)->whereIn('nick_name_id', $userNicknames)->where('end', '=', 0)->where('delegate_nick_name_id','=',0)->orderBy('support_order', 'ASC')->groupBy('camp_num')->get();
+        // Fixes #912: Warning is missing while supporting agreement camp (after delegate support)
+        $mysupports = Support::where('topic_num', $topic_num)->whereIn('camp_num', $childCamps)->whereIn('nick_name_id', $userNicknames)->where('end', '=', 0)->orderBy('support_order', 'ASC')->groupBy('camp_num')->get();
 
         /* if($confirm_support && count($mysupports)) {
 
@@ -1015,14 +1021,15 @@ class Camp extends Model {
                 $topic = self::getLiveCamp($subs->topic_num,$subs->camp_num,['nofilter'=>true]);
                 $title = preg_replace('/[^A-Za-z0-9\-]/', '-', ($topic->title != '') ? $topic->title : $topic->camp_name);
                 $topic_id =$subs->topic_num . "-" . $title;
-                $link = self::getTopicCampUrl($topic_num,$camp_num); //url('topic/' . $topic_id . '/' . $subs->camp_num);
+                $link = self::getTopicCampUrl($topic_num,$subs->camp_num); //$camp_num change to $subs->camp_num for #934 
+                //url('topic/' . $topic_id . '/' . $subs->camp_num);
                 $list[]= '<a href="'.$link.'">'.$topic->camp_name.'</a>';
             }
         }
         return $list;
     }
 
-    public static function getCampSubscribers($topic_num,$camp_num){
+    public static function getCampSubscribers($topic_num,$camp_num=1){
         $users_data = [];
         $users = \App\Model\CampSubscription::select('user_id')->where('topic_num','=',$topic_num)
                 ->where('camp_num','=',$camp_num)->get();
@@ -1100,4 +1107,19 @@ class Camp extends Model {
         return $parentCampName;
     }
 
+    /**
+     * By Reena Nalwa Talentelgia
+     * Return Users subscribing that topic directly or through childs
+     */
+    public static function getSubscribersInTopic($topicNum){
+        $users_data = [];
+        $users = \App\Model\CampSubscription::select('*')->where('topic_num','=',$topicNum)
+                ->get();
+        if(count($users)){
+            foreach($users as $user){
+                array_push($users_data, $user->user_id);
+            }
+        }        
+        return $users_data;
+    }
 }
