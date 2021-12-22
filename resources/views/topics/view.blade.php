@@ -36,8 +36,8 @@ if(isset($topic) && count($topic) > 0 ) {?>
                 <div class="nf-button-wrap">
                     <a class="rgWT mr-3" href="{{  url('editnews/' . $id . '/' . $parentcampnum)}}"><i class="fa fa-pencil-square-o"></i> Edit News</a>
                     <a onClick="enableDeleteNews()" class="pull-right rgWT delete-news-btn" href="javascript:void(0);"><i class="fa fa-trash"></i> Delete News</a>
-                    @endif
                 </div>
+                @endif
             </h3>
             <div class="content">
                 <ul>
