@@ -1147,32 +1147,80 @@ class TopicController extends Controller {
         } else if (isset($data['change_for']) && $data['change_for'] == 'camp') {
             $camp = Camp::where('id', $changeID)->first();
 			if(isset($camp)) {
-            $submitterNickId = $camp->submitter_nick_id;
-            $agreeCount = ChangeAgreeLog::where('topic_num', '=', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('change_id', '=', $changeID)->where('change_for', '=', $data['change_for'])->count();
-            $supporters = Support::getAllSupporters($data['topic_num'], $data['camp_num'],$submitterNickId);
-            if ($agreeCount == $supporters) {
-                //go live                
-                $camp->go_live_time = strtotime(date('Y-m-d H:i:s'));
-                $camp->update();
-                //clear log
-                ChangeAgreeLog::where('topic_num', '=', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('change_id', '=', $changeID)->where('change_for', '=', $data['change_for'])->delete();
-            }
+                $submitterNickId = $camp->submitter_nick_id;
+                $agreeCount = ChangeAgreeLog::where('topic_num', '=', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('change_id', '=', $changeID)->where('change_for', '=', $data['change_for'])->count();
+                $supporters = Support::getAllSupporters($data['topic_num'], $data['camp_num'],$submitterNickId);
+                if ($agreeCount == $supporters) {
+                    //go live                
+                    $camp->go_live_time = strtotime(date('Y-m-d H:i:s'));
+                    $camp->update();
+                    //clear log
+                    ChangeAgreeLog::where('topic_num', '=', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('change_id', '=', $changeID)->where('change_for', '=', $data['change_for'])->delete();
+
+                    // Prepare data for dispatching to the job (canonizer-service)
+                    $selectedAlgo = 'blind_popularity';
+                    if(session('defaultAlgo')) {
+                        $selectedAlgo = session('defaultAlgo');
+                    }
+
+                    $asOf = 'default';
+                    if(session('asofDefault')) {
+                        $asOf = session('asofDefault');
+                    }
+                    
+                    $asOfDefaultDate = time();
+                    $topic = $camp->topic;
+                    $canonizerServiceData = [
+                        'topic_num' =>  $topic->topic_num,
+                        'algorithm' => $selectedAlgo,
+                        'asOfDate' => $asOfDefaultDate,
+                        'asOf' => $asOf
+                    ];
+
+                    // Dispact job when create a default camp
+                    CanonizerService::dispatch($canonizerServiceData)
+                        ->onQueue('canonizer-service')
+                        ->unique(Topic::class, $topic->id);
+                }
 			}	
             Session::flash('success', "Your agreement to camp submitted successfully");
         } else if (isset($data['change_for']) && $data['change_for'] == 'topic') {
             $topic = Topic::where('id', $changeID)->first();
 			if(isset($topic)) { 
-            $submitterNickId = $topic->submitter_nick_id;
-            $agreeCount = ChangeAgreeLog::where('topic_num', '=', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('change_id', '=', $changeID)->where('change_for', '=', $data['change_for'])->count();
-            $supporters = Support::getAllSupporters($data['topic_num'], $data['camp_num'],$submitterNickId);
-            if ($agreeCount == $supporters) {
-                //go live               
-                $topic->go_live_time = strtotime(date('Y-m-d H:i:s'));
-                $topic->update();
-                //clear log
-                ChangeAgreeLog::where('topic_num', '=', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('change_id', '=', $changeID)->where('change_for', '=', $data['change_for'])->delete();
-            }
-		  }	
+                $submitterNickId = $topic->submitter_nick_id;
+                $agreeCount = ChangeAgreeLog::where('topic_num', '=', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('change_id', '=', $changeID)->where('change_for', '=', $data['change_for'])->count();
+                $supporters = Support::getAllSupporters($data['topic_num'], $data['camp_num'],$submitterNickId);
+                if ($agreeCount == $supporters) {
+                    //go live               
+                    $topic->go_live_time = strtotime(date('Y-m-d H:i:s'));
+                    $topic->update();
+                    //clear log
+                    ChangeAgreeLog::where('topic_num', '=', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('change_id', '=', $changeID)->where('change_for', '=', $data['change_for'])->delete();
+                    // Prepare data for dispatching to the job (canonizer-service)
+                    $selectedAlgo = 'blind_popularity';
+                    if(session('defaultAlgo')) {
+                        $selectedAlgo = session('defaultAlgo');
+                    }
+
+                    $asOf = 'default';
+                    if(session('asofDefault')) {
+                        $asOf = session('asofDefault');
+                    }
+                    
+                    $asOfDefaultDate = time();
+                    $canonizerServiceData = [
+                        'topic_num' =>  $topic->topic_num,
+                        'algorithm' => $selectedAlgo,
+                        'asOfDate' => $asOfDefaultDate,
+                        'asOf' => $asOf
+                    ];
+
+                    // Dispact job when create a default camp
+                    CanonizerService::dispatch($canonizerServiceData)
+                        ->onQueue('canonizer-service')
+                        ->unique(Topic::class, $topic->id);
+                }
+		    } 	
           Session::flash('success', "Your agreement to topic submitted successfully");
         }
 
@@ -1206,6 +1254,7 @@ class TopicController extends Controller {
             $data['subject'] = "Proposed change to statement for camp " . $livecamp->topic->topic_name . " / " . $livecamp->camp_name. " submitted";
             $this->mailSubscribersAndSupporters($directSupporter,$subscribers,$link, $data);
             return response()->json(['id' => $statement->id, 'message' => 'Your change to statement has been submitted to your supporters.']);
+        
         } else if ($type == 'camp') {
             $camp = Camp::where('id', '=', $id)->first();
             $camp->grace_period = 0;
@@ -1227,8 +1276,35 @@ class TopicController extends Controller {
             $data['nick_name'] = $nickName->nick_name;
             $data['forum_link'] = 'forum/' . $livecamp->topic_num . '-' . $livecamp->camp_name . '/' . $livecamp->camp_num . '/threads';
             $data['subject'] = "Proposed change to " . $livecamp->topic->topic_name . ' / ' . $livecamp->camp_name . " submitted";
+            
+            // Prepare data for dispatching to the job (canonizer-service)
+            $selectedAlgo = 'blind_popularity';
+            if(session('defaultAlgo')) {
+                $selectedAlgo = session('defaultAlgo');
+            }
+
+            $asOf = 'default';
+            if(session('asofDefault')) {
+                $asOf = session('asofDefault');
+            }
+            
+            $asOfDefaultDate = time();
+            $topic = $camp->topic;
+            $canonizerServiceData = [
+                'topic_num' =>  $topic->topic_num,
+                'algorithm' => $selectedAlgo,
+                'asOfDate' => $asOfDefaultDate,
+                'asOf' => $asOf
+            ];
+
+            // Dispact job when create a default camp
+            CanonizerService::dispatch($canonizerServiceData)
+                ->onQueue('canonizer-service')
+                ->unique(Topic::class, $topic->id);
+            
             $this->mailSubscribersAndSupporters($directSupporter,$subscribers,$link, $data);  
             return response()->json(['id' => $camp->id, 'message' => 'Your change to camp has been submitted to your supporters.']);
+        
         } else if ($type == 'topic') {
             $topicData = Topic::where('id', '=', $id)->first();
             $topic = Topic::getLiveTopic($topicData->topic_num);
@@ -1249,6 +1325,32 @@ class TopicController extends Controller {
             $data['nick_name'] = $nickName->nick_name;
             $data['forum_link'] = 'forum/' . $topic->topic_num . '-' . $topic->topic_name . '/1/threads';
             $data['subject'] = "Proposed change to topic " . $topic->topic_name . " submitted";
+            
+            // Prepare data for dispatching to the job (canonizer-service)
+            $selectedAlgo = 'blind_popularity';
+            if(session('defaultAlgo')) {
+                $selectedAlgo = session('defaultAlgo');
+            }
+
+            $asOf = 'default';
+            if(session('asofDefault')) {
+                $asOf = session('asofDefault');
+            }
+            
+            $asOfDefaultDate = time();
+
+            $canonizerServiceData = [
+                'topic_num' =>  $topic->topic_num,
+                'algorithm' => $selectedAlgo,
+                'asOfDate' => $asOfDefaultDate,
+                'asOf' => $asOf
+            ];
+
+            // Dispact job when create a default camp
+            CanonizerService::dispatch($canonizerServiceData)
+                ->onQueue('canonizer-service')
+                ->unique(Topic::class, $topic->id);
+
             $this->mailSupporters($directSupporter, $link, $data);         //mail supporters  
            //  $this->mailSubscribersAndSupporters($directSupporter,$subscribers,$link, $data);  
            return response()->json(['id' => $topic->id, 'message' => 'Your change to topic has been submitted to your supporters.']);
