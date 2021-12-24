@@ -320,7 +320,7 @@ class CThreadsController extends Controller
           $this->validate(
             $request, [
                 'title' => [
-                    'required', 'max:100', Rule::unique('thread')->ignore($threadId)
+                    'required', 'regex:/^[a-zA-Z0-9\s]+$/', 'max:100', Rule::unique('thread')->ignore($threadId)
                         ->where(function ($query) use ($campArr, $topicArr) {
                             return $query->where('camp_id', $campArr[0])->where('topic_id', $topicArr[0]);
                         })
@@ -333,7 +333,7 @@ class CThreadsController extends Controller
           $old_title = request('thread_title_name');
           DB::update('update thread set title =?, updated_at = ? where id = ?', [$title, time(), $threadId]);
 
-          $return_url = 'forum/'.$topicName.'/'.$campNum.'/threads/'.$threadId.'/edit';
+          $return_url = 'forum/'.$topicName.'/'.$campNum.'/threads/';//.$threadId.'/edit';
           if (strcmp($title, $old_title) !== 0) {
             return redirect($return_url)->with('success', 'Thread title updated.');
           }
