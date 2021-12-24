@@ -184,7 +184,7 @@ class TopicSupport extends Model {
             $nickName = Nickname::where('id',$array['index'])->first();
             $topicData = Topic::getLiveTopic($topicnum,['nofilter'=>true]);
             $namespace_id = (isset($topicData->namespace_id)) ? $topicData->namespace_id:1;
-            $supports = $nickName->getSupportCampList($namespace_id);
+            $supports = $nickName->getSupportCampList($namespace_id, [], $topicnum);
             $support_number = self::getSupportNumber($topicnum,$campnum,$supports);
             $support_txt = ($support_number) ? $support_number.":": '';
 
