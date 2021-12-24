@@ -50,6 +50,7 @@ class CThreadsController extends Controller
         {
             $partcipateFlag = 0;
             $myThreads = 0;
+            $request_by = request('by');
             if (request('by') == 'me') {
                 /**
                  * Filter out the Threads by User
@@ -141,6 +142,7 @@ class CThreadsController extends Controller
                                              ->first()->topic_name,
                 'parentcamp'       => Camp::campNameWithAncestors($camp,'',$topicname),
                 'participateFlag'  => $partcipateFlag,
+                'request_by'  => $request_by,
             ],
             compact('threads')
         );
@@ -227,6 +229,7 @@ class CThreadsController extends Controller
             'title.max' => 'Title can not be more than 100 characters.',
             'nick_name.required' => 'The nick name field is required.',
         ];
+        //993 ticket
           $this->validate(
               $request, [
                   'title'    => 'required|max:100|regex:/^[a-zA-Z0-9\s]+$/',
@@ -320,7 +323,7 @@ class CThreadsController extends Controller
           $this->validate(
             $request, [
                 'title' => [
-                    'required', 'max:100', Rule::unique('thread')->ignore($threadId)
+                    'required', 'regex:/^[a-zA-Z0-9\s]+$/', 'max:100', Rule::unique('thread')->ignore($threadId)
                         ->where(function ($query) use ($campArr, $topicArr) {
                             return $query->where('camp_id', $campArr[0])->where('topic_id', $topicArr[0]);
                         })
@@ -333,7 +336,7 @@ class CThreadsController extends Controller
           $old_title = request('thread_title_name');
           DB::update('update thread set title =?, updated_at = ? where id = ?', [$title, time(), $threadId]);
 
-          $return_url = 'forum/'.$topicName.'/'.$campNum.'/threads/'.$threadId.'/edit';
+          $return_url = 'forum/'.$topicName.'/'.$campNum.'/threads/';//.$threadId.'/edit';
           if (strcmp($title, $old_title) !== 0) {
             return redirect($return_url)->with('success', 'Thread title updated.');
           }
