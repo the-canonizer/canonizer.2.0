@@ -227,6 +227,7 @@ class CThreadsController extends Controller
             'title.max' => 'Title can not be more than 100 characters.',
             'nick_name.required' => 'The nick name field is required.',
         ];
+        //993 ticket
           $this->validate(
               $request, [
                   'title'    => 'required|max:100|regex:/^[a-zA-Z0-9\s]+$/',
