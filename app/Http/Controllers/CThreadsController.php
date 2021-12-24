@@ -50,6 +50,7 @@ class CThreadsController extends Controller
         {
             $partcipateFlag = 0;
             $myThreads = 0;
+            $request_by = request('by');
             if (request('by') == 'me') {
                 /**
                  * Filter out the Threads by User
@@ -141,6 +142,7 @@ class CThreadsController extends Controller
                                              ->first()->topic_name,
                 'parentcamp'       => Camp::campNameWithAncestors($camp,'',$topicname),
                 'participateFlag'  => $partcipateFlag,
+                'request_by'  => $request_by,
             ],
             compact('threads')
         );
