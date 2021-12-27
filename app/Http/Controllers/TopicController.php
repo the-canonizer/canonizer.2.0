@@ -242,31 +242,10 @@ class TopicController extends Controller {
 
             Session::flash('success', $message);
 
-            // Prepare data for dispatching to the job (canonizer-service)
-            $selectedAlgo = 'blind_popularity';
-            if(session('defaultAlgo')) {
-                $selectedAlgo = session('defaultAlgo');
-            }
-
-            $asOf = 'default';
-            if(session('asofDefault')) {
-                $asOf = session('asofDefault');
-            }
-            
-            $asOfDefaultDate = time();
-            $canonizerServiceData = [
-                'topic_num' =>  $topic->topic_num,
-                'algorithm' => $selectedAlgo,
-                'asOfDate' => $asOfDefaultDate,
-                'asOf' => $asOf
-            ];
-
             // Sending mail
             if ($eventtype == "CREATE") {
-                // Dispact job when create a default camp
-                CanonizerService::dispatch($canonizerServiceData)
-                ->onQueue('canonizer-service')
-                ->unique(Topic::class, $topic->id);
+                // Dispatch Job
+                $this->dispatchJob($topic);
                 
                 // send history link in email
                 $link = 'topic-history/' . $topic->topic_num;
@@ -279,10 +258,8 @@ class TopicController extends Controller {
                     throw new \Swift_TransportException($e);
                 }          
             } else if ($eventtype == "OBJECTION") {
-                // Dispact job when create a default camp
-                CanonizerService::dispatch($canonizerServiceData)
-                    ->onQueue('canonizer-service')
-                    ->unique(Topic::class, $topic->id);
+                // Dispatch Job
+                $this->dispatchJob($topic);
 
                 $user = Nickname::getUserByNickName($all['submitter']);
                 $liveTopic = Topic::select('topic.*')
@@ -310,10 +287,8 @@ class TopicController extends Controller {
                 } 
             } // #951 removed the update email event from here as we will send email after commit or after one hour refer notify_change or console->command->notifyUser classs 
             else if ($eventtype == "UPDATE") {
-                // Dispatch job while updating a topic
-                CanonizerService::dispatch($canonizerServiceData)
-                    ->onQueue('canonizer-service')
-                    ->unique(Topic::class, $topic->id);
+                // Dispatch Job
+                $this->dispatchJob($topic);
             }
         } catch (Exception $e) {
             DB::rollback();
@@ -805,30 +780,9 @@ class TopicController extends Controller {
             Session::flash('test_case_success', 'true');
             $topic = $camp->topic;
             
-            // Prepare data for dispatching to the job (canonizer-service)
-            $selectedAlgo = 'blind_popularity';
-            if(session('defaultAlgo')) {
-                $selectedAlgo = session('defaultAlgo');
-            }
-
-            $asOf = 'default';
-            if(session('asofDefault')) {
-                $asOf = session('asofDefault');
-            }
-
-            $asOfDefaultDate = time();
-            $canonizerServiceData = [
-                'topic_num' =>  $topic->topic_num,
-                'algorithm' => $selectedAlgo,
-                'asOfDate' => $asOfDefaultDate,
-                'asOf' => $asOf
-            ];
-
             if ($eventtype == "CREATE") {
-                // Dispact job when create a camp
-                CanonizerService::dispatch($canonizerServiceData)
-                    ->onQueue('canonizer-service')
-                    ->unique(Topic::class, $topic->id);
+                // Dispatch Job
+                $this->dispatchJob($topic);
 
                 // send history link in email
                 $link = 'camp/history/' . $camp->topic_num . '/' . $camp->camp_num;
@@ -843,10 +797,8 @@ class TopicController extends Controller {
                     throw new \Swift_TransportException($e);
                 } 
             } else if ($eventtype == "OBJECTION") {
-                // Dispact job when create a camp
-                CanonizerService::dispatch($canonizerServiceData)
-                    ->onQueue('canonizer-service')
-                    ->unique(Topic::class, $topic->id);
+                // Dispatch Job
+                $this->dispatchJob($topic);
 
                 $user = Nickname::getUserByNickName($all['submitter']);
                 $livecamp = Camp::getLiveCamp($camp->topic_num,$camp->camp_num);
@@ -869,10 +821,8 @@ class TopicController extends Controller {
                     } 
             } // #951 removed the update email event from here as we will send email after commit or after one hour refer notify_change or console->command->notifyUser classs
             else if ($eventtype == "UPDATE") {
-                // Dispact job when create a camp
-                CanonizerService::dispatch($canonizerServiceData)
-                    ->onQueue('canonizer-service')
-                    ->unique(Topic::class, $topic->id);                
+                // Dispatch Job
+                $this->dispatchJob($topic);              
             }
 
             Session::flash('success', $message);
@@ -1138,31 +1088,9 @@ class TopicController extends Controller {
                     $camp->update();
                     //clear log
                     ChangeAgreeLog::where('topic_num', '=', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('change_id', '=', $changeID)->where('change_for', '=', $data['change_for'])->delete();
-
-                    // Prepare data for dispatching to the job (canonizer-service)
-                    $selectedAlgo = 'blind_popularity';
-                    if(session('defaultAlgo')) {
-                        $selectedAlgo = session('defaultAlgo');
-                    }
-
-                    $asOf = 'default';
-                    if(session('asofDefault')) {
-                        $asOf = session('asofDefault');
-                    }
-                    
-                    $asOfDefaultDate = time();
                     $topic = $camp->topic;
-                    $canonizerServiceData = [
-                        'topic_num' =>  $topic->topic_num,
-                        'algorithm' => $selectedAlgo,
-                        'asOfDate' => $asOfDefaultDate,
-                        'asOf' => $asOf
-                    ];
-
-                    // Dispact job when create a default camp
-                    CanonizerService::dispatch($canonizerServiceData)
-                        ->onQueue('canonizer-service')
-                        ->unique(Topic::class, $topic->id);
+                    // Dispatch Job
+                    $this->dispatchJob($topic);
                 }
 			}	
             Session::flash('success', "Your agreement to camp submitted successfully");
@@ -1177,30 +1105,9 @@ class TopicController extends Controller {
                     $topic->go_live_time = strtotime(date('Y-m-d H:i:s'));
                     $topic->update();
                     //clear log
-                    ChangeAgreeLog::where('topic_num', '=', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('change_id', '=', $changeID)->where('change_for', '=', $data['change_for'])->delete();
-                    // Prepare data for dispatching to the job (canonizer-service)
-                    $selectedAlgo = 'blind_popularity';
-                    if(session('defaultAlgo')) {
-                        $selectedAlgo = session('defaultAlgo');
-                    }
-
-                    $asOf = 'default';
-                    if(session('asofDefault')) {
-                        $asOf = session('asofDefault');
-                    }
-                    
-                    $asOfDefaultDate = time();
-                    $canonizerServiceData = [
-                        'topic_num' =>  $topic->topic_num,
-                        'algorithm' => $selectedAlgo,
-                        'asOfDate' => $asOfDefaultDate,
-                        'asOf' => $asOf
-                    ];
-
-                    // Dispact job when create a default camp
-                    CanonizerService::dispatch($canonizerServiceData)
-                        ->onQueue('canonizer-service')
-                        ->unique(Topic::class, $topic->id);
+                    ChangeAgreeLog::where('topic_num', '=', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('change_id', '=', $changeID)->where('change_for', '=', $data['change_for'])->delete(); 
+                    // Dispatch Job
+                    $this->dispatchJob($topic);
                 }
 		    } 	
           Session::flash('success', "Your agreement to topic submitted successfully");
@@ -1259,30 +1166,9 @@ class TopicController extends Controller {
             $data['forum_link'] = 'forum/' . $livecamp->topic_num . '-' . $livecamp->camp_name . '/' . $livecamp->camp_num . '/threads';
             $data['subject'] = "Proposed change to " . $livecamp->topic->topic_name . ' / ' . $livecamp->camp_name . " submitted";
             
-            // Prepare data for dispatching to the job (canonizer-service)
-            $selectedAlgo = 'blind_popularity';
-            if(session('defaultAlgo')) {
-                $selectedAlgo = session('defaultAlgo');
-            }
-
-            $asOf = 'default';
-            if(session('asofDefault')) {
-                $asOf = session('asofDefault');
-            }
-            
-            $asOfDefaultDate = time();
             $topic = $camp->topic;
-            $canonizerServiceData = [
-                'topic_num' =>  $topic->topic_num,
-                'algorithm' => $selectedAlgo,
-                'asOfDate' => $asOfDefaultDate,
-                'asOf' => $asOf
-            ];
-
-            // Dispact job when create a default camp
-            CanonizerService::dispatch($canonizerServiceData)
-                ->onQueue('canonizer-service')
-                ->unique(Topic::class, $topic->id);
+            // Dispatch Job
+            $this->dispatchJob($topic);
             
             $this->mailSubscribersAndSupporters($directSupporter,$subscribers,$link, $data);  
             return response()->json(['id' => $camp->id, 'message' => 'Your change to camp has been submitted to your supporters.']);
@@ -1308,30 +1194,8 @@ class TopicController extends Controller {
             $data['forum_link'] = 'forum/' . $topic->topic_num . '-' . $topic->topic_name . '/1/threads';
             $data['subject'] = "Proposed change to topic " . $topic->topic_name . " submitted";
             
-            // Prepare data for dispatching to the job (canonizer-service)
-            $selectedAlgo = 'blind_popularity';
-            if(session('defaultAlgo')) {
-                $selectedAlgo = session('defaultAlgo');
-            }
-
-            $asOf = 'default';
-            if(session('asofDefault')) {
-                $asOf = session('asofDefault');
-            }
-            
-            $asOfDefaultDate = time();
-
-            $canonizerServiceData = [
-                'topic_num' =>  $topic->topic_num,
-                'algorithm' => $selectedAlgo,
-                'asOfDate' => $asOfDefaultDate,
-                'asOf' => $asOf
-            ];
-
-            // Dispact job when create a default camp
-            CanonizerService::dispatch($canonizerServiceData)
-                ->onQueue('canonizer-service')
-                ->unique(Topic::class, $topic->id);
+            // Dispatch Job
+            $this->dispatchJob($topic);
 
             $this->mailSupporters($directSupporter, $link, $data);         //mail supporters  
            //  $this->mailSubscribersAndSupporters($directSupporter,$subscribers,$link, $data);  
@@ -1407,6 +1271,7 @@ class TopicController extends Controller {
         }
         return;
     }
+
     private function mailSubscribers($subscribers, $link, $data) {
         foreach ($subscribers as $user) {
             $user = \App\User::find($user);
@@ -1458,4 +1323,28 @@ class TopicController extends Controller {
          
     }
 
+    private function dispatchJob($topic) {
+        // Prepare data for dispatching to the job (canonizer-service)
+        $selectedAlgo = 'blind_popularity';
+        if(session('defaultAlgo')) {
+            $selectedAlgo = session('defaultAlgo');
+        }
+
+        $asOf = 'default';
+        if(session('asofDefault')) {
+            $asOf = session('asofDefault');
+        }
+        
+        $asOfDefaultDate = time();
+        $canonizerServiceData = [
+            'topic_num' =>  $topic->topic_num,
+            'algorithm' => $selectedAlgo,
+            'asOfDate' => $asOfDefaultDate,
+            'asOf' => $asOf
+        ];
+        // Dispact job when create a default camp
+        CanonizerService::dispatch($canonizerServiceData)
+        ->onQueue('canonizer-service')
+        ->unique(Topic::class, $topic->id);
+    }
 }
