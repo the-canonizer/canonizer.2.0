@@ -24,6 +24,7 @@ class CanonizerLoginPage(Page):
 
         self.hover(*HomePageIdentifiers.LOGIN)
         self.find_element(*HomePageIdentifiers.LOGIN).click()
+
         return CanonizerLoginPage(self.driver)
 
     def enter_email(self, user):

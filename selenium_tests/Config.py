@@ -29,8 +29,8 @@ else:
     exit(1)
 # Login Page Configuration Parameters
 
-DEFAULT_USER = "rupali.chavan9860@gmail.com"
-DEFAULT_PASS = "Rupali@12345"
+DEFAULT_USER = "pooja.khatri@zibtek.in"
+DEFAULT_PASS = "Pooja@1234"
 #DEFAULT_USER = "r_canonizer_user@yopmail.com"
 #DEFAULT_PASS = "Rupali@12345"
 DEFAULT_INVALID_USER = 'invaliduser@gmail.com'
@@ -75,5 +75,8 @@ DEFAULT_CONFIRM_PASSWORD = "Test@12345"
 DEF_NICK_NAME = "Rupali C"
 
 
+# Create New Thread Configure Parameters
+DEFAULT_THREAD_NAME = "Test Thread Name"
+DUPLICATE_THREAD_NAME = "Test Duplicate Thread Name"
 
 print(DEFAULT_CHROME_DRIVER_LOCATION)

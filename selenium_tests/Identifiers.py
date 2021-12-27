@@ -2,7 +2,6 @@ from builtins import object
 
 from selenium.webdriver.common.by import By
 
-
 """
 Objects are Separated in this module
  - ID is the preferable choice as it is unique in a web page
@@ -16,12 +15,12 @@ class HomePageIdentifiers(object):
     """
     This Class holds the Home Page Element Identifiers.
     """
-    BODY            = (By.ID, 'mainNav')
-    LOGIN           = (By.XPATH, '//*[@id="navbarResponsive"]/ul[1]/li[2]/a[2]')
-    REGISTER        = (By.XPATH, '//*[@id="navbarResponsive"]/ul[1]/li[2]/a[3]')
+    BODY = (By.ID, 'mainNav')
+    LOGIN = (By.XPATH, '//*[@id="navbarResponsive"]/ul[1]/li[2]/a[2]')
+    REGISTER = (By.XPATH, '//*[@id="navbarResponsive"]/ul[1]/li[2]/a[3]')
     WHATISCANONIZER = (By.XPATH, '//*[@id="exampleAccordion"]/ul[1]/li[2]/a')
     WHATISCANONIZERHEADING = (By.XPATH, '//*[@id="exampleAccordion"]/ul[1]/li[1]/a/span')
-    LOADALLTOPICS   = (By.ID, 'loadtopic')
+    LOADALLTOPICS = (By.ID, 'loadtopic')
     CREATE_NEW_CAMP = (By.XPATH, '//*[@id="exampleAccordion"]/ul[1]/li[4]/a/span')
     UPLOADFILE = (By.XPATH, '//*[@id="exampleAccordion"]/ul[1]/li[4]/a/span')
     WHITE_PAPER = (By.XPATH, '//*[@id="exampleAccordion"]/ul[1]/li[6]/a/span')
@@ -48,11 +47,11 @@ class LoginPageIdentifiers(object):
     """
     Class to holds the Login, Logout and Forgot Password Page Identifiers Path
     """
-    EMAIL         = (By.ID, 'email')
-    PASSWORD      = (By.ID, 'password')
-    SUBMIT        = (By.ID, 'submit')
+    EMAIL = (By.ID, 'email')
+    PASSWORD = (By.ID, 'password')
+    SUBMIT = (By.ID, 'submit')
     ERROR_MESSAGE = (By.XPATH, '//*[@id="login_form"]/div[1]/p')
-    SIGNUPNOW     = (By.XPATH, '/html/body/div/div[2]/div[3]/div/a')
+    SIGNUPNOW = (By.XPATH, '/html/body/div/div[2]/div[3]/div/a')
     ERROR_EMAIL = (By.XPATH, '//*[@id="login_form"]/div[1]/p')
     ERROR_PASSWORD = (By.XPATH, '/html/body/div/div[2]/div[1]/form/div[2]/p')
     EMAIL_ASTRK = (By.XPATH, '/html/body/div/div[2]/div[1]/form/div[1]/label/span')
@@ -76,25 +75,25 @@ class RegistrationPageIdentifiers(object):
     """
     This class holds the User Registration Page Identifiers
     """
-    FIRST_NAME       = (By.ID, 'firstname')
+    FIRST_NAME = (By.ID, 'firstname')
     FIRST_NAME_ASTRK = (By.XPATH, '/html/body/div[1]/div[2]/div[1]/form/div[1]/label/span')
-    MIDDLE_NAME      = (By.ID, 'middle_name')
-    LAST_NAME        = (By.ID, 'lastname')
-    LAST_NAME_ASTRK  = (By.XPATH, '/html/body/div[1]/div[2]/div[1]/form/div[3]/label/span')
-    REGISTER         = (By.XPATH, '//*[@id="navbarResponsive"]/ul[1]/li[2]/a[3]')
-    EMAIL            = (By.ID, 'email')
-    EMAIL_ASTRK      = (By.XPATH, '/html/body/div[1]/div[2]/div[1]/form/div[4]/label/span')
-    PASSWORD         = (By.ID, 'password')
-    PASSWORD_ASTRK   = (By.XPATH, '/html/body/div[1]/div[2]/div[1]/form/div[5]/label/span')
+    MIDDLE_NAME = (By.ID, 'middle_name')
+    LAST_NAME = (By.ID, 'lastname')
+    LAST_NAME_ASTRK = (By.XPATH, '/html/body/div[1]/div[2]/div[1]/form/div[3]/label/span')
+    REGISTER = (By.XPATH, '//*[@id="navbarResponsive"]/ul[1]/li[2]/a[3]')
+    EMAIL = (By.ID, 'email')
+    EMAIL_ASTRK = (By.XPATH, '/html/body/div[1]/div[2]/div[1]/form/div[4]/label/span')
+    PASSWORD = (By.ID, 'password')
+    PASSWORD_ASTRK = (By.XPATH, '/html/body/div[1]/div[2]/div[1]/form/div[5]/label/span')
     CONFIRM_PASSWORD = (By.ID, 'pwd_confirm')
     CNFM_PSSWD_ASTRK = (By.XPATH, '/html/body/div[1]/div[2]/div[1]/form/div[6]/label/span')
-    LOGINOPTION      = (By.XPATH, '/html/body/div/div[2]/div[3]/div/a')
-    CREATE_ACCOUNT   = (By.XPATH, '/html/body/div[1]/div[2]/div/form/button')
+    LOGINOPTION = (By.XPATH, '/html/body/div/div[2]/div[3]/div/a')
+    CREATE_ACCOUNT = (By.XPATH, '/html/body/div[1]/div[2]/div/form/button')
     ERROR_FIRST_NAME = (By.XPATH, '/html/body/div[1]/div[2]/div[1]/form/div[1]/p')
     ERROR_MIDDLE_NAME = (By.XPATH, '/html/body/div/div[2]/div[1]/form/div[2]/p')
-    ERROR_LAST_NAME  = (By.XPATH, '/html/body/div[1]/div[2]/div/form/div[3]/p')
-    ERROR_EMAIL      = (By.XPATH, '/html/body/div/div[2]/div[1]/form/div[4]/p')
-    ERROR_PASSWORD   = (By.XPATH, '/html/body/div/div[2]/div[1]/form/div[5]/p[2]')
+    ERROR_LAST_NAME = (By.XPATH, '/html/body/div[1]/div[2]/div/form/div[3]/p')
+    ERROR_EMAIL = (By.XPATH, '/html/body/div/div[2]/div[1]/form/div[4]/p')
+    ERROR_PASSWORD = (By.XPATH, '/html/body/div/div[2]/div[1]/form/div[5]/p[2]')
     ERROR_DUPLICATE_EMAIL = (By.XPATH, '/html/body/div/div[2]/div[1]/form/div[4]/p')
     CAPTCHA = (By.ID, 'CaptchaCode')
     ERROR_CAPTCHA = (By.XPATH, '/html/body/div/div[2]/div[1]/form/div[7]/p')
@@ -138,7 +137,7 @@ class HelpIdentifiers(object):
     Class to hold the Help Page Identifiers
     """
     HELP = (By.XPATH, '//*[@id="exampleAccordion"]/ul[1]/li[5]/a/span')
-    #HELP = (By.XPATH, '//*[@id="exampleAccordion"]/ul[1]/li[6]/a/span')
+    # HELP = (By.XPATH, '//*[@id="exampleAccordion"]/ul[1]/li[6]/a/span')
     STEPS_TO_CREATE_A_NEW_TOPIC = (By.LINK_TEXT, 'Steps to create a new topic')
     DEALING_WITH_DISAGREEMENTS = (By.LINK_TEXT, 'Dealing with disagreement')
     WIKI_MARKUP_INFORMATION = (By.LINK_TEXT, 'Wiki markup and file upload information')
@@ -174,18 +173,18 @@ class CreateNewTopicPageIdentifiers(object):
     """
     Class to hold the Create New Topic Page Identifiers
     """
-    CREATE_NEW_TOPIC    = (By.XPATH, '//*[@id="exampleAccordion"]/ul[1]/li[3]/a/span')
-    NICK_NAME           = (By.ID, 'nick_name')
-    TOPIC_NAME          = (By.ID, 'topic_name')
-    NAMESPACE           = (By.ID, 'namespace')
-    NOTE                = (By.ID, 'note')
-    ERROR_NICK_NAME     = (By.XPATH, '/html/body/div[1]/div[2]/div/div/form/div[1]/p')
-    ERROR_TOPIC_NAME    = (By.XPATH, '/html/body/div[1]/div[2]/div/div/form/div[2]/p')
-    CREATETOPIC         = (By.ID, 'submit')
-    ADDNEWNICKNAME      = (By.XPATH, '/html/body/div[1]/div[2]/div/div/form/div[1]/a')
-    NICK_NAME_ASTRK     = (By.XPATH, '/html/body/div[1]/div[2]/div/div/form/div[1]/label/span')
-    TOPIC_NAME_ASTRK    = (By.XPATH, '/html/body/div[1]/div[2]/div/div/form/div[2]/label/span')
-    NAMESPACE_ASTRK     = (By.XPATH, '/html/body/div[1]/div[2]/div/div/form/div[3]/label/span')
+    CREATE_NEW_TOPIC = (By.XPATH, '//*[@id="exampleAccordion"]/ul[1]/li[3]/a/span')
+    NICK_NAME = (By.ID, 'nick_name')
+    TOPIC_NAME = (By.ID, 'topic_name')
+    NAMESPACE = (By.ID, 'namespace')
+    NOTE = (By.ID, 'note')
+    ERROR_NICK_NAME = (By.XPATH, '/html/body/div[1]/div[2]/div/div/form/div[1]/p')
+    ERROR_TOPIC_NAME = (By.XPATH, '/html/body/div[1]/div[2]/div/div/form/div[2]/p')
+    CREATETOPIC = (By.ID, 'submit')
+    ADDNEWNICKNAME = (By.XPATH, '/html/body/div[1]/div[2]/div/div/form/div[1]/a')
+    NICK_NAME_ASTRK = (By.XPATH, '/html/body/div[1]/div[2]/div/div/form/div[1]/label/span')
+    TOPIC_NAME_ASTRK = (By.XPATH, '/html/body/div[1]/div[2]/div/div/form/div[2]/label/span')
+    NAMESPACE_ASTRK = (By.XPATH, '/html/body/div[1]/div[2]/div/div/form/div[3]/label/span')
     ERROR_DUPLICATE_TOPIC_NAME = (By.XPATH, '/html/body/div[1]/div[2]/div/div/form/div[2]/p')
     INVALID_TOPIC_NAME = (By.XPATH, '/html/body/div/div[2]/div/div/form/div[2]/p')
     OTHER_NAMESPACE_NAME = (By.ID, 'create_namespace')
@@ -197,8 +196,8 @@ class LogoutIdentifiers(object):
     """
     Class to hold the Logout Identifiers
     """
-    USERNAME  = (By.XPATH, '//*[@id="navbarResponsive"]/ul[1]/li[2]/div/a/span')
-    LOGOUT    = (By.XPATH, '//*[@id="navbarResponsive"]/ul[1]/li[2]/div/ul/li[2]/a')
+    USERNAME = (By.XPATH, '//*[@id="navbarResponsive"]/ul[1]/li[2]/div/a/span')
+    LOGOUT = (By.XPATH, '//*[@id="navbarResponsive"]/ul[1]/li[2]/div/ul/li[2]/a')
 
 
 class AccountSettingsIdentifiers(object):
@@ -309,7 +308,7 @@ class TopicUpdatePageIdentifiers(object):
     """
     Class to hold the Topic Update Page Identifiers
     """
-    #TOPIC_IDENTIFIER = (By.XPATH, '//*[@id="outline_224"]/a')//*[@id="outline_173"]/a
+    # TOPIC_IDENTIFIER = (By.XPATH, '//*[@id="outline_224"]/a')//*[@id="outline_173"]/a
     TOPIC_IDENTIFIER = (By.XPATH, '//*[@id="outline_173"]/a')
     MANAGE_EDIT_TOPIC = (By.XPATH, '//*[@id="edit_topic"]')
     SUBMIT_TOPIC_UPDATE_BASED_ON_THIS = (By.XPATH, '//*[@id="update"]')
@@ -350,7 +349,7 @@ class CreateNewCampPageIdentifiers(object):
     """
     Class to hold the Create New Camp Page Identifiers
     """
-    #CREATE_CAMP = (By.XPATH, '//*[@id="tree_88_1-Agreement_1"]/ul/li[1]/span/a')
+    # CREATE_CAMP = (By.XPATH, '//*[@id="tree_88_1-Agreement_1"]/ul/li[1]/span/a')
     CREATE_CAMP = (By.XPATH, '//*[@id="tree_173_1-Agreement_1"]/ul/li[1]/span/a')
     NICK_NAME = (By.ID, 'nick_name')
     CAMP_NAME = (By.ID, 'camp_name')
@@ -414,7 +413,7 @@ class CampStatementEditPageIdentifiers(object):
     ERROR_STATEMENT = (By.XPATH, '/html/body/div[1]/div[3]/div/div/form/div[2]/p')
     SUBMIT_UPDATE = (By.ID, 'submit')
     ADDNEWNICKNAME = (By.XPATH, '//*[@id="add_new_nickname"]')
-    #TOPIC_IDENTIFIER = (By.XPATH, '//*[@id="outline_224"]/a')
+    # TOPIC_IDENTIFIER = (By.XPATH, '//*[@id="outline_224"]/a')
     TOPIC_IDENTIFIER = (By.XPATH, '//*[@id="outline_173"]/a')
 
 
@@ -422,7 +421,7 @@ class AddNewsPageIdentifiers(object):
     """
     Class to hold the Add News Page Identifiers
     """
-    #ADD_NEWS = (By.XPATH, '/html/body/div[1]/div[3]/div/div[1]/h3/div[2]/a[2]')
+    # ADD_NEWS = (By.XPATH, '/html/body/div[1]/div[3]/div/div[1]/h3/div[2]/a[2]')
     ADD_NEWS = (By.LINK_TEXT, 'Add News')
     DISPLAY_TEXT = (By.ID, 'display_text')
     DISPLAY_TEXT_ASTRK = (By.XPATH, '//*[@id="topicForm"]/div[1]/label/span')
@@ -440,7 +439,7 @@ class EditNewsPageIdentifiers(object):
     """
     Class to hold the Edit News Page Identifiers
     """
-    #EDIT_NEWS = (By.XPATH, '/html/body/div[1]/div[3]/div[1]/div[1]/h3/a')
+    # EDIT_NEWS = (By.XPATH, '/html/body/div[1]/div[3]/div[1]/div[1]/h3/a')
     EDIT_NEWS = (By.LINK_TEXT, 'Edit News')
     DISPLAY_TEXT = (By.ID, 'display_text')
     LINK = (By.ID, 'link')
@@ -465,7 +464,8 @@ class MySupportsPageIdentifiers(object):
     Class to hold the My Supports Page Identifiers
     """
     TOPIC_NAME = (By.LINK_TEXT, 'Theories of Consciousness')
-    CAMP_NAME = (By.XPATH, '//*[contains(@href,"https://staging.canonizer.com/topic/88-Theories-of-Consciousness/1-Agreement")]')
+    CAMP_NAME = (
+    By.XPATH, '//*[contains(@href,"https://staging.canonizer.com/topic/88-Theories-of-Consciousness/1-Agreement")]')
 
 
 class AddCampStatementPageIdentifiers(object):
@@ -482,10 +482,10 @@ class AddCampStatementPageIdentifiers(object):
     ERROR_STATEMENT = (By.XPATH, '/html/body/div/div[3]/div/div/form/div[2]/p')
     SUBMIT_STATEMENT = (By.ID, 'submit')
     ADDNEWNICKNAME = (By.XPATH, '//*[@id="add_new_nickname"]')
-    #TOPIC_IDENTIFIER = (By.XPATH, '//*[@id="outline_173"]/a')
-    #TOPIC_IDENTIFIER = (By.XPATH, '//*[@id="outline_281"]/a')
-    TOPIC_IDENTIFIER = (By.XPATH, '//*[@id="outline_224"]/a')
-
+    # TOPIC_IDENTIFIER = (By.XPATH, '//*[@id="outline_173"]/a')
+    # TOPIC_IDENTIFIER = (By.XPATH, '//*[@id="outline_281"]/a')
+    # TOPIC_IDENTIFIER = (By.XPATH, '//*[@id="outline_224"]/a')
+    TOPIC_IDENTIFIER = (By.XPATH, '//*[@id="outline_411"]/a')
 
 class TermsAndPrivacyPolicyIdentifiers(object):
     """
@@ -517,10 +517,14 @@ class JoinSupportCampPageIdentifiers(object):
     """
     Class to hold the Join/manage support crumbs links Identifiers
     """
-    JOINSUPPORTCAMP= (By.ID, 'join_support_camp')
+    JOINSUPPORTCAMP = (By.ID, 'join_support_camp')
     ADDNEWNICKNAME = (By.ID, 'add_new_nickname')
 
 
-
-
-
+class CampForumIdentifiers(object):
+    CAMP_FORUM = (By.ID, 'camp_forum')
+    CREATE_THREAD = (By.XPATH, '/html/body/div[1]/div[2]/div/div[2]/a[5]')
+    TITLE_THREAD = (By.ID, '//*[@id="title"]')
+    SUBMIT_THREAD = (By.ID, 'threadSubmitBtn')
+    ERROR_TITLE = (By.XPATH, '//*[@id="threadForm"]/ul/li')
+    NICK_NAME = (By.ID, 'nick_name')
