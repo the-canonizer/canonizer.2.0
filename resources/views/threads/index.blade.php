@@ -83,7 +83,13 @@
       </table>
       @else 
         <hr>
-        <p>No threads available for this topic.
+        <p>
+          @if ($request_by=='most_replies')
+            No Top 10 threads available for this topic.
+          @else
+            No threads available for this topic.
+          @endif
+
           Start <a href="{{ URL::to('/')}}/forum/{{ $topicname }}/{{ $campnum }}/threads/create">New Thread.
           </a>
         </p>
