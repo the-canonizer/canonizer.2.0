@@ -224,29 +224,6 @@ class TopicController extends Controller {
                     session()->forget("topic-support-nickname-{$topic->topic_num}");
                     session()->forget("topic-support-tree-{$topic->topic_num}");
 
-                    // Prepare data for dispatching to the job (canonizer-service)
-                    $selectedAlgo = 'blind_popularity';
-                    if(session('defaultAlgo')) {
-                        $selectedAlgo = session('defaultAlgo');
-                    }
-
-                    $asOf = 'default';
-                    if(session('asofDefault')) {
-                        $asOf = session('asofDefault');
-                    }
-                    
-                    $asOfDefaultDate = time();
-                    $canonizerServiceData = [
-                        'topic_num' =>  $topic->topic_num,
-                        'algorithm' => $selectedAlgo,
-                        'asOfDate' => $asOfDefaultDate,
-                        'asOf' => $asOf
-                    ];
-
-                    // Dispact job when create a default camp
-                    CanonizerService::dispatch($canonizerServiceData)
-                        ->onQueue('canonizer-service')
-                        ->unique(Topic::class, $topic->id);
                 }
             }
 
@@ -283,9 +260,14 @@ class TopicController extends Controller {
                 'asOfDate' => $asOfDefaultDate,
                 'asOf' => $asOf
             ];
-            
+
             // Sending mail
             if ($eventtype == "CREATE") {
+                // Dispact job when create a default camp
+                CanonizerService::dispatch($canonizerServiceData)
+                ->onQueue('canonizer-service')
+                ->unique(Topic::class, $topic->id);
+                
                 // send history link in email
                 $link = 'topic-history/' . $topic->topic_num;
 				$data['type'] = "topic";
