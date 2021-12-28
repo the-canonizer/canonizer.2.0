@@ -578,7 +578,8 @@ class Camp extends Model {
             foreach (session("topic-support-nickname-$topicnum") as $supported) {
                 $nickNameSupports = session("topic-support-{$topicnum}")->filter(function ($item) use($supported) {
                     return $item->nick_name_id == $supported->nick_name_id; /* Current camp support */
-                });                
+                });
+                $supportPoint = Algorithm::{$algorithm}($supported->nick_name_id,$supported->topic_num,$supported->camp_num);                
                 
                 $currentCampSupport = $nickNameSupports->filter(function ($item) use($campnum) {
                             return $item->camp_num == $campnum; /* Current camp support */
@@ -590,7 +591,6 @@ class Camp extends Model {
 				   0.5 for their first, if they support 2, 
 				   0.25 after and half, again, for each one after that. */
 				if ($currentCampSupport) {
-                    $supportPoint = Algorithm::{$algorithm}($supported->nick_name_id,$supported->topic_num,$supported->camp_num);
                     $multiSupport = false; //default
                      if ($nickNameSupports->count() > 1) {
                         $multiSupport = true;
@@ -612,7 +612,7 @@ class Camp extends Model {
     public function buildCampTree($traversedTreeArray, $currentCamp = null, $activeCamp = null, $activeCampDefault = false,$add_supporter = false, $arrowposition) {
         $html = '<ul class="childrenNode">';
 		$action = Route::getCurrentRoute()->getActionMethod();
-        // $onecamp =  self::getLiveCamp($this->topic_num, $activeCamp);
+        $onecamp =  self::getLiveCamp($this->topic_num, $activeCamp);
         
         if ($currentCamp == $activeCamp && $action != "index") { 
             $url_portion = self::getSeoBasedUrlPortion($this->topic_num,$currentCamp);
@@ -942,7 +942,7 @@ class Camp extends Model {
         }
         
         $html = "<li id='tree_" . $this->topic_num . "_" . $activeCamp . "_" . $this->camp_num . "'>";
-        $parentClass = is_array($reducedTree[$this->camp_num]['children']) && count($reducedTree[$this->camp_num]['children']) > 0 ? 'parent' : '';
+        $parentClass = is_array($reducedTree[$this->camp_num]['children']) && count($reducedTree[$this->camp_num]['children']) > 0 ? 'parent' : 'noCampArrow';
         $icon = is_array($reducedTree[$this->camp_num]['children']) && count($reducedTree[$this->camp_num]['children']) > 0 ? '<i class="fa '.$arrowposition.'"></i>' : '';
         if(count($reducedTree[$this->camp_num]['children']) == 0 )
 		$icon = '<i class="fa '.$arrowposition.'"></i>';
