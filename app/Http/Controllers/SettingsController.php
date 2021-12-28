@@ -1160,7 +1160,7 @@ class SettingsController extends Controller
         $data['promotedTo'] = $promotedTo;
         $data['topic'] = $topic;
         $data['camp'] = $camp;
-        $data['subject'] ="You have been promted";
+        $data['subject'] ="You have been promoted";
         $data['topic_link'] = \App\Model\Camp::getTopicCampUrl($topicNum,1);
         $data['camp_link'] = \App\Model\Camp::getTopicCampUrl($topicNum,$camp->camp_num);        
         foreach ($alldirectDelegates as $supporter) {
@@ -1191,7 +1191,7 @@ class SettingsController extends Controller
         $data['promotedFrom'] = $promotedFrom;
         $data['topic'] = $topic;
         $data['camp'] = $camp;
-        $data['subject'] ="You have been promted as direct supporter";
+        $data['subject'] ="You have been promoted as direct supporter";
         $data['topic_link'] = Camp::getTopicCampUrl($topicNum,1);
         $data['camp_link'] = Camp::getTopicCampUrl($topicNum,$campNum);   
         $data['url_portion'] =  Camp::getSeoBasedUrlPortion($topicNum,$campNum);     
