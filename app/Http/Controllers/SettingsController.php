@@ -2,28 +2,28 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\Request;
+use Hash;
+use Cookie;
+use App\User;
 use App\Model\Camp;
 use App\Model\Topic;
-use App\User;
-use Illuminate\Support\Facades\Session;
-use App\Library\General;
-use App\Model\Nickname;
 use App\Model\Support;
+use App\Model\Nickname;
+use App\Library\General;
+use App\Model\SocialUser;
+use App\Mail\PhoneOTPMail;
 use App\Model\TopicSupport;
+use Illuminate\Http\Request;
+use App\Model\EtherAddresses;
+use App\Jobs\CanonizerService;
 use App\Model\SupportInstance;
-use Illuminate\Support\Facades\Validator;
-use Cookie;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\NewDelegatedSupporterMail;
-use App\Mail\PhoneOTPMail;
-use App\Model\EtherAddresses;
-use App\Model\SocialUser;
-use Hash;
 use App\Mail\PromotedDelegatesMail;
 use App\Mail\PromotedDirectSupporterMail;
-
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Validator;
 
 class SettingsController extends Controller
 {
@@ -70,6 +70,7 @@ class SettingsController extends Controller
                 ->withErrors($validator)
                 ->withInput();
         }
+        
         if ($id) {
             $user = User::find($id);
             $user->first_name = $input['first_name'];
@@ -134,6 +135,7 @@ class SettingsController extends Controller
         $nicknames = Nickname::where('owner_code', '=', $encode)->get();
         return view('settings.nickname', ['nicknames' => $nicknames, 'user' => $user]);
     }
+
     public function phone_verify(Request $request)
     {
         $input = $request->all();
@@ -206,6 +208,7 @@ class SettingsController extends Controller
 
         return redirect()->back();
     }
+
     public function add_nickname(Request $request)
     {
         $id = Auth::user()->id;
@@ -290,7 +293,7 @@ class SettingsController extends Controller
                 Session::flash('warning', "You are directly supporting one or more camps under this topic. If you continue your direct support will be removed.");
             }
             $parentSupport = Camp::validateParentsupport($topicnum, $campnum, $userNickname, $confirm_support);
-             if ($parentSupport === "notlive") {
+            if ($parentSupport === "notlive") {
                 Session::flash('warning', "You cant submit your support to this camp as its not live yet.");
                 //return redirect()->back();
             } else if ($parentSupport) {
@@ -350,6 +353,7 @@ class SettingsController extends Controller
             foreach ($nicknames as $nickname) {
                 $userNickname[] = $nickname->id;
             }
+
             $supportedTopic = Support::whereIn('nick_name_id', $userNickname)
                 ->whereRaw("(start < $as_of_time) and ((end = 0) or (end > $as_of_time))")
                 ->groupBy('topic_num')->orderBy('start', 'DESC')->get();
@@ -462,7 +466,7 @@ class SettingsController extends Controller
             }else if (isset($data['support_order']) && isset($data['delegate_nick_name_id']) && $data['delegate_nick_name_id'] == 0 ) {
                foreach ($data['support_order'] as $camp_num => $support_order) {
                     $last_camp = $camp_num;
-                   if(!in_array($camp_num,$mysupportArray)){
+                    if(!in_array($camp_num,$mysupportArray)) {
                         $newcamp_mail_flag = true;
                         $data['camp_num'] = $camp_num;
                         $supportTopic = new Support();
@@ -526,8 +530,9 @@ class SettingsController extends Controller
             if ($last_camp == $data['camp_num']) {
                 Session::flash('confirm', "samecamp");
             }
-           /* remove delegate support if user is support directly */
-             if(isset($data['delegated']) && count($data['delegated']) > 0 && $data['delegate_nick_name_id'] == 0){
+            
+            /* remove delegate support if user is support directly */
+            if(isset($data['delegated']) && count($data['delegated']) > 0 && $data['delegate_nick_name_id'] == 0){
                 foreach($data['delegated'] as $k=>$d){
                     if($d !=0){
                         $support = Support::where('topic_num', $topic_num)->where('camp_num','=', $k)->where('nick_name_id','=',$data['nick_name'])->where('delegate_nick_name_id','=',$d)->where('end', '=', 0)->get();
@@ -538,7 +543,8 @@ class SettingsController extends Controller
                     }
                 }
                
-             }
+            }
+
             /* Send delegated support email to the direct supporter and all parent  and to subscriber*/
             if (isset($data['delegate_nick_name_id']) && $data['delegate_nick_name_id'] != 0) {
                 // $parentUser = Nickname::getUserByNickName($data['delegate_nick_name_id']);
@@ -562,7 +568,11 @@ class SettingsController extends Controller
             }
             Session::save();
             Session::flash('success', "Your support update has been submitted successfully.");
-            return redirect(\App\Model\Camp::getTopicCampUrl($data['topic_num'],session('campnum')));
+
+            $topic = Topic::where('topic_num', $topic_num)->get()->last();            
+            $this->dispatchJob($topic);
+            
+            return redirect(\App\Model\Camp::getTopicCampUrl($data['topic_num'],session('campnum')));            
         } else {
             return redirect()->route('login');
         }
@@ -586,10 +596,10 @@ class SettingsController extends Controller
          $receiver = (config('app.env') == "production") ? $parentUser->email : config('app.admin_email');
          try{
             Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new NewDelegatedSupporterMail($parentUser, $link, $dataObject));
-         }catch(\Swift_TransportException $e){
-                        throw new \Swift_TransportException($e);
-                        //$response = $e->getMessage() ;
-            } 
+         }catch(\Swift_TransportException $e) {
+            throw new \Swift_TransportException($e);
+            //$response = $e->getMessage() ;
+        } 
              
     }
 
@@ -649,11 +659,10 @@ class SettingsController extends Controller
             if (!in_array($user->id, $alreadyMailed, TRUE)) {
                 $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
                 try{
-
-                Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new NewDelegatedSupporterMail($user, $link, $data));
+                    Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new NewDelegatedSupporterMail($user, $link, $data));
                 }catch(\Swift_TransportException $e){
-                       throw new \Swift_TransportException($e);// $response = $e->getMessage() ;
-                    } 
+                    throw new \Swift_TransportException($e);// $response = $e->getMessage() ;
+                } 
             }
         }
         return;
@@ -852,7 +861,8 @@ class SettingsController extends Controller
             return redirect()->route('login');
         }
     }
-  private function link_exists($provider,$data){
+    
+    private function link_exists($provider,$data){
         $returnArr = [];
         foreach ($data as $key => $value) {
             if($value->provider == $provider){
@@ -861,6 +871,7 @@ class SettingsController extends Controller
         }
         return $returnArr;
     }
+
     function sociallinks(){
         if(Auth::check()){
             $providers = ['google','facebook','github','twitter','linkedin'];
@@ -889,6 +900,7 @@ class SettingsController extends Controller
         
         
     }
+
     function blockchain(){
         if(Auth::check()){
             $user = Auth::user();
@@ -1076,9 +1088,14 @@ class SettingsController extends Controller
         session()->forget("topic-support-nickname-$topicNum");
         session()->forget("topic-support-tree-$topicNum");
         Session::save();
+
+        $topic = Topic::where('topic_num', $topicNum)->get()->last();            
+        $this->dispatchJob($topic);
+
         return redirect(\App\Model\Camp::getTopicCampUrl($topicNum ,$campNum));
 
     }
+    
     /**
      * By Reena Nalwa 
      * If delegate supporter is removing its support it well end by promoting its delegates to their place
@@ -1244,6 +1261,7 @@ class SettingsController extends Controller
         $this->mailSubscribersAndSupporters($directSupporterInCampList,$subscribers, $link, $result,$campList);   
     }
 
+
     private function removeDirectSupport($data){
         $nickNameId = $data['nick_name'];
         $directSupportedCamps = Support::where('topic_num', $data['topic_num'])
@@ -1262,5 +1280,30 @@ class SettingsController extends Controller
             ->where('end', '=',0)
             ->where('delegate_nick_name_id', '=',0)->update(['end'=>time()]);
         return $data;
-    }
 }
+  
+private function dispatchJob($topic) {
+    $selectedAlgo = 'blind_popularity';
+    if(session('defaultAlgo')) {
+        $selectedAlgo = session('defaultAlgo');
+    }
+
+    $asOf = 'default';
+    if(session('asofDefault')) {
+        $asOf = session('asofDefault');
+    }
+
+    $asOfDefaultDate = time();
+    $canonizerServiceData = [
+        'topic_num' =>  $topic->topic_num,
+        'algorithm' => $selectedAlgo,
+        'asOfDate' => $asOfDefaultDate,
+        'asOf' => $asOf
+    ];
+    // Dispact job when create a camp
+    CanonizerService::dispatch($canonizerServiceData)
+        ->onQueue('canonizer-service')
+        ->unique(Topic::class, $topic->id);
+
+}
+

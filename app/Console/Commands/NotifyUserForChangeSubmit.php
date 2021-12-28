@@ -2,16 +2,17 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
 use DB;
-use App\Model\Statement;
+use App\User;
 use App\Model\Camp;
 use App\Model\Topic;
 use App\Model\Support;
-use App\User;
+use App\Model\Nickname;
+use App\Model\Statement;
+use App\Jobs\CanonizerService;
+use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\PurposedToSupportersMail;
-use App\Model\Nickname;
 
 class NotifyUserForChangeSubmit extends Command {
 
@@ -82,6 +83,7 @@ class NotifyUserForChangeSubmit extends Command {
                 $data['nick_name'] = $nickName->nick_name;
                 $data['forum_link'] = 'forum/' . $statement->topic_num . '-statement/' . $statement->camp_num . '/threads';
                 $data['subject'] = "Proposed change to statement for camp " . $livecamp->topic->topic_name . " / " . $livecamp->camp_name. " submitted";
+                
                 self::mailSubscribersAndSupporters($directSupporter,$subscribers,$link, $data);
                 echo " \n Your change to statement #' .$statement->id. 'has been submitted to your supporters \n";
             } else if ($type == 'camp') {
@@ -104,6 +106,32 @@ class NotifyUserForChangeSubmit extends Command {
                 $data['nick_name'] = $nickName->nick_name;
                 $data['forum_link'] = 'forum/' . $livecamp->topic_num . '-' . $livecamp->camp_name . '/' . $livecamp->camp_num . '/threads';
                 $data['subject'] = "Proposed change to " . $livecamp->topic->topic_name . ' / ' . $livecamp->camp_name . " submitted";
+                
+                // Prepare data for dispatching to the job (canonizer-service)
+                $selectedAlgo = 'blind_popularity';
+                if(session('defaultAlgo')) {
+                    $selectedAlgo = session('defaultAlgo');
+                }
+
+                $asOf = 'default';
+                if(session('asofDefault')) {
+                    $asOf = session('asofDefault');
+                }
+                
+                $asOfDefaultDate = time();
+                $topic = $camp->topic;
+                $canonizerServiceData = [
+                    'topic_num' =>  $topic->topic_num,
+                    'algorithm' => $selectedAlgo,
+                    'asOfDate' => $asOfDefaultDate,
+                    'asOf' => $asOf
+                ];
+
+                // Dispact job when create a default camp
+                CanonizerService::dispatch($canonizerServiceData)
+                    ->onQueue('canonizer-service')
+                    ->unique(Topic::class, $topic->id);
+                
                 self::mailSubscribersAndSupporters($directSupporter,$subscribers,$link, $data);   
                 echo "\n Your change to camp #' . $camp->id.  ' has been submitted to your supporters. \n";
             } else if ($type == 'topic') {
@@ -126,6 +154,32 @@ class NotifyUserForChangeSubmit extends Command {
                 $data['nick_name'] = $nickName->nick_name;
                 $data['forum_link'] = 'forum/' . $topic->topic_num . '-' . $topic->topic_name . '/1/threads';
                 $data['subject'] = "Proposed change to topic " . $topic->topic_name . " submitted";
+                
+                // Prepare data for dispatching to the job (canonizer-service)
+                $selectedAlgo = 'blind_popularity';
+                if(session('defaultAlgo')) {
+                    $selectedAlgo = session('defaultAlgo');
+                }
+
+                $asOf = 'default';
+                if(session('asofDefault')) {
+                    $asOf = session('asofDefault');
+                }
+                
+                $asOfDefaultDate = time();
+
+                $canonizerServiceData = [
+                    'topic_num' =>  $topicData->topic_num,
+                    'algorithm' => $selectedAlgo,
+                    'asOfDate' => $asOfDefaultDate,
+                    'asOf' => $asOf
+                ];
+
+                // Dispact job when create a default camp
+                CanonizerService::dispatch($canonizerServiceData)
+                    ->onQueue('canonizer-service')
+                    ->unique(Topic::class, $topicData->id);
+                
                 self::mailSupporters($directSupporter, $link, $data);         //mail supporters  
                 self::mailSubscribersAndSupporters($directSupporter,$subscribers,$link, $data);                 
                 echo "\n Your change to topic #'.$topic->id.' has been submitted to your supporters. \n ";
@@ -153,7 +207,7 @@ class NotifyUserForChangeSubmit extends Command {
         return;
     }
 
-     private function mailSubscribersAndSupporters($directSupporter,$subscribers,$link, $dataObject){
+     private static function mailSubscribersAndSupporters($directSupporter,$subscribers,$link, $dataObject){
         $alreadyMailed = [];
         $i=0;
         foreach ($directSupporter as $supporter) {            
