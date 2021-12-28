@@ -184,7 +184,7 @@ class TopicSupport extends Model {
             $nickName = Nickname::where('id',$array['index'])->first();
             $topicData = Topic::getLiveTopic($topicnum,['nofilter'=>true]);
             $namespace_id = (isset($topicData->namespace_id)) ? $topicData->namespace_id:1;
-            $supports = $nickName->getSupportCampList($namespace_id, [], $topicnum);
+            $supports = $nickName->getSupportCampList($namespace_id);
             $support_number = self::getSupportNumber($topicnum,$campnum,$supports);
             $support_txt = ($support_number) ? $support_number.":": '';
 
@@ -192,8 +192,8 @@ class TopicSupport extends Model {
             $html.= "<li class='main-parent'>".$space_html."<a href='".route('user_supports',$nickName->id)."?topicnum=".$topicnum."&campnum=".$campnum."&namespace=".$namespace_id."#camp_".$topicnum."_".$campnum."'>{$support_txt}{$nickName->nick_name}</a><div class='badge'>".round($array['score'],2)."</div>";
             if(in_array($array['index'],$userNicknames)){
                 $html.='<a href="'.url('remove/mysupport/'.$topicnum.'/'. $campnum .'/' .$array['index']).'" class="btn btn-info">Remove Your Support</a>';
-            }                
-            if(!in_array($array['index'],$userNicknames) && !in_array($array['index'],$myDelegator) && !in_array($array['index'],$myDelegation) && Auth::check()){
+        }                
+            if(!in_array($array['index'],$userNicknames) && !in_array($array['index'],$myDelegator) && !in_array($array['index'],$myDelegation)){
                 $html.='<a href="'.url('support/'.$urlPortion.'_'.$array['index']).'" class="btn btn-info">Delegate Your Support</a>';
             }
             $html.="<ul>";

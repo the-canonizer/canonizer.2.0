@@ -37,13 +37,13 @@
                 </div>
             </label>
             <input type="password" name="password" class="form-control" id="password" placeholder="Password">
-            @if ($errors->has('password')) <p class="help-block">{{ $errors->first('password') }}</p> @endif
              <!--<span style="display:none;" class="passStrengthCheck">Password must be atleast 8 characters, including atleast one digit and one special character(@,# !,$..)</span>-->
         </div>
         
         <div class="form-group">
             <label for="pwd">Confirm Password <span style="color:red">*</span></label>
             <input type="password" name="password_confirmation" class="form-control" id="pwd_confirm" placeholder="Confirm Password">
+            @if ($errors->has('password')) <p class="help-block">{{ $errors->first('password') }}</p> @endif
             <p class="help-block" id="pwd-help" style="display: none"></p>        
         </div>
 
