@@ -63,7 +63,7 @@
                 </form>
             </div>
             </h3>
-            <div class="content supported_camp" style="word-break: break-word;">	  
+            <div class="content supported_camp">	  
             <h5>List of supported camps</h5>
             @if(count($supportedCamps) > 0)
 			   @foreach($supportedCamps as $key=>$supports)

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="right-whitePnl">
+<div class="right-whitePnl" style="height: 10px; width: 68%;">
   <h3 class="text-center">Edit title of the thread</h3>
   @if(Session::has('success'))
     <div class="alert alert-success">

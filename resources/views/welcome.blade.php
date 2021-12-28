@@ -59,11 +59,11 @@
 
                        <?php
 
-                        // $topicData = \App\Model\Topic::where('topic_num','=',$topic->topic_num)->where('go_live_time', '<=', $as_of_time)->latest('submit_time')->get();
+                        $topicData = \App\Model\Topic::where('topic_num','=',$topic->topic_num)->where('go_live_time', '<=', $as_of_time)->latest('submit_time')->get();
                         $campData = \App\Model\Camp::where('topic_num',$topic->topic_num)->where('camp_num',$topic->camp_num)->where('go_live_time', '<=', $as_of_time)->latest('submit_time')->first();
-                        // $topic_name_space_id = isset($topicData[0]) ? $topicData[0]->namespace_id:1;
-                        // $topic_name = isset($topicData[0]) ? $topicData[0]->topic_name:'';
-                        // $request_namesapce = session('defaultNamespaceId', 1); 
+                        $topic_name_space_id = isset($topicData[0]) ? $topicData[0]->namespace_id:1;
+                        $topic_name = isset($topicData[0]) ? $topicData[0]->topic_name:'';
+                        $request_namesapce = session('defaultNamespaceId', 1); 
                        
                         
                         $as_of_time = time();
