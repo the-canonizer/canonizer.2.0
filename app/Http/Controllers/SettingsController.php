@@ -23,6 +23,7 @@ use App\Model\SocialUser;
 use Hash;
 use App\Mail\PromotedDelegatesMail;
 use App\Mail\PromotedDirectSupporterMail;
+use App\Mail\SupportRemovedMail;
 
 
 class SettingsController extends Controller
@@ -762,6 +763,7 @@ class SettingsController extends Controller
                 $input['topic_num'] = $topic_num;
                 $promoteDelegate = true;
                 $ifSupportLeft = true; //default, only useful in case od direct supporter
+                $prefNo = 1;
                 $supportCount = Support::where('topic_num', $topic_num)
                 ->whereIn('nick_name_id', [$nick_name_id])
                 ->whereRaw("(start < $as_of_time) and ((end = 0) or (end > $as_of_time))")
@@ -1145,7 +1147,7 @@ class SettingsController extends Controller
 
     public function notifiyPromotedDelegates($topicNum,$campNum='',$nickNameId,$delegateNickNameId,$alldirectDelegates){
          //mail return
-         //return;
+        // return;
         $to = [];
         $topic = Camp::getAgreementTopic($topicNum,['nofilter'=>true]);
         $fistChoiceCamp = Support::where('topic_num', $topicNum)->where('nick_name_id', '=', $delegateNickNameId)->where('end', '=', 0)->where('support_order',1)->first();
@@ -1217,7 +1219,7 @@ class SettingsController extends Controller
         $parentUser = Nickname::getNickName($delegateNickNameId);
         $result['delegated_user'] = $parentUser->nick_name;             
         $nickName = Nickname::getNickName($nickNameId);
-        $topic = Camp::getAgreementTopic($topicNum,['nofilter'=>true]);
+        $topic = Camp::getAgreementTopic($topicNum,['nofilter'=>true]);        
         //$camp = Camp::where('topic_num', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('go_live_time', '<=', time())->latest('submit_time')->first();
 
         $result['topic_num'] = $topicNum;
@@ -1225,7 +1227,7 @@ class SettingsController extends Controller
         $result['nick_name'] = $nickName->nick_name;
         $result['object'] = $topic->topic_name;       
         $result['subject'] = $nickName->nick_name . " has removed their delegated support from ". $parentUser->nick_name . " in ".$topic->topic_name." topic.";
-        
+        $result['topic'] = $topic;
         $link = \App\Model\Camp::getTopicCampUrl($topicNum,1);
         $deletedSupport = Support::where('topic_num', $topicNum)
             ->whereIn('nick_name_id', [$nickNameId])
@@ -1239,7 +1241,8 @@ class SettingsController extends Controller
                 $directSupporterInCampList[] = $support;
              }
         }
-        $supportsDirect = array_push($directSupporterInCampList,$deletedSupport[0]);       
+        $this->notifyRemovingDelegateSupporter($nickName, $parentUser,$result);
+        //$supportsDirect = array_push($directSupporterInCampList,$deletedSupport[0]);       
         $result['support_deleted'] = 1;
         $this->mailSubscribersAndSupporters($directSupporterInCampList,$subscribers, $link, $result,$campList);   
     }
@@ -1263,4 +1266,21 @@ class SettingsController extends Controller
             ->where('delegate_nick_name_id', '=',0)->update(['end'=>time()]);
         return $data;
     }
+
+    /**
+     * Notify delegate user who is removing their support
+     * 
+     */
+
+     private function notifyRemovingDelegateSupporter($nickName,$parentUser, $data){
+        $user = Nickname::getUserByNickName($nickName->id);    
+        $result['subject'] = "Support removed from ". $parentUser->nick_name . " in ".$data['topic']->topic_name." topic.";         
+        $link = \App\Model\Camp::getTopicCampUrl($data['topic_num'],1);          
+        $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
+        try{
+            Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new SupportRemovedMail($user, $link, $data));
+        }catch(\Swift_TransportException $e){
+                    throw new \Swift_TransportException($e);
+        } 
+     }
 }
