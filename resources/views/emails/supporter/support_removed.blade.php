@@ -6,3 +6,4 @@
 Sincerely,<br>
 {{ config('app.email_signature') }}
 @endcomponent
+<?php exit; ?>
