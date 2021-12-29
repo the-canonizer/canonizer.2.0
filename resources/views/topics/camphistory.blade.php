@@ -174,7 +174,14 @@
                         } else {
                             $bgcolor = "#4e4ef3;"; //blue
                         }
-                      if($ifIamSupporter && $interval > 0 && $data->grace_period > 0  && Auth::user()->id != $submitterUserID){
+                        $IFNOtSubmissterNotSupporterAndInGracePeriod = false;
+                        if($ifIamSupporter && $interval > 0 && $data->grace_period > 0  && Auth::user()->id != $submitterUserID){
+                            $IFNOtSubmissterNotSupporterAndInGracePeriod = true;
+                        }else if(!$ifIamSupporter && $data->grace_period > 0){
+                            $IFNOtSubmissterNotSupporterAndInGracePeriod = true;
+                        }
+                        echo "ddd::--". $IFNOtSubmissterNotSupporterAndInGracePeriod;
+                       if($IFNOtSubmissterNotSupporterAndInGracePeriod){
                             continue;
                         }
                         ?>
