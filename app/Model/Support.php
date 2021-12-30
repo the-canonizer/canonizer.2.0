@@ -121,7 +121,7 @@ class Support extends Model {
         return count($support) ? $support->nick_name_id : 0 ;
     }
     
-    public static function getAllSupporters1($topic,$camp,$excludeNickID){
+    public static function getAllSupporters($topic,$camp,$excludeNickID){
         $nickNametoExclude = [$excludeNickID];
         $support = self::where('topic_num','=',$topic)->where('camp_num','=',$camp)
                 ->where('end','=',0)
