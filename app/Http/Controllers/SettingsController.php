@@ -1314,6 +1314,8 @@ class SettingsController extends Controller
      */
 
     private function notifyRemovingDelegateSupporter($nickName,$parentUser, $data){
+        //mail return
+        //return
         $user = Nickname::getUserByNickName($nickName->id);    
         $result['subject'] = "Support removed from ". $parentUser->nick_name . " in ".$data['topic']->topic_name." topic.";         
         $link = \App\Model\Camp::getTopicCampUrl($data['topic_num'],1);          
@@ -1325,5 +1327,5 @@ class SettingsController extends Controller
         } 
     }
 }
-}
+
 
