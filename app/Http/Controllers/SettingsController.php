@@ -1306,4 +1306,5 @@ private function dispatchJob($topic) {
         ->unique(Topic::class, $topic->id);
 
 }
+}
 
