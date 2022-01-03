@@ -130,7 +130,7 @@
 								
 							<input type="hidden" name="camp[{{$support->camp->camp_num}}]" value="{{ $support->camp->camp_num }}">
 							<input type="hidden" name="delegated[{{$support->camp->camp_num}}]" value="{{ $support->delegate_nick_name_id }}">
-							<b><a href="<?= $url; ?>"><span class="support_order"> {{ $support->support_order }} </span> . {{ $livecamp->camp_name }} </a></b><br/>
+							<b><a class="mr-5" href="<?= $url; ?>"><span class="support_order"> {{ $support->support_order }} </span> . {{ $livecamp->camp_name }} </a></b><br/>
 								
 						
 							<?php if(isset($topic->topic_num) && isset($supportedTopic->topic_num) &&  $topic->topic_num==$supportedTopic->topic_num) $lastsupportOrder++;
@@ -167,7 +167,7 @@
 								
 							<input type="hidden" name="camp[{{$support->camp->camp_num}}]" value="{{ $support->camp->camp_num }}">
 							<input type="hidden" name="delegated[{{$support->camp->camp_num}}]" value="{{ $support->delegate_nick_name_id }}">
-							<b><a href="<?= $url; ?>"><span class="support_order">{{ $key }} </span> . {{ $liveCamp->camp_name }} </b></a><br/>
+							<b><a class="mr-5" href="<?= $url; ?>"><span class="support_order">{{ $key }} </span> . {{ $liveCamp->camp_name }} </b></a><br/>
 								
 						
 							<?php if(isset($topic->topic_num) && isset($supportedTopic->topic_num) &&  $topic->topic_num==$supportedTopic->topic_num) $lastsupportOrder++;
@@ -193,7 +193,7 @@
 							<input type="hidden" name="camp[{{$camp->camp_num}}]" value="{{ $camp->camp_num }}">
 							<input type="hidden" name="delegated[{{$camp->camp_num}}]" value="{{ $delegate_nick_name_id }}">
 							
-							<b><a href="<?= $url; ?>"><span class="support_order">{{ $key+1}} </span> . {{ $camp->camp_name }} </a></b><br/>
+							<b><a class="mr-5" href="<?= $url; ?>"><span class="support_order">{{ $key+1}} </span> . {{ $camp->camp_name }} </a></b><br/>
 							<span rel="{{$camp->camp_num}}" order="{{ $key + 1  }}" delegated="{{ $delegate_nick_name_id }}" class="x-btn remove_camp">X</span>                        
 						</div>
 					</div>	
@@ -214,7 +214,7 @@
 								<input type="hidden" class="final_support_order" name="support_order[{{$camp->camp_num}}]" id="support_order_0" value="{{ (isset($support->support_order)) ? $support->support_order + 1 : 1 }}">
 								<input type="hidden" name="camp[{{$camp->camp_num}}]" value="{{ $camp->camp_num }}">
 								<input type="hidden" name="delegated[{{$camp->camp_num}}]" value="{{ $delegate_nick_name_id }}">
-								<b><a href="<?= $url; ?>"><span class="support_order">{{ ++$lastsupportOrder }} </span> . {{ $camp->camp_name }} </a></b><br/>
+								<b><a class="mr-5" href="<?= $url; ?>"><span class="support_order">{{ ++$lastsupportOrder }} </span> . {{ $camp->camp_name }} </a></b><br/>
 								<span rel="{{ $camp->camp_num }}" order="{{ (isset($support->support_order)) ? $support->support_order + 1 : 1 }}" delegated="{{ $delegate_nick_name_id }}"  class="x-btn remove_camp">X</span>
 								<?php $lastsupportOrder++; ?>							
 							</div>
