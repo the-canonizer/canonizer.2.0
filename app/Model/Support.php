@@ -164,4 +164,32 @@ class Support extends Model {
         }
         return $supporters;
     }
+
+    public static function removeSupport($topicNum,$campNum,$nickName = null) {
+        $supportData = self::where('topic_num',$topicNum)->where('camp_num',$campNum)->where('end','=',0);
+        if(!empty($nickName)){
+            $supportData->where('nick_name_id',$nickName);
+        }
+        $results = $supportData->get();
+        foreach($results as $value){
+            $value->end = time();
+            $value->save();
+            $higherSupportNumbers = self::where('topic_num',$topicNum)
+                ->where('end','=',0)
+                ->where('nick_name_id',$value->nick_name_id)
+                ->where('support_order','>',$value->support_order)->get();
+            foreach($higherSupportNumbers as $support){
+                $support->end = time();
+                $support->save();
+                $create = new self();
+                $create->topic_num = $support->topic_num;
+                $create->nick_name_id = $support->nick_name_id;
+                $create->delegate_nick_name_id = 0;
+                $create->start = time();
+                $create->camp_num = $support->camp_num;
+                $create->support_order = ($support->support_order - 1);
+                $create->save();
+            }
+        }
+    }
 }
