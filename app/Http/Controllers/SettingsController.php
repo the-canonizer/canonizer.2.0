@@ -7,6 +7,7 @@ use Cookie;
 use App\User;
 use App\Model\Camp;
 use App\Model\Topic;
+use App\Facades\Util;
 use App\Model\Support;
 use App\Model\Nickname;
 use App\Library\General;
@@ -17,12 +18,12 @@ use Illuminate\Http\Request;
 use App\Model\EtherAddresses;
 use App\Jobs\CanonizerService;
 use App\Model\SupportInstance;
+use App\Mail\PromotedDelegatesMail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\NewDelegatedSupporterMail;
-use App\Mail\PromotedDelegatesMail;
-use App\Mail\PromotedDirectSupporterMail;
 use Illuminate\Support\Facades\Session;
+use App\Mail\PromotedDirectSupporterMail;
 use Illuminate\Support\Facades\Validator;
 
 class SettingsController extends Controller
@@ -553,7 +554,10 @@ class SettingsController extends Controller
             Session::flash('success', "Your support update has been submitted successfully.");
 
             $topic = Topic::where('topic_num', $topic_num)->get()->last();            
-            $this->dispatchJob($topic);
+            // Dispatch Job
+            if(isset($topic)) {
+                Util::dispatchJob($topic, 0);
+            }
             
             return redirect(\App\Model\Camp::getTopicCampUrl($data['topic_num'],session('campnum')));            
         } else {
@@ -1042,7 +1046,10 @@ class SettingsController extends Controller
         Session::save();
 
         $topic = Topic::where('topic_num', $topicNum)->get()->last();            
-        $this->dispatchJob($topic);
+        // Dispatch Job
+        if(isset($topic)) {
+            Util::dispatchJob($topic, 0);
+        }
 
         return redirect(\App\Model\Camp::getTopicCampUrl($topicNum ,$campNum));
 
@@ -1212,27 +1219,4 @@ class SettingsController extends Controller
         $this->mailSubscribersAndSupporters($directSupporterInCampList,$subscribers, $link, $result,$campList);   
     }
 
-    private function dispatchJob($topic) {
-        $selectedAlgo = 'blind_popularity';
-        if(session('defaultAlgo')) {
-            $selectedAlgo = session('defaultAlgo');
-        }
-        
-        $asOf = 'default';
-        if(session('asofDefault')) {
-            $asOf = session('asofDefault');
-        }
-
-        $asOfDefaultDate = time();
-        $canonizerServiceData = [
-            'topic_num' =>  $topic->topic_num,
-            'algorithm' => $selectedAlgo,
-            'asOfDate' => $asOfDefaultDate,
-            'asOf' => $asOf
-        ];
-        // Dispact job when create a camp
-        CanonizerService::dispatch($canonizerServiceData)
-            ->onQueue('canonizer-service')
-            ->unique(Topic::class, $topic->id);
-    }
 }
