@@ -2,6 +2,10 @@
 
 namespace App\Helpers;
 
+use Exception;
+use App\Jobs\CanonizerService;
+use Illuminate\Support\Facades\Log;
+
 /*
 |=================================================================
 | @Class        :   Util
@@ -49,5 +53,44 @@ class Util
             //$curl_result_obj = $curl_response;
             return $curl_response;
         }
+        
     }
+
+    /**
+     * Dispatch canonizer service job
+     * @param object $topic
+     * @param boolean $updateAll
+     * @return void
+     */
+    public function dispatchJob($topic, $updateAll) {
+
+        try{
+            $selectedAlgo = 'blind_popularity';
+            if(session('defaultAlgo')) {
+                $selectedAlgo = session('defaultAlgo');
+            }
+            
+            $asOf = 'default';
+            if(session('asofDefault')) {
+                $asOf = session('asofDefault');
+            }
+
+            $asOfDefaultDate = time();
+            $canonizerServiceData = [
+                'topic_num' =>  $topic->topic_num,
+                'algorithm' => $selectedAlgo,
+                'asOfDate'  => $asOfDefaultDate,
+                'asOf'      => $asOf,
+                'updateAll' => $updateAll
+            ];
+            // Dispact job when create a camp
+            CanonizerService::dispatch($canonizerServiceData)
+                ->onQueue('canonizer-service')
+                ->unique(Topic::class, $topic->id);
+        } catch(Exception $ex) {
+            Log::error("Util :: DispatchJob :: message: ".$ex->getMessage());
+        }
+        
+    }
+    
 }

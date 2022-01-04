@@ -2,16 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Model\Topic;
-use App\Model\Camp;
-use App\Model\Support;
-use App\Model\TopicSupport;
-use App\Model\SupportInstance;
-use App\VideoPodcast;
 use DB;
-use App\Model\Namespaces;
 use Auth;
+use App\Model\Camp;
+use App\Model\Topic;
+use App\Facades\Util;
+use App\VideoPodcast;
+use App\Model\Support;
+use App\Model\Namespaces;
+use App\Model\TopicSupport;
+use Illuminate\Http\Request;
+use App\Jobs\CanonizerService;
+use App\Model\SupportInstance;
 
 class HomeController extends Controller {
 
@@ -199,14 +201,24 @@ class HomeController extends Controller {
     }
 
     public function changeAlgorithm(Request $request) {
-        session(['defaultAlgo' => $request->input('algo')]);
+        $algorithm = $request->input('algo');
+        $tempTopicID = $request->input('topic_id');
+        
+        session(['defaultAlgo' => $algorithm]);
+
+        if(isset($tempTopicID) && !empty($tempTopicID)) {
+            $topicNum = explode('-',$tempTopicID)[0];
+            $topic = Topic::getLiveTopic($topicNum);
+            if(isset($topic) && (strtolower($algorithm) === 'blind_popularity' || strtolower($algorithm) === 'mind_experts')){
+                Util::dispatchJob($topic, 1);
+            } else {
+                // Nothing to do
+            }
+        }
     }
-
-
 
     public function changeNamespace(Request $request) {
         $namespace = Namespaces::find($request->input('namespace'));
-
         session(['defaultNamespaceId' => $namespace->id]);
     }
 

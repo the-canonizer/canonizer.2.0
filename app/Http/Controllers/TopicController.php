@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use App\Model\Camp;
 use App\Model\Topic;
 //use App\Library\Wikiparser\wikiParser;
+use App\Facades\Util;
 use App\Library\Wiky;
 use App\Model\Support;
 use App\Model\NewsFeed;
@@ -245,7 +246,9 @@ class TopicController extends Controller {
             // Sending mail
             if ($eventtype == "CREATE") {
                 // Dispatch Job
-                $this->dispatchJob($topic);
+                if(isset($topic)) {
+                    Util::dispatchJob($topic, 0);
+                }
                 
                 // send history link in email
                 $link = 'topic-history/' . $topic->topic_num;
@@ -259,7 +262,9 @@ class TopicController extends Controller {
                 }          
             } else if ($eventtype == "OBJECTION") {
                 // Dispatch Job
-                $this->dispatchJob($topic);
+                if(isset($topic)) {
+                    Util::dispatchJob($topic, 0);
+                }
 
                 $user = Nickname::getUserByNickName($all['submitter']);
                 $liveTopic = Topic::select('topic.*')
@@ -288,7 +293,9 @@ class TopicController extends Controller {
             } // #951 removed the update email event from here as we will send email after commit or after one hour refer notify_change or console->command->notifyUser classs 
             else if ($eventtype == "UPDATE") {
                 // Dispatch Job
-                $this->dispatchJob($topic);
+                if(isset($topic)) {
+                    Util::dispatchJob($topic, 0);
+                }
             }
         } catch (Exception $e) {
             DB::rollback();
@@ -782,7 +789,9 @@ class TopicController extends Controller {
             
             if ($eventtype == "CREATE") {
                 // Dispatch Job
-                $this->dispatchJob($topic);
+                if(isset($topic)) {
+                    Util::dispatchJob($topic, 0);
+                }
 
                 // send history link in email
                 $link = 'camp/history/' . $camp->topic_num . '/' . $camp->camp_num;
@@ -798,7 +807,9 @@ class TopicController extends Controller {
                 } 
             } else if ($eventtype == "OBJECTION") {
                 // Dispatch Job
-                $this->dispatchJob($topic);
+                if(isset($topic)) {
+                    Util::dispatchJob($topic, 0);
+                }
 
                 $user = Nickname::getUserByNickName($all['submitter']);
                 $livecamp = Camp::getLiveCamp($camp->topic_num,$camp->camp_num);
@@ -822,7 +833,9 @@ class TopicController extends Controller {
             } // #951 removed the update email event from here as we will send email after commit or after one hour refer notify_change or console->command->notifyUser classs
             else if ($eventtype == "UPDATE") {
                 // Dispatch Job
-                $this->dispatchJob($topic);              
+                if(isset($topic)) {
+                    Util::dispatchJob($topic, 0);
+                }        
             }
 
             Session::flash('success', $message);
@@ -1090,7 +1103,9 @@ class TopicController extends Controller {
                     ChangeAgreeLog::where('topic_num', '=', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('change_id', '=', $changeID)->where('change_for', '=', $data['change_for'])->delete();
                     $topic = $camp->topic;
                     // Dispatch Job
-                    $this->dispatchJob($topic);
+                    if(isset($topic)) {
+                        Util::dispatchJob($topic, 0);
+                    }
                 }
 			}	
             Session::flash('success', "Your agreement to camp submitted successfully");
@@ -1107,7 +1122,9 @@ class TopicController extends Controller {
                     //clear log
                     ChangeAgreeLog::where('topic_num', '=', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('change_id', '=', $changeID)->where('change_for', '=', $data['change_for'])->delete(); 
                     // Dispatch Job
-                    $this->dispatchJob($topic);
+                    if(isset($topic)) {
+                        Util::dispatchJob($topic, 0);
+                    }
                 }
 		    } 	
           Session::flash('success', "Your agreement to topic submitted successfully");
@@ -1168,7 +1185,9 @@ class TopicController extends Controller {
             
             $topic = $camp->topic;
             // Dispatch Job
-            $this->dispatchJob($topic);
+            if(isset($topic)) {
+                Util::dispatchJob($topic, 0);
+            }
             
             $this->mailSubscribersAndSupporters($directSupporter,$subscribers,$link, $data);  
             return response()->json(['id' => $camp->id, 'message' => 'Your change to camp has been submitted to your supporters.']);
@@ -1195,8 +1214,10 @@ class TopicController extends Controller {
             $data['subject'] = "Proposed change to topic " . $topic->topic_name . " submitted";
             
             // Dispatch Job
-            $this->dispatchJob($topic);
-
+            if(isset($topic)) {
+                Util::dispatchJob($topic, 0);
+            }
+            
             $this->mailSupporters($directSupporter, $link, $data);         //mail supporters  
            //  $this->mailSubscribersAndSupporters($directSupporter,$subscribers,$link, $data);  
            return response()->json(['id' => $topic->id, 'message' => 'Your change to topic has been submitted to your supporters.']);
@@ -1323,28 +1344,4 @@ class TopicController extends Controller {
          
     }
 
-    private function dispatchJob($topic) {
-        // Prepare data for dispatching to the job (canonizer-service)
-        $selectedAlgo = 'blind_popularity';
-        if(session('defaultAlgo')) {
-            $selectedAlgo = session('defaultAlgo');
-        }
-
-        $asOf = 'default';
-        if(session('asofDefault')) {
-            $asOf = session('asofDefault');
-        }
-        
-        $asOfDefaultDate = time();
-        $canonizerServiceData = [
-            'topic_num' =>  $topic->topic_num,
-            'algorithm' => $selectedAlgo,
-            'asOfDate' => $asOfDefaultDate,
-            'asOf' => $asOf
-        ];
-        // Dispact job when create a default camp
-        CanonizerService::dispatch($canonizerServiceData)
-        ->onQueue('canonizer-service')
-        ->unique(Topic::class, $topic->id);
-    }
 }
