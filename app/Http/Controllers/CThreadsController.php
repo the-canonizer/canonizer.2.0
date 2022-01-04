@@ -11,6 +11,7 @@ use App\Model\Nickname;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 
 use App\Mail\ForumThreadCreatedMail;
@@ -50,8 +51,12 @@ class CThreadsController extends Controller
         {
             $partcipateFlag = 0;
             $myThreads = 0;
-            $request_by = request('by');
-            if (request('by') == 'me') {
+            if (Auth::check()) {
+                $request_by = request('by');
+            }else{
+                $request_by = "";
+            }
+            if ($request_by == 'me') {
                 /**
                  * Filter out the Threads by User
                  * @var [type]
@@ -69,7 +74,7 @@ class CThreadsController extends Controller
                     $threads = [];
                 }
             }
-            elseif (request('by') == 'participate') {
+            elseif ($request_by == 'participate') {
                 /**
                  * Filter out the threads on the basis of users Participation in Threads
                  * @var [type]
@@ -90,7 +95,7 @@ class CThreadsController extends Controller
                 $partcipateFlag = 1;
                 //dd($threads);
             }
-            elseif (request('by') == 'most_replies') {
+            elseif ($request_by == 'most_replies') {
                 /**
                  * Filter out the threads on the basis of most replies or the most popular threads
                  * @var [type]
