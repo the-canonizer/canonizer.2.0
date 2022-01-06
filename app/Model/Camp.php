@@ -578,28 +578,44 @@ class Camp extends Model {
         return $score;
     }
 
-    public function getCamptSupportCount($algorithm, $topicnum, $campnum) {
-
+    public function getCamptSupportCount($algorithm, $topicnum, $campnum,$nick_name_id=null) {
         $supportCountTotal = 0;
+        
         try {
-           
             foreach (session("topic-support-nickname-$topicnum") as $supported) {
-                $nickNameSupports = session("topic-support-{$topicnum}")->filter(function ($item) use($supported) {
-                    return $item->nick_name_id == $supported->nick_name_id; /* Current camp support */
-                });                
+                if($nick_name_id !=null && $supported->nick_name_id == $nick_name_id ){
+                    $nickNameSupports = session("topic-support-{$topicnum}")->filter(function ($item) use($nick_name_id) {
+                        return $item->nick_name_id == $nick_name_id; /* Current camp support */
+                    });
+                }else{
+                    $nickNameSupports = session("topic-support-{$topicnum}")->filter(function ($item) use($supported) {
+                        return $item->nick_name_id == $supported->nick_name_id; /* Current camp support */
+                    });
+                }
+                                
                 
                 $currentCampSupport = $nickNameSupports->filter(function ($item) use($campnum) {
                             return $item->camp_num == $campnum; /* Current camp support */
                         })->first();
                         
-                
+                       
 			   /*The canonizer value should be the same as their value supporting that camp. 
 				   1 if they only support one party, 
 				   0.5 for their first, if they support 2, 
 				   0.25 after and half, again, for each one after that. */
-				if ($currentCampSupport) {
-                    $supportPoint = Algorithm::{$algorithm}($supported->nick_name_id,$supported->topic_num,$supported->camp_num);
-                    $multiSupport = false; //default
+                    if($nick_name_id && $currentCampSupport && $supported->nick_name_id == $nick_name_id){
+                        $supportPoint = Algorithm::{$algorithm}($supported->nick_name_id,$supported->topic_num,$supported->camp_num);
+                        $multiSupport = false; //default;
+                         if ($nickNameSupports->count() > 1) {
+                            $multiSupport = true;
+                            $supportCountTotal += round($supportPoint / (2 ** ($currentCampSupport->support_order)), 2);
+                        } else if ($nickNameSupports->count() == 1) {
+                             $supportCountTotal += $supportPoint;
+                        }
+                        $supportCountTotal += $this->getDeletegatedSupportCount($algorithm, $topicnum, $campnum, $supported->nick_name_id, $currentCampSupport->support_order, $multiSupport);
+                    } else if ($currentCampSupport && $nick_name_id == null) {
+                     $supportPoint = Algorithm::{$algorithm}($supported->nick_name_id,$supported->topic_num,$supported->camp_num);
+                     $multiSupport = false; //default
                      if ($nickNameSupports->count() > 1) {
                         $multiSupport = true;
                         $supportCountTotal += round($supportPoint / (2 ** ($currentCampSupport->support_order)), 2);
@@ -613,7 +629,6 @@ class Camp extends Model {
         } catch (\Exception $e) {
             echo "topic-support-nickname-$topicnum" . $e->getMessage();
         }
-
         return $supportCountTotal;
     }
 
@@ -626,7 +641,6 @@ class Camp extends Model {
             $url_portion = self::getSeoBasedUrlPortion($this->topic_num,$currentCamp);
             $html = '<ul><li class="create-new-li"><span><a href="' . url('camp/create/'.$url_portion) . '">&lt;Start new supporting camp here&gt;</a></span></li>';
         }
-  
         if (is_array($traversedTreeArray)) {
             foreach ($traversedTreeArray as $campnum => $array) {
                 /* ticket 846 sunil */
@@ -717,7 +731,6 @@ class Camp extends Model {
             $array[$child->camp_num]['link'] = self::getTopicCampUrl($child->topic_num,$child->camp_num). $queryString .'#statement';
             $array[$child->camp_num]['score'] = $this->getCamptSupportCount($algorithm, $child->topic_num, $child->camp_num);
             $children = $this->traverseCampTree($algorithm, $child->topic_num, $child->camp_num, $child->parent_camp_num);
-
             $array[$child->camp_num]['children'] = is_array($children) ? $children : [];
         }
         return $array;
@@ -833,10 +846,9 @@ class Camp extends Model {
         }
 
     }
-
-    public function campTree($algorithm, $activeAcamp = null, $supportCampCount = 0, $needSelected = 0) {
+    public function campTree($algorithm,$nick_name_id=null) {
         $as_of_time = time();
-        Camp::$traversetempArray = [];
+        Camp::$traversetempArray = []; 
         if ((isset($_REQUEST['asof']) && $_REQUEST['asof'] == 'bydate')) {
             $as_of_time = strtotime($_REQUEST['asofdate']);
         }else if((session()->has('asof') && session('asof') == 'bydate' && !isset($_REQUEST['asof']))){
@@ -908,18 +920,16 @@ class Camp extends Model {
         $tree = [];
         $tree[$this->camp_num]['title'] = $topic_name;
         $tree[$this->camp_num]['link'] = self::getTopicCampUrl($this->topic_num,$this->camp_num);//  url('topic/' . $topic_id . '/' . $this->camp_num.'#statement');
-        $tree[$this->camp_num]['score'] = $this->getCamptSupportCount($algorithm, $this->topic_num, $this->camp_num);
+        $tree[$this->camp_num]['score'] =  $this->getCamptSupportCount($algorithm, $this->topic_num, $this->camp_num,$nick_name_id);
         $tree[$this->camp_num]['children'] = $this->traverseCampTree($algorithm, $this->topic_num, $this->camp_num);
         
         return $reducedTree = TopicSupport::sumTranversedArraySupportCount($tree);
     }
 
     public function campTreeHtml($activeCamp = null, $activeCampDefault = false,$add_supporter = false, $arrowposition ='fa-arrow-down') {
-        $reducedTree = $this->campTree(session('defaultAlgo', 'blind_popularity'), $activeAcamp = null, $supportCampCount = 0, $needSelected = 0);
-        
+       $reducedTree = $this->campTree(session('defaultAlgo', 'blind_popularity'), $activeAcamp = null, $supportCampCount = 0, $needSelected = 0);
         /* ticket 846 sunil */
         $filter = isset($_REQUEST['filter']) && is_numeric($_REQUEST['filter']) ? $_REQUEST['filter'] : 0.000;
-        
         if(session('filter')==="removed") {
             $filter = 0.000;	
         } else if(isset($_SESSION['filterchange'])) {

@@ -555,10 +555,10 @@ class TopicController extends Controller {
 
         $parentcampnum = isset($onecamp->parent_camp_num) ? $onecamp->parent_camp_num : 0;
 
-        // $statementHistory = Statement::getHistory($topicnum, $campnum);
-        $statement = Statement::getHistory($topicnum, $campnum);
-        // $statement=[];
-        $submit_time = (count($statement)) ? $statement[0]->submit_time: null; 
+        $statementHistory = Statement::getHistory($topicnum, $campnum);
+        //$statement = Statement::getHistory($topicnum, $campnum);
+         $statement=[];
+        $submit_time = (count($statementHistory)) ? $statementHistory[0]->submit_time: null; 
         $nickNames = null;
         $ifIamSupporter = null;
         $ifSupportDelayed = null;
@@ -566,21 +566,21 @@ class TopicController extends Controller {
             $nickNames = Nickname::personNicknameArray();
             $ifIamSupporter = Support::ifIamSupporter($topicnum, $campnum, $nickNames,$submit_time);
             $ifSupportDelayed = Support::ifIamSupporter($topicnum, $campnum, $nickNames,$submit_time, $delayed=true);
-            // if(count($statementHistory) > 0){
-            //     foreach($statementHistory as $val){
-            //         $submitterUserID = Nickname::getUserIDByNickName($val->submitter_nick_id);
-            //         $submittime = $val->submit_time;
-            //         $starttime = time();
-            //         $endtime = $submittime + 60*60;
-            //         $interval = $endtime - $starttime;
-            //         if($ifIamSupporter && $interval > 0 && $val->grace_period > 0  && Auth::user()->id != $submitterUserID){
-            //            continue;
-            //         }else{
-            //             array_push($statement,$val);
-            //         }
-            //     }
-            // }
-        };
+            if(count($statementHistory) > 0){
+                foreach($statementHistory as $val){
+                    $submitterUserID = Nickname::getUserIDByNickName($val->submitter_nick_id);
+                    $submittime = $val->submit_time;
+                    $starttime = time();
+                    $endtime = $submittime + 60*60;
+                    $interval = $endtime - $starttime;
+                    if($ifIamSupporter && $interval > 0 && $val->grace_period > 0  && Auth::user()->id != $submitterUserID){
+                       continue;
+                    }else{
+                        array_push($statement,$val);
+                    }
+                }
+            }
+        }
         $wiky = new Wiky;
         return view('topics.statementhistory', compact('topic', 'statement', 'parentcampnum', 'onecamp', 'parentcamp', 'wiky', 'ifIamSupporter','submit_time','ifSupportDelayed'));
     }
