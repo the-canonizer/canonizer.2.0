@@ -60,4 +60,3 @@ Click here to See this topic.
 Sincerely,<br>
 {{ config('app.email_signature') }}
 @endcomponent
-<?php exit; ?>
