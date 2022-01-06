@@ -184,7 +184,7 @@ class SharesAlgoController extends Controller {
                 $dataShares = SharesAlgorithm::paginate(10);
            
             }
-            
+            $dataShares->withPath('/admin/shares');
             if(count($dataShares) > 0){
                 foreach($dataShares as $d){
                     $table.="<tr>";
