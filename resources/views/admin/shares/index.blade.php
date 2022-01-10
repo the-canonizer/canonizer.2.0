@@ -45,7 +45,7 @@
                 @if(isset($shares) && count($shares) > 0)
                 @foreach($shares as $share)
                 <tr>
-                    <td>{{ $share->usernickname->nick_name }}</td>
+                    <td><a href="{{route('user_supports',$share->usernickname->id)}}">{{ $share->usernickname->nick_name }}</a></td>
                     <td>{{ date("F,Y",strtotime($share->as_of_date)) }}</td>
                     <td>{{ $share->share_value}}</td>
                     <td>{{ number_format(sqrt($share->share_value),2)}}</td>
