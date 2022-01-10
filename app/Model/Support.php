@@ -165,10 +165,13 @@ class Support extends Model {
         return $supporters;
     }
 
-    public static function removeSupport($topicNum,$campNum,$nickName = null) {
+    public static function removeSupport($topicNum,$campNum,$nickName = []) {
+        if(empty($topicNum) || empty($campNum) || empty($nickName)){
+            return;
+        }
         $supportData = self::where('topic_num',$topicNum)->where('camp_num',$campNum)->where('end','=',0);
         if(!empty($nickName)){
-            $supportData->where('nick_name_id',$nickName);
+            $supportData->whereIn('nick_name_id',$nickName);
         }
         $results = $supportData->get();
         foreach($results as $value){
