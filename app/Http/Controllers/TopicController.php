@@ -722,18 +722,21 @@ class TopicController extends Controller {
         $eventtype = "CREATE";
         if (isset($all['camp_num'])) {
             // while updating camp check if any old support then remove it if parent camp changed #834
-            $campOldData = Camp::getLiveCamp($all['topic_num'],$all['camp_num']);// #834
+            $campOldData = Camp::getLiveCamp($all['topic_num'],$all['camp_num']);
             if(isset($all['parent_camp_num']) && $all['parent_camp_num']!='' && $all['parent_camp_num'] != $campOldData->parent_camp_num){
-            // get new parent direct supports and remove it #834
-                // $supportData = Support::where('topic_num','=',$all['topic_num'])->where('camp_num','=',$all['parent_camp_num'])->get();
-                // if(count($supportData) > 0){
-                //     foreach($supportData as $value){
-                //         $value->end = time();
-                //         $value->save();
-                //     }
-                // }
-                //#924 change support number when parent camp updated
-                Support::removeSupport($all['topic_num'],$all['parent_camp_num']);
+                //edit camp have direct supports
+                $supportData_camp = Support::getDirectSupporter($all['topic_num'],$all['camp_num']);
+                //get new parent direct supports and remove it #834
+                $supportData = Support::where('topic_num','=',$all['topic_num'])->where('camp_num','=',$all['parent_camp_num'])->where('end', '=', 0)->get();
+                if(empty($supportData_camp)){
+                   if(count($supportData) > 0){
+                        foreach($supportData as $value){
+                            $value->end = time();
+                            $value->save();
+                            
+                        }
+                    } 
+                }
             }
             $eventtype = "UPDATE";
             $camp->camp_num = $all['camp_num'];

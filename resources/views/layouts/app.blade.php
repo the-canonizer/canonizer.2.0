@@ -195,7 +195,9 @@
                       session(['asofDefault'=>$_REQUEST['asof']]);
                     }
                     if(isset($_REQUEST['asofdate']) && $_REQUEST['asofdate']) {
-                      session(['asofdateDefault'=>$_REQUEST['asofdate']]);
+                        $date = date_create($_REQUEST['asofdate']);
+                        $date = date_format($date,"m/d/Y h:s:i A"); //added by Ali Ahmad ticket# 1001, 1011, 1020
+                        session(['asofdateDefault'=> $date]);
                     }
 
                     $visibleRoutes = array("index","show");

@@ -178,14 +178,22 @@ class Camp extends Model {
                 ->join('namespace', 'topic.namespace_id', '=', 'namespace.id')
                 ->where('camp_name', '=', 'Agreement')
                 ->where('camp.objector_nick_id', '=', NULL)
-                ->where('camp.go_live_time', '<=', $as_of_time)
-                ->whereRaw('topic.go_live_time in (select max(topic.go_live_time) from topic where topic.topic_num=topic.topic_num and topic.objector_nick_id is null and topic.go_live_time <=' . $as_of_time . ' group by topic.topic_num)')
                 ->where('topic.topic_name', '<>', "");
         if (isset($_REQUEST['namespace']) && (!empty($_REQUEST['namespace']) || $_REQUEST['namespace'] != 0)) {
             $query->where('namespace_id', $_REQUEST['namespace']);
         }else if( null !== session('defaultNamespaceId') && !empty(session('defaultNamespaceId'))){
             $query->whereIn('namespace_id',explode(',', session('defaultNamespaceId', 1)));
         }
+
+        if (isset($_REQUEST['asof']) && $_REQUEST['asof'] == 'review') {
+            $query->whereRaw('topic.go_live_time in (select max(topic.go_live_time) from topic where topic.topic_num=topic.topic_num and topic.objector_nick_id is null group by topic.topic_num)');
+          
+        }else{
+            $query->where('camp.go_live_time', '<=', $as_of_time);
+            $query->whereRaw('topic.go_live_time in (select max(topic.go_live_time) from topic where topic.topic_num=topic.topic_num and topic.objector_nick_id is null and topic.go_live_time <=' . $as_of_time . ' group by topic.topic_num)');
+
+        }
+        
         if(isset($_REQUEST['my']) && $_REQUEST['my'] == $_REQUEST['namespace']){
             $query->whereIn('topic.submitter_nick_id', $nicknameIds);
         }

@@ -87,6 +87,11 @@ function changeNamespace(element){
         type:"POST",
         data:{namespace:$(element).val()},
         success:function(response){
+            var namespace = $("select[name='namespace']").val();
+            var my = $("input[name='my']").val();
+            if(namespace != my){
+                $("input[name='my']").attr('disabled','disabled');
+            }
             $(element).parents('form').submit();
         }
     });
