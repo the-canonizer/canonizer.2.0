@@ -146,6 +146,12 @@ class Algorithm{
         $as_of_time = time();
         if(isset($_REQUEST['asof']) && $_REQUEST['asof']=='bydate'){
             $as_of_time = strtotime($_REQUEST['asofdate']);
+        }else{
+            // get the last month shares added for user as current share #1055
+            $latest_record = SharesAlgorithm::where('nick_name_id',$nick_name_id)->orderBy('as_of_date','desc')->first();
+            if(isset($latest_record) && isset($latest_record->as_of_date)){
+                $as_of_time = strtotime($latest_record->as_of_date);  
+            }
         }
         $year = date('Y',$as_of_time);
         $month = date('m',$as_of_time);
