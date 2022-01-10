@@ -1202,8 +1202,8 @@ class TopicController extends Controller {
             // Dispatch Job
             $this->dispatchJob($topic);
 
-            $this->mailSupporters($directSupporter, $link, $data);         //mail supporters  
-           //  $this->mailSubscribersAndSupporters($directSupporter,$subscribers,$link, $data);  
+            //$this->mailSupporters($directSupporter, $link, $data);         //mail supporters  
+            $this->mailSubscribersAndSupporters($directSupporter,$subscribers,$link, $data);  
            return response()->json(['id' => $topic->id, 'message' => 'Your change to topic has been submitted to your supporters.']);
         }
     }
