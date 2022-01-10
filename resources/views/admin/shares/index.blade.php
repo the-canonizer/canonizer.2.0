@@ -26,8 +26,8 @@
                         <option value="">Select Month</option>
                             <?php
 
-                                    for($m=1; $m<=date('m'); $m++){
-                                       echo '<option value="'.date('F,Y', mktime(0, 0, 0, $m)).'">'.date('F,Y', mktime(0, 0, 0, $m)).'</option>';
+                                    foreach($month_range as $m){
+                                       echo '<option value="'.date('Y-m-d', strtotime($m)).'">'.date('F,Y', strtotime($m)).'</option>';
                                      }
                             ?>
                     </select>
