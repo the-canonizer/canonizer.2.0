@@ -557,8 +557,21 @@ class SettingsController extends Controller
             // Dispatch Job
             if(isset($topic)) {
                 Util::dispatchJob($topic, 0);
+
+                // Incase the topic is mind expert then find all the affected topics 
+                if($topic_num == 81) {
+                    $camp = Camp::where('topic_num', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('go_live_time', '<=', time())->latest('submit_time')->first();
+                    if(!empty($camp)) {
+                        // Get submitter nick name id
+                        $submitterNickNameID = $camp->submitter_nick_id;
+                        $affectedTopicNums = Support::where('nick_name_id',$submitterNickNameID)->where('end',0)->distinct('topic_num')->pluck('topic_num');
+                        foreach($affectedTopicNums as $affectedTopicNum) {
+                            $topic = Topic::where('topic_num', $affectedTopicNum)->get()->last();
+                            Util::dispatchJob($topic, 1);
+                        }
+                    }
+                }
             }
-            
             return redirect(\App\Model\Camp::getTopicCampUrl($data['topic_num'],session('campnum')));            
         } else {
             return redirect()->route('login');
@@ -685,7 +698,6 @@ class SettingsController extends Controller
             $this->mailSubscribersAndSupporters($directSupporter,$subscribers, $link, $result);
             
     }
-
 
     private function emailForSupportDeleted($data){
              //$parentUser = null;
@@ -1049,6 +1061,19 @@ class SettingsController extends Controller
         // Dispatch Job
         if(isset($topic)) {
             Util::dispatchJob($topic, 0);
+            // Incase the topic is mind expert then find all the affected topics 
+            if($topicNum == 81) {
+                $camp = Camp::where('topic_num', $topicNum)->where('camp_num', '=', $campNum)->where('go_live_time', '<=', time())->latest('submit_time')->first();
+                if(!empty($camp)) {
+                    // Get submitter nick name id
+                    $submitterNickNameID = $camp->submitter_nick_id;
+                    $affectedTopicNums = Support::where('nick_name_id',$submitterNickNameID)->where('end',0)->distinct('topic_num')->pluck('topic_num');
+                    foreach($affectedTopicNums as $affectedTopicNum) {
+                        $topic = Topic::where('topic_num', $affectedTopicNum)->get()->last();
+                        Util::dispatchJob($topic, 1);
+                    }
+                }
+            }
         }
 
         return redirect(\App\Model\Camp::getTopicCampUrl($topicNum ,$campNum));
