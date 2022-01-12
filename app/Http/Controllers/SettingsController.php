@@ -293,7 +293,7 @@ class SettingsController extends Controller
             if ($delegateSupportInTopic->count() > 0) {
                 $nickName = Nickname::where('id',$delegateSupportInTopic[0]->delegate_nick_name_id)->first();
                 $userFromNickname = $nickName->getUser(); 
-                Session::flash('warning', "You have  delegated your support to user ".$nickName->nick_name." under this topic. If you continue your delegated support will be removed.");
+                Session::flash('warning', "You have delegated your support to user ".$nickName->nick_name." under this topic. If you continue your delegated support will be removed.");
 
             }
             /** By Reena Nalwa #974 */
