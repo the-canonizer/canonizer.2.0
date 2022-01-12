@@ -95,7 +95,7 @@ if(isset($topic) && count($topic) > 0 ) {?>
                         $title      = preg_replace('/[^A-Za-z0-9\-]/', '-', $topic->topic_name);						  
                         $topic_id  = $topic->topic_num."-".$title;
 						 ?>
-                     {!! $topic->campTreeHtml($parentcampnum,1,false) !!} 
+                     {!! $topic->campTreeHtml($parentcampnum, 1, false, 'fa-arrow-down', $topic) !!} 
                     </ul>
                     
                 </div>
