@@ -288,9 +288,18 @@ class SettingsController extends Controller
 
                 }
             }
+            /** #1037 */
+            $delegateSupportInTopic = Support::where('topic_num', $topicnum)->where('end', '=', 0)->where('delegate_nick_name_id','!=',0)->whereIn('nick_name_id', $userNickname)->get();
+            if ($delegateSupportInTopic->count() > 0) {
+                $nickName = Nickname::where('id',$delegateSupportInTopic[0]->delegate_nick_name_id)->first();
+                $userFromNickname = $nickName->getUser(); 
+                Session::flash('warning', "You have delegated your support to user ".$nickName->nick_name." under this topic. If you continue your delegated support will be removed.");
+
+            }
             /** By Reena Nalwa #974 */
             $alreadyDirectSupported = Support::where('topic_num', $topicnum)->where('end', '=', 0)->where('delegate_nick_name_id', '=', 0)->whereIn('nick_name_id', $userNickname)->pluck('camp_num')->toArray();
             if(count($alreadyDirectSupported) && $delegate_nick_name_id){
+                                   
                 Session::flash('warning', "You are directly supporting one or more camps under this topic. If you continue your direct support will be removed.");
             }
             $parentSupport = Camp::validateParentsupport($topicnum, $campnum, $userNickname, $confirm_support);
@@ -653,7 +662,7 @@ class SettingsController extends Controller
 
     private function mailSubscribers($subscribers, $link, $data, $alreadyMailed)
     {  //mail return
-        //return;
+       // return;
         foreach ($subscribers as $user) {
             $user = \App\User::find($user);
             if (!in_array($user->id, $alreadyMailed, TRUE)) {
@@ -670,7 +679,7 @@ class SettingsController extends Controller
 
     private function mailDirectSupporters($directSupporter, $link, $data)
     {   //mail return
-        //return;
+       // return;
         foreach ($directSupporter as $supporter) {
             $user = Nickname::getUserByNickName($supporter->nick_name_id);
             $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
@@ -687,7 +696,7 @@ class SettingsController extends Controller
     private function emailForSupportAdded($data)
     {
          //mail return
-         //return;
+        // return;
         $parentUser = Nickname::getUserByNickName($data['nick_name']);
         $nickName = Nickname::getNickName($data['nick_name']);
         $topic = Camp::getAgreementTopic($data['topic_num'],['nofilter'=>true]);
@@ -1163,7 +1172,7 @@ class SettingsController extends Controller
 
     public function notifiyPromotedDelegates($topicNum,$campNum='',$nickNameId,$delegateNickNameId,$alldirectDelegates){
          //mail return
-         //return;
+        //return;
         $to = [];
         $topic = Camp::getAgreementTopic($topicNum,['nofilter'=>true]);
         $fistChoiceCamp = Support::where('topic_num', $topicNum)->where('nick_name_id', '=', $delegateNickNameId)->where('end', '=', 0)->where('support_order',1)->first();
@@ -1229,11 +1238,12 @@ class SettingsController extends Controller
      */
     private function mailWhenDelegateSupportRemoved($topicNum,$nickNameId,$delegateNickNameId,$campList){
         //mail return
-        //return;
+       // return;
         $parentUser = null;
         $result['delegate_support_deleted'] = 1;
         $parentUser = Nickname::getNickName($delegateNickNameId);
-        $result['delegated_user'] = $parentUser->nick_name;             
+        $result['delegated_user'] = $parentUser->nick_name;
+        $result['delegated_user_id'] = $parentUser->id;             
         $nickName = Nickname::getNickName($nickNameId);
         $topic = Camp::getAgreementTopic($topicNum,['nofilter'=>true]);        
         //$camp = Camp::where('topic_num', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('go_live_time', '<=', time())->latest('submit_time')->first();
@@ -1241,23 +1251,28 @@ class SettingsController extends Controller
         $result['topic_num'] = $topicNum;
         $result['camp_num'] = 1;
         $result['nick_name'] = $nickName->nick_name;
+        $result['nick_name_id'] = $nickName->id;
         $result['object'] = $topic->topic_name;       
         $result['subject'] = $nickName->nick_name . " has removed their delegated support from ". $parentUser->nick_name . " in ".$topic->topic_name." topic.";
         $result['topic'] = $topic;
         $link = \App\Model\Camp::getTopicCampUrl($topicNum,1);
-        $deletedSupport = Support::where('topic_num', $topicNum)
-            ->whereIn('nick_name_id', [$nickNameId])
+        $parentSupport = Support::where('topic_num', $topicNum)
+            ->whereIn('nick_name_id', [$delegateNickNameId])
             ->orderBy('end', 'DESC')
-            ->get();
+            ->first();
         $subscribers = Camp::getCampSubscribers($topicNum);
         $directSupporterInCampList = [];
         $directSupporter = Support::getAllDirectSupporters($topicNum);
         foreach($directSupporter as $support){
-            if(in_array($support->camp_num, $campList,TRUE)){
+            if(in_array($support->camp_num, $campList,TRUE)){  // mail to those who is supporting/subscribing camps from which support is withdrawn
                 $directSupporterInCampList[] = $support;
              }
         }
         $this->notifyRemovingDelegateSupporter($nickName, $parentUser,$result);
+        if($parentSupport->delegate_nick_name_id != 0){ // mail to delegate user from whome delegate support is withdrawn
+           $result['mail_to_parent'] = true;
+            $this->notifyRemovingDelegateSupporter($parentUser, $parentUser,$result);
+        }
         //$supportsDirect = array_push($directSupporterInCampList,$deletedSupport[0]);       
         $result['support_deleted'] = 1;
         $this->mailSubscribersAndSupporters($directSupporterInCampList,$subscribers, $link, $result,$campList);   
@@ -1314,9 +1329,9 @@ class SettingsController extends Controller
 
     private function notifyRemovingDelegateSupporter($nickName,$parentUser, $data){
         //mail return
-       // return
+        //return
         $user = Nickname::getUserByNickName($nickName->id);    
-        $result['subject'] = "Support removed from ". $parentUser->nick_name . " in ".$data['topic']->topic_name." topic.";         
+        $data['subject'] = "Support removed from ". $parentUser->nick_name . " in ".$data['topic']->topic_name." topic.";         
         $link = \App\Model\Camp::getTopicCampUrl($data['topic_num'],1);          
         $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
         try{
