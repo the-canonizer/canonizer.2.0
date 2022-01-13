@@ -27,6 +27,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\ObjectionToSubmitterMail;
 use App\Mail\PurposedToSupportersMail;
 use App\Mail\NewDelegatedSupporterMail;
+use App\Model\TopicSupport;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Foundation\Auth\RedirectsUsers;
 
@@ -724,19 +725,19 @@ class TopicController extends Controller {
             // while updating camp check if any old support then remove it if parent camp changed #834
             $campOldData = Camp::getLiveCamp($all['topic_num'],$all['camp_num']);
             if(isset($all['parent_camp_num']) && $all['parent_camp_num']!='' && $all['parent_camp_num'] != $campOldData->parent_camp_num){
-                //edit camp have direct supports
-                $supportData_camp = Support::getDirectSupporter($all['topic_num'],$all['camp_num']);
-                //get new parent direct supports and remove it #834
-                $supportData = Support::where('topic_num','=',$all['topic_num'])->where('camp_num','=',$all['parent_camp_num'])->where('end', '=', 0)->get();
-                if(empty($supportData_camp)){
-                   if(count($supportData) > 0){
-                        foreach($supportData as $value){
-                            $value->end = time();
-                            $value->save();
-                            
-                        }
-                    } 
+                //#924 start
+                //get all child camps of current camp
+                $allChildCamps = Camp::getAllChildCamps($campOldData);
+                //get supporters of all child camps of current camp
+                $allChildSupporters = Support::where('topic_num',$all['topic_num'])
+                    ->where('end',0)
+                    ->whereIn('camp_num',$allChildCamps)
+                    ->pluck('nick_name_id');
+                //remove all supports from parent camp if there any child supporter
+                if(sizeof($allChildSupporters) > 0){
+                    Support::removeSupport($all['topic_num'],$all['parent_camp_num'],$allChildSupporters);
                 }
+                //#924 end
             }
             $eventtype = "UPDATE";
             $camp->camp_num = $all['camp_num'];
