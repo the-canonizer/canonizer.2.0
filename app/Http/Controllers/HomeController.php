@@ -206,8 +206,9 @@ class HomeController extends Controller {
 
     public function changeNamespace(Request $request) {
         $namespace = Namespaces::find($request->input('namespace'));
-
-        session(['defaultNamespaceId' => $namespace->id]);
+        if(!empty($namespace)){
+            session(['defaultNamespaceId' => $namespace->id]);
+        }
     }
 
     public function termservice(){
