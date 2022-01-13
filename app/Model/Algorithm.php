@@ -387,20 +387,24 @@ class Algorithm{
             ->where('nick_name_id', '=', $nick_name_id)
             ->get();
         
-        foreach ($user_support_camps as $scamp) {
-            $ret_camp = Camp::where('topic_num', '=', $scamp->topic_num)
-                ->where('camp_num', '=', $scamp->camp_num)
-                ->whereNotNull('camp_about_nick_id')
-                ->where('camp_about_nick_id', '<>', 0)
-                ->whereRaw('go_live_time in (select max(go_live_time) from camp where topic_num='.$topicnum.' and objector_nick_id is null and go_live_time < "'.time().'" group by camp_num)')				
-                ->where('go_live_time','<',time())
-                ->groupBy('camp_num')				
-				->orderBy('submit_time', 'desc')
-                ->get();
+        $topic_num_array = array();
+        $camp_num_array = array();
 
-            if ( $ret_camp->count() ) {
-                $num_of_camps_supported++;
-            }
+        foreach ($user_support_camps as $scamp) {
+            $topic_num_array[] = $scamp->topic_num;
+            $camp_num_array[] = $scamp->camp_num;
+        }
+        $ret_camp = Camp::whereIn('topic_num', array_unique($topic_num_array))
+            ->whereIn('camp_num', array_unique($camp_num_array))
+            ->whereNotNull('camp_about_nick_id')
+            ->where('camp_about_nick_id', '<>', 0)
+            ->whereRaw('go_live_time in (select max(go_live_time) from camp where topic_num=' . $topicnum . ' and objector_nick_id is null and go_live_time < "' . time() . '" group by camp_num)')
+            ->where('go_live_time', '<', time())
+            ->groupBy('camp_num')
+            ->orderBy('submit_time', 'desc')
+            ->get();
+        if ($ret_camp->count()) {
+            $num_of_camps_supported = $ret_camp->count();
         }
         
         if( ( $directSupports->count() > 0 || $delegatedSupports->count() > 0 ) && $num_of_camps_supported > 1 ) {

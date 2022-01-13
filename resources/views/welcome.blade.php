@@ -66,7 +66,6 @@
                         // $topic_name = isset($topicData[0]) ? $topicData[0]->topic_name:'';
                         // $request_namesapce = session('defaultNamespaceId', 1); 
                        
-                        
                         $as_of_time = time();
                         if(isset($_REQUEST['asof']) && $_REQUEST['asof']=='date'){
                             $as_of_time = strtotime($_REQUEST['asofdate']);
