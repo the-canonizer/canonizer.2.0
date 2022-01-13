@@ -43,7 +43,7 @@
             <div class="content">
             <div class="row">
          @if(count($topics))
-          <div class="tree col-sm-12">
+          <div class="tree home-page-tree col-sm-12">
                     <ul class="mainouter" id="load-data">
                       <?php $createCamp = 1;
                         session(['topic_on_page' => 0]);
@@ -58,20 +58,48 @@
                        @foreach($topics as $k=>$topic)
 
                        <?php
-
-                        $topicData = \App\Model\Topic::where('topic_num','=',$topic->topic_num)->where('go_live_time', '<=', $as_of_time)->latest('submit_time')->get();
-                        $campData = \App\Model\Camp::where('topic_num',$topic->topic_num)->where('camp_num',$topic->camp_num)->where('go_live_time', '<=', $as_of_time)->latest('submit_time')->first();
-                        $topic_name_space_id = isset($topicData[0]) ? $topicData[0]->namespace_id:1;
-                        $topic_name = isset($topicData[0]) ? $topicData[0]->topic_name:'';
-                        $request_namesapce = session('defaultNamespaceId', 1); 
+                        
+                         $topicData = \App\Model\Topic::where('topic_num','=',$topic->topic_num)->where('go_live_time', '<=', $as_of_time)->latest('submit_time')->get();
+                         $url = \App\Model\Camp::getTopicCampUrl($topic->topic_num,$topic->camp_num);
+                        // $campData = \App\Model\Camp::where('topic_num',$topic->topic_num)->where('camp_num',$topic->camp_num)->where('go_live_time', '<=', $as_of_time)->latest('submit_time')->first();
+                        // $topic_name_space_id = isset($topicData[0]) ? $topicData[0]->namespace_id:1;
+                        // $topic_name = isset($topicData[0]) ? $topicData[0]->topic_name:'';
+                        // $request_namesapce = session('defaultNamespaceId', 1); 
                        
                         
                         $as_of_time = time();
                         if(isset($_REQUEST['asof']) && $_REQUEST['asof']=='date'){
                             $as_of_time = strtotime($_REQUEST['asofdate']);
                         } 
+
+                        $filter = isset($_REQUEST['filter']) && is_numeric($_REQUEST['filter']) ? $_REQUEST['filter'] : 0.000;
+        
+                        if(session('filter')==="removed") {
+                            $filter = 0.000;	
+                        } else if(isset($_SESSION['filterchange'])) {
+                            $filter = $_SESSION['filterchange'];
+                        }
+
+                        if ($topic->score < $filter) {
+                            $val = session('topic_on_page');
+                            session(['topic_on_page' => $val+1]);
+                            continue;
+                        }
+
                        ?>
-                         {!! $campData->campTreeHtml($createCamp,false,false,'fa-arrow-right') !!}
+                                             
+                        <li >
+                            <span class="parent" title="Expand this branch"><i class="fa fa-arrow-right"></i> </span>
+                            <div class="tp-title" bis_skin_checked="1">
+                                <a style="" href="@php echo  $url; @endphp" bis_skin_checked="1">
+                                    <?php echo $topicData[0]->topic_name; ?>
+                                </a>
+                                <div class="badge" bis_skin_checked="1">@php echo $topic->score; @endphp</div>
+                            </div>
+                        </li>
+                        
+                         {{-- {!! $campData->campTreeHtml($createCamp,false,false,'fa-arrow-right') !!} --}}
+                       
                          <?php $createCamp = 0;?>
                        @endforeach
                     <a id="btn-more" class="remove-row" data-id="{{ $topic->id }}"></a>
@@ -171,3 +199,14 @@ function changeNamespace(element){
 </script>
 
 @endsection
+<style> 
+.tree li::before, .tree li::after  {
+    border: none !important;
+} 
+.tree li .tp-title {
+    margin-left: 10px !important;
+}
+.tree ul.mainouter ul {
+    padding-left: 10px !important;
+}
+</style>
