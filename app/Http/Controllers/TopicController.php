@@ -718,6 +718,9 @@ class TopicController extends Controller {
         $camp->submitter_nick_id = isset($all['nick_name']) ? $all['nick_name'] : "";
         $camp->camp_about_url = isset($all['camp_about_url']) ? $all['camp_about_url'] : "";
         $camp->camp_about_nick_id = isset($all['camp_about_nick_id']) ? $all['camp_about_nick_id'] : "";
+        if($all['topic_num'] == '81' && !isset($all['camp_about_nick_id'])){ // check if mind_expert topic and camp abt nick name id is null then assign nick name as about nickname
+            $camp->camp_about_nick_id = isset($all['nick_name']) ? $all['nick_name'] : "";  
+        }
         $camp->grace_period = 1;
 
         $eventtype = "CREATE";
