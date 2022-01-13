@@ -1023,6 +1023,7 @@ class Camp extends Model {
         return $html;
     }
 
+
     public static function getCampSubscription($topicnum,$campnum,$userid=null){
         $returnArr = array('flag'=>0,'camp'=>[],'camp_subscription_data'=>[]);
         if($userid){
