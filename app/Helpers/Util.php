@@ -37,6 +37,7 @@ class Util
             CURLOPT_HTTP_VERSION    => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST   => $type,
             CURLOPT_POSTFIELDS      => $body,
+            CURLOPT_REFERER         => env('APP_URL'),
             CURLOPT_HTTPHEADER      => $headers
         );
         
