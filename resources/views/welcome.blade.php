@@ -96,7 +96,7 @@
                                 <div class="badge" bis_skin_checked="1">@php echo $topic->score; @endphp</div>
                             </div>
                         </li>
-                        
+
                          {{-- {!! $campData->campTreeHtml($createCamp,false,false,'fa-arrow-right') !!} --}}
                        
                          <?php $createCamp = 0;?>
