@@ -19,6 +19,7 @@ use App\Model\EtherAddresses;
 use App\Jobs\CanonizerService;
 use App\Model\SupportInstance;
 use App\Mail\PromotedDelegatesMail;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\NewDelegatedSupporterMail;
@@ -559,14 +560,22 @@ class SettingsController extends Controller
                 Util::dispatchJob($topic, 0);
 
                 // Incase the topic is mind expert then find all the affected topics 
+                Log::info("Topic Num: ". $topic_num. " and Camp Num: ". $data['camp_num']);
+                Log::info('================================================================');
                 if($topic_num == 81) {
                     $camp = Camp::where('topic_num', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('go_live_time', '<=', time())->latest('submit_time')->first();
+                    Log::info("Camp: ". json_encode($camp));
+                    Log::info('================================================================');
                     if(!empty($camp)) {
                         // Get submitter nick name id
                         $submitterNickNameID = $camp->submitter_nick_id;
+                        Log::info("Submit Nick Name ID: ". $submitterNickNameID);
                         $affectedTopicNums = Support::where('nick_name_id',$submitterNickNameID)->where('end',0)->distinct('topic_num')->pluck('topic_num');
+                        Log::info("Affected Topics : ". json_encode($affectedTopicNums));
+                        Log::info('================================================================');
                         foreach($affectedTopicNums as $affectedTopicNum) {
                             $topic = Topic::where('topic_num', $affectedTopicNum)->get()->last();
+                            Log::info("Topic Num inside loop: ".$topic->topic_num);
                             Util::dispatchJob($topic, 1);
                         }
                     }
