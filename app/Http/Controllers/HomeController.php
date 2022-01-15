@@ -210,7 +210,7 @@ class HomeController extends Controller {
             $topicNum = explode('-',$tempTopicID)[0];
             $topic = Topic::getLiveTopic($topicNum);
             if(isset($topic) && (strtolower($algorithm) === 'blind_popularity' || strtolower($algorithm) === 'mind_experts')){
-                Util::dispatchJob($topic, 1);
+                Util::dispatchJob($topic, 1, 1);
             } else {
                 // Nothing to do
             }

@@ -397,23 +397,26 @@ class SettingsController extends Controller
             $myDelegatedSupports = [];
             $myDelegator = Support::where('topic_num', $topic_num)->whereIn('delegate_nick_name_id', $userNicknames)->where('end', '=', 0)->groupBy('nick_name_id')->get();
             $mysupports = Support::where('topic_num', $topic_num)->whereIn('nick_name_id', $userNicknames)->where('end', '=', 0)->orderBy('support_order', 'ASC')->get();
+            
             if(isset($mysupports) && count($mysupports) > 0){
-                    foreach ($mysupports as $spp){
-                        if($spp['delegate_nick_name_id'] == 0){
-                            $mysupportArray[] =  $spp->camp_num;  
-                        }else{
-                            $myDelegatedSupports[] =  $spp->camp_num;  
-                        }
+                foreach ($mysupports as $spp){
+                    if($spp['delegate_nick_name_id'] == 0){
+                        $mysupportArray[] =  $spp->camp_num;  
+                    }else{
+                        $myDelegatedSupports[] =  $spp->camp_num;  
                     }
+                }
             }                       
+            
             if (isset($mysupports) && count($mysupports) > 0 && isset($data['removed_camp']) && count($data['removed_camp']) > 0) {
                foreach ($mysupports as $singleSupport) { 
                     if(in_array($singleSupport->camp_num,$data['removed_camp'])){
                         $this->removeSupport($topic_num,$singleSupport->camp_num,$singleSupport->nick_name_id,'',$singleSupport->support_order);
                     } 
-                 }    
+                }    
             }
-              /** if user is delegating to someone else or is directly supporting  then all the old delegated  supports will be removed #702 **/
+            
+            /** if user is delegating to someone else or is directly supporting  then all the old delegated  supports will be removed #702 **/
             if(isset($myDelegatedSupports) && count($myDelegatedSupports) > 0){
                 foreach ($mysupports as $singleSupport) {
                      if(in_array($singleSupport->camp_num,$myDelegatedSupports)){
@@ -425,7 +428,8 @@ class SettingsController extends Controller
                        $this->emailForSupportDeleted($mailData);    
                     }             
                 }
-            }            
+            } 
+           
             $last_camp =  $data['camp_num'];
             $newcamp_mail_flag = false;           
             if(isset($myDelegatedSupports) && count($myDelegatedSupports) > 0 && isset($data['delegate_nick_name_id']) && $data['delegate_nick_name_id'] == 0 ){ // removing delegte support and directly supporting camp
@@ -449,7 +453,7 @@ class SettingsController extends Controller
                     $this->emailForSupportAdded($data);   
                 }
             }else if (isset($data['support_order']) && isset($data['delegate_nick_name_id']) && $data['delegate_nick_name_id'] == 0 ) {
-               foreach ($data['support_order'] as $camp_num => $support_order) {
+                foreach ($data['support_order'] as $camp_num => $support_order) {
                     $last_camp = $camp_num;
                     if(!in_array($camp_num,$mysupportArray)) {
                         $newcamp_mail_flag = true;
@@ -484,8 +488,8 @@ class SettingsController extends Controller
                     $this->emailForSupportAdded($data);   
                 }
             }else if($data['delegate_nick_name_id'] !=0){
-                 $delegateUsersupports = Support::where('topic_num', $topic_num)->where('nick_name_id', $data['delegate_nick_name_id'])->where('end', '=', 0)->orderBy('support_order', 'ASC')->get();
-                 if(isset($delegateUsersupports) && count($delegateUsersupports) > 0){
+                $delegateUsersupports = Support::where('topic_num', $topic_num)->where('nick_name_id', $data['delegate_nick_name_id'])->where('end', '=', 0)->orderBy('support_order', 'ASC')->get();
+                if(isset($delegateUsersupports) && count($delegateUsersupports) > 0){
                     foreach($delegateUsersupports as $cmp){
                         $last_camp = $cmp->camp_num;
                         if(in_array($last_camp,$mysupportArray)){ // if user is also a direct supporter end that support
@@ -510,7 +514,7 @@ class SettingsController extends Controller
                         session()->forget("topic-support-tree-{$cmp->topic_num}");
                         Session::save();
                     }
-                 }                
+                }                
             }
             if ($last_camp == $data['camp_num']) {
                 Session::flash('confirm', "samecamp");
@@ -551,35 +555,15 @@ class SettingsController extends Controller
                 $result['delegated_user'] = $parentUserNickName->nick_name;
                 $this->mailSubscribersAndSupporters($directSupporter,$subscribers, $link, $result);
             }
+
             Session::save();
             Session::flash('success', "Your support update has been submitted successfully.");
 
             $topic = Topic::where('topic_num', $topic_num)->get()->last();            
             // Dispatch Job
             if(isset($topic)) {
-                Util::dispatchJob($topic, 0);
+                Util::dispatchJob($topic, $data['camp_num'], 0);
 
-                // Incase the topic is mind expert then find all the affected topics 
-                Log::info("Topic Num: ". $topic_num. " and Camp Num: ". $data['camp_num']);
-                Log::info('================================================================');
-                if($topic_num == 81) {
-                    $camp = Camp::where('topic_num', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('go_live_time', '<=', time())->latest('submit_time')->first();
-                    Log::info("Camp: ". json_encode($camp));
-                    Log::info('================================================================');
-                    if(!empty($camp)) {
-                        // Get submitter nick name id
-                        $submitterNickNameID = $camp->submitter_nick_id;
-                        Log::info("Submit Nick Name ID: ". $submitterNickNameID);
-                        $affectedTopicNums = Support::where('nick_name_id',$submitterNickNameID)->where('end',0)->distinct('topic_num')->pluck('topic_num');
-                        Log::info("Affected Topics : ". json_encode($affectedTopicNums));
-                        Log::info('================================================================');
-                        foreach($affectedTopicNums as $affectedTopicNum) {
-                            $topic = Topic::where('topic_num', $affectedTopicNum)->get()->last();
-                            Log::info("Topic Num inside loop: ".$topic->topic_num);
-                            Util::dispatchJob($topic, 1);
-                        }
-                    }
-                }
             }
             return redirect(\App\Model\Camp::getTopicCampUrl($data['topic_num'],session('campnum')));            
         } else {
@@ -1069,20 +1053,7 @@ class SettingsController extends Controller
         $topic = Topic::where('topic_num', $topicNum)->get()->last();            
         // Dispatch Job
         if(isset($topic)) {
-            Util::dispatchJob($topic, 0);
-            // Incase the topic is mind expert then find all the affected topics 
-            if($topicNum == 81) {
-                $camp = Camp::where('topic_num', $topicNum)->where('camp_num', '=', $campNum)->where('go_live_time', '<=', time())->latest('submit_time')->first();
-                if(!empty($camp)) {
-                    // Get submitter nick name id
-                    $submitterNickNameID = $camp->submitter_nick_id;
-                    $affectedTopicNums = Support::where('nick_name_id',$submitterNickNameID)->where('end',0)->distinct('topic_num')->pluck('topic_num');
-                    foreach($affectedTopicNums as $affectedTopicNum) {
-                        $topic = Topic::where('topic_num', $affectedTopicNum)->get()->last();
-                        Util::dispatchJob($topic, 1);
-                    }
-                }
-            }
+            Util::dispatchJob($topic, $campNum, 0);
         }
 
         return redirect(\App\Model\Camp::getTopicCampUrl($topicNum ,$campNum));

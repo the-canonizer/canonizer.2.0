@@ -3,6 +3,9 @@
 namespace App\Helpers;
 
 use Exception;
+use App\Model\Camp;
+use App\Model\Topic;
+use App\Model\Support;
 use App\Jobs\CanonizerService;
 use Illuminate\Support\Facades\Log;
 
@@ -63,7 +66,7 @@ class Util
      * @param boolean $updateAll
      * @return void
      */
-    public function dispatchJob($topic, $updateAll) {
+    public function dispatchJob($topic, $campNum = 1, $updateAll) {
 
         try{
             $selectedAlgo = 'blind_popularity';
@@ -88,6 +91,30 @@ class Util
             CanonizerService::dispatch($canonizerServiceData)
                 ->onQueue('canonizer-service')
                 ->unique(Topic::class, $topic->id);
+
+            // Incase the topic is mind expert then find all the affected topics 
+            if($topic->topic_num == 81) {
+                $camp = Camp::where('topic_num', $topic->topic_num)->where('camp_num', '=', $campNum)->where('go_live_time', '<=', time())->latest('submit_time')->first();
+                if(!empty($camp)) {
+                    // Get submitter nick name id
+                    $submitterNickNameID = $camp->camp_about_nick_id;
+                    $affectedTopicNums = Support::where('nick_name_id',$submitterNickNameID)->where('end',0)->distinct('topic_num')->pluck('topic_num');
+                    foreach($affectedTopicNums as $affectedTopicNum) {
+                        $topic = Topic::where('topic_num', $affectedTopicNum)->get()->last();
+                        $canonizerServiceData = [
+                            'topic_num' => $topic->topic_num,
+                            'algorithm' => $selectedAlgo,
+                            'asOfDate'  => $asOfDefaultDate,
+                            'asOf'      => $asOf,
+                            'updateAll' => 1
+                        ];
+                        // Dispact job when create a camp
+                        CanonizerService::dispatch($canonizerServiceData)
+                            ->onQueue('canonizer-service')
+                            ->unique(Topic::class, $topic->id);
+                    }
+                }
+            }
         } catch(Exception $ex) {
             Log::error("Util :: DispatchJob :: message: ".$ex->getMessage());
         }
