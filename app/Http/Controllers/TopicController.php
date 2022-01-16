@@ -580,9 +580,28 @@ class TopicController extends Controller {
                     }
                 }
             }
+        }else{
+            $stmnt = Statement::getHistory($topicnum, $campnum);
+            if(count($stmnt) > 0){
+               foreach($stmnt as $arr){
+                $submittime = $arr->submit_time;
+                $starttime = time();
+                $endtime = $submittime + 60*60;
+                $interval = $endtime - $starttime;
+                echo $interval;
+                if($arr->grace_period < 1 && $interval > 0){
+                    array_push($statement,$arr);
+                }
+               }
+            }           
+
         }
         $wiky = new Wiky;
         return view('topics.statementhistory', compact('topic', 'statement', 'parentcampnum', 'onecamp', 'parentcamp', 'wiky', 'ifIamSupporter','submit_time','ifSupportDelayed'));
+    }
+
+    public function filterArr($arr){                    
+            return $arr->grace_period > 0 ? false : true;
     }
 
     /**

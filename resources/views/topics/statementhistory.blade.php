@@ -26,6 +26,8 @@
 
 
 <div class="right-whitePnl">
+<?php 
+    if(!empty($statement)) {  ?>
 <div class="row">
     <div class="col-sm-12">
         <div class="notifySignPNL topic-status">
@@ -48,6 +50,7 @@
         </div>
     </div>
 </div>
+<?php } ?>
 <div>
     <div class="col-sm-12 margin-btm-2">
               
@@ -264,13 +267,14 @@
                     </form>
 			   <?php } 
                         } else {
-                            echo " No statement history available.";
+                            echo " No statement history available or it might be possible a user has added a statement but it is in review state";
                         }
 			   ?>
         
 </div>
 </div>
 </div>  <!-- /.right-whitePnl-->
+
     
 
     <script>
