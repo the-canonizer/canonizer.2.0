@@ -144,7 +144,7 @@ if (!empty($topics)) {
                         continue;
                     }else if(Auth::check() && $data->grace_period > 0 && $interval > 0 && Auth::user()->id != $submitterUserID){
                         continue;
-                    }else if(!Auth::check() && $data->grace_period > 0 && $interval > 0 ){
+                    }else if(!Auth::check() && $data->grace_period > 0 && $interval > 0 && $currentTime < $data->go_live_time ){
                         continue;
                     }
                     ?>
