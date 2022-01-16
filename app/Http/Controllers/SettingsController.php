@@ -843,7 +843,7 @@ class SettingsController extends Controller
             $id = Auth::user()->id;
             $user = User::where('id', '=', $id)->first();
             $message = [
-                'new_password.regex' => 'Password must be atleast 8 characters, including atleast one digit, one lower case letter and one special character(@,# !,$..)',
+                'new_password.regex' => 'Password must be at least 8 characters, including at least one digit, one lower case letter and one special character(@,# !,$..)',
                 'current_password.required' => 'The current password field is required.'
             ];
             $validator = Validator::make($request->all(), [

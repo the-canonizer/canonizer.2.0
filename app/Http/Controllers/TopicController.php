@@ -573,7 +573,7 @@ class TopicController extends Controller {
                     $starttime = time();
                     $endtime = $submittime + 60*60;
                     $interval = $endtime - $starttime;
-                    if($ifIamSupporter && $interval > 0 && $val->grace_period > 0  && Auth::user()->id != $submitterUserID){
+                    if( $interval > 0 && $val->grace_period > 0  && Auth::user()->id != $submitterUserID){
                        continue;
                     }else{
                         array_push($statement,$val);
@@ -585,11 +585,10 @@ class TopicController extends Controller {
             if(count($stmnt) > 0){
                foreach($stmnt as $arr){
                 $submittime = $arr->submit_time;
-                $starttime = time();
+                $starttime = $currentTime = time();
                 $endtime = $submittime + 60*60;
                 $interval = $endtime - $starttime;
-                echo $interval;
-                if($arr->grace_period < 1 && $interval > 0){
+                if(($arr->grace_period < 1 && $interval < 0 ) || $currentTime > $arr->go_live_time){
                     array_push($statement,$arr);
                 }
                }

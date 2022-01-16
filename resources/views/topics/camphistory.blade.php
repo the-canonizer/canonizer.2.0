@@ -152,7 +152,9 @@
                             $IFNOtSubmissterNotSupporterAndInGracePeriod = false;
                             if($ifIamSupporter && $interval > 0 && $data->grace_period > 0  && Auth::user()->id != $submitterUserID){
                                 $IFNOtSubmissterNotSupporterAndInGracePeriod = true;
-                            }else if(!$ifIamSupporter && $data->grace_period > 0){
+                            }else if(Auth::check() && $data->grace_period > 0 && $interval > 0 && Auth::user()->id != $submitterUserID){
+                                $IFNOtSubmissterNotSupporterAndInGracePeriod = true;
+                            }else if(!Auth::check() && $data->grace_period > 0 && $interval > 0 ){
                                 $IFNOtSubmissterNotSupporterAndInGracePeriod = true;
                             }
                            
