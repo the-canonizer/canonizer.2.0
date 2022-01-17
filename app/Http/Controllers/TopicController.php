@@ -48,7 +48,7 @@ class TopicController extends Controller {
             session()->put('asofDefault',$_REQUEST['asof']);
         }
         if(isset($_REQUEST['asofdate']) && $_REQUEST['asofdate']!=''){
-            session()->put('asofdateDefault',$_REQUEST['asofdate']);
+            //session()->put('asofdateDefault',$_REQUEST['asofdate']);
         }
         session()->save();
     }
@@ -440,7 +440,9 @@ class TopicController extends Controller {
 
         $parentcamp = Camp::campNameWithAncestors($camp, '',$topic->topic_name);
 
-        $parentcampsData = Camp::getAllParentCampNew($camp->topic_num);//1070
+        //$parentcampsData = Camp::getAllParentCampNew($camp->topic_num);
+
+        $parentcampsData = Camp::getAllParentCamp($camp->topic_num,['nofilter' => true]);//1070
 
         $childCamps = array_unique(Camp::getAllChildCamps($camp));
 
