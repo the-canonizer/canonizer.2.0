@@ -26,6 +26,8 @@
 
 
 <div class="right-whitePnl">
+<?php 
+    if(!empty($statement)) {  ?>
 <div class="row">
     <div class="col-sm-12">
         <div class="notifySignPNL topic-status">
@@ -48,6 +50,7 @@
         </div>
     </div>
 </div>
+<?php } ?>
 <div>
     <div class="col-sm-12 margin-btm-2">
               
@@ -56,113 +59,111 @@
 			            $currentLive = 0; 
 				          $currentTime = time();
                           $ifIamDelegatedSupporter = 0;             
-                      $stmentLength = count($statement);                  
-			         foreach($statement as $key=>$data) { 
-						   $isagreeFlag = false;
-                        $isGraceFlag = false;
-                        $liveStatement = \App\Model\Statement::getLiveStatement($data->topic_num,$data->camp_num);
-                        $camp = \App\Model\Camp::where('camp_num','=',$data->camp_num)->where('topic_num','=',$data->topic_num)->get();
-                        $nickNamesData = \App\Model\Nickname::personNicknameArray();
-                        $supported_camps = [];
-                         if(sizeof($nickNamesData) > 0){
-                            foreach ($nickNamesData as $key => $value) {
-                                $nickName = \App\Model\Nickname::find($value);
-                                $supported_camp = $nickName->getSupportCampList();
-                                $supported_camps = array_merge($supported_camps,$supported_camp);
-                            }
-                        }
-                $ifSupportingThisCampOrChild = 0;
-                if(isset($supported_camps) && sizeof($supported_camps) > 0){ 
-                     foreach ($supported_camps as $key => $value) {
-                         if($key == $data->topic_num){
-                            if(isset($value['array'])){
-                              foreach($value['array'] as $i => $supportData ){
-                                  foreach($supportData as $j => $support){
-                                       if($support['camp_num'] == $data->camp_num){
-                                          $ifSupportingThisCampOrChild = 1;
-                                          break;
-                                        }
-                                      }
-                                  }
-                              }else{
-                                $ifSupportingThisCampOrChild = 1;
-                                break;
-                              }
-                         }                
-                    }
-                }
-
-                if(!$ifSupportingThisCampOrChild){
-                $delegatedUsers = \App\Model\Support::where('topic_num',$data->topic_num)->where('delegate_nick_name_id','!=',0)->orderBy('support_order','ASC')->get();
-                        if(count($delegatedUsers) > 0){
-                            foreach ($delegatedUsers as $key => $value) {
-                                if(in_array($value->nick_name_id,$nickNamesData)){
-                                    $ifIamDelegatedSupporter =  $nickNamesData[array_search($value->nick_name_id,$nickNamesData,true)];
+                        $stmentLength = count($statement);                  
+			            foreach($statement as $key=>$data) { 
+                            $isagreeFlag = false;
+                            $isGraceFlag = false;
+                            $liveStatement = \App\Model\Statement::getLiveStatement($data->topic_num,$data->camp_num);
+                            $camp = \App\Model\Camp::where('camp_num','=',$data->camp_num)->where('topic_num','=',$data->topic_num)->get();
+                            $nickNamesData = \App\Model\Nickname::personNicknameArray();
+                            $supported_camps = [];
+                            if(sizeof($nickNamesData) > 0){
+                                foreach ($nickNamesData as $key => $value) {
+                                    $nickName = \App\Model\Nickname::find($value);
+                                    $supported_camp = $nickName->getSupportCampList();
+                                    $supported_camps = array_merge($supported_camps,$supported_camp);
                                 }
                             }
-                        }
-                  $camp = \App\Model\Camp::where('camp_num','=',$data->camp_num)->where('topic_num','=',$data->topic_num)->get();
-                  $allChildren = \App\Model\Camp::getAllChildCamps($camp[0]);
-                  if(sizeof($allChildren) > 0 ){
-                  foreach($allChildren as $campnum){
-                     if($submit_time){
-                        $support = \App\Model\Support::where('topic_num',$data->topic_num)->where('camp_num',$campnum)->whereIn('nick_name_id',$nickNamesData)->where('delegate_nick_name_id',0)->where('end','=',0)->where('start','<=',$submit_time)->orderBy('support_order','ASC')->get();
-                     }else{
-                        $support = \App\Model\Support::where('topic_num',$data->topic_num)->where('camp_num',$campnum)->whereIn('nick_name_id',$nickNamesData)->where('delegate_nick_name_id',0)->where('end','=',0)->orderBy('support_order','ASC')->get();
-                     }
+                            $ifSupportingThisCampOrChild = 0;
+                            if(isset($supported_camps) && sizeof($supported_camps) > 0){ 
+                                foreach ($supported_camps as $key => $value) {
+                                    if($key == $data->topic_num){
+                                         if(isset($value['array'])){
+                                            foreach($value['array'] as $i => $supportData ){
+                                                foreach($supportData as $j => $support){
+                                                    if($support['camp_num'] == $data->camp_num){
+                                                        $ifSupportingThisCampOrChild = 1;
+                                                         break;
+                                                     }
+                                                }
+                                             }
+                                        }else{
+                                            $ifSupportingThisCampOrChild = 1;
+                                            break;
+                                        }
+                                    }                
+                                }
+                            }
+
+                            if(!$ifSupportingThisCampOrChild){
+                                $delegatedUsers = \App\Model\Support::where('topic_num',$data->topic_num)->where('delegate_nick_name_id','!=',0)->orderBy('support_order','ASC')->get();
+                                if(count($delegatedUsers) > 0){
+                                    foreach ($delegatedUsers as $key => $value) {
+                                        if(in_array($value->nick_name_id,$nickNamesData)){
+                                            $ifIamDelegatedSupporter =  $nickNamesData[array_search($value->nick_name_id,$nickNamesData,true)];
+                                        }
+                                    }
+                                }
+                             $camp = \App\Model\Camp::where('camp_num','=',$data->camp_num)->where('topic_num','=',$data->topic_num)->get();
+                             $allChildren = \App\Model\Camp::getAllChildCamps($camp[0]);
+                             if(sizeof($allChildren) > 0 ){
+                                foreach($allChildren as $campnum){
+                                    if($submit_time){
+                                        $support = \App\Model\Support::where('topic_num',$data->topic_num)->where('camp_num',$campnum)->whereIn('nick_name_id',$nickNamesData)->where('delegate_nick_name_id',0)->where('end','=',0)->where('start','<=',$submit_time)->orderBy('support_order','ASC')->get();
+                                    }else{
+                                        $support = \App\Model\Support::where('topic_num',$data->topic_num)->where('camp_num',$campnum)->whereIn('nick_name_id',$nickNamesData)->where('delegate_nick_name_id',0)->where('end','=',0)->orderBy('support_order','ASC')->get();
+                                    }
                       
-                         if(sizeof($support) > 0){
-                              $ifSupportingThisCampOrChild = 1;
-                              if(!$ifIamSupporter){
-                                $ifIamSupporter = $support[0]->nick_name_id;
-                              }
-                              break;
-                          }
-                      }
-                  }
-                }
+                                if(sizeof($support) > 0){
+                                    $ifSupportingThisCampOrChild = 1;
+                                        if(!$ifIamSupporter){
+                                             $ifIamSupporter = $support[0]->nick_name_id;
+                                        }
+                                        break;
+                                    }
+                                }
+                            }
+                        }                
+                        $submittime = $data->submit_time;
+                        $starttime = time();
+                        $endtime = $submittime + 60*60;
+                        $interval = $endtime - $starttime;
+                        $intervalTime = date('H:i:s',$interval);
+                        $grace_hour = date('H',strtotime($intervalTime));
+                        $grace_minute = date('i',strtotime($intervalTime));
+                        $grace_second = date('s',strtotime($intervalTime));
+                        $submitterUserID = App\Model\Nickname::getUserIDByNickName($data->submitter_nick_id);
+                                                        
+						if($data->objector_nick_id !== NULL)
+							$bgcolor ="rgba(255, 0, 0, 0.5);"; //red
+						else if($currentTime < $data->go_live_time && $currentTime >= $data->submit_time) {
+							$bgcolor ="rgba(255, 255, 0, 0.5);"; //yellow
+                            $isagreeFlag = true;
+                            $isGraceFlag = TRUE;
+                            if($ifIamSupporter){
+                            $isAgreed = App\Model\ChangeAgreeLog::isAgreed($data->id,$ifIamSupporter);
+                            }
+                            
+                            if(Auth::check()){
+                                if(Auth::user()->id == $submitterUserID && $data->grace_period && $interval > 0){
+                            ?>
+                                    <script>
+                                        $(function(){
+                                            $("#countdowntimer<?php echo $data->id; ?>").countdowntimer({
+                                                    hours: "<?php echo $grace_hour; ?>",
+                                                    minutes : "<?php echo $grace_minute; ?>",
+                                                    seconds : "<?php echo $grace_second; ?>",
+                                                    timeUp : timeisUp
+                                            });
 
-
-                
-                $submittime = $data->submit_time;
-                $starttime = time();
-                $endtime = $submittime + 60*60;
-                $interval = $endtime - $starttime;
-                $intervalTime = date('H:i:s',$interval);
-                $grace_hour = date('H',strtotime($intervalTime));
-                $grace_minute = date('i',strtotime($intervalTime));
-                $grace_second = date('s',strtotime($intervalTime));
-                $submitterUserID = App\Model\Nickname::getUserIDByNickName($data->submitter_nick_id);
-                                                   
-						   if($data->objector_nick_id !== NULL)
-							   $bgcolor ="rgba(255, 0, 0, 0.5);"; //red
-						   else if($currentTime < $data->go_live_time && $currentTime >= $data->submit_time) {
-							   $bgcolor ="rgba(255, 255, 0, 0.5);"; //yellow
-                                                           $isagreeFlag = true;
-                                                           $isGraceFlag = TRUE;
-                                                           if($ifIamSupporter){
-                                                            $isAgreed = App\Model\ChangeAgreeLog::isAgreed($data->id,$ifIamSupporter);
-                                                           }
-                                                           
-                                                     if(Auth::check()){
-                                                     if(Auth::user()->id == $submitterUserID && $data->grace_period && $interval > 0){
-                                                     ?>
-                                                      <script>
-                                                            $(function(){
-                                                              $("#countdowntimer<?php echo $data->id; ?>").countdowntimer({
-                                                                      hours: "<?php echo $grace_hour; ?>",
-                                                                      minutes : "<?php echo $grace_minute; ?>",
-                                                                      seconds : "<?php echo $grace_second; ?>",
-                                                                      timeUp : timeisUp
-                                                              });
-
-                                                              function timeisUp() {
-                                                                  notifyAndCloseTimer('<?php echo $data->id ;?>');
-                                                               }
-                                                              });
-                                                        </script>
+                                            function timeisUp() {
+                                                notifyAndCloseTimer('<?php echo $data->id ;?>');
+                                            }
+                                            });
+                                </script>
                                                       
-                                                     <?php } }
+                    <?php       } 
+                             }
                                                            
 						   }   
 						   else if($currentLive!=1 && $currentTime >= $data->go_live_time) {
@@ -171,22 +172,13 @@
 						   } else {
 							   $bgcolor ="#4e4ef3;"; //blue
 						   }
-                   $input=$data->value;		
-                    if($ifIamSupporter && $interval > 0 && $data->grace_period > 0  && Auth::user()->id != $submitterUserID){
-                            continue;
-                        }				   
+                    $input=$data->value;		
+                   			   
 			   ?>
 			    <div class="form-group CmpHistoryPnl" style="background-color:{{ $bgcolor }}; width:100%;">
                   <div class="statement"><b>Statement :</b> 
 				  <?php 
 				              $rootUrl = str_replace("/public","",Request::root());
-							  /*$finalStatement  = $wiky->parse($input); 
-							  
-							  $finalStatement = str_replace("http://canonizer.com",$rootUrl,$finalStatement);
-							  $finalStatement = str_replace("http://www.canonizer.com",$rootUrl,$finalStatement);
-							  
-							  echo $finalStatement;*/
-							  
 							  $WikiParser = new wikiParser;
 							  $output = $WikiParser->parse($input);
 							  $finalStatement = str_replace("http://canonizer.com",$rootUrl,$output);
@@ -274,15 +266,15 @@
                         <input type="hidden" name="change_for" value="statement" />
                     </form>
 			   <?php } 
-				 } else {
-					 
-					 echo " No statement history available.";
-				 }
+                        } else {
+                            echo " No statement history available or it might be possible a user has added a statement but it is in review state";
+                        }
 			   ?>
         
 </div>
 </div>
 </div>  <!-- /.right-whitePnl-->
+
     
 
     <script>

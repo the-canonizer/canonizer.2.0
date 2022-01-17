@@ -149,7 +149,15 @@
                             if ($ifIamSupporter) {
                                 $isAgreed = App\Model\ChangeAgreeLog::isAgreed($data->id, $ifIamSupporter,'camp');
                             }
-                            
+                            $IFNOtSubmissterNotSupporterAndInGracePeriod = false;
+                            if($ifIamSupporter && $interval > 0 && $data->grace_period > 0  && Auth::user()->id != $submitterUserID){
+                                $IFNOtSubmissterNotSupporterAndInGracePeriod = true;
+                            }else if(Auth::check() && $data->grace_period > 0 && $interval > 0 && $currentTime < $data->go_live_time && Auth::user()->id != $submitterUserID){
+                                $IFNOtSubmissterNotSupporterAndInGracePeriod = true;
+                            }else if(!Auth::check() && $data->grace_period > 0 && $interval > 0 && $currentTime < $data->go_live_time){
+                                $IFNOtSubmissterNotSupporterAndInGracePeriod = true;
+                            }
+                           
                             //grace period
                             if(Auth::check()){
                             if(Auth::user()->id == $submitterUserID && $data->grace_period && $interval > 0){?>
@@ -166,17 +174,19 @@
                                           notifyAndCloseTimer('<?php echo $data->id ;?>');                                                                                                                              }
                                       });
                                 </script>
-                            <?php } } 
-                            
+                            <?php } }else{
+                                $IFNOtSubmissterNotSupporterAndInGracePeriod = true;
+                            } 
+                         if($IFNOtSubmissterNotSupporterAndInGracePeriod){
+                                continue;
+                            }
                         } else if ($currentLive != 1 && $currentTime >= $data->go_live_time) {
                             $currentLive = 1;
                             $bgcolor = "rgba(0, 128, 0, 0.5);"; // green
                         } else {
                             $bgcolor = "#4e4ef3;"; //blue
                         }
-                      if($ifIamSupporter && $interval > 0 && $data->grace_period > 0  && Auth::user()->id != $submitterUserID){
-                            continue;
-                        }
+                        
                         ?>
                         <div class="form-group CmpHistoryPnl" style="background-color:{{ $bgcolor }}">
                             <div>

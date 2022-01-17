@@ -67,8 +67,7 @@ class TopicSupport extends Model {
             
             $supportPoint = Algorithm::{$algorithm}($support->nick_name_id,$support->topic_num,$support->camp_num); 
             $array[$support->nick_name_id]['index']=$support->nick_name_id;
-             //dd($array);
-            if($multiSupport){
+           if($multiSupport){
                 $array[$support->nick_name_id]['score'] = round($supportPoint / (2 ** ($parent_support_order)),2);
             }else{
                 $array[$support->nick_name_id]['score'] = $supportPoint;
@@ -107,18 +106,18 @@ class TopicSupport extends Model {
                 return $item->nick_name_id == $support->nick_name_id;
             });
             $supportPoint = Algorithm::{$algorithm}($support->nick_name_id,$support->topic_num,$support->camp_num);
-			$currentCampSupport =  $nickNameSupports->filter(function ($item) use($campnum)
+            $currentCampSupport =  $nickNameSupports->filter(function ($item) use($campnum)
 			{
 				return $item->camp_num == $campnum; /* Current camp support */
 			})->first();
-
             $array[$support->nick_name_id]['score'] = 0;
             $array[$support->nick_name_id]['children'] = [];
             $array[$support->nick_name_id]['index']=$support->nick_name_id;
             $multiSupport = false;
-            if($currentCampSupport){
-                
-                if($nickNameSupports->count() > 1){
+            if($currentCampSupport){                
+                if($algorithm == 'mind_experts'){
+                    $array[$support->nick_name_id]['score']=round($supportPoint,2);
+                } else if($nickNameSupports->count() > 1 && $algorithm != 'mind_experts'){
                     $multiSupport = true;					
 					$array[$support->nick_name_id]['score']=round($supportPoint / (2 ** ($support->support_order)),2);
 				}else if($nickNameSupports->count() >= 1 && $support->topic_num !='54' && $algorithm == 'mormon'){ //only for mormon if selected
@@ -129,9 +128,9 @@ class TopicSupport extends Model {
                     $array[$support->nick_name_id]['score']=round($supportPoint / (2 ** ($support->support_order)),2);
                 }
                 else if($nickNameSupports->count() == 1){
-				
-				     $array[$support->nick_name_id]['score']=$supportPoint;		 
+                     $array[$support->nick_name_id]['score']=$supportPoint;		 
 				}
+               
             $array[$support->nick_name_id]['children'] = self::traverseChildTree($algorithm,$topicnum,$campnum,$support->nick_name_id,$currentCampSupport->support_order,$multiSupport);
             }
 		  	
@@ -204,6 +203,7 @@ class TopicSupport extends Model {
     }
 
     public static function sumTranversedArraySupportCount($traversedTreeArray=array()){
+        
        if(isset($traversedTreeArray) && is_array($traversedTreeArray)) {
 		 
         foreach($traversedTreeArray as $key => $array){
@@ -276,9 +276,7 @@ class TopicSupport extends Model {
         }
         
         $traversedSupportCountTreeArray = self::sortTraversedSupportCountTreeArray(self::sumTranversedArraySupportCount(self::traverseTree($algorithm,$topicnum,$campnum)));
-       //echo "<pre>"; print_r($traversedSupportCountTreeArray); exit;
         $delegationTreeArray = self::getDelegationTree($traversedSupportCountTreeArray,[]);
-       
         
 		return self::buildTree($topicnum,$campnum,$traversedSupportCountTreeArray,true,$add_supporter,$delegationTreeArray);
     }
