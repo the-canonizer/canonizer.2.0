@@ -206,15 +206,15 @@ class HomeController extends Controller {
         
         session(['defaultAlgo' => $algorithm]);
 
-        if(isset($tempTopicID) && !empty($tempTopicID)) {
-            $topicNum = explode('-',$tempTopicID)[0];
-            $topic = Topic::getLiveTopic($topicNum);
-            if(isset($topic) && (strtolower($algorithm) === 'blind_popularity' || strtolower($algorithm) === 'mind_experts')){
-                Util::dispatchJob($topic, 1, 1);
-            } else {
-                // Nothing to do
-            }
-        }
+        // if(isset($tempTopicID) && !empty($tempTopicID)) {
+        //     $topicNum = explode('-',$tempTopicID)[0];
+        //     $topic = Topic::getLiveTopic($topicNum);
+        //     if(isset($topic) && (strtolower($algorithm) === 'blind_popularity' || strtolower($algorithm) === 'mind_experts')){
+        //         Util::dispatchJob($topic, 1, 1);
+        //     } else {
+        //         // Nothing to do
+        //     }
+        // }
     }
 
     public function changeNamespace(Request $request) {
