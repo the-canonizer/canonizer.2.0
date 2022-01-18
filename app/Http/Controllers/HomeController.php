@@ -72,7 +72,7 @@ class HomeController extends Controller {
             $asOfDefaultDate =  session('asofdateDefault');
          }
 
-        $asOfDefaultDate = strtotime($asOfDefaultDate);
+       echo $asOfDefaultDate = strtotime($asOfDefaultDate);
 
         $previous = 0;
 
@@ -84,6 +84,8 @@ class HomeController extends Controller {
         if( ($asOfDefaultDate > $cronDate) && ( $selectedAlgo == 'blind_popularity' || $selectedAlgo == "mind_experts")){
 
             $previous = 1; 
+
+            echo "inside condition";
 
             $requestBody = [
                 "page_number" => $page_no,
