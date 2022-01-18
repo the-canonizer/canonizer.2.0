@@ -72,7 +72,7 @@ class HomeController extends Controller {
             $asOfDefaultDate =  session('asofdateDefault');
          }
 
-       echo $asOfDefaultDate = strtotime($asOfDefaultDate);
+        $asOfDefaultDate = strtotime($asOfDefaultDate);
 
         $previous = 0;
 
@@ -84,8 +84,6 @@ class HomeController extends Controller {
         if( ($asOfDefaultDate > $cronDate) && ( $selectedAlgo == 'blind_popularity' || $selectedAlgo == "mind_experts")){
 
             $previous = 1; 
-
-            echo "inside condition";
 
             $requestBody = [
                 "page_number" => $page_no,
@@ -104,8 +102,6 @@ class HomeController extends Controller {
             $reducedTree = Util::execute('POST', $endpoint, $headers, $requestBody);
 
             $topics = json_decode($reducedTree, true);
-            print_r($topics);
-            exit;
         }
         else
         {
