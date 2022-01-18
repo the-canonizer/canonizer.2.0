@@ -129,7 +129,7 @@ class Camp extends Model {
     }
 
     public function scopeCampNameWithAncestors($query, $camp, $campname = '',$title = '', $breadcrum = false) {
-      $as_of_time = time();
+        $as_of_time = time();
         if (isset($_REQUEST['asof']) && $_REQUEST['asof'] == 'bydate') {
             $as_of_time = strtotime($_REQUEST['asofdate']);
         }
