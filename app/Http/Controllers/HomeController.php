@@ -102,6 +102,8 @@ class HomeController extends Controller {
             $reducedTree = Util::execute('POST', $endpoint, $headers, $requestBody);
 
             $topics = json_decode($reducedTree, true);
+            print_r($topics);
+            exit;
         }
         else
         {
