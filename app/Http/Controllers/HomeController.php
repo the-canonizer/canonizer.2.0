@@ -81,7 +81,7 @@ class HomeController extends Controller {
             $selectedAlgo = session('defaultAlgo');
         }
        
-        if( ($asOfDefaultDate > $cronDate) && ( $selectedAlgo == 'blind_popularity' || $selectedAlgo == "mind_experts")){
+        if( ($asOfDefaultDate >= $cronDate) && ( $selectedAlgo == 'blind_popularity' || $selectedAlgo == "mind_experts")){
 
             $previous = 1; 
 
