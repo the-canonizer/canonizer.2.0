@@ -137,15 +137,15 @@ class Camp extends Model {
             if ($campname != '') { 
                 $url = self::getTopicCampUrl($camp->topic_num,$camp->camp_num);
                 if($breadcrum){
-                    $campname = "<a href='" . $url . "'>" . ucfirst($title) . '</a> / ' . ucfirst($campname);
+                    $campname = "<a href='" . $url . "'>" . ($title) . '</a> / ' . ($campname);
                 }else
-                $campname = "<a href='" . $url . "'>" . ucfirst($camp->camp_name) . '</a> / ' . ucfirst($campname);
+                $campname = "<a href='" . $url . "'>" . ($camp->camp_name) . '</a> / ' . ($campname);
             } else { 
                 $url = self::getTopicCampUrl($camp->topic_num,$camp->camp_num);
                 if($breadcrum){
-                    $campname = "<a href='" . $url . "'>" . ucfirst($camp->camp_name) . '</a>';
+                    $campname = "<a href='" . $url . "'>" . ($camp->camp_name) . '</a>';
                 }else
-                $campname = "<a href='" . $url . "'>" . ucfirst($camp->camp_name) . '</a>';
+                $campname = "<a href='" . $url . "'>" . ($camp->camp_name) . '</a>';
             }
 
             if (isset($camp) && $camp->parent_camp_num) {
