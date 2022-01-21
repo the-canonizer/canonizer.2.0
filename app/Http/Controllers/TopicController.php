@@ -1005,7 +1005,9 @@ class TopicController extends Controller {
             }catch(\Swift_TransportException $e){
                 throw new \Swift_TransportException($e);
             } 
-        } // #951 removedthe update email event from here as we will send email after commit or after one hour refer notify_change or console->command->notifyUser classs
+            return redirect('statement/history/' . $statement->topic_num . '/' . $statement->camp_num)->with(['success' => $message, 'go_live_time' => $go_live_time]);
+        } 
+        // #951 removedthe update email event from here as we will send email after commit or after one hour refer notify_change or console->command->notifyUser classs
         //return redirect('statement/history/' . $statement->topic_num . '/' . $statement->camp_num)->with(['success' => $message, 'go_live_time' => $go_live_time]);
         $link_url = \App\Model\Camp::getTopicCampUrl($statement->topic_num,$statement->camp_num);
         return redirect($link_url)->with(['success' => $message, 'go_live_time' => $go_live_time]);
