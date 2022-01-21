@@ -76,6 +76,8 @@ class HomeController extends Controller {
 
         $previous = 0;
 
+        $fromExistingCode = 1;
+
         $selectedAlgo = 'blind_popularity';
         if(session('defaultAlgo')) {
             $selectedAlgo = session('defaultAlgo');
@@ -102,9 +104,15 @@ class HomeController extends Controller {
             $reducedTree = Util::execute('POST', $endpoint, $headers, $requestBody);
 
             $topics = json_decode($reducedTree, true);
+            
+            if(count($topics['data']) > 0 ){
+                $topics = $topics;
+                $fromExistingCode = 0;
+            }
         }
-        else
-        {
+      
+        if($fromExistingCode){
+            
             $topics =  Camp::sortTopicsBasedOnScore(Camp::getAllAgreementTopic(20, $_REQUEST));
         }
 

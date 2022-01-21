@@ -915,23 +915,37 @@ class Camp extends Model {
 
         $titleKey = 'title';
         $linkKey = 'link';
+        $fromExistingCode = 1;
+
+        $cronDate = env('CS_CRON_DATE'); 
+        $cronDate =  isset($cronDate) ? strtotime($cronDate) : strtotime(date('Y-m-d'));
+
+        $asOf = 'default';
+
+        if((isset($_REQUEST['asof']) && ($_REQUEST['asof'] == "review" || $_REQUEST['asof'] == "bydate"))){
+            $asOf = $_REQUEST['asof'];
+        }
+        else if ((session('asofDefault')== "review" || session('asofDefault')== "bydate" ) && !isset($_REQUEST['asof'])) {
+            $asOf = session('asofDefault');
+        }
+
+        $asOfDefaultDate = date('Y-m-d');
+
+        if(isset($_REQUEST['asof']) && $_REQUEST['asof'] == "bydate"){
+            $asOfDefaultDate = date('Y-m-d', strtotime($_REQUEST['asofdate']));
+         }else if(($asOf == 'bydate') && session('asofdateDefault')){
+            $asOfDefaultDate =  session('asofdateDefault');
+         }
+
+        $asOfDefaultDate = strtotime($asOfDefaultDate);
 
         $selectedAlgo = 'blind_popularity';
         if(session('defaultAlgo')) {
             $selectedAlgo = session('defaultAlgo');
         }
 
-        if( $selectedAlgo == 'blind_popularity' || $selectedAlgo == "mind_experts"){
+        if( ($asOfDefaultDate >= $cronDate) && ($selectedAlgo == 'blind_popularity' || $selectedAlgo == "mind_experts")){
         
-            $asOf = 'default';
-
-            if((isset($_REQUEST['asof']) && ($_REQUEST['asof'] == "review" || $_REQUEST['asof'] == "bydate"))){
-                $asOf = $_REQUEST['asof'];
-            }
-            else if ((session('asofDefault')== "review" || session('asofDefault')== "bydate" ) && !isset($_REQUEST['asof'])) {
-                $asOf = session('asofDefault');
-            }
-
             //change the keys if the asOf is review
             if($asOf == 'review'){
                 $titleKey = 'review_title';
@@ -939,11 +953,19 @@ class Camp extends Model {
             }
 
             $asOfDefaultDate = time();
+            $checkOfDefaultToday = time();
 
             if(isset($_REQUEST['asof']) && $_REQUEST['asof'] == "bydate"){
                 $asOfDefaultDate = strtotime(date('Y-m-d H:i:s', strtotime($_REQUEST['asofdate'])));
+                $checkOfDefaultDate = $asOfDefaultDate;
            }else if(($asOf == 'bydate') && session('asofdateDefault')){
                 $asOfDefaultDate =  strtotime(session('asofdateDefault'));
+                $checkOfDefaultDate = $asOfDefaultDate;
+            }
+
+            //check if bydate is greater than current date
+            if($checkOfDefaultDate > $checkOfDefaultToday){
+                $asOfDefaultDate = time();
             }
 
             $requestBody = [
@@ -962,12 +984,15 @@ class Camp extends Model {
             $reducedTree = Util::execute('POST', $endpoint, $headers, $requestBody);
 
             $data = json_decode($reducedTree, true);
-        
-            $reducedTree = $data['data'][0]['tree_structure'];
+
+            if(count($data['data']) > 0 ){
+                $reducedTree = $data['data'][0]['tree_structure'];
+                $fromExistingCode = 0;
+            }
 
         }
-        else{
-
+       
+        if($fromExistingCode){
             $reducedTree = $this->campTree(session('defaultAlgo', 'blind_popularity'), $activeAcamp = null, $supportCampCount = 0, $needSelected = 0);
         }
         
