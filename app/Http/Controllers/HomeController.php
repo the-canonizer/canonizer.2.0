@@ -30,7 +30,7 @@ class HomeController extends Controller {
             }
             if(isset($_REQUEST['asofdate']) && $_REQUEST['asofdate']!=''){
                 //session(['asofdateDefault'=>$_REQUEST['asofdate']]);
-                session()->put('asofdateDefault',$_REQUEST['asofdate']);
+                //session()->put('asofdateDefault',$_REQUEST['asofdate']);
             }
             session()->save();
     }

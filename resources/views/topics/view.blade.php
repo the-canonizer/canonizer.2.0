@@ -273,7 +273,7 @@ change camps with them."><i class="fa fa-question"></i></a>
                  <input type="hidden"  name="filter" value="0.00"/>
                    <input type="hidden" name="_token" value="{{ csrf_token() }}">                   
                    <input type="hidden"  name="asof"  value="bydate">
-                   <input hidden type="text" id="asofdatenew" name="asofdate" value="<?php echo $topicData[0]->go_live_time; ?>"/>
+                   <input hidden type="text" id="asofdatenew" name="asofdate" value="<?php echo date("Y-m-d H:i:s",$topicData[0]->go_live_time); ?>"/>
                     <h3>This topic was first created on <a href="javascript:void(0);" onClick="submitAsOfForm()">
                         <?php (count($topicData) > 0) ? to_local_time($topicData[0]->submit_time) :'' ;?></a></h3>
                 </form>            
@@ -296,8 +296,8 @@ function deleteNewsFeed(id){
 
 function submitAsOfForm(){
     var dateVal = $('#asofdatenew').val();
-    var dateString = new Date(dateVal * 1000).toUTCString();
-     $('#asofdatenew').val(dateString);
+    var dateString = new Date(dateVal * 1000).toLocaleString();
+    $('#asofdatenew').val(dateVal);
     $('#as_of_form').submit();
 }
 

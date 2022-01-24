@@ -562,13 +562,17 @@ class SettingsController extends Controller
                 $nickName = Nickname::getNickName($data['nick_name']);
                 $topic = Camp::getAgreementTopic($data['topic_num'],['nofilter'=>true]);
                 $camp = Camp::where('topic_num', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('go_live_time', '<=', time())->latest('submit_time')->first();
+                $result['namespace_id'] = (isset($topic->namespace_id) && $topic->namespace_id)  ?  $topic->namespace_id : 1;
                 $result['topic_num'] = $data['topic_num'];
                 $result['camp_num'] = $data['camp_num'];
-                $result['nick_name'] = $nickName->nick_name;
-                $result['object'] = $topic->topic_name . " / " . $camp->camp_name;
+                $result['nick_name'] = $nickName->nick_name; 
+                $result['nick_name_id'] = $nickName->id; 
+               // $result['object'] = $topic->topic_name . " / " . $camp->camp_name;
+                $result['object'] = $topic->topic_name; // #954 only topic name should be mentioned
                 $result['support_camp'] = $camp->camp_name;
                 $result['subject'] = $nickName->nick_name . " has just delegated their support to you.";
-                $link = \App\Model\Camp::getTopicCampUrl($data['topic_num'],$data['camp_num']);
+                //$link = \App\Model\Camp::getTopicCampUrl($data['topic_num'],$data['camp_num']);
+                $link = \App\Model\Camp::getTopicCampUrl($data['topic_num'],1); //#954
                 $subscribers = Camp::getCampSubscribers($data['topic_num'], $data['camp_num']);
                 $directSupporter = Support::getAllDirectSupporters($data['topic_num'], $data['camp_num']);
                 $this->mailParentDelegetedUser($data,$link,$result,$subscribers);
@@ -615,7 +619,7 @@ class SettingsController extends Controller
 
     private function mailSubscribersAndSupporters($directSupporter, $subscribers, $link, $dataObject,$campList=[])
     {   //mail return
-        //return;
+       // return;
         $alreadyMailed = [];
         foreach ($directSupporter as $supporter) {
             $supportData = $dataObject;
@@ -662,7 +666,7 @@ class SettingsController extends Controller
 
     private function mailSubscribers($subscribers, $link, $data, $alreadyMailed)
     {  //mail return
-       // return;
+        //return;
         foreach ($subscribers as $user) {
             $user = \App\User::find($user);
             if (!in_array($user->id, $alreadyMailed, TRUE)) {
@@ -679,7 +683,7 @@ class SettingsController extends Controller
 
     private function mailDirectSupporters($directSupporter, $link, $data)
     {   //mail return
-       // return;
+        //return;
         foreach ($directSupporter as $supporter) {
             $user = Nickname::getUserByNickName($supporter->nick_name_id);
             $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
@@ -696,7 +700,7 @@ class SettingsController extends Controller
     private function emailForSupportAdded($data)
     {
          //mail return
-        // return;
+         //return;
         $parentUser = Nickname::getUserByNickName($data['nick_name']);
         $nickName = Nickname::getNickName($data['nick_name']);
         $topic = Camp::getAgreementTopic($data['topic_num'],['nofilter'=>true]);
@@ -843,7 +847,7 @@ class SettingsController extends Controller
             $id = Auth::user()->id;
             $user = User::where('id', '=', $id)->first();
             $message = [
-                'new_password.regex' => 'Password must be atleast 8 characters, including atleast one digit, one lower case letter and one special character(@,# !,$..)',
+                'new_password.regex' => 'Password must be at least 8 characters, including at least one digit, one lower case letter and one special character(@,# !,$..)',
                 'current_password.required' => 'The current password field is required.'
             ];
             $validator = Validator::make($request->all(), [
@@ -1238,7 +1242,7 @@ class SettingsController extends Controller
      */
     private function mailWhenDelegateSupportRemoved($topicNum,$nickNameId,$delegateNickNameId,$campList){
         //mail return
-       // return;
+        //return;
         $parentUser = null;
         $result['delegate_support_deleted'] = 1;
         $parentUser = Nickname::getNickName($delegateNickNameId);
@@ -1331,7 +1335,7 @@ class SettingsController extends Controller
         //mail return
         //return
         $user = Nickname::getUserByNickName($nickName->id);    
-        $data['subject'] = "Support removed from ". $parentUser->nick_name . " in ".$data['topic']->topic_name." topic.";         
+        $data['subject'] = $nickName->nick_name . " has removed their delegated support from ". $parentUser->nick_name . " in ".$data['topic']->topic_name." topic.";         
         $link = \App\Model\Camp::getTopicCampUrl($data['topic_num'],1);          
         $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
         try{

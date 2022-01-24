@@ -48,7 +48,7 @@ class TopicController extends Controller {
             session()->put('asofDefault',$_REQUEST['asof']);
         }
         if(isset($_REQUEST['asofdate']) && $_REQUEST['asofdate']!=''){
-            session()->put('asofdateDefault',$_REQUEST['asofdate']);
+            //session()->put('asofdateDefault',$_REQUEST['asofdate']);
         }
         session()->save();
     }
@@ -295,8 +295,8 @@ class TopicController extends Controller {
             DB::rollback();
             Session::flash('error', "Fail to create topic, please try later.");
         }
-
-        return redirect('topic-history/' . $topic->topic_num)->with(['success' => $message, 'go_live_time' => $go_live_time, 'objection' => $objection]);
+        $link_url = \App\Model\Camp::getTopicCampUrl($topic->topic_num,1);
+        return redirect($link_url)->with(['success' => $message, 'go_live_time' => $go_live_time, 'objection' => $objection]);
     }
 
     /**
@@ -407,7 +407,7 @@ class TopicController extends Controller {
         $topicnum = $topicnumArray[0];
 		
 		$topic = Camp::getAgreementTopic($topicnum,['nofilter'=>true]);
-         $camp = Camp::getLiveCamp($topicnum, $parentcampnum,['nofilter'=>true]);
+        $camp = Camp::getLiveCamp($topicnum, $parentcampnum,['nofilter'=>true]);
        
         $parentcamp = Camp::campNameWithAncestors($camp, '',$topic->topic_name);
         
@@ -440,7 +440,9 @@ class TopicController extends Controller {
 
         $parentcamp = Camp::campNameWithAncestors($camp, '',$topic->topic_name);
 
-        $parentcampsData = Camp::getAllParentCampNew($camp->topic_num);
+        //$parentcampsData = Camp::getAllParentCampNew($camp->topic_num);
+
+        $parentcampsData = Camp::getAllParentCamp($camp->topic_num,['nofilter' => true]);//1070
 
         $childCamps = array_unique(Camp::getAllChildCamps($camp));
 
@@ -555,10 +557,10 @@ class TopicController extends Controller {
 
         $parentcampnum = isset($onecamp->parent_camp_num) ? $onecamp->parent_camp_num : 0;
 
-        // $statementHistory = Statement::getHistory($topicnum, $campnum);
-        $statement = Statement::getHistory($topicnum, $campnum);
-        // $statement=[];
-        $submit_time = (count($statement)) ? $statement[0]->submit_time: null; 
+        $statementHistory = Statement::getHistory($topicnum, $campnum);
+        //$statement = Statement::getHistory($topicnum, $campnum);
+         $statement=[];
+        $submit_time = (count($statementHistory)) ? $statementHistory[0]->submit_time: null; 
         $nickNames = null;
         $ifIamSupporter = null;
         $ifSupportDelayed = null;
@@ -566,23 +568,41 @@ class TopicController extends Controller {
             $nickNames = Nickname::personNicknameArray();
             $ifIamSupporter = Support::ifIamSupporter($topicnum, $campnum, $nickNames,$submit_time);
             $ifSupportDelayed = Support::ifIamSupporter($topicnum, $campnum, $nickNames,$submit_time, $delayed=true);
-            // if(count($statementHistory) > 0){
-            //     foreach($statementHistory as $val){
-            //         $submitterUserID = Nickname::getUserIDByNickName($val->submitter_nick_id);
-            //         $submittime = $val->submit_time;
-            //         $starttime = time();
-            //         $endtime = $submittime + 60*60;
-            //         $interval = $endtime - $starttime;
-            //         if($ifIamSupporter && $interval > 0 && $val->grace_period > 0  && Auth::user()->id != $submitterUserID){
-            //            continue;
-            //         }else{
-            //             array_push($statement,$val);
-            //         }
-            //     }
-            // }
-        };
+            if(count($statementHistory) > 0){
+                foreach($statementHistory as $val){
+                    $submitterUserID = Nickname::getUserIDByNickName($val->submitter_nick_id);
+                    $submittime = $val->submit_time;
+                    $starttime = time();
+                    $endtime = $submittime + 60*60;
+                    $interval = $endtime - $starttime;
+                    if( $interval > 0 && $val->grace_period > 0  && Auth::user()->id != $submitterUserID){
+                       continue;
+                    }else{
+                        array_push($statement,$val);
+                    }
+                }
+            }
+        }else{
+            $stmnt = Statement::getHistory($topicnum, $campnum);
+            if(count($stmnt) > 0){
+               foreach($stmnt as $arr){
+                $submittime = $arr->submit_time;
+                $starttime = $currentTime = time();
+                $endtime = $submittime + 60*60;
+                $interval = $endtime - $starttime;
+                if(($arr->grace_period < 1 && $interval < 0 ) || $currentTime > $arr->go_live_time){
+                    array_push($statement,$arr);
+                }
+               }
+            }           
+
+        }
         $wiky = new Wiky;
         return view('topics.statementhistory', compact('topic', 'statement', 'parentcampnum', 'onecamp', 'parentcamp', 'wiky', 'ifIamSupporter','submit_time','ifSupportDelayed'));
+    }
+
+    public function filterArr($arr){                    
+            return $arr->grace_period > 0 ? false : true;
     }
 
     /**
@@ -718,6 +738,9 @@ class TopicController extends Controller {
         $camp->submitter_nick_id = isset($all['nick_name']) ? $all['nick_name'] : "";
         $camp->camp_about_url = isset($all['camp_about_url']) ? $all['camp_about_url'] : "";
         $camp->camp_about_nick_id = isset($all['camp_about_nick_id']) ? $all['camp_about_nick_id'] : "";
+        if($all['topic_num'] == '81' && !isset($all['camp_about_nick_id'])){ // check if mind_expert topic and camp abt nick name id is null then assign nick name as about nickname
+            $camp->camp_about_nick_id = isset($all['nick_name']) ? $all['nick_name'] : "";  
+        }
         $camp->grace_period = 1;
 
         $eventtype = "CREATE";
@@ -839,7 +862,9 @@ class TopicController extends Controller {
         if (isset($all['objection']) && $all['objection'] == 1) {
             return redirect('camp/history/' . $camp->topic_num . '/' . $camp->camp_num)->with(['success' => $message, 'go_live_time' => $go_live_time, 'objection' => $objection]);
         } else {
-            return redirect('camp/history/' . $camp->topic_num . '/' . $camp->camp_num)->with(['success' => $message, 'go_live_time' => $go_live_time]);
+            $link_url = \App\Model\Camp::getTopicCampUrl($camp->topic_num,$camp->camp_num);
+            return redirect($link_url)->with(['success' => $message, 'go_live_time' => $go_live_time]);
+            //return redirect('camp/history/' . $camp->topic_num . '/' . $camp->camp_num)->with(['success' => $message, 'go_live_time' => $go_live_time]);
         }
     }
 
@@ -980,8 +1005,12 @@ class TopicController extends Controller {
             }catch(\Swift_TransportException $e){
                 throw new \Swift_TransportException($e);
             } 
-        } // #951 removedthe update email event from here as we will send email after commit or after one hour refer notify_change or console->command->notifyUser classs
-        return redirect('statement/history/' . $statement->topic_num . '/' . $statement->camp_num)->with(['success' => $message, 'go_live_time' => $go_live_time]);
+            return redirect('statement/history/' . $statement->topic_num . '/' . $statement->camp_num)->with(['success' => $message, 'go_live_time' => $go_live_time]);
+        } 
+        // #951 removedthe update email event from here as we will send email after commit or after one hour refer notify_change or console->command->notifyUser classs
+        //return redirect('statement/history/' . $statement->topic_num . '/' . $statement->camp_num)->with(['success' => $message, 'go_live_time' => $go_live_time]);
+        $link_url = \App\Model\Camp::getTopicCampUrl($statement->topic_num,$statement->camp_num);
+        return redirect($link_url)->with(['success' => $message, 'go_live_time' => $go_live_time]);
     }
 
     /**
