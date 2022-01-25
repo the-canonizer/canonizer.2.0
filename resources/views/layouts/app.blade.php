@@ -196,7 +196,9 @@
                       session(['asofDefault'=>$_REQUEST['asof']]);
                     }
                     if(isset($_REQUEST['asofdate']) && $_REQUEST['asofdate']) {
-                      session(['asofdateDefault'=>$_REQUEST['asofdate']]);
+                        //$date = date_create($_REQUEST['asofdate']);
+                        //$date = date_format($date,"m/d/Y h:s:i A"); //added by Ali Ahmad ticket# 1001, 1011, 1020
+                        session(['asofdateDefault'=>$_REQUEST['asofdate']]);
                     }
 
                     $visibleRoutes = array("index","show");
@@ -205,7 +207,7 @@
                         <ul class="lowermneu canoalgo">
 
                         <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Components">
-                            <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#canoalgo">
+                            <a class="nav-link nav-link-collapse" data-toggle="collapse" href="#canoalgo">
                                 <span class="nav-link-text">Canonizer</span>
                             </a>
                             <ul class="sidenav-second-level collapse show" id="canoalgo">
@@ -243,7 +245,7 @@
                       <?php } ?>
                     <ul class="lowermneu asof">
                         <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Components">
-                            <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#asof">
+                            <a class="nav-link nav-link-collapse" data-toggle="collapse" href="#asof">
                                 <span class="nav-link-text">As Of</span>
                             </a>
                             <ul class="sidenav-second-level collapse show" id="asof">
@@ -267,9 +269,12 @@
 									
 									<div><input readonly type="text" id="asofdate" name="asofdate" value=""/></div>
 								    <script>
-                                        <?php if(session('asofdateDefault')!=null && session('asofdateDefault')!='') { ?>
+                                        <?php if(session('asofdateDefault')!=null && session('asofdateDefault')!='') { 
+                                            ?>
+                                           
     									var date = new Date(<?= strtotime(session('asofdateDefault')) ?> * 1000).toLocaleString();
-                                       $('#asofdate').val(date);
+                                       
+                                       $('#asofdate').val("<?php echo session('asofdateDefault');  ?>");
                                    <?php } ?>
 									</script>
 								</form>
@@ -319,7 +324,7 @@
                 <div class="modal-body">
                     To object to this change, you should be a direct supporter of the topic/camp and should have supported it before the change was submitted.
                     <br/>For more information about disagreement, please read topic:<br/>
-                    <a href="https://canonizer.com/statement/history/132-Help/4-Dealing-with-Disagreement" target="_blank">https://canonizer.com/statement/history/132-Help/4-Dealing-with-Disagreement</a>
+                    <a href="https://canonizer.com/topic/132-Help/4-Disagreement" target="_blank">https://canonizer.com/topic/132-Help/4-Disagreement</a>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-dismiss="modal">

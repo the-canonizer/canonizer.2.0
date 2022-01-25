@@ -6,9 +6,9 @@
  @elseif(isset($data['support_deleted']) && $data['support_deleted'] == 1 && $data['delegate_support_deleted'] != 1)
  {{ $data['nick_name']}} has just removed their support from this camp: <a href="{{ $link }}"><b>{{ $data['object']}}</b></a>
  @elseif(isset($data['support_deleted']) && $data['support_deleted'] == 1 && $data['delegate_support_deleted'] == 1)
- {{ $data['nick_name']}} has just removed their delegated support from {{(isset($data['delegated_user']))? $data['delegated_user'] :'you'}} in this camp: <a href="{{ $link }}"><b>{{ $data['object']}}</b></a>
+ {{ $data['nick_name']}} has just removed their delegated support from {{(isset($data['delegated_user']))? $data['delegated_user'] :'you'}} in this topic: <a href="{{ $link }}"><b>{{ $data['topic']->topic_name}}</b></a>
  @else
- 	{{ $data['nick_name']}} has just delegated their support to {{(isset($data['delegated_user']))? $data['delegated_user'] :'you'}} in this camp: <a href="{{ $link }}"><b>{{ $data['object']}}</b></a>
+ <a target="_blank" href="<?= route('user_supports',$data['nick_name_id']) .'?topicnum=&campnum=&namespace=' . $data['namespace_id']; ?>">{{ $data['nick_name']}} </a> has just delegated their support to {{(isset($data['delegated_user']))? $data['delegated_user'] :'you'}} in this topic: <a href="{{ $link }}"><b>{{ $data['object']}}</b></a>
  @endif
 
  </p>
@@ -34,7 +34,7 @@
 			@if(isset($data['support_list']) && count($data['support_list']) > 0)
 			@foreach($data['support_list'] as $support)
 			 	<li>You are directly supporting {!!$support!!}</li>
-			 @endforeach
+			@endforeach
 			
 			@else
 			<li>You are directly supporting <a href="{{ $link }}">{{ $data['support_camp']}} </a></li>

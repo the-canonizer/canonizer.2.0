@@ -109,7 +109,7 @@
             if (res) {
 
                 $("#fileNameErrorBox").html(
-                    '<strong>Error! </strong> Special characters are not allowed in Name field');
+                    '<strong>Error! </strong> Special characters are not allowed in file name field');
                 $("#fileNameErrorBox").css("display", "block");
                 $("#successMsg").css("display", "none");
                 $(".errorMsg").css("display", "none");

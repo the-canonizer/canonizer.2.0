@@ -192,6 +192,7 @@ return [
         LaravelCaptcha\Providers\LaravelCaptchaServiceProvider::class,
         //Laravel\Socialite\SocialiteServiceProvider::class,
         App\Library\Socialite\SocialiteServiceProvider::class,
+        Com\NickelIT\UniqueableJobs\UniqueableJobsServiceProvider::class,
     ],
 
     /*

@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 use App\User;
 use App\Model\SharesAlgorithm;
 use App\Model\Nickname;
+use DateInterval;
+use DatePeriod;
+use DateTime;
 use Illuminate\Support\Facades\Validator;
 
 class SharesAlgoController extends Controller {
@@ -19,7 +22,23 @@ class SharesAlgoController extends Controller {
     public function index()
     {
         $shares = SharesAlgorithm::paginate(10);
-        return view('admin.shares.index',compact('shares'));
+        $oldest_record = SharesAlgorithm::orderBy('as_of_date','asc')->first();
+        $start_date = date('Y-m-d');        
+        $end      = (new DateTime(date('Y-m-d')));
+        $month_range = [];
+        if(isset($oldest_record) && isset($oldest_record->as_of_date)){
+            $start    = (new DateTime(date('Y-m-d',strtotime($oldest_record->as_of_date))))->modify('first day of this month');
+            $interval = DateInterval::createFromDateString('1 month');
+            $period   = new DatePeriod($start, $interval, $end);
+            $month_range = [];
+            foreach ($period as $dt) {
+                array_push($month_range,$dt->format('Y-m-d'));
+    
+            }
+        }else{
+            array_push($month_range,$start_date);
+        };
+        return view('admin.shares.index',compact('shares','month_range'));
     }
 
     /**
@@ -43,7 +62,7 @@ class SharesAlgoController extends Controller {
     {
         $data = $request->only('nick_name_id','as_of_date','share_value');
          $todayDate = date('Y-m-d');
-         $jandate = date('01/01/2021');
+         $jandate = date('Y-01-01');
          $validatorArray = [ 
           'nick_name_id' => 'required',
           'as_of_date' => 'required|date|after_or_equal:'.$jandate.'|before_or_equal:'.$todayDate,
@@ -109,7 +128,7 @@ class SharesAlgoController extends Controller {
     {
         if($id){
             $todayDate = date('Y-m-d');
-            $jandate = date('01/01/2021');
+            $jandate = date('Y-01-01');
             $data = $request->only('nick_name_id','as_of_date','share_value');
              $share = SharesAlgorithm::where('id','=',$id)->first();
               $validatorArray = [ 
@@ -184,11 +203,11 @@ class SharesAlgoController extends Controller {
                 $dataShares = SharesAlgorithm::paginate(10);
            
             }
-            
+            $dataShares->withPath('/admin/shares');
             if(count($dataShares) > 0){
                 foreach($dataShares as $d){
                     $table.="<tr>";
-                    $table.="<td>".$d->usernickname->nick_name."</td><td>".date("F,Y",strtotime($d->as_of_date))."</td><td>".$d->share_value."</td><td>".number_format(sqrt($d->share_value),2)."</td>";
+                    $table.="<td><a href='".route('user_supports',$d->usernickname->id)."'>".$d->usernickname->nick_name."</a></td><td>".date("F,Y",strtotime($d->as_of_date))."</td><td>".$d->share_value."</td><td>".number_format(sqrt($d->share_value),2)."</td>";
                     $table.="<td>
                         <a href='".url('/admin/shares/edit/'.$d->id) ."'><i class='fa fa-edit'></i>&nbsp;&nbsp;Edit</a>
                         &nbsp;&nbsp;<a href='javascript:void(0)' onClick='deleteShare(".$d->id.")'><i class='fa fa-trash'></i>&nbsp;&nbsp;Delete</a>

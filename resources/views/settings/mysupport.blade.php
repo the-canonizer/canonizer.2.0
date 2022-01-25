@@ -74,13 +74,13 @@
 						 ?>
 						 <div id="positions" class="SpCmpBDY delegate_support support-sorter-element ui-widget">
 					        <form onsubmit="return confirm('Do you really want to remove this support ?');" action="{{ route('settings.support.delete')}}" id="support-{{$support->support_id}}" method="post">
-                            <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                            <input type="hidden" id="support_id_{{ $support->support_id }}" name="support_id" value="{{ $support->support_id }}">
-                            <input type="hidden" id= "topic_num_{{ $support->support_id }}" name="topic_num" value="{{ $data->topic_num }}">
-                            <input type="hidden" id= "nick_name_id_{{ $support->support_id }}" name="nick_name_id" value="{{ $support->nick_name_id }}">
-                            <input type="hidden" id= "delegate_nick_name_id_{{ $support->support_id }}" name="delegate_nick_name_id" value="{{ $support->delegate_nick_name_id }}">
-                          <button type="submit" id="submit_{{ $support->support_id }}" class="btn-sptclose" title="Remove Support"><i class="fa fa-close"></i></button>
-                         </form>
+                                <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                <input type="hidden" id="support_id_{{ $support->support_id }}" name="support_id" value="{{ $support->support_id }}">
+                                <input type="hidden" id= "topic_num_{{ $support->support_id }}" name="topic_num" value="{{ $data->topic_num }}">
+                                <input type="hidden" id= "nick_name_id_{{ $support->support_id }}" name="nick_name_id" value="{{ $support->nick_name_id }}">
+                                <input type="hidden" id= "delegate_nick_name_id_{{ $support->support_id }}" name="delegate_nick_name_id" value="{{ $support->delegate_nick_name_id }}">
+                                <button type="submit" id="submit_{{ $support->support_id }}" class="btn-sptclose" title="Remove Support"><i class="fa fa-close"></i></button>
+                            </form>
 						  Support delegated to {{$delegatedNickDetail->nick_name }}
                           
 						</div>

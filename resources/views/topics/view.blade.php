@@ -15,12 +15,12 @@
 
 <div id="camp_subscription_notify"  style="display:none;" class="alert alert-success">
     <div calss="row">
-                <strong>Success!</strong> <span id="subscription_msg" ></span>
-        </div>       
+        <strong>Success!</strong><span id="subscription_msg" ></span>
+    </div>       
 </div>
 
 <?php 
-if(isset($topic) && count($topic) > 0 ) { ?>
+if(isset($topic) && count($topic) > 0 ) {?>
 
 <div class="camp top-head">
     <h3><b>Topic:</b> {{ $topic->topic_name}}</h3>
@@ -36,8 +36,8 @@ if(isset($topic) && count($topic) > 0 ) { ?>
                 <div class="nf-button-wrap">
                     <a class="rgWT mr-3" href="{{  url('editnews/' . $id . '/' . $parentcampnum)}}"><i class="fa fa-pencil-square-o"></i> Edit News</a>
                     <a onClick="enableDeleteNews()" class="pull-right rgWT delete-news-btn" href="javascript:void(0);"><i class="fa fa-trash"></i> Delete News</a>
-                    @endif
                 </div>
+                @endif
             </h3>
             <div class="content">
                 <ul>
@@ -191,7 +191,12 @@ change camps with them."><i class="fa fa-question"></i></a>
             </div>    
             </div>
             <div class="footer">
-               <a id="join_support_camp" class="btn btn-warning" href="<?php echo url('support/'.$url_portion );?>">Directly Join or Manage Support</a>
+                <?php if(isset($ifIamSupporter) && !($ifIamSupporter)){ ?>
+                    <a id="join_support_camp" class="btn btn-warning" href="<?php echo url('support/'.$url_portion );?>">Directly Join and Support</a>
+                <?php }else{ ?>
+                    <a id="join_support_camp" class="btn btn-warning" href="<?php echo url('support/'.$url_portion );?>">Manage Support</a>
+                <?php } ?>
+               
             </div>
         </div>
    
@@ -268,7 +273,7 @@ change camps with them."><i class="fa fa-question"></i></a>
                  <input type="hidden"  name="filter" value="0.00"/>
                    <input type="hidden" name="_token" value="{{ csrf_token() }}">                   
                    <input type="hidden"  name="asof"  value="bydate">
-                   <input hidden type="text" id="asofdatenew" name="asofdate" value="<?php echo $topicData[0]->go_live_time; ?>"/>
+                   <input hidden type="text" id="asofdatenew" name="asofdate" value="<?php echo date("Y-m-d H:i:s",$topicData[0]->go_live_time); ?>"/>
                     <h3>This topic was first created on <a href="javascript:void(0);" onClick="submitAsOfForm()">
                         <?php (count($topicData) > 0) ? to_local_time($topicData[0]->submit_time) :'' ;?></a></h3>
                 </form>            
@@ -291,8 +296,8 @@ function deleteNewsFeed(id){
 
 function submitAsOfForm(){
     var dateVal = $('#asofdatenew').val();
-    var dateString = new Date(dateVal * 1000).toUTCString();
-     $('#asofdatenew').val(dateString);
+    var dateString = new Date(dateVal * 1000).toLocaleString();
+    $('#asofdatenew').val(dateVal);
     $('#as_of_form').submit();
 }
 

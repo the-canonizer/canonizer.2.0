@@ -18,7 +18,11 @@
 </div>
 <div class="right-whitePnl">
   <div class="panel panel-group">
-
+     @if(Session::has('success'))
+        <div class="alert alert-success">
+            <strong>Success! </strong>{{ Session::get('success')}}    
+        </div>
+      @endif
     <div class="panel-body">
       <form id="threadForm" method="POST" action="{{ URL::to('/')}}/forum/{{ $topicname }}/{{ $campnum }}/threads">
         {{ csrf_field() }}

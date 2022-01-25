@@ -67,8 +67,7 @@ class TopicSupport extends Model {
             
             $supportPoint = Algorithm::{$algorithm}($support->nick_name_id,$support->topic_num,$support->camp_num); 
             $array[$support->nick_name_id]['index']=$support->nick_name_id;
-             //dd($array);
-            if($multiSupport){
+           if($multiSupport){
                 $array[$support->nick_name_id]['score'] = round($supportPoint / (2 ** ($parent_support_order)),2);
             }else{
                 $array[$support->nick_name_id]['score'] = $supportPoint;
@@ -107,18 +106,18 @@ class TopicSupport extends Model {
                 return $item->nick_name_id == $support->nick_name_id;
             });
             $supportPoint = Algorithm::{$algorithm}($support->nick_name_id,$support->topic_num,$support->camp_num);
-			$currentCampSupport =  $nickNameSupports->filter(function ($item) use($campnum)
+            $currentCampSupport =  $nickNameSupports->filter(function ($item) use($campnum)
 			{
 				return $item->camp_num == $campnum; /* Current camp support */
 			})->first();
-
             $array[$support->nick_name_id]['score'] = 0;
             $array[$support->nick_name_id]['children'] = [];
             $array[$support->nick_name_id]['index']=$support->nick_name_id;
             $multiSupport = false;
-            if($currentCampSupport){
-                
-                if($nickNameSupports->count() > 1){
+            if($currentCampSupport){                
+                if($algorithm == 'mind_experts'){
+                    $array[$support->nick_name_id]['score']=round($supportPoint,2);
+                } else if($nickNameSupports->count() > 1 && $algorithm != 'mind_experts'){
                     $multiSupport = true;					
 					$array[$support->nick_name_id]['score']=round($supportPoint / (2 ** ($support->support_order)),2);
 				}else if($nickNameSupports->count() >= 1 && $support->topic_num !='54' && $algorithm == 'mormon'){ //only for mormon if selected
@@ -129,9 +128,9 @@ class TopicSupport extends Model {
                     $array[$support->nick_name_id]['score']=round($supportPoint / (2 ** ($support->support_order)),2);
                 }
                 else if($nickNameSupports->count() == 1){
-				
-				     $array[$support->nick_name_id]['score']=$supportPoint;		 
+                     $array[$support->nick_name_id]['score']=$supportPoint;		 
 				}
+               
             $array[$support->nick_name_id]['children'] = self::traverseChildTree($algorithm,$topicnum,$campnum,$support->nick_name_id,$currentCampSupport->support_order,$multiSupport);
             }
 		  	
@@ -169,7 +168,6 @@ class TopicSupport extends Model {
         return $i;
     }
     public static function buildTree($topicnum,$campnum,$traversedTreeArray,$parentNode=false,$add_supporter = false,$delegationTreeArray = []){
-        
         $html= "";
         $userId = null;
         if(Auth::check()){
@@ -178,56 +176,24 @@ class TopicSupport extends Model {
         // check if anyone is delegating to logged in user
         $delegatingToCurrentUser = [];
         $userNicknames = Nickname::personNicknameArray();
-        $myDelegator = Support::where('topic_num', $topicnum)->whereIn('delegate_nick_name_id', $userNicknames)->where('end', '=', 0)->groupBy('nick_name_id')->get();
-       
-        if($myDelegator && count($myDelegator) > 0){
-            foreach($myDelegator as $delegator){
-                $delegatingToCurrentUser[$delegator->delegate_nick_name_id] =  $delegator->nick_name_id;
-            }            
-        }
+        $myDelegator =  Support::where('topic_num', $topicnum)->whereIn('delegate_nick_name_id', $userNicknames)->where('end', '=', 0)->groupBy('nick_name_id')->pluck('nick_name_id')->toArray();
+        $myDelegation = Support::where('topic_num', $topicnum)->whereIn('nick_name_id', $userNicknames)->where('delegate_nick_name_id','!=',0)->where('end', '=', 0)->groupBy('nick_name_id')->pluck('delegate_nick_name_id')->toArray();
         foreach($traversedTreeArray as $array){
+            $space_html = '';
             $nickName = Nickname::where('id',$array['index'])->first();
-            $nickNameArr = $nickName ->personNicknameArray();
-            $userFromNickname = $nickName->getUser();
-            $delegatedUserID = [];
-            $delegatedUserID[] = $userFromNickname->id;
-            if($delegatingToCurrentUser && count($delegatingToCurrentUser) > 0 && in_array($array['index'],$delegatingToCurrentUser) ){
-                $delegatedUser = array_search($array['index'],$delegatingToCurrentUser);
-                $delnickName1 = Nickname::where('id',$delegatedUser)->first();
-                $deluserFromNickname1 = $delnickName1->getUser();
-                $delegatedUserID[] = $deluserFromNickname1->id;
-              }
-            if(is_array($array['children']) && sizeof($array['children']) > 0){
-                foreach ($array['children'] as $key => $value) {
-                   $delnickName = Nickname::where('id',$value['index'])->first();
-                   $deluserFromNickname = $delnickName->getUser();
-                   $delegatedUserID[] = $deluserFromNickname->id;                  
-                }                
-            }        
             $topicData = Topic::getLiveTopic($topicnum,['nofilter'=>true]);
             $namespace_id = (isset($topicData->namespace_id)) ? $topicData->namespace_id:1;
-            $supports = $nickName->getSupportCampList($namespace_id);
+            $supports = $nickName->getSupportCampList($namespace_id, [], $topicnum);
             $support_number = self::getSupportNumber($topicnum,$campnum,$supports);
             $support_txt = ($support_number) ? $support_number.":": '';
-            $ifSupporter = Support::ifIamSupporter($topicnum,$campnum,$nickNameArr);
-            $space_html = '';
-            if($add_supporter){
-                    $space_html='<span class="" title="Collapse"></span>';
-                }
-             if($parentNode){
-                $html.= "<li class='main-parent'>".$space_html."<a href='".route('user_supports',$nickName->id)."?topicnum=".$topicnum."&campnum=".$campnum."&namespace=".$namespace_id."#camp_".$topicnum."_".$campnum."'>{$support_txt}{$nickName->nick_name}</a><div class='badge'>".round($array['score'],2)."</div>";
-                if( $userId && $userFromNickname->id != $userId && !in_array($userId, $delegatedUserID) && !in_array($userId, $delegationTreeArray)  &&  isset($ifSupporter) && !$ifSupporter &&  !$add_supporter){
-                    $urlPortion = Camp::getSeoBasedUrlPortion($topicnum,$campnum);
-                    $html.='<a href="'.url('support/'.$urlPortion.'_'.$array['index']).'" class="btn btn-info">Delegate Your Support</a>';
-                }
-                
-            }else{
-                $html.= "<li>".$space_html."<a href='".route('user_supports',$nickName->id)."?topicnum=".$topicnum."&campnum=".$campnum."&namespace=".$namespace_id."#camp_".$topicnum."_".$campnum."'>{$support_txt}{$nickName->nick_name}</a><div class='badge'>".round($array['score'],2)."</div> ";
-               
-                if( $userId && $userFromNickname->id != $userId && !in_array($userId, $delegatedUserID) && !in_array($userId, $delegationTreeArray)  && isset($ifSupporter) && !$ifSupporter &&   !$add_supporter){
-                    $urlPortion = Camp::getSeoBasedUrlPortion($topicnum,$campnum);
-                     $html.='<a href="'.url('support/'.$urlPortion.'_'.$array['index']).'" class="btn btn-info">Delegate Your Support</a>';
-                }
+
+            $urlPortion = Camp::getSeoBasedUrlPortion($topicnum,$campnum);
+            $html.= "<li class='main-parent'>".$space_html."<a href='".route('user_supports',$nickName->id)."?topicnum=".$topicnum."&campnum=".$campnum."&namespace=".$namespace_id."#camp_".$topicnum."_".$campnum."'>{$support_txt}{$nickName->nick_name}</a><div class='badge'>".round($array['score'],2)."</div>";
+            if(in_array($array['index'],$userNicknames)){
+                $html.='<a href="'.url('remove/mysupport/'.$topicnum.'/'. $campnum .'/' .$array['index']).'" class="btn btn-info">Remove Your Support</a>';
+            }                
+            if(!in_array($array['index'],$userNicknames) && !in_array($array['index'],$myDelegator) && !in_array($array['index'],$myDelegation) && Auth::check()){
+                $html.='<a href="'.url('support/'.$urlPortion.'_'.$array['index']).'" class="btn btn-info">Delegate Your Support</a>';
             }
             $html.="<ul>";
             $html.=self::buildTree($topicnum,$campnum,$array['children'],false,$add_supporter,$delegationTreeArray);
@@ -237,6 +203,7 @@ class TopicSupport extends Model {
     }
 
     public static function sumTranversedArraySupportCount($traversedTreeArray=array()){
+        
        if(isset($traversedTreeArray) && is_array($traversedTreeArray)) {
 		 
         foreach($traversedTreeArray as $key => $array){
@@ -269,7 +236,6 @@ class TopicSupport extends Model {
 	{
         $a = $a['score'];
         $b = $b['score'];
-
         if ($a == $b) return 0;
         return ($a > $b) ? -1 : 1;
 	}
@@ -281,10 +247,11 @@ class TopicSupport extends Model {
                 $delnickName = Nickname::where('id',$array['index'])->first();
                 $deluserFromNickname = $delnickName->getUser();
                 $delegationTreeArray[] = $deluserFromNickname->id; 
-
-                if(is_array($array['children']) && sizeof($array['children']) > 0){
+                
+                if(is_array($array['children']) && sizeof($array['children']) > 0){ 
                     return self::getDelegationTree($array['children'],$delegationTreeArray);
                 }else{
+                   // echo "<pre>"; print_r($delegationTreeArray); exit;
                     return $delegationTreeArray;
                 }
             }
@@ -309,7 +276,6 @@ class TopicSupport extends Model {
         }
         
         $traversedSupportCountTreeArray = self::sortTraversedSupportCountTreeArray(self::sumTranversedArraySupportCount(self::traverseTree($algorithm,$topicnum,$campnum)));
-        
         $delegationTreeArray = self::getDelegationTree($traversedSupportCountTreeArray,[]);
         
 		return self::buildTree($topicnum,$campnum,$traversedSupportCountTreeArray,true,$add_supporter,$delegationTreeArray);
