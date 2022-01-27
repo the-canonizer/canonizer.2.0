@@ -267,8 +267,8 @@
                     </form>
 			   <?php } 
                         } else {
-                            echo " No statement history available or it might be possible a user has added a statement but it is in review state";
-                        }
+                            echo " There is no statement history available right now. It may also be possible that a statement has been added, but it is in a review state.";
+                      }
 			   ?>
         
 </div>

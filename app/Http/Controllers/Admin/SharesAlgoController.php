@@ -65,7 +65,8 @@ class SharesAlgoController extends Controller {
          $jandate = date('Y-01-01');
          $validatorArray = [ 
           'nick_name_id' => 'required',
-          'as_of_date' => 'required|date|after_or_equal:'.$jandate.'|before_or_equal:'.$todayDate,
+         // 'as_of_date' => 'required|date|after_or_equal:'.$jandate.'|before_or_equal:'.$todayDate,
+         'as_of_date' => 'required|date|before_or_equal:'.$todayDate,
           'share_value' => 'required|numeric|min:1|max:100000'
           ];
         
@@ -133,14 +134,16 @@ class SharesAlgoController extends Controller {
              $share = SharesAlgorithm::where('id','=',$id)->first();
               $validatorArray = [ 
                   'nick_name_id' => 'required',
-                   'as_of_date' => 'required|date|after_or_equal:'.$jandate.'|before_or_equal:'.$todayDate,
+                   //'as_of_date' => 'required|date|after_or_equal:'.$jandate.'|before_or_equal:'.$todayDate,
+                   'as_of_date' => 'required|date|before_or_equal:'.$todayDate,
                    'share_value' => 'required|numeric|min:1|max:100000'
                   ];
              if($share->nick_name_id != $data['nick_name_id']){
                  $validatorArray['nick_name_id'] = 'required';
              }
              if($share->as_of_date != $data['as_of_date']){
-                $validatorArray['as_of_date'] = 'required|date|after_or_equal:'.$jandate.'|before_or_equal:'.$todayDate;
+                // $validatorArray['as_of_date'] = 'required|date|after_or_equal:'.$jandate.'|before_or_equal:'.$todayDate;
+                $validatorArray['as_of_date'] = 'required|date|before_or_equal:'.$todayDate;
              }
              if($share->share_value != $data['share_value']){
                 $validatorArray['share_value'] = 'required|numeric|min:1|max:100000';
