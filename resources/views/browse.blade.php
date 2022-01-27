@@ -75,20 +75,18 @@
 <script>
 $(document).ready(function(){
     var uri = window.location.toString();
-        if (uri.indexOf("?") > 0) {
-            var clean_uri = uri.substring(0, uri.indexOf("?"));
-            window.history.replaceState({}, document.title, clean_uri);            
-        }
+    if (uri.indexOf("?") > 0) {
+        var clean_uri = uri.substring(0, uri.indexOf("?"));
+        window.history.replaceState({}, document.title, clean_uri);            
+    }
 });
 function submitBrowseForm(element){
     if(($(element).val() == null) || ($(element).val() == "")){
-        $("input[name='my']").attr('disabled','disabled');
-        $("select[name='namespace']").attr('disabled','disabled');
+        $("input[name='my']").val('');
         $(element).parents('form').submit();
     }else{
       changeNamespace(element);  
     }
-    
 }
 function changeNamespace(element){
     $.ajax({
@@ -99,7 +97,11 @@ function changeNamespace(element){
             var namespace = $("select[name='namespace']").val();
             var my = $("input[name='my']").val();
             if(namespace != my){
-                $("input[name='my']").attr('disabled','disabled');
+                if($("input[name='my']").is(":checked")){
+                    $("input[name='my']").val(namespace);
+                }else{
+                    $("input[name='my']").attr('disabled','disabled');
+                }
             }
             $(element).parents('form').submit();
         }
