@@ -48,7 +48,7 @@ class TopicController extends Controller {
             session()->put('asofDefault',$_REQUEST['asof']);
         }
         if(isset($_REQUEST['asofdate']) && $_REQUEST['asofdate']!=''){
-            //session()->put('asofdateDefault',$_REQUEST['asofdate']);
+            ///session()->put('asofdateDefault',$_REQUEST['asofdate']); //#1074 wrong format setup
         }
         session()->save();
     }
