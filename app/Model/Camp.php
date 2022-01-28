@@ -358,10 +358,16 @@ class Camp extends Model {
                     $asofdate  = time();
                 }
 
-                return self::where('topic_num', $topicnum)
+                /* return self::where('topic_num', $topicnum)
                                 ->where('camp_num', '=', $campnum)
                                 ->where('objector_nick_id', '=', NULL)
                                 ->where('go_live_time', '<=', $asofdate)
+                                ->latest('submit_time')->first(); */
+
+                return self::where('topic_num', $topicnum)
+                                ->where('camp_num', '=', $campnum)
+                                ->where('objector_nick_id', '=', NULL)
+                                //->where('go_live_time', '<=', $asofdate)
                                 ->latest('submit_time')->first();
             }
         }
