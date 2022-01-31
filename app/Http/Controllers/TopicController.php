@@ -294,7 +294,7 @@ class TopicController extends Controller {
             else if ($eventtype == "UPDATE") {
                 // Dispatch Job
                 if(isset($topic)) {
-                    Util::dispatchJob($topic, 1, 0);
+                    Util::dispatchJob($topic, 1, 1);
                 }
             }
         } catch (Exception $e) {
@@ -790,7 +790,7 @@ class TopicController extends Controller {
             if ($eventtype == "CREATE") {
                 // Dispatch Job
                 if(isset($topic)) {
-                    Util::dispatchJob($topic, $camp->camp_num, 0);
+                    Util::dispatchJob($topic, $camp->camp_num, 1);
                 }
 
                 // send history link in email
@@ -808,7 +808,7 @@ class TopicController extends Controller {
             } else if ($eventtype == "OBJECTION") {
                 // Dispatch Job
                 if(isset($topic)) {
-                    Util::dispatchJob($topic, $camp->camp_num, 0);
+                    Util::dispatchJob($topic, $camp->camp_num, 1);
                 }
 
                 $user = Nickname::getUserByNickName($all['submitter']);
@@ -834,7 +834,7 @@ class TopicController extends Controller {
             else if ($eventtype == "UPDATE") {
                 // Dispatch Job
                 if(isset($topic)) {
-                    Util::dispatchJob($topic, $camp->camp_num, 0);
+                    Util::dispatchJob($topic, $camp->camp_num, 1);
                 }        
             }
 
@@ -1104,7 +1104,7 @@ class TopicController extends Controller {
                     $topic = $camp->topic;
                     // Dispatch Job
                     if(isset($topic)) {
-                        Util::dispatchJob($topic, $camp->camp_num, 0);
+                        Util::dispatchJob($topic, $camp->camp_num, 1);
                     }
                 }
 			}	
@@ -1123,7 +1123,7 @@ class TopicController extends Controller {
                     ChangeAgreeLog::where('topic_num', '=', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('change_id', '=', $changeID)->where('change_for', '=', $data['change_for'])->delete(); 
                     // Dispatch Job
                     if(isset($topic)) {
-                        Util::dispatchJob($topic, $data['camp_num'], 0);
+                        Util::dispatchJob($topic, $data['camp_num'], 1);
                     }
                 }
 		    } 	
@@ -1186,7 +1186,7 @@ class TopicController extends Controller {
             $topic = $camp->topic;
             // Dispatch Job
             if(isset($topic)) {
-                Util::dispatchJob($topic, $camp->camp_num, 0);
+                Util::dispatchJob($topic, $camp->camp_num, 1);
             }
             
             $this->mailSubscribersAndSupporters($directSupporter,$subscribers,$link, $data);  
@@ -1215,7 +1215,7 @@ class TopicController extends Controller {
             
             // Dispatch Job
             if(isset($topic)) {
-                Util::dispatchJob($topic, 1, 0);
+                Util::dispatchJob($topic, 1, 1);
             }
             
             $this->mailSupporters($directSupporter, $link, $data);         //mail supporters  

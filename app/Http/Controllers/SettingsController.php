@@ -562,7 +562,7 @@ class SettingsController extends Controller
             $topic = Topic::where('topic_num', $topic_num)->get()->last();            
             // Dispatch Job
             if(isset($topic)) {
-                Util::dispatchJob($topic, $data['camp_num'], 0);
+                Util::dispatchJob($topic, $data['camp_num'], 1);
 
             }
             return redirect(\App\Model\Camp::getTopicCampUrl($data['topic_num'],session('campnum')));            
@@ -1053,7 +1053,7 @@ class SettingsController extends Controller
         $topic = Topic::where('topic_num', $topicNum)->get()->last();            
         // Dispatch Job
         if(isset($topic)) {
-            Util::dispatchJob($topic, $campNum, 0);
+            Util::dispatchJob($topic, $campNum, 1);
         }
 
         return redirect(\App\Model\Camp::getTopicCampUrl($topicNum ,$campNum));
