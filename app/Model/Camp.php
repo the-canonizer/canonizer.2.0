@@ -104,6 +104,17 @@ class Camp extends Model {
         return $flag;
     }
 
+    public static function checkifDirectSupporter($directSupporter,$nick_id){
+        $flag =false;
+        foreach($directSupporter as $sup){
+            if($sup->nick_name_id == $nick_id){
+                $flag = true;
+                break;
+            }
+        }
+        return $flag;
+    }
+
     public function scopeGetSupportedNicknames($query, $topicnum, $campnum = null) {
         $query = TopicSupport::where('topic_num', '=', $topicnum)
                 ->groupBy('nick_name_id');
