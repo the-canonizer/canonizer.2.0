@@ -1221,7 +1221,7 @@ class TopicController extends Controller {
             $data['go_live_time'] = $topic->go_live_time;
             $data['type'] = 'topic : ';
             $data['typeobject'] = 'topic';
-			$data['note'] = $topic->note;
+			$data['note'] = $topicData->note;
             $data['camp_num'] = 1;
             $nickName = Nickname::getNickName($topic->submitter_nick_id);
             $data['topic_num'] = $topic->topic_num;
