@@ -119,7 +119,7 @@ class HomeController extends Controller {
         ### End of CS17 ticket ####
         
         $videopodcast = VideoPodcast::all()->first();
-        return view('welcome', ['topics' => $topics, 'namespaces' => $namespaces,'videopodcast'=>$videopodcast, "previous"=>$previous, "page_no" => $page_no]);
+        return view('welcome', ['topics' => $topics, 'namespaces' => $namespaces,'videopodcast'=>$videopodcast, "previous"=>$previous, "page_no" => $page_no, "asOf"=>$asOf]);
     }
 
     public function loadmoretopics(Request $request){

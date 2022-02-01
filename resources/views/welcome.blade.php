@@ -99,7 +99,7 @@
                               $disabled = isset($page_no) && $page_no == 1 ? 'disabled' : '';
                               $next = $page_no+1;
                               $previous = $page_no - 1;
-                              $nexDisabled = $next >= $topics['number_of_pages'] ? 'disabled':'';
+                              $nexDisabled = $next >= $topics['data']['number_of_pages'] ? 'disabled':'';
                          ?>
                         <ul class="pagination">
                             @if ($page_no > 1)
@@ -109,7 +109,7 @@
                             @endif
     
                                 <?php 
-                                   for($idx=1; $idx <= $topics['number_of_pages']; $idx++){
+                                   for($idx=1; $idx <= $topics['data']['number_of_pages']; $idx++){
                                          $active = $page_no == $idx ? 'active': '';
                                 ?>
                                 @if ($page_no == $idx)
@@ -120,7 +120,7 @@
                            
                             <?php } ?> 
                             <li>
-                                @if ($next <= $topics['number_of_pages'])
+                                @if ($next <= $topics['data']['number_of_pages'])
                                   <a href="@php echo url('/').'?page='.$next;  @endphp">»</a>
                                 @else
                                  »
