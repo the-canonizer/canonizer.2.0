@@ -85,7 +85,7 @@
                                 <a style="cursor:pointer;" href="@php echo  $url; @endphp" bis_skin_checked="1"><i class="fa fa-arrow-right"></i> </a></span>
                             <div class="tp-title" bis_skin_checked="1">
                                 <a style="" href="@php echo  $url; @endphp" bis_skin_checked="1">
-                                    <?php echo $topic['topic_name']; ?>
+                                    <?php echo $asOf == "review" ? $topic['tree_structure_1_review_title']: $topic['topic_name'] ; ?>
                                 </a>
                                 <div class="badge" bis_skin_checked="1">@php echo $topic['topic_score'] @endphp</div>
                             </div>
