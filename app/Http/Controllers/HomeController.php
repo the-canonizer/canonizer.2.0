@@ -92,7 +92,8 @@ class HomeController extends Controller {
                 "page_size" => $page_per_record,
                 "namespace_id" => session('defaultNamespaceId'),
                 "asofdate" =>  $asOfDefaultDate,
-                "algorithm" => $selectedAlgo
+                "algorithm" => $selectedAlgo,
+                "asof"=>$asOf
             ];
 
             $appURL = env('CS_APP_URL');
