@@ -237,7 +237,7 @@
                                  @if($isagreeFlag && $ifIamSupporter   && Auth::user()->id != $submitterUserID)
                                 <div class="CmpHistoryPnl-footer">
                                     <div>
-                                      <!--if($stmentLength ==1 || ($stmentLength >1 &&  $liveStatement && $data->submit_time  > $liveStatement->submit_time))-->
+                                      <!--if($stmentLength ==1 || ($stmentLength >1 &&  $liveStatement && $data->submit_time  > $liveStatement->submit_time))   --> 
                                       @if($stmentLength ==1 || ($stmentLength >1  && $data->submit_time  > $liveStatement->submit_time) || $liveStatement)
                                        <input {{ (isset($isAgreed) && $isAgreed) ? 'checked' : '' }} {{ (isset($isAgreed) && $isAgreed) ? 'disabled' : '' }} class="agree-to-change" type="checkbox" name="agree" value="" onchange="agreeToChannge(this,'{{ $data->id}}')"> I agree with this statement change</input>
                                        @endif
