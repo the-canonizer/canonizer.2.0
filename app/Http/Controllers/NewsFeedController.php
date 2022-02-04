@@ -121,8 +121,14 @@ class NewsFeedController extends Controller
             $newsData = NewsFeed::where('id','=',$id)->first();
             $topicnum = $newsData->topic_num;
             $campnum = $newsData->camp_num;
-            NewsFeed::find($id)->delete();
-            return redirect(\App\Model\Camp::getTopicCampUrl($topicnum,$campnum))->with(['success' => "News deleted successfully"]);
+            $get_id = NewsFeed::find($id);
+            if($get_id != null){
+                NewsFeed::find($id)->delete();
+                return redirect(\App\Model\Camp::getTopicCampUrl($topicnum,$campnum))->with(['success' => "News deleted successfully"]);
+            }
+            else{
+                return redirect()->back()->with([ 'error' => 'News has already been deleted by another user' ]);
+            }
         }
     }
     
