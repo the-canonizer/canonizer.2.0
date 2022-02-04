@@ -1,11 +1,20 @@
 @extends('layouts.app')
 @section('content')
 
-
+<?php $topic_camp_link = \App\Model\Camp::getTopicCampUrl($topic->topic_num,1); ?>
 <div class="page-titlePnl">
     <h1 class="page-title">Supported Camps</h1>
 </div> 
-<h6>{!! $parentcamp !!}</h6> 
+<div class="camp top-head">
+	<h3>
+		<b>Topic:</b> 
+		<a href="<?php echo $topic_camp_link;?>">{{ isset($supportedTopic->topic->topic_name)? $supportedTopic->topic->topic_name :''}}</a> 
+	</h3>
+	<h3>
+		<b>Camp:</b>
+		{!! $parentcamp !!}
+	</h3> 
+</div>
 @if(!Session::has('success') && Session::has('warning') && !Session::has('warningDelegate'))
 <div class="alert alert-danger">
     <strong>Warning! </strong>{{ Session::get('warning')}} 
