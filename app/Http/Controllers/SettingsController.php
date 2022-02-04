@@ -1148,7 +1148,7 @@ class SettingsController extends Controller
             $mailData['camp_num'] = $campNum;
             $mailData['nick_name'] = $nickNameId;
             $mailData['delegate_nick_name_id'] = $delegateNickNameId;
-            $currentSupportOrder =isset($currentSupportOrder!="")?$currentSupportOrder:1;
+          
             $remaingSupportWithHighOrder = Support::where('topic_num', $topicNum)
                 //->where('delegate_nick_name_id',0)
                 ->whereIn('nick_name_id', [$nickNameId])
