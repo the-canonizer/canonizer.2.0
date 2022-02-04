@@ -25,7 +25,7 @@ if(isset($topic) && count($topic) > 0 ) {?>
 <div class="camp top-head">
     <h3><b>Topic:</b> {{ $topic->topic_name}}</h3>
     <h3><b>Camp:</b> {!! $parentcamp !!}</h3> 
-</div>      	
+</div>  
 <div class="right-whitePnl">
     <div class="container-fluid">
         @if(count($news) > 0)
@@ -288,6 +288,7 @@ function enableDeleteNews(){
 }
 
 function deleteNewsFeed(id){
+    
    var crfm = confirm('Are you sure you want to delete this news feed');
    if(crfm){
         window.location.href="{{ url('/newsfeed/delete')}}/"+id;
