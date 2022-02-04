@@ -1147,14 +1147,15 @@ class SettingsController extends Controller
             $mailData['topic_num'] = $topicNum;
             $mailData['camp_num'] = $campNum;
             $mailData['nick_name'] = $nickNameId;
-            $mailData['delegate_nick_name_id'] = $delegateNickNameId; 
+            $mailData['delegate_nick_name_id'] = $delegateNickNameId;
+            $currentSupportOrder =isset($currentSupportOrder!=""):$currentSupportOrder:1;
             $remaingSupportWithHighOrder = Support::where('topic_num', $topicNum)
                 //->where('delegate_nick_name_id',0)
                 ->whereIn('nick_name_id', [$nickNameId])
                 ->whereRaw("(start < $as_of_time) and ((end = 0) or (end > $as_of_time))")
                 ->where('support_order', '>', $currentSupportOrder)
                 ->orderBy('support_order', 'ASC')
-                ->get();            
+                ->get();     
             $endSupport = Support::where('topic_num', $topicNum)->where('camp_num', $campNum)->where('nick_name_id', $nickNameId)->where('end', '=', 0)->update(array('end' => time()));
             if ($endSupport) {
                 if(!$ifSupportLeft && $promoteDelegate){ //Abondoning Topic completely, So promoting DD to its place
