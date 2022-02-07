@@ -1148,7 +1148,6 @@ class SettingsController extends Controller
             $mailData['camp_num'] = $campNum;
             $mailData['nick_name'] = $nickNameId;
             $mailData['delegate_nick_name_id'] = $delegateNickNameId;
-          
             $remaingSupportWithHighOrder = Support::where('topic_num', $topicNum)
                 //->where('delegate_nick_name_id',0)
                 ->whereIn('nick_name_id', [$nickNameId])
@@ -1341,7 +1340,9 @@ class SettingsController extends Controller
         //mail return
         //return
         $user = Nickname::getUserByNickName($nickName->id);    
-        $data['subject'] = $nickName->nick_name . " has removed their delegated support from ". $parentUser->nick_name . " in ".$data['topic']->topic_name." topic.";         
+        //$data['subject'] = $nickName->nick_name . " has removed their delegated support from ". $parentUser->nick_name . " in ".$data['topic']->topic_name." topic."; 
+        $data['subject'] = $data['nick_name'] . " has removed their delegated support from ". $parentUser->nick_name . " in ".$data['topic']->topic_name." topic."; 
+                
         $link = \App\Model\Camp::getTopicCampUrl($data['topic_num'],1);          
         $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
         try{
