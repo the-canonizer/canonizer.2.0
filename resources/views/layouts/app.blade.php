@@ -193,7 +193,9 @@
                       session(['asofDefault'=>$_REQUEST['asof']]);
                     }
                     if(isset($_REQUEST['asofdate']) && $_REQUEST['asofdate']) {
-                      session(['asofdateDefault'=>$_REQUEST['asofdate']]);
+                        //$date = date_create($_REQUEST['asofdate']);
+                        //$date = date_format($date,"m/d/Y h:s:i A"); //added by Ali Ahmad ticket# 1001, 1011, 1020
+                        session(['asofdateDefault'=>$_REQUEST['asofdate']]);
                     }
 
                     $visibleRoutes = array("index","show");
@@ -264,9 +266,12 @@
 									
 									<div><input readonly type="text" id="asofdate" name="asofdate" value=""/></div>
 								    <script>
-                                        <?php if(session('asofdateDefault')!=null && session('asofdateDefault')!='') { ?>
+                                        <?php if(session('asofdateDefault')!=null && session('asofdateDefault')!='') { 
+                                            ?>
+                                           
     									var date = new Date(<?= strtotime(session('asofdateDefault')) ?> * 1000).toLocaleString();
-                                       $('#asofdate').val(date);
+                                       
+                                       $('#asofdate').val("<?php echo session('asofdateDefault');  ?>");
                                    <?php } ?>
 									</script>
 								</form>

@@ -11,6 +11,7 @@ use App\Model\Camp;
 use App\Model\Nickname;
 use App\Model\Support;
 use App\Model\Topic;
+use DB;
 
 class CommonForumFunctions
 {
@@ -132,7 +133,7 @@ class CommonForumFunctions
         $data['camp_name'] = CommonForumFunctions::getCampName($topicid, $campnum);
 
         $data['nick_name'] = CommonForumFunctions::getForumNickName($nick_id);
-
+      
         $data['subject'] = $topic_name." / ".$data['camp_name']. " / ". $thread_title.
                             " created";
         $data['camp_url'] = "topic/".$topicid."-".$topic_name_encoded."/". $campnum."?";
@@ -164,7 +165,7 @@ class CommonForumFunctions
                         if(!in_array($sub,$userExist,TRUE)){
                             $userSub = \App\User::find($sub);
                             $subscriptions_list = Camp::getSubscriptionList($userSub->id,$topicid,$campnum);
-                             $subscribe_list[$userSub->id] = $subscriptions_list;                
+                            $subscribe_list[$userSub->id] = $subscriptions_list;                
                             $sub_bcc_user[] = $userSub;                   
                         }
                     }
@@ -174,18 +175,25 @@ class CommonForumFunctions
         $filtered_sub_user = array_unique(array_filter($sub_bcc_user,function($e) use($userExist){
             return !in_array($e->id, $userExist);
         }));
-
-         if(isset($filtered_bcc_user) && count($filtered_bcc_user) > 0){
+        
+        if(isset($filtered_bcc_user) && count($filtered_bcc_user) > 0){
 
             foreach($filtered_bcc_user as $user){
                 $bcc_email = CommonForumFunctions::getReceiver($user->email);
-
+                
                 $data['support_list'] = $support_list[$user->id];
                 if(isset($supporter_and_subscriber[$user->id]) && isset($supporter_and_subscriber[$user->id]['also_subscriber']) && $supporter_and_subscriber[$user->id]['also_subscriber']){
                     $data['also_subscriber']= $supporter_and_subscriber[$user->id]['also_subscriber'];
                     $data['sub_support_list'] = $supporter_and_subscriber[$user->id]['sub_support_list'];
                 }
-                Mail::bcc($bcc_email)->send(new ForumThreadCreatedMail($user, $link, $data));    
+                $get_flags = DB::table('person')->where('email', '=', $bcc_email)
+                                                ->where('private_flags', 'like', '%email%')
+                                                ->get();
+                if(count($get_flags) > 0){//if it is not null then email is private
+                    Mail::bcc($bcc_email)->send(new ForumThreadCreatedMail($user, $link, $data));    
+                }else{
+                    Mail::to($bcc_email)->send(new ForumThreadCreatedMail($user, $link, $data));    
+                }
             }
         }
 
@@ -193,9 +201,16 @@ class CommonForumFunctions
             $data['subscriber'] = 1;
             foreach($filtered_sub_user as $userSub){
                 $subscriber_bcc_email = CommonForumFunctions::getReceiver($userSub->email); 
-                 $data['support_list'] = $subscribe_list[$userSub->id];
-              
-                Mail::bcc($subscriber_bcc_email)->send(new ForumThreadCreatedMail($userSub, $link, $data));    
+                $data['support_list'] = $subscribe_list[$userSub->id];
+
+                $get_flags = DB::table('person')->where('email', '=', $subscriber_bcc_email)
+                                                ->where('private_flags', 'like', '%email%')
+                                                ->get();
+                if(count($get_flags) > 0){//if it is not null then email is private
+                    Mail::bcc($subscriber_bcc_email)->send(new ForumThreadCreatedMail($userSub, $link, $data));   
+                }else{
+                    Mail::to($subscriber_bcc_email)->send(new ForumThreadCreatedMail($userSub, $link, $data));    
+                }        
             }
         }
         return;

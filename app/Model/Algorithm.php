@@ -146,6 +146,12 @@ class Algorithm{
         $as_of_time = time();
         if(isset($_REQUEST['asof']) && $_REQUEST['asof']=='bydate'){
             $as_of_time = strtotime($_REQUEST['asofdate']);
+        }else{
+            // get the last month shares added for user as current share #1055
+            $latest_record = SharesAlgorithm::where('nick_name_id',$nick_name_id)->orderBy('as_of_date','desc')->first();
+            if(isset($latest_record) && isset($latest_record->as_of_date)){
+                $as_of_time = strtotime($latest_record->as_of_date);  
+            }
         }
         $year = date('Y',$as_of_time);
         $month = date('m',$as_of_time);
@@ -376,9 +382,7 @@ class Algorithm{
         });
         
 		# start with one person one vote canonize.
-		
-        $expertCampReducedTree = $expertCamp->campTree('blind_popularity'); # only need to canonize this branch
-
+		$expertCampReducedTree = $expertCamp->campTree('blind_popularity',$nick_name_id); # only need to canonize this branch
         // Check if user supports himself
         $num_of_camps_supported = 0;
         
@@ -406,11 +410,12 @@ class Algorithm{
         if ($ret_camp->count()) {
             $num_of_camps_supported = $ret_camp->count();
         }
-        
+       
         if( ( $directSupports->count() > 0 || $delegatedSupports->count() > 0 ) && $num_of_camps_supported > 1 ) {
-             return $expertCampReducedTree[$expertCamp->camp_num]['score'] * 5;
+             return $expertCampReducedTree[$expertCamp->camp_num]['score'] * 5;             
         }else{
              return $expertCampReducedTree[$expertCamp->camp_num]['score'] * 1;
         }
+        
     }
 }

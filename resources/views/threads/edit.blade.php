@@ -24,7 +24,7 @@
       <input name="thread_title_name" type="hidden" value="{{ $thread->title }}">
   
     </div>
-    <div class="form-group">
+    <div class="form-group col-sm-4">
       <button type="submit" class="btn btn-primary mb-2">Submit</button>
     </div>
   </form>

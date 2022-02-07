@@ -73,13 +73,20 @@
     <!-- /.container-fluid-->
 </div>  <!-- /.right-whitePnl-->
 <script>
+$(document).ready(function(){
+    var uri = window.location.toString();
+    if (uri.indexOf("?") > 0) {
+        var clean_uri = uri.substring(0, uri.indexOf("?"));
+        window.history.replaceState({}, document.title, clean_uri);            
+    }
+});
 function submitBrowseForm(element){
     if(($(element).val() == null) || ($(element).val() == "")){
-         $(element).parents('form').submit();
+        $("input[name='my']").val('');
+        $(element).parents('form').submit();
     }else{
       changeNamespace(element);  
     }
-    
 }
 function changeNamespace(element){
     $.ajax({
@@ -87,6 +94,15 @@ function changeNamespace(element){
         type:"POST",
         data:{namespace:$(element).val()},
         success:function(response){
+            var namespace = $("select[name='namespace']").val();
+            var my = $("input[name='my']").val();
+            if(namespace != my){
+                if($("input[name='my']").is(":checked")){
+                    $("input[name='my']").val(namespace);
+                }else{
+                    $("input[name='my']").attr('disabled','disabled');
+                }
+            }
             $(element).parents('form').submit();
         }
     });

@@ -1,6 +1,6 @@
  @component('mail::message')
  Hello {{ $user->first_name }} {{ $user->last_name }},<br/>
-<p>
+<p> 
  
 {{ $data['nick_name'] }} has proposed a change to this {{$data['type']}} <a href="{{ url('/') . '/' . $link }}">{{ $data['object']}} </a> which you currently {{(isset($data['subscriber']) && $data['subscriber'] == 1) ? 'subscribed' :'directly support'}}.  If no supporters of this {{$data['type']}} <a href="{{ url('/') . '/' . $link }}">{{ $data['object']}} </a> object to this change, it will go live in {{ config('app.go_live_text') }}.
 @if(isset($data['note']))
@@ -40,9 +40,9 @@
 			@endif
 			
 		</ul>
-   <h4>Note:</h4>
-	<p>
-	 We request that all <b>direct</b> supporters of a camp continue to receive notifications and take responsibility for the camp. You can avoid being notified by <b>delegating</b> your support to someone else.
+   	<h4>Note:</h4>
+   	<p>
+		We request that all <b>direct</b> supporters of a camp continue to receive notifications and take responsibility for the camp. If you <b>delegate</b> your support to someone else, you will no longer receive these notifications. <b>Delegating</b> your support to someone else will also result in your support following them for all camps in this topic.
 	</p>
 @endif
 </p>

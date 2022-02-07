@@ -137,7 +137,7 @@ class ResetPasswordController extends Controller {
      */
     protected function validationErrorMessages() {
         return $message = [
-            'password.regex'=>'Password must be atleast 8 characters, including atleast one digit, one lower case letter and one special character(@,# !,$..)'
+            'password.regex'=>'Password must be at least 8 characters, including at least one digit, one lower case letter and one special character(@,# !,$..)'
         ];
     }
 
