@@ -400,7 +400,9 @@ class SettingsController extends Controller
            
             /* Enter support record to support table */
             $data = $request->all();
+
             /** IN case of delegated support check for any direct support and remove them */
+            $anyDelegator = Support::where('topic_num', $data['topic_num'])->whereIn('delegate_nick_name_id', [$data['nick_name']])->where('end', '=', 0)->groupBy('nick_name_id')->get(); //#1088
             if(isset($data['delegate_nick_name_id']) && $data['delegate_nick_name_id']){
                 $data = $this->removeDirectSupport($data);
             }
@@ -527,8 +529,13 @@ class SettingsController extends Controller
                         $supportTopic->start = time();
                         $supportTopic->camp_num = $cmp->camp_num;
                         $supportTopic->support_order = $cmp->support_order;
-                        $supportTopic->save(); 
+                        $supportTopic->save();
 
+                        //all delegator of $data['nick_name] should also assigned with this support #1088
+                        if(isset($anyDelegator) && !empty($anyDelegator))
+                        {
+                            $this->addSupportToDelegates($anyDelegator,$cmp,$data['nick_name']);
+                        }
                         /* clear the existing session for the topic to get updated support count */
                         session()->forget("topic-support-{$cmp->topic_num}");
                         session()->forget("topic-support-nickname-{$cmp->topic_num}");
@@ -705,7 +712,7 @@ class SettingsController extends Controller
     private function emailForSupportAdded($data)
     {
         //mail return
-        //return;
+       // return;
         $parentUser = Nickname::getUserByNickName($data['nick_name']);
         $nickName = Nickname::getNickName($data['nick_name']);
         $topic = Camp::getAgreementTopic($data['topic_num'],['nofilter'=>true]);
@@ -1288,7 +1295,10 @@ class SettingsController extends Controller
         $this->mailSubscribersAndSupporters($directSupporterInCampList,$subscribers, $link, $result,$campList);   
     }
 
-
+    /**
+     * Remove All direct support, if user delegate their support to someone else
+     * Also, ends the support of its deleagtes for all the previous supported camps
+     */
     private function removeDirectSupport($data){
         $nickNameId = $data['nick_name'];
         $directSupportedCamps = Support::where('topic_num', $data['topic_num'])
@@ -1306,6 +1316,11 @@ class SettingsController extends Controller
             ->whereIn('nick_name_id', [$nickNameId])
             ->where('end', '=',0)
             ->where('delegate_nick_name_id', '=',0)->update(['end'=>time()]);
+
+       // end support for all its deleagte as well #1088
+       /*Support::where('topic_num', $data['topic_num'])
+            ->whereIn('delegate_nick_name_id', [$nickNameId])
+            ->where('end', '=',0)->update(['end'=>time()]);*/
         return $data;
     }
   
@@ -1349,6 +1364,36 @@ class SettingsController extends Controller
         }catch(\Swift_TransportException $e){
                     throw new \Swift_TransportException($e);
         } 
+    }
+
+    /**
+     * recursive function to change the support 
+     * when a supporter delegate support to other
+     */
+    private function addSupportToDelegates($anyDelegator,$cmp,$delegatedTo){
+
+        foreach($anyDelegator as $delegator){
+            //get delegates of this nickname for this topic and reset it first and add new one
+            $anyDelegator = Support::where('topic_num', $cmp->topic_num)->whereIn('delegate_nick_name_id', [  $delegator->nick_name_id ])->where('end', '=', 0)->groupBy('nick_name_id')->get(); //#1088
+           //ending support of child as well
+            Support::where('topic_num',$cmp->topic_num)
+            ->where('end', '=',0)
+            ->where('delegate_nick_name_id',  '=', $delegatedTo)->update(['end'=>time()]);
+
+            $supportTopic = new Support();
+            $supportTopic->topic_num = $cmp->topic_num;
+            $supportTopic->nick_name_id = $delegator->nick_name_id;
+            $supportTopic->delegate_nick_name_id = $delegatedTo;
+            $supportTopic->start = time();
+            $supportTopic->camp_num = $cmp->camp_num;
+            $supportTopic->support_order = $cmp->support_order;
+            $supportTopic->save();
+
+            if(count($anyDelegator) > 0){
+                $this->addSupportToDelegates($anyDelegator,$cmp,$delegator->nick_name_id);                
+            }
+            return;
+        }
     }
 }
 
