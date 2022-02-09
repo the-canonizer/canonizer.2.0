@@ -295,6 +295,11 @@ class TopicController extends Controller {
             DB::rollback();
             Session::flash('error', "Fail to create topic, please try later.");
         }
+
+        if ($eventtype == "CREATE") {
+            return redirect('topic-history/' . $topic->topic_num)->with(['success' => $message, 'go_live_time' => $go_live_time, 'objection' => $objection]);
+        }
+
         $link_url = \App\Model\Camp::getTopicCampUrl($topic->topic_num,1);
         return redirect($link_url)->with(['success' => $message, 'go_live_time' => $go_live_time, 'objection' => $objection]);
     }
@@ -862,9 +867,11 @@ class TopicController extends Controller {
         if (isset($all['objection']) && $all['objection'] == 1) {
             return redirect('camp/history/' . $camp->topic_num . '/' . $camp->camp_num)->with(['success' => $message, 'go_live_time' => $go_live_time, 'objection' => $objection]);
         } else {
+            if($eventtype == "CREATE"){
+                return redirect('camp/history/' . $camp->topic_num . '/' . $camp->camp_num)->with(['success' => $message, 'go_live_time' => $go_live_time]);
+            }
             $link_url = \App\Model\Camp::getTopicCampUrl($camp->topic_num,$camp->camp_num);
             return redirect($link_url)->with(['success' => $message, 'go_live_time' => $go_live_time]);
-            //return redirect('camp/history/' . $camp->topic_num . '/' . $camp->camp_num)->with(['success' => $message, 'go_live_time' => $go_live_time]);
         }
     }
 
