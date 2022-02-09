@@ -35,22 +35,17 @@ class CanonizerService implements ShouldQueue
      */
     public function handle()
     {
-        // Get payload of the job to log
+        
         $jobPayload = $this->job->getRawBody();
-        $updateAll = 0;
-
+        
         if(!$this->validateRequestData($this->canonizerData)) {
             return;
         }
-        if(array_key_exists('updateAll', $this->canonizerData)) {
-            $updateAll = $this->canonizerData['updateAll'];
-        }
-        
+
         $requestBody = [
-            'topic_num'     => $this->canonizerData['topic_num'],
-            'asofdate'      => $this->canonizerData['asOfDate'],
-            'algorithm'     => $this->canonizerData['algorithm'],
-            'update_all'    => $updateAll
+            'topic_num' => $this->canonizerData['topic_num'],
+            'asofdate' => $this->canonizerData['asOfDate'],
+            'algorithm' => $this->canonizerData['algorithm']
         ];
 
         $appURL = env('CS_APP_URL');

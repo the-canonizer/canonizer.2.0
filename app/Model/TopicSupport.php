@@ -191,8 +191,8 @@ class TopicSupport extends Model {
             $html.= "<li class='main-parent'>".$space_html."<a href='".route('user_supports',$nickName->id)."?topicnum=".$topicnum."&campnum=".$campnum."&namespace=".$namespace_id."#camp_".$topicnum."_".$campnum."'>{$support_txt}{$nickName->nick_name}</a><div class='badge'>".round($array['score'],2)."</div>";
             if(in_array($array['index'],$userNicknames)){
                 $html.='<a href="'.url('remove/mysupport/'.$topicnum.'/'. $campnum .'/' .$array['index']).'" class="btn btn-info">Remove Your Support</a>';
-        }                
-            if(!in_array($array['index'],$userNicknames) && !in_array($array['index'],$myDelegator) && !in_array($array['index'],$myDelegation)){
+            }                
+            if(!in_array($array['index'],$userNicknames) && !in_array($array['index'],$myDelegator) && !in_array($array['index'],$myDelegation) && Auth::check()){
                 $html.='<a href="'.url('support/'.$urlPortion.'_'.$array['index']).'" class="btn btn-info">Delegate Your Support</a>';
             }
             $html.="<ul>";

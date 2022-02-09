@@ -390,14 +390,15 @@ class Algorithm{
             ->whereRaw("(start < $as_of_time) and ((end = 0) or (end > $as_of_time))")
             ->where('nick_name_id', '=', $nick_name_id)
             ->get();
-        
         $topic_num_array = array();
         $camp_num_array = array();
-
+    
         foreach ($user_support_camps as $scamp) {
             $topic_num_array[] = $scamp->topic_num;
             $camp_num_array[] = $scamp->camp_num;
         }
+
+        
         $ret_camp = Camp::whereIn('topic_num', array_unique($topic_num_array))
             ->whereIn('camp_num', array_unique($camp_num_array))
             ->whereNotNull('camp_about_nick_id')
