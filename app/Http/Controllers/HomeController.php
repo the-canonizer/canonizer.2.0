@@ -2,16 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Model\Topic;
-use App\Model\Camp;
-use App\Model\Support;
-use App\Model\TopicSupport;
-use App\Model\SupportInstance;
-use App\VideoPodcast;
 use DB;
-use App\Model\Namespaces;
 use Auth;
+use App\Model\Camp;
+use App\Model\Topic;
+use App\Facades\Util;
+use App\VideoPodcast;
+use App\Model\Support;
+use App\Model\Namespaces;
+use App\Model\TopicSupport;
+use Illuminate\Http\Request;
+use App\Jobs\CanonizerService;
+use App\Model\SupportInstance;
 
 class HomeController extends Controller {
 
@@ -42,11 +44,82 @@ class HomeController extends Controller {
          if(null == session('defaultNamespaceId')){
             session()->put('defaultNamespaceId',1);
         }
-        $page_no = isset($_REQUEST['page']) ? $_REQUEST['page'] : 1; 
-        $topics =  Camp::sortTopicsBasedOnScore(Camp::getAllAgreementTopic(20, $_REQUEST));
-       // echo "<pre>"; print_r($topics); die;
+        $page_no = isset($_REQUEST['page']) ? $_REQUEST['page'] : 1;
+        
+        ### Added by ali Ahmad
+        ### Canonizer Service ticket CS17
+        ### Date : 18-01-2022
+        
+        $page_per_record = env('PAGE_PER_RECORD');
+        $page_per_record = isset($page_per_record) ? $page_per_record: 20;
+        $cronDate = env('CS_CRON_DATE'); 
+        $cronDate =  isset($cronDate) ? strtotime($cronDate) : strtotime(date('Y-m-d'));
+
+        $asOf = 'default';
+
+        if((isset($_REQUEST['asof']) && ($_REQUEST['asof'] == "review" || $_REQUEST['asof'] == "bydate"))){
+            $asOf = $_REQUEST['asof'];
+        }
+        else if ((session('asofDefault')== "review" || session('asofDefault')== "bydate" ) && !isset($_REQUEST['asof'])) {
+            $asOf = session('asofDefault');
+        }
+
+        $asOfDefaultDate = date('Y-m-d');
+
+        if(isset($_REQUEST['asof']) && $_REQUEST['asof'] == "bydate"){
+            $asOfDefaultDate = date('Y-m-d', strtotime($_REQUEST['asofdate']));
+         }else if(($asOf == 'bydate') && session('asofdateDefault')){
+            $asOfDefaultDate =  session('asofdateDefault');
+         }
+
+        $asOfDefaultDate = strtotime($asOfDefaultDate);
+
+        $previous = 0;
+
+        $fromExistingCode = 1;
+
+        $selectedAlgo = 'blind_popularity';
+        if(session('defaultAlgo')) {
+            $selectedAlgo = session('defaultAlgo');
+        }
+       
+        if( ($asOfDefaultDate >= $cronDate) && ( $selectedAlgo == 'blind_popularity' || $selectedAlgo == "mind_experts")){
+
+            $previous = 1; 
+
+            $requestBody = [
+                "page_number" => $page_no,
+                "page_size" => $page_per_record,
+                "namespace_id" => session('defaultNamespaceId'),
+                "asofdate" =>  $asOfDefaultDate,
+                "algorithm" => $selectedAlgo,
+                "asof"=>$asOf
+            ];
+
+            $appURL = env('CS_APP_URL');
+            $endpointCSGETTree =   env('CS_GET_HOME_PAGE_DATA');
+            $endpoint = $appURL."/".$endpointCSGETTree;
+            $headers = array('Content-Type:multipart/form-data');
+
+            $reducedTree = Util::execute('POST', $endpoint, $headers, $requestBody);
+
+            $topics = json_decode($reducedTree, true);
+            
+            if(count($topics['data']) > 0 ){
+                $topics = $topics;
+                $fromExistingCode = 0;
+            }
+        }
+      
+        if($fromExistingCode){
+            
+            $topics =  Camp::sortTopicsBasedOnScore(Camp::getAllAgreementTopic(20, $_REQUEST));
+        }
+
+        ### End of CS17 ticket ####
+        
         $videopodcast = VideoPodcast::all()->first();
-        return view('welcome', ['topics' => $topics, 'namespaces' => $namespaces,'videopodcast'=>$videopodcast]);
+        return view('welcome', ['topics' => $topics, 'namespaces' => $namespaces,'videopodcast'=>$videopodcast, "previous"=>$previous, "page_no" => $page_no, "asOf"=>$asOf]);
     }
 
     public function loadmoretopics(Request $request){
@@ -199,10 +272,21 @@ class HomeController extends Controller {
     }
 
     public function changeAlgorithm(Request $request) {
-        session(['defaultAlgo' => $request->input('algo')]);
+        $algorithm = $request->input('algo');
+        $tempTopicID = $request->input('topic_id');
+        
+        session(['defaultAlgo' => $algorithm]);
+
+        // if(isset($tempTopicID) && !empty($tempTopicID)) {
+        //     $topicNum = explode('-',$tempTopicID)[0];
+        //     $topic = Topic::getLiveTopic($topicNum);
+        //     if(isset($topic) && (strtolower($algorithm) === 'blind_popularity' || strtolower($algorithm) === 'mind_experts')){
+        //         Util::dispatchJob($topic, 1, 1);
+        //     } else {
+        //         // Nothing to do
+        //     }
+        // }
     }
-
-
 
     public function changeNamespace(Request $request) {
         $namespace = Namespaces::find($request->input('namespace'));

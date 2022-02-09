@@ -31,8 +31,6 @@
         <script src="{{ URL::asset('/js/jquery.countdownTimer.min.js') }}"></script>
         <link href="{{ URL::asset('/css/jquery.countdownTimer.css') }}" rel="stylesheet" type="text/css">
 
-
-
     </head>
      <body>
         @section('sidebar')
@@ -212,9 +210,9 @@
                             <ul class="sidenav-second-level collapse show" id="canoalgo">
                                 <li>
 									<span>Canonizer Algorithm:</span>
-                                    <select name="algorithm" onchange="changeAlgorithmChoice(this)">
+                                    <select name="algorithm" id="algorithm" onchange="changeAlgorithmChoice(this)">
                                     @foreach(\App\Model\Algorithm::getList() as $key=>$value)
-                                        <option value="{{ $key }}" {{ session('defaultAlgo') == $key ? 'selected' : ''}}>{{$value}}</option>
+                                        <option value="{{ $key }}" {{ session('defaultAlgo') == $key ? 'selected' : ''}} topic-id={{ $id }} camp-num={{ $campNum }}>{{$value}}</option>
                                     @endforeach
                                     </select>
 									<a href="<?php echo url('topic/53-Canonizer-Algorithms/1-Agreement') ?>"><span class="{{ (Request::getRequestUri() =='/topic/53-Canonizer-Algorithms/1-Agreement') ? 'menu-active':''}}">Algorithm Information</span></a>
@@ -403,14 +401,15 @@
                  }
 				 $('#as_of').submit();
 			});
-
         });
 
         function changeAlgorithmChoice(element){
+            let topicID = $(element).find('option:selected').attr("topic-id");
+            let campNum = $(element).find('option:selected').attr("camp-num");
             $.ajax({
                 url:"{{ route('change-algorithm') }}",
                 type:"POST",
-                data:{algo:$(element).val()},
+                data:{algo:$(element).val(), topic_id: topicID, camp_num: campNum},
                 success:function(){
                     window.location.reload();
                 }
