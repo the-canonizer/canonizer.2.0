@@ -43,140 +43,35 @@
             <div class="content">
             <div class="row">
          @if(count($topics))
-          <div class="tree home-page-tree col-sm-12">
+          <div class="tree col-sm-12">
                     <ul class="mainouter" id="load-data">
-                      <?php 
-                      
-                        $createCamp = 1;
+                      <?php $createCamp = 1;
                         session(['topic_on_page' => 0]);
-                        $as_of_time = time();
-
+                       $as_of_time = time();
                         if (isset($_REQUEST['asof']) && $_REQUEST['asof'] == 'bydate') {
                             $as_of_time = strtotime($_REQUEST['asofdate']);
                         }else if(session()->has('asofDefault') && session('asofDefault') == 'bydate' && !isset($_REQUEST['asof'])){
                             $as_of_time = strtotime(session('asofdateDefault'));
                         }
-
                         session(['topic_on_page' => 0]);
-                        $filter = isset($_REQUEST['filter']) && is_numeric($_REQUEST['filter']) ? $_REQUEST['filter'] : 0.000;
-        
-                        if(session('filter')==="removed") {
-                            $filter = 0.000;	
-                        } else if(isset($_SESSION['filterchange'])) {
-                            $filter = $_SESSION['filterchange'];
-                        }
-
-                      ###  if current date is greater than cron run date ###
-
-                        if($previous > 0){ 
-
-                           ## check that topics are exist in data
-                          if(count($topics['data']['topic']) > 0){
-                            foreach($topics['data']['topic'] as $k=>$topic){
-                                $url = \App\Model\Camp::getTopicCampUrl($topic['topic_id'], 1);
-
-                                if ($topic['topic_score'] < $filter) {
-                                    continue;
-                                }
                         ?>
-                         
-                         <li >
-                            <span class="parent" title="Expand this branch">
-                                <a style="cursor:pointer;" href="@php echo  $url; @endphp" bis_skin_checked="1"><i class="fa fa-arrow-right"></i> </a></span>
-                            <div class="tp-title" bis_skin_checked="1">
-                                <a style="" href="@php echo  $url; @endphp" bis_skin_checked="1">
-                                    <?php echo $asOf == "review" ? $topic['tree_structure_1_review_title']: $topic['topic_name'] ; ?>
-                                </a>
-                                <div class="badge" bis_skin_checked="1">@php echo $topic['topic_score'] @endphp</div>
-                            </div>
-                         </li>
-                        
-                        <?php  }  ?>
+                       @foreach($topics as $k=>$topic)
 
-                         <?php   
-                         
-                             ### Pagination ###   
-                              $disabled = isset($page_no) && $page_no == 1 ? 'disabled' : '';
-                              $next = $page_no+1;
-                              $previous = $page_no - 1;
-                              $nexDisabled = $next >= $topics['data']['number_of_pages'] ? 'disabled':'';
-                         ?>
-                        <ul class="pagination">
-                            @if ($page_no > 1)
-                                <li> <a href="@php echo url('/').'?page='.$previous;  @endphp">«</a></li>
-                            @else
-                                <li class="@php echo $disabled @endphp"><span>«</span></li>
-                            @endif
-    
-                                <?php 
-                                   for($idx=1; $idx <= $topics['data']['number_of_pages']; $idx++){
-                                         $active = $page_no == $idx ? 'active': '';
-                                ?>
-                                @if ($page_no == $idx)
-                                   <li class="@php echo $active; @endphp"> <span><?php echo $idx; ?></span></li>
-                                @else 
-                                   <li><a href="@php echo url('/').'?page='.$idx;  @endphp"><?php echo $idx; ?></a></li>
-                                @endif
-                           
-                            <?php } ?> 
-                            <li>
-                                @if ($next <= $topics['data']['number_of_pages'])
-                                  <a href="@php echo url('/').'?page='.$next;  @endphp">»</a>
-                                @else
-                                 »
-                                @endif
-                            </li>
-                       </ul>
-                    
-                        <?php  } else { ?>
+                       <?php
 
-                          <p>There are no topics on this page, given the current algorithm and filter setting.</p>
-                         
-                        <?php 
-
-                           } 
-                        } 
-
-                          ###  End of above condition ###
-                        
-                          ###   if user select the previous date than cron run date then this part will execute ###
-                        else 
-                        { 
-                            
-                        ?>
-                        
-                         @foreach($topics as $k=>$topic)
-
-                        <?php
-                        
-                         $topicData = \App\Model\Topic::where('topic_num','=',$topic->topic_num)->where('go_live_time', '<=', $as_of_time)->latest('submit_time')->get();
-                         $url = \App\Model\Camp::getTopicCampUrl($topic->topic_num,$topic->camp_num);
-                        // $campData = \App\Model\Camp::where('topic_num',$topic->topic_num)->where('camp_num',$topic->camp_num)->where('go_live_time', '<=', $as_of_time)->latest('submit_time')->first();
+                        // $topicData = \App\Model\Topic::where('topic_num','=',$topic->topic_num)->where('go_live_time', '<=', $as_of_time)->latest('submit_time')->get();
+                        $campData = \App\Model\Camp::where('topic_num',$topic->topic_num)->where('camp_num',$topic->camp_num)->where('go_live_time', '<=', $as_of_time)->latest('submit_time')->first();
                         // $topic_name_space_id = isset($topicData[0]) ? $topicData[0]->namespace_id:1;
                         // $topic_name = isset($topicData[0]) ? $topicData[0]->topic_name:'';
                         // $request_namesapce = session('defaultNamespaceId', 1); 
-
-                        if ($topic->score < $filter) {
-                            $val = session('topic_on_page');
-                            session(['topic_on_page' => $val+1]);
-                            continue;
-                        }
-
-                       ?>
-                                             
-                        <li >
-                            <span class="parent" title="Expand this branch">
-                                <a style="cursor:pointer;" href="@php echo  $url; @endphp" bis_skin_checked="1"><i class="fa fa-arrow-right"></i> </a></span> </span>
-                            <div class="tp-title" bis_skin_checked="1">
-                                <a style="" href="@php echo  $url; @endphp" bis_skin_checked="1">
-                                    <?php echo $topicData[0]->topic_name; ?>
-                                </a>
-                                <div class="badge" bis_skin_checked="1">@php echo $topic->score; @endphp</div>
-                            </div>
-                        </li>
-
-                         {{-- {!! $campData->campTreeHtml($createCamp,false,false,'fa-arrow-right') !!} --}}
                        
+                        
+                        $as_of_time = time();
+                        if(isset($_REQUEST['asof']) && $_REQUEST['asof']=='date'){
+                            $as_of_time = strtotime($_REQUEST['asofdate']);
+                        } 
+                       ?>
+                         {!! $campData->campTreeHtml($createCamp,false,false,'fa-arrow-right') !!}
                          <?php $createCamp = 0;?>
                        @endforeach
                     <a id="btn-more" class="remove-row" data-id="{{ $topic->id }}"></a>
@@ -186,7 +81,6 @@
                      <p>There are no topics on this page, given the current algorithm and filter setting.</p>
                     @endif
                     {!! $topics->links() !!}
-                    <?php } ?>
                 </div>
         @else
          <h6 style="margin-left:30px;"> No topic available.</h6>
@@ -277,14 +171,3 @@ function changeNamespace(element){
 </script>
 
 @endsection
-<style> 
-.tree li::before, .tree li::after  {
-    border: none !important;
-} 
-.tree li .tp-title {
-    margin-left: 10px !important;
-}
-.tree ul.mainouter ul {
-    padding-left: 10px !important;
-}
-</style>
