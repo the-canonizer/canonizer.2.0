@@ -248,7 +248,7 @@ class TopicController extends Controller {
             if ($eventtype == "CREATE") {
                 // Dispatch Job
                 if(isset($topic)) {
-                    Util::dispatchJob($topic, 1, 0);
+                    Util::dispatchJob($topic, 1, 1);
                 }
                 
                 // send history link in email
@@ -264,7 +264,7 @@ class TopicController extends Controller {
             } else if ($eventtype == "OBJECTION") {
                  // Dispatch Job
                  if(isset($topic)) {
-                    Util::dispatchJob($topic, 1, 0);
+                    Util::dispatchJob($topic, 1, 1);
                 }
 
                 $user = Nickname::getUserByNickName($all['submitter']);
