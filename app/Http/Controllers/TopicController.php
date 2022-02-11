@@ -886,6 +886,10 @@ class TopicController extends Controller {
     public function store_statement(Request $request) {
         $all = $request->all();
 
+        $totalSupport =  Support::getAllSupporters($all['topic_num'], $all['camp_num'],0);
+
+        $loginUserNicknames =  Nickname::personNicknameIds();
+
         $currentTime = time();
         $messagesVal = [
             'statement.required' => 'The statement field is required.',
@@ -959,6 +963,34 @@ class TopicController extends Controller {
                 $statement->submitter_nick_id = $all['nick_name'];
             }
         } 
+        /** 
+         * Scenario 1 : 
+         * User A creates topic ->Support will get added automatically to Agreement camp
+         * Case 1 : When User A added camp statement to Agreement camp - It should go "live"(Grace period = 0)
+         * Case 2 : When User B added camp statement to Agreement camp - It should go in "In Review"(Grace period = 1)
+         */
+         if($all['camp_num'] == 1 && in_array($all['submitter'] , $loginUserNicknames)  ){
+            
+            $statement->grace_period = 0;
+         }
+         if($all['camp_num'] == 1 && !in_array($all['submitter'] , $loginUserNicknames)  ){
+            $statement->grace_period = 1;
+         }
+
+        /*  Scenario 2 : 
+           User A creates topic ->Create "camp 1" 
+          Case 1 : When User A only supported "camp 1" and also added camp statement to "camp 1" camp - It should go "live"(Grace period = 0)
+           Case 2 : When User A only supported "camp 1" and User B added camp statement to "camp 1" camp - It should go in "in review"(Grace period = 1)
+            Case 3 : When "camp 1" has no supporters and User B added camp statement to "camp 1" camp - It should go "live"(Grace period = 0)
+        */
+        if( $all['camp_num'] > 1  && $totalSupport <= 0){
+               $statement->grace_period = 0;
+         }
+         else if( $all['camp_num'] > 1  && $totalSupport > 0 && in_array($all['submitter'] , $loginUserNicknames)){
+             $statement->grace_period = 0;
+         }else{
+              $statement->grace_period = 1;
+         }
         $statement->save();
         if ($eventtype == "CREATE") {
            // send history link in email
