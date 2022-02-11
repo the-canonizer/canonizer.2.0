@@ -8,7 +8,7 @@
 <div class="camp top-head">
 	<h3>
 		<b>Topic:</b> 
-		<a href="<?php echo $topic_camp_link;?>">{{ isset($topic->title)? $topic->title :''}}</a> 
+		{{ isset($topic->title)? $topic->title :''}}
 	</h3>
 	<h3>
 		<b>Camp:</b>
