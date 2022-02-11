@@ -19,9 +19,16 @@ class SharesAlgoController extends Controller {
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
+    public function index(Request $request)
+    {   $data = $request->query();
         $shares = SharesAlgorithm::paginate(10);
+        if(isset($data['month']) && $data['month'] !=''){
+            $year = date('Y',strtotime($data['month']));
+            $month = date('m',strtotime($data['month']));
+            $shares = SharesAlgorithm::whereYear('as_of_date', '=', $year)
+              ->whereMonth('as_of_date', '=', $month)->paginate(10);
+           
+        }
         $oldest_record = SharesAlgorithm::orderBy('as_of_date','asc')->first();
         $start_date = date('Y-m-d');        
         $end      = (new DateTime(date('Y-m-d')));
@@ -224,7 +231,7 @@ class SharesAlgoController extends Controller {
             }
 
             $table.="</table>";
-            $table.=$dataShares->links();
+            $table.=$dataShares->appends(['month'=>$data['month']])->links();
           echo $table; exit;
         
 
