@@ -48,7 +48,7 @@ class TopicController extends Controller {
             session()->put('asofDefault',$_REQUEST['asof']);
         }
         if(isset($_REQUEST['asofdate']) && $_REQUEST['asofdate']!=''){
-            //session()->put('asofdateDefault',$_REQUEST['asofdate']);
+            ///session()->put('asofdateDefault',$_REQUEST['asofdate']); //#1074 wrong format setup
         }
         session()->save();
     }
@@ -295,8 +295,13 @@ class TopicController extends Controller {
             DB::rollback();
             Session::flash('error', "Fail to create topic, please try later.");
         }
-        $link_url = \App\Model\Camp::getTopicCampUrl($topic->topic_num,1);
-        return redirect($link_url)->with(['success' => $message, 'go_live_time' => $go_live_time, 'objection' => $objection]);
+
+        if ($eventtype == "CREATE") {
+            $link_url = \App\Model\Camp::getTopicCampUrl($topic->topic_num,1);
+            return redirect($link_url)->with(['success' => $message, 'go_live_time' => $go_live_time, 'objection' => $objection]);            
+        }
+        return redirect('topic-history/' . $topic->topic_num)->with(['success' => $message, 'go_live_time' => $go_live_time, 'objection' => $objection]);
+        
     }
 
     /**
@@ -862,9 +867,13 @@ class TopicController extends Controller {
         if (isset($all['objection']) && $all['objection'] == 1) {
             return redirect('camp/history/' . $camp->topic_num . '/' . $camp->camp_num)->with(['success' => $message, 'go_live_time' => $go_live_time, 'objection' => $objection]);
         } else {
-            $link_url = \App\Model\Camp::getTopicCampUrl($camp->topic_num,$camp->camp_num);
-            return redirect($link_url)->with(['success' => $message, 'go_live_time' => $go_live_time]);
-            //return redirect('camp/history/' . $camp->topic_num . '/' . $camp->camp_num)->with(['success' => $message, 'go_live_time' => $go_live_time]);
+            if ($eventtype == "CREATE"){
+                $link_url = \App\Model\Camp::getTopicCampUrl($camp->topic_num,$camp->camp_num);
+                return redirect($link_url)->with(['success' => $message, 'go_live_time' => $go_live_time]);
+            }
+            else {
+                return redirect('camp/history/' . $camp->topic_num . '/' . $camp->camp_num)->with(['success' => $message, 'go_live_time' => $go_live_time]);    
+            }     
         }
     }
 
@@ -1008,9 +1017,9 @@ class TopicController extends Controller {
             return redirect('statement/history/' . $statement->topic_num . '/' . $statement->camp_num)->with(['success' => $message, 'go_live_time' => $go_live_time]);
         } 
         // #951 removedthe update email event from here as we will send email after commit or after one hour refer notify_change or console->command->notifyUser classs
-        //return redirect('statement/history/' . $statement->topic_num . '/' . $statement->camp_num)->with(['success' => $message, 'go_live_time' => $go_live_time]);
-        $link_url = \App\Model\Camp::getTopicCampUrl($statement->topic_num,$statement->camp_num);
-        return redirect($link_url)->with(['success' => $message, 'go_live_time' => $go_live_time]);
+        return redirect('statement/history/' . $statement->topic_num . '/' . $statement->camp_num)->with(['success' => $message, 'go_live_time' => $go_live_time]);
+        //$link_url =\App\Model\Camp::getTopicCampUrl($statement->topic_num,$statement->camp_num);
+        //return redirect($link_url)->with(['success' => $message, 'go_live_time' => $go_live_time]);
     }
 
     /**
@@ -1221,7 +1230,7 @@ class TopicController extends Controller {
             $data['go_live_time'] = $topic->go_live_time;
             $data['type'] = 'topic : ';
             $data['typeobject'] = 'topic';
-			$data['note'] = $topic->note;
+			$data['note'] = $topicData->note;
             $data['camp_num'] = 1;
             $nickName = Nickname::getNickName($topic->submitter_nick_id);
             $data['topic_num'] = $topic->topic_num;

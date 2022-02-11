@@ -12,4 +12,4 @@
 <?php } ?>
 Sincerely,<br>
 {{ config('app.email_signature') }}
-@endcomponent
+@endcomponent 

@@ -19,9 +19,16 @@ class SharesAlgoController extends Controller {
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
+    public function index(Request $request)
+    {   $data = $request->query();
         $shares = SharesAlgorithm::paginate(10);
+        if(isset($data['month']) && $data['month'] !=''){
+            $year = date('Y',strtotime($data['month']));
+            $month = date('m',strtotime($data['month']));
+            $shares = SharesAlgorithm::whereYear('as_of_date', '=', $year)
+              ->whereMonth('as_of_date', '=', $month)->paginate(10);
+           
+        }
         $oldest_record = SharesAlgorithm::orderBy('as_of_date','asc')->first();
         $start_date = date('Y-m-d');        
         $end      = (new DateTime(date('Y-m-d')));
@@ -65,7 +72,8 @@ class SharesAlgoController extends Controller {
          $jandate = date('Y-01-01');
          $validatorArray = [ 
           'nick_name_id' => 'required',
-          'as_of_date' => 'required|date|after_or_equal:'.$jandate.'|before_or_equal:'.$todayDate,
+         // 'as_of_date' => 'required|date|after_or_equal:'.$jandate.'|before_or_equal:'.$todayDate,
+         'as_of_date' => 'required|date|before_or_equal:'.$todayDate,
           'share_value' => 'required|numeric|min:1|max:100000'
           ];
         
@@ -133,14 +141,16 @@ class SharesAlgoController extends Controller {
              $share = SharesAlgorithm::where('id','=',$id)->first();
               $validatorArray = [ 
                   'nick_name_id' => 'required',
-                   'as_of_date' => 'required|date|after_or_equal:'.$jandate.'|before_or_equal:'.$todayDate,
+                   //'as_of_date' => 'required|date|after_or_equal:'.$jandate.'|before_or_equal:'.$todayDate,
+                   'as_of_date' => 'required|date|before_or_equal:'.$todayDate,
                    'share_value' => 'required|numeric|min:1|max:100000'
                   ];
              if($share->nick_name_id != $data['nick_name_id']){
                  $validatorArray['nick_name_id'] = 'required';
              }
              if($share->as_of_date != $data['as_of_date']){
-                $validatorArray['as_of_date'] = 'required|date|after_or_equal:'.$jandate.'|before_or_equal:'.$todayDate;
+                // $validatorArray['as_of_date'] = 'required|date|after_or_equal:'.$jandate.'|before_or_equal:'.$todayDate;
+                $validatorArray['as_of_date'] = 'required|date|before_or_equal:'.$todayDate;
              }
              if($share->share_value != $data['share_value']){
                 $validatorArray['share_value'] = 'required|numeric|min:1|max:100000';
@@ -221,7 +231,7 @@ class SharesAlgoController extends Controller {
             }
 
             $table.="</table>";
-            $table.=$dataShares->links();
+            $table.=$dataShares->appends(['month'=>$data['month']])->links();
           echo $table; exit;
         
 

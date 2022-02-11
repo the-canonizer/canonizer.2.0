@@ -25,7 +25,7 @@ if(isset($topic) && count($topic) > 0 ) {?>
 <div class="camp top-head">
     <h3><b>Topic:</b> {{ $topic->topic_name}}</h3>
     <h3><b>Camp:</b> {!! $parentcamp !!}</h3> 
-</div>      	
+</div>  
 <div class="right-whitePnl">
     <div class="container-fluid">
         @if(count($news) > 0)
@@ -252,7 +252,7 @@ change camps with them."><i class="fa fa-question"></i></a>
                      <input type="hidden"  name="filter" value="0.00"/>
                        <input type="hidden" name="_token" value="{{ csrf_token() }}">                   
                        <input type="hidden"  name="asof"  value="bydate">
-                       <input hidden type="text" id="asofdatenew" name="asofdate" value="<?php echo $campData[0]->go_live_time; ?>"/>
+                       <input hidden type="text" id="asofdatenew" name="asofdate" value="<?php echo date("Y-m-d H:i:s",$campData[0]->go_live_time); ?>"/>
                         <h3>This camp was first created on <a href="javascript:void(0);" onClick="submitAsOfForm()">
                             <?php (count($campData) > 0) ? to_local_time($campData[0]->submit_time) :'' ;?></a></h3>
                     </form>            
@@ -288,6 +288,7 @@ function enableDeleteNews(){
 }
 
 function deleteNewsFeed(id){
+    
    var crfm = confirm('Are you sure you want to delete this news feed');
    if(crfm){
         window.location.href="{{ url('/newsfeed/delete')}}/"+id;
