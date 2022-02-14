@@ -2,7 +2,7 @@
 Hello {{ $user->first_name }} {{ $user->last_name }}, <br/>
 
 <p>
-    {{ $data['nick_name']->nick_name }} has created the new thread
+    <a target="_blank" href="<?= route('user_supports',$data['nick_name_id']) .'?topicnum=&campnum=&namespace=' . $data['namespace_id']; ?>">{{ $data['nick_name']->nick_name }}</a> has created the new thread
     <a href="{{ url('/').'/'.$link }}">{{ $data['thread_title'] }}</a>
 
 </p>
