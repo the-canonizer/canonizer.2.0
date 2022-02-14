@@ -8,7 +8,7 @@
 <div class="camp top-head">
 	<h3>
 		<b>Topic:</b> 
-		{{ isset($topic->title)? $topic->title :''}}
+		{{ isset($topicData->topic_name)? $topicData->topic_name :''}}
 	</h3>
 	<h3>
 		<b>Camp:</b>
