@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('content')
+@section('content') 
 
 <?php $topic_camp_link = \App\Model\Camp::getTopicCampUrl($topic->topic_num,1); ?>
 <div class="page-titlePnl">
@@ -8,7 +8,7 @@
 <div class="camp top-head">
 	<h3>
 		<b>Topic:</b> 
-		{{ isset($topic->title)? $topic->title :''}}
+		{{ isset($topicData->topic_name)? $topicData->topic_name :''}}
 	</h3>
 	<h3>
 		<b>Camp:</b>
