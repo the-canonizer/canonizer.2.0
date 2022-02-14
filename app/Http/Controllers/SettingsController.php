@@ -6,6 +6,7 @@ use Hash;
 use Cookie;
 use App\User;
 use App\Model\Camp;
+use App\Facades\Util;
 use App\Model\Topic;
 use App\Model\Support;
 use App\Model\Nickname;
@@ -595,8 +596,12 @@ class SettingsController extends Controller
             Session::save();
             Session::flash('success', "Your support update has been submitted successfully.");
 
-            $topic = Topic::where('topic_num', $topic_num)->get()->last();            
-            $this->dispatchJob($topic);
+            $topic = Topic::where('topic_num', $topic_num)->get()->last();  
+
+            if(isset($topic)) {
+                Util::dispatchJob($topic, $data['camp_num'], 1);
+
+            }
             
             return redirect(\App\Model\Camp::getTopicCampUrl($data['topic_num'],session('campnum')));            
         } else {
@@ -1116,7 +1121,9 @@ class SettingsController extends Controller
         Session::save();
 
         $topic = Topic::where('topic_num', $topicNum)->get()->last();            
-        $this->dispatchJob($topic);
+       if(isset($topic)) {
+            Util::dispatchJob($topic, $campNum, 1);
+        }
 
         return redirect(\App\Model\Camp::getTopicCampUrl($topicNum ,$campNum));
 
