@@ -382,8 +382,8 @@ $('#widget').draggable();
 			$(ref).parent(".support-sorter-element").find('.remove_camp').html('undo');
 			$(ref).parent(".support-sorter-element").find('.remove_camp').removeClass('x-btn');
 			$(ref).parent(".support-sorter-element").find('.remove_camp').addClass('undo_camp');
-			$( ".column" ).find('.x-btn').each(function(i,v){ 
-				$(v).parent(".support-sorter-element").find('.support_order').text(i+1);
+			$( ".column" ).find('.x-btn').each(function(i,v){
+				//$(v).parent(".support-sorter-element").find('.support_order').text(i+1);
 				$(v).parent(".support-sorter-element").find('.final_support_order').val(i+1);
 			});
 			activateClearBtn();
