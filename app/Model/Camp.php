@@ -1020,10 +1020,21 @@ class Camp extends Model {
   
               $data = json_decode($reducedTree, true);
   
-              if(count($data['data']) > 0 ){
-                  $reducedTree = $data['data'][0]['tree_structure'];
-                  $fromExistingCode = 0;
-              }
+              if(count($data['data']) && $data['code'] == 200 ){
+
+                /** title and review title field empty in most of the cases if any key is null or empty
+                 *  then fetch data from mysql
+                 */
+                $topicName =  strlen($data['data'][0]['topic_name'])?? null;
+                $title     =  strlen($data['data'][0]['tree_structure']['1']['title'])?? null;
+                $reviewTitle =  strlen($data['data'][0]['tree_structure']['1']['review_title'])?? null;
+                
+                if($topicName && $title && $reviewTitle){
+                   $reducedTree = $data['data'][0]['tree_structure'];
+                   $fromExistingCode = 0;
+                }
+
+             }
   
           }
          
