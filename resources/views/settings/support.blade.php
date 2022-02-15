@@ -118,7 +118,7 @@
 						<span class="btn btn-sm btn-info"><input type="checkbox" name="remove_all" id="remove_all" />Remove All</span>
 						<span class="btn btn-sm btn-secondary" id="undo_all">Clear All Changes</span>
 					</div>
-					<div class="row" style="min-height:120px">
+					<div class="col-sm-12" style="min-height:120px">
 					@if(Session::has('confirm') && Session::get('confirm') == 'samecamp')	
 						<div class="col-sm-6">
 						<div class="row column">
@@ -233,7 +233,7 @@
 			</div>	
 						
 			@if(isset($topic))
-			<div id="myTabContent" class="add-nickname-section">  
+			<div id="myTabContent" class="add-nickname-section col-sm-12">  
 					<h5>Nick Name To Support Above Camps </h5>
 				<input type="hidden" name="_token" value="{{ csrf_token() }}">
 					<input type="hidden" id="topic_num" name="topic_num" value="{{ $topic->topic_num }}">
