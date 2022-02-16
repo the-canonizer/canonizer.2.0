@@ -110,6 +110,7 @@ class HomeController extends Controller {
         }
       
         if($fromExistingCode){
+            $previous = 0;
             $topics =  Camp::sortTopicsBasedOnScore(Camp::getAllAgreementTopic(20, $_REQUEST));
         }
 
