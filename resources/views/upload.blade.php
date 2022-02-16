@@ -125,16 +125,21 @@
         $(document).ready(function() {
             $('input[type="file"]').change(function(event) {
                 var _size = this.files[0].size;
-                var fSExt = new Array('Bytes', 'KB', 'MB', 'GB'),
-                i=0;while(_size>900){_size/=1024;i++;}
-                var exactSize = (Math.round(_size*100)/100)+' '+fSExt[i];
-                console.log('FILE SIZE = ',exactSize);
-                $("#fileNameErrorBox").html('<strong>Error! </strong> The file may not be greater than 5 MB');
-                $("#fileNameErrorBox").css("display", "block");
-                $("#successMsg").css("display", "none");
-                $(".errorMsg").css("display", "none");
-                $("#file").val('');
-                return false;
+                //var fSExt = new Array('Bytes', 'KB', 'MB', 'GB'),
+                //i=0;while(_size>900){_size/=1024;i++;}
+                //var exactSize = (Math.round(_size*100)/100)+' '+fSExt[i];
+                console.log('FILE SIZE = ',_size);
+                if(_size> 5242880){
+                    $("#fileNameErrorBox").html('<strong>Error! </strong> The file may not be greater than 5 MB');
+                    $("#fileNameErrorBox").css("display", "block");
+                    $("#successMsg").css("display", "none");
+                    $(".errorMsg").css("display", "none");
+                    $("#file").val('');
+                    return false;
+                }
+                else{
+                    $("#fileNameErrorBox").css("display", "none");
+                }
             });
         });
 

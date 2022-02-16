@@ -23,7 +23,7 @@ class UploadController extends Controller
         //     'file' => 'required|mimes:jpeg,bmp,png,jpg,gif|max:5120|min:1'
         // ];
          $validatorArray = [
-            'file' => 'required|mimes:jpeg,bmp,png,jpg,gif,deb|min:1|max:5120',
+            'file' => 'required|mimes:jpeg,bmp,png,jpg,gif|min:1|max:5120',
             'file_name' => 'required'
         ];
         $messages = array(
