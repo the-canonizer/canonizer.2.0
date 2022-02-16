@@ -104,14 +104,12 @@ class HomeController extends Controller {
 
             $topics = json_decode($reducedTree, true);
             
-            if(count($topics['data']) > 0 ){
-                $topics = $topics;
+            if(count($topics['data']) && count($topics['data']['topic']) && $topics['status_code'] == 200){
                 $fromExistingCode = 0;
             }
         }
       
         if($fromExistingCode){
-            
             $topics =  Camp::sortTopicsBasedOnScore(Camp::getAllAgreementTopic(20, $_REQUEST));
         }
 
