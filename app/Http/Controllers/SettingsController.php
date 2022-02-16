@@ -570,15 +570,17 @@ class SettingsController extends Controller
                 $nickName = Nickname::getNickName($data['nick_name']);
                 $topic = Camp::getAgreementTopic($data['topic_num'],['nofilter'=>true]);
                 $camp = Camp::where('topic_num', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('go_live_time', '<=', time())->latest('submit_time')->first();
-                $result['namespace_id'] = (isset($topic->namespace_id) && $topic->namespace_id)  ?  $topic->namespace_id : 1;
                 $result['topic_num'] = $data['topic_num'];
                 $result['camp_num'] = $data['camp_num'];
-                $result['nick_name'] = $nickName->nick_name; 
-                $result['nick_name_id'] = $nickName->id; 
+                $result['nick_name'] = $nickName->nick_name;   
                // $result['object'] = $topic->topic_name . " / " . $camp->camp_name;
                 $result['object'] = $topic->topic_name; // #954 only topic name should be mentioned
                 $result['support_camp'] = $camp->camp_name;
                 $result['subject'] = $nickName->nick_name . " has just delegated their support to you.";
+                //1081 issue
+                $result['namespace_id'] = (isset($topic->namespace_id) && $topic->namespace_id)  ?  $topic->namespace_id : 1;
+                $result['nick_name_id'] = $nickName->id;
+
                 //$link = \App\Model\Camp::getTopicCampUrl($data['topic_num'],$data['camp_num']);
                 $link = \App\Model\Camp::getTopicCampUrl($data['topic_num'],1); //#954
                 $subscribers = Camp::getCampSubscribers($data['topic_num'], $data['camp_num']);
@@ -729,6 +731,10 @@ class SettingsController extends Controller
         $result['object'] = $topic->topic_name ." / ".$camp->camp_name;
         $result['support_camp'] = $camp->camp_name;
         $result['subject'] = $nickName->nick_name . " has added their support to ".$result['object'].".";
+        //1081 issue
+        $result['namespace_id'] = (isset($topic->namespace_id) && $topic->namespace_id)  ?  $topic->namespace_id : 1;
+        $result['nick_name_id'] = $nickName->id;
+
         $link = \App\Model\Camp::getTopicCampUrl($data['topic_num'],$data['camp_num']);
         $subscribers = Camp::getCampSubscribers($data['topic_num'], $data['camp_num']);
         $directSupporter = Support::getAllDirectSupporters($data['topic_num'], $data['camp_num']);
@@ -760,6 +766,10 @@ class SettingsController extends Controller
             $result['object'] = $topic->topic_name ." / ".$camp->camp_name;
             $result['support_camp'] = $camp->camp_name;
             $result['subject'] = $nickName->nick_name . " has removed their support from ".$result['object'].".";
+            //1081 issue
+            $result['namespace_id'] = (isset($topic->namespace_id) && $topic->namespace_id)  ?  $topic->namespace_id : 1;
+            $result['nick_name_id'] = $nickName->id;
+
             if($parentUserNickName){
                 $result['subject'] = $nickName->nick_name . " has removed their delegated support from ". $parentUserNickName->nick_name." in ".$result['object'].".";
             }
@@ -1274,9 +1284,12 @@ class SettingsController extends Controller
         $result['topic_num'] = $topicNum;
         $result['camp_num'] = 1;
         $result['nick_name'] = $nickName->nick_name;
-        $result['nick_name_id'] = $nickName->id;
         $result['object'] = $topic->topic_name;       
         $result['subject'] = $nickName->nick_name . " has removed their delegated support from ". $parentUser->nick_name . " in ".$topic->topic_name." topic.";
+        //1081 issue
+        $result['namespace_id'] = (isset($topic->namespace_id) && $topic->namespace_id)  ?  $topic->namespace_id : 1;
+        $result['nick_name_id'] = $nickName->id;
+
         $result['topic'] = $topic;
         $link = \App\Model\Camp::getTopicCampUrl($topicNum,1);
         $parentSupport = Support::where('topic_num', $topicNum)

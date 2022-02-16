@@ -283,6 +283,10 @@ class TopicController extends Controller {
                 $data['nick_name'] = $nickName->nick_name;
                 $data['forum_link'] = 'forum/' . $topic->topic_num . '-' . $liveTopic->topic_name . '/1/threads';
                 $data['subject'] = $data['nick_name'] . " has objected to your proposed change.";
+                //1081 issue
+                $data['namespace_id'] = (isset($topic->namespace_id) && $topic->namespace_id)  ?  $topic->namespace_id : 1;
+                $data['nick_name_id'] = $nickName->id;
+
                 $data['help_link'] = General::getDealingWithDisagreementUrl();
 
                 $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
@@ -853,6 +857,10 @@ class TopicController extends Controller {
                 $data['nick_name'] = $nickName->nick_name;
                 $data['forum_link'] = 'forum/' . $camp->topic_num . '-' . $camp->camp_name . '/' . $camp->camp_num . '/threads';
                 $data['subject'] = $data['nick_name'] . " has objected to your proposed change.";
+                //1081 issue
+                $data['namespace_id'] = (isset($livecamp->topic->namespace_id) && $livecamp->topic->namespace_id)  ?  $livecamp->topic->namespace_id : 1;
+                $data['nick_name_id'] = $nickName->id;
+
                 $data['topic_link'] = \App\Model\Camp::getTopicCampUrl($camp->topic_num,$camp->camp_num); 
                 $data['type'] = "Camp";
                 $data['object_type'] = ""; 
@@ -1003,6 +1011,9 @@ class TopicController extends Controller {
             $dataObject['nick_name'] = $nickName->nick_name;
             $dataObject['forum_link'] = 'forum/' . $statement->topic_num . '-statement/' . $statement->camp_num . '/threads';
             $dataObject['subject'] = "Proposed change to statement for camp " . $livecamp->topic->topic_name . " / " . $livecamp->camp_name. " submitted";
+            //1081 issue
+            $dataObject['namespace_id'] = (isset($livecamp->topic->namespace_id) && $livecamp->topic->namespace_id)  ?  $livecamp->topic->namespace_id : 1;
+            $dataObject['nick_name_id'] = $nickName->id;
             $this->mailSubscribersAndSupporters($directSupporter,$subscribers,$link, $dataObject);
 
          } else if ($eventtype == "OBJECTION") {
@@ -1019,6 +1030,10 @@ class TopicController extends Controller {
             $data['nick_name'] = $nickName->nick_name;
             $data['forum_link'] = 'forum/' . $statement->topic_num . '-statement/' . $statement->camp_num . '/threads';
             $data['subject'] = $data['nick_name'] . " has objected to your proposed change.";
+            //1081 issue
+            $data['namespace_id'] = (isset($livecamp->topic->namespace_id) && $livecamp->topic->namespace_id)  ?  $livecamp->topic->namespace_id : 1;
+            $data['nick_name_id'] = $nickName->id;
+                
             $data['help_link'] = General::getDealingWithDisagreementUrl();
 
             $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
@@ -1202,6 +1217,10 @@ class TopicController extends Controller {
             $data['nick_name'] = $nickName->nick_name;
             $data['forum_link'] = 'forum/' . $statement->topic_num . '-statement/' . $statement->camp_num . '/threads';
             $data['subject'] = "Proposed change to statement for camp " . $livecamp->topic->topic_name . " / " . $livecamp->camp_name. " submitted";
+            //1081 issue
+            $data['namespace_id'] = (isset($livecamp->topic->namespace_id) && $livecamp->topic->namespace_id)  ?  $livecamp->topic->namespace_id : 1;
+            $data['nick_name_id'] = $nickName->id;
+
             $this->mailSubscribersAndSupporters($directSupporter,$subscribers,$link, $data);
             return response()->json(['id' => $statement->id, 'message' => 'Your change to statement has been submitted to your supporters.']);
         
@@ -1226,6 +1245,9 @@ class TopicController extends Controller {
             $data['nick_name'] = $nickName->nick_name;
             $data['forum_link'] = 'forum/' . $livecamp->topic_num . '-' . $livecamp->camp_name . '/' . $livecamp->camp_num . '/threads';
             $data['subject'] = "Proposed change to " . $livecamp->topic->topic_name . ' / ' . $livecamp->camp_name . " submitted";
+            //1081 issue
+            $data['namespace_id'] = (isset($livecamp->topic->namespace_id) && $livecamp->topic->namespace_id)  ?  $livecamp->topic->namespace_id : 1;
+            $data['nick_name_id'] = $nickName->id;
             
             $topic = $camp->topic;
             // Dispatch Job
@@ -1256,6 +1278,9 @@ class TopicController extends Controller {
             $data['nick_name'] = $nickName->nick_name;
             $data['forum_link'] = 'forum/' . $topic->topic_num . '-' . $topic->topic_name . '/1/threads';
             $data['subject'] = "Proposed change to topic " . $topic->topic_name . " submitted";
+            //1081 issue
+            $data['namespace_id'] = (isset($topic->namespace_id) && $topic->namespace_id)  ?  $topic->namespace_id : 1;
+            $data['nick_name_id'] = $nickName->id;
             
             // Dispatch Job
            // Dispatch Job
