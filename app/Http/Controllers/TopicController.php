@@ -997,6 +997,7 @@ class TopicController extends Controller {
          if($all['camp_num'] == 1 && !in_array($all['submitter'] , $loginUserNicknames)  ){
             $statement->grace_period = 1;
          }
+         
 
         /*  Scenario 2 : 
            User A creates topic ->Create "camp 1" 
