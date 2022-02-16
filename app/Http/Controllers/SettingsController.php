@@ -426,7 +426,7 @@ class SettingsController extends Controller
              * in that case delegate should not promted it should simply shifted with DS
             */
             $promoteDelegate = true;
-            if(isset($data['support_order']) && count($data['support_order']) > 0){
+            if(isset($data['removed_camp']) && isset($data['support_order']) && count($data['support_order']) > 0){
                 $promoteDelegate = false;
             }
             /** check point 2 if all suppot removed  */
@@ -1056,6 +1056,12 @@ class SettingsController extends Controller
      */
     public function addDelegatedSupport($myDelegator,$topic_num,$camp_num,$support_order,$delegatedTo){
         foreach($myDelegator as $delegator){
+            Support::where('topic_num',$topic_num)
+             ->where('end', '=',0)
+             ->where('nick_name_id', '=', $delegator->nick_name_id)
+             ->where('delegate_nick_name_id','=',$delegatedTo)
+             ->update(['end'=>time()]);
+
             $supportTopic = new Support();
             $supportTopic->topic_num = $topic_num;
             $supportTopic->nick_name_id = $delegator->nick_name_id;
@@ -1068,6 +1074,10 @@ class SettingsController extends Controller
             //get sublevel of delgates
             $userNicknames = Nickname::personNicknameArray($delegator->nick_name_id);
             $subLevelDelegates = Support::where('topic_num', $topic_num)->whereIn('delegate_nick_name_id', $userNicknames)->where('end', '=', 0)->groupBy('nick_name_id')->get();
+             //ending support of child for previous camps and adding new 
+             Support::where('topic_num',$topic_num)
+             ->where('end', '=',0)
+             ->whereIN('delegate_nick_name_id',  $userNicknames)->update(['end'=>time()]);
             if(count($subLevelDelegates) > 0){
                 $this->addDelegatedSupport($subLevelDelegates,$topic_num,$camp_num,$support_order,$delegator->nick_name_id);
             }
@@ -1194,7 +1204,10 @@ class SettingsController extends Controller
                         $support->save();
                         $currentSupportOrder++;                 
                     }
-                    $this->deleteDelegateSupport($topicNum,$campNum,$nickNameId,$remaingSupportWithHighOrder,$startSupportOrder);
+
+                    if($promoteDelegate){
+                        $this->deleteDelegateSupport($topicNum,$campNum,$nickNameId,$remaingSupportWithHighOrder,$startSupportOrder);
+                    }
                 }   
             } 
             /* send support deleted mail to all supporter and subscribers */
