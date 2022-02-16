@@ -62,6 +62,10 @@
                         } else if(isset($_SESSION['filterchange'])) {
                             $filter = $_SESSION['filterchange'];
                         }
+
+                         $dotCount = 0;
+                         $dotCountForG8 = 0;
+
                       ###  if current date is greater than cron run date ###
                         if($previous > 0){ 
                            ## check that topics are exist in data
@@ -95,22 +99,108 @@
                               $nexDisabled = $next >= $topics['data']['number_of_pages'] ? 'disabled':'';
                          ?>
                         <ul class="pagination">
+
+                           <!-- Disable the previous button if page is 1 or less -->
                             @if ($page_no > 1)
                                 <li> <a href="@php echo url('/').'?page='.$previous;  @endphp">«</a></li>
                             @else
                                 <li class="@php echo $disabled @endphp"><span>«</span></li>
                             @endif
     
-                                <?php 
-                                   for($idx=1; $idx <= $topics['data']['number_of_pages']; $idx++){
-                                         $active = $page_no == $idx ? 'active': '';
-                                ?>
-                                @if ($page_no == $idx)
-                                   <li class="@php echo $active; @endphp"> <span><?php echo $idx; ?></span></li>
-                                @else 
-                                   <li><a href="@php echo url('/').'?page='.$idx;  @endphp"><?php echo $idx; ?></a></li>
-                                @endif
-                           
+                            <?php 
+                               for($idx=1; $idx <= $topics['data']['number_of_pages']; $idx++){
+                                    $active = $page_no == $idx ? 'active': '';
+                             ?>
+
+                               <!-- Start of if the page less than 8 -->
+                               <!-- #################################### -->
+
+                                @if($page_no < 8)
+                                
+                                    <!-- if the current selected page is less than 12 then show all in a row -->
+                                    @if($topics['data']['number_of_pages'] <= 12 )
+                                          <li><a href="@php echo url('/').'?page='.$idx;  @endphp"><?php echo $idx; ?></a></li>
+                                    @endif
+
+                                    <!-- 
+                                        if the current selected page is greater than 12 
+                                        then show first 8 and last two number
+                                    
+                                     -->
+                                     @if($topics['data']['number_of_pages'] > 12)
+
+                                         @if($idx <= 8)
+                                            @if ($page_no == $idx)
+                                               <li class="@php echo $active; @endphp"> <span><?php echo $idx; ?></span></li>
+                                            @else
+                                               <li><a href="@php echo url('/').'?page='.$idx;  @endphp"><?php echo $idx; ?></a></li>
+                                            @endif
+                                         @endif
+
+                                         @if($idx > 8 && $idx <= $topics['data']['number_of_pages']-2 && $dotCount == 0 )
+                                             @php  
+                                                  $dotCount = 1 ;
+                                             @endphp
+                                              <li><span>...<span></li>
+                                         @endif
+
+                                         @if($idx >= $topics['data']['number_of_pages']-1)
+                                             <li><a href="@php echo url('/').'?page='.$idx;  @endphp"><?php echo $idx; ?></a></li>
+                                         @endif
+
+                                     @endif
+                                      
+                                 @endif
+
+                                 <!-- End of if page is less than 8 logic -->
+                                 <!-- #################################### -->
+                                  
+                                 <!-- Start of if the current page is greater than 8 -->
+                                  @if($page_no >= 8)
+
+                                   <!-- show first two -->
+                                    @if($idx <=2 )
+                                          <li><a href="@php echo url('/').'?page='.$idx;  @endphp"><?php echo $idx; ?></a></li>
+                                    @endif
+
+                                     <!-- show dot -->
+                                    @if($idx >2 && $idx <=5 && $dotCount == 0 )
+                                             @php  
+                                                  $dotCount = 1 ;
+                                             @endphp
+                                              <li><span>...<span></li>  
+                                    @endif
+
+                                     <!-- show 2 number less and 2 number greater than current page -->
+                                    @if($idx > $page_no-3 && $idx < $page_no+3 && $idx <= $topics['data']['number_of_pages']-2 )
+                                          @if ($page_no == $idx)
+                                               <li class="@php echo $active; @endphp"> <span><?php echo $idx; ?></span></li>
+                                          @else
+                                               <li><a href="@php echo url('/').'?page='.$idx;  @endphp"><?php echo $idx; ?></a></li>
+                                          @endif
+                                    @endif
+
+                                   <!-- if the remaining page less than equal to 2 then show dots again -->
+                                    @if($idx >= $page_no+3 && ($topics['data']['number_of_pages']-($page_no+3) >= 2) && $dotCountForG8 ==0)
+                                             @php  
+                                                  $dotCountForG8 = 1 ;
+                                             @endphp
+                                              <li><span>...<span></li>  
+                                    @endif
+
+                                   <!-- Show last two -->
+                                    @if($idx >= $topics['data']['number_of_pages']-1)
+                                        @if ($page_no == $idx)
+                                               <li class="@php echo $active; @endphp"> <span><?php echo $idx; ?></span></li>
+                                          @else
+                                               <li><a href="@php echo url('/').'?page='.$idx;  @endphp"><?php echo $idx; ?></a></li>
+                                          @endif
+                                    @endif
+
+                                 @endif
+
+                                 <!-- End of greater than 8 logic -->
+                                <!--  ################################# -->
                             <?php } ?> 
                             <li>
                                 @if ($next <= $topics['data']['number_of_pages'])
