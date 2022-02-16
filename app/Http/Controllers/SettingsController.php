@@ -580,6 +580,8 @@ class SettingsController extends Controller
                 //1081 issue
                 $result['namespace_id'] = (isset($topic->namespace_id) && $topic->namespace_id)  ?  $topic->namespace_id : 1;
                 $result['nick_name_id'] = $nickName->id;
+                $result['delegated_user'] = $parentUserNickName->nick_name;
+                $result['delegated_user_id'] = $parentUserNickName->id;
 
                 //$link = \App\Model\Camp::getTopicCampUrl($data['topic_num'],$data['camp_num']);
                 $link = \App\Model\Camp::getTopicCampUrl($data['topic_num'],1); //#954
@@ -592,7 +594,7 @@ class SettingsController extends Controller
                     $this->mailParentDelegetedUser($data,$link,$result,$subscribers);
                 }
                 $result['subject'] = $nickName->nick_name . " has just delegated their support to " . $parentUserNickName->nick_name;
-                $result['delegated_user'] = $parentUserNickName->nick_name;
+                
                 $this->mailSubscribersAndSupporters($directSupporter,$subscribers, $link, $result);
             }
             Session::save();
@@ -755,6 +757,7 @@ class SettingsController extends Controller
                 $parentUserNickName = Nickname::getNickName($data['delegate_nick_name_id']);
                 $result['delegate_support_deleted'] = 1;
                 $result['delegated_user'] = $parentUserNickName->nick_name;
+                $result['delegated_user_id'] = $parentUserNickName->id;
             }        
            $nickName = Nickname::getNickName($data['nick_name']);
            $topic = Camp::getAgreementTopic($data['topic_num'],['nofilter'=>true]);
