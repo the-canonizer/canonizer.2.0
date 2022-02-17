@@ -22,8 +22,10 @@ class ActionController extends Controller
 		if(function_exists('exec')) {
 			
 			  $mysqldump =  (stristr(PHP_OS, 'WIN')) ? exec("where mysqldump") : exec("which mysqldump");
+			  echo $mysqldump;
    			try{
-				 $command = "$mysqldump -P $dbport -h $dbhost -u$dbuser -p$dbpass $dbname > $dbexportPath"; 
+				 $command = "$mysqldump -P $dbport -h $dbhost -u$dbuser -p$dbpass $dbname > $dbexportPath";
+				 echo $command; 
 				 $output=array();
 				exec($command,$output,$worked);
 			}catch(\Exception $e){
