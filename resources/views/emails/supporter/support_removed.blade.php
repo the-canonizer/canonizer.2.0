@@ -11,5 +11,5 @@
 </p>
 <?php } ?>
 Sincerely,<br>
-{{ config('app.email_signature') }}
+{{ config('app.email_signature') }} 
 @endcomponent 

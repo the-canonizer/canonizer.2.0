@@ -6,9 +6,9 @@
  @elseif(isset($data['support_deleted']) && $data['support_deleted'] == 1 && $data['delegate_support_deleted'] != 1)
  	<a target="_blank" href="<?= route('user_supports',$data['nick_name_id']) .'?topicnum=&campnum=&namespace=' . $data['namespace_id']; ?>">{{ $data['nick_name']}}</a> has just removed their support from this camp: <a href="{{ $link }}"><b>{{ $data['object']}}</b></a>
  @elseif(isset($data['support_deleted']) && $data['support_deleted'] == 1 && $data['delegate_support_deleted'] == 1)
- 	<a target="_blank" href="<?= route('user_supports',$data['nick_name_id']) .'?topicnum=&campnum=&namespace=' . $data['namespace_id']; ?>">{{ $data['nick_name']}}</a> has just removed their delegated support from {{(isset($data['delegated_user']))? $data['delegated_user'] :'you'}} in this topic: <a href="{{ $link }}"><b>{{ $data['topic']->topic_name}}</b></a>
+ 	<a target="_blank" href="<?= route('user_supports',$data['nick_name_id']) .'?topicnum=&campnum=&namespace=' . $data['namespace_id']; ?>">{{ $data['nick_name']}}</a> has just removed their delegated support from <a target="_blank" href="<?= route('user_supports',$data['delegated_user_id']) .'?topicnum=&campnum=&namespace=' . $data['namespace_id']; ?>"> {{(isset($data['delegated_user']))? $data['delegated_user'] :'you'}} </a>in this topic: <a href="{{ $link }}"><b>{{ $data['topic']->topic_name}}</b></a>
  @else
- 	<a target="_blank" href="<?= route('user_supports',$data['nick_name_id']) .'?topicnum=&campnum=&namespace=' . $data['namespace_id']; ?>">{{ $data['nick_name']}} </a> has just delegated their support to {{(isset($data['delegated_user']))? $data['delegated_user'] :'you'}} in this topic: <a href="{{ $link }}"><b>{{ $data['object']}}</b></a>
+ 	<a target="_blank" href="<?= route('user_supports',$data['nick_name_id']) .'?topicnum=&campnum=&namespace=' . $data['namespace_id']; ?>">{{ $data['nick_name']}} </a> has just delegated their support to <a target="_blank" href="<?= route('user_supports',$data['delegated_user_id']) .'?topicnum=&campnum=&namespace=' . $data['namespace_id']; ?>"> {{(isset($data['delegated_user']))? $data['delegated_user'] :'you'}} </a> in this topic: <a href="{{ $link }}"><b>{{ $data['object']}}</b></a>
  @endif
 
  </p>
