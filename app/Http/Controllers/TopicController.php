@@ -990,13 +990,23 @@ class TopicController extends Controller {
          * Case 1 : When User A added camp statement to Agreement camp - It should go "live"(Grace period = 0)
          * Case 2 : When User B added camp statement to Agreement camp - It should go in "In Review"(Grace period = 1)
          */
-         if($all['camp_num'] == 1 && in_array($all['submitter'] , $loginUserNicknames)  ){
+
+         if( $all['camp_num'] == 1  && $totalSupport <= 0){
+           $statement->grace_period = 0;
+         }
+         if($all['camp_num'] == 1 && $totalSupport > 0 && in_array($all['submitter'] , $loginUserNicknames)  ){
             
             $statement->grace_period = 0;
          }
-         if($all['camp_num'] == 1 && !in_array($all['submitter'] , $loginUserNicknames)  ){
+         if($all['camp_num'] == 1  && $totalSupport > 0 && !in_array($all['submitter'] , $loginUserNicknames)  ){
             $statement->grace_period = 1;
          }
+
+         // CASE if user object on it
+         if($all['camp_num'] == 1 && $eventtype == "OBJECTION"){
+            $statement->grace_period = 0;
+         }
+         
          
 
         /*  Scenario 2 : 
@@ -1010,9 +1020,16 @@ class TopicController extends Controller {
          }
          else if( $all['camp_num'] > 1  && $totalSupport > 0 && in_array($all['submitter'] , $loginUserNicknames)){
              $statement->grace_period = 0;
-         }else{
-              $statement->grace_period = 1;
+         }else if( $all['camp_num'] > 1  && $totalSupport > 0 && !in_array($all['submitter'] , $loginUserNicknames)){
+            $statement->grace_period = 1;
+        }
+
+        // CASE if user object on it
+        if($all['camp_num'] > 1 && $eventtype == "OBJECTION"){
+            $statement->grace_period = 0;
          }
+
+
         $statement->save();
         if ($eventtype == "CREATE") {
            // send history link in email
