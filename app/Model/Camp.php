@@ -978,7 +978,7 @@ class Camp extends Model {
           if(session('defaultAlgo')) {
               $selectedAlgo = session('defaultAlgo');
           }
-
+  
           if( ($asOfDefaultDate >= $cronDate) && ($selectedAlgo == 'blind_popularity' || $selectedAlgo == "mind_experts")){
           
               //change the keys if the asOf is review
@@ -1020,13 +1020,24 @@ class Camp extends Model {
   
               $data = json_decode($reducedTree, true);
   
-              if(count($data['data']) > 0 ){
-                  $reducedTree = $data['data'][0]['tree_structure'];
-                  $fromExistingCode = 0;
-              }
+              if(count($data['data']) && $data['code'] == 200 ){
+
+                /** title and review title field empty in most of the cases if any key is null or empty
+                 *  then fetch data from mysql
+                 */
+                $topicName =  strlen($data['data'][0]['topic_name'])?? null;
+                $title     =  strlen($data['data'][0]['tree_structure']['1']['title'])?? null;
+                $reviewTitle =  strlen($data['data'][0]['tree_structure']['1']['review_title'])?? null;
+                
+                if($topicName && $title && $reviewTitle){
+                   $reducedTree = $data['data'][0]['tree_structure'];
+                   $fromExistingCode = 0;
+                }
+
+             }
   
           }
-          
+         
           if($fromExistingCode){
               $reducedTree = $this->campTree(session('defaultAlgo', 'blind_popularity'), $activeAcamp = null, $supportCampCount = 0, $needSelected = 0);
           }
