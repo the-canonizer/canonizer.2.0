@@ -22,7 +22,7 @@
 @endif 
 @if(Session::has('already_exists'))
     <div id="myModal" class="modal fade" role="dialog">
-      <form method="post" action="{{ url('/deactivateuser')}}" onsubmit="submitForm(this)">
+      <form method="post" id="userDeactivationForm" action="{{ url('/deactivateuser')}}" onsubmit="deactivateUser(event)">
       <div class="modal-dialog">
         <!-- Modal content-->
         <div class="modal-content">
@@ -44,7 +44,7 @@
           </div>
           <div class="modal-footer">
              <input type="hidden" name="_token" value="{{ csrf_token() }}">
-            <button type="submit"  class="btn btn-success">Submit</button>
+            <button type="submit" id="deactivateUserSubmitButton"  class="btn btn-success">Submit</button>
             <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
           </div>
         </div>
@@ -162,6 +162,29 @@
     $(e.target).parent('form').submit();
     return true;
   }
+
+  function deactivateUser(e){
+    const selectedUser = $("input[name=user_deactivate]:checked").val();
+    if(selectedUser){
+      $('#userDeactivationForm').submit();
+    }else{
+      e.preventDefault();
+    }
+  }
+
+  $(document).ready(function() {
+    $('#deactivateUserSubmitButton').prop('disabled', true);
+    $("input[name=user_deactivate]").change(function(){
+      console.log("fbjbvjkkdnlvk")
+      const selectedUser = $("input[name=user_deactivate]:checked").val();
+      if(selectedUser){
+        $('#deactivateUserSubmitButton').prop('disabled', false);
+      }else{
+        $('#deactivateUserSubmitButton').prop('disabled', true);
+      }
+    })
+  })
+
 </script>
 @endsection
 
