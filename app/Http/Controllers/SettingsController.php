@@ -824,7 +824,12 @@ class SettingsController extends Controller
                 }
                 $this->removeSupport($topic_num,$currentSupportRec->camp_num,$nick_name_id,'',$currentSupportRec->support_order,$promoteDelegate,$ifSupportLeft);
                 Session::flash('success', "Your support has been removed successfully.");                
-            }            
+            } 
+            $topicSupport = Topic::where('id', $topic_num)->first();
+            // Dispatch Job
+            if(isset($topicSupport)) {
+                Util::dispatchJob($topicSupport, 1, 1);
+            }           
             return redirect()->back();
         }
         Session::flash('error', "Invalid access.");
