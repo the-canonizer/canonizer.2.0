@@ -14,7 +14,8 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         'App\Console\Commands\AdminUser',
-        'App\Console\Commands\NotifyUserForChangeSubmit'
+        'App\Console\Commands\NotifyUserForChangeSubmit',
+        'App\Console\Commands\FixSupport',
     ];
 
     /**
