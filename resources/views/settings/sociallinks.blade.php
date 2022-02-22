@@ -129,8 +129,8 @@
                             <td>
                                <div class="row">
                                   <div class="col-sm-4">
-                                    <a href="{{ url('/login/'.$provider) }}" class="btn btn-sm {{$provider}} fb btn-{{$provider}}">
-                                    Link <i class="fa fa-{{$provider}} fa-fw"></i></a>
+                                    <a href="{{ url('/login/'.$provider) }}" class="btn btn-sm {{ strtolower($provider) }} fb btn-{{ strtolower($provider) }}">
+                                    Link <i class="fa fa-{{ strtolower($provider) }} fa-fw"></i></a>
                                   </div>
                                </div>
                                 
