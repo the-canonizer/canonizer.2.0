@@ -1064,8 +1064,11 @@ class TopicController extends Controller {
             //1081 issue
             $dataObject['namespace_id'] = (isset($livecamp->topic->namespace_id) && $livecamp->topic->namespace_id)  ?  $livecamp->topic->namespace_id : 1;
             $dataObject['nick_name_id'] = $nickName->id;
-            $this->mailSubscribersAndSupporters($directSupporter,$subscribers,$link, $dataObject);
 
+            if($statement->grace_period == 0){
+                $this->mailSubscribersAndSupporters($directSupporter,$subscribers,$link, $dataObject);
+            }
+           
          } else if ($eventtype == "OBJECTION") {
 
             $user = Nickname::getUserByNickName($all['submitter']);
