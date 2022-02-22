@@ -24,7 +24,9 @@ class CanonizerLoginPage(Page):
 
         self.hover(*HomePageIdentifiers.LOGIN)
         self.find_element(*HomePageIdentifiers.LOGIN).click()
-        return CanonizerLoginPage(self.driver)
+        title = self.find_element(*HomePageIdentifiers.LOGIN_TITLE).text
+        if title == 'Log in':
+            return CanonizerLoginPage(self.driver)
 
     def enter_email(self, user):
         """
@@ -125,7 +127,9 @@ class CanonizerLoginPage(Page):
             self.find_element(*LoginPageIdentifiers.PASSWORD_ASTRK)
 
     def login_should_have_forgot_password_link(self):
-        return self.find_element(*LoginPageIdentifiers.FORGOTPASSWORD).text
+        text = self.find_element(*LoginPageIdentifiers.FORGOTPASSWORD).text
+        if text == 'Forgot Password':
+            return CanonizerLoginPage(self.driver)
 
     def click_request_otp_button(self):
         self.find_element(*LoginPageIdentifiers.REQUEST_OTP).click()
@@ -140,7 +144,9 @@ class CanonizerLoginPage(Page):
 
     def request_otp_with_invalid_user_email(self, user):
         self.request_otp(user)
-        return self.find_element(*LoginPageIdentifiers.ERROR_MESSAGE).text
+        error = self.find_element(*LoginPageIdentifiers.ERROR_MESSAGE).text
+        if error == 'User does not exists.':
+            return CanonizerLoginPage(self.driver)
 
     def request_otp_with_valid_user_phone_number(self, phone_number):
         self.request_otp(phone_number)
@@ -148,14 +154,19 @@ class CanonizerLoginPage(Page):
 
     def request_otp_with_invalid_user_phone_number(self, phone_number):
         self.request_otp(phone_number)
-        return self.find_element(*LoginPageIdentifiers.ERROR_MESSAGE).text
+        error = self.find_element(*LoginPageIdentifiers.ERROR_MESSAGE).text
+        if error == 'User does not exists.':
+            return CanonizerLoginPage(self.driver)
 
     def request_otp_with_unverified_user_phone_number(self, phone_number):
         self.request_otp(phone_number)
-        return self.find_element(*LoginPageIdentifiers.ERROR_MESSAGE).text
+        error = self.find_element(*LoginPageIdentifiers.ERROR_MESSAGE).text
+        if error == 'User mobile number is not verified.':
+            return CanonizerLoginPage(self.driver)
 
     def request_otp_with_blank_email_or_phone_number(self):
         self.request_otp('')
+
         return self.find_element(*LoginPageIdentifiers.ERROR_EMAIL).text
 
     def enter_otp(self, otp):
@@ -175,7 +186,9 @@ class CanonizerLoginPage(Page):
 
     def login_with_invalid_otp(self, otp):
         self.click_submit_otp(otp)
-        return self.find_element(*LoginOTPVerificationIdentifiers.ERROR_INVALID_OTP).text
+        error = self.find_element(*LoginOTPVerificationIdentifiers.ERROR_INVALID_OTP).text
+        if error == 'Error! Incorrect One Time Verification Code Entered':
+            return CanonizerLoginPage(self.driver)
 
     def login_otp_verification_page_mandatory_fields_are_marked_with_asterisk(self):
         """
@@ -188,10 +201,14 @@ class CanonizerLoginPage(Page):
 
     def login_with_blank_otp(self):
         self.click_submit_otp('')
-        return self.find_element(*LoginOTPVerificationIdentifiers.ERROR_OTP).text
+        error = self.find_element(*LoginOTPVerificationIdentifiers.ERROR_OTP).text
+        if error == "Please enter One Time Verification Code":
+            return CanonizerLoginPage(self.driver)
 
     def check_register_page_open_click_signup_now_link(self):
 
         self.hover(*LoginPageIdentifiers.SIGNUPNOW)
         self.find_element(*LoginPageIdentifiers.SIGNUPNOW).click()
-        return CanonizerLoginPage(self.driver)
+        heading = self.find_element(*LoginPageIdentifiers.HEADING).text
+        if heading == 'Create Account':
+            return CanonizerLoginPage(self.driver)
