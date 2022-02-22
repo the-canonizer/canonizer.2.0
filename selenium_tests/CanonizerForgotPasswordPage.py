@@ -7,7 +7,9 @@ class CanonizerForgotPasswordPage(Page):
     def click_forgot_password_page_button(self):
         self.hover(*ForgotPasswordIdentifiers.FORGOT_PASSWORD)
         self.find_element(*ForgotPasswordIdentifiers.FORGOT_PASSWORD).click()
-        return CanonizerForgotPasswordPage(self.driver)
+        title = self.find_element(*ForgotPasswordIdentifiers.TITLE).text
+        if title == 'Forgot Password':
+            return CanonizerForgotPasswordPage(self.driver)
 
     def enter_email(self, email):
         self.find_element(*ForgotPasswordIdentifiers.EMAIL).send_keys(email)
@@ -29,11 +31,16 @@ class CanonizerForgotPasswordPage(Page):
 
     def forgot_password_with_invalid_email_format(self, email):
         self.submit(email)
-        return self.find_element(*ForgotPasswordIdentifiers.ERROR_INVALID_EMAIL).text
+        error = self.find_element(*ForgotPasswordIdentifiers.ERROR_INVALID_EMAIL).text
+        if error == 'The email must be a valid email address.':
+            return CanonizerForgotPasswordPage(self.driver)
 
     def forgot_password_with_valid_email(self, email):
         self.submit(email)
-        return self
+        confirmation_text = self.find_element(*ForgotPasswordIdentifiers.CONFIRMATION).text
+        if confirmation_text == 'Confirmation':
+            print("URL", CanonizerForgotPasswordPage(self.driver))
+            return CanonizerForgotPasswordPage(self.driver)
 
     def forgot_password_page_mandatory_fields_are_marked_with_asterisk(self):
         return \

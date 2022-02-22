@@ -18,11 +18,22 @@ class CanonizerUploadFilePage(Page):
         :return:
             Return the control to the main Program
         """
-
-        self.hover(*UploadFileIdentifiers.UPLOADFILE)
-        self.find_element(*UploadFileIdentifiers.UPLOADFILE).click()
-        time.sleep(3)
+        title = self.find_element(*UploadFileIdentifiers.TITLE).text
+        if title == 'Canonizer Main Page':
+            self.hover(*UploadFileIdentifiers.UPLOADFILE)
+            self.find_element(*UploadFileIdentifiers.UPLOADFILE).click()
+            upload_title = self.find_element(*UploadFileIdentifiers.UPLOAD_TITLE).text
+            if upload_title in 'Upload Files, Max size 5 MB':
+                time.sleep(3)
+                return CanonizerUploadFilePage(self.driver)
         return CanonizerUploadFilePage(self.driver)
+
+    def upload_file_without_user_login(self):
+        title = self.find_element(*UploadFileIdentifiers.TITLE).text
+        if title == 'Canonizer Main Page':
+            self.hover(*UploadFileIdentifiers.UPLOADFILE)
+            self.find_element(*UploadFileIdentifiers.UPLOADFILE).click()
+            return CanonizerUploadFilePage(self.driver)
 
     def enter_originalfile_name(self, originalfilename):
         self.find_element(*UploadFileIdentifiers.FILE_NAME).send_keys(originalfilename)
@@ -37,29 +48,46 @@ class CanonizerUploadFilePage(Page):
         """
         self.find_element(*UploadFileIdentifiers.UPLOAD).click()
 
-    def upload(self, originalfilename):
-         self.enter_originalfile_name(originalfilename)
-         self.click_upload_button()
+    def upload(self, originalfilename, file_name):
+        self.enter_originalfile_name(originalfilename)
+        self.enter_newfile_name(file_name)
+        self.click_upload_button()
 
     def upload_file_with_blank_file(self):
-        self.upload('')
+        self.click_upload_button()
         return self.find_element(*UploadFileIdentifiers.ERROR_FILE_NAME).text
 
-    def upload_file_with_size_file_more_than_5mb(self, originalfilename):
-        self.upload(originalfilename)
+    def upload_file_with_size_file_more_than_5mb(self, originalfilename, file_name):
+        self.upload(originalfilename,file_name)
         return self.find_element(*UploadFileIdentifiers.ERROR_FILE_SIZE).text
 
-    def upload_file_with_valid_format(self, originalfilename):
-        self.upload(originalfilename)
-        return self
+    def upload_file_with_valid_format(self, originalfilename, file_name):
+        self.upload(originalfilename, file_name)
+        success_message = self.find_element(*UploadFileIdentifiers.SUCCESS_MESSAGE).text
+        if success_message == 'Success! File uploaded successfully!':
+            return CanonizerUploadFilePage(self.driver)
 
-    def upload_file_with_same_file_name(self, originalfilename):
-        self.upload(originalfilename)
+    def upload_file_with_same_file_name(self, originalfilename, file_name):
+        self.upload(originalfilename, file_name)
         return self.find_element(*UploadFileIdentifiers.SAME_FILE_NAME_ERROR).text
 
-    def upload_file_with_size_zero_bytes(self, originalfilename):
-        self.upload(originalfilename)
+    def upload_file_with_size_zero_bytes(self, originalfilename, file_name):
+        self.upload(originalfilename, file_name)
         return self.find_element(*UploadFileIdentifiers.ERROR_ZERO_FILE_SIZE).text
+
+    def verify_recent_upload_file_name_from_list_of_files(self, originalfilename, file_name):
+        self.upload(originalfilename, file_name)
+        success_message = self.find_element(*UploadFileIdentifiers.SUCCESS_MESSAGE).text
+        if success_message == 'Success! File uploaded successfully!':
+            recent_file_name = self.find_element(*UploadFileIdentifiers.RECENT_FILE_NAME).text
+            if file_name in recent_file_name:
+                return CanonizerUploadFilePage(self.driver)
+
+    def verify_uploaded_image_file_format(self, originalfilename, file_name):
+        self.upload(originalfilename, file_name)
+        error_message = self.find_element(*UploadFileIdentifiers.ERROR_INVALID_FILE_FORMAT).text
+        if error_message  in 'Error! The type of the uploaded file should be an image.(jpeg,jpg,png,bmp,gif)':
+            return CanonizerUploadFilePage(self.driver)
 
     def open_uploaded_file(self):
         try:
@@ -74,14 +102,3 @@ class CanonizerUploadFilePage(Page):
     def upload_file_with_invalid_file_name_format(self, originalfilename):
         self.upload(originalfilename)
         return self.find_element(*UploadFileIdentifiers.SAME_FILE_NAME_ERROR).text
-
-
-
-
-
-
-
-
-
-
-
