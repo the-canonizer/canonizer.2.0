@@ -918,7 +918,7 @@ class SettingsController extends Controller
 
     function sociallinks(){
         if(Auth::check()){
-            $providers = ['Google', 'Facebook', 'Github', 'Twitter', 'Linkedin'];
+            $providers = ['Google', 'Facebook', 'Github', 'Twitter', 'LinkedIn'];
             $user = Auth::user();
             $socialdata = []; 
             $social_data = SocialUser::where('user_id','=',$user->id)->get();
