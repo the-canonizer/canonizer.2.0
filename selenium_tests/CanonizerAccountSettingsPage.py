@@ -54,7 +54,6 @@ class CanonizerAccountSettingsPage(Page):
         if page_title == 'Profile':
             return CanonizerAccountSettingsPage(self.driver)
 
-
     def click_account_settings_add_manage_nick_names_page_button(self):
         """
         This function is to click on the Account Settings ->Add & Manage Nick Names tab
@@ -71,7 +70,6 @@ class CanonizerAccountSettingsPage(Page):
         page_title = self.find_element(*AccountSettingsManageProfileInfoIdentifiers.PAGE_TITLE).text
         if page_title == 'Nick Names':
             return CanonizerAccountSettingsPage(self.driver)
-
 
     def click_account_settings_my_supports_page_button(self):
         """
@@ -105,7 +103,6 @@ class CanonizerAccountSettingsPage(Page):
         page_title = self.find_element(*AccountSettingsManageProfileInfoIdentifiers.PAGE_TITLE).text
         if page_title == 'Social Oauth Verification':
             return CanonizerAccountSettingsPage(self.driver)
-
 
     def click_account_settings_change_password_page_button(self):
         """
@@ -235,11 +232,7 @@ class CanonizerAccountSettingsNickNamesPage(Page):
         self.create('')
         return self.find_element(*AddAndManageNickNamesIdentifiers.ERROR_NICK_NAME).text
 
-    def create_with_duplicate_nick_name(self, nick_name):
-        self.create(nick_name)
-        return self.find_element(*AddAndManageNickNamesIdentifiers.ERROR_NICK_NAME).text
-
-    def create_with_blank_spaces_nick_name(self, nick_name):
+    def create_nick_name(self, nick_name):
         self.create(nick_name)
         return self.find_element(*AddAndManageNickNamesIdentifiers.ERROR_NICK_NAME).text
 
@@ -266,7 +259,6 @@ class AccountSettingsMySupportsPage(Page):
                 return AccountSettingsMySupportsPage(self.driver)
         except NoSuchElementException:
             return False
-        return False
 
     def check_camp_page_from_my_supports_loaded(self):
         """
@@ -281,7 +273,6 @@ class AccountSettingsMySupportsPage(Page):
                 return AccountSettingsMySupportsPage(self.driver)
         except NoSuchElementException:
             return False
-        return False
 
     def check_topic_create_new_camp_page_from_my_supports_loaded(self):
         """
@@ -297,7 +288,6 @@ class AccountSettingsMySupportsPage(Page):
             return AccountSettingsMySupportsPage(self.driver)
         except NoSuchElementException:
             return False
-        return AccountSettingsMySupportsPage(self.driver)
 
     def check_camp_create_new_camp_page_from_my_supports_loaded(self):
         """
@@ -346,9 +336,6 @@ class AccountSettingsManageProfileInfoPage(Page):
     def enter_state(self, state):
         self.find_element(*AccountSettingsManageProfileInfoIdentifiers.STATE).send_keys(state)
 
-    # def enter_country(self, country):
-    # self.find_element(*AccountSettingsManageProfileInfoIdentifiers.COUNTRY).send_keys(country)
-
     def enter_zip_code(self, zip_code):
         self.find_element(*AccountSettingsManageProfileInfoIdentifiers.ZIP_CODE).send_keys(zip_code)
 
@@ -362,20 +349,19 @@ class AccountSettingsManageProfileInfoPage(Page):
         """
         self.find_element(*AccountSettingsManageProfileInfoIdentifiers.UPDATE).click()
 
-    def update(self, first_name, middle_name, last_name, email, language, dob, address_line1, address_line2, city,
-               state, zip_code):
-        self.enter_first_name(first_name)
-        self.enter_middle_name(middle_name)
-        self.enter_last_name(last_name)
-        self.enter_email(email)
-        self.enter_language(language)
-        self.enter_dob(dob)
-        self.enter_address_line1(address_line1)
-        self.enter_address_line2(address_line2)
-        self.enter_city(city)
-        self.enter_state(state)
+    def update(self, *args):
+        self.enter_first_name(args[0])
+        self.enter_middle_name(args[1])
+        self.enter_last_name(args[2])
+        self.enter_email(args[3])
+        self.enter_language(args[4])
+        self.enter_dob(args[5])
+        self.enter_address_line1(args[6])
+        self.enter_address_line2(args[7])
+        self.enter_city(args[8])
+        self.enter_state(args[9])
         # self.enter_country(country)
-        self.enter_zip_code(zip_code)
+        self.enter_zip_code(args[10])
         self.click_update_button()
 
     def click_verify_button(self):
@@ -398,11 +384,9 @@ class AccountSettingsManageProfileInfoPage(Page):
             self.find_element(*AccountSettingsManageProfileInfoIdentifiers.COUNTRY_ASTRK) and \
             self.find_element(*AccountSettingsManageProfileInfoIdentifiers.PHONE_NUMBER_ASTRK)
 
-    def update_profile_with_blank_first_name(self, middle_name, last_name, email, language, dob, address_line1,
-                                             address_line2, city, state, zip_code):
+    def update_profile_with_blank_first_name(self, middle_name, last_name):
         self.find_element(*AccountSettingsManageProfileInfoIdentifiers.FIRST_NAME).clear()
-        self.update('', middle_name, last_name, email, language, dob, address_line1, address_line2, city, state,
-                    zip_code)
+        self.update('', middle_name, last_name, '', '', '', '', '', '', '', '')
         return self.find_element(*AccountSettingsManageProfileInfoIdentifiers.ERROR_FIRST_NAME).text
 
     def update_profile_with_blank_last_name(self, first_name, middle_name, email, language, dob, address_line1,
@@ -464,6 +448,3 @@ class AccountSettingsManageProfileInfoPage(Page):
         error = self.find_element(*AccountSettingsManageProfileInfoIdentifiers.ERROR_PHONE_NUMBER_VERIFICATION).text
         if error == 'Verification : A 6 digit code has been sent on your phone number for verification.':
             return AccountSettingsMySupportsPage(self.driver)
-
-
-

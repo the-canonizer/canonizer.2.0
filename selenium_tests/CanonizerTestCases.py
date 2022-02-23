@@ -435,10 +435,16 @@ testCases = {
     'TC_UPDATE_THREAD_01': [critical, 'When user update the thread, the thread should get update'],
     'TC_UPDATE_THREAD_02': [critical, 'When suer try to edit the thread with special character, '
                                       'user must see error message'],
-    'TC_LOAD_TOP_10_THREAD':[critical, 'When user click on top 10 thread, user should see top 10 threads.'],
+    'TC_LOAD_TOP_10_THREAD': [critical, 'When user click on top 10 thread, user should see top 10 threads.'],
+    'TC_LOAD_MY_PARTICIPANTS': [critical, 'When user click on My Participant, user should see my participants'],
+    'TC_LOAD_ALL_THREADS': [critical, 'When user click on all threads, user should see all threads.'],
     'TC_LOAD_MY_THREAD_PAGE': [critical, 'When user click on My Thread, it should see all threads created by him.'],
     'TC_CAMP_FORM_01': [critical, "When user click on All Threads, if threads are not present, user should see 'No "
                                   "threads available for this topic' statement"],
+    'TC_CAMP_FORM_02': [critical, 'When user click on any thread, '
+                                  'user should see all the replies associated with that thread'],
+    'TC_EDIT_REPLY_TO_THREAD': [critical, 'When user on reply, and edit the reply, '
+                                          'user should be able to see the edited reply.'],
     'TC_CAMP_FORM_03': [critical, 'When user click on create thread page, All Mandatory Fields are marked with * Sign'],
     'TC_CAMP_FORM_04': [critical, 'When user click on create thread page and fill all the fields wih valid data, '
                                   'thread should get create.'],
