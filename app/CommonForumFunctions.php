@@ -26,6 +26,7 @@ class CommonForumFunctions
      */
     public static function sendEmailToSupportersForumPost($topicid, $campnum, $link, $post, $threadId, $nick_id, $topic_name_encoded,$reply_id)
     {
+<<<<<<< .merge_file_mVDtU8
         $bcc_email = [];
         $subscriber_bcc_email = [];
         $userExist = [];
@@ -34,6 +35,10 @@ class CommonForumFunctions
         $sub_bcc_user = [];
         $support_list = [];
         $subscribe_list = [];
+=======
+        $bcc_email = '';
+
+>>>>>>> .merge_file_KkVqK7
         $camp  = CommonForumFunctions::getForumLiveCamp($topicid, $campnum);
         $subCampIds = CommonForumFunctions::getForumAllChildCamps($camp);
 
@@ -271,14 +276,19 @@ class CommonForumFunctions
      */
     public static function getTopicName($topicid)
     {
+<<<<<<< .merge_file_mVDtU8
         return Topic::where('topic_num', $topicid)->
                       where('objector_nick_id', '=', NULL)
                       ->where('go_live_time', '<=', time())
                             ->latest('submit_time')->first()->topic_name;
                       // ->orderBy('go_live_time', 'desc')->
                       // first()->topic_name;
+=======
+        return Topic::where('topic_num', $topicid)
+            ->orderBy('go_live_time', 'desc')
+            ->first()->topic_name;
+>>>>>>> .merge_file_KkVqK7
     }
-
 
     /**
      * [getCampName description]
@@ -288,6 +298,7 @@ class CommonForumFunctions
      */
     public static function getCampName($topicid, $campnum)
     {
+<<<<<<< .merge_file_mVDtU8
         return Camp::where('camp_num', $campnum)->
                      where('objector_nick_id', '=', NULL)->
                      where('topic_num', $topicid)
@@ -295,6 +306,14 @@ class CommonForumFunctions
                             ->latest('submit_time')->first()->camp_name;
                      // ->orderBy('go_live_time', 'desc')->
                      // first()->camp_name;
+=======
+        return Camp::where('camp_num', $campnum)
+            ->where('topic_num', $topicid)
+            ->where('objector_nick_id', NULL)
+            ->where('go_live_time', '<=', time())
+            ->latest('submit_time')
+            ->first()->camp_name; 
+>>>>>>> .merge_file_KkVqK7
     }
 }
 
