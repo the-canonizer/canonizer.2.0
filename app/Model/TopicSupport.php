@@ -204,10 +204,10 @@ class TopicSupport extends Model {
             $html.= "<li class='main-parent'>".$space_html."<a href='".route('user_supports',$nickName->id)."?topicnum=".$topicnum."&campnum=".$campnum."&namespace=".$namespace_id."#camp_".$topicnum."_".$campnum."'>{$support_txt}{$nickName->nick_name}</a><div class='badge'>".round($array['score'],2)."</div>";
             if($as_of_time < time()){
                 if(in_array($array['index'],$userNicknames)){
-                    $html.="<a data-toggle='tooltip' data-original-title='You cannot remove your support from an archived camp. For LIVE camp, select \"default\" option under \"as of\".' style='".$disabledCss."' href='javascript:void(0)' class='btn btn-info'>Remove Your Support</a>";
+                    $html.="<a data-toggle='tooltip' data-original-title='History cannot be modified. In order to modify your current support select the default option in the \"As Of\" box' style='".$disabledCss."' href='javascript:void(0)' class='btn btn-info'>Remove Your Support</a>";
                 }                
                 if(!in_array($array['index'],$userNicknames) && !in_array($array['index'],$myDelegator) && !in_array($array['index'],$myDelegation) && Auth::check()){
-                    $html.="<a data-toggle='tooltip' data-original-title='You cannot remove your support from an archived camp. For LIVE camp, select \"default\" option under \“as of\”.' style='".$disabledCss."' href='javascript:void(0)' class='btn btn-info'>Delegate Your Support</a>";
+                    $html.="<a data-toggle='tooltip' data-original-title='History cannot be modified. In order to modify your current support select the default option in the \"As Of\" box' style='".$disabledCss."' href='javascript:void(0)' class='btn btn-info'>Delegate Your Support</a>";
                 }
             }else{
                 if(in_array($array['index'],$userNicknames)){
