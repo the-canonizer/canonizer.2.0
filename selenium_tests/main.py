@@ -65,7 +65,6 @@ class TestPages(unittest.TestCase):
         registerPage = CanonizerRegisterPage(self.driver).click_register_button()
         self.assertIn("/signup", registerPage.get_url())
 
-
     # 03
     def test_canonizer_login_button(self):
         print("\n" + str(test_cases(2)))
@@ -91,77 +90,45 @@ class TestPages(unittest.TestCase):
     def test_registration_with_blank_first_name(self):
         print("\n" + str(test_cases(5)))
         result = CanonizerRegisterPage(self.driver).click_register_button().registration_with_blank_first_name(
-            DEFAULT_MIDDLE_NAME,
-            DEFAULT_LAST_NAME,
-            DEFAULT_USER,
-            DEFAULT_PASS,
-            DEFAULT_PASS,
-            '')
-        self.assertIn("The first name field is required.", result)
+            REG_LIST_3).get_url()
+        print(result)
+        self.assertIn("/signup", result)
 
     # 07
     def test_registration_with_blank_last_name(self):
         print("\n" + str(test_cases(6)))
         result = CanonizerRegisterPage(self.driver).click_register_button().registration_with_blank_last_name(
-            DEFAULT_FIRST_NAME,
-            DEFAULT_MIDDLE_NAME,
-            DEFAULT_USER,
-            DEFAULT_PASS,
-            DEFAULT_PASS,
-            '')
-        self.assertIn("The last name field is required.", result)
+           REG_LIST_4).get_url()
+        self.assertIn("/signup", result)
 
     # 08
     def test_registration_with_blank_email(self):
         print("\n" + str(test_cases(7)))
         result = CanonizerRegisterPage(self.driver).click_register_button().registration_with_blank_email(
-            DEFAULT_FIRST_NAME,
-            DEFAULT_MIDDLE_NAME,
-            DEFAULT_LAST_NAME,
-            DEFAULT_PASS,
-            DEFAULT_PASS,
-            '')
-        self.assertIn("The email field is required.", result)
+           REG_LIST_5).get_url()
+        self.assertIn("/signup", result)
 
     # 09
     def test_registration_with_blank_password(self):
         print("\n" + str(test_cases(8)))
         result = CanonizerRegisterPage(self.driver).click_register_button().registration_with_blank_password(
-            DEFAULT_FIRST_NAME,
-            DEFAULT_MIDDLE_NAME,
-            DEFAULT_LAST_NAME,
-            DEFAULT_USER,
-            '')
-        self.assertIn('The password field is required.', result)
+           REG_LIST_6).get_url()
+        self.assertIn("/signup", result)
 
     # 10
     def test_registration_with_invalid_password_length(self):
         print("\n" + str(test_cases(9)))
         result = CanonizerRegisterPage(self.driver).click_register_button().registration_with_invalid_password_length(
-            DEFAULT_FIRST_NAME,
-            DEFAULT_MIDDLE_NAME,
-            DEFAULT_LAST_NAME,
-            DEFAULT_USER,
-            '12345',
-            '12345',
-            '')
-        self.assertIn(
-            'Password must be at least 8 characters, including at least one digit, one lower case letter and one special character(@,# !,$..).',
-            result)
+           REG_LIST_7).get_url()
+        self.assertIn("/signup", result)
 
     # 11
     def test_registration_with_different_confirmation_password(self):
         print("\n" + str(test_cases(10)))
         result = CanonizerRegisterPage(
             self.driver).click_register_button().registration_with_different_confirmation_password(
-            DEFAULT_FIRST_NAME,
-            DEFAULT_MIDDLE_NAME,
-            DEFAULT_LAST_NAME,
-            DEFAULT_USER,
-            'Test@1234567',
-            'Test@123456',
-            '')
-        self.assertIn('The password confirmation does not match.', result)
+            REG_LIST_8).get_url()
+        self.assertIn("/signup", result)
 
     # 12
     def test_what_is_canonizer_page_loaded_properly(self):
@@ -881,16 +848,9 @@ class TestPages(unittest.TestCase):
             self.driver).click_username_link_button().click_account_settings_page_button().click_account_settings_manage_profile_info_page_button()
         result = AccountSettingsManageProfileInfoPage(self.driver).update_profile_with_blank_first_name(
             DEFAULT_MIDDLE_NAME,
-            DEFAULT_LAST_NAME,
-            DEFAULT_USER,
-            '',
-            '',
-            '',
-            '',
-            '',
-            '',
-            '')
-        self.assertIn("The first name field is required.", result)
+            DEFAULT_LAST_NAME).get_url()
+        print(result)
+        self.assertIn("/settings", result)
 
     # 65
     def test_update_profile_with_blank_last_name(self):
@@ -903,15 +863,9 @@ class TestPages(unittest.TestCase):
         result = AccountSettingsManageProfileInfoPage(self.driver).update_profile_with_blank_last_name(
             DEFAULT_FIRST_NAME,
             DEFAULT_MIDDLE_NAME,
-            DEFAULT_USER,
-            '',
-            '',
-            '',
-            '',
-            '',
-            '',
-            '')
-        self.assertIn("The last name field is required.", result)
+            ).get_url()
+        print(result)
+        self.assertIn("/settings", result)
 
     # ----- My Profile Page Test Cases End -----
 
@@ -2200,14 +2154,8 @@ class TestPages(unittest.TestCase):
     def test_registration_with_duplicate_email(self):
         print("\n" + str(test_cases(163)))
         result = CanonizerRegisterPage(self.driver).click_register_button().registration_with_duplicate_email(
-            DEFAULT_FIRST_NAME,
-            DEFAULT_MIDDLE_NAME,
-            DEFAULT_LAST_NAME,
-            DEFAULT_USER,
-            DEFAULT_PASS,
-            DEFAULT_PASS,
-            '')
-        self.assertIn("The email has already been taken.", result)
+            REG_LIST_2).get_url()
+        self.assertIn("/signup", result)
 
     # 165
     def test_check_topic_page_from_my_supports_loaded(self):
@@ -2420,14 +2368,9 @@ class TestPages(unittest.TestCase):
     def test_registration_with_blank_spaces_first_name(self):
         print("\n" + str(test_cases(176)))
         result = CanonizerRegisterPage(self.driver).click_register_button().registration_with_blank_spaces_first_name(
-            "      ",
-            DEFAULT_MIDDLE_NAME,
-            DEFAULT_LAST_NAME,
-            DEFAULT_USER,
-            DEFAULT_PASS,
-            DEFAULT_PASS,
-            '')
-        self.assertIn("The first name field is required.", result)
+            REG_LIST_1).get_url()
+        print(result)
+        self.assertIn("/signup", result)
 
     def test_broken_url(self):
         self.assertTrue(
@@ -2941,51 +2884,28 @@ class TestPages(unittest.TestCase):
     def test_registration_with_blank_captcha(self):
         print("\n" + str(test_cases(231)))
         result = CanonizerRegisterPage(self.driver).click_register_button().registration_with_blank_captcha(
-            DEFAULT_FIRST_NAME,
-            DEFAULT_MIDDLE_NAME,
-            DEFAULT_LAST_NAME,
-            DEFAULT_USER,
-            DEFAULT_PASS,
-            DEFAULT_PASS).get_url()
+            REG_LIST_9).get_url()
         self.assertIn("/signup", result)
 
     # 233
     def test_registration_with_invalid_first_name(self):
         print("\n" + str(test_cases(232)))
         result = CanonizerRegisterPage(self.driver).click_register_button().registration_with_invalid_first_name(
-            INVALID_NAME_REGISTER,
-            DEFAULT_MIDDLE_NAME,
-            DEFAULT_LAST_NAME,
-            DEFAULT_USER,
-            DEFAULT_PASS,
-            DEFAULT_PASS,
-            '').get_url()
+            REG_LIST_10).get_url()
         self.assertIn("/signup", result)
 
     # 234
     def test_registration_with_invalid_last_name(self):
         print("\n" + str(test_cases(233)))
         result = CanonizerRegisterPage(self.driver).click_register_button().registration_with_invalid_last_name(
-            DEFAULT_FIRST_NAME,
-            DEFAULT_MIDDLE_NAME,
-            INVALID_NAME_REGISTER,
-            DEFAULT_USER,
-            DEFAULT_PASS,
-            DEFAULT_PASS,
-            '').get_url()
+           REG_LIST_11).get_url()
         self.assertIn("/signup", result)
 
     # 235
     def test_registration_with_invalid_middle_name(self):
         print("\n" + str(test_cases(234)))
         result = CanonizerRegisterPage(self.driver).click_register_button().registration_with_invalid_middle_name(
-            DEFAULT_FIRST_NAME,
-            INVALID_NAME_REGISTER,
-            DEFAULT_LAST_NAME,
-            DEFAULT_USER,
-            DEFAULT_PASS,
-            DEFAULT_PASS,
-            '').get_url()
+            REG_LIST_12).get_url()
         self.assertIn("/signup", result)
 
     # 236
@@ -3047,14 +2967,7 @@ class TestPages(unittest.TestCase):
             INVALID_NAME_REGISTER,
             DEFAULT_MIDDLE_NAME,
             DEFAULT_LAST_NAME,
-            DEFAULT_USER,
-            '',
-            '',
-            '',
-            '',
-            '',
-            '',
-            '').get_url()
+           ).get_url()
         self.assertIn("/settings", result)
 
     # 241
@@ -3068,14 +2981,7 @@ class TestPages(unittest.TestCase):
             DEFAULT_FIRST_NAME,
             INVALID_NAME_REGISTER,
             DEFAULT_LAST_NAME,
-            DEFAULT_USER,
-            '',
-            '',
-            '',
-            '',
-            '',
-            '',
-            '').get_url()
+            ).get_url()
         self.assertIn("/settings", result)
 
     # 242
@@ -3089,16 +2995,8 @@ class TestPages(unittest.TestCase):
             DEFAULT_FIRST_NAME,
             DEFAULT_MIDDLE_NAME,
             INVALID_NAME_REGISTER,
-            DEFAULT_USER,
-            '',
-            '',
-            '',
-            '',
-            '',
-            '',
-            '').get_url()
+            ).get_url()
         self.assertIn("/settings", result)
-
 
     # 243
     def test_submit_update_with_invalid_topic_name(self):
@@ -3183,13 +3081,7 @@ class TestPages(unittest.TestCase):
     def test_registration_with_invalid_captcha(self):
         print("\n" + str(test_cases(250)))
         result = CanonizerRegisterPage(self.driver).click_register_button().registration_with_invalid_captcha(
-            DEFAULT_FIRST_NAME,
-            DEFAULT_MIDDLE_NAME,
-            DEFAULT_LAST_NAME,
-            DEFAULT_USER,
-            DEFAULT_PASS,
-            DEFAULT_PASS,
-            'INVALID').get_url()
+            REG_LIST_13).get_url()
         self.assertIn("/signup", result)
 
     # 252
@@ -3308,13 +3200,7 @@ class TestPages(unittest.TestCase):
     def test_registration_with_invalid_email(self):
         print("\n" + str(test_cases(262)))
         result = CanonizerRegisterPage(self.driver).click_register_button().registration_with_invalid_email(
-            DEFAULT_FIRST_NAME,
-            DEFAULT_MIDDLE_NAME,
-            DEFAULT_LAST_NAME,
-            DEFAULT_INVALID_EMAIL_FORMAT,
-            DEFAULT_PASS,
-            DEFAULT_PASS,
-            '').get_url()
+            REG_LIST_14).get_url()
         self.assertIn("/signup", result)
 
     # 264
@@ -3457,30 +3343,36 @@ class TestPages(unittest.TestCase):
     def test_load_top_10_thread_page(self):
         print("\n", str(test_cases('TC_LOAD_TOP_10_THREAD')))
         self.login_to_canonizer_app()
-        result = AddForumsPage(self.driver).load_camp_forum_page().load_top_10_thread_page()
-        self.assertTrue(result, True)
+        result = AddForumsPage(self.driver).load_camp_forum_page().load_top_10_thread_page().get_url()
+        self.assertIn("forum/173-Software-Testing/1-Agreement/threads?by=most_replies", result)
 
+    # TC_LOAD_MY_PARTICIPANTS
     def test_load_my_participation(self):
+        print("\n", str(test_cases('TC_LOAD_MY_PARTICIPANTS')))
         self.login_to_canonizer_app()
-        result = AddForumsPage(self.driver).load_camp_forum_page().load_my_participation()
-        self.assertTrue(result, True)
+        result = AddForumsPage(self.driver).load_camp_forum_page().load_my_participation().get_url()
+        self.assertIn("forum/173-Software-Testing/1-Agreement/threads?by=participate", result)
 
+    # TC_LOAD_ALL_THREADS
     def test_load_all_threads(self):
+        print("\n", str(test_cases('TC_LOAD_ALL_THREADS')))
         self.login_to_canonizer_app()
-        result = AddForumsPage(self.driver).load_camp_forum_page().load_all_threads()
-        self.assertTrue(result, True)
+        result = AddForumsPage(self.driver).load_camp_forum_page().load_all_threads().get_url()
+        self.assertIn("forum/173-Software-Testing/1-Agreement/threads", result)
 
     # TC_CAMP_FORM_01
     def test_check_no_thread_availability(self):
         print("\n", str(test_cases('TC_CAMP_FORM_01')))
         self.login_to_canonizer_app()
-        result = AddForumsPage(self.driver).load_camp_forum_page().check_no_thread_availability()
-        self.assertTrue(result, True)
+        result = AddForumsPage(self.driver).load_camp_forum_page().check_no_thread_availability().get_url()
+        self.assertIn("forum/638-faiqa-riaz-new-topic-2/1-Agreement/threads", result)
 
+    # TC_CAMP_FORM_02
     def test_check_all_replies_to_thread(self):
+        print("\n", str(test_cases('TC_CAMP_FORM_02')))
         self.login_to_canonizer_app()
-        result = AddForumsPage(self.driver).load_camp_forum_page().check_all_replies_to_thread()
-        self.assertIn("forum/411-Demo-Topic/1-Agreement/threads/504", result.get_url())
+        result = AddForumsPage(self.driver).load_camp_forum_page().check_all_replies_to_thread().get_url()
+        self.assertIn("forum/173-Software-Testing/1-Agreement/threads/569", result)
 
     # TC_CAMP_FORM_03
     def test_create_thread_mandatory_fields_are_marked_with_asterisk(self):
@@ -3489,12 +3381,14 @@ class TestPages(unittest.TestCase):
         self.assertTrue(
             AddForumsPage(self.driver).load_camp_forum_page().create_thread_mandatory_fields_are_marked_with_asteris())
 
+    # TC_EDIT_REPLY_TO_THREAD
     def test_edit_reply_to_thread(self):
+        print("\n" + str(test_cases('TC_EDIT_REPLY_TO_THREAD')))
         self.login_to_canonizer_app()
         result = AddForumsPage(self.driver).load_camp_forum_page().edit_reply_to_thread(
-            DEFAULT_EDIT_REPLY
-        )
-        self.assertIn("forum/411-Demo-Topic/1-Agreement/threads/504", result.get_url())
+            "Lorem Ipsum is simply dummy text of the printing and typesetting industry."
+        ).get_url()
+        self.assertIn("forum/173-Software-Testing/1-Agreement/threads/569", result)
 
     # TC_CAMP_FORM_04
     def test_create_thread_with_valid_data(self):
@@ -3505,8 +3399,8 @@ class TestPages(unittest.TestCase):
             DEFAULT_THREAD_NAME,
             DEF_NICK_NAME
 
-        )
-        self.assertIn("Thread Created Successfully!", result)
+        ).get_url()
+        self.assertIn("forum/173-Software-Testing/1-Agreement/threads", result)
 
     # TC_CAMP_FORM_05
     def test_create_thread_with_invalid_data(self):
@@ -3514,10 +3408,10 @@ class TestPages(unittest.TestCase):
         self.login_to_canonizer_app()
         result = AddForumsPage(
             self.driver).load_camp_forum_page().load_create_thread_page().create_thread_with_invalid_data(
-            "Checking thread wih Invalid Data ****",
+            "*******************",
             DEF_NICK_NAME
-        )
-        self.assertIn("Title can only contain space and alphanumeric characters.", result)
+        ).get_url()
+        self.assertIn("forum/173-Software-Testing/1-Agreement/threads/create", result)
 
     # TC_CAMP_FORM_06
     def test_create_thread_with_blank_mandatory_fields(self):
@@ -3527,8 +3421,8 @@ class TestPages(unittest.TestCase):
             self.driver).load_camp_forum_page().load_create_thread_page().create_thread_with_blank_mandatory_fields(
             "",
             ""
-        )
-        self.assertIn("Title is required.", result)
+        ).get_url()
+        self.assertIn("forum/173-Software-Testing/1-Agreement/threads/create", result)
 
     # TC_CAMP_FORM_07
     def test_create_thread_with_only_mandatory_fields(self):
@@ -3538,8 +3432,8 @@ class TestPages(unittest.TestCase):
             self.driver).load_camp_forum_page().load_create_thread_page().create_thread_with_only_mandatory_fields(
             "Checking Data with only Mandatory Fields",
             DEF_NICK_NAME
-        )
-        self.assertIn("Thread Created Successfully!", result)
+        ).get_url()
+        self.assertIn("forum/173-Software-Testing/1-Agreement/threads", result)
 
     # TC_CAMP_FORM_09
     def test_edit_thread_with_duplicate_title(self):
@@ -3547,8 +3441,8 @@ class TestPages(unittest.TestCase):
         self.login_to_canonizer_app()
         result = AddForumsPage(self.driver).load_camp_forum_page().edit_thread_title_with_duplicate_title(
             DUPLICATE_THREAD_NAME
-        )
-        self.assertIn("Thread title must be unique", result)
+        ).get_url()
+        self.assertIn("forum/173-Software-Testing/1-Agreement/threads/574/edit", result)
 
     # TC_CAMP_FORM_10
     def test_create_thread_with_invalid_data_with_enter_key(self):
@@ -3569,8 +3463,8 @@ class TestPages(unittest.TestCase):
             self.driver).load_camp_forum_page().load_create_thread_page().create_thread_with_valid_data_with_enter_key(
             "Creating a thread with enter key",
             DEF_NICK_NAME
-        )
-        self.assertIn("Thread Created Successfully!", result)
+        ).get_url()
+        self.assertIn("forum/173-Software-Testing/1-Agreement/threads", result)
 
     # TC_CAMP_FORM_12
     def test_create_thread_with_trailing_spaces(self):
@@ -3580,51 +3474,55 @@ class TestPages(unittest.TestCase):
             self.driver).load_camp_forum_page().load_create_thread_page().create_thread_with_trailing_spaces(
             "          Creating thread with trailing spaces",
             DEF_NICK_NAME
-        )
-        self.assertIn("Thread Created Successfully!", result)
+        ).get_url()
+        self.assertIn("forum/173-Software-Testing/1-Agreement/threads", result)
 
     # TC_CAMP_FORM_13
     def test_verify_camp_link_form(self):
         print("\n" + str(test_cases('TC_CAMP_FORM_13')))
         self.login_to_canonizer_app()
         result = AddForumsPage(
-            self.driver).load_camp_forum_page().load_create_thread_page().verify_camp_link_form()
-        self.assertTrue(result, True)
+            self.driver).load_camp_forum_page().load_create_thread_page().verify_camp_link_form().get_url()
+        self.assertIn("topic/173-Software-Testing/1-Agreement", result)
 
     # TC_POST_THREAD_01
     def test_load_thread_posts_page(self):
         print("\n" + str(test_cases('TC_POST_THREAD_01')))
         self.login_to_canonizer_app()
         result = AddForumsPage(
-            self.driver).load_camp_forum_page().load_thread_posts_page()
-        self.assertTrue(result, True)
+            self.driver).load_camp_forum_page().load_thread_posts_page().get_url()
+        self.assertIn("forum/173-Software-Testing/1-Agreement/threads/576", result)
 
     # TC_POST_THREAD_02
     def test_thread_posts_mandatory_fields_are_marked_with_asterisk(self):
         print("\n" + str(test_cases('TC_POST_THREAD_02')))
         self.login_to_canonizer_app()
-        self.assertTrue(
-            AddForumsPage(self.driver).load_camp_forum_page().thread_posts_mandatory_fields_are_marked_with_asterisk())
+        result = AddForumsPage(
+            self.driver).load_camp_forum_page().thread_posts_mandatory_fields_are_marked_with_asterisk().get_url()
+        self.assertIn("forum/173-Software-Testing/1-Agreement/threads/576", result)
 
     # TC_POST_THREAD_03
     def test_post_reply_to_thread(self):
         print("\n" + str(test_cases('TC_POST_THREAD_03')))
         self.login_to_canonizer_app()
-        self.assertTrue(AddForumsPage(self.driver).load_camp_forum_page().post_reply_to_thread(
+        result = AddForumsPage(self.driver).load_camp_forum_page().post_reply_to_thread(
             "Test Reply 1"
-        ))
+        ).get_url()
+        self.assertIn("forum/173-Software-Testing/1-Agreement/threads/576", result)
 
     # TC_POST_THREAD_04
     def test_thread_pagination(self):
         print("\n" + str(test_cases('TC_POST_THREAD_04')))
         self.login_to_canonizer_app()
-        self.assertTrue(AddForumsPage(self.driver).load_camp_forum_page().thread_pagination())
+        result = AddForumsPage(self.driver).load_camp_forum_page().thread_pagination().get_url()
+        self.assertIn("forum/173-Software-Testing/1-Agreement/threads", result)
 
     # TC_POST_THREAD_05
     def test_verify_nickname_on_thread_title(self):
         print("\n" + str(test_cases('TC_POST_THREAD_05')))
         self.login_to_canonizer_app()
-        self.assertTrue(AddForumsPage(self.driver).load_camp_forum_page().verify_nickname_on_thread_title())
+        result = AddForumsPage(self.driver).load_camp_forum_page().verify_nickname_on_thread_title().get_url()
+        self.assertIn("user/supports/", result)
 
     def test_page_crash(self):
         self.login_to_canonizer_app()
