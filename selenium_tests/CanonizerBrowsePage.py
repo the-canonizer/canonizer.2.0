@@ -2,9 +2,8 @@ from CanonizerBase import Page
 from Identifiers import BrowsePageIdentifiers
 from selenium.webdriver.support.ui import Select
 import time
-import unittest
 
-import sys
+
 
 class CanonizerBrowsePage(Page):
 
