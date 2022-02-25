@@ -105,7 +105,7 @@ class RegistrationPageIdentifiers(object):
     LOGINOPTION = (By.XPATH, '/html/body/div/div[2]/div[3]/div/a')
     CREATE_ACCOUNT = (By.XPATH, '/html/body/div[1]/div[2]/div/form/button')
     ERROR_FIRST_NAME = (By.XPATH, '/html/body/div[1]/div[2]/div[1]/form/div[1]/p')
-    ERROR_MIDDLE_NAME = (By.XPATH, '/html/body/div/div[2]/div[1]/form/div[2]/p')
+    ERROR_MIDDLE_NAME = (By.XPATH, '/html/body/div[1]/div[2]/div[1]/form/div[2]/p')
     ERROR_LAST_NAME = (By.XPATH, '/html/body/div[1]/div[2]/div/form/div[3]/p')
     ERROR_EMAIL = (By.XPATH, '/html/body/div/div[2]/div[1]/form/div[4]/p')
     # ERROR_PASSWORD = (By.XPATH, '/html/body/div/div[2]/div[1]/form/div[5]/p[2]')
@@ -624,7 +624,8 @@ class CampForumIdentifiers(object):
     SUCCESS_MESSAGE = (By.XPATH, '/html/body/div[1]/div[2]/div/div[3]/div/strong')
     ERROR_BLANK_TITLE = (By.XPATH, '//*[@id="threadForm"]/ul')
     ERROR_DUPLICATE_TITLE = (By.XPATH, '/html/body/div[1]/div[2]/div/div[2]/strong')
-    ERROR_TITLE_WITH_SPECIAL_CHAR = (By.XPATH, '//*[@id="threadForm"]/ul')
+    ERROR_TITLE_WITH_SPECIAL_CHAR = (By.XPATH, '//*[@id="threadForm"]/ul/li')
+    NICK_NAME_ASTRK = (By.XPATH, '//*[@id="postForm"]/div[2]/label')
 
     ALL_THREADS = (By.XPATH, "/html/body/div[1]/div[2]/div/div[2]/a[1]")
     MY_THREADS = (By.XPATH, '/html/body/div[1]/div[2]/div/div[2]/a[2]')
@@ -660,5 +661,7 @@ class CampForumIdentifiers(object):
     CREATED_BY = (By.XPATH, "/html/body/div[1]/div[2]/div/div[1]/div/span[1]/a")
     SUPPORTED_CAMPS_LIST = (By.XPATH, "/html/body/div[1]/div[1]/div/div/div/h5")
     UPDATE_THREAD_BUTTON = (By.XPATH, '/html/body/div[1]/div[1]/form/div[2]/button')
+    TITLE_REPLY_ALL = (By.XPATH, '/html/body/div[1]/div[2]/div/div[1]/div/span[1]')
 
+    NEWS_FEED= (By.XPATH, '/html/body/div[1]/div[3]/div/div[1]/h3/span')
 
