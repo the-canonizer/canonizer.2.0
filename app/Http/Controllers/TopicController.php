@@ -1018,11 +1018,16 @@ class TopicController extends Controller {
         if( $all['camp_num'] > 1  && $totalSupport <= 0){
                $statement->grace_period = 0;
          }
-         else if( $all['camp_num'] > 1  && $totalSupport > 0 && in_array($all['submitter'] , $loginUserNicknames)){
-             $statement->grace_period = 0;
-         }else if( $all['camp_num'] > 1  && $totalSupport > 0 && !in_array($all['submitter'] , $loginUserNicknames)){
-            $statement->grace_period = 1;
-        }
+
+        // #1183 start (when use update or edit any statement it is not going in grace period even there are other supporters for the camp) so commenting below conditions
+
+        //  else if( $all['camp_num'] > 1  && $totalSupport > 0 && in_array($all['submitter'] , $loginUserNicknames)){
+        //      $statement->grace_period = 0;
+        //  }else if( $all['camp_num'] > 1  && $totalSupport > 0 && !in_array($all['submitter'] , $loginUserNicknames)){
+        //     $statement->grace_period = 1;
+        // }
+
+        // #1183 end
 
         // CASE if user object on it
         if($all['camp_num'] > 1 && $eventtype == "OBJECTION"){
