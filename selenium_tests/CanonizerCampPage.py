@@ -2,12 +2,12 @@ from selenium.webdriver.common.keys import Keys
 
 from CanonizerBase import Page
 from Identifiers import CreateNewCampPageIdentifiers, BrowsePageIdentifiers, TopicUpdatePageIdentifiers, CampEditPageIdentifiers, HomePageIdentifiers, BreadCrumbsLinksIdentifiers,CampStatementEditPageIdentifiers
-from selenium.webdriver.support.ui import Select
 from selenium.common.exceptions import NoSuchElementException
 import time
 
 
 class CanonizerCampPage(Page):
+    new_camp = 'Create New Camp'
 
     def load_topic_page(self):
         # Browse to Browse Page
@@ -25,7 +25,7 @@ class CanonizerCampPage(Page):
         self.hover(*CreateNewCampPageIdentifiers.CREATE_CAMP)
         self.find_element(*CreateNewCampPageIdentifiers.CREATE_CAMP).click()
         title = self.find_element(*CreateNewCampPageIdentifiers.TITLE).text
-        if title == 'Create New Camp':
+        if title == self.new_camp:
             return CanonizerCampPage(self.driver)
 
     def load_create_camp_page_without_login(self):
