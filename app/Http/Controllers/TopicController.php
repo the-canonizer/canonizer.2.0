@@ -1018,11 +1018,16 @@ class TopicController extends Controller {
         if( $all['camp_num'] > 1  && $totalSupport <= 0){
                $statement->grace_period = 0;
          }
-         else if( $all['camp_num'] > 1  && $totalSupport > 0 && in_array($all['submitter'] , $loginUserNicknames)){
-             $statement->grace_period = 0;
-         }else if( $all['camp_num'] > 1  && $totalSupport > 0 && !in_array($all['submitter'] , $loginUserNicknames)){
-            $statement->grace_period = 1;
-        }
+
+        // #1183 start (when use update or edit any statement it is not going in grace period even there are other supporters for the camp) so commenting below conditions
+
+        //  else if( $all['camp_num'] > 1  && $totalSupport > 0 && in_array($all['submitter'] , $loginUserNicknames)){
+        //      $statement->grace_period = 0;
+        //  }else if( $all['camp_num'] > 1  && $totalSupport > 0 && !in_array($all['submitter'] , $loginUserNicknames)){
+        //     $statement->grace_period = 1;
+        // }
+
+        // #1183 end
 
         // CASE if user object on it
         if($all['camp_num'] > 1 && $eventtype == "OBJECTION"){
@@ -1064,8 +1069,11 @@ class TopicController extends Controller {
             //1081 issue
             $dataObject['namespace_id'] = (isset($livecamp->topic->namespace_id) && $livecamp->topic->namespace_id)  ?  $livecamp->topic->namespace_id : 1;
             $dataObject['nick_name_id'] = $nickName->id;
-            $this->mailSubscribersAndSupporters($directSupporter,$subscribers,$link, $dataObject);
 
+            if($statement->grace_period == 0){
+                $this->mailSubscribersAndSupporters($directSupporter,$subscribers,$link, $dataObject);
+            }
+           
          } else if ($eventtype == "OBJECTION") {
 
             $user = Nickname::getUserByNickName($all['submitter']);
