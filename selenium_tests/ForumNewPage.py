@@ -62,32 +62,22 @@ class AddForumsPage(Page):
         self.hover(*CampForumIdentifiers.TOP_10_THREADS)
         self.find_element(*CampForumIdentifiers.TOP_10_THREADS).click()
         page_title = self.find_element(*CampForumIdentifiers.MY_THREAD_HEADING).text
-        url = AddForumsPage(self.driver).get_url()
-        if page_title == 'Canonizer Forum Details' and url == 'https://staging.canonizer.com/forum/411-Demo-Topic/1-Agreement/threads?by=most_replies':
-            return True
-        else:
-            return False
+        if page_title == 'Canonizer Forum Details':
+            return AddForumsPage(self.driver)
 
     def load_my_participation(self):
         self.hover(*CampForumIdentifiers.MY_PARTICIPATION)
         self.find_element(*CampForumIdentifiers.MY_PARTICIPATION).click()
         page_title = self.find_element(*CampForumIdentifiers.MY_THREAD_HEADING).text
-        url = AddForumsPage(self.driver).get_url()
-        if page_title == 'Canonizer Forum Details' and url == 'https://staging.canonizer.com/forum/411-Demo-Topic/1-Agreement/threads?by=participate':
-            return True
-        else:
-            return False
+        if page_title == 'Canonizer Forum Details':
+            return AddForumsPage(self.driver)
 
     def load_all_threads(self):
         self.hover(*CampForumIdentifiers.ALL_THREADS)
         self.find_element(*CampForumIdentifiers.ALL_THREADS).click()
         page_title = self.find_element(*CampForumIdentifiers.MY_THREAD_HEADING).text
-        url = AddForumsPage(self.driver).get_url()
-        print("page_title", page_title)
-        if page_title == 'Canonizer Forum Details' and url == 'https://staging.canonizer.com/forum/411-Demo-Topic/1-Agreement/threads':
-            return True
-        else:
-            return False
+        if page_title == 'Canonizer Forum Details':
+            return AddForumsPage(self.driver)
 
     def check_no_thread_availability(self):
         self.hover(*CampForumIdentifiers.ALL_THREADS)
@@ -95,10 +85,8 @@ class AddForumsPage(Page):
         page_title = self.find_element(*CampForumIdentifiers.MY_THREAD_HEADING).text
         statement = self.find_element(*CampForumIdentifiers.NO_THREAD_STATEMENT).text
         url = AddForumsPage(self.driver).get_url()
-        if page_title == 'Canonizer Forum Details' and url == 'https://staging.canonizer.com/forum/488-Testing-Topic-1/1-Agreement/threads' and 'No threads available for this topic' in statement:
-            return True
-        else:
-            return False
+        if page_title == 'Canonizer Forum Details' and 'No threads available for this topic' in statement:
+            return AddForumsPage(self.driver)
 
     def create_thread_mandatory_fields_are_marked_with_asteris(self):
         self.hover(*CampForumIdentifiers.CREATE_THREAD)
@@ -153,58 +141,71 @@ class AddForumsPage(Page):
 
     def create_thread_with_correct_title_name(self, thread_title, nickname):
         self.create_thread(thread_title, nickname)
-        return self.find_element(*CampForumIdentifiers.SUCCESS_MESSAGE).text
+        success_message = self.find_element(*CampForumIdentifiers.SUCCESS_MESSAGE).text
+        if success_message == 'Thread Created Successfully!':
+            return AddForumsPage(self.driver)
 
     def create_thread_with_invalid_data(self, thread_title, nickname):
         self.enter_title_of_thread(thread_title)
         self.enter_nickname(nickname)
         self.find_element(*CampForumIdentifiers.SUBMIT_THREAD).click()
-        return self.find_element(*CampForumIdentifiers.ERROR_TITLE_WITH_SPECIAL_CHAR).text
+        error = self.find_element(*CampForumIdentifiers.ERROR_TITLE_WITH_SPECIAL_CHAR).text
+        if error == 'Title can only contain space and alphanumeric characters.':
+            return AddForumsPage(self.driver)
 
     def create_thread_with_blank_mandatory_fields(self, thread_title, nickname):
         self.enter_title_of_thread(" ")
         self.enter_nickname("")
         self.find_element(*CampForumIdentifiers.SUBMIT_THREAD).click()
-        return self.find_element(*CampForumIdentifiers.ERROR_TITLE_WITH_SPECIAL_CHAR).text
+        error = self.find_element(*CampForumIdentifiers.ERROR_TITLE_WITH_SPECIAL_CHAR).text
+        if error == 'Title is required.':
+            return AddForumsPage(self.driver)
 
     def create_thread_with_only_mandatory_fields(self, thread_title, nickname):
         self.enter_title_of_thread(thread_title)
         self.enter_nickname(nickname)
         self.find_element(*CampForumIdentifiers.SUBMIT_THREAD).click()
-        return self.find_element(*CampForumIdentifiers.SUCCESS_MESSAGE).text
+        success_message = self.find_element(*CampForumIdentifiers.SUCCESS_MESSAGE).text
+        if success_message == 'Thread Created Successfully!':
+            return AddForumsPage(self.driver)
 
     def create_thread_with_valid_data_with_enter_key(self, thread_title, nickname):
         self.enter_title_of_thread(thread_title)
         self.enter_nickname(nickname)
         self.find_element(*CampForumIdentifiers.SUBMIT_THREAD).send_keys(Keys.ENTER)
-        return self.find_element(*CampForumIdentifiers.SUCCESS_MESSAGE).text
+        success_message = self.find_element(*CampForumIdentifiers.SUCCESS_MESSAGE).text
+        if success_message == 'Thread Created Successfully!':
+            return AddForumsPage(self.driver)
 
     def create_thread_with_trailing_spaces(self, thread_title, nickname):
         self.enter_title_of_thread(thread_title)
         self.enter_nickname(nickname)
         self.find_element(*CampForumIdentifiers.SUBMIT_THREAD).click()
-        return self.find_element(*CampForumIdentifiers.SUCCESS_MESSAGE).text
+        success_message = self.find_element(*CampForumIdentifiers.SUCCESS_MESSAGE).text
+        if success_message == 'Thread Created Successfully!':
+            return AddForumsPage(self.driver)
 
     def verify_camp_link_form(self):
         self.find_element(*CampForumIdentifiers.AGREEMENT).click()
         page_title = self.find_element(*CampForumIdentifiers.CAMP_TITLE).text
-        url = AddForumsPage(self.driver).get_url()
-        if page_title == 'Topic: Testing Topic 1' and url == 'https://staging.canonizer.com/topic/488-Testing-Topic-1/1-Agreement':
-            return True
-        else:
-            return False
+        if page_title == 'News Feeds':
+            return AddForumsPage(self.driver)
 
     def create_thread_with_invalid_data_with_enter_key(self, thread_title, nickname):
         self.enter_title_of_thread(thread_title)
         self.enter_nickname(nickname)
         self.find_element(*CampForumIdentifiers.SUBMIT_THREAD).send_keys(Keys.ENTER)
-        return self.find_element(*CampForumIdentifiers.ERROR_TITLE_WITH_SPECIAL_CHAR).text
+        error = self.find_element(*CampForumIdentifiers.ERROR_TITLE_WITH_SPECIAL_CHAR).text
+        if error == 'Title can only contain space and alphanumeric characters.':
+            return AddForumsPage(self.driver)
 
     def create_thread_with_invalid_data(self, thread_title, nickname):
         self.enter_title_of_thread(thread_title)
         self.enter_nickname(nickname)
         self.find_element(*CampForumIdentifiers.SUBMIT_THREAD).click()
-        return self.find_element(*CampForumIdentifiers.ERROR_TITLE_WITH_SPECIAL_CHAR).text
+        error = self.find_element(*CampForumIdentifiers.ERROR_TITLE_WITH_SPECIAL_CHAR).text
+        if error == 'Title can only contain space and alphanumeric characters.':
+            return AddForumsPage(self.driver)
 
     def update_thread_title(self, thread_title):
         self.load_my_thread_page()
@@ -219,8 +220,10 @@ class AddForumsPage(Page):
 
     def edit_thread_title_with_duplicate_title(self, thread_title):
         self.update_thread_title(thread_title)
-        result = self.find_element(*CampForumIdentifiers.ERROR_IN_EDIT_TITLE).text
-        return result
+        error = self.find_element(*CampForumIdentifiers.ERROR_IN_EDIT_TITLE).text
+        print(error)
+        if error == 'Thread title must be unique':
+            return AddForumsPage(self.driver)
 
     def edit_thread_title_with_special_char(self, thread_title):
         self.update_thread_title(thread_title)
@@ -231,8 +234,9 @@ class AddForumsPage(Page):
     def check_all_replies_to_thread(self):
         self.hover(*CampForumIdentifiers.THREAD_TITLE)
         self.find_element(*CampForumIdentifiers.THREAD_TITLE).click()
-
-        return AddForumsPage(self.driver)
+        title = self.find_element(*CampForumIdentifiers.TITLE_REPLY_ALL).text
+        if 'Thread Created' in title:
+            return AddForumsPage(self.driver)
 
     def edit_reply_to_thread(self, reply):
         self.load_all_threads()
@@ -243,7 +247,9 @@ class AddForumsPage(Page):
         self.find_element(*CampForumIdentifiers.EDI_REPLY_TEXT_BOX).clear()
         self.find_element(*CampForumIdentifiers.EDI_REPLY_TEXT_BOX).send_keys(reply)
         self.click_post_submit_button()
-        return AddForumsPage(self.driver)
+        title = self.find_element(*CampForumIdentifiers.TITLE_REPLY_ALL).text
+        if 'Thread Created' in title:
+            return AddForumsPage(self.driver)
 
     def check_page_crash(self):
 
@@ -266,15 +272,13 @@ class AddForumsPage(Page):
     def load_thread_posts_page(self):
         self.find_element(*CampForumIdentifiers.THREAD_TITLE).click()
         page_title = self.find_element(*CampForumIdentifiers.CAMP_FORUM_HEADING).text
-        url = AddForumsPage(self.driver).get_url()
-        if page_title == '« List of All Camp Threads' and url == 'https://staging.canonizer.com/forum/488-Testing-Topic-1/1-Agreement/threads/532':
-            return True
-        else:
-            return False
+        if page_title == '« List of All Camp Threads':
+            return AddForumsPage(self.driver)
 
     def thread_posts_mandatory_fields_are_marked_with_asterisk(self):
         self.find_element(*CampForumIdentifiers.THREAD_TITLE).click()
-        return self.find_element(*CampForumIdentifiers.NICK_NAME)
+        if self.find_element(*CampForumIdentifiers.NICK_NAME_ASTRK):
+            return AddForumsPage(self.driver)
 
     def post_reply_to_thread(self, reply):
         self.hover(*CampForumIdentifiers.THREAD_TITLE)
@@ -286,9 +290,7 @@ class AddForumsPage(Page):
         after_reply = self.find_element(*CampForumIdentifiers.POST_COUNTER).text
         counter_after_reply = [int(word) for word in after_reply.split() if word.isdigit()]
         if counter_before_reply < counter_after_reply:
-            return True
-        else:
-            return False
+            return AddForumsPage(self.driver)
 
     def thread_pagination(self):
         page_heading = self.find_element(*CampForumIdentifiers.PAGE_TITLE).text
@@ -299,11 +301,7 @@ class AddForumsPage(Page):
             pre_pagination = self.find_element(*CampForumIdentifiers.PRE_PAGINATION).text
             next_pagination = self.find_element(*CampForumIdentifiers.NEXT_PAGINATION).text
             if pre_pagination == "«" and next_pagination == "»" and length_rows == 10:
-                return True
-            else:
-                return False
-        else:
-            return False
+                return AddForumsPage(self.driver)
 
     def verify_nickname_on_thread_title(self):
         self.hover(*CampForumIdentifiers.THREAD_TITLE)
@@ -314,9 +312,5 @@ class AddForumsPage(Page):
             self.find_element(*CampForumIdentifiers.CREATED_BY).click()
             heading = self.find_element(*CampForumIdentifiers.SUPPORTED_CAMPS_LIST).text
             if heading == 'List of supported camps':
-                return True
-            else:
-                return False
-        else:
-            return False
+                return AddForumsPage(self.driver)
 
