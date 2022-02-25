@@ -362,20 +362,19 @@ class AccountSettingsManageProfileInfoPage(Page):
         """
         self.find_element(*AccountSettingsManageProfileInfoIdentifiers.UPDATE).click()
 
-    def update(self, first_name, middle_name, last_name, email, language, dob, address_line1, address_line2, city,
-               state, zip_code):
-        self.enter_first_name(first_name)
-        self.enter_middle_name(middle_name)
-        self.enter_last_name(last_name)
-        self.enter_email(email)
-        self.enter_language(language)
-        self.enter_dob(dob)
-        self.enter_address_line1(address_line1)
-        self.enter_address_line2(address_line2)
-        self.enter_city(city)
-        self.enter_state(state)
+    def update(self, *args):
+        self.enter_first_name(args[0])
+        self.enter_middle_name(args[1])
+        self.enter_last_name(args[2])
+        self.enter_email(args[3])
+        self.enter_language(args[4])
+        self.enter_dob(args[5])
+        self.enter_address_line1(args[6])
+        self.enter_address_line2(args[7])
+        self.enter_city(args[8])
+        self.enter_state(args[9])
         # self.enter_country(country)
-        self.enter_zip_code(zip_code)
+        self.enter_zip_code(args[10])
         self.click_update_button()
 
     def click_verify_button(self):
@@ -398,19 +397,19 @@ class AccountSettingsManageProfileInfoPage(Page):
             self.find_element(*AccountSettingsManageProfileInfoIdentifiers.COUNTRY_ASTRK) and \
             self.find_element(*AccountSettingsManageProfileInfoIdentifiers.PHONE_NUMBER_ASTRK)
 
-    def update_profile_with_blank_first_name(self, middle_name, last_name, email, language, dob, address_line1,
-                                             address_line2, city, state, zip_code):
+    def update_profile_with_blank_first_name(self, middle_name, last_name):
         self.find_element(*AccountSettingsManageProfileInfoIdentifiers.FIRST_NAME).clear()
-        self.update('', middle_name, last_name, email, language, dob, address_line1, address_line2, city, state,
-                    zip_code)
-        return self.find_element(*AccountSettingsManageProfileInfoIdentifiers.ERROR_FIRST_NAME).text
+        self.update('', middle_name, last_name, '','','', '','','', '','')
+        error = self.find_element(*AccountSettingsManageProfileInfoIdentifiers.ERROR_FIRST_NAME).text
+        if error == 'The first name field is required.':
+            return AccountSettingsMySupportsPage(self.driver)
 
-    def update_profile_with_blank_last_name(self, first_name, middle_name, email, language, dob, address_line1,
-                                            address_line2, city, state, zip_code):
+    def update_profile_with_blank_last_name(self, first_name, middle_name,):
         self.find_element(*AccountSettingsManageProfileInfoIdentifiers.LAST_NAME).clear()
-        self.update(first_name, middle_name, '', email, language, dob, address_line1, address_line2, city, state,
-                    zip_code)
-        return self.find_element(*AccountSettingsManageProfileInfoIdentifiers.ERROR_LAST_NAME).text
+        self.update(first_name, middle_name, '', '','','', '','','', '','')
+        error = self.find_element(*AccountSettingsManageProfileInfoIdentifiers.ERROR_LAST_NAME).text
+        if error == 'The last name field is required.':
+            return AccountSettingsMySupportsPage(self.driver)
 
     def verify_phone_number_with_blank_phone_number(self):
         self.find_element(*AccountSettingsManageProfileInfoIdentifiers.PHONE_NUMBER).clear()
@@ -431,29 +430,23 @@ class AccountSettingsManageProfileInfoPage(Page):
         if error == 'The phone number must be 10 digits.':
             return AccountSettingsMySupportsPage(self.driver)
 
-    def update_profile_with_invalid_first_name(self, firstname, middle_name, last_name, email, language, dob,
-                                               address_line1, address_line2, city, state, zip_code):
+    def update_profile_with_invalid_first_name(self, firstname, middle_name, last_name, ):
         self.find_element(*AccountSettingsManageProfileInfoIdentifiers.FIRST_NAME).clear()
-        self.update(firstname, middle_name, last_name, email, language, dob, address_line1, address_line2, city, state,
-                    zip_code)
+        self.update(firstname, middle_name, last_name, '', '','','', '','','', '','')
         error = self.find_element(*AccountSettingsManageProfileInfoIdentifiers.ERROR_FIRST_NAME).text
         if error == 'The first name must be in alphabets and space only.':
             return AccountSettingsMySupportsPage(self.driver)
 
-    def update_profile_with_invalid_middle_name(self, firstname, middle_name, last_name, email, language, dob,
-                                                address_line1, address_line2, city, state, zip_code):
+    def update_profile_with_invalid_middle_name(self, firstname, middle_name, last_name):
         self.find_element(*AccountSettingsManageProfileInfoIdentifiers.MIDDLE_NAME).clear()
-        self.update(firstname, middle_name, last_name, email, language, dob, address_line1, address_line2, city, state,
-                    zip_code)
+        self.update(firstname, middle_name, last_name, '', '','','', '','','', '','')
         error = self.find_element(*AccountSettingsManageProfileInfoIdentifiers.ERROR_MIDDLE_NAME).text
         if error == 'The middle name must be in alphabets and space only.':
             return AccountSettingsMySupportsPage(self.driver)
 
-    def update_profile_with_invalid_last_name(self, firstname, middle_name, last_name, email, language, dob,
-                                              address_line1, address_line2, city, state, zip_code):
+    def update_profile_with_invalid_last_name(self, firstname, middle_name, last_name):
         self.find_element(*AccountSettingsManageProfileInfoIdentifiers.LAST_NAME).clear()
-        self.update(firstname, middle_name, last_name, email, language, dob, address_line1, address_line2, city, state,
-                    zip_code)
+        self.update(firstname, middle_name, last_name, '', '','','', '','','', '','')
         error = self.find_element(*AccountSettingsManageProfileInfoIdentifiers.ERROR_LAST_NAME).text
         if error == 'The last name must be in alphabets and space only.':
             return AccountSettingsMySupportsPage(self.driver)
