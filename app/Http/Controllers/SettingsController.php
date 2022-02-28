@@ -923,7 +923,8 @@ class SettingsController extends Controller
 
     function sociallinks(){
         if(Auth::check()){
-            $providers = ['Google', 'Facebook', 'Github', 'Twitter', 'LinkedIn'];
+            $providers = ['google','facebook','github','twitter','linkedin'];
+            $providerNames = ['google' => 'Google', 'facebook' => 'Facebook','github' => 'Github', 'twitter' => 'Twitter','linkedin' =>'LinkedIn'];
             $user = Auth::user();
             $socialdata = []; 
             $social_data = SocialUser::where('user_id','=',$user->id)->get();
@@ -942,7 +943,7 @@ class SettingsController extends Controller
                     $socialdata[$d]=['provider'=>$d];   
                 } 
             }
-            return view('settings.sociallinks',['sociallinks'=>$socialdata,'providers'=>$providers]);
+            return view('settings.sociallinks',['sociallinks'=>$socialdata,'providers'=>$providers, 'providerNames' => $providerNames]);
         }else{
             return redirect()->route('login');
         }
