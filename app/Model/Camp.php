@@ -999,7 +999,7 @@ class Camp extends Model {
               }
   
               //check if bydate is greater than current date
-              if($checkOfDefaultDate > $checkOfDefaultToday){
+              if(isset($checkOfDefaultDate) && $checkOfDefaultDate > $checkOfDefaultToday){
                   $asOfDefaultDate = time();
               }
   
