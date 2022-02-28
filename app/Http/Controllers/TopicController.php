@@ -1024,7 +1024,7 @@ class TopicController extends Controller {
         }
 
         // #1183 start (when use update or edit any statement it is not going in grace period even there are other supporters for the camp)
-        $otherDirectSupporters = Support::where(['topic_num'=>$all['topic_num'],'camp_num'=>$all['camp_num'],'end'=>0])->whereNotIn('nick_name_id',$loginUserNicknames)->first();
+        $otherDirectSupporters = Support::where(['topic_num'=>$all['topic_num'],'camp_num'=>$all['camp_num'],'delegate_nick_name_id'=>0,'end'=>0])->whereNotIn('nick_name_id',$loginUserNicknames)->first();
         if(!empty($otherDirectSupporters)){
             $statement->grace_period = 1;
         }
