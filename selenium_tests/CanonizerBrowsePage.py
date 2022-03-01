@@ -2,7 +2,7 @@ from CanonizerBase import Page
 from Identifiers import BrowsePageIdentifiers
 from selenium.webdriver.support.ui import Select
 import time
-
+from Config import NAME_SPACE_1
 
 
 class CanonizerBrowsePage(Page):
@@ -462,9 +462,6 @@ class CanonizerBrowsePage(Page):
         select = Select(self.find_element(*BrowsePageIdentifiers.NAMESPACE))
         select.select_by_visible_text(menu_item)
         time.sleep(4)
-        # self.hover(*BrowsePageIdentifiers.ONLY_MY_TOPICS)
-        # self.find_element(*BrowsePageIdentifiers.ONLY_MY_TOPICS).click()
-        # time.sleep(3)
         return CanonizerBrowsePage(self.driver)
 
     def one_by_one_only_my_topics(self):
@@ -472,14 +469,6 @@ class CanonizerBrowsePage(Page):
         self.find_element(*BrowsePageIdentifiers.ONLY_MY_TOPICS).click()
         time.sleep(3)
         return CanonizerBrowsePage(self.driver)
-
-    # def select_menu_items_one_by_one(self, topic_list):
-    #     self.click_browse_page_button()
-    #     self.hover(*BrowsePageIdentifiers.NAMESPACE)
-    #     for topic in topic_list:
-    #         result = self.one_by_one(topic)
-    #         print('result', result.get_url())
-    #     return CanonizerBrowsePage(self.driver)
 
     def select_menu_items_one_by_one(self):
         self.click_browse_page_button()
@@ -495,20 +484,20 @@ class CanonizerBrowsePage(Page):
         topic_list.pop(0)
         for i in range(len(topic_list)):
             result1 = self.one_by_one(topic_list[i])
-            name_space1 = "https://staging.canonizer.com/browse?namespace=" + str(index[i])
+            name_space1 = NAME_SPACE_1 + str(index[i])
             if name_space1 != result1.get_url():
                 print("name space", name_space1)
                 print("result Url:", result1.get_url())
                 print("Fail")
                 return False
 
-            # name_space2 = "https://staging.canonizer.com/browse?namespace="+str(index[i])+"&my="+str(index[i])
-            # result2 = self.one_by_one_only_my_topics()
-            # if name_space2 != result2.get_url():
-            #     print("name space Only My topic", name_space2)
-            #     print("result Url Only My topic :", result2.get_url())
-            #     print("Fail")
-            #     return False
+            name_space2 = NAME_SPACE_1 + str(index[i])+"&my="+str(index[i])
+            result2 = self.one_by_one_only_my_topics()
+            if name_space2 != result2.get_url():
+                print("name space Only My topic", name_space2)
+                print("result Url Only My topic :", result2.get_url())
+                print("Fail")
+                return False
 
         return CanonizerBrowsePage(self.driver)
 

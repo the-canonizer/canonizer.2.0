@@ -8,6 +8,7 @@ import time
 
 
 class CanonizerCampStatementPage(Page):
+    camp_agreement = "Camp: Agreement"
 
     def load_topic_agreement_page(self):
         """
@@ -25,8 +26,8 @@ class CanonizerCampStatementPage(Page):
 
     def load_edit_camp_statement_page(self):
         """
-                    Go To The topic
-                """
+            Go To The topic
+        """
         # Browse to Browse Page
         self.hover(*BrowsePageIdentifiers.BROWSE)
         self.find_element(*BrowsePageIdentifiers.BROWSE).click()
@@ -42,11 +43,10 @@ class CanonizerCampStatementPage(Page):
             self.hover(*CampStatementEditPageIdentifiers.SUBMIT_STATEMENT_UPDATE_BASED_ON_THIS)
             self.find_element(*CampStatementEditPageIdentifiers.SUBMIT_STATEMENT_UPDATE_BASED_ON_THIS).click()
             page_title = self.find_element(*CampStatementEditPageIdentifiers.PAGE_TITLE).text
-            if page_title == 'Camp: Agreement':
+            if page_title == self.camp_agreement:
                 return CanonizerCampStatementPage(self.driver)
         except NoSuchElementException:
             return False
-        return True
 
     def verify_previous_data_on_edit_camp_statement_page(self):
         self.load_edit_camp_statement_page()
@@ -91,7 +91,6 @@ class CanonizerCampStatementPage(Page):
             return self.find_element(*CampStatementEditPageIdentifiers.ERROR_NICK_NAME)
         except NoSuchElementException:
             return False
-        return True
 
     def submit_statement_update_with_blank_statement(self, nick_name, note):
         self.find_element(*CampStatementEditPageIdentifiers.STATEMENT).clear()
@@ -103,7 +102,6 @@ class CanonizerCampStatementPage(Page):
             return self.find_element(*CampStatementEditPageIdentifiers.ADDNEWNICKNAME).text
         except NoSuchElementException:
             return False
-        return True
 
     def nick_name_page_should_open_update_camp_statement_add_new_nick_name(self):
         try:
@@ -114,7 +112,6 @@ class CanonizerCampStatementPage(Page):
                 return CanonizerCampStatementPage(self.driver)
         except NoSuchElementException:
             return False
-        return True
 
 
 class AddCampStatementPage(Page):
@@ -141,7 +138,6 @@ class AddCampStatementPage(Page):
                 return AddCampStatementPage(self.driver)
         except NoSuchElementException:
             return False
-        return False
 
     def add_camp_statement_page_mandatory_fields_are_marked_with_asterisk(self):
         """
@@ -184,7 +180,6 @@ class AddCampStatementPage(Page):
                 return self.find_element(*AddCampStatementPageIdentifiers.ERROR_NICK_NAME).text
         except NoSuchElementException:
             return False
-        return True
 
     def submit_statement_with_blank_statement(self, nick_name, note):
         self.submit_statement(nick_name, '', note)
@@ -198,7 +193,9 @@ class AddCampStatementPage(Page):
         self.enter_camp_statement(statement)
         self.enter_note(note)
         self.click_submit_statement_button()
-        return self.find_element(*AddCampStatementPageIdentifiers.SUCCESS_MESSAGE).text
+        success_message = self.find_element(*AddCampStatementPageIdentifiers.SUCCESS_MESSAGE).text
+        if success_message == "Success! Statement submitted successfully.":
+            return AddCampStatementPage(self.driver)
 
     def add_camp_statement_page_valid_data_with_enter_key(self, statement, note):
         self.enter_camp_statement(statement)
@@ -214,23 +211,25 @@ class AddCampStatementPage(Page):
         return self.find_element(*AddCampStatementPageIdentifiers.SUCCESS_MESSAGE).text
 
     def add_camp_statement_page_without_mandatory_fields(self, statement):
+        self.load_add_camp_statement_page()
         self.enter_camp_statement(statement)
         self.click_submit_statement_button()
-        message = self.find_element(*AddCampStatementPageIdentifiers.ERROR_MESSAGE).text
-        return message
+        error = self.find_element(*AddCampStatementPageIdentifiers.ERROR_MESSAGE).text
+        if error == 'The statement field is required.':
+            return AddCampStatementPage(self.driver)
 
     def add_camp_statement_page_mandatory_fields_only(self, statement):
         self.enter_camp_statement(statement)
         self.click_submit_statement_button()
-        return self.find_element(*AddCampStatementPageIdentifiers.SUCCESS_MESSAGE).text
-
+        success_message = self.find_element(*AddCampStatementPageIdentifiers.SUCCESS_MESSAGE).text
+        if success_message == "Success! Statement submitted successfully.":
+            return AddCampStatementPage(self.driver)
 
     def add_camp_statement_page_should_have_add_new_nick_name_link_for_new_users(self):
         try:
             return self.find_element(*AddCampStatementPageIdentifiers.ADDNEWNICKNAME).text
         except NoSuchElementException:
             return False
-        return True
 
     def nick_name_page_should_open_add_camp_statement_add_new_nick_name(self):
         try:
@@ -241,4 +240,3 @@ class AddCampStatementPage(Page):
                 return AddCampStatementPage(self.driver)
         except NoSuchElementException:
             return False
-        return True

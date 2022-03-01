@@ -11,6 +11,7 @@ class CanonizerCampPage(Page):
     new_camp = 'Create New Camp'
     agreement = "Agreement"
     login = 'Log in'
+    window_scroll = "window.scrollTo(0, document.body.scrollHeight);"
 
     def load_topic_page(self):
         # Browse to Browse Page
@@ -162,7 +163,7 @@ class CanonizerCampPage(Page):
 
     def load_agreement_page_from_bread_crumb_forum_agreement_camp_link(self):
         self.load_topic_page()
-        self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        self.driver.execute_script(self.window_scroll)
         # Click on agreement camp on bread crumbs
         self.hover(*BreadCrumbsLinksIdentifiers.CAMP_FORUM)
         self.find_element(*BreadCrumbsLinksIdentifiers.CAMP_FORUM).click()
@@ -251,8 +252,9 @@ class CanonizerCampPage(Page):
 
 
 class CanonizerEditCampPage(Page):
-    success_message = "Success! Camp change submitted successfully."
 
+    success_message = "Success! Camp change submitted successfully."
+    window_scroll = "window.scrollTo(0, document.body.scrollHeight);"
     def load_topic_agreement_page(self):
         """
             Go To The topic
@@ -276,7 +278,7 @@ class CanonizerEditCampPage(Page):
     def load_camp_manage_edit_page(self):
         self.load_topic_agreement_page()
         # Click on Manage/Edit This camp
-        self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        self.driver.execute_script(self.window_scroll)
         time.sleep(3)
         self.hover(*CampEditPageIdentifiers.MANAGE_EDIT_CAMP)
         self.find_element(*CampEditPageIdentifiers.MANAGE_EDIT_CAMP).click()
@@ -297,7 +299,7 @@ class CanonizerEditCampPage(Page):
     def load_camp_update_page(self):
         self.load_topic_agreement_page()
 
-        self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        self.driver.execute_script(self.window_scroll)
         time.sleep(3)
         self.hover(*CampEditPageIdentifiers.MANAGE_EDIT_CAMP)
         self.find_element(*CampEditPageIdentifiers.MANAGE_EDIT_CAMP).click()
@@ -345,7 +347,7 @@ class CanonizerEditCampPage(Page):
             Go To The topic
         """
         self.load_topic_agreement_page()
-        self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        self.driver.execute_script(self.window_scroll)
         time.sleep(3)
         # Click on user nick name
         try:
@@ -361,7 +363,7 @@ class CanonizerEditCampPage(Page):
             Go To The topic
         """
         self.load_topic_agreement_page()
-        self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        self.driver.execute_script(self.window_scroll)
         time.sleep(3)
         # Click on user nick name
         self.hover(*CampEditPageIdentifiers.USER_NICK_NAME)
