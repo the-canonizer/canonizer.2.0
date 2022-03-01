@@ -573,7 +573,7 @@ class TopicController extends Controller {
 
         $parentcampnum = isset($onecamp->parent_camp_num) ? $onecamp->parent_camp_num : 0;
 
-        $statementHistory = Statement::getHistory($topicnum, $campnum);
+        $statementHistory = Statement::getHistory($topicnum, $campnum);        
         //$statement = Statement::getHistory($topicnum, $campnum);
          $statement=[];
         $submit_time = (count($statementHistory)) ? $statementHistory[0]->submit_time: null; 
@@ -591,6 +591,7 @@ class TopicController extends Controller {
                     $starttime = time();
                     $endtime = $submittime + 60*60;
                     $interval = $endtime - $starttime;
+
                     if( $interval > 0 && $val->grace_period > 0  && Auth::user()->id != $submitterUserID){
                        continue;
                     }else{
@@ -957,7 +958,6 @@ class TopicController extends Controller {
             $statement->submitter_nick_id = $all['nick_name'];
 
             $nickNames = Nickname::personNicknameArray();
-
             $ifIamSingleSupporter = Support::ifIamSingleSupporter($all['topic_num'], $all['camp_num'], $nickNames);
             if (!$ifIamSingleSupporter) {
                // $statement->go_live_time = strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
@@ -990,51 +990,45 @@ class TopicController extends Controller {
          * Case 1 : When User A added camp statement to Agreement camp - It should go "live"(Grace period = 0)
          * Case 2 : When User B added camp statement to Agreement camp - It should go in "In Review"(Grace period = 1)
          */
-
-         if( $all['camp_num'] == 1  && $totalSupport <= 0){
-           $statement->grace_period = 0;
-         }
-         if($all['camp_num'] == 1 && $totalSupport > 0 && in_array($all['submitter'] , $loginUserNicknames)  ){
-            
-            $statement->grace_period = 0;
-         }
-         if($all['camp_num'] == 1  && $totalSupport > 0 && !in_array($all['submitter'] , $loginUserNicknames)  ){
-            $statement->grace_period = 1;
-         }
-
-         // CASE if user object on it
-         if($all['camp_num'] == 1 && $eventtype == "OBJECTION"){
-            $statement->grace_period = 0;
-         }
+        if($all['camp_num']) {
+            if(in_array($all['submitter'] , $loginUserNicknames)  ){
+                $statement->grace_period = 0;
+            }
+            else {
+                $statement->grace_period = 1;
+            }
+        }
          
-         
-
         /*  Scenario 2 : 
-           User A creates topic ->Create "camp 1" 
-          Case 1 : When User A only supported "camp 1" and also added camp statement to "camp 1" camp - It should go "live"(Grace period = 0)
-           Case 2 : When User A only supported "camp 1" and User B added camp statement to "camp 1" camp - It should go in "in review"(Grace period = 1)
+            User A creates topic ->Create "camp 1" 
+            Case 1 : When User A only supported "camp 1" and also added camp statement to "camp 1" camp - It should go "live"(Grace period = 0)
+            Case 2 : When User A only supported "camp 1" and User B added camp statement to "camp 1" camp - It should go in "in review"(Grace period = 1)
             Case 3 : When "camp 1" has no supporters and User B added camp statement to "camp 1" camp - It should go "live"(Grace period = 0)
         */
-        if( $all['camp_num'] > 1  && $totalSupport <= 0){
-               $statement->grace_period = 0;
-         }
+       
+        if($all['camp_num'] > 1) {
+            if($totalSupport <= 0){
+                $statement->grace_period = 0;
+            } else if($totalSupport > 0 && in_array($all['submitter'] , $loginUserNicknames)){
+                $statement->grace_period = 0;
+            } else{
+                $statement->grace_period = 1;
+            }
+        }
 
-        // #1183 start (when use update or edit any statement it is not going in grace period even there are other supporters for the camp) so commenting below conditions
-
-        //  else if( $all['camp_num'] > 1  && $totalSupport > 0 && in_array($all['submitter'] , $loginUserNicknames)){
-        //      $statement->grace_period = 0;
-        //  }else if( $all['camp_num'] > 1  && $totalSupport > 0 && !in_array($all['submitter'] , $loginUserNicknames)){
-        //     $statement->grace_period = 1;
-        // }
-
-        // #1183 end
-
-        // CASE if user object on it
-        if($all['camp_num'] > 1 && $eventtype == "OBJECTION"){
-            $statement->grace_period = 0;
-         }
-
-
+        /**
+         * Scenario 3
+         * User A creates topic -> support will be added automatically to agreement camp
+         * When User A remove his support and User B add support and camp statement - It should go "live"(Grace period = 0)
+         */
+        if(isset($all['camp_num']) && isset($all['camp_num'])) {
+            $nickNames = Nickname::personNicknameArray();
+            $ifIamSingleSupporter = Support::ifIamSingleSupporter($all['topic_num'], $all['camp_num'], $nickNames);
+            if($all['camp_num'] == 1 && $ifIamSingleSupporter) {
+                $statement->grace_period = 0;
+            } 
+        }
+        
         $statement->save();
         if ($eventtype == "CREATE") {
            // send history link in email
@@ -1254,7 +1248,7 @@ class TopicController extends Controller {
         $all = $request->all();
         $type = $all['type'];
         $id = $all['id'];
-
+        
         if ($type == 'statement') {
             $statement = Statement::where('id', '=', $id)->first();
             $statement->grace_period = 0;
