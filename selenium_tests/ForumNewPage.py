@@ -8,7 +8,8 @@ from Config import *
 
 
 class AddForumsPage(Page):
-
+    forum_details = "Canonizer Forum Details"
+    success_message = "Thread Created Successfully!"
     def load_camp_forum_page(self):
         """
         Go To Camp Forum
@@ -35,7 +36,7 @@ class AddForumsPage(Page):
     def load_camp_forum_page_with_page_crash(self):
         self.load_camp_forum_page()
         page_title = self.find_element(*CampForumIdentifiers.CAMP_FORUM_HEADING).text
-        if page_title == 'Canonizer Forum Details':
+        if page_title == self.forum_details:
             return AddForumsPage(self.driver)
 
     def load_create_thread_page(self):
@@ -55,28 +56,28 @@ class AddForumsPage(Page):
         self.hover(*CampForumIdentifiers.MY_THREADS)
         self.find_element(*CampForumIdentifiers.MY_THREADS).click()
         page_title = self.find_element(*CampForumIdentifiers.MY_THREAD_HEADING).text
-        if page_title == 'Canonizer Forum Details':
+        if page_title == self.forum_details:
             return AddForumsPage(self.driver)
 
     def load_top_10_thread_page(self):
         self.hover(*CampForumIdentifiers.TOP_10_THREADS)
         self.find_element(*CampForumIdentifiers.TOP_10_THREADS).click()
         page_title = self.find_element(*CampForumIdentifiers.MY_THREAD_HEADING).text
-        if page_title == 'Canonizer Forum Details':
+        if page_title == self.forum_details:
             return AddForumsPage(self.driver)
 
     def load_my_participation(self):
         self.hover(*CampForumIdentifiers.MY_PARTICIPATION)
         self.find_element(*CampForumIdentifiers.MY_PARTICIPATION).click()
         page_title = self.find_element(*CampForumIdentifiers.MY_THREAD_HEADING).text
-        if page_title == 'Canonizer Forum Details':
+        if page_title == self.forum_details:
             return AddForumsPage(self.driver)
 
     def load_all_threads(self):
         self.hover(*CampForumIdentifiers.ALL_THREADS)
         self.find_element(*CampForumIdentifiers.ALL_THREADS).click()
         page_title = self.find_element(*CampForumIdentifiers.MY_THREAD_HEADING).text
-        if page_title == 'Canonizer Forum Details':
+        if page_title == self.forum_details:
             return AddForumsPage(self.driver)
 
     def check_no_thread_availability(self):
@@ -85,7 +86,7 @@ class AddForumsPage(Page):
         page_title = self.find_element(*CampForumIdentifiers.MY_THREAD_HEADING).text
         statement = self.find_element(*CampForumIdentifiers.NO_THREAD_STATEMENT).text
         url = AddForumsPage(self.driver).get_url()
-        if page_title == 'Canonizer Forum Details' and 'No threads available for this topic' in statement:
+        if page_title == self.forum_details and 'No threads available for this topic' in statement:
             return AddForumsPage(self.driver)
 
     def create_thread_mandatory_fields_are_marked_with_asteris(self):
@@ -110,8 +111,6 @@ class AddForumsPage(Page):
         self.find_element(*CampForumIdentifiers.POST_SUBMIT).click()
 
     def create_thread(self, title, nickname):
-        # print("Title: ", title)
-        # print("Nickname: ", nickname)
         self.enter_title_of_thread(title)
         self.enter_nickname(nickname)
         self.click_submit_button()
@@ -142,7 +141,7 @@ class AddForumsPage(Page):
     def create_thread_with_correct_title_name(self, thread_title, nickname):
         self.create_thread(thread_title, nickname)
         success_message = self.find_element(*CampForumIdentifiers.SUCCESS_MESSAGE).text
-        if success_message == 'Thread Created Successfully!':
+        if success_message == self.success_message:
             return AddForumsPage(self.driver)
 
     def create_thread_with_invalid_data(self, thread_title, nickname):
@@ -166,7 +165,7 @@ class AddForumsPage(Page):
         self.enter_nickname(nickname)
         self.find_element(*CampForumIdentifiers.SUBMIT_THREAD).click()
         success_message = self.find_element(*CampForumIdentifiers.SUCCESS_MESSAGE).text
-        if success_message == 'Thread Created Successfully!':
+        if success_message == self.success_message:
             return AddForumsPage(self.driver)
 
     def create_thread_with_valid_data_with_enter_key(self, thread_title, nickname):
@@ -174,7 +173,7 @@ class AddForumsPage(Page):
         self.enter_nickname(nickname)
         self.find_element(*CampForumIdentifiers.SUBMIT_THREAD).send_keys(Keys.ENTER)
         success_message = self.find_element(*CampForumIdentifiers.SUCCESS_MESSAGE).text
-        if success_message == 'Thread Created Successfully!':
+        if success_message == self.success_message:
             return AddForumsPage(self.driver)
 
     def create_thread_with_trailing_spaces(self, thread_title, nickname):
@@ -182,7 +181,7 @@ class AddForumsPage(Page):
         self.enter_nickname(nickname)
         self.find_element(*CampForumIdentifiers.SUBMIT_THREAD).click()
         success_message = self.find_element(*CampForumIdentifiers.SUCCESS_MESSAGE).text
-        if success_message == 'Thread Created Successfully!':
+        if success_message == self.success_message:
             return AddForumsPage(self.driver)
 
     def verify_camp_link_form(self):
