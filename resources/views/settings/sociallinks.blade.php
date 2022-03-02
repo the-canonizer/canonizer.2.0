@@ -96,14 +96,14 @@
                         @if(isset($sociallinks[$provider]) && isset($sociallinks[$provider]['social_email']))
                            <tr>
                             <td>{{$key+1}}</td>
-                            <td>{{$sociallinks[$provider]['provider']}}</td>
+                            <td>{{$providerNames[$provider]}}</td>
                             <td>{{$sociallinks[$provider]['social_email']}}</td>                            
                             <td>{{$sociallinks[$provider]['social_name']}}</td>
                             <td>
                                 <div class="row ml-0">
                                     <div class="btn-group">
                                          <div class="col-sm-5 pl-0">
-                                             <a  class="btn btn-sm {{ strtolower($provider) }} btn-{{ strtolower($provider) }}"> Linked <i class="fa fa-{{ strtolower($provider) }} fa-fw"></i></a>
+                                            <a  class="btn btn-sm {{$provider}} btn-{{$provider}}"> Linked <i class="fa fa-{{$provider}} fa-fw"></i></a>
                                           </div> 
                                           <div class="col-sm-4">
                                             <form method="post" class="form-group" action="{{ url('/delete_social_link/') }}">
@@ -123,14 +123,14 @@
                         @else 
                             <tr>
                             <td>{{$key+1}}</td>
-                            <td>{{$provider}}</td>
+                            <td>{{$providerNames[$provider]}}</td>
                             <td></td>                            
                             <td></td>
                             <td>
                                <div class="row">
                                   <div class="col-sm-4">
-                                    <a href="{{ url('/login/'.strtolower($provider)) }}" class="btn btn-sm {{ strtolower($provider) }} fb btn-{{ strtolower($provider) }}">
-                                    Link <i class="fa fa-{{ strtolower($provider) }} fa-fw"></i></a>
+                                    <a href="{{ url('/login/'.$provider) }}" class="btn btn-sm {{$provider}} fb btn-{{$provider}}">
+                                      Link <i class="fa fa-{{$provider}} fa-fw"></i></a>
                                   </div>
                                </div>
                                 
