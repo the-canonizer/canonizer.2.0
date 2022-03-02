@@ -5,7 +5,7 @@ import time
 
 
 class CanonizerJoinSupportCampPage(Page):
-
+    supported_camps = "Supported Camps"
     def load_topic_page(self):
         # Browse to Browse Page
         self.hover(*BrowsePageIdentifiers.BROWSE)
@@ -23,7 +23,7 @@ class CanonizerJoinSupportCampPage(Page):
         self.hover(*JoinSupportCampPageIdentifiers.JOINSUPPORTCAMP)
         self.find_element(*JoinSupportCampPageIdentifiers.JOINSUPPORTCAMP).click()
         title = self.find_element(*JoinSupportCampPageIdentifiers.TITLE).text
-        if title == 'Supported Camps':
+        if title == self.supported_camps:
             return CanonizerJoinSupportCampPage(self.driver)
 
     def load_direct_join_and_support_page(self):
@@ -35,11 +35,10 @@ class CanonizerJoinSupportCampPage(Page):
             self.find_element(*JoinSupportCampPageIdentifiers.JOINSUPPORTCAMP).click()
             page_title = self.find_element(*JoinSupportCampPageIdentifiers.PAGE_TITLE).text
 
-            if page_title == 'Supported Camps':
+            if page_title == self.supported_camps:
                 return CanonizerJoinSupportCampPage(self.driver)
         except NoSuchElementException:
             return False
-        return True
 
     def verify_warning_directly_supporting_child_camp(self):
         self.load_topic_page()
@@ -52,7 +51,6 @@ class CanonizerJoinSupportCampPage(Page):
                 return CanonizerJoinSupportCampPage(self.driver)
         except NoSuchElementException:
             return False
-        return False
 
     def verify_support_to_child_camp(self):
         self.load_topic_page()
@@ -65,22 +63,16 @@ class CanonizerJoinSupportCampPage(Page):
             count_after_support = self.find_element(*JoinSupportCampPageIdentifiers.COUNT_BEFORE_SUPPORT).text
             self.find_element(*JoinSupportCampPageIdentifiers.PARENT_CAMP).click()
             support = self.find_element(*JoinSupportCampPageIdentifiers.JOIN_CAMP_SUPPORT).text
-            if count_after_support > count_before_support and support =='Directly Join and Support':
+            if count_after_support > count_before_support and support == 'Directly Join and Support':
                 return CanonizerJoinSupportCampPage(self.driver)
         except NoSuchElementException:
             return False
-        return False
-
-
-
-
 
     def join_support_camp_page_should_have_add_new_nick_name_link_for_new_users(self):
         try:
             return self.find_element(*JoinSupportCampPageIdentifiers.ADDNEWNICKNAME)
         except NoSuchElementException:
             return False
-        return True
 
     def nick_name_page_should_open_join_support_camp_add_new_nick_name(self):
         try:
@@ -91,5 +83,3 @@ class CanonizerJoinSupportCampPage(Page):
                 return CanonizerJoinSupportCampPage(self.driver)
         except NoSuchElementException:
             return False
-        return True
-
