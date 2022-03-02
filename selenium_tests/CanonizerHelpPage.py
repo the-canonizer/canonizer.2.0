@@ -3,6 +3,9 @@ from Identifiers import HelpIdentifiers
 
 
 class CanonizerHelpPage(Page):
+    title = 'Canonizer Main Page'
+    help = 'Help'
+    sub_heading = 'Camp Statement'
 
     def check_what_is_canonizer_help_page_loaded(self):
         """
@@ -10,11 +13,11 @@ class CanonizerHelpPage(Page):
         :return:
         """
         title = self.find_element(*HelpIdentifiers.TITTLE).text
-        if title == 'Canonizer Main Page':
+        if title == self.title:
             self.hover(*HelpIdentifiers.HELP)
             self.find_element(*HelpIdentifiers.HELP).click()
             heading = self.find_element(*HelpIdentifiers.TITTLE_HELP).text
-            if heading == 'Help':
+            if heading == self.help:
                 return CanonizerHelpPage(self.driver)
 
     def check_Steps_to_Create_a_New_Topic_page_loaded(self):
@@ -76,8 +79,7 @@ class CanonizerHelpPage(Page):
         self.hover(*HelpIdentifiers.CONSENSUS_OUT_OF_CONTROVERSY_USE_CASE)
         self.find_element(*HelpIdentifiers.CONSENSUS_OUT_OF_CONTROVERSY_USE_CASE).click()
         sub_heading = self.find_element(*HelpIdentifiers.SUB_HEADING).text
-        print(sub_heading, "heading")
-        if sub_heading == 'Camp Statement':
+        if sub_heading == self.sub_heading:
             return CanonizerHelpPage(self.driver)
 
 
