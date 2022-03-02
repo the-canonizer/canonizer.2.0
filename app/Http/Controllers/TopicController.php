@@ -1021,7 +1021,7 @@ class TopicController extends Controller {
          * User A creates topic -> support will be added automatically to agreement camp
          * When User A remove his support and User B add support and camp statement - It should go "live"(Grace period = 0)
          */
-        if(isset($all['camp_num']) && isset($all['camp_num'])) {
+        if(isset($all['camp_num']) && isset($all['topic_num'])) {
             $nickNames = Nickname::personNicknameArray();
             $ifIamSingleSupporter = Support::ifIamSingleSupporter($all['topic_num'], $all['camp_num'], $nickNames);
             if($all['camp_num'] == 1 && $ifIamSingleSupporter) {
@@ -1029,6 +1029,18 @@ class TopicController extends Controller {
             } 
         }
         
+        /**
+         * Scenario 4
+         * User A create topic -> support will be added automatically to agreement camp
+         * When User B add support and camp statement to Agreement - It should go "live"(Grace period = 0)
+         */
+        
+        if(isset($all['camp_num']) && isset($all['objection'])) {
+            if($all['camp_num'] == 1 && $all['objection']) {
+                $statement->grace_period = 0;
+            } 
+        }
+
         $statement->save();
         if ($eventtype == "CREATE") {
            // send history link in email
