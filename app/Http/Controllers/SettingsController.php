@@ -607,7 +607,7 @@ class SettingsController extends Controller
 
             }
             
-            return redirect(\App\Model\Camp::getTopicCampUrl($data['topic_num'],session('campnum')));            
+            return redirect(\App\Model\Camp::getTopicCampUrl($data['topic_num'],session('campnum'), $currentTime = time()));            
         } else {
             return redirect()->route('login');
         }
@@ -1153,7 +1153,7 @@ class SettingsController extends Controller
             Util::dispatchJob($topic, $campNum, 1);
         }
 
-        return redirect(\App\Model\Camp::getTopicCampUrl($topicNum ,$campNum));
+        return redirect(\App\Model\Camp::getTopicCampUrl($topicNum ,$campNum, $currentTime = time()));
 
     }
     

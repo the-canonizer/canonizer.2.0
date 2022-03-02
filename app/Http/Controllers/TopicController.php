@@ -308,7 +308,8 @@ class TopicController extends Controller {
         }
 
         if ($eventtype == "CREATE") {
-            $link_url = \App\Model\Camp::getTopicCampUrl($topic->topic_num,1);
+            $link_url = \App\Model\Camp::getTopicCampUrl($topic->topic_num, 1, $currentTime = time());
+            
             return redirect($link_url)->with(['success' => $message, 'go_live_time' => $go_live_time, 'objection' => $objection]);            
         }
         return redirect('topic-history/' . $topic->topic_num)->with(['success' => $message, 'go_live_time' => $go_live_time, 'objection' => $objection]);
@@ -890,7 +891,7 @@ class TopicController extends Controller {
             return redirect('camp/history/' . $camp->topic_num . '/' . $camp->camp_num)->with(['success' => $message, 'go_live_time' => $go_live_time, 'objection' => $objection]);
         } else {
             if ($eventtype == "CREATE"){
-                $link_url = \App\Model\Camp::getTopicCampUrl($camp->topic_num,$camp->camp_num);
+                $link_url = \App\Model\Camp::getTopicCampUrl($camp->topic_num,$camp->camp_num,$currentTime = time());
                 return redirect($link_url)->with(['success' => $message, 'go_live_time' => $go_live_time]);
             }
             else {
