@@ -580,6 +580,8 @@ class SettingsController extends Controller
                 //1081 issue
                 $result['namespace_id'] = (isset($topic->namespace_id) && $topic->namespace_id)  ?  $topic->namespace_id : 1;
                 $result['nick_name_id'] = $nickName->id;
+                $result['delegated_user'] = $parentUserNickName->nick_name;
+                $result['delegated_user_id'] = $parentUserNickName->id;
 
                 //$link = \App\Model\Camp::getTopicCampUrl($data['topic_num'],$data['camp_num']);
                 $link = \App\Model\Camp::getTopicCampUrl($data['topic_num'],1); //#954
@@ -592,7 +594,7 @@ class SettingsController extends Controller
                     $this->mailParentDelegetedUser($data,$link,$result,$subscribers);
                 }
                 $result['subject'] = $nickName->nick_name . " has just delegated their support to " . $parentUserNickName->nick_name;
-                $result['delegated_user'] = $parentUserNickName->nick_name;
+                
                 $this->mailSubscribersAndSupporters($directSupporter,$subscribers, $link, $result);
             }
             Session::save();
@@ -755,6 +757,7 @@ class SettingsController extends Controller
                 $parentUserNickName = Nickname::getNickName($data['delegate_nick_name_id']);
                 $result['delegate_support_deleted'] = 1;
                 $result['delegated_user'] = $parentUserNickName->nick_name;
+                $result['delegated_user_id'] = $parentUserNickName->id;
             }        
            $nickName = Nickname::getNickName($data['nick_name']);
            $topic = Camp::getAgreementTopic($data['topic_num'],['nofilter'=>true]);
@@ -821,7 +824,12 @@ class SettingsController extends Controller
                 }
                 $this->removeSupport($topic_num,$currentSupportRec->camp_num,$nick_name_id,'',$currentSupportRec->support_order,$promoteDelegate,$ifSupportLeft);
                 Session::flash('success', "Your support has been removed successfully.");                
-            }            
+            } 
+            $topicSupport = Topic::where('id', $topic_num)->first();
+            // Dispatch Job
+            if(isset($topicSupport)) {
+                Util::dispatchJob($topicSupport, 1, 1);
+            }           
             return redirect()->back();
         }
         Session::flash('error', "Invalid access.");
@@ -916,6 +924,7 @@ class SettingsController extends Controller
     function sociallinks(){
         if(Auth::check()){
             $providers = ['google','facebook','github','twitter','linkedin'];
+            $providerNames = ['google' => 'Google', 'facebook' => 'Facebook','github' => 'Github', 'twitter' => 'Twitter','linkedin' =>'LinkedIn'];
             $user = Auth::user();
             $socialdata = []; 
             $social_data = SocialUser::where('user_id','=',$user->id)->get();
@@ -934,7 +943,7 @@ class SettingsController extends Controller
                     $socialdata[$d]=['provider'=>$d];   
                 } 
             }
-            return view('settings.sociallinks',['sociallinks'=>$socialdata,'providers'=>$providers]);
+            return view('settings.sociallinks',['sociallinks'=>$socialdata,'providers'=>$providers, 'providerNames' => $providerNames]);
         }else{
             return redirect()->route('login');
         }

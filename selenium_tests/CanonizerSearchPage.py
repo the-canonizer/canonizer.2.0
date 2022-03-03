@@ -17,10 +17,11 @@ class CanonizerSearchPage(Page):
         :return:
             Return the result to the main page.
         """
-
-        self.hover(*CanonizerSearchPageIdentifiers.SEARCH_BUTTON)
-        self.find_element(*CanonizerSearchPageIdentifiers.SEARCH_BUTTON).click()
-        return CanonizerSearchPage(self.driver)
+        title = self.find_element(*CanonizerSearchPageIdentifiers.TITLE).text
+        if title == 'Canonizer Main Page':
+            self.hover(*CanonizerSearchPageIdentifiers.SEARCH_BUTTON)
+            self.find_element(*CanonizerSearchPageIdentifiers.SEARCH_BUTTON).click()
+            return CanonizerSearchPage(self.driver)
 
     def enter_search_keyword(self, search_keyword):
         self.find_element(*CanonizerSearchPageIdentifiers.SEARCH_KEYWORD).send_keys(search_keyword)
@@ -49,11 +50,13 @@ class CanonizerSearchPage(Page):
         :param web:
         :return:
         """
-        self.hover(*CanonizerSearchPageIdentifiers.WEB_LABEL)
-        self.find_element(*CanonizerSearchPageIdentifiers.WEB_LABEL).click()
-        self.hover(*CanonizerSearchPageIdentifiers.SEARCH_BUTTON)
-        self.find_element(*CanonizerSearchPageIdentifiers.SEARCH_BUTTON).click()
-        return CanonizerSearchPage(self.driver)
+        title = self.find_element(*CanonizerSearchPageIdentifiers.TITLE).text
+        if title == 'Canonizer Main Page':
+            self.hover(*CanonizerSearchPageIdentifiers.WEB_LABEL)
+            self.find_element(*CanonizerSearchPageIdentifiers.WEB_LABEL).click()
+            self.hover(*CanonizerSearchPageIdentifiers.SEARCH_BUTTON)
+            self.find_element(*CanonizerSearchPageIdentifiers.SEARCH_BUTTON).click()
+            return CanonizerSearchPage(self.driver)
 
     def click_search_button_keyword_web(self, search_keyword):
         """
@@ -61,9 +64,11 @@ class CanonizerSearchPage(Page):
         :param web:
         :return:
         """
-        self.enter_search_keyword(search_keyword)
-        self.click_search_button_web()
-        return CanonizerSearchPage(self.driver)
+        title = self.find_element(*CanonizerSearchPageIdentifiers.TITLE).text
+        if title == 'Canonizer Main Page':
+            self.enter_search_keyword(search_keyword)
+            self.click_search_button_web()
+            return CanonizerSearchPage(self.driver)
 
     def click_search_button_keyword_canonizer_com(self, search_keyword):
         """
@@ -71,8 +76,10 @@ class CanonizerSearchPage(Page):
         :param web:
         :return:
         """
-        self.enter_search_keyword(search_keyword)
-        self.click_search_button()
-        return CanonizerSearchPage(self.driver)
+        title = self.find_element(*CanonizerSearchPageIdentifiers.TITLE).text
+        if title == 'Canonizer Main Page':
+            self.enter_search_keyword(search_keyword)
+            self.click_search_button()
+            return CanonizerSearchPage(self.driver)
 
 

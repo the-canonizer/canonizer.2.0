@@ -1049,7 +1049,14 @@ class TopicController extends Controller {
                 $statement->grace_period = 0;
             } 
         }
-        
+
+        // #1183 start (when use update or edit any statement it is not going in grace period even there are other supporters for the camp)
+        $otherDirectSupporters = Support::where(['topic_num'=>$all['topic_num'],'camp_num'=>$all['camp_num'],'delegate_nick_name_id'=>0,'end'=>0])->whereNotIn('nick_name_id',$loginUserNicknames)->first();
+        if(!empty($otherDirectSupporters)){
+            $statement->grace_period = 1;
+        }
+        // #1183 end
+
         $statement->save();
         if ($eventtype == "CREATE") {
            // send history link in email
@@ -1084,8 +1091,11 @@ class TopicController extends Controller {
             //1081 issue
             $dataObject['namespace_id'] = (isset($livecamp->topic->namespace_id) && $livecamp->topic->namespace_id)  ?  $livecamp->topic->namespace_id : 1;
             $dataObject['nick_name_id'] = $nickName->id;
-            $this->mailSubscribersAndSupporters($directSupporter,$subscribers,$link, $dataObject);
 
+            if($statement->grace_period == 0){
+                $this->mailSubscribersAndSupporters($directSupporter,$subscribers,$link, $dataObject);
+            }
+           
          } else if ($eventtype == "OBJECTION") {
 
             $user = Nickname::getUserByNickName($all['submitter']);
