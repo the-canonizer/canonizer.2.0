@@ -1036,7 +1036,7 @@ class TopicController extends Controller {
          */
         
         if(isset($all['camp_num']) && isset($all['objection'])) {
-            if($all['camp_num'] == 1 && $all['objection']) {
+            if($all['objection']) {
                 $statement->grace_period = 0;
             } 
         }
