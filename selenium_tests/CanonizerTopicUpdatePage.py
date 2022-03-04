@@ -1,6 +1,5 @@
 from CanonizerBase import Page
 from Identifiers import TopicUpdatePageIdentifiers, BrowsePageIdentifiers, TopicObjectPageIdentifiers
-from selenium.webdriver.support.ui import Select
 from selenium.common.exceptions import NoSuchElementException
 import time
 
@@ -26,7 +25,6 @@ class CanonizerTopicUpdatePage(Page):
         # Browse To Manage/Edit This Topic
         self.hover(*TopicUpdatePageIdentifiers.MANAGE_EDIT_TOPIC)
         self.find_element(*TopicUpdatePageIdentifiers.MANAGE_EDIT_TOPIC).click()
-        time.sleep(3)
         return self.driver
 
     def load_topic_update_page(self):
@@ -65,15 +63,12 @@ class CanonizerTopicUpdatePage(Page):
             print("Here")
             self.hover(*TopicUpdatePageIdentifiers.OBJECT)
             self.find_element(*TopicUpdatePageIdentifiers.OBJECT).click()
-            print("*******************")
             temp = CanonizerTopicUpdatePage(self.driver)
             print(temp.get_url(), "Url")
             return CanonizerTopicUpdatePage(self.driver)
 
         except NoSuchElementException:
             return False
-
-        return True
 
     def topic_update_page_mandatory_fields_are_marked_with_asterisk(self):
         """
@@ -103,12 +98,10 @@ class CanonizerTopicUpdatePage(Page):
             self.find_element(*TopicObjectPageIdentifiers.OBJECTION_REASON_ASTRK)
 
     def topic_update_page_should_have_add_new_nick_name_link_for_new_users(self):
-            #return self.find_element(*TopicUpdatePageIdentifiers.ADDNEWNICKNAME).text
         try:
             return self.find_element(*TopicUpdatePageIdentifiers.ADDNEWNICKNAME)
         except NoSuchElementException:
             return False
-        return True
 
     def enter_nick_name(self, nickname):
         self.find_element(*TopicUpdatePageIdentifiers.NICK_NAME).send_keys(nickname)
@@ -138,12 +131,10 @@ class CanonizerTopicUpdatePage(Page):
 
     def submit_update_with_blank_nick_name(self, topic_name, namespace, note):
         self.submit_update('', topic_name, namespace, note)
-        #return self.find_element(*TopicUpdatePageIdentifiers.ERROR_NICK_NAME).text
         try:
             return self.find_element(*TopicUpdatePageIdentifiers.ERROR_NICK_NAME)
         except NoSuchElementException:
             return False
-        return True
 
     def submit_update_with_blank_topic_name(self, nickname, namespace, note):
         self.find_element(*TopicUpdatePageIdentifiers.TOPIC_NAME).clear()
@@ -179,5 +170,4 @@ class CanonizerTopicUpdatePage(Page):
                 return CanonizerTopicUpdatePage(self.driver)
         except NoSuchElementException:
             return False
-        return True
 
