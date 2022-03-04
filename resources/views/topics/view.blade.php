@@ -91,9 +91,6 @@ if(isset($topic) && count($topic) > 0 ) {?>
             <?php }else if(Auth::check() && Auth::user()->id){ ?>
                 <a style="float: right;font-size: medium; margin-right: 20px; margin-top: 5px;"><input id="topic_subscription" type="checkbox" name="topic_subscription" />Entire Topic Subscribe</a>
             <?php } ?>
-            <?php if(Auth::check() && Auth::user()->id){ ?>
-               
-            <?php } ?>
             </div>
 			
             
@@ -343,7 +340,6 @@ $('#camp_subscription').click(function(){
 
 });
 $('#topic_subscription').click(function(){
-    //alert("topic_subscription"); return false;
     var isChecked = $(this).prop('checked');
     var userId = '<?php echo (Auth::check()) ?  Auth::user()->id: null; ?>';
     var topic_num = "<?php echo $topic->topic_num; ?>";

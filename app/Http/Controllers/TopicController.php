@@ -379,7 +379,6 @@ class TopicController extends Controller {
         }
         $camp_subscriptionsData = Camp::getCampSubscription($topicnum,$parentcampnum,$userid);
         $topic_subscriptionsData = Camp::getTopicSubscription($topicnum,0,$userid);
-        //echo "<pre>"; print_r($topic_subscriptionsData); die;
         $camp_subscriptions = $camp_subscriptionsData['flag'];
         $topic_subscriptions = $topic_subscriptionsData['flag'];
         $subscribedCamp = $camp_subscriptionsData['camp'];
@@ -1514,9 +1513,6 @@ class TopicController extends Controller {
     public function add_topic_subscription(Request $request){
         try{
             $all = $request->all();
-            // $subscribers = Camp::getCampSubscribers(88, 0);
-            // echo "<pre>"; print_r($subscribers); die;
-            //echo "<pre>"; print_r($all); die;
              $id = isset($all['id']) ? $all['id'] : null;
              if($all['checked'] == 'true'){
                 $camp_subscription = new \App\Model\CampSubscription();

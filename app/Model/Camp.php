@@ -1142,7 +1142,6 @@ class Camp extends Model {
         $returnArr = array('flag'=>0,'id'=>0);
         if($userid){
                $camp_subscription = \App\Model\CampSubscription::where('user_id','=',$userid)->where('camp_num','=',$campnum)->where('topic_num','=',$topicnum)->where('subscription_start','<=',strtotime(date('Y-m-d H:i:s')))->where('subscription_end','=',null)->orWhere('subscription_end','>=',strtotime(date('Y-m-d H:i:s')))->get();
-               //echo "<pre>"; print_r($camp_subscription[0]); die;
                $flag = sizeof($camp_subscription) > 0  || 0;
                  if(!$flag){
                     $returnArr = array('flag'=>0,'id'=>$camp_subscription[0]->id);
@@ -1181,7 +1180,7 @@ class Camp extends Model {
         return $list;
     }
 
-    public static function getCampSubscribers($topic_num,$camp_num=0){
+    public static function getCampSubscribers($topic_num,$camp_num=1){
         $users_data = [];
         $users = \App\Model\CampSubscription::select('user_id')->where('topic_num','=',$topic_num)
                 ->where('camp_num','=',$camp_num)
