@@ -1005,11 +1005,22 @@ class TopicController extends Controller {
             Case 2 : When User A only supported "camp 1" and User B added camp statement to "camp 1" camp - It should go in "in review"(Grace period = 1)
             Case 3 : When "camp 1" has no supporters and User B added camp statement to "camp 1" camp - It should go "live"(Grace period = 0)
         */
-       
+
+        /**
+         * Scenario 3 :
+         * When User A created topic & camp and remove his support from camp
+         * User B add support and camp statement to "camp 1" - It should go "live"(Grace period = 0)
+         */
+        
+        $nickNames = Nickname::personNicknameArray();
+        $ifIamSingleSupporter = Support::ifIamSingleSupporter($all['topic_num'], $all['camp_num'], $nickNames);
+
         if($all['camp_num'] > 1) {
             if($totalSupport <= 0){
                 $statement->grace_period = 0;
             } else if($totalSupport > 0 && in_array($all['submitter'] , $loginUserNicknames)){
+                $statement->grace_period = 0;
+            } else if($ifIamSingleSupporter) {
                 $statement->grace_period = 0;
             } else{
                 $statement->grace_period = 1;
@@ -1017,13 +1028,11 @@ class TopicController extends Controller {
         }
 
         /**
-         * Scenario 3
-         * User A creates topic -> support will be added automatically to agreement camp
-         * When User A remove his support and User B add support and camp statement - It should go "live"(Grace period = 0)
+         * Scenario 4
+         * User A creates topic -> support will be added automatically to agreement camp -> remove support
+         * User B add support (to agreemnt or camp) and camp statement - It should go "live"(Grace period = 0)
          */
         if(isset($all['camp_num']) && isset($all['topic_num'])) {
-            $nickNames = Nickname::personNicknameArray();
-            $ifIamSingleSupporter = Support::ifIamSingleSupporter($all['topic_num'], $all['camp_num'], $nickNames);
             if($all['camp_num'] == 1 && $ifIamSingleSupporter) {
                 $statement->grace_period = 0;
             } 
