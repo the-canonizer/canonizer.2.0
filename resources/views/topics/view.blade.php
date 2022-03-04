@@ -18,6 +18,11 @@
         <strong>Success!</strong><span id="subscription_msg" ></span>
     </div>       
 </div>
+<div id="topic_subscription_notify"  style="display:none;" class="alert alert-success">
+    <div calss="row">
+        <strong>Success!</strong><span id="topic_subscription_msg" ></span>
+    </div>       
+</div>
 
 <?php 
 if(isset($topic) && count($topic) > 0 ) {?>
@@ -68,7 +73,8 @@ if(isset($topic) && count($topic) > 0 ) {?>
             indicates the camp page you are currently on and the statement below
             is for that camp."><i class="fa fa-question"></i></a>
             <input type="hidden" id="subs_id" value="<?php echo ($camp_subscription_data && count($camp_subscription_data) > 0) ? $camp_subscription_data[0]->id: null; ?>" />
-             <a class="pull-right news-feed" href="{{ url('/addnews/' . $id . '/' . $parentcampnum)}}">Add News</a>
+            <input type="hidden" id="topic_subs_id" value="<?php echo ($topic_subscriptionsData['id'] && count($topic_subscriptionsData['id']) > 0) ? $topic_subscriptionsData['id']: null; ?>" />
+            <a class="pull-right news-feed" href="{{ url('/addnews/' . $id . '/' . $parentcampnum)}}">Add News</a>
              <?php if(Auth::check() && Auth::user()->id && $camp_subscriptions == 1){  ?>
                 <a style="float: right;font-size: medium; margin-right: 20px; margin-top: 5px;"><input id="camp_subscription" type="checkbox" name="subscribe" checked="checked" /> Subscribe</a>
             <?php }else if(Auth::check() && Auth::user()->id && isset($subscribedCamp) && isset($subscribedCamp->topic_num)  && $camp_subscriptions == 2){ 
@@ -80,7 +86,14 @@ if(isset($topic) && count($topic) > 0 ) {?>
             <?php }else if(Auth::check() && Auth::user()->id){ ?>
                 <a style="float: right;font-size: medium; margin-right: 20px; margin-top: 5px;"><input id="camp_subscription" type="checkbox" name="subscribe" /> Subscribe</a>
             <?php } ?>
-
+             <?php if(Auth::check() && Auth::user()->id && $topic_subscriptions == 1){  ?>
+                <a style="float: right;font-size: medium; margin-right: 20px; margin-top: 5px;"><input id="topic_subscription" type="checkbox" name="topic_subscription" checked="checked" />Entire Topic Subscribe</a>
+            <?php }else if(Auth::check() && Auth::user()->id){ ?>
+                <a style="float: right;font-size: medium; margin-right: 20px; margin-top: 5px;"><input id="topic_subscription" type="checkbox" name="topic_subscription" />Entire Topic Subscribe</a>
+            <?php } ?>
+            <?php if(Auth::check() && Auth::user()->id){ ?>
+               
+            <?php } ?>
             </div>
 			
             
@@ -328,7 +341,25 @@ $('#camp_subscription').click(function(){
         }
     })
 
-})
+});
+$('#topic_subscription').click(function(){
+    //alert("topic_subscription"); return false;
+    var isChecked = $(this).prop('checked');
+    var userId = '<?php echo (Auth::check()) ?  Auth::user()->id: null; ?>';
+    var topic_num = "<?php echo $topic->topic_num; ?>";
+    var subscrip_id = $("#topic_subs_id").val();
+    $.ajax({
+        type:'POST',
+        url:"{{ route('topic.subscription')}}",
+        data:{id:subscrip_id,userid:userId,topic_num:topic_num,checked:isChecked, _token:"{{csrf_token()}}"},
+        success:function(res){
+          $('#topic_subscription_msg').html(res.message);
+          $('#topic_subscription_notify').show().fadeOut(5000);
+          $("#topic_subs_id").val(res.id);
+        }
+    })
+
+});
 <?php } ?>
 </script>	
 @endsection

@@ -139,6 +139,7 @@ Route::group([ 'middleware' => 'auth'], function() {
     Route::post('/newsfeed/update',['as'=>'newsfeed.update','uses'=>'NewsFeedController@update']);
     Route::get('/newsfeed/delete/{id}', 'NewsFeedController@destroy');
     Route::post('/camp/add_subscription',['as'=>'camp.subscription','uses'=>'TopicController@add_camp_subscription']);
+    Route::post('/camp/add_topic_subscription',['as'=>'topic.subscription','uses'=>'TopicController@add_topic_subscription']);
     Route::post('/deactivateuser',['as'=>'social.deactivateuser','uses'=>'SocialController@deactivateuser']);
     Route::post('/delete_social_link',['as'=>'social.delete_social_link','uses'=>'SocialController@delete']);
     Route::get('remove/mysupport/{topicnum}/{campnum}/{nickid}', [ 'as' => 'settings.support.remove', 'uses' => 'SettingsController@remove_support']);
