@@ -75,7 +75,9 @@
 <script>
 $(document).ready(function(){
     var uri = window.location.toString();
-    if (uri.indexOf("?") > 0) {
+    var namespace = $("select[name='namespace']").val();
+    var my = $("input[name='my']").val();
+    if (uri.indexOf("?") > 0 && !namespace && !my) {
         var clean_uri = uri.substring(0, uri.indexOf("?"));
         window.history.replaceState({}, document.title, clean_uri);            
     }
