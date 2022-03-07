@@ -3120,7 +3120,7 @@ class TestPages(unittest.TestCase):
     def test_select_menu_items_one_by_one(self):
         print("\n")
         self.login_to_canonizer_app()
-        result = CanonizerBrowsePage(self.driver).select_menu_items_one_by_one()
+        self.assertTrue( CanonizerBrowsePage(self.driver).select_menu_items_one_by_one())
 
     # TC_LOAD_ADD_CAMP_FORUM_PAGE
     def test_load_add_camp_forum_page(self):

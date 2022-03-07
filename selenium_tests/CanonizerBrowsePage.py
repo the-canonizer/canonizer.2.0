@@ -459,6 +459,9 @@ class CanonizerBrowsePage(Page):
         return CanonizerBrowsePage(self.driver)
 
     def one_by_one(self, menu_item):
+        element = self.find_element(*BrowsePageIdentifiers.ONLY_MY_TOPICS)
+        if element.is_selected():
+            self.find_element(*BrowsePageIdentifiers.ONLY_MY_TOPICS).click()
         select = Select(self.find_element(*BrowsePageIdentifiers.NAMESPACE))
         select.select_by_visible_text(menu_item)
         time.sleep(4)
@@ -486,17 +489,11 @@ class CanonizerBrowsePage(Page):
             result1 = self.one_by_one(topic_list[i])
             name_space1 = NAME_SPACE_1 + str(index[i])
             if name_space1 != result1.get_url():
-                print("name space", name_space1)
-                print("result Url:", result1.get_url())
-                print("Fail")
                 return False
 
             name_space2 = NAME_SPACE_1 + str(index[i])+"&my="+str(index[i])
             result2 = self.one_by_one_only_my_topics()
             if name_space2 != result2.get_url():
-                print("name space Only My topic", name_space2)
-                print("result Url Only My topic :", result2.get_url())
-                print("Fail")
                 return False
 
         return CanonizerBrowsePage(self.driver)
