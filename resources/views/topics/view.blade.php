@@ -201,10 +201,18 @@ change camps with them."><i class="fa fa-question"></i></a>
             </div>    
             </div>
             <div class="footer">
-                <?php if(isset($ifIamSupporter) && !($ifIamSupporter)){ ?>
-                    <a id="join_support_camp" class="btn btn-warning" href="<?php echo url('support/'.$url_portion );?>">Directly Join and Support</a>
+                <?php 
+                 if ((isset($_REQUEST['asof']) && $_REQUEST['asof'] == "bydate")  || (session()->has('asofDefault') && session('asofDefault') == 'bydate' && !isset($_REQUEST['asof']))) {
+                            $href = "javascript:void(0)";
+                            $title = "title='History cannot be modified. In order to modify your current support select the default option in the as-of box.'";
+                        }else {
+                            $href = url('support/'.$url_portion);
+                            $title = "";
+                        }
+                 if(isset($ifIamSupporter) && !($ifIamSupporter)){ ?>
+                    <a id="join_support_camp" <?php echo $title; ?> class="btn btn-warning" href="<?php echo $href; ?>">Directly Join and Support</a>
                 <?php }else{ ?>
-                    <a id="join_support_camp" class="btn btn-warning" href="<?php echo url('support/'.$url_portion );?>">Manage Support</a>
+                    <a id="join_support_camp" <?php echo $title; ?> class="btn btn-warning" href="<?php echo $href; ?>">Manage Support</a>
                 <?php } ?>
                
             </div>
