@@ -1200,7 +1200,7 @@ class TopicController extends Controller {
         } else if (isset($data['change_for']) && $data['change_for'] == 'camp') {
             $camp = Camp::where('id', $changeID)->first();
 			if(isset($camp)) {
-                // while updating camp check if any old support then remove it if parent camp changed 1076
+                //sunil while updating camp check if any old support then remove it if parent camp changed 1076
                 $this->checkParentCampChanged($camp->topic_num,$camp->camp_num,$camp->parent_camp_num); 
                 //end 1076
                 $submitterNickId = $camp->submitter_nick_id;
@@ -1490,7 +1490,7 @@ class TopicController extends Controller {
         ->onQueue('canonizer-service')
         ->unique(Topic::class, $topic->id);
     }
-
+    //sunil
     private function checkParentCampChanged($topic_num, $camp_num, $parent_camp_num) {
         // while updating camp check if any old support then remove it if parent camp changed
         $campOldData = Camp::getLiveCamp($topic_num,$camp_num);
