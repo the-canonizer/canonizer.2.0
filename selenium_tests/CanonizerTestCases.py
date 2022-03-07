@@ -475,18 +475,18 @@ testCases = {
                                     'Creaty by user" '
                                     'should be redirected to user supported camp page'],
     'TC_EDIT_CAMP_STATEMENT_01': [critical, 'When user click on Manage/Edi Camp, should see Camp History page.'],
-    'TC_EDIT_CAMP_STATEMENT_02': [critical, 'When user click on Manage/Edi Camp, should see Camp History page, '
-                                            'and user '
-                                            'Click on View this version, user should see agreement page'],
+    'TC_EDIT_CAMP_STATEMENT_02': [critical, 'When user Click on View this version, user should see agreement page'],
+    'TC_VERIFY_CAMP_UPDATE_PAGE': [critical, 'When user click on view this version, user should see update camp page'],
     'TC_EDIT_CAMP_STATEMENT_03': [critical, 'When user update the camp with valid data, it should get update'],
     'TC_EDIT_CAMP_STATEMENT_04': [critical, 'When user update the camp with invalid data, user must see Error '
                                             'Message'],
-    'TC_EDIT_CAMP_STATEMENT_05': [critical, 'When user update the camp with invalid data and Press Enter Key, '
-                                            'user must see Error '
-                                            'Message'],
-    'TC_EDIT_CAMP_STATEMENT_06': [critical, 'When user update the camp with valid data and Press Enter Key, '
+    'TC_EDIT_CAMP_STATEMENT_05': [critical, 'When user update the camp with valid data and Press Enter Key, '
                                             'user must see Success '
                                             'Message on Camp History Page'],
+    'TC_EDIT_CAMP_STATEMENT_06': [critical, 'When user update the camp with invalid data and Press Enter Key, '
+                                            'user must see Error '
+                                            'Message'],
+
     'TC_EDIT_CAMP_STATEMENT_07': [critical, 'When user update the camp with mandatory fields only user must see '
                                             'Success Message on Camp History Page'],
     'TC_EDIT_CAMP_STATEMENT_08': [critical, 'When user update the camp with data with trailing spaces '
@@ -507,6 +507,7 @@ testCases = {
     'TC_FOOTER_SUPPORT_CANONIZER':     [critical, 'Without login User should see Support Canonizer in Footer'],
     'TC_FOOTER_TERMS_AND_SERVICES':     [critical, 'Without login User should see Terms and Services in Footer'],
     'TC_UPLOAD_FILE_16': [critical, 'On File Upload page, When user upload file, user should see file uploaded file '
-                                    'on top of the list']
+                                    'on top of the list'],
+
 
 }
