@@ -51,10 +51,11 @@ class HomePageIdentifiers(object):
     SERVICES = (By.XPATH, '//*[@id="exampleAccordion"]/ul[1]/li[9]/a/span')
     PRIVACY_P0LICY = (By.XPATH, '/html/body/footer/div/div/div/small[3]/a[1]')
     HEADING = (By.XPATH, '/html/body/div[1]/div[1]/h1')
-    COPY_RIGHT =(By.XPATH, '/html/body/footer/div/div/div/small[1]')
+    COPY_RIGHT = (By.XPATH, '/html/body/footer/div/div/div/small[1]')
     SUPPORT = (By.XPATH, '/html/body/footer/div/div/div/small[2]/a')
     TERMS_AND_SERVICES = (By.XPATH, '/html/body/footer/div/div/div/small[3]/a[2]')
     JOB_TITLE = (By.XPATH, '/html/body/div[1]/div[2]/h3[1]')
+
 
 class LoginPageIdentifiers(object):
     """
@@ -73,6 +74,7 @@ class LoginPageIdentifiers(object):
     FORGOTPASSWORD = (By.XPATH, '//*[@id="login_form"]/div[3]/a')
     REQUEST_OTP = (By.ID, 'request_opt')
     HEADING = (By.XPATH, '/html/body/div[1]/div[1]/h1')
+    ERROR_BLANK_PASSWORD = (By.XPATH, '//*[@id="login_form"]/div[2]/p')
 
 
 class LoginOTPVerificationIdentifiers(object):
@@ -133,6 +135,7 @@ class CanonizerSearchPageIdentifiers(object):
     SEARCH_BUTTON = (By.ID, 'sbb')
     TITLE = (By.XPATH, '/html/body/div[1]/div[1]/h1')
 
+
 class UploadFileIdentifiers(object):
     """
     Class to hold the Upload File page Identifiers
@@ -142,7 +145,7 @@ class UploadFileIdentifiers(object):
     ERROR_FILE_NAME = (By.ID, 'fileNameErrorBox')
     UPLOAD = (By.ID, 'upload_file')
     NEW_FILE_NAME = (By.ID, 'file_name')
-    ERROR_FILE_SIZE = (By.XPATH, '/html/body/div/div[1]')
+    ERROR_FILE_SIZE = (By.XPATH, '//*[@id="fileNameErrorBox"]')
     CHOOSE_FILE = (By.XPATH, '/html/body/div[1]/div[1]/div/div/div/form/div[1]/input')
     INVALID_FILE_FORMAT_ERROR = (By.XPATH, '/html/body/div/div[1]')
     SAME_FILE_NAME_ERROR = (By.XPATH, '/html/body/div/div[1]')
@@ -151,8 +154,9 @@ class UploadFileIdentifiers(object):
     TITLE = (By.XPATH, '/html/body/div[1]/div[1]/h1')
     UPLOAD_TITLE = (By.XPATH, '/html/body/div[1]/div[2]/div/div/h3')
     SUCCESS_MESSAGE = (By.XPATH, '//*[@id="successMsg"]')
-    RECENT_FILE_NAME= (By.XPATH, '/html/body/div[1]/div[3]/div/div/div/div/table/tbody/tr[2]/td[1]')
-    ERROR_INVALID_FILE_FORMAT= (By.XPATH, '/html/body/div[1]/div[1]')
+    RECENT_FILE_NAME = (By.XPATH, '/html/body/div[1]/div[3]/div/div/div/div/table/tbody/tr[2]/td[1]')
+    ERROR_INVALID_FILE_FORMAT = (By.XPATH, '/html/body/div[1]/div[1]')
+
 
 class HelpIdentifiers(object):
     """
@@ -170,6 +174,7 @@ class HelpIdentifiers(object):
     TITTLE_HELP = (By.XPATH, '//*[@id="camp_statement"]/h1')
     TITTLE_CREAT_NEW_TOPIC = (By.XPATH, '/html/body/div[1]/div[1]/h1')
     SUB_HEADING = (By.XPATH, '//*[@id="statement"]/h3/div[1]')
+
 
 class ForgotPasswordIdentifiers(object):
     """
@@ -200,6 +205,7 @@ class BrowsePageIdentifiers(object):
     TITLE = (By.XPATH, '/html/body/div[1]/div[1]/h1')
     HEADING = (By.XPATH, '/html/body/div[1]/div[1]/div/div/h3/div[1]')
 
+
 class CreateNewTopicPageIdentifiers(object):
     """
     Class to hold the Create New Topic Page Identifiers
@@ -216,7 +222,7 @@ class CreateNewTopicPageIdentifiers(object):
     NICK_NAME_ASTRK = (By.XPATH, '/html/body/div[1]/div[2]/div/div/form/div[1]/label/span')
     TOPIC_NAME_ASTRK = (By.XPATH, '/html/body/div[1]/div[2]/div/div/form/div[2]/label/span')
     NAMESPACE_ASTRK = (By.XPATH, '/html/body/div[1]/div[2]/div/div/form/div[3]/label/span')
-    ERROR_DUPLICATE_TOPIC_NAME = (By.XPATH, '/html/body/div[1]/div[2]/div/div/form/div[2]/p')
+    ERROR_DUPLICATE_TOPIC_NAME = (By.XPATH, '//*[@id="topicForm"]/div[2]/p')
     INVALID_TOPIC_NAME = (By.XPATH, '/html/body/div/div[2]/div/div/form/div[2]/p')
     OTHER_NAMESPACE_NAME = (By.ID, 'create_namespace')
     OTHER_NAMESPACE_NAME_ASTRK = (By.XPATH, '//*[@id="other-namespace"]/label/span')
@@ -237,6 +243,9 @@ class CreateNewTopicPageIdentifiers(object):
     CAMP_SUCCESS_MESSAGE = (By.XPATH, '/html/body/div[1]/div[3]/strong')
     NEW_SUPPORT_CAMP = (By.XPATH, '/html/body/div[1]/div[1]/h3[2]/a[2]')
     LOGIN_TITLE = (By.XPATH, '/html/body/div[1]/div[1]/h1')
+    EDIT_CAMP = (By.ID, 'edit_camp')
+    HISTORY_DATA = (By.XPATH, '/html/body/div[1]/div[3]/div[2]/div/form/div/div[1]')
+
 
 class LogoutIdentifiers(object):
     """
@@ -245,6 +254,7 @@ class LogoutIdentifiers(object):
     USERNAME = (By.XPATH, '//*[@id="navbarResponsive"]/ul[1]/li[2]/div/a/span')
     LOGOUT = (By.XPATH, '//*[@id="navbarResponsive"]/ul[1]/li[2]/div/ul/li[2]/a')
     TITLE = (By.XPATH, '/html/body/div[1]/div[1]/h1')
+
 
 class AccountSettingsIdentifiers(object):
     """
@@ -390,6 +400,7 @@ class TopicUpdatePageIdentifiers(object):
     HEADING = (By.XPATH, '/html/body/div[1]/div[2]/h1')
     CAMP_HEADING = (By.XPATH, '/html/body/div[1]/div[3]/div/div[1]/h3/div[1]')
 
+
 class TopicObjectPageIdentifiers(object):
     """
     Class to hold the Topic Object Page Identifiers
@@ -428,6 +439,7 @@ class CreateNewCampPageIdentifiers(object):
     HEADING = (By.XPATH, '/html/body/div[1]/div[1]/h1')
     TITLE_CREATE_NEW_CAMP = (By.XPATH, '/html/body/div[1]/div[2]/h1')
 
+
 class CampEditPageIdentifiers(object):
     """
     Class to hold the Edit Camp Page Identifiers
@@ -450,7 +462,7 @@ class CampEditPageIdentifiers(object):
     ADDNEWNICKNAME = (By.LINK_TEXT, 'Add New Nick Name')
     SUBMIT_UPDATE = (By.ID, 'submit')
     ERROR_DUPLICATE_CAMP_NAME = (By.XPATH, '/html/body/div[1]/div[3]/div/div/form/div[3]/p')
-    CAMP_IDENTIFIER = (By.XPATH, '//*[@id="tree_173_1_5"]/div/a')
+    CAMP_IDENTIFIER = (By.XPATH, '//*[@id="tree_173_1_4"]/div/a')
     USER_NICK_NAME = (By.XPATH, '//*[@id="support-tree"]/li/a')
     USER_SUPPORTS_CAMP_NAME = (By.XPATH, '//*[@id="camp_173_2"]/a')
     ERROR_CAMP_ABOUT_URL = (By.XPATH, '/html/body/div/div[3]/div/div/form/div[6]/p[2]')
@@ -458,7 +470,6 @@ class CampEditPageIdentifiers(object):
     PAGE_TITLE = (By.XPATH, "/html/body/div[1]/div[2]/h1")
     PAGE_HEADING = (By.XPATH, "/html/body/div[1]/div[2]/h3[2]/a")
     SUCCESS_MESSAGE = (By.XPATH, "/html/body/div[1]/div[3]")
-
 
 
 class CampStatementEditPageIdentifiers(object):
@@ -484,7 +495,6 @@ class CampStatementEditPageIdentifiers(object):
     PAGE_HEADING = (By.XPATH, "/html/body/div[1]/div[2]/h1")
 
 
-
 class AddNewsPageIdentifiers(object):
     """
     Class to hold the Add News Page Identifiers
@@ -505,6 +515,7 @@ class AddNewsPageIdentifiers(object):
     TITLE = (By.XPATH, '/html/body/div[1]/div[1]/h1')
     HEADING = (By.XPATH, '/html/body/div[1]/div[2]/h3[2]')
 
+
 class EditNewsPageIdentifiers(object):
     """
     Class to hold the Edit News Page Identifiers
@@ -523,6 +534,7 @@ class EditNewsPageIdentifiers(object):
     HEADING = (By.XPATH, '/html/body/div[1]/div[1]/h1')
     AGREEMENT_HEADING = (By.XPATH, '/html/body/div[1]/div[2]/h3[2]')
     UPDATE_SUCCESS = (By.XPATH, '/html/body/div[1]/div[1]')
+
 
 class DeleteNewsPageIdentifiers(object):
     """
@@ -566,7 +578,7 @@ class AddCampStatementPageIdentifiers(object):
     # TOPIC_IDENTIFIER = (By.XPATH, '//*[@id="outline_224"]/a')
     # TOPIC_IDENTIFIER = (By.XPATH, '//*[@id="outline_488"]/a')
     # TOPIC_IDENTIFIER = (By.XPATH, '//*[@id="outline_362"]/a') //outline_411
-    # TOPIC_IDENTIFIER = (By.XPATH, '//*[@id="outline_595"]/a')
+    # TOPIC_IDENTIFIER = (By.XPATH, '//*[@id="outline_441"]/a')
     CAMP_LIST = (By.XPATH, '//*[@id="tree_173_1-Agreement_1"]/ul')
     PAGE_TITLE = (By.XPATH, "/html/body/div[1]/div[2]/h1")
     SUCCESS_MESSAGE = (By.XPATH, "/html/body/div[1]/div[3]")
@@ -600,6 +612,7 @@ class BreadCrumbsLinksIdentifiers(object):
     TOPIC_HISTORY_TOPIC_NAME = (By.XPATH, '/html/body/div/div[1]/h3/a')
     TITLE = (By.XPATH, '/html/body/div[1]/div[2]/h3[2]/a')
 
+
 class JoinSupportCampPageIdentifiers(object):
     """
     Class to hold the Join/manage support crumbs links Identifiers
@@ -614,6 +627,7 @@ class JoinSupportCampPageIdentifiers(object):
     SUBMIT = (By.ID, 'submit')
     PARENT_CAMP = (By.XPATH, '//*[@id="tree_589_2-Supporting-Camp-Testing-Camp_1"]/div/a')
     TITLE = (By.XPATH, '/html/body/div[1]/div[1]/h1')
+
 
 class CampForumIdentifiers(object):
     CAMP_FORUM = (By.ID, 'camp_forum')
@@ -663,5 +677,4 @@ class CampForumIdentifiers(object):
     UPDATE_THREAD_BUTTON = (By.XPATH, '/html/body/div[1]/div[1]/form/div[2]/button')
     TITLE_REPLY_ALL = (By.XPATH, '/html/body/div[1]/div[2]/div/div[1]/div/span[1]')
 
-    NEWS_FEED= (By.XPATH, '/html/body/div[1]/div[3]/div/div[1]/h3/span')
-
+    NEWS_FEED = (By.XPATH, '/html/body/div[1]/div[3]/div/div[1]/h3/span')
