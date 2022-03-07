@@ -1,10 +1,7 @@
 from CanonizerBase import Page
 from Identifiers import CampForumIdentifiers, BrowsePageIdentifiers, AddCampStatementPageIdentifiers
 from selenium.common.exceptions import NoSuchElementException
-import time
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver import ActionChains
-from Config import *
 
 
 class AddForumsPage(Page):
