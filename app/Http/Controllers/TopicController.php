@@ -308,7 +308,8 @@ class TopicController extends Controller {
         }
 
         if ($eventtype == "CREATE") {
-            $link_url = \App\Model\Camp::getTopicCampUrl($topic->topic_num,1);
+            $link_url = \App\Model\Camp::getTopicCampUrl($topic->topic_num, 1, $currentTime = time());
+            
             return redirect($link_url)->with(['success' => $message, 'go_live_time' => $go_live_time, 'objection' => $objection]);            
         }
         return redirect('topic-history/' . $topic->topic_num)->with(['success' => $message, 'go_live_time' => $go_live_time, 'objection' => $objection]);
@@ -875,7 +876,7 @@ class TopicController extends Controller {
             return redirect('camp/history/' . $camp->topic_num . '/' . $camp->camp_num)->with(['success' => $message, 'go_live_time' => $go_live_time, 'objection' => $objection]);
         } else {
             if ($eventtype == "CREATE"){
-                $link_url = \App\Model\Camp::getTopicCampUrl($camp->topic_num,$camp->camp_num);
+                $link_url = \App\Model\Camp::getTopicCampUrl($camp->topic_num,$camp->camp_num,$currentTime = time());
                 return redirect($link_url)->with(['success' => $message, 'go_live_time' => $go_live_time]);
             }
             else {
@@ -990,11 +991,22 @@ class TopicController extends Controller {
             Case 2 : When User A only supported "camp 1" and User B added camp statement to "camp 1" camp - It should go in "in review"(Grace period = 1)
             Case 3 : When "camp 1" has no supporters and User B added camp statement to "camp 1" camp - It should go "live"(Grace period = 0)
         */
-       
+
+        /**
+         * Scenario 3 :
+         * When User A created topic & camp and remove his support from camp
+         * User B add support and camp statement to "camp 1" - It should go "live"(Grace period = 0)
+         */
+        
+        $nickNames = Nickname::personNicknameArray();
+        $ifIamSingleSupporter = Support::ifIamSingleSupporter($all['topic_num'], $all['camp_num'], $nickNames);
+
         if($all['camp_num'] > 1) {
             if($totalSupport <= 0){
                 $statement->grace_period = 0;
             } else if($totalSupport > 0 && in_array($all['submitter'] , $loginUserNicknames)){
+                $statement->grace_period = 0;
+            } else if($ifIamSingleSupporter) {
                 $statement->grace_period = 0;
             } else{
                 $statement->grace_period = 1;
@@ -1002,13 +1014,11 @@ class TopicController extends Controller {
         }
 
         /**
-         * Scenario 3
-         * User A creates topic -> support will be added automatically to agreement camp
-         * When User A remove his support and User B add support and camp statement - It should go "live"(Grace period = 0)
+         * Scenario 4
+         * User A creates topic -> support will be added automatically to agreement camp -> remove support
+         * User B add support (to agreemnt or camp) and camp statement - It should go "live"(Grace period = 0)
          */
         if(isset($all['camp_num']) && isset($all['topic_num'])) {
-            $nickNames = Nickname::personNicknameArray();
-            $ifIamSingleSupporter = Support::ifIamSingleSupporter($all['topic_num'], $all['camp_num'], $nickNames);
             if($all['camp_num'] == 1 && $ifIamSingleSupporter) {
                 $statement->grace_period = 0;
             } 
@@ -1021,10 +1031,17 @@ class TopicController extends Controller {
          */
         
         if(isset($all['camp_num']) && isset($all['objection'])) {
-            if($all['camp_num'] == 1 && $all['objection']) {
+            if($all['objection']) {
                 $statement->grace_period = 0;
             } 
         }
+
+        // #1183 start (when use update or edit any statement it is not going in grace period even there are other supporters for the camp)
+        $otherDirectSupporters = Support::where(['topic_num'=>$all['topic_num'],'camp_num'=>$all['camp_num'],'delegate_nick_name_id'=>0,'end'=>0])->whereNotIn('nick_name_id',$loginUserNicknames)->first();
+        if(!empty($otherDirectSupporters)){
+            $statement->grace_period = 1;
+        }
+        // #1183 end
 
         $statement->save();
         if ($eventtype == "CREATE") {
