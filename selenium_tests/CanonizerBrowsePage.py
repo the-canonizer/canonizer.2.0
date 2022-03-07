@@ -16,6 +16,7 @@ class CanonizerBrowsePage(Page):
         :return:
             Return the result to the main page.
         """
+
         title = self.find_element(*BrowsePageIdentifiers.TITLE).text
         if title == 'Canonizer Main Page':
             self.hover(*BrowsePageIdentifiers.BROWSE)

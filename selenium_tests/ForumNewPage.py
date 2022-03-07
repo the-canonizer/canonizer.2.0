@@ -262,8 +262,8 @@ class AddForumsPage(Page):
         self.hover(*CampForumIdentifiers.CAMP_FORUM)
         self.find_element(*CampForumIdentifiers.CAMP_FORUM).click()
         heading = self.find_element(*CampForumIdentifiers.CAMP_FORUM_HEADING).text
-        url = AddForumsPage(self.driver).get_url()
-        return [url, heading]
+        if heading == 'Canonizer Forum Details':
+            return AddForumsPage(self.driver)
 
     def load_thread_posts_page(self):
         self.find_element(*CampForumIdentifiers.THREAD_TITLE).click()

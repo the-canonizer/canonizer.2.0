@@ -292,7 +292,8 @@ class TestPages(unittest.TestCase):
         print("\n" + str(test_cases(25)))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
-        result = CanonizerUploadFilePage(self.driver).click_upload_file_page_button().upload_file_with_blank_file().get_url()
+        result = CanonizerUploadFilePage(
+            self.driver).click_upload_file_page_button().upload_file_with_blank_file().get_url()
         self.assertIn("/upload", result)
 
     # ----- Upload File Page Test Cases End -----
@@ -1640,8 +1641,8 @@ class TestPages(unittest.TestCase):
         self.login_to_canonizer_app()
         # Go to Edit News and check if display text is blank
         result = CanonizerEditNewsFeedsPage(self.driver).load_edit_news_feed_page().update_news_with_blank_display_text(
-                "Test",
-                "").get_url()
+            "Test",
+            "").get_url()
         self.assertIn("/editnews/173-Software-Testing/1-Agreement", result)
 
     # 138
@@ -1651,8 +1652,8 @@ class TestPages(unittest.TestCase):
         self.login_to_canonizer_app()
         # Go to Edit News and check if link is blank
         result = CanonizerEditNewsFeedsPage(self.driver).load_edit_news_feed_page().update_news_with_blank_link(
-                "Test",
-                "").get_url()
+            "Test",
+            "").get_url()
         self.assertIn("editnews/173-Software-Testing/1-Agreement", result)
 
     # 139
@@ -1661,10 +1662,11 @@ class TestPages(unittest.TestCase):
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Go to Edit News and check entered link is invalid
-        result = CanonizerEditNewsFeedsPage(self.driver).load_edit_news_feed_page().update_news_with_invalid_link_format(
-                "Test",
-                "Test",
-                "").get_url()
+        result = CanonizerEditNewsFeedsPage(
+            self.driver).load_edit_news_feed_page().update_news_with_invalid_link_format(
+            "Test",
+            "Test",
+            "").get_url()
         self.assertIn("editnews/173-Software-Testing/1-Agreement", result)
 
     # 140
@@ -1800,7 +1802,8 @@ class TestPages(unittest.TestCase):
     def test_delete_news_button_visibility(self):
         print("\n", str(test_cases('TC_DELETE_NEWS_01')))
         self.login_to_canonizer_app()
-        result = CanonizerDeleteNewsFeedsPage(self.driver).click_delete_news_feed().delete_news_button_visibility().get_url()
+        result = CanonizerDeleteNewsFeedsPage(
+            self.driver).click_delete_news_feed().delete_news_button_visibility().get_url()
         self.assertIn("/topic/173-Software-Testing/1-Agreement", result)
 
     # TC_DELETE_NEWS_02
@@ -3120,7 +3123,7 @@ class TestPages(unittest.TestCase):
     def test_select_menu_items_one_by_one(self):
         print("\n")
         self.login_to_canonizer_app()
-        self.assertTrue( CanonizerBrowsePage(self.driver).select_menu_items_one_by_one())
+        self.assertTrue(CanonizerBrowsePage(self.driver).select_menu_items_one_by_one())
 
     # TC_LOAD_ADD_CAMP_FORUM_PAGE
     def test_load_add_camp_forum_page(self):
@@ -3388,23 +3391,8 @@ class TestPages(unittest.TestCase):
 
     def test_page_crash(self):
         self.login_to_canonizer_app()
-        result = AddForumsPage(self.driver).check_page_crash()
-        # print("result", result)
-        # result ['https://staging.canonizer.com/forum/411-Demo-Topic/1-Agreement/threads', 'Canonizer Forum Details']
-        self.assertTrue(['/forum/411-Demo-Topic/1-Agreement/threads', 'Canonizer Forum Details'], result)
-
-    # ----- Direct Join and Support  Start -----
-
-    # TC_DIRECT_JOIN_AND_SUPPORT_01
-    # def test_load_direct_join_and_support_page(self):
-    #     # Click on the Login Page and Create a Login Session and for further actions.
-    #     self.login_to_canonizer_app()
-    #     print("\n")
-    #     result = CanonizerEditCampPage(self.driver).load_direct_join_and_support_page()
-    #     if result:
-    #         self.assertIn("support/173-Software-Testing/1-Agreement", result.get_url())
-
-    # ----- Direct Join & Support  End -----
+        result = AddForumsPage(self.driver).check_page_crash().get_url()
+        self.assertIn("/forum", result)
 
     def tearDown(self):
         self.driver.close()
