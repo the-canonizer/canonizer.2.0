@@ -46,6 +46,132 @@ DEFAULT_FIRST_NAME = "Rupali"
 DEFAULT_MIDDLE_NAME = "A"
 DEFAULT_LAST_NAME = "Chavan"
 INVALID_NAME_REGISTER = "invalidname!@#$%1"
+REG_LIST_1 = [
+    "      ",
+    DEFAULT_MIDDLE_NAME,
+    DEFAULT_LAST_NAME,
+    DEFAULT_USER,
+    DEFAULT_PASS,
+    DEFAULT_PASS,
+    ''
+]
+REG_LIST_2 = [
+    DEFAULT_FIRST_NAME,
+    DEFAULT_MIDDLE_NAME,
+    DEFAULT_LAST_NAME,
+    DEFAULT_USER,
+    DEFAULT_PASS,
+    DEFAULT_PASS,
+    ''
+]
+REG_LIST_3 = [
+    '',
+    DEFAULT_MIDDLE_NAME,
+    DEFAULT_LAST_NAME,
+    DEFAULT_USER,
+    DEFAULT_PASS,
+    DEFAULT_PASS,
+    ''
+]
+REG_LIST_4 = [
+    DEFAULT_FIRST_NAME,
+    DEFAULT_MIDDLE_NAME,
+    '',
+    DEFAULT_USER,
+    DEFAULT_PASS,
+    DEFAULT_PASS,
+    ''
+]
+REG_LIST_5 = [
+    DEFAULT_FIRST_NAME,
+    DEFAULT_MIDDLE_NAME,
+    DEFAULT_LAST_NAME,
+    '',
+    DEFAULT_PASS,
+    DEFAULT_PASS,
+    ''
+]
+REG_LIST_6 = [
+    DEFAULT_FIRST_NAME,
+    DEFAULT_MIDDLE_NAME,
+    DEFAULT_LAST_NAME,
+    DEFAULT_USER,
+    '',
+    '',
+    ''
+]
+REG_LIST_7 =[
+    DEFAULT_FIRST_NAME,
+    DEFAULT_MIDDLE_NAME,
+    DEFAULT_LAST_NAME,
+    DEFAULT_USER,
+    '12345',
+    '12345',
+    ''
+]
+REG_LIST_8 = [
+    DEFAULT_FIRST_NAME,
+    DEFAULT_MIDDLE_NAME,
+    DEFAULT_LAST_NAME,
+    DEFAULT_USER,
+    'Test@1234567',
+    'Test@123456',
+    ''
+]
+REG_LIST_9 = [
+    DEFAULT_FIRST_NAME,
+    DEFAULT_MIDDLE_NAME,
+    DEFAULT_LAST_NAME,
+    DEFAULT_USER,
+    DEFAULT_PASS,
+    DEFAULT_PASS,
+    ''
+]
+REG_LIST_10 = [
+    INVALID_NAME_REGISTER,
+    DEFAULT_MIDDLE_NAME,
+    DEFAULT_LAST_NAME,
+    DEFAULT_USER,
+    DEFAULT_PASS,
+    DEFAULT_PASS,
+    ''
+]
+REG_LIST_11 = [
+    DEFAULT_FIRST_NAME,
+    DEFAULT_MIDDLE_NAME,
+    INVALID_NAME_REGISTER,
+    DEFAULT_USER,
+    DEFAULT_PASS,
+    DEFAULT_PASS,
+    ''
+]
+REG_LIST_12 = [
+    DEFAULT_FIRST_NAME,
+    INVALID_NAME_REGISTER,
+    DEFAULT_LAST_NAME,
+    DEFAULT_USER,
+    DEFAULT_PASS,
+    DEFAULT_PASS,
+    ''
+]
+REG_LIST_13 = [
+    DEFAULT_FIRST_NAME,
+    DEFAULT_MIDDLE_NAME,
+    DEFAULT_LAST_NAME,
+    DEFAULT_USER,
+    DEFAULT_PASS,
+    DEFAULT_PASS,
+    'INVALID'
+]
+REG_LIST_14= [
+    DEFAULT_FIRST_NAME,
+    DEFAULT_MIDDLE_NAME,
+    DEFAULT_LAST_NAME,
+    DEFAULT_INVALID_EMAIL_FORMAT,
+    DEFAULT_PASS,
+    DEFAULT_PASS,
+    ''
+]
 
 # Account Setting
 
@@ -71,7 +197,126 @@ DUPLICATE_CAMP_NAME = "Levels Of Testing"
 INVALID_TOPIC_NAME = "Test@1234567"
 INVALID_CAMP_NAME = "Test@1234567"
 INVALID_CAMP_ABOUT_URL = "TestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestA1"
-
+CAMP_LIST_1 = [
+    "Test", "", "", "", "", "",""
+]
+CAMP_LIST_2 = [
+    "Agreement",
+    "Types Of Testing 1",
+    "Test",
+    "Testing Keywords, Keywords",
+    "Just Note for testing",
+    "www.google.com",
+    "Pooja"
+]
+CAMP_LIST_3 = [
+    "Agreement",
+    "Types Of Testing 1",
+    "Test",
+    "Testing Keywords, Keywords",
+    "Just Note for testing",
+    "invalid url",
+    "Pooja",
+]
+CAMP_LIST_4= [
+    "Agreement",
+    "Types Of Testing 1",
+    "",
+    "",
+    "",
+    "",
+    "",
+]
+CAMP_LIST_5 = [
+    "Agreement",
+    "Types Of Testing 1",
+    "",
+    "           keywords with trailing spaces.",
+    "          notes with trailing spaces.",
+    "      www.google.com",
+    "",
+]
+CAMP_LIST_6 = [
+    "",
+    "",
+    "",
+    "",
+    "",
+    "invalid url",
+    "",
+]
+CAMP_LIST_7 = [
+    "",
+    "",
+    DUPLICATE_CAMP_NAME,
+    "",
+    "",
+    "",
+    ""
+]
+CAMP_LIST_8 = [
+    "",
+    "",
+    INVALID_CAMP_NAME,
+    "",
+    "",
+    "",
+    ""
+]
+CAMP_LIST_9 = [
+    "",
+    "",
+    "",
+    "",
+    "",
+    INVALID_CAMP_ABOUT_URL,
+    ""
+]
+CAMP_LIST_10 = [
+    "Test",
+    "",
+    "",
+    "",
+    "",
+    "",
+    ""
+]
+CREATE_CAMP_LIST_1 = [
+    "Test",
+    "",
+    "",
+    "",
+    "",
+    "",
+    ""
+]
+CREATE_CAMP_LIST_2 = [
+    "Test",
+    "",
+    "",
+    "",
+    "",
+    "",
+    ""
+]
+CREATE_CAMP_LIST_3 = [
+    "",
+    "",
+    DUPLICATE_CAMP_NAME,
+    "",
+    "",
+    "",
+    ""
+]
+CREATE_CAMP_LIST_4 = [
+    "",
+    "",
+    INVALID_CAMP_NAME,
+    "",
+    "",
+    "",
+    ""
+]
 # Change Password Configuration Parameters
 DEFAULT_CURRENT_PASSWORD = "Pooja@123456"
 DEFAULT_NEW_PASSWORD = "Test@12345"
@@ -82,6 +327,7 @@ DEF_NICK_NAME = "Pooja"
 
 # Browse Page
 DEF_MENU_ITEM = "/crypto_currency/"
+NAME_SPACE_1 = "https://staging.canonizer.com/browse?namespace="
 
 # Create New Thread Configure Parameters
 DEFAULT_THREAD_NAME = "Test Thread Name 2"
