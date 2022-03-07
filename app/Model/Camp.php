@@ -776,8 +776,9 @@ class Camp extends Model {
         return $topic_id_name . '/' . $camp_num_name;
     }
 
-    public static function getTopicCampUrl($topic_num,$camp_num){
+    public static function getTopicCampUrl($topic_num,$camp_num,$currentTime = null){
         $urlPortion = self::getSeoBasedUrlPortion($topic_num,$camp_num); 
+        $urlPortion = $urlPortion.'?currentTime='.$currentTime.'';
         return url('topic/' .$urlPortion);
     }
 
@@ -978,9 +979,11 @@ class Camp extends Model {
           if(session('defaultAlgo')) {
               $selectedAlgo = session('defaultAlgo');
           }
-  
-          if( ($asOfDefaultDate >= $cronDate) && ($selectedAlgo == 'blind_popularity' || $selectedAlgo == "mind_experts")){
+        
+          $redirectRequestStartTime = \Request::has('currentTime') ? \Request::get('currentTime') : 0;
+          $currentTime = time() + (5 * 60); 
           
+          if( ($asOfDefaultDate >= $cronDate) && ($selectedAlgo == 'blind_popularity' || $selectedAlgo == "mind_experts") && (($redirectRequestStartTime && $currentTime > $redirectRequestStartTime) || !$redirectRequestStartTime)){
               //change the keys if the asOf is review
               if($asOf == 'review'){
                   $titleKey = 'review_title';
@@ -999,7 +1002,7 @@ class Camp extends Model {
               }
   
               //check if bydate is greater than current date
-              if(isset($checkOfDefaultDate) && $checkOfDefaultDate > $checkOfDefaultToday){
+              if($checkOfDefaultDate > $checkOfDefaultToday){
                   $asOfDefaultDate = time();
               }
   
