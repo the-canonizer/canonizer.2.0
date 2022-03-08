@@ -27,7 +27,7 @@
 <div class="right-whitePnl">
 <div class="row col-sm-12 justify-content-between">
     <div class="col-sm-5 margin-btm-2">
-        <form action="{{ route('camp.save')}}" method="post">
+        <form action="{{ route('camp.save')}}" method="post" id="campForm">
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
             <input type="hidden" id="topic_num" name="topic_num" value="{{ $topic->topic_num }}">
            <!-- <input type="hidden" id="parent_camp_num" name="parent_camp_num" value="{{ $parentcampnum }}">-->
@@ -110,6 +110,16 @@
                 changeYear: true
             });
         })
+    </script>
+    <script>
+    $(document).ready(function () {
+        $("#campForm").submit(function (e) {
+            console.log("log");          
+            //disable the submit button
+            $("#submit").attr("disabled", true);
+            return true;
+        });
+    });
     </script>
 
 

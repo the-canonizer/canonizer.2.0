@@ -21,7 +21,9 @@ class CanonizerRegisterPage(Page):
 
         self.hover(*RegistrationPageIdentifiers.REGISTER)
         self.find_element(*RegistrationPageIdentifiers.REGISTER).click()
-        return CanonizerRegisterPage(self.driver)
+        title = self.find_element(*RegistrationPageIdentifiers.TITLE).text
+        if title == 'Create Account':
+            return CanonizerRegisterPage(self.driver)
 
     def enter_first_name(self, firstname):
         self.find_element(*RegistrationPageIdentifiers.FIRST_NAME).send_keys(firstname)
@@ -83,7 +85,7 @@ class CanonizerRegisterPage(Page):
 
     def registration_with_different_confirmation_password(self, firstname, middlename, lastname, user, password, confirmpassword, captcha):
         self.register(firstname, middlename, lastname, user, password, confirmpassword, captcha)
-        return self.find_element(*RegistrationPageIdentifiers.ERROR_PASSWORD).text
+        return self.find_element(*RegistrationPageIdentifiers.ERROR_CONFIRMATION).text
 
     def registration_should_have_login_option_for_existing_users(self):
         return self.find_element(*RegistrationPageIdentifiers.LOGINOPTION).text
@@ -111,34 +113,48 @@ class CanonizerRegisterPage(Page):
         return self.find_element(*RegistrationPageIdentifiers.ERROR_FIRST_NAME).text
 
     def check_login_page_open_click_login_here_link(self):
-
         self.hover(*RegistrationPageIdentifiers.LOGINOPTION)
         self.find_element(*RegistrationPageIdentifiers.LOGINOPTION).click()
-        return CanonizerRegisterPage(self.driver)
+        title = self.find_element(*RegistrationPageIdentifiers.TITLE).text
+        if title == 'Log in':
+            return CanonizerRegisterPage(self.driver)
 
     def registration_with_blank_captcha(self, firstname, middlename, lastname, user, password, confirmpassword):
         self.register(firstname, middlename, lastname, user, password, confirmpassword, '')
-        return self.find_element(*RegistrationPageIdentifiers.ERROR_CAPTCHA).text
+        error =  self.find_element(*RegistrationPageIdentifiers.ERROR_CAPTCHA).text
+        if error == 'The captcha code field is required.':
+            return CanonizerRegisterPage(self.driver)
 
     def registration_with_invalid_first_name(self, firstname, middlename, lastname, user, password, confirmpassword, captcha):
         self.register(firstname, middlename, lastname, user, password, confirmpassword, captcha)
-        return self.find_element(*RegistrationPageIdentifiers.ERROR_FIRST_NAME).text
+        error = self.find_element(*RegistrationPageIdentifiers.ERROR_FIRST_NAME).text
+        if error == 'The first name must be in alphabets and space only.':
+            return CanonizerRegisterPage(self.driver)
 
     def registration_with_invalid_last_name(self, firstname,middlename, lastname, user, password, confirmpassword, captcha):
         self.register(firstname, middlename, lastname, user, password, confirmpassword, captcha)
-        return self.find_element(*RegistrationPageIdentifiers.ERROR_LAST_NAME).text
+        error = self.find_element(*RegistrationPageIdentifiers.ERROR_LAST_NAME).text
+        if error == 'The last name must be in alphabets and space only.':
+            return CanonizerRegisterPage(self.driver)
 
     def registration_with_invalid_middle_name(self, firstname,middlename, lastname, user, password, confirmpassword, captcha):
         self.register(firstname, middlename, lastname, user, password, confirmpassword, captcha)
-        return self.find_element(*RegistrationPageIdentifiers.ERROR_MIDDLE_NAME).text
+        error = self.find_element(*RegistrationPageIdentifiers.ERROR_MIDDLE_NAME).text
+        if error == 'The middle name must be in alphabets and space only.':
+            return CanonizerRegisterPage(self.driver)
 
     def registration_with_invalid_captcha(self, firstname, middlename, lastname, user, password, confirmpassword, captcha):
         self.register(firstname, middlename, lastname, user, password, confirmpassword, captcha)
-        return self.find_element(*RegistrationPageIdentifiers.ERROR_CAPTCHA).text
+        error = self.find_element(*RegistrationPageIdentifiers.ERROR_CAPTCHA).text
+        if error == 'CAPTCHA validation failed, please try again.':
+            return CanonizerRegisterPage(self.driver)
 
     def registration_with_invalid_email(self, firstname, middlename , lastname, user, password, confirmpassword, captcha):
         self.register(firstname, middlename, lastname, user, password, confirmpassword, captcha)
-        return self.find_element(*RegistrationPageIdentifiers.ERROR_EMAIL).text
+        error = self.find_element(*RegistrationPageIdentifiers.ERROR_EMAIL).text
+        if error == 'The email must be a valid email address.':
+            return CanonizerRegisterPage(self.driver)
+
 
 
 

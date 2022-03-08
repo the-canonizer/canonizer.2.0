@@ -48,7 +48,7 @@
                     <li class="nav-item col-sm-7">
                        <form method="get" action="https://www.google.com/custom" target="_top">
                             <div class="input-group search-panel">
-                               <table>
+                               <table class="radio-button-top">
 									<tr>
 										<td class="radio radio-primary">
 										<input type="radio" name="sitesearch" value="" checked id="ss0"></input>
@@ -74,7 +74,7 @@
                     <li class="nav-item col-sm-5 text-right" style="padding-right:0px;">
                         @if(Auth::check())
 						<div class="dropdown">
-                            Browsing as: <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-fw fa-user"></i> <span class="brsr-name">{{ Auth::user()->first_name . ' ' . Auth::user()->last_name}} </span></a>
+                            Browsing as: <a href="javascript:void(0)" class="dropdown-toggle login-icon" data-toggle="dropdown"><i class="fa fa-fw fa-user"></i> <span class="brsr-name">{{ Auth::user()->first_name . ' ' . Auth::user()->last_name}} </span></a>
                             <span class="caret"></span>
                             <ul class="dropdown-menu">
                                 <li><a href="{{ route('settings')}}">Account Settings</a></li>
@@ -441,3 +441,21 @@
 
 </body>
 </html>
+
+<style>
+
+table.radio-button-top .radio label::before{
+    top:0px !important;
+}
+table.radio-button-top .radio label::after{
+    top:3px !important;
+}
+.login-icon::after{
+     margin-top:7px !important;
+}
+
+.search-panel table.radio-button-top{
+    top: 43px !important;
+}
+
+</style>

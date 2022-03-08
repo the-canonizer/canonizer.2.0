@@ -23,7 +23,7 @@ class ActionController extends Controller
 			
 			  $mysqldump =  (stristr(PHP_OS, 'WIN')) ? exec("where mysqldump") : exec("which mysqldump");
    			try{
-				 $command = "$mysqldump -P $dbport -h $dbhost -u$dbuser -p$dbpass $dbname > $dbexportPath"; 
+				 $command = "$mysqldump --column-statistics=0  -P $dbport -h $dbhost -u$dbuser '-p$dbpass' $dbname > $dbexportPath";
 				 $output=array();
 				exec($command,$output,$worked);
 			}catch(\Exception $e){
@@ -55,7 +55,7 @@ class ActionController extends Controller
         $db = DB::select($query);
         $link = mysqli_connect($dbhost, $dbuser, $dbpass);
          $mysql =  (stristr(PHP_OS, 'WIN')) ? exec("where mysql") : exec("which mysql");
-        $command = "$mysql -P $dbport -h $dbhost -u$dbuser -p$dbpass  $dbname < $file"; 
+        $command = "$mysql  -P $dbport -h $dbhost -u$dbuser -p$dbpass  $dbname < $file"; 
         if(empty($db)){
         	$sql = "CREATE DATABASE IF NOT EXISTS $dbname";
 			if (mysqli_query($link,$sql)) {

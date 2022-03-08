@@ -6,6 +6,7 @@ use Hash;
 use Cookie;
 use App\User;
 use App\Model\Camp;
+use App\Facades\Util;
 use App\Model\Topic;
 use App\Model\Support;
 use App\Model\Nickname;
@@ -425,7 +426,7 @@ class SettingsController extends Controller
              * in that case delegate should not promted it should simply shifted with DS
             */
             $promoteDelegate = true;
-            if(isset($data['support_order']) && count($data['support_order']) > 0){
+            if(isset($data['removed_camp']) && isset($data['support_order']) && count($data['support_order']) > 0){
                 $promoteDelegate = false;
             }
             /** check point 2 if all suppot removed  */
@@ -569,15 +570,19 @@ class SettingsController extends Controller
                 $nickName = Nickname::getNickName($data['nick_name']);
                 $topic = Camp::getAgreementTopic($data['topic_num'],['nofilter'=>true]);
                 $camp = Camp::where('topic_num', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('go_live_time', '<=', time())->latest('submit_time')->first();
-                $result['namespace_id'] = (isset($topic->namespace_id) && $topic->namespace_id)  ?  $topic->namespace_id : 1;
                 $result['topic_num'] = $data['topic_num'];
                 $result['camp_num'] = $data['camp_num'];
-                $result['nick_name'] = $nickName->nick_name; 
-                $result['nick_name_id'] = $nickName->id; 
+                $result['nick_name'] = $nickName->nick_name;   
                // $result['object'] = $topic->topic_name . " / " . $camp->camp_name;
                 $result['object'] = $topic->topic_name; // #954 only topic name should be mentioned
                 $result['support_camp'] = $camp->camp_name;
                 $result['subject'] = $nickName->nick_name . " has just delegated their support to you.";
+                //1081 issue
+                $result['namespace_id'] = (isset($topic->namespace_id) && $topic->namespace_id)  ?  $topic->namespace_id : 1;
+                $result['nick_name_id'] = $nickName->id;
+                $result['delegated_user'] = $parentUserNickName->nick_name;
+                $result['delegated_user_id'] = $parentUserNickName->id;
+
                 //$link = \App\Model\Camp::getTopicCampUrl($data['topic_num'],$data['camp_num']);
                 $link = \App\Model\Camp::getTopicCampUrl($data['topic_num'],1); //#954
                 $subscribers = Camp::getCampSubscribers($data['topic_num'], $data['camp_num']);
@@ -589,16 +594,20 @@ class SettingsController extends Controller
                     $this->mailParentDelegetedUser($data,$link,$result,$subscribers);
                 }
                 $result['subject'] = $nickName->nick_name . " has just delegated their support to " . $parentUserNickName->nick_name;
-                $result['delegated_user'] = $parentUserNickName->nick_name;
+                
                 $this->mailSubscribersAndSupporters($directSupporter,$subscribers, $link, $result);
             }
             Session::save();
             Session::flash('success', "Your support update has been submitted successfully.");
 
-            $topic = Topic::where('topic_num', $topic_num)->get()->last();            
-            $this->dispatchJob($topic);
+            $topic = Topic::where('topic_num', $topic_num)->get()->last();  
+
+            if(isset($topic)) {
+                Util::dispatchJob($topic, $data['camp_num'], 1);
+
+            }
             
-            return redirect(\App\Model\Camp::getTopicCampUrl($data['topic_num'],session('campnum')));            
+            return redirect(\App\Model\Camp::getTopicCampUrl($data['topic_num'],session('campnum'), $currentTime = time()));            
         } else {
             return redirect()->route('login');
         }
@@ -724,6 +733,10 @@ class SettingsController extends Controller
         $result['object'] = $topic->topic_name ." / ".$camp->camp_name;
         $result['support_camp'] = $camp->camp_name;
         $result['subject'] = $nickName->nick_name . " has added their support to ".$result['object'].".";
+        //1081 issue
+        $result['namespace_id'] = (isset($topic->namespace_id) && $topic->namespace_id)  ?  $topic->namespace_id : 1;
+        $result['nick_name_id'] = $nickName->id;
+
         $link = \App\Model\Camp::getTopicCampUrl($data['topic_num'],$data['camp_num']);
         $subscribers = Camp::getCampSubscribers($data['topic_num'], $data['camp_num']);
         $directSupporter = Support::getAllDirectSupporters($data['topic_num'], $data['camp_num']);
@@ -744,6 +757,7 @@ class SettingsController extends Controller
                 $parentUserNickName = Nickname::getNickName($data['delegate_nick_name_id']);
                 $result['delegate_support_deleted'] = 1;
                 $result['delegated_user'] = $parentUserNickName->nick_name;
+                $result['delegated_user_id'] = $parentUserNickName->id;
             }        
            $nickName = Nickname::getNickName($data['nick_name']);
            $topic = Camp::getAgreementTopic($data['topic_num'],['nofilter'=>true]);
@@ -755,6 +769,10 @@ class SettingsController extends Controller
             $result['object'] = $topic->topic_name ." / ".$camp->camp_name;
             $result['support_camp'] = $camp->camp_name;
             $result['subject'] = $nickName->nick_name . " has removed their support from ".$result['object'].".";
+            //1081 issue
+            $result['namespace_id'] = (isset($topic->namespace_id) && $topic->namespace_id)  ?  $topic->namespace_id : 1;
+            $result['nick_name_id'] = $nickName->id;
+
             if($parentUserNickName){
                 $result['subject'] = $nickName->nick_name . " has removed their delegated support from ". $parentUserNickName->nick_name." in ".$result['object'].".";
             }
@@ -806,7 +824,12 @@ class SettingsController extends Controller
                 }
                 $this->removeSupport($topic_num,$currentSupportRec->camp_num,$nick_name_id,'',$currentSupportRec->support_order,$promoteDelegate,$ifSupportLeft);
                 Session::flash('success', "Your support has been removed successfully.");                
-            }            
+            } 
+            $topicSupport = Topic::where('id', $topic_num)->first();
+            // Dispatch Job
+            if(isset($topicSupport)) {
+                Util::dispatchJob($topicSupport, 1, 1);
+            }           
             return redirect()->back();
         }
         Session::flash('error', "Invalid access.");
@@ -901,6 +924,7 @@ class SettingsController extends Controller
     function sociallinks(){
         if(Auth::check()){
             $providers = ['google','facebook','github','twitter','linkedin'];
+            $providerNames = ['google' => 'Google', 'facebook' => 'Facebook','github' => 'Github', 'twitter' => 'Twitter','linkedin' =>'LinkedIn'];
             $user = Auth::user();
             $socialdata = []; 
             $social_data = SocialUser::where('user_id','=',$user->id)->get();
@@ -919,7 +943,7 @@ class SettingsController extends Controller
                     $socialdata[$d]=['provider'=>$d];   
                 } 
             }
-            return view('settings.sociallinks',['sociallinks'=>$socialdata,'providers'=>$providers]);
+            return view('settings.sociallinks',['sociallinks'=>$socialdata,'providers'=>$providers, 'providerNames' => $providerNames]);
         }else{
             return redirect()->route('login');
         }
@@ -1041,6 +1065,12 @@ class SettingsController extends Controller
      */
     public function addDelegatedSupport($myDelegator,$topic_num,$camp_num,$support_order,$delegatedTo){
         foreach($myDelegator as $delegator){
+            Support::where('topic_num',$topic_num)
+             ->where('end', '=',0)
+             ->where('nick_name_id', '=', $delegator->nick_name_id)
+             ->where('delegate_nick_name_id','=',$delegatedTo)
+             ->update(['end'=>time()]);
+
             $supportTopic = new Support();
             $supportTopic->topic_num = $topic_num;
             $supportTopic->nick_name_id = $delegator->nick_name_id;
@@ -1053,6 +1083,10 @@ class SettingsController extends Controller
             //get sublevel of delgates
             $userNicknames = Nickname::personNicknameArray($delegator->nick_name_id);
             $subLevelDelegates = Support::where('topic_num', $topic_num)->whereIn('delegate_nick_name_id', $userNicknames)->where('end', '=', 0)->groupBy('nick_name_id')->get();
+             //ending support of child for previous camps and adding new 
+             Support::where('topic_num',$topic_num)
+             ->where('end', '=',0)
+             ->whereIN('delegate_nick_name_id',  $userNicknames)->update(['end'=>time()]);
             if(count($subLevelDelegates) > 0){
                 $this->addDelegatedSupport($subLevelDelegates,$topic_num,$camp_num,$support_order,$delegator->nick_name_id);
             }
@@ -1116,9 +1150,11 @@ class SettingsController extends Controller
         Session::save();
 
         $topic = Topic::where('topic_num', $topicNum)->get()->last();            
-        $this->dispatchJob($topic);
+       if(isset($topic)) {
+            Util::dispatchJob($topic, $campNum, 1);
+        }
 
-        return redirect(\App\Model\Camp::getTopicCampUrl($topicNum ,$campNum));
+        return redirect(\App\Model\Camp::getTopicCampUrl($topicNum ,$campNum, $currentTime = time()));
 
     }
     
@@ -1177,7 +1213,10 @@ class SettingsController extends Controller
                         $support->save();
                         $currentSupportOrder++;                 
                     }
-                    $this->deleteDelegateSupport($topicNum,$campNum,$nickNameId,$remaingSupportWithHighOrder,$startSupportOrder);
+
+                    if($promoteDelegate){
+                        $this->deleteDelegateSupport($topicNum,$campNum,$nickNameId,$remaingSupportWithHighOrder,$startSupportOrder);
+                    }
                 }   
             } 
             /* send support deleted mail to all supporter and subscribers */
@@ -1267,9 +1306,12 @@ class SettingsController extends Controller
         $result['topic_num'] = $topicNum;
         $result['camp_num'] = 1;
         $result['nick_name'] = $nickName->nick_name;
-        $result['nick_name_id'] = $nickName->id;
         $result['object'] = $topic->topic_name;       
         $result['subject'] = $nickName->nick_name . " has removed their delegated support from ". $parentUser->nick_name . " in ".$topic->topic_name." topic.";
+        //1081 issue
+        $result['namespace_id'] = (isset($topic->namespace_id) && $topic->namespace_id)  ?  $topic->namespace_id : 1;
+        $result['nick_name_id'] = $nickName->id;
+
         $result['topic'] = $topic;
         $link = \App\Model\Camp::getTopicCampUrl($topicNum,1);
         $parentSupport = Support::where('topic_num', $topicNum)

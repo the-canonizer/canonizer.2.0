@@ -2,7 +2,7 @@
 <p>Hello  {{ $user->first_name }} {{ $user->last_name }}, </p>
 
 <p>
-    {{ $data['nick_name']->nick_name }} {{$data['post_type']}} the following post to the Camp
+    <a target="_blank" href="<?= route('user_supports',$data['nick_name_id']) .'?topicnum=&campnum=&namespace=' . $data['namespace_id']; ?>">{{ $data['nick_name']->nick_name }}</a> {{$data['post_type']}} the following post to the Camp
     <a href="{{ url('/').'/'.$data['camp_url'] }}"> {{ $data['camp_name'] }} </a> forum:
 
 </p>

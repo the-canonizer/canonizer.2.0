@@ -1,5 +1,8 @@
+from selenium.webdriver.common.keys import Keys
+
 from CanonizerBase import Page
-from Identifiers import CampStatementEditPageIdentifiers,BrowsePageIdentifiers, TopicUpdatePageIdentifiers, AddCampStatementPageIdentifiers
+from Identifiers import CampStatementEditPageIdentifiers, BrowsePageIdentifiers, TopicUpdatePageIdentifiers, \
+    AddCampStatementPageIdentifiers
 from selenium.common.exceptions import NoSuchElementException
 import time
 
@@ -38,10 +41,16 @@ class CanonizerCampStatementPage(Page):
             self.find_element(*CampStatementEditPageIdentifiers.EDIT_CAMP_STATEMENT).click()
             self.hover(*CampStatementEditPageIdentifiers.SUBMIT_STATEMENT_UPDATE_BASED_ON_THIS)
             self.find_element(*CampStatementEditPageIdentifiers.SUBMIT_STATEMENT_UPDATE_BASED_ON_THIS).click()
-            return CanonizerCampStatementPage(self.driver)
+            page_title = self.find_element(*CampStatementEditPageIdentifiers.PAGE_TITLE).text
+            if page_title == 'Camp: Agreement':
+                return CanonizerCampStatementPage(self.driver)
         except NoSuchElementException:
             return False
         return True
+
+    def verify_previous_data_on_edit_camp_statement_page(self):
+        self.load_edit_camp_statement_page()
+        nick_name = self.find_element(*CampStatementEditPageIdentifiers.NICK_NAME).text
 
     def camp_statement_edit_page_mandatory_fields_are_marked_with_asterisk(self):
         """
@@ -127,11 +136,12 @@ class AddCampStatementPage(Page):
         try:
             self.hover(*AddCampStatementPageIdentifiers.ADD_CAMP_STATEMENT)
             self.find_element(*AddCampStatementPageIdentifiers.ADD_CAMP_STATEMENT).click()
-            time.sleep(3)
-            return AddCampStatementPage(self.driver)
+            page_title = self.find_element(*AddCampStatementPageIdentifiers.PAGE_TITLE).text
+            if page_title == 'Add Camp Statement':
+                return AddCampStatementPage(self.driver)
         except NoSuchElementException:
             return False
-        return True
+        return False
 
     def add_camp_statement_page_mandatory_fields_are_marked_with_asterisk(self):
         """
@@ -171,7 +181,7 @@ class AddCampStatementPage(Page):
             if elem.is_displayed():
                 self.submit_statement('', statement, note)
                 time.sleep(2)
-                return self.find_element(*AddCampStatementPageIdentifiers.ERROR_NICK_NAME)
+                return self.find_element(*AddCampStatementPageIdentifiers.ERROR_NICK_NAME).text
         except NoSuchElementException:
             return False
         return True
@@ -183,6 +193,37 @@ class AddCampStatementPage(Page):
     def submit_statement_with_valid_data(self, nick_name, statement, note):
         self.submit_statement(nick_name, statement, note)
         return self
+
+    def add_camp_statement_page_valid_data(self, statement, note):
+        self.enter_camp_statement(statement)
+        self.enter_note(note)
+        self.click_submit_statement_button()
+        return self.find_element(*AddCampStatementPageIdentifiers.SUCCESS_MESSAGE).text
+
+    def add_camp_statement_page_valid_data_with_enter_key(self, statement, note):
+        self.enter_camp_statement(statement)
+        self.enter_note(note)
+        self.find_element(*AddCampStatementPageIdentifiers.SUBMIT_STATEMENT).send_keys(Keys.ENTER)
+        return self.find_element(*AddCampStatementPageIdentifiers.SUCCESS_MESSAGE).text
+
+    def add_camp_statement_page_data_with_trailing_spaces(self, statement, note):
+        self.enter_camp_statement(statement)
+        self.enter_note(note)
+        time.sleep(6)
+        self.find_element(*AddCampStatementPageIdentifiers.SUBMIT_STATEMENT).send_keys(Keys.ENTER)
+        return self.find_element(*AddCampStatementPageIdentifiers.SUCCESS_MESSAGE).text
+
+    def add_camp_statement_page_without_mandatory_fields(self, statement):
+        self.enter_camp_statement(statement)
+        self.click_submit_statement_button()
+        message = self.find_element(*AddCampStatementPageIdentifiers.ERROR_MESSAGE).text
+        return message
+
+    def add_camp_statement_page_mandatory_fields_only(self, statement):
+        self.enter_camp_statement(statement)
+        self.click_submit_statement_button()
+        return self.find_element(*AddCampStatementPageIdentifiers.SUCCESS_MESSAGE).text
+
 
     def add_camp_statement_page_should_have_add_new_nick_name_link_for_new_users(self):
         try:
@@ -201,7 +242,3 @@ class AddCampStatementPage(Page):
         except NoSuchElementException:
             return False
         return True
-
-
-
-

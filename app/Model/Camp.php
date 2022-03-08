@@ -9,6 +9,7 @@ use App\Model\Algorithm;
 use App\Model\TopicSupport;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Database\Eloquent\Collection;
+use App\Facades\Util;
 
 class Camp extends Model {
 
@@ -647,10 +648,10 @@ class Camp extends Model {
         return $supportCountTotal;
     }
 
-    public function buildCampTree($traversedTreeArray, $currentCamp = null, $activeCamp = null, $activeCampDefault = false,$add_supporter = false, $arrowposition) {
+    public function buildCampTree($traversedTreeArray, $currentCamp = null, $activeCamp = null, $activeCampDefault = false,$add_supporter = false, $arrowposition, $linkKey = 'link', $titleKey = 'title') {
         $html = '<ul class="childrenNode">';
 		$action = Route::getCurrentRoute()->getActionMethod();
-        // $onecamp =  self::getLiveCamp($this->topic_num, $activeCamp);
+        //$onecamp =  self::getLiveCamp($this->topic_num, $activeCamp);
         
         if ($currentCamp == $activeCamp && $action != "index") { 
             $url_portion = self::getSeoBasedUrlPortion($this->topic_num,$currentCamp);
@@ -695,10 +696,10 @@ class Camp extends Model {
                     $support_tree_html.= '<ul>'.$support_tree.'</ul>';
                     $support_tree_html .= '</li></ul></div>';
                 }
-                $html .= '<span class="' . $class . '">' . $icon . '</span><div class="tp-title"><a style="' . $selected . '" href="' . $array['link'] . '">' . $array['title'] . '</a> <div class="badge">' . $array['score'] .'</div>'.$support_tree_html;
+                $html .= '<span class="' . $class . '">' . $icon . '</span><div class="tp-title"><a style="' . $selected . '" href="' . $array[$linkKey] . '">' . $array[$titleKey] . '</a> <div class="badge">' . $array['score'] .'</div>'.$support_tree_html;
                
                 $html .= '</div>';
-                $html .= $this->buildCampTree($array['children'], $campnum, $activeCamp, $activeCampDefault,$add_supporter,$arrowposition);
+                $html .= $this->buildCampTree($array['children'], $campnum, $activeCamp, $activeCampDefault,$add_supporter,$arrowposition, $linkKey, $titleKey);
                 $html .= '</li>';
             }
         }
@@ -775,8 +776,9 @@ class Camp extends Model {
         return $topic_id_name . '/' . $camp_num_name;
     }
 
-    public static function getTopicCampUrl($topic_num,$camp_num){
+    public static function getTopicCampUrl($topic_num,$camp_num,$currentTime = null){
         $urlPortion = self::getSeoBasedUrlPortion($topic_num,$camp_num); 
+        $urlPortion = $urlPortion.'?currentTime='.$currentTime.'';
         return url('topic/' .$urlPortion);
     }
 
@@ -941,9 +943,112 @@ class Camp extends Model {
         return $reducedTree = TopicSupport::sumTranversedArraySupportCount($tree);
     }
 
-    public function campTreeHtml($activeCamp = null, $activeCampDefault = false,$add_supporter = false, $arrowposition ='fa-arrow-down') {
-       $reducedTree = $this->campTree(session('defaultAlgo', 'blind_popularity'), $activeAcamp = null, $supportCampCount = 0, $needSelected = 0);
-        /* ticket 846 sunil */
+    public function campTreeHtml($activeCamp = null, $activeCampDefault = false,$add_supporter = false, $arrowposition ='fa-arrow-down', $topic = null) {
+         /**  
+          * Added by Ali Ahmad 
+          * Jira Ticket CS-17
+          */
+
+          $titleKey = 'title';
+          $linkKey = 'link';
+          $fromExistingCode = 1;
+  
+          $cronDate = env('CS_CRON_DATE'); 
+          $cronDate =  isset($cronDate) ? strtotime($cronDate) : strtotime(date('Y-m-d'));
+  
+          $asOf = 'default';
+  
+          if((isset($_REQUEST['asof']) && ($_REQUEST['asof'] == "review" || $_REQUEST['asof'] == "bydate"))){
+              $asOf = $_REQUEST['asof'];
+          }
+          else if ((session('asofDefault')== "review" || session('asofDefault')== "bydate" ) && !isset($_REQUEST['asof'])) {
+              $asOf = session('asofDefault');
+          }
+  
+          $asOfDefaultDate = date('Y-m-d');
+  
+          if(isset($_REQUEST['asof']) && $_REQUEST['asof'] == "bydate"){
+              $asOfDefaultDate = date('Y-m-d', strtotime($_REQUEST['asofdate']));
+           }else if(($asOf == 'bydate') && session('asofdateDefault')){
+              $asOfDefaultDate =  session('asofdateDefault');
+           }
+  
+          $asOfDefaultDate = strtotime($asOfDefaultDate);
+  
+          $selectedAlgo = 'blind_popularity';
+          if(session('defaultAlgo')) {
+              $selectedAlgo = session('defaultAlgo');
+          }
+        
+          $redirectRequestStartTime = \Request::has('currentTime') ? \Request::get('currentTime') : 0;
+          $currentTime = time() + (5 * 60); 
+          
+          if( ($asOfDefaultDate >= $cronDate) && ($selectedAlgo == 'blind_popularity' || $selectedAlgo == "mind_experts") && (($redirectRequestStartTime && $currentTime > $redirectRequestStartTime) || !$redirectRequestStartTime)){
+              //change the keys if the asOf is review
+              if($asOf == 'review'){
+                  $titleKey = 'review_title';
+                  $linkKey = 'review_link';
+              }
+  
+              $asOfDefaultDate = time();
+              $checkOfDefaultToday = time();
+  
+              if(isset($_REQUEST['asof']) && $_REQUEST['asof'] == "bydate"){
+                  $asOfDefaultDate = strtotime(date('Y-m-d H:i:s', strtotime($_REQUEST['asofdate'])));
+                  $checkOfDefaultDate = $asOfDefaultDate;
+             }else if(($asOf == 'bydate') && session('asofdateDefault')){
+                  $asOfDefaultDate =  strtotime(session('asofdateDefault'));
+                  $checkOfDefaultDate = $asOfDefaultDate;
+              }
+  
+              //check if bydate is greater than current date
+              if($checkOfDefaultDate > $checkOfDefaultToday){
+                  $asOfDefaultDate = time();
+              }
+  
+              $requestBody = [
+                  'topic_num' => $topic->topic_num,
+                  'algorithm' => $selectedAlgo,
+                  'asofdate'  => $asOfDefaultDate,
+                  'asOf'      => $asOf,
+                  'update_all' => 0
+              ];
+  
+              $appURL = env('CS_APP_URL');
+              $endpointCSGETTree =   env('CS_GET_TREE');
+              $endpoint = $appURL."/".$endpointCSGETTree;
+              $headers = array('Content-Type:multipart/form-data');
+  
+              $reducedTree = Util::execute('POST', $endpoint, $headers, $requestBody);
+  
+              $data = json_decode($reducedTree, true);
+  
+              if(count($data['data']) && $data['code'] == 200 ){
+
+                /** title and review title field empty in most of the cases if any key is null or empty
+                 *  then fetch data from mysql
+                 */
+                $topicName =  strlen($data['data'][0]['topic_name'])?? null;
+                $title     =  strlen($data['data'][0]['tree_structure']['1']['title'])?? null;
+                $reviewTitle =  strlen($data['data'][0]['tree_structure']['1']['review_title'])?? null;
+                
+                if($topicName && $title && $reviewTitle){
+                   $reducedTree = $data['data'][0]['tree_structure'];
+                   $fromExistingCode = 0;
+                }
+
+             }
+  
+          }
+         
+          if($fromExistingCode){
+              $reducedTree = $this->campTree(session('defaultAlgo', 'blind_popularity'), $activeAcamp = null, $supportCampCount = 0, $needSelected = 0);
+          }
+          
+          
+          /* End of CS-17 Jira ticket */
+       
+       /* ticket 846 sunil */
         $filter = isset($_REQUEST['filter']) && is_numeric($_REQUEST['filter']) ? $_REQUEST['filter'] : 0.000;
         if(session('filter')==="removed") {
             $filter = 0.000;	
@@ -986,8 +1091,8 @@ class Camp extends Model {
  	      $icon = '<i class="fa '.$arrowposition.'"></i>';
 
 		$html .= '<span class="' . $parentClass . '">'. $icon.' </span>';
-        $html .= '<div class="tp-title"><a style="' . $selected . '" href="' . $reducedTree[$this->camp_num]['link'] . '">' . $reducedTree[$this->camp_num]['title'] . '</a><div class="badge">' . round($reducedTree[$this->camp_num]['score'], 2) . '</div>'.$support_tree_html.'</div>';        
-        $html .= $this->buildCampTree($reducedTree[$this->camp_num]['children'], $this->camp_num, $activeCamp, $activeCampDefault,$add_supporter,$arrowposition);
+        $html .= '<div class="tp-title"><a style="' . $selected . '" href="' . $reducedTree[$this->camp_num][$linkKey] . '">' . $reducedTree[$this->camp_num][$titleKey] . '</a><div class="badge">' . round($reducedTree[$this->camp_num]['score'], 2) . '</div>'.$support_tree_html.'</div>';         
+        $html .= $this->buildCampTree($reducedTree[$this->camp_num]['children'], $this->camp_num, $activeCamp, $activeCampDefault,$add_supporter,$arrowposition, $linkKey, $titleKey);
         $html .= "</li>";
         return $html;
     }

@@ -48,6 +48,10 @@ class CommonForumFunctions
         $data['camp_name'] = $camp_name;
         $data['thread'] = CThread::where('id', $threadId)->latest()->get();
         $data['subject'] = $topic_name . " / " . $camp_name . " / " . $data['thread'][0]->title . " post " . $post_msg;
+        //1081 issue
+        $data['namespace_id'] = CommonForumFunctions::getNamespaceId($topicid);
+        $data['nick_name_id'] = $nick_id;
+
         $data['camp_url'] = "topic/" . $topicid . "-" . $topic_name_encoded . "/" . $campnum . "?";
         $data['nick_name'] = CommonForumFunctions::getForumNickName($nick_id);
         foreach ($subCampIds as $camp_id) {
@@ -137,6 +141,10 @@ class CommonForumFunctions
 
         $data['subject'] = $topic_name . " / " . $data['camp_name'] . " / " . $thread_title .
             " created";
+        //1081 issue
+        $data['namespace_id'] = CommonForumFunctions::getNamespaceId($topicid);
+        $data['nick_name_id'] = $nick_id;
+
         $data['camp_url'] = "topic/" . $topicid . "-" . $topic_name_encoded . "/" . $campnum . "?";
 
         $data['thread_title'] = $thread_title;
@@ -314,7 +322,6 @@ class CommonForumFunctions
         } else {
             $mailerObj = new ForumPostSubmittedMail($user, $link, $data);
         }
-
         $get_flags = DB::table('person')->where('email', '=', $email)
             ->where('private_flags', 'like', '%email%')
             ->get();
@@ -325,5 +332,20 @@ class CommonForumFunctions
         } else {
             Mail::to($email)->send($mailerObj);
         }
+    }
+
+    /**
+     * [getNamespaceId description]
+     * @param  [type] $topicid [description]
+     * @return [type]          [description]
+    */
+    public static function getNamespaceId($topicid)
+    {
+        return Topic::where('topic_num', $topicid)->
+            where('objector_nick_id', '=', null)
+            ->where('go_live_time', '<=', time())
+            ->latest('submit_time')->first()->namespace_id;
+        // ->orderBy('go_live_time', 'desc')->
+        // first()->topic_name;
     }
 }

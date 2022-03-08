@@ -13,6 +13,8 @@ class Support extends Model {
 
     protected static $tempArray = [];
 
+    protected $fillable = ['nick_name_id','topic_num','camp_num','delegate_nick_name_id','start','end','flags','support_order'];
+
    
     public static function boot() {
         
