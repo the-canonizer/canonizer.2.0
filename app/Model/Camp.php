@@ -981,9 +981,10 @@ class Camp extends Model {
           }
         
           $redirectRequestStartTime = \Request::has('currentTime') ? \Request::get('currentTime') : 0;
-          $currentTime = time() + (5 * 60); 
+          $currentTime = time(); 
+          $requestPayloadTime = $currentTime - $redirectRequestStartTime;
           
-          if( ($asOfDefaultDate >= $cronDate) && ($selectedAlgo == 'blind_popularity' || $selectedAlgo == "mind_experts") && (($redirectRequestStartTime && $currentTime > $redirectRequestStartTime) || !$redirectRequestStartTime)){
+          if( ($asOfDefaultDate >= $cronDate) && ($selectedAlgo == 'blind_popularity' || $selectedAlgo == "mind_experts") && (($redirectRequestStartTime && $requestPayloadTime >= 300) || !$redirectRequestStartTime)){
               //change the keys if the asOf is review
               if($asOf == 'review'){
                   $titleKey = 'review_title';
