@@ -43,7 +43,7 @@
             
             <button type="submit" id="submit" class="btn btn-login">Create News</button>
             <?php 
-               $link = \App\Model\Camp::getTopicCampUrl($topicnum,$camp_num);
+               $link = \App\Model\Camp::getTopicCampUrl($topicnum,$camp_num,time());
             ?>
             <a href="<?php echo $link; ?>" class="btn btn-default">Cancel</a>
         </form>

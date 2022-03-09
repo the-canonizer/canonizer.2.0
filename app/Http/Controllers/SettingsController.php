@@ -381,6 +381,7 @@ class SettingsController extends Controller
      */
     public function add_support(Request $request)
     {
+       
         $id = Auth::user()->id;
         $alreadyMailed = [];
         $as_of_time = time();
@@ -584,7 +585,7 @@ class SettingsController extends Controller
                 $result['delegated_user_id'] = $parentUserNickName->id;
 
                 //$link = \App\Model\Camp::getTopicCampUrl($data['topic_num'],$data['camp_num']);
-                $link = \App\Model\Camp::getTopicCampUrl($data['topic_num'],1); //#954
+                $link = \App\Model\Camp::getTopicCampUrl($data['topic_num'],1,time()); //#954
                 $subscribers = Camp::getCampSubscribers($data['topic_num'], $data['camp_num']);
                 $directSupporter = Support::getAllDirectSupporters($data['topic_num'], $data['camp_num']);
                 //check direct supporter or not mail
@@ -607,7 +608,7 @@ class SettingsController extends Controller
 
             }
             
-            return redirect(\App\Model\Camp::getTopicCampUrl($data['topic_num'],session('campnum'), $currentTime = time()));            
+            return redirect(\App\Model\Camp::getTopicCampUrl($data['topic_num'],session('campnum'),time()));            
         } else {
             return redirect()->route('login');
         }
@@ -737,7 +738,7 @@ class SettingsController extends Controller
         $result['namespace_id'] = (isset($topic->namespace_id) && $topic->namespace_id)  ?  $topic->namespace_id : 1;
         $result['nick_name_id'] = $nickName->id;
 
-        $link = \App\Model\Camp::getTopicCampUrl($data['topic_num'],$data['camp_num']);
+        $link = \App\Model\Camp::getTopicCampUrl($data['topic_num'],$data['camp_num'],time());
         $subscribers = Camp::getCampSubscribers($data['topic_num'], $data['camp_num']);
         $directSupporter = Support::getAllDirectSupporters($data['topic_num'], $data['camp_num']);
         $result['support_added'] = 1;
@@ -777,7 +778,7 @@ class SettingsController extends Controller
                 $result['subject'] = $nickName->nick_name . " has removed their delegated support from ". $parentUserNickName->nick_name." in ".$result['object'].".";
             }
            
-            $link = \App\Model\Camp::getTopicCampUrl($data['topic_num'],$data['camp_num']);
+            $link = \App\Model\Camp::getTopicCampUrl($data['topic_num'],$data['camp_num'],time());
             $deletedSupport = Support::where('topic_num', $data['topic_num'])
                 ->whereIn('nick_name_id', [$data['nick_name']])
                 ->orderBy('end', 'DESC')
@@ -1153,7 +1154,7 @@ class SettingsController extends Controller
             Util::dispatchJob($topic, $campNum, 1);
         }
 
-        return redirect(\App\Model\Camp::getTopicCampUrl($topicNum ,$campNum, $currentTime = time()));
+        return redirect(\App\Model\Camp::getTopicCampUrl($topicNum ,$campNum, time()));
 
     }
     
@@ -1240,8 +1241,8 @@ class SettingsController extends Controller
         $data['topic'] = $topic;
         $data['camp'] = $camp;
         $data['subject'] ="You have been promoted";
-        $data['topic_link'] = \App\Model\Camp::getTopicCampUrl($topicNum,1);
-        $data['camp_link'] = \App\Model\Camp::getTopicCampUrl($topicNum,$camp->camp_num);        
+        $data['topic_link'] = \App\Model\Camp::getTopicCampUrl($topicNum,1,time());
+        $data['camp_link'] = \App\Model\Camp::getTopicCampUrl($topicNum,$camp->camp_num,time());        
         foreach ($alldirectDelegates as $supporter) {
             $user = Nickname::getUserByNickName($supporter->nick_name_id);
             $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
@@ -1271,8 +1272,8 @@ class SettingsController extends Controller
         $data['topic'] = $topic;
         $data['camp'] = $camp;
         $data['subject'] ="You have been promoted as direct supporter";
-        $data['topic_link'] = Camp::getTopicCampUrl($topicNum,1);
-        $data['camp_link'] = Camp::getTopicCampUrl($topicNum,$campNum);   
+        $data['topic_link'] = Camp::getTopicCampUrl($topicNum,1,time());
+        $data['camp_link'] = Camp::getTopicCampUrl($topicNum,$campNum,time());   
         $data['url_portion'] =  Camp::getSeoBasedUrlPortion($topicNum,$campNum);     
         foreach ($alldirectDelegates as $supporter) {
             $user = Nickname::getUserByNickName($supporter->nick_name_id);
@@ -1312,7 +1313,7 @@ class SettingsController extends Controller
         $result['nick_name_id'] = $nickName->id;
 
         $result['topic'] = $topic;
-        $link = \App\Model\Camp::getTopicCampUrl($topicNum,1);
+        $link = \App\Model\Camp::getTopicCampUrl($topicNum,1,time());
         $parentSupport = Support::where('topic_num', $topicNum)
             ->whereIn('nick_name_id', [$delegateNickNameId])
             ->orderBy('end', 'DESC')
@@ -1399,7 +1400,7 @@ class SettingsController extends Controller
         //$data['subject'] = $nickName->nick_name . " has removed their delegated support from ". $parentUser->nick_name . " in ".$data['topic']->topic_name." topic."; 
         $data['subject'] = $data['nick_name'] . " has removed their delegated support from ". $parentUser->nick_name . " in ".$data['topic']->topic_name." topic."; 
                 
-        $link = \App\Model\Camp::getTopicCampUrl($data['topic_num'],1);          
+        $link = \App\Model\Camp::getTopicCampUrl($data['topic_num'],1,time());          
         $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
         try{
             Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new SupportRemovedMail($user, $link, $data));
