@@ -1013,7 +1013,7 @@ class TopicController extends Controller {
                 $statement->grace_period = 1;
             }
         }
-
+        dd($statement);
         /**
          * Scenario 4
          * User A creates topic -> support will be added automatically to agreement camp -> remove support
