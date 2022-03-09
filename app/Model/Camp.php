@@ -441,22 +441,16 @@ class Camp extends Model {
             Camp::$chilcampArray[] = $key;
             Camp::$chilcampArray[] = $key1;
             $camparray[] = $camp->camp_num;
+            //adding go_live_time condition Sunil Talentelgia
             $childCamps = Camp::where('topic_num', $camp->topic_num)->where('parent_camp_num', $camp->camp_num)->where('go_live_time', '<=', time())->groupBy('camp_num')->latest('submit_time')->get();
             foreach ($childCamps as $child) {
+                //adding go_live_time condition Sunil Talentelgia
                 $latestParent = Camp::where('topic_num', $child->topic_num)
                 ->where('camp_num', $child->camp_num)->where('go_live_time', '<=', time())->latest('submit_time')->first();
                 if($latestParent->parent_camp_num == $camp->camp_num ){ 
                     $camparray = array_merge($camparray, self::getAllChildCamps($child)); 
 
                 }
-               /* if($camp->camp_num == 1){
-                    $ifParentChanged = true;
-                }else{
-                    $ifParentChanged =  $latestParent->parent_camp_num == $camp->camp_num;
-                }
-                if($ifParentChanged){
-                    $camparray = array_merge($camparray, self::getAllChildCamps($child)); 
-                }*/
                 
             }
         }
