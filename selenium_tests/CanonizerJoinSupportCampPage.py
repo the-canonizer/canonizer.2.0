@@ -1,19 +1,21 @@
 from CanonizerBase import Page
-from Identifiers import JoinSupportCampPageIdentifiers, BrowsePageIdentifiers, TopicUpdatePageIdentifiers
+from Identifiers import JoinSupportCampPageIdentifiers, BrowsePageIdentifiers, TopicUpdatePageIdentifiers, \
+    CreateNewTopicPageIdentifiers
 from selenium.common.exceptions import NoSuchElementException
 import time
 
 
 class CanonizerJoinSupportCampPage(Page):
     supported_camps = "Supported Camps"
+
     def load_topic_page(self):
         # Browse to Browse Page
-        self.hover(*BrowsePageIdentifiers.BROWSE)
-        self.find_element(*BrowsePageIdentifiers.BROWSE).click()
+        self.hover(*JoinSupportCampPageIdentifiers.BROWSE)
+        self.find_element(*JoinSupportCampPageIdentifiers.BROWSE).click()
 
         # Browse to Topic Name
-        self.hover(*TopicUpdatePageIdentifiers.TOPIC_IDENTIFIER)
-        self.find_element(*TopicUpdatePageIdentifiers.TOPIC_IDENTIFIER).click()
+        self.hover(*JoinSupportCampPageIdentifiers.TOPIC_IDENTIFIER)
+        self.find_element(*JoinSupportCampPageIdentifiers.TOPIC_IDENTIFIER).click()
         return CanonizerJoinSupportCampPage(self.driver)
 
     def load_join_support_camp_page(self):
@@ -83,3 +85,42 @@ class CanonizerJoinSupportCampPage(Page):
                 return CanonizerJoinSupportCampPage(self.driver)
         except NoSuchElementException:
             return False
+
+    def verifying_one_person_one_vote_01(self):
+        self.load_topic_page()
+        parent_support_count = self.find_element(*JoinSupportCampPageIdentifiers.BADGE).text
+        if parent_support_count == '1':
+            self.find_element(*JoinSupportCampPageIdentifiers.CHILD_CAMP).click()
+            before_support_child_count = self.find_element(*JoinSupportCampPageIdentifiers.SUPPORT).text
+            if before_support_child_count == '0':
+                self.find_element(*JoinSupportCampPageIdentifiers.JOINSUPPORTCAMP).click()
+                self.find_element(*JoinSupportCampPageIdentifiers.CONFIRM_SUBMIT).click()
+                self.find_element(*JoinSupportCampPageIdentifiers.PARENT_CAMP).click()
+                try:
+                    self.find_element(*JoinSupportCampPageIdentifiers.CHILD_SUPPORT)
+                except NoSuchElementException:
+                    return CanonizerJoinSupportCampPage(self.driver)
+
+    def verifying_one_person_one_vote_02(self):
+        self.load_topic_page()
+        parent_support_count = self.find_element(*JoinSupportCampPageIdentifiers.BADGE).text
+        if parent_support_count == '1':
+            self.find_element(*JoinSupportCampPageIdentifiers.CHILD_CAMP).click()
+            before_support_child_count = self.find_element(*JoinSupportCampPageIdentifiers.SUPPORT).text
+            if before_support_child_count == '0':
+                self.find_element(*JoinSupportCampPageIdentifiers.JOINSUPPORTCAMP).click()
+                self.find_element(*JoinSupportCampPageIdentifiers.CONFIRM_SUBMIT).click()
+                child_support =self.find_element(*JoinSupportCampPageIdentifiers.SUPPORT).text
+                if child_support == '1':
+                    self.find_element(*JoinSupportCampPageIdentifiers.CHILD_CAMP_2).click()
+                    self.find_element(*JoinSupportCampPageIdentifiers.JOINSUPPORTCAMP).click()
+                    self.find_element(*JoinSupportCampPageIdentifiers.SUBMIT).click()
+                    parent_count = self.find_element(*JoinSupportCampPageIdentifiers.PARENT_BADGE).text
+                    child_01_badge = self.find_element(*JoinSupportCampPageIdentifiers.CHILD_01_BADGE).text
+                    child_02_badge = self.find_element(*JoinSupportCampPageIdentifiers.CHILD_02_BADGE).text
+                    if parent_count == '0.75' and child_01_badge == '0.5' and child_02_badge == '0.25':
+                        return CanonizerJoinSupportCampPage(self.driver)
+
+
+
+

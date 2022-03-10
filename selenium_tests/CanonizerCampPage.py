@@ -252,9 +252,9 @@ class CanonizerCampPage(Page):
 
 
 class CanonizerEditCampPage(Page):
-
     success_message = "Success! Camp change submitted successfully."
     window_scroll = "window.scrollTo(0, document.body.scrollHeight);"
+
     def load_topic_agreement_page(self):
         """
             Go To The topic
