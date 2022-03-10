@@ -979,7 +979,7 @@ class Camp extends Model {
         
           $redirectRequestStartTime = \Request::has('currentTime') ? \Request::get('currentTime') : 0;
           $currentTime = time() + (5 * 60); 
-          
+         /* 
           if( ($asOfDefaultDate >= $cronDate) && ($selectedAlgo == 'blind_popularity' || $selectedAlgo == "mind_experts") && (($redirectRequestStartTime && $currentTime > $redirectRequestStartTime) || !$redirectRequestStartTime)){
               //change the keys if the asOf is review
               if($asOf == 'review'){
@@ -1037,7 +1037,7 @@ class Camp extends Model {
              }
   
           }
-         
+         */
           if($fromExistingCode){
               $reducedTree = $this->campTree(session('defaultAlgo', 'blind_popularity'), $activeAcamp = null, $supportCampCount = 0, $needSelected = 0);
           }
