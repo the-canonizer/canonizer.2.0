@@ -77,7 +77,7 @@ class CanonizerRegisterPage(Page):
         if error == 'The last name field is required.':
             return CanonizerRegisterPage(self.driver)
 
-    def registration_with_blank_email(self,REG_LIST_5):
+    def registration_with_blank_email(self, REG_LIST_5):
         self.register(REG_LIST_5[0], REG_LIST_5[1], REG_LIST_5[2], REG_LIST_5[3], REG_LIST_5[4], REG_LIST_5[5],
                       REG_LIST_5[6])
         error = self.find_element(*RegistrationPageIdentifiers.ERROR_EMAIL).text
@@ -94,7 +94,7 @@ class CanonizerRegisterPage(Page):
     def registration_with_invalid_password_length(self, REG_LIST_7):
         self.register(REG_LIST_7[0], REG_LIST_7[1], REG_LIST_7[2], REG_LIST_7[3], REG_LIST_7[4], REG_LIST_7[5],
                       REG_LIST_7[6])
-        error =self.find_element(*RegistrationPageIdentifiers.ERROR_PASSWORD).text
+        error = self.find_element(*RegistrationPageIdentifiers.ERROR_PASSWORD).text
         if error == 'Password must be at least 8 characters, including at least one digit, one lower case letter and one special character(@,# !,$..).':
             return CanonizerRegisterPage(self.driver)
 
@@ -107,7 +107,6 @@ class CanonizerRegisterPage(Page):
 
     def registration_should_have_login_option_for_existing_users(self):
         return self.find_element(*RegistrationPageIdentifiers.LOGINOPTION).text
-
 
     def register_page_mandatory_fields_are_marked_with_asterisk(self):
         """
@@ -124,13 +123,15 @@ class CanonizerRegisterPage(Page):
             self.find_element(*RegistrationPageIdentifiers.CNFM_PSSWD_ASTRK)
 
     def registration_with_duplicate_email(self, REG_LIST_2):
-        self.register(REG_LIST_2[0], REG_LIST_2[1], REG_LIST_2[2], REG_LIST_2[3], REG_LIST_2[4], REG_LIST_2[5], REG_LIST_2[6])
+        self.register(REG_LIST_2[0], REG_LIST_2[1], REG_LIST_2[2], REG_LIST_2[3], REG_LIST_2[4], REG_LIST_2[5],
+                      REG_LIST_2[6])
         error = self.find_element(*RegistrationPageIdentifiers.ERROR_DUPLICATE_EMAIL).text
         if error == 'The email has already been taken.':
             return CanonizerRegisterPage(self.driver)
 
-    def registration_with_blank_spaces_first_name(self,REG_LIST_1):
-        self.register(REG_LIST_1[0], REG_LIST_1[1], REG_LIST_1[2], REG_LIST_1[3], REG_LIST_1[4], REG_LIST_1[5], REG_LIST_1[6])
+    def registration_with_blank_spaces_first_name(self, REG_LIST_1):
+        self.register(REG_LIST_1[0], REG_LIST_1[1], REG_LIST_1[2], REG_LIST_1[3], REG_LIST_1[4], REG_LIST_1[5],
+                      REG_LIST_1[6])
         error = self.find_element(*RegistrationPageIdentifiers.ERROR_FIRST_NAME).text
         if error == 'The first name field is required.':
             return CanonizerRegisterPage(self.driver)
@@ -184,6 +185,20 @@ class CanonizerRegisterPage(Page):
         if error == 'The email must be a valid email address.':
             return CanonizerRegisterPage(self.driver)
 
-
-
-
+    def verify_registration_placeholders(self):
+        first_name = self.find_element(*RegistrationPageIdentifiers.FIRST_NAME)
+        middle_name = self.find_element(*RegistrationPageIdentifiers.MIDDLE_NAME)
+        last_name = self.find_element(*RegistrationPageIdentifiers.LAST_NAME)
+        email = self.find_element(*RegistrationPageIdentifiers.EMAIL)
+        password = self.find_element(*RegistrationPageIdentifiers.PASSWORD)
+        confirm_password = self.find_element(*RegistrationPageIdentifiers.CONFIRM_PASSWORD)
+        first_name_placeholder = first_name.get_attribute('placeholder')
+        middle_name_placeholder = middle_name.get_attribute('placeholder')
+        last_name_placeholder = last_name.get_attribute('placeholder')
+        email_placeholder = email.get_attribute('placeholder')
+        password_placeholder = password.get_attribute('placeholder')
+        confirm_password_placeholder = confirm_password.get_attribute('placeholder')
+        if first_name_placeholder == 'First Name' and middle_name_placeholder == 'Middle Name' \
+                and last_name_placeholder == 'Last Name' and email_placeholder == 'Email' \
+                and password_placeholder == 'Password' and confirm_password_placeholder == 'Confirm Password':
+            return CanonizerRegisterPage(self.driver)
