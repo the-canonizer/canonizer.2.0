@@ -80,7 +80,7 @@ if(isset($topic) && count($topic) > 0 ) {?>
             <?php }else if(Auth::check() && Auth::user()->id && isset($subscribedCamp) && isset($subscribedCamp->topic_num)  && $camp_subscriptions == 2){ 
                  $title = preg_replace('/[^A-Za-z0-9\-]/', '-', $subscribedCamp->topic->topic_name);
                  $topic_id = $subscribedCamp->topic_num . "-" . $title;
-                 $link = \App\Model\Camp::getTopicCampUrl($subscribedCamp->topic_num,$subscribedCamp->camp_num);
+                 $link = \App\Model\Camp::getTopicCampUrl($subscribedCamp->topic_num,$subscribedCamp->camp_num,time());
              ?> 
                 <a href="<?php echo $link; ?>"  data-toggle="tooltip" data-placement="top" title="You are subscribed to  {{$subscribedCamp->camp_name}} camp" style="float: right;font-size: medium; margin-right: 20px; margin-top: 5px;"><input disabled="true" id="camp_subscription" type="checkbox" name="subscribe" checked="checked" /> Subscribe</a>
             <?php }else if(Auth::check() && Auth::user()->id){ ?>
