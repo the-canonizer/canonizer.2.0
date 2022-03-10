@@ -1218,7 +1218,7 @@ class TopicController extends Controller {
         } else if (isset($data['change_for']) && $data['change_for'] == 'camp') {
             $camp = Camp::where('id', $changeID)->first();
 			if(isset($camp)) {
-                // while updating camp check if any old support then remove it if parent camp changed 1076
+                //sunil Talentelgia- while updating camp check if any old support then remove it if parent camp changed 1076 / 1211
                 $this->checkParentCampChanged($camp->topic_num,$camp->camp_num,$camp->parent_camp_num); 
                 //end 1076
                 $submitterNickId = $camp->submitter_nick_id;
@@ -1508,6 +1508,9 @@ class TopicController extends Controller {
         ->onQueue('canonizer-service')
         ->unique(Topic::class, $topic->id);
     }
+<<<<<<< HEAD
+    //Sunil Talentelgia This function only work when we changes parent camp. In that case we remove support of parent camp 
+=======
 
     public function add_topic_subscription(Request $request){
         try{
@@ -1539,8 +1542,9 @@ class TopicController extends Controller {
         }
     }
          
+>>>>>>> staging
     private function checkParentCampChanged($topic_num, $camp_num, $parent_camp_num) {
-        // while updating camp check if any old support then remove it if parent camp changed
+        //Sunil Talentelgia while updating camp check if any old support then remove it if parent camp changed
         $campOldData = Camp::getLiveCamp($topic_num,$camp_num);
         if(isset($parent_camp_num) && $parent_camp_num!='' && $parent_camp_num != $campOldData->parent_camp_num){
             //#924 start
