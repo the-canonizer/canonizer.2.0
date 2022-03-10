@@ -1508,9 +1508,6 @@ class TopicController extends Controller {
         ->onQueue('canonizer-service')
         ->unique(Topic::class, $topic->id);
     }
-<<<<<<< HEAD
-    //Sunil Talentelgia This function only work when we changes parent camp. In that case we remove support of parent camp 
-=======
 
     public function add_topic_subscription(Request $request){
         try{
@@ -1542,7 +1539,7 @@ class TopicController extends Controller {
         }
     }
          
->>>>>>> staging
+    //Sunil Talentelgia This function only work when we changes parent camp. In that case we remove support of parent camp 
     private function checkParentCampChanged($topic_num, $camp_num, $parent_camp_num) {
         //Sunil Talentelgia while updating camp check if any old support then remove it if parent camp changed
         $campOldData = Camp::getLiveCamp($topic_num,$camp_num);
