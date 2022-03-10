@@ -173,7 +173,7 @@ if (!empty($topics)) {
                             @endif 	 				 
                         </div>    
                         <div class="CmpHistoryPnl-footer">
-                            <?php if ($currentTime < $data->go_live_time && $currentTime >= $data->submit_time && ($ifIamSupporter || $ifIamDelegatedSupporter)) { ?>
+                            <?php if ($currentTime < $data->go_live_time && $currentTime >= $data->submit_time && ($ifIamSupporter)) { ?>
                                 <a id="object" class="btn btn-historysmt mb-1" href="<?php echo url('manage/topic/' . $data->id . '-objection'); ?>">Object</a>
                             <?php }else if($currentTime < $data->go_live_time && $currentTime >= $data->submit_time && $ifSupportDelayed){ ?>
                                 <button type="button" onClick="disagreementPopup()" class="btn btn-historysmt mb-1 disable-btn"  >Object &nbsp;<i title="You can not object to this camp change" class="fa fa-info-circle" aria-hidden="true"></i></button>

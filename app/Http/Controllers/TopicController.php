@@ -379,7 +379,9 @@ class TopicController extends Controller {
                             ->where('camp_num', '=', $parentcampnum)->get();
         }
         $camp_subscriptionsData = Camp::getCampSubscription($topicnum,$parentcampnum,$userid);
+        $topic_subscriptionsData = Camp::getTopicSubscription($topicnum,0,$userid);
         $camp_subscriptions = $camp_subscriptionsData['flag'];
+        $topic_subscriptions = $topic_subscriptionsData['flag'];
         $subscribedCamp = $camp_subscriptionsData['camp'];
         $camp_subscription_data = $camp_subscriptionsData['camp_subscription_data'];
         session()->forget("topic-support-{$topicnum}");
@@ -408,8 +410,7 @@ class TopicController extends Controller {
             $editFlag = false;
         }
        
-
-        return view('topics.view', compact('topic', 'parentcampnum','camp_subscriptions','camp_subscription_data','subscribedCamp', 'parentcamp', 'camp', 'wiky', 'id','news','editFlag','topicData','campData','ifIamSupporter'));
+        return view('topics.view', compact('topic', 'parentcampnum','topic_subscriptions','topic_subscriptionsData','camp_subscriptions','camp_subscription_data','subscribedCamp', 'parentcamp', 'camp', 'wiky', 'id','news','editFlag','topicData','campData','ifIamSupporter'));
     }
 
     /**
@@ -933,7 +934,6 @@ class TopicController extends Controller {
         $statement->go_live_time = $currentTime; //strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
         $statement->language = 'English';
         $statement->grace_period = 1;
-
         $eventtype = "CREATE";
         $message = "Statement submitted successfully.";
         if (isset($all['camp_num'])) {
@@ -1508,6 +1508,36 @@ class TopicController extends Controller {
         ->unique(Topic::class, $topic->id);
     }
 
+    public function add_topic_subscription(Request $request){
+        try{
+            $all = $request->all();
+             $id = isset($all['id']) ? $all['id'] : null;
+             if($all['checked'] == 'true'){
+                $camp_subscription = new \App\Model\CampSubscription();
+                 $camp_subscription->user_id = $all['userid'];
+                 $camp_subscription->topic_num = $all['topic_num'];
+                 $camp_subscription->camp_num = 0;
+                 $camp_subscription->subscription_start = strtotime(date('Y-m-d H:i:s'));
+                $msg = "You have successfully subscribed to this Topic.";
+             }else{
+                if($id){
+                    $camp_subs_data = \App\Model\CampSubscription::where('topic_num','=',$all['topic_num'])->where('user_id', '=', $all['userid'])->get();
+                    $camp_subscription = $camp_subs_data[0];
+                    $camp_subscription->subscription_end = strtotime(date('Y-m-d H:i:s'));
+                }
+                
+                $msg = "You have successfully unsubscribed from this Topic.";
+             }
+             $camp_subscription->save();
+             $returnId = ($id) ? null : $camp_subscription->id;
+             return response()->json(['result' => "Success", 'message' =>$msg ,'id'=>$returnId]);
+        
+        }catch(\Exception $e){
+             return response()->json(['result' => "Error", 'message' => 'Error in subscring the camp.']);
+        
+        }
+    }
+         
     private function checkParentCampChanged($topic_num, $camp_num, $parent_camp_num) {
         // while updating camp check if any old support then remove it if parent camp changed
         $campOldData = Camp::getLiveCamp($topic_num,$camp_num);
