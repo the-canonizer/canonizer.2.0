@@ -82,4 +82,12 @@ class CanonizerSearchPage(Page):
             self.click_search_button()
             return CanonizerSearchPage(self.driver)
 
-
+    def verify_search_button_placeholder(self):
+        search = self.find_element(*CanonizerSearchPageIdentifiers.SEARCH_KEYWORD)
+        search_placeholder = search.get_attribute('placeholder')
+        if search_placeholder == 'Google Search for...':
+            self.find_element(*CanonizerSearchPageIdentifiers.SEARCH_KEYWORD).send_keys("Demo text")
+            search = self.find_element(*CanonizerSearchPageIdentifiers.SEARCH_KEYWORD).text
+            print(search_placeholder, "Text")
+            if search == "":
+                return CanonizerSearchPage(self.driver)
