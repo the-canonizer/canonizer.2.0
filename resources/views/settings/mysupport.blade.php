@@ -36,7 +36,7 @@
                 @if(count($supportedTopic))
                  @foreach($supportedTopic as $data)
                  <?php  
-                     $link = \App\Model\Camp::getTopicCampUrl($data->topic->topic_num,1);
+                     $link = \App\Model\Camp::getTopicCampUrl($data->topic->topic_num,1,time());
                  ?>
                        <div class="SpCmpHd"><b>For Topic : <a href="<?php echo $link; ?>">{{ $data->topic->topic_name}} </a> </b></div>
                		<div class="row column{{ $data->topic_num }}" style="padding:10px 15px;">
@@ -58,7 +58,7 @@
 						  <button type="submit" id="submit_{{ $support->support_id }}" class="btn-sptclose" title="Remove Support"><i class="fa fa-close"></i></button>
 						 </form>
 						    <?php  
-                     $link = \App\Model\Camp::getTopicCampUrl($data->topic_num,isset($support->camp->camp_num) ? $support->camp->camp_num : '1' );
+                     $link = \App\Model\Camp::getTopicCampUrl($data->topic_num,isset($support->camp->camp_num) ? $support->camp->camp_num : '1',time() );
 
                  ?>
 					     <b><span class="support_order">{{ $support->support_order }}</span> . <a style="text-decoration: underline; color: blue;" href="<?php echo $link; ?>"> {{ isset($camp->camp_name) ? $camp->camp_name : '' }}  </a> <br/>

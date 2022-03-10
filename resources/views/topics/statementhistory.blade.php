@@ -214,7 +214,7 @@
                   @endif 
 				  
 				 <div class="CmpHistoryPnl-footer">
-				    <?php if($currentTime < $data->go_live_time && $currentTime >= $data->submit_time && ($ifIamSupporter || $ifIamDelegatedSupporter)) { ?>
+				    <?php if($currentTime < $data->go_live_time && $currentTime >= $data->submit_time && ($ifIamSupporter)) { ?>
                         <a id="object" class="btn btn-historysmt mb-1" href="<?php echo url('manage/statement/'.$data->id.'-objection');?>">Object</a>
                     <?php }else if($currentTime < $data->go_live_time && $currentTime >= $data->submit_time && $ifSupportDelayed){ ?>
                         <button type="button" onClick="disagreementPopup()" class="btn btn-historysmt mb-1 disable-btn">Object &nbsp;<i title="You can not object to this camp statement." class="fa fa-info-circle" aria-hidden="true"></i></button>
@@ -223,7 +223,7 @@
                     <?php } ?>  
 					<a id="update" class="btn btn-historysmt mb-1" href="<?php echo url('manage/statement/'.$data->id);?>">Submit Statement Update Based On This</a>
                    <?php
-                        $link = \App\Model\Camp::getTopicCampUrl($data->topic_num,$data->camp_num);
+                        $link = \App\Model\Camp::getTopicCampUrl($data->topic_num,$data->camp_num,time());
                       ?>
                     <a id="version" class="btn btn-historysmt mb-1" href="<?php echo $link.'?asof=bydate&asofdate='. date('Y/m/d H:i:s', $data->go_live_time); ?>">View This Version</a>
 				          <script>
