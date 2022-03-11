@@ -1,7 +1,7 @@
 from CanonizerBase import Page
 from Identifiers import UploadFileIdentifiers
 import time
-from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import NoSuchElementException, WebDriverException
 
 
 class CanonizerUploadFilePage(Page):
@@ -96,7 +96,7 @@ class CanonizerUploadFilePage(Page):
     def verify_uploaded_image_file_format(self, originalfilename, file_name):
         self.upload(originalfilename, file_name)
         error_message = self.find_element(*UploadFileIdentifiers.ERROR_INVALID_FILE_FORMAT).text
-        if error_message  in 'Error! The type of the uploaded file should be an image.(jpeg,jpg,png,bmp,gif)':
+        if error_message in 'Error! The type of the uploaded file should be an image.(jpeg,jpg,png,bmp,gif)':
             return CanonizerUploadFilePage(self.driver)
 
     def open_uploaded_file(self):
@@ -112,4 +112,39 @@ class CanonizerUploadFilePage(Page):
         self.upload(originalfilename)
         error = self.find_element(*UploadFileIdentifiers.SAME_FILE_NAME_ERROR).text
         if error == 'Error! The type of the uploaded file should be an image.(jpeg,jpg,png,bmp,gif)':
+            return CanonizerUploadFilePage(self.driver)
+
+    def load_file_upload_page(self):
+        title = self.find_element(*UploadFileIdentifiers.TITLE).text
+        if title == 'Canonizer Main Page':
+            self.hover(*UploadFileIdentifiers.UPLOADFILE)
+            self.find_element(*UploadFileIdentifiers.UPLOADFILE).click()
+
+    def verify_login_on_upload_file_page(self):
+        self.load_file_upload_page()
+        login = self.find_element(*UploadFileIdentifiers.LOGIN).text
+        if login == 'Log in':
+            return CanonizerUploadFilePage(self.driver)
+
+    def verify_upload_file_button_is_clickable(self):
+        self.load_file_upload_page()
+        self.hover(*UploadFileIdentifiers.UPLOAD)
+        try:
+            self.find_element(*UploadFileIdentifiers.UPLOAD).click()
+            return CanonizerUploadFilePage(self.driver)
+        except WebDriverException:
+            return False
+
+    def verify_choose_file_button_is_clickable(self):
+        self.load_file_upload_page()
+        try:
+            self.find_element(*UploadFileIdentifiers.CHOOSE_FILE_BUTTON).click()
+            return CanonizerUploadFilePage(self.driver)
+        except WebDriverException:
+            return False
+
+    def verify_file_upload_warning(self):
+        self.load_file_upload_page()
+        warning = self.find_element(*UploadFileIdentifiers.WARNING).text
+        if warning == 'Warning : Once a file will be uploaded there is no way to delete the file.':
             return CanonizerUploadFilePage(self.driver)
