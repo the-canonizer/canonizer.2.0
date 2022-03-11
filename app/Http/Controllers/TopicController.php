@@ -255,7 +255,7 @@ class TopicController extends Controller {
                 $link = 'topic-history/' . $topic->topic_num;
 				$data['type'] = "topic";
                 $data['object'] = $topic->topic_name;
-				$data['link'] = \App\Model\Camp::getTopicCampUrl($topic->topic_num,1);	
+				$data['link'] = \App\Model\Camp::getTopicCampUrl($topic->topic_num,1,time());	
                 try{
                      Mail::to(Auth::user()->email)->bcc(config('app.admin_bcc'))->send(new ThankToSubmitterMail(Auth::user(), $link,$data));
                 }catch(\Swift_TransportException $e){
@@ -276,7 +276,7 @@ class TopicController extends Controller {
                 $link = 'topic-history/' . $topic->topic_num;             
                 $data['object'] = $liveTopic->topic_name;
                 $nickName = Nickname::getNickName($all['nick_name']);
-                $data['topic_link'] = \App\Model\Camp::getTopicCampUrl($topic->topic_num,1);  
+                $data['topic_link'] = \App\Model\Camp::getTopicCampUrl($topic->topic_num,1,time());  
                 $data['type'] = "Topic";
                 $data['object'] = $liveTopic->topic_name;
                 $data['object_type'] = ""; 
@@ -308,7 +308,7 @@ class TopicController extends Controller {
         }
 
         if ($eventtype == "CREATE") {
-            $link_url = \App\Model\Camp::getTopicCampUrl($topic->topic_num, 1, $currentTime = time());
+            $link_url = \App\Model\Camp::getTopicCampUrl($topic->topic_num, 1, time());
             
             return redirect($link_url)->with(['success' => $message, 'go_live_time' => $go_live_time, 'objection' => $objection]);            
         }
@@ -393,6 +393,7 @@ class TopicController extends Controller {
 			
 		 $parentcamp = "N/A";	
 		}
+        
         $wiky = new Wiky;        
         //news feeds
         $editFlag = true;
@@ -824,8 +825,8 @@ class TopicController extends Controller {
                 $data['type'] = "camp";
                 $camp_id= isset($camp->camp_num) ? $camp->camp_num:1;
                 $livecamp = Camp::getLiveCamp($camp->topic_num,$camp->camp_num);
-                $data['object'] = $livecamp->topic->topic_name . " / " . $camp->camp_name;
-                $data['link'] = \App\Model\Camp::getTopicCampUrl($camp->topic_num,$camp_id);
+				$data['object'] = $livecamp->topic->topic_name . " / " . $camp->camp_name;
+				$data['link'] = \App\Model\Camp::getTopicCampUrl($camp->topic_num,$camp_id, time());
                 try{
                     Mail::to(Auth::user()->email)->bcc(config('app.admin_bcc'))->send(new ThankToSubmitterMail(Auth::user(), $link,$data));
                 }catch(\Swift_TransportException $e){
@@ -849,7 +850,7 @@ class TopicController extends Controller {
                 $data['namespace_id'] = (isset($livecamp->topic->namespace_id) && $livecamp->topic->namespace_id)  ?  $livecamp->topic->namespace_id : 1;
                 $data['nick_name_id'] = $nickName->id;
 
-                $data['topic_link'] = \App\Model\Camp::getTopicCampUrl($camp->topic_num,$camp->camp_num); 
+                $data['topic_link'] = \App\Model\Camp::getTopicCampUrl($camp->topic_num,$camp->camp_num,time()); 
                 $data['type'] = "Camp";
                 $data['object_type'] = ""; 
                 $data['object'] = $livecamp->topic->topic_name."/".$livecamp->camp_name;
@@ -877,7 +878,7 @@ class TopicController extends Controller {
             return redirect('camp/history/' . $camp->topic_num . '/' . $camp->camp_num)->with(['success' => $message, 'go_live_time' => $go_live_time, 'objection' => $objection]);
         } else {
             if ($eventtype == "CREATE"){
-                $link_url = \App\Model\Camp::getTopicCampUrl($camp->topic_num,$camp->camp_num,$currentTime = time());
+                $link_url = \App\Model\Camp::getTopicCampUrl($camp->topic_num,$camp->camp_num,time());
                 return redirect($link_url)->with(['success' => $message, 'go_live_time' => $go_live_time]);
             }
             else {
@@ -1012,7 +1013,7 @@ class TopicController extends Controller {
                 $statement->grace_period = 1;
             }
         }
-
+        
         /**
          * Scenario 4
          * User A creates topic -> support will be added automatically to agreement camp -> remove support
@@ -1051,7 +1052,7 @@ class TopicController extends Controller {
             $livecamp = Camp::getLiveCamp($statement->topic_num,$statement->camp_num);
 			$data['type'] = "statement";
 			$data['object'] = $livecamp->topic->topic_name . " / " . $livecamp->camp_name;
-			$data['link'] = \App\Model\Camp::getTopicCampUrl($statement->topic_num,1);
+			$data['link'] = \App\Model\Camp::getTopicCampUrl($statement->topic_num,1,time());
             try{
 
             //Mail::to(Auth::user()->email)->bcc(config('app.admin_bcc'))->send(new ThankToSubmitterMail(Auth::user(), $link,$data));
@@ -1089,7 +1090,7 @@ class TopicController extends Controller {
             $link = 'statement/history/' . $statement->topic_num . '/' . $statement->camp_num;
             $nickName = Nickname::getNickName($all['nick_name']);
 
-            $data['topic_link'] = \App\Model\Camp::getTopicCampUrl($statement->topic_num,$statement->camp_num);
+            $data['topic_link'] = \App\Model\Camp::getTopicCampUrl($statement->topic_num,$statement->camp_num,time());
             $data['type'] = "Camp";
             $data['object'] = $livecamp->topic->topic_name . " / " . $livecamp->camp_name;
             $data['object_type'] = "statement";   
@@ -1217,7 +1218,7 @@ class TopicController extends Controller {
         } else if (isset($data['change_for']) && $data['change_for'] == 'camp') {
             $camp = Camp::where('id', $changeID)->first();
 			if(isset($camp)) {
-                // while updating camp check if any old support then remove it if parent camp changed 1076
+                //sunil Talentelgia- while updating camp check if any old support then remove it if parent camp changed 1076 / 1211
                 $this->checkParentCampChanged($camp->topic_num,$camp->camp_num,$camp->parent_camp_num); 
                 //end 1076
                 $submitterNickId = $camp->submitter_nick_id;
@@ -1538,8 +1539,9 @@ class TopicController extends Controller {
         }
     }
          
+    //Sunil Talentelgia This function only work when we changes parent camp. In that case we remove support of parent camp 
     private function checkParentCampChanged($topic_num, $camp_num, $parent_camp_num) {
-        // while updating camp check if any old support then remove it if parent camp changed
+        //Sunil Talentelgia while updating camp check if any old support then remove it if parent camp changed
         $campOldData = Camp::getLiveCamp($topic_num,$camp_num);
         if(isset($parent_camp_num) && $parent_camp_num!='' && $parent_camp_num != $campOldData->parent_camp_num){
             //#924 start

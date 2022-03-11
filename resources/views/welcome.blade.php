@@ -71,7 +71,7 @@
                            ## check that topics are exist in data
                           if(count($topics['data']['topic']) > 0){
                             foreach($topics['data']['topic'] as $k=>$topic){
-                                $url = \App\Model\Camp::getTopicCampUrl($topic['topic_id'], 1);
+                                $url = \App\Model\Camp::getTopicCampUrl($topic['topic_id'], 1,time());
                                 if ($topic['topic_score'] < $filter) {
                                     continue;
                                 }
@@ -231,7 +231,7 @@
                         <?php
                         
                          $topicData = \App\Model\Topic::where('topic_num','=',$topic->topic_num)->where('go_live_time', '<=', $as_of_time)->latest('submit_time')->get();
-                         $url = \App\Model\Camp::getTopicCampUrl($topic->topic_num,$topic->camp_num);
+                         $url = \App\Model\Camp::getTopicCampUrl($topic->topic_num,$topic->camp_num,time());
                         // $campData = \App\Model\Camp::where('topic_num',$topic->topic_num)->where('camp_num',$topic->camp_num)->where('go_live_time', '<=', $as_of_time)->latest('submit_time')->first();
                         // $topic_name_space_id = isset($topicData[0]) ? $topicData[0]->namespace_id:1;
                         // $topic_name = isset($topicData[0]) ? $topicData[0]->topic_name:'';
