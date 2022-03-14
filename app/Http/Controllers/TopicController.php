@@ -937,6 +937,7 @@ class TopicController extends Controller {
         $statement->grace_period = 1;
         $eventtype = "CREATE";
         $message = "Statement submitted successfully.";
+        $nickNames = Nickname::personNicknameArray();
         if (isset($all['camp_num'])) {
             //check statement is created or updated #885
             $eventtype = isset($all['statement_event_type'])? $all['statement_event_type']: "UPDATE"; 
@@ -944,7 +945,6 @@ class TopicController extends Controller {
 		    $statement->camp_num = $all['camp_num'];
             $statement->submitter_nick_id = $all['nick_name'];
 
-            $nickNames = Nickname::personNicknameArray();
             $ifIamSingleSupporter = Support::ifIamSingleSupporter($all['topic_num'], $all['camp_num'], $nickNames);
             if (!$ifIamSingleSupporter) {
                // $statement->go_live_time = strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
@@ -1038,8 +1038,8 @@ class TopicController extends Controller {
         }
 
         // #1183 start (when use update or edit any statement it is not going in grace period even there are other supporters for the camp)
-        $otherDirectSupporters = Support::where(['topic_num'=>$all['topic_num'],'camp_num'=>$all['camp_num'],'delegate_nick_name_id'=>0,'end'=>0])->whereNotIn('nick_name_id',$loginUserNicknames)->first();
-        if(!empty($otherDirectSupporters)){
+        $ifIamSingleSupporter = Support::ifIamSingleSupporter($all['topic_num'], $all['camp_num'], $nickNames);
+        if (!$ifIamSingleSupporter) {
             $statement->grace_period = 1;
         }
         // #1183 end

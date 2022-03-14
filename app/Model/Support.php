@@ -44,7 +44,7 @@ class Support extends Model {
         }
 
 
-       $othersupports->filter(function($item) use($camp_num){
+        $othersupports->filter(function($item) use($camp_num){
             if($camp_num){
                 return $item->camp_num == $camp_num;
             }
@@ -55,11 +55,12 @@ class Support extends Model {
         }else{
             if($camp_num != 0){
                 $camp = Camp::where('camp_num','=',$camp_num)->where('topic_num','=',$topic_num)->get();
+                Camp::clearChildCampArray();
                 $allChildren = Camp::getAllChildCamps($camp[0]);
                 if(sizeof($allChildren) > 0 ){
-                foreach($allChildren as $campnum){
-                    $support = self::where('topic_num',$topic_num)->where('camp_num',$campnum)->whereNotIn('nick_name_id',$userNicknames)->where('delegate_nick_name_id',0)->where('end','=',0)->orderBy('support_order','ASC')->get();
-                      if(sizeof($support) > 0){
+                    foreach($allChildren as $campnum){
+                        $support = self::where('topic_num',$topic_num)->where('camp_num',$campnum)->whereNotIn('nick_name_id',$userNicknames)->where('delegate_nick_name_id',0)->where('end','=',0)->orderBy('support_order','ASC')->get();
+                        if(sizeof($support) > 0){
                             $supportFlag = 0;
                             break;
                         }
