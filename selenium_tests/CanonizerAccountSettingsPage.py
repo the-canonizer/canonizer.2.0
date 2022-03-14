@@ -1,8 +1,11 @@
+from selenium.webdriver.common.keys import Keys
+
 from CanonizerBase import Page
 from Identifiers import AccountSettingsIdentifiers, LogoutIdentifiers, AccountSettingsChangePasswordIdentifiers, \
     AddAndManageNickNamesIdentifiers, AccountSettingsManageProfileInfoIdentifiers, MySupportsPageIdentifiers, \
     HomePageIdentifiers
 from selenium.common.exceptions import NoSuchElementException
+import datetime
 
 
 class CanonizerAccountSettingsPage(Page):
@@ -54,7 +57,6 @@ class CanonizerAccountSettingsPage(Page):
         if page_title == 'Profile':
             return CanonizerAccountSettingsPage(self.driver)
 
-
     def click_account_settings_add_manage_nick_names_page_button(self):
         """
         This function is to click on the Account Settings ->Add & Manage Nick Names tab
@@ -71,7 +73,6 @@ class CanonizerAccountSettingsPage(Page):
         page_title = self.find_element(*AccountSettingsManageProfileInfoIdentifiers.PAGE_TITLE).text
         if page_title == 'Nick Names':
             return CanonizerAccountSettingsPage(self.driver)
-
 
     def click_account_settings_my_supports_page_button(self):
         """
@@ -105,7 +106,6 @@ class CanonizerAccountSettingsPage(Page):
         page_title = self.find_element(*AccountSettingsManageProfileInfoIdentifiers.PAGE_TITLE).text
         if page_title == 'Social Oauth Verification':
             return CanonizerAccountSettingsPage(self.driver)
-
 
     def click_account_settings_change_password_page_button(self):
         """
@@ -166,15 +166,21 @@ class CanonizerAccountSettingsChangePasswordPage(Page):
 
     def save_with_blank_current_password(self, new_password, confirm_password):
         self.save('', new_password, confirm_password)
-        return self.find_element(*AccountSettingsChangePasswordIdentifiers.ERROR_CURRENT_PASSWORD).text
+        error = self.find_element(*AccountSettingsChangePasswordIdentifiers.ERROR_CURRENT_PASSWORD).text
+        if error == 'The current password field is required.':
+            return CanonizerAccountSettingsChangePasswordPage(self.driver)
 
     def save_with_blank_new_password(self, current_password, confirm_password):
         self.save(current_password, '', confirm_password)
-        return self.find_element(*AccountSettingsChangePasswordIdentifiers.ERROR_NEW_PASSWORD).text
+        error = self.find_element(*AccountSettingsChangePasswordIdentifiers.ERROR_NEW_PASSWORD).text
+        if error == 'The new password field is required.':
+            return CanonizerAccountSettingsChangePasswordPage(self.driver)
 
     def save_with_blank_confirm_password(self, current_password, new_password):
         self.save(current_password, new_password, '')
-        return self.find_element(*AccountSettingsChangePasswordIdentifiers.ERROR_CONFIRM_PASSWORD).text
+        error = self.find_element(*AccountSettingsChangePasswordIdentifiers.ERROR_CONFIRM_PASSWORD).text
+        if error == 'The confirm password field is required.':
+            return CanonizerAccountSettingsChangePasswordPage(self.driver)
 
     def change_password_page_mandatory_fields_are_marked_with_asterisk(self):
         """
@@ -190,19 +196,44 @@ class CanonizerAccountSettingsChangePasswordPage(Page):
 
     def save_with_invalid_current_password(self, current_password, new_password, confirm_password):
         self.save(current_password, new_password, confirm_password)
-        return self.find_element(*AccountSettingsChangePasswordIdentifiers.INVALID_CURRENT_PASSWORD).text
+        error = self.find_element(*AccountSettingsChangePasswordIdentifiers.INVALID_CURRENT_PASSWORD).text
+        if error == 'Incorrect Current Password.':
+            return CanonizerAccountSettingsChangePasswordPage(self.driver)
 
     def save_with_mismatch_new_confirm_password(self, current_password, new_password, confirm_password):
         self.save(current_password, new_password, confirm_password)
-        return self.find_element(*AccountSettingsChangePasswordIdentifiers.PASSWORD_MISMATCH).text
+        error = self.find_element(*AccountSettingsChangePasswordIdentifiers.PASSWORD_MISMATCH).text
+        if error == 'The confirm password and new password must match.':
+            return CanonizerAccountSettingsChangePasswordPage(self.driver)
 
     def save_with_same_new_and_current_password(self, current_password, new_password, confirm_password):
         self.save(current_password, new_password, confirm_password)
-        return self.find_element(*AccountSettingsChangePasswordIdentifiers.CURRENT_NEW_PASSWORD_MUST_DIFF).text
+        error = self.find_element(*AccountSettingsChangePasswordIdentifiers.CURRENT_NEW_PASSWORD_MUST_DIFF).text
+        if error == 'The new password and current password must be different.':
+            return CanonizerAccountSettingsChangePasswordPage(self.driver)
 
     def save_with_invalid_new_password(self, current_password, new_password, confirm_password):
         self.save(current_password, new_password, confirm_password)
-        return self.find_element(*AccountSettingsChangePasswordIdentifiers.INVALID_NEW_PASSWORD).text
+        error = self.find_element(*AccountSettingsChangePasswordIdentifiers.INVALID_NEW_PASSWORD).text
+        if error == 'Password must be at least 8 characters, including at least one digit, one lower case letter and one special character(@,# !,$..)':
+            return CanonizerAccountSettingsChangePasswordPage(self.driver)
+
+    def verify_forgot_password_save_button(self):
+        self.find_element(*AccountSettingsChangePasswordIdentifiers.SAVE).click()
+        error_current_pass = self.find_element(*AccountSettingsChangePasswordIdentifiers.ERROR_CURRENT_PASSWORD).text
+        error_new_pass = self.find_element(*AccountSettingsChangePasswordIdentifiers.ERROR_NEW_PASSWORD).text
+        error_confirm_pass = self.find_element(*AccountSettingsChangePasswordIdentifiers.ERROR_CONFIRM_PASSWORD).text
+
+        if error_current_pass == 'The current password field is required.' and error_new_pass == 'The new password field is required.' and error_confirm_pass == 'The confirm password field is required.':
+            return CanonizerAccountSettingsPage(self.driver)
+
+    def verify_forgot_password_save_button_on_enter_key(self):
+        self.find_element(*AccountSettingsChangePasswordIdentifiers.SAVE).send_keys(Keys.ENTER)
+        error_current_pass = self.find_element(*AccountSettingsChangePasswordIdentifiers.ERROR_CURRENT_PASSWORD).text
+        error_new_pass = self.find_element(*AccountSettingsChangePasswordIdentifiers.ERROR_NEW_PASSWORD).text
+        error_confirm_pass = self.find_element(*AccountSettingsChangePasswordIdentifiers.ERROR_CONFIRM_PASSWORD).text
+        if error_current_pass == 'The current password field is required.' and error_new_pass == 'The new password field is required.' and error_confirm_pass == 'The confirm password field is required.':
+            return CanonizerAccountSettingsPage(self.driver)
 
 
 class CanonizerAccountSettingsNickNamesPage(Page):
@@ -313,6 +344,15 @@ class AccountSettingsMySupportsPage(Page):
 
         return AccountSettingsMySupportsPage(self.driver)
 
+    def verify_delete_support_confirmation_alertbox(self):
+
+        self.find_element(*MySupportsPageIdentifiers.SUPPORT).click()
+        self.find_element(*MySupportsPageIdentifiers.DELETE_SUPPORT).click()
+        self.driver.switch_to.alert.accept()
+        success_message = self.find_element(*MySupportsPageIdentifiers.SUCCESS_MESSAGE).text
+        if success_message == 'Success! Your support has been removed successfully.':
+            return AccountSettingsMySupportsPage(self.driver)
+
 
 class AccountSettingsManageProfileInfoPage(Page):
 
@@ -399,14 +439,14 @@ class AccountSettingsManageProfileInfoPage(Page):
 
     def update_profile_with_blank_first_name(self, middle_name, last_name):
         self.find_element(*AccountSettingsManageProfileInfoIdentifiers.FIRST_NAME).clear()
-        self.update('', middle_name, last_name, '','','', '','','', '','')
+        self.update('', middle_name, last_name, '', '', '', '', '', '', '', '')
         error = self.find_element(*AccountSettingsManageProfileInfoIdentifiers.ERROR_FIRST_NAME).text
         if error == 'The first name field is required.':
             return AccountSettingsMySupportsPage(self.driver)
 
-    def update_profile_with_blank_last_name(self, first_name, middle_name,):
+    def update_profile_with_blank_last_name(self, first_name, middle_name, ):
         self.find_element(*AccountSettingsManageProfileInfoIdentifiers.LAST_NAME).clear()
-        self.update(first_name, middle_name, '', '','','', '','','', '','')
+        self.update(first_name, middle_name, '', '', '', '', '', '', '', '', '')
         error = self.find_element(*AccountSettingsManageProfileInfoIdentifiers.ERROR_LAST_NAME).text
         if error == 'The last name field is required.':
             return AccountSettingsMySupportsPage(self.driver)
@@ -432,24 +472,64 @@ class AccountSettingsManageProfileInfoPage(Page):
 
     def update_profile_with_invalid_first_name(self, firstname, middle_name, last_name, ):
         self.find_element(*AccountSettingsManageProfileInfoIdentifiers.FIRST_NAME).clear()
-        self.update(firstname, middle_name, last_name, '', '','','', '','','', '','')
+        self.update(firstname, middle_name, last_name, '', '', '', '', '', '', '', '', '')
         error = self.find_element(*AccountSettingsManageProfileInfoIdentifiers.ERROR_FIRST_NAME).text
         if error == 'The first name must be in alphabets and space only.':
             return AccountSettingsMySupportsPage(self.driver)
 
     def update_profile_with_invalid_middle_name(self, firstname, middle_name, last_name):
         self.find_element(*AccountSettingsManageProfileInfoIdentifiers.MIDDLE_NAME).clear()
-        self.update(firstname, middle_name, last_name, '', '','','', '','','', '','')
+        self.update(firstname, middle_name, last_name, '', '', '', '', '', '', '', '', '')
         error = self.find_element(*AccountSettingsManageProfileInfoIdentifiers.ERROR_MIDDLE_NAME).text
         if error == 'The middle name must be in alphabets and space only.':
             return AccountSettingsMySupportsPage(self.driver)
 
     def update_profile_with_invalid_last_name(self, firstname, middle_name, last_name):
         self.find_element(*AccountSettingsManageProfileInfoIdentifiers.LAST_NAME).clear()
-        self.update(firstname, middle_name, last_name, '', '','','', '','','', '','')
+        self.update(firstname, middle_name, last_name, '', '', '', '', '', '', '', '', '')
         error = self.find_element(*AccountSettingsManageProfileInfoIdentifiers.ERROR_LAST_NAME).text
         if error == 'The last name must be in alphabets and space only.':
             return AccountSettingsMySupportsPage(self.driver)
+
+    def update_profile_with_valid_data_with_enter_key(self, first_name, middle_name, last_name):
+        self.find_element(*AccountSettingsManageProfileInfoIdentifiers.FIRST_NAME).clear()
+        self.find_element(*AccountSettingsManageProfileInfoIdentifiers.MIDDLE_NAME).clear()
+        self.find_element(*AccountSettingsManageProfileInfoIdentifiers.LAST_NAME).clear()
+        self.enter_first_name(first_name)
+        self.enter_middle_name(middle_name)
+        self.enter_last_name(last_name)
+        self.find_element(*AccountSettingsManageProfileInfoIdentifiers.UPDATE).send_keys(Keys.ENTER)
+        success_message = self.find_element(*AccountSettingsManageProfileInfoIdentifiers.SUCCESS_MESSAGE).text
+        if success_message == 'Success! Profile updated successfully.':
+            return AccountSettingsMySupportsPage(self.driver)
+
+    def update_profile_with_mandatory_fields(self, first_name, last_name):
+        self.find_element(*AccountSettingsManageProfileInfoIdentifiers.FIRST_NAME).clear()
+        self.find_element(*AccountSettingsManageProfileInfoIdentifiers.LAST_NAME).clear()
+        self.enter_first_name(first_name)
+        self.enter_last_name(last_name)
+        self.find_element(*AccountSettingsManageProfileInfoIdentifiers.UPDATE).click()
+        success_message = self.find_element(*AccountSettingsManageProfileInfoIdentifiers.SUCCESS_MESSAGE).text
+        if success_message == 'Success! Profile updated successfully.':
+            return AccountSettingsMySupportsPage(self.driver)
+
+    def update_profile_with_blank_mandatory_fields(self):
+        self.find_element(*AccountSettingsManageProfileInfoIdentifiers.FIRST_NAME).clear()
+        self.find_element(*AccountSettingsManageProfileInfoIdentifiers.LAST_NAME).clear()
+        self.find_element(*AccountSettingsManageProfileInfoIdentifiers.UPDATE).click()
+        error1 = self.find_element(*AccountSettingsManageProfileInfoIdentifiers.ERROR_FIRST_NAME).text
+        error2 = self.find_element(*AccountSettingsManageProfileInfoIdentifiers.ERROR_LAST_NAME).text
+        if error1 == 'The first name field is required.' and error2 == 'The last name field is required.':
+            return AccountSettingsMySupportsPage(self.driver)
+
+    def verify_dob_on_profile_info(self):
+        dob = self.find_element(*AccountSettingsManageProfileInfoIdentifiers.DOB)
+        dob = dob.get_attribute('value')
+        try:
+            datetime.datetime.strptime(dob, '%d/%m/%Y')
+            return AccountSettingsMySupportsPage(self.driver)
+        except ValueError:
+            raise ValueError("Incorrect data format, should be YYYY-MM-DD")
 
     def verify_phone_number_with_valid_length_phone_number(self):
         self.find_element(*AccountSettingsManageProfileInfoIdentifiers.PHONE_NUMBER).clear()
@@ -457,6 +537,3 @@ class AccountSettingsManageProfileInfoPage(Page):
         error = self.find_element(*AccountSettingsManageProfileInfoIdentifiers.ERROR_PHONE_NUMBER_VERIFICATION).text
         if error == 'Verification : A 6 digit code has been sent on your phone number for verification.':
             return AccountSettingsMySupportsPage(self.driver)
-
-
-
