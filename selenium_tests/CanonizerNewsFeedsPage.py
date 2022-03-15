@@ -118,7 +118,6 @@ class CanonizerAddNewsFeedsPage(Page):
         self.create_news(display_text, link, available_for_child_camps)
         error_text = self.find_element(*AddNewsPageIdentifiers.ERROR_DISPLAY_TEXT).text
         error_link = self.find_element(*AddNewsPageIdentifiers.ERROR_LINK).text
-        print(error_text, error_link)
         if error_text == 'Display text can only contain space, full stop (.) and alphanumeric characters.' and error_link == 'Link is invalid. (Example: https://www.example.com?post=1234)':
             return CanonizerAddNewsFeedsPage(self.driver)
 

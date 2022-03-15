@@ -48,3 +48,5 @@ class CanonizerForgotPasswordPage(Page):
     def forgot_password_page_mandatory_fields_are_marked_with_asterisk(self):
         return \
             self.find_element(*ForgotPasswordIdentifiers.EMAIL_ASTRK)
+
+
