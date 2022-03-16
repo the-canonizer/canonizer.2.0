@@ -51,7 +51,7 @@
 						   
 						  $topic_id = $topic->topic_num."-".$title;
               $namespace = \App\Model\Namespaces::find($topic->namespace_id);
-						  $link = \App\Model\Camp::getTopicCampUrl($topic->topic_num,$topic->camp_num,time());
+						  $link = \App\Model\Camp::getTopicCampUrl($topic->topic_num,$topic->camp_num);
 						 ?>
 					 
 					 <li id="outline_{{ $topic->topic_num }}" style="line-height: 2"> <a href="<?php echo $link; ?>"> {{ namespace_label($namespace) }} {{ $topic->topic_name }} </a></li>

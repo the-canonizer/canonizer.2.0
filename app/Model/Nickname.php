@@ -148,7 +148,7 @@ class Nickname extends Model {
             $camp_num = $rs->camp_num;
             $title = preg_replace('/[^A-Za-z0-9\-]/', '-', ($rs->title != '') ? $rs->title : $rs->camp_name);
             $topic_id = $topic_num . "-" . $title;
-            $url = Camp::getTopicCampUrl($topic_num,$camp_num,time());
+            $url = Camp::getTopicCampUrl($topic_num,$camp_num);
             if ($rs->delegate_nick_name_id && $camp_num != 1 ) {
                 $supports[$topic_num]['array'][$rs->support_order][] = ['camp_name' => $rs->camp_name, 'camp_num' => $camp_num, 'link' => $url,'delegate_nick_name_id'=>$rs->delegate_nick_name_id];
             } else if ($camp_num == 1) {
@@ -220,7 +220,7 @@ class Nickname extends Model {
             $livecamp = Camp::getLiveCamp($topic_num,$camp_num,['nofilter'=>true]);
             $title = preg_replace('/[^A-Za-z0-9\-]/', '-', ($livecamp->title != '') ? $livecamp->title : $livecamp->camp_name);
             $topic_id = $topic_num . "-" . $title;
-            $url = Camp::getTopicCampUrl($topic_num,$camp_num,time());
+            $url = Camp::getTopicCampUrl($topic_num,$camp_num);
             if ($rs->delegate_nick_name_id && $camp_num != 1 ) {
                 //$url = Camp::getTopicCampUrl($topic_num,$camp_num);//url('topic/' . $topic_id . '/' . $camp_num)
                 $supports[$topic_num]['array'][$rs->support_order][] = ['camp_name' => $livecamp->camp_name, 'camp_num' => $camp_num, 'link' => $url ,'delegate_nick_name_id'=>$rs->delegate_nick_name_id];

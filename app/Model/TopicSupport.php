@@ -215,7 +215,7 @@ class TopicSupport extends Model {
                     $html.='<a href="'.url('remove/mysupport/'.$topicnum.'/'. $campnum .'/' .$array['index']).'" class="btn btn-info">Remove Your Support</a>';
                 }                
                 if(!in_array($array['index'],$userNicknames) && !in_array($array['index'],$myDelegator) && !in_array($array['index'],$myDelegation) && Auth::check()){
-                    $html.='<a href="'.url('support/'.$urlPortion.'_'.$array['index'].'?currentTime='.time()).'" class="btn btn-info">Delegate Your Support</a>';
+                    $html.='<a href="'.url('support/'.$urlPortion.'_'.$array['index']).'" class="btn btn-info">Delegate Your Support</a>';
                 }
             }
             $html.="<ul>";
