@@ -56,11 +56,14 @@ class CanonizerCreateNewTopicPage(Page):
         """
         self.find_element(*CreateNewTopicPageIdentifiers.CREATETOPIC).click()
 
-    def create_topic(self, nickname, topic_name, namespace, note):
+    def entering_data_fields(self, nickname, topic_name, namespace, note):
         self.enter_nick_name(nickname)
         self.enter_topic_name(topic_name)
         self.enter_namespace(namespace)
         self.enter_note(note)
+
+    def create_topic(self, nickname, topic_name, namespace, note):
+        self.entering_data_fields(nickname, topic_name, namespace, note)
         self.click_create_topic_button()
 
     def create_topic_with_blank_nick_name(self, topic_name, namespace, note):
@@ -111,6 +114,12 @@ class CanonizerCreateNewTopicPage(Page):
         if success_message == "Success! Topic created successfully.":
             return CanonizerCreateNewTopicPage(self.driver)
 
+    def create_topic_with_invalid_data(self, nickname, topic_name, namespace, note):
+        self.create_topic(nickname, topic_name, namespace, note)
+        error = self.find_element(*CreateNewTopicPageIdentifiers.INVALID_TOPIC_NAME).text
+        if error == 'Topic name can only contain space and alphanumeric characters.':
+            return CanonizerCreateNewTopicPage(self.driver)
+
     def verify_single_support_on_new_topic_creation(self, nickname, topic_name, namespace, note):
         self.create_topic(nickname, topic_name, namespace, note)
 
@@ -146,7 +155,8 @@ class CanonizerCreateNewTopicPage(Page):
             return CanonizerCreateNewTopicPage(self.driver)
 
     def create_topic_name_with_enter_key(self, nickname, topic_name, namespace, note):
-        self.create_topic(nickname, topic_name, namespace, '')
+        self.entering_data_fields(nickname, topic_name, namespace, note)
+        self.find_element(*CreateNewTopicPageIdentifiers.CREATETOPIC).send_keys(Keys.ENTER)
         success_message = self.find_element(*CreateNewTopicPageIdentifiers.SUCCESS_MESSAGE_TOPIC_CREATION).text
         if success_message == "Success! Topic created successfully.":
             return CanonizerCreateNewTopicPage(self.driver)
@@ -164,16 +174,11 @@ class CanonizerCreateNewTopicPage(Page):
             return False
 
     def create_topic_name_with_enter_key_verifying_history_page(self, nickname, topic_name, namespace, note):
-        self.enter_nick_name(nickname)
-        self.enter_topic_name(topic_name)
-        self.enter_namespace(namespace)
-        self.enter_note(note)
+        self.entering_data_fields(nickname, topic_name, namespace, note)
         self.find_element(*CreateNewTopicPageIdentifiers.CREATETOPIC).send_keys(Keys.ENTER)
-        if self.find_element(
-                *CreateNewTopicPageIdentifiers.TOPIC_NAME_HISTORY_PAGE).text == 'Topic Name : Testing Topic 1':
-            return self.find_element(*CreateNewTopicPageIdentifiers.SUCCESS_MESSAGE).text
-        else:
-            return False
+        success_message = self.find_element(*CreateNewTopicPageIdentifiers.SUCCESS_MESSAGE_TOPIC_CREATION).text
+        if success_message == "Success! Topic created successfully.":
+            return CanonizerCreateNewTopicPage(self.driver)
 
     def create_topic_name_with_trailing_space(self, nickname, topic_name, namespace, note):
         self.create_topic(nickname, topic_name, namespace, note)
@@ -200,8 +205,8 @@ class CanonizerCreateNewTopicPage(Page):
         html_list = self.find_element(*CreateNewTopicPageIdentifiers.NAMESPACE_LIST)
         items = html_list.find_elements_by_tag_name("li")
         for item in items:
-            text = item.text
-            print(text)
+            if topic_name in item.text:
+                return CanonizerCreateNewTopicPage(self.driver)
 
     def nick_name_page_should_open_create_topic_add_new_nick_name(self):
         try:
