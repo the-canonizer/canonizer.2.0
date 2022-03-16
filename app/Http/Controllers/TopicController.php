@@ -362,7 +362,7 @@ class TopicController extends Controller {
             $ifIamSupporter = false;
         }
 
-        if(session('campnum') && session('campnum') == null) {
+        if(session('campnum')) {
 			session()->forget('campnum');
 			return redirect()->refresh();
 		}
