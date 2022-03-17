@@ -202,17 +202,21 @@ change camps with them."><i class="fa fa-question"></i></a>
             </div>
             <div class="footer">
                 <?php 
-                 if ((isset($_REQUEST['asof']) && $_REQUEST['asof'] == "bydate")  || (session()->has('asofDefault') && session('asofDefault') == 'bydate' && !isset($_REQUEST['asof']))) {
-                            $href = "javascript:void(0)";
-                            $title = "title='History cannot be modified. In order to modify your current support select the default option in the as-of box.'";
-                        }else {
-                            $href = url('support/'.$url_portion);
-                            $title = "";
-                        }
+                if ((isset($_REQUEST['asof']) && $_REQUEST['asof'] == "bydate")  || (session()->has('asofDefault') && session('asofDefault') == 'bydate' && !isset($_REQUEST['asof']))) {
+                    $href =  "javascript:void(0)";
+                    $style =  "cursor: default;";
+                    $class =  "disable-btn";
+                    $tooltip = " <i data-toggle='tooltip' data-placement='auto' title='History cannot be modified. In order to modify your current support select the default option in the as-of box.' class='fa fa-info-circle'></i>";
+                }else {
+                    $href = url('support/'.$url_portion);
+                    $tooltip = "";
+                    $style = "";
+                    $class =  "btn-warning";
+                }
                  if(isset($ifIamSupporter) && !($ifIamSupporter)){ ?>
-                    <a id="join_support_camp" <?php echo $title; ?> class="btn btn-warning" href="<?php echo $href; ?>">Directly Join and Support</a>
+                    <a id="join_support_camp" style="{{$style}}" class="btn {{$class}}" href="{{$href}}">Directly Join and Support {!! $tooltip !!}</a>
                 <?php }else{ ?>
-                    <a id="join_support_camp" <?php echo $title; ?> class="btn btn-warning" href="<?php echo $href; ?>">Manage Support</a>
+                    <a id="join_support_camp" style="{{$style}}" class="btn {{$class}}"  href="{{$href}}">Manage Support {!! $tooltip !!}</a>
                 <?php } ?>
                
             </div>
