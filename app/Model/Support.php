@@ -123,6 +123,19 @@ class Support extends Model {
         
         return count($support) ? $support->nick_name_id : 0 ;
     }
+
+    public static function ifIamImplicitSupporter($topic_num,$camp_num,$nickNames,$submit_time = null){
+        $liveCamp = Camp::getLiveCamp($topic_num,$camp_num);
+        $allChildCamps = Camp::getAllChildCamps($liveCamp);
+        // dd(json_encode($allChildCamps));
+        if($submit_time){
+            $support = self::where('topic_num','=',$topic_num)->whereIn('camp_num',$allChildCamps)->whereIn('nick_name_id',$nickNames)->where('delegate_nick_name_id',0)->where('end','=',0)->where('start','<=',$submit_time)->first();
+        }else{
+            $support = self::where('topic_num','=',$topic_num)->whereIn('camp_num',$allChildCamps)->whereIn('nick_name_id',$nickNames)->where('delegate_nick_name_id',0)->where('end','=',0)->first();
+        }
+        
+        return count($support) ? $support->nick_name_id : 0 ;
+    }
     
     public static function getAllSupporters($topic,$camp,$excludeNickID){
         $nickNametoExclude = [$excludeNickID];

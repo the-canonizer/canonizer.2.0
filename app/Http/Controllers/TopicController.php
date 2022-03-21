@@ -547,12 +547,13 @@ class TopicController extends Controller {
         if (Auth::check()) {
             $nickNames = Nickname::personNicknameArray();
             $ifIamSupporter = Support::ifIamSupporter($topicnum, $campnum, $nickNames,$submit_time);
+            $ifIamImplicitSupporter = Support::ifIamImplicitSupporter($topicnum, $campnum, $nickNames,$submit_time);
             $ifSupportDelayed = Support::ifIamSupporter($topicnum, $campnum, $nickNames,$submit_time,$delayed=true); //if support provided after Camp submitted for IN-Review
         }
 
         //if(!count($onecamp)) return back();
         $wiky = new Wiky;
-        return view('topics.camphistory', compact('topic', 'camps', 'parentcampnum', 'onecamp', 'parentcamp', 'wiky', 'ifIamSupporter','submit_time','ifSupportDelayed'));
+        return view('topics.camphistory', compact('topic', 'camps', 'parentcampnum', 'onecamp', 'parentcamp', 'wiky', 'ifIamSupporter','submit_time','ifSupportDelayed','ifIamImplicitSupporter'));
     }
 
     
