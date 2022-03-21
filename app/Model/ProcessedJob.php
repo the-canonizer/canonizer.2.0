@@ -16,7 +16,7 @@ class ProcessedJob extends Model
      * @var array
      */
     protected $fillable = [
-        'payload', 'status', 'code', 'response', 'created_at', 'updated_at'
+        'payload', 'status', 'code', 'response', 'created_at', 'updated_at','topic_num'
     ];
 
 }

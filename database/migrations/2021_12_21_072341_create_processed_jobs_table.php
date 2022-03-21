@@ -16,9 +16,9 @@ class CreateProcessedJobsTable extends Migration
         Schema::create('processed_jobs', function (Blueprint $table) {
             $table->increments('id');
             $table->longText('payload')->nullable();
-            $table->string('status');
-            $table->integer('code');
-            $table->longText('response');
+            $table->string('status')->nullable();
+            $table->integer('code')->nullable();
+            $table->longText('response')->nullable();
             $table->timestamps();
         });
     }
