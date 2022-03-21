@@ -793,8 +793,6 @@ class TopicController extends Controller {
 
             if (isset($all['camp_update']) && $all['camp_update'] == 1) {
                 $eventtype = "CAMP_UPDATE";
-                // while updating camp check if any old support then remove it if parent camp changed
-                $this->checkParentCampChanged($all['topic_num'],$all['camp_num'],$all['parent_camp_num']); 
                 $camp = Camp::where('id', $all['camp_id'])->first();
                 $camp->topic_num = $all['topic_num'];
                 $camp->parent_camp_num = isset($all['parent_camp_num']) ? $all['parent_camp_num'] : "";
@@ -814,6 +812,11 @@ class TopicController extends Controller {
         if ($camp->save()) {
             Session::flash('test_case_success', 'true');
             $topic = $camp->topic;
+
+            //note- objection case it will be not update parent camp support 
+            if ($eventtype == "CAMP_UPDATE" || $eventtype == "UPDATE") {
+                $this->checkParentCampChanged($all['topic_num'],$all['camp_num'],$all['parent_camp_num']);   
+            }
             
             if ($eventtype == "CREATE") {
                 // Dispatch Job
@@ -870,6 +873,7 @@ class TopicController extends Controller {
                 }              
             }
 
+           
             Session::flash('success', $message);
         } else {
             $message = 'Camp not added, please try again.';
@@ -1544,9 +1548,9 @@ class TopicController extends Controller {
     private function checkParentCampChanged($topic_num, $camp_num, $parent_camp_num) {
         //Sunil Talentelgia while updating camp check if any old support then remove it if parent camp changed
         $campOldData = Camp::getLiveCamp($topic_num,$camp_num);
-        if(isset($parent_camp_num) && $parent_camp_num!='' && $parent_camp_num != $campOldData->parent_camp_num){
+        if(isset($parent_camp_num) && $parent_camp_num!=''){ // && $parent_camp_num != $campOldData->parent_camp_num){
+            $allParentCamps = Camp::getAllParent($campOldData);
             //#924 start
-            //get all child camps of current camp
             $allChildCamps = Camp::getAllChildCamps($campOldData);
             //get supporters of all child camps of current camp
             $allChildSupporters = Support::where('topic_num',$topic_num)
@@ -1555,7 +1559,9 @@ class TopicController extends Controller {
                 ->pluck('nick_name_id');
             //remove all supports from parent camp if there any child supporter
             if(sizeof($allChildSupporters) > 0){
-                Support::removeSupport($topic_num,$parent_camp_num,$allChildSupporters);
+                foreach($allParentCamps as $p ){
+                    Support::removeSupport($topic_num,$p,$allChildSupporters);
+                }
             }
             //#924 end
         }
