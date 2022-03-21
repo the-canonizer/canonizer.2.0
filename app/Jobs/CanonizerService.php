@@ -75,7 +75,8 @@ class CanonizerService implements ShouldQueue
                 'payload'   => $jobPayload,
                 'status'    => (bool)$response['success'] === true ? 'Success' : 'Failed',
                 'code'      => $response['code'],
-                'response'  => $responseData
+                'response'  => $responseData,
+                'topic_num' => $this->canonizerData['topic_num'],
             ]);
         } else {
             Log::error("Empty response, something went wrong");
