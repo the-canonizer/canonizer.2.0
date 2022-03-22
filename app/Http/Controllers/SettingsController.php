@@ -1387,7 +1387,7 @@ class SettingsController extends Controller
         // Dispact job when create a camp
         CanonizerService::dispatch($canonizerServiceData)
             ->onQueue('canonizer-service')
-            ->unique(Topic::class, $topic->id);
+            ->unique(Topic::class, $topic->topic_num);
     }
 
     /**

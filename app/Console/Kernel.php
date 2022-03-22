@@ -17,6 +17,7 @@ class Kernel extends ConsoleKernel
         'App\Console\Commands\NotifyUserForChangeSubmit',
         'App\Console\Commands\FixSupport',
         'App\Console\Commands\DeleteProcessedJobs',
+        'App\Console\Commands\UpdateProcessedJobsTopicNumber',
     ];
 
     /**

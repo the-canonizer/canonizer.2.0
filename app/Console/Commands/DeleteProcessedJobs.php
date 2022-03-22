@@ -21,7 +21,7 @@ class DeleteProcessedJobs extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Remove each topic duplicate entries except latest ones in processed jobs table';
 
     /**
      * Create a new command instance.

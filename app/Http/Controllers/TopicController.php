@@ -1511,7 +1511,7 @@ class TopicController extends Controller {
         // Dispact job when create a default camp
         CanonizerService::dispatch($canonizerServiceData)
         ->onQueue('canonizer-service')
-        ->unique(Topic::class, $topic->id);
+        ->unique(Topic::class, $topic->topic_num);
     }
 
     public function add_topic_subscription(Request $request){
