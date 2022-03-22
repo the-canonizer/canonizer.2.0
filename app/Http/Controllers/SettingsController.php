@@ -1067,6 +1067,7 @@ class SettingsController extends Controller
     public function addDelegatedSupport($myDelegator,$topic_num,$camp_num,$support_order,$delegatedTo){
         foreach($myDelegator as $delegator){
             Support::where('topic_num',$topic_num)
+             ->where('camp_num', '=',$camp_num)
              ->where('end', '=',0)
              ->where('nick_name_id', '=', $delegator->nick_name_id)
              ->where('delegate_nick_name_id','=',$delegatedTo)
