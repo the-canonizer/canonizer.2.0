@@ -15,7 +15,7 @@ DEFAULT_BINARY_LOCATION = ''
 
 if platform.system() == 'Darwin':
     DEFAULT_BINARY_LOCATION = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
-    DEFAULT_CHROME_DRIVER_LOCATION = os.getcwd() + "/Webdrivers/chromedriver_mac_m1"
+    DEFAULT_CHROME_DRIVER_LOCATION = os.getcwd() + "/Webdrivers/chromedriver"
 elif platform.system() == 'Windows':
     #DEFAULT_BINARY_LOCATION = "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe"
     DEFAULT_BINARY_LOCATION = "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"
@@ -29,8 +29,10 @@ else:
     exit(1)
 # Login Page Configuration Parameters
 
-DEFAULT_USER = "rupali.chavan9860@gmail.com"
-DEFAULT_PASS = "Rupali@12345"
+DEFAULT_USER = "sania.mohan@talentelgia.in"
+DEFAULT_PASS = "Test@123"
+DEFAULT_UNVERIFIED_EMAIL = "sania@gmail.com"
+DEFAULT_UNVERIFIED_PASSWORD = 'Test@123'
 #DEFAULT_USER = "r_canonizer_user@yopmail.com"
 #DEFAULT_PASS = "Rupali@12345"
 DEFAULT_INVALID_USER = 'invaliduser@gmail.com'
@@ -48,12 +50,16 @@ DEFAULT_LAST_NAME = "Chavan"
 INVALID_NAME_REGISTER = "invalidname!@#$%1"
 
 # File Upload Page Configuration Parameters
-DEFAULT_ORIGINAL_FILE_NAME = "H:\\Astronomy\\Images\\venera.gif"
+DEFAULT_ORIGINAL_FILE_NAME = "/Users/himmatpratapsinghgill/Desktop/female-silhoutte-avatar-default-profile-260nw-1219366543.jpeg"
+#DEFAULT_ORIGINAL_FILE_NAME = "H:\\Astronomy\\Images\\venera.gif"
+#FILE_WITH_MORE_THAN_5MB = "H:\\Astronomy\\Images\\PIA00272.jpg"
+#FILE_WITH_SAME_NAME = "H:\\Astronomy\\Images\\venera.gif"
 DEFAULT_NEW_FILE_NAME = ""
 DEFAULT_FILE_SIZE = ""
-FILE_WITH_MORE_THAN_5MB = "H:\\Astronomy\\Images\\PIA00272.jpg"
-FILE_WITH_SAME_NAME = "H:\\Astronomy\\Images\\venera.gif"
+FILE_WITH_MORE_THAN_5MB = "/Users/himmatpratapsinghgill/Desktop/dsc00137.jpg"
+FILE_WITH_SAME_NAME = "/Users/himmatpratapsinghgill/Desktop/female-silhoutte-avatar-default-profile-260nw-1219366543.jpeg"
 FILE_WITH_ZERO_BYTES = "C:\\Users\\Ajay\\Desktop\\Canonizer\\New Bitmap Image.bmp"
+INVALID_FILE_FORMAT = "/Users/himmatpratapsinghgill/Desktop/sample files/file_example_PPT_1MB.ppt"
 
 # Create New Topic Configuration Parameters
 DEFAULT_NICK_NAME = ""
@@ -72,7 +78,7 @@ DEFAULT_NEW_PASSWORD = "Test@12345"
 DEFAULT_CONFIRM_PASSWORD = "Test@12345"
 
 # Add New Nick Name Configuration Parameters
-DEF_NICK_NAME = "Rupali C"
+DEF_NICK_NAME = "saniaqa"
 
 
 

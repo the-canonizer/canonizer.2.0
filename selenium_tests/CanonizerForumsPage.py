@@ -224,7 +224,7 @@ class CanonizerForumsPage(Page):
 
     def forum_thread_title_marked_with_asterisk(self, test_thread_url):
         """
-            Functio to check if the thread title (mandatory) is marked with asterick
+            Function to check if the thread title (mandatory) is marked with asterick
         :param test_thread_url: test Thread URL from config file
         :return:
         """
@@ -241,7 +241,7 @@ class CanonizerForumsPage(Page):
 
     def forum_thread_nick_name_marked_with_asterisk(self, test_thread_url):
         """
-            Functio to check if the thread nick name field (mandatory) is marked with asterick
+            Function to check if the thread nick name field (mandatory) is marked with asterick
         :param test_thread_url: test Thread URL from config file
         :return:
         """

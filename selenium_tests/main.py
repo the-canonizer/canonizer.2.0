@@ -19,10 +19,16 @@ from CanonizerCampStatementPage import *
 from CanonizerNewsFeedsPage import *
 from CanonizerBrokenURL import *
 from CanonizerJoinSupportCampPage import *
+from ForumNewPage import *
+
 from datetime import datetime
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
 from time import time
 import os
 import re
+
 
 
 class TestPages(unittest.TestCase):
@@ -37,7 +43,7 @@ class TestPages(unittest.TestCase):
         options = webdriver.ChromeOptions()
         options.binary_location = DEFAULT_BINARY_LOCATION
         # options.add_argument('headless')
-        options.add_argument('window-size=1200x800')
+        options.add_argument('window-size=1900×900')
 
         self.driver = webdriver.Chrome(driver_location, options=options)
         self.driver.get(DEFAULT_BASE_URL)
@@ -1361,8 +1367,8 @@ class TestPages(unittest.TestCase):
         self.login_to_canonizer_app()
         # Go to Upload File and check upload file with invalid file format
         result = CanonizerUploadFilePage(self.driver).click_upload_file_page_button().upload_file_with_valid_format(
-            DEFAULT_ORIGINAL_FILE_NAME)
-        self.assertIn("upload", result.get_url())
+            DEFAULT_ORIGINAL_FILE_NAME, 'testing1')
+        self.assertIn("Success! File uploaded successfully!", result)
 
     # 144
     def test_upload_file_with_size_file_more_than_5mb(self):
@@ -1371,7 +1377,7 @@ class TestPages(unittest.TestCase):
         self.login_to_canonizer_app()
         # Go to Upload File and check upload file with file size more than 5MB
         result = CanonizerUploadFilePage(self.driver).click_upload_file_page_button().upload_file_with_size_file_more_than_5mb(
-            FILE_WITH_MORE_THAN_5MB)
+            FILE_WITH_MORE_THAN_5MB, 'testing2')
         self.assertIn("Error! The file may not be greater than 5120 kilobytes.", result)
 
     # 145
@@ -1381,9 +1387,9 @@ class TestPages(unittest.TestCase):
         self.login_to_canonizer_app()
         # Go to Upload File and check upload file with existing file name
         result = CanonizerUploadFilePage(
-            self.driver).click_upload_file_page_button().upload_file_with_same_file_name(
-            FILE_WITH_SAME_NAME)
-        self.assertIn("Error! There is already a file with name venera, Please use different name.", result)
+            self.driver).click_upload_file_page_button().upload_file_with_same_file_name(DEFAULT_ORIGINAL_FILE_NAME,
+            'testing1')
+        self.assertIn("Error! There is already a file with name testing1, Please use different name.", result)
 
     # 146
     def test_upload_file_with_size_zero_bytes(self):
@@ -1672,6 +1678,7 @@ class TestPages(unittest.TestCase):
                 "Test",
                 "")
             self.assertIn("The statement field is required.", result)
+
 
     # 176
     def test_add_camp_statement_page_should_have_add_new_nick_name_link_for_new_users(self):
@@ -2514,6 +2521,79 @@ class TestPages(unittest.TestCase):
         # Click on the Browse link
         self.assertIn("/browse?namespace=27&my=27", CanonizerBrowsePage(
             self.driver).select_by_value_government_sandy_city_only_my_topics().get_url())
+
+    # 268
+    def test_load_add_camp_forum_page(self):
+        # Click on the Login Page
+        self.login_to_canonizer_app()
+        print("camp forum page")
+        result = AddForumsPage(self.driver).load_camp_forum_page()
+        if result:
+            self.assertIn("/forum/", result.get_url())
+
+    # 269
+    def test_load_create_thread_page(self):
+        # Click on Login Page
+        self.login_to_canonizer_app()
+        result = AddForumsPage(self.driver).load_camp_forum_page().load_create_thread_page()
+        if result:
+            self.assertIn("/threads/create",result.get_url())
+
+    # 270
+    def test_submit_thread_with_blank_title(self):
+            # Click on the Login Page
+            self.login_to_canonizer_app()
+            # Go to create thread and check if title is blank
+            result = AddForumsPage(
+                self.driver).load_camp_forum_page().load_create_thread_page().submit_thread_with_blank_title(
+                DEF_NICK_NAME)
+            self.assertIn("Title is required.", result)
+
+    # 271
+    def test_submit_thread_with_valid_data(self):
+        # Click on the Login Page
+        self.login_to_canonizer_app()
+        # Go to create thread
+        result = AddForumsPage(
+            self.driver).load_camp_forum_page().load_create_thread_page().submit_thread_with_valid_data('title', DEF_NICK_NAME)
+        self.assertIn("", result.get_url())
+
+    # 272
+    def test_login_with_the_account_that_is_registered_but_not_verified(self):
+        # Click on the Login Page
+        self.test_canonizer_login_button()
+        result = CanonizerLoginPage(self.driver).login_with_the_account_that_is_registered_but_not_verified(DEFAULT_UNVERIFIED_EMAIL, DEFAULT_UNVERIFIED_PASSWORD)
+        self.assertIn("Error! Your account is not verified yet. You must have received the verification code in your registered email or mobile. If not then you can request for new code by clicking on the button below.", result)
+
+    # 273
+    def test_upload_file_with_blank_filename(self):
+        self.login_to_canonizer_app()
+        result = CanonizerUploadFilePage(self.driver).click_upload_file_page_button().upload_file_with_blank_filename(DEFAULT_ORIGINAL_FILE_NAME,'')
+        self.assertIn("Error! File name is required", result)
+
+    # 274
+    def test_upload_file_with_blank_file_field(self):
+        self.login_to_canonizer_app()
+        result = CanonizerUploadFilePage(self.driver).click_upload_file_page_button().upload_file_with_blank_file_field('', 'mynewfile')
+        self.assertIn("Error! The file field is required", result)
+
+    # 275
+    def test_upload_file_with_invalid_file_format(self):
+        self.login_to_canonizer_app()
+        result = CanonizerUploadFilePage(self.driver).click_upload_file_page_button().upload_file_with_invalid_file_format(INVALID_FILE_FORMAT,'newfile2')
+        self.assertIn("Error! The type of the uploaded file should be an image.(jpeg,jpg,png,bmp,gif)", result)
+
+    # 276
+    def test_special_characters_are_not_allowed_in_filenames(self):
+        self.login_to_canonizer_app()
+        result = CanonizerUploadFilePage(self.driver).click_upload_file_page_button().special_characters_are_not_allowed_in_filenames(DEFAULT_ORIGINAL_FILE_NAME, 'file$#@&*_+:"><?!@~^')
+        self.assertIn("Error! Special characters are not allowed in file name field", result)
+
+    # 277
+    def test_open_uploaded_file(self):
+        self.login_to_canonizer_app()
+        CanonizerUploadFilePage(self.driver).click_upload_file_page_button().open_uploaded_file().open("https://staging.canonizer.com/files/testing1.jpeg")
+
 
     def tearDown(self):
         self.driver.close()

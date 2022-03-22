@@ -59,7 +59,7 @@ class LoginPageIdentifiers(object):
     PASSWORD_ASTRK = (By.XPATH, '/html/body/div/div[2]/div[1]/form/div[2]/label/span')
     FORGOTPASSWORD = (By.XPATH, '/html/body/div/div[2]/div[1]/form/div[3]/a')
     REQUEST_OTP = (By.ID, 'request_opt')
-
+    UNVERIFIED_EMAIL = (By.XPATH,'/html/body/div[1]/div[2]/div')
 
 class LoginOTPVerificationIdentifiers(object):
     """
@@ -98,6 +98,7 @@ class RegistrationPageIdentifiers(object):
     ERROR_DUPLICATE_EMAIL = (By.XPATH, '/html/body/div/div[2]/div[1]/form/div[4]/p')
     CAPTCHA = (By.ID, 'CaptchaCode')
     ERROR_CAPTCHA = (By.XPATH, '/html/body/div/div[2]/div[1]/form/div[7]/p')
+    PAGE_TITLE = (By.XPATH, '/html/body/div[1]/div[1]/h1')
 
 
 class WhatIsCanonizerPageIdentifiers(object):
@@ -122,16 +123,25 @@ class UploadFileIdentifiers(object):
     """
     UPLOADFILE = (By.XPATH, '//*[@id="exampleAccordion"]/ul[1]/li[4]/a/span')
     FILE_NAME = (By.NAME, 'file')
-    ERROR_FILE_NAME = (By.XPATH, '/html/body/div[1]/div[1]')
+    #ERROR_FILE_NAME = (By.XPATH, '/html/body/div[1]/div[1]')
+    ERROR_FILE_NAME = (By.ID, 'fileNameErrorBox')
     UPLOAD = (By.ID, 'upload_file')
     NEW_FILE_NAME = (By.ID, 'file_name')
     ERROR_FILE_SIZE = (By.XPATH, '/html/body/div/div[1]')
     CHOOSE_FILE = (By.XPATH, '/html/body/div[1]/div[1]/div/div/div/form/div[1]/input')
-    INVALID_FILE_FORMAT_ERROR = (By.XPATH, '/html/body/div/div[1]')
+    #INVALID_FILE_FORMAT_ERROR = (By.XPATH, '/html/body/div/div[1]')
     SAME_FILE_NAME_ERROR = (By.XPATH, '/html/body/div/div[1]')
     ERROR_ZERO_FILE_SIZE = (By.XPATH, '/html/body/div/div[1]')
-    UPLOADED_FILE = (By.XPATH, '/html/body/div/div[1]/div/div/div/div/table/tbody/tr[2]/td[1]/a/i')
+    #UPLOADED_FILE = (By.XPATH, '/html/body/div/div[1]/div/div/div/div/table/tbody/tr[2]/td[1]/a/i'
+    UPLOADED_FILE = (By.XPATH, ' /html/body/div[1]/div[2]/div/div/div/div/table/tbody/tr[2]/td[1]/a')
 
+
+
+    SUCCESS_UPLOAD = (By.ID,'successMsg')
+    ERROR_BLANK_FILENAME = (By.ID, 'fileNameErrorBox')
+    ERROR_BLANK_FILE_FIELD = (By.XPATH, '/html/body/div[1]/div[1]')
+    INVALID_FILE_FORMAT_ERROR = (By.XPATH, '/html/body/div[1]/div[1]')
+    SPECIAL_CHARACTERS_ERROR = (By.ID, 'fileNameErrorBox')
 
 class HelpIdentifiers(object):
     """
@@ -151,7 +161,7 @@ class ForgotPasswordIdentifiers(object):
     """
     Class to hold the Forgot Password Page Identifiers
     """
-    FORGOT_PASSWORD = (By.XPATH, '/html/body/div[1]/div[2]/div[1]/form/div[3]/a')
+    FORGOT_PASSWORD = (By.XPATH, '//*[@id="login_form"]/div[3]/a')
     EMAIL = (By.ID, 'email')
     SUBMIT = (By.ID, 'submit')
     ERROR_MESSAGE_EMAIL = (By.XPATH, '/html/body/div/div[2]/div/form/div/p')
@@ -484,7 +494,8 @@ class AddCampStatementPageIdentifiers(object):
     ADDNEWNICKNAME = (By.XPATH, '//*[@id="add_new_nickname"]')
     #TOPIC_IDENTIFIER = (By.XPATH, '//*[@id="outline_173"]/a')
     #TOPIC_IDENTIFIER = (By.XPATH, '//*[@id="outline_281"]/a')
-    TOPIC_IDENTIFIER = (By.XPATH, '//*[@id="outline_224"]/a')
+    #TOPIC_IDENTIFIER = (By.XPATH, '//*[@id="outline_224"]/a')
+    TOPIC_IDENTIFIER = (By.XPATH, '//*[@id="outline_366"]/a')
 
 
 class TermsAndPrivacyPolicyIdentifiers(object):
@@ -521,6 +532,12 @@ class JoinSupportCampPageIdentifiers(object):
     ADDNEWNICKNAME = (By.ID, 'add_new_nickname')
 
 
-
+class CampForumIdentifiers(object):
+    CAMP_FORUM = (By.ID, 'camp_forum')
+    CREATE_THREAD = (By.XPATH, '/html/body/div[1]/div[2]/div/div[2]/a[5]')
+    TITLE_THREAD = (By.ID, 'title')
+    SUBMIT_THREAD = (By.ID, 'threadSubmitBtn')
+    ERROR_TITLE = (By.XPATH, '//*[@id="threadForm"]/ul/li')
+    NICK_NAME = (By.ID, 'nick_name')
 
 

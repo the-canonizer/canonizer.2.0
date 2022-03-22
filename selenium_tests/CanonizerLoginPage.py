@@ -1,3 +1,5 @@
+import time
+
 from CanonizerBase import Page
 from Identifiers import LoginPageIdentifiers, HomePageIdentifiers, ForgotPasswordIdentifiers, LoginOTPVerificationIdentifiers
 
@@ -21,8 +23,10 @@ class CanonizerLoginPage(Page):
         :return:
             Return the result to the main page.
         """
-
+        time.sleep(3)
         self.hover(*HomePageIdentifiers.LOGIN)
+        print(HomePageIdentifiers.LOGIN)
+        time.sleep(3)
         self.find_element(*HomePageIdentifiers.LOGIN).click()
         return CanonizerLoginPage(self.driver)
 
@@ -195,3 +199,9 @@ class CanonizerLoginPage(Page):
         self.hover(*LoginPageIdentifiers.SIGNUPNOW)
         self.find_element(*LoginPageIdentifiers.SIGNUPNOW).click()
         return CanonizerLoginPage(self.driver)
+
+    def login_with_the_account_that_is_registered_but_not_verified(self, user, password):
+        self.enter_email(user)
+        self.enter_password(password)
+        self.click_login_button()
+        return self.find_element(*LoginPageIdentifiers.UNVERIFIED_EMAIL).text

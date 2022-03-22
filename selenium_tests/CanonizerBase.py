@@ -1,3 +1,5 @@
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.action_chains import ActionChains
 from Config import DEFAULT_BASE_URL
 
@@ -22,7 +24,12 @@ class Page(object):
         return self.driver.current_url
 
     def hover(self, *locator):
-        element = self.find_element(*locator)
+        #element = self.find_element(*locator)
+        #hover = ActionChains(self.driver).move_to_element(element)
+        #hover.perform()
+        element = WebDriverWait(self.driver, 20).until(
+            EC.visibility_of_element_located((locator[0], locator[1]))
+        )
         hover = ActionChains(self.driver).move_to_element(element)
         hover.perform()
 
