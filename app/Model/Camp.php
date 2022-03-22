@@ -1170,7 +1170,15 @@ class Camp extends Model {
                 $topic_id =$subs->topic_num . "-" . $title;
                 $link = self::getTopicCampUrl($topic_num,$subs->camp_num); //$camp_num change to $subs->camp_num for #934 
                 //url('topic/' . $topic_id . '/' . $subs->camp_num);
-                $list[]= '<a href="'.$link.'">'.$topic->camp_name.'</a>';
+                if($subs->camp_num == 0){
+                    $topic = \App\Model\Topic::getLiveTopic($subs->topic_num,['nofilter'=>true]);
+                    $link = self::getTopicCampUrl($topic_num,1,time());
+                    if(!empty($topic)){
+                        $list[]= '<a href="'.$link.'">'.$topic->topic_name.'</a>';
+                    }
+                }else{
+                    $list[]= '<a href="'.$link.'">'.$topic->camp_name.'</a>';
+                }
             }
         }
         return $list;
@@ -1179,7 +1187,7 @@ class Camp extends Model {
     public static function getCampSubscribers($topic_num,$camp_num=1){
         $users_data = [];
         $users = \App\Model\CampSubscription::select('user_id')->where('topic_num','=',$topic_num)
-                ->where('camp_num','=',$camp_num)
+                ->whereIn('camp_num',[0,$camp_num])
                 ->get();
         if(count($users)){
             foreach($users as $user){
