@@ -52,7 +52,7 @@ class NewsFeedController extends Controller
         $news->available_for_child = isset($all['available_for_child']) ? $all['available_for_child'] : 0 ;
         $news->submit_time = strtotime(date('Y-m-d H:i:s'));
         $news->save();
-        return redirect(\App\Model\Camp::getTopicCampUrl($topicnum,$campnum,time()))->with(['success' => "News added successfully"]);
+        return redirect(\App\Model\Camp::getTopicCampUrl($topicnum,$campnum))->with(['success' => "News added successfully"]);
     }
     
     public function edit($topic,$campnum){
@@ -106,7 +106,7 @@ class NewsFeedController extends Controller
             $news->submit_time = strtotime(date('Y-m-d H:i:s'));
             $news->save();
        }
-       return redirect(\App\Model\Camp::getTopicCampUrl($topicnum,$campnum,time()))->with(['success' => "News updated successfully"]);
+       return redirect(\App\Model\Camp::getTopicCampUrl($topicnum,$campnum))->with(['success' => "News updated successfully"]);
     }
 
      /**
@@ -124,7 +124,7 @@ class NewsFeedController extends Controller
             $get_id = NewsFeed::find($id);
             if($get_id != null){
                 NewsFeed::find($id)->delete();
-                return redirect(\App\Model\Camp::getTopicCampUrl($topicnum,$campnum,time()))->with(['success' => "News deleted successfully"]);
+                return redirect(\App\Model\Camp::getTopicCampUrl($topicnum,$campnum))->with(['success' => "News deleted successfully"]);
             }
             else{
                 return redirect()->back()->with([ 'error' => 'News has already been deleted by another user' ]);

@@ -48,7 +48,7 @@
                 </div>
                 <button type="submit" id="submit" class="btn btn-login">Submit</button>
                 <?php 
-                   $link = \App\Model\Camp::getTopicCampUrl($topicnum,$camp_num,time());
+                   $link = \App\Model\Camp::getTopicCampUrl($topicnum,$camp_num);
                 ?>
                 <a href="<?php echo $link; ?>" class="btn btn-default">Cancel</a>
             </form>

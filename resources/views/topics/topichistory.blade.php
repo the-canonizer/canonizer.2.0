@@ -182,9 +182,9 @@ if (!empty($topics)) {
                             <?php } ?>  
                                 <a id="update" class="btn btn-historysmt mb-1" href="<?php echo url('manage/topic/' . $data->id); ?>">Submit Topic Update Based On This</a>		
                             <?php
-                                $link = \App\Model\Camp::getTopicCampUrl($data->topic_num,1,time());
+                                $link = \App\Model\Camp::getTopicCampUrl($data->topic_num,1);
                             ?>		  
-                            <a id="version" class="btn btn-historysmt mb-1" href="<?php echo $link.'&asof=bydate&asofdate=' . date('Y/m/d H:i:s', $data->go_live_time); ?>">View This Version</a>
+                            <a id="version" class="btn btn-historysmt mb-1" href="<?php echo $link.'?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $data->go_live_time); ?>">View This Version</a>
                                <script>
                                      var href = $('#version').attr('href');
                                      var date = new Date(<?= $data->go_live_time ?> * 1000).toLocaleString();
