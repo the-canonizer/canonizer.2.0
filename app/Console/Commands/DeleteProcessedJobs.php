@@ -44,6 +44,7 @@ class DeleteProcessedJobs extends Command
         $notDelId = [];
         foreach ($items as $val) {
             $delId =  ProcessedJob::where('topic_num', $val->topic_num)
+                ->where('status','=','Failed')
                 ->latest('created_at')->first();
                 $notDelId[] = $delId->id;
         }
