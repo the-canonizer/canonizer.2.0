@@ -64,6 +64,7 @@ class CanonizerHomePage(Page):
     Attributes: None
     """
     main_page = "Canonizer Main Page"
+
     def check_what_is_canonizer_page_loaded(self):
         """
         This function verifies if the canonizer home page loads properly.
@@ -95,7 +96,6 @@ class CanonizerHomePage(Page):
         heading = self.find_element(*HomePageIdentifiers.HEADING).text
         if privacy_policy == 'Privacy Policy' and heading == self.main_page:
             return CanonizerWhitePaper(self.driver)
-
 
     def verify_footer_for_copy_right_year(self):
         copy_right = self.find_element(*HomePageIdentifiers.COPY_RIGHT).text
@@ -131,6 +131,7 @@ class WhatIsCanonizerPage(Page):
 
 class CanonizerWhitePaper(Page):
     main_page = "Canonizer Main Page"
+
     def check_white_paper_should_open(self):
         title = self.find_element(*HomePageIdentifiers.HOME_PAGE_TITLE).text
         if title == self.main_page:
@@ -193,6 +194,7 @@ class CanonizerAlgorithmInformation(Page):
 
 class CanonizerAsOfFilters(Page):
     main_page = "Canonizer Main Page"
+
     def check_include_review_filter_applied(self):
         title = self.find_element(*AsOfIdentifiers.TITLE).text
         if title == self.main_page:
