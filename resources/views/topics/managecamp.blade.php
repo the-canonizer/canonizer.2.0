@@ -36,7 +36,7 @@
         <form action="{{ route('camp.save')}}" onsubmit="return submitForm(this);" method="post">
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
             <input type="hidden" id="topic_num" name="topic_num" value="{{ $topic->topic_num }}">
-            
+            <input type="hidden" id="camp_id" name="camp_id" value="{{ $camp->id }}">
 			<input type="hidden" id="camp_num" name="camp_num" value="{{ $camp->camp_num }}">
 			<input type="hidden" id="submitter" name="submitter" value="{{ $camp->submitter_nick_id }}">
 			<?php if($objection=="objection") 
@@ -52,7 +52,7 @@
             { 
             ?>
                 <input type="hidden" id="camp_update" name="camp_update" value="1">
-                <input type="hidden" id="camp_id" name="camp_id" value="{{ $camp->id }}">
+                
             <?php 
             } 
             ?>
@@ -61,6 +61,8 @@
             {
             ?>
 			 <input type="hidden" id="parent_camp_num" name="parent_camp_num" value="{{ $parentcampnum }}">
+             <input type="hidden" id="old_parent_camp_num" name="old_parent_camp_num" value="{{ $parentcampnum }}">
+                
 			<?php 
             } 
             else 
@@ -77,6 +79,8 @@
 					@endforeach
 					
                 </select>
+                <input type="hidden" id="old_parent_camp_num" name="old_parent_camp_num" value="{{ $camp->parent_camp_num }}">
+                
                  @if ($errors->has('parent_camp_num')) <p class="help-block">{{ $errors->first('parent_camp_num') }}</p> @endif
 				 
              </div> 

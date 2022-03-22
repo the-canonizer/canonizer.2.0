@@ -986,71 +986,71 @@ class Camp extends Model {
           $currentTime = time(); 
           $requestPayloadTime = $currentTime - $redirectRequestStartTime;
          
-          if( ($asOfDefaultDate >= $cronDate) && ($selectedAlgo == 'blind_popularity' || $selectedAlgo == "mind_experts") && (($redirectRequestStartTime && $requestPayloadTime >= 300) || !$redirectRequestStartTime)){
-              //change the keys if the asOf is review
-              if($asOf == 'review'){
-                  $titleKey = 'review_title';
-                  $linkKey = 'review_link';
-              }
-  
-              $asOfDefaultDate = time();
-              $checkOfDefaultToday = time();
-  
-              if(isset($_REQUEST['asof']) && $_REQUEST['asof'] == "bydate"){
-                  $asOfDefaultDate = strtotime(date('Y-m-d H:i:s', strtotime($_REQUEST['asofdate'])));
-                  $checkOfDefaultDate = $asOfDefaultDate;
-             }else if(($asOf == 'bydate') && session('asofdateDefault')){
-                  $asOfDefaultDate =  strtotime(session('asofdateDefault'));
-                  $checkOfDefaultDate = $asOfDefaultDate;
-              }
-  
-              //check if bydate is greater than current date
-              if($checkOfDefaultDate > $checkOfDefaultToday){
-                  $asOfDefaultDate = time();
-              }
-  
-              $requestBody = [
-                  'topic_num' => $topic->topic_num,
-                  'algorithm' => $selectedAlgo,
-                  'asofdate'  => $asOfDefaultDate,
-                  'asOf'      => $asOf,
-                  'update_all' => 0
-              ];
-  
-              $appURL = env('CS_APP_URL');
-              $endpointCSGETTree =   env('CS_GET_TREE');
-              $endpoint = $appURL."/".$endpointCSGETTree;
-              $headers = array('Content-Type:multipart/form-data');
-  
-              $reducedTree = Util::execute('POST', $endpoint, $headers, $requestBody);
-  
-              $data = json_decode($reducedTree, true);
-  
-              if(count($data['data']) && $data['code'] == 200 ){
+        if( ($asOfDefaultDate >= $cronDate) && ($selectedAlgo == 'blind_popularity' || $selectedAlgo == "mind_experts") && (($redirectRequestStartTime && $requestPayloadTime >= 300) || !$redirectRequestStartTime)){
+            //change the keys if the asOf is review
+            if($asOf == 'review'){
+                $titleKey = 'review_title';
+                $linkKey = 'review_link';
+            }
 
-                // title and review title field empty in most of the cases if any key is null or empty
-                //  then fetch data from mysql
-                //
-                $topicName =  strlen($data['data'][0]['topic_name'])?? null;
-                $title     =  strlen($data['data'][0]['tree_structure']['1']['title'])?? null;
-                $reviewTitle =  strlen($data['data'][0]['tree_structure']['1']['review_title'])?? null;
-                
-                if($topicName && $title && $reviewTitle){
-                   $reducedTree = $data['data'][0]['tree_structure'];
-                   $fromExistingCode = 0;
-                }
+            $asOfDefaultDate = time();
+            $checkOfDefaultToday = time();
 
-             }
+            if(isset($_REQUEST['asof']) && $_REQUEST['asof'] == "bydate"){
+            $asOfDefaultDate = strtotime(date('Y-m-d H:i:s', strtotime($_REQUEST['asofdate'])));
+                $checkOfDefaultDate = $asOfDefaultDate;
+            }else if(($asOf == 'bydate') && session('asofdateDefault')){
+                $asOfDefaultDate =  strtotime(session('asofdateDefault'));
+                $checkOfDefaultDate = $asOfDefaultDate;
+            }
+
+            //check if bydate is greater than current date
+            if($checkOfDefaultDate > $checkOfDefaultToday){
+                $asOfDefaultDate = time();
+            }
+
+            $requestBody = [
+                'topic_num' => $topic->topic_num,
+                'algorithm' => $selectedAlgo,
+                'asofdate'  => $asOfDefaultDate,
+                'asOf'      => $asOf,
+                'update_all' => 0
+            ];
+
+            $appURL = env('CS_APP_URL');
+            $endpointCSGETTree =   env('CS_GET_TREE');
+            $endpoint = $appURL."/".$endpointCSGETTree;
+            $headers = array('Content-Type:multipart/form-data');
+
+            $reducedTree = Util::execute('POST', $endpoint, $headers, $requestBody);
+
+            $data = json_decode($reducedTree, true);
+
+            if(count($data['data']) && $data['code'] == 200 ){
+
+            // title and review title field empty in most of the cases if any key is null or empty
+            //  then fetch data from mysql
+            //
+            $topicName =  strlen($data['data'][0]['topic_name'])?? null;
+            $title     =  strlen($data['data'][0]['tree_structure']['1']['title'])?? null;
+            $reviewTitle =  strlen($data['data'][0]['tree_structure']['1']['review_title'])?? null;
+            
+            if($topicName && $title && $reviewTitle){
+                $reducedTree = $data['data'][0]['tree_structure'];
+                $fromExistingCode = 0;
+            }
+
+            }
   
-          }
+        }
          
-          if($fromExistingCode){
-              $reducedTree = $this->campTree(session('defaultAlgo', 'blind_popularity'), $activeAcamp = null, $supportCampCount = 0, $needSelected = 0);
-          }
-          //dd($reducedTree);
-          /* End of CS-17 Jira ticket */
+        if($fromExistingCode){
+            $reducedTree = $this->campTree(session('defaultAlgo', 'blind_popularity'), $activeAcamp = null, $supportCampCount = 0, $needSelected = 0);
+        }
+        //dd($reducedTree);
+        /* End of CS-17 Jira ticket */
        
-       /* ticket 846 sunil */
+        /* ticket 846 sunil */
         $filter = isset($_REQUEST['filter']) && is_numeric($_REQUEST['filter']) ? $_REQUEST['filter'] : 0.000;
         if(session('filter')==="removed") {
             $filter = 0.000;	
