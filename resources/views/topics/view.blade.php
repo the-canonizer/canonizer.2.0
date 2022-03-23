@@ -304,7 +304,11 @@ change camps with them."><i class="fa fa-question"></i></a>
     </div>
 <?php } ?>
 <script>
-
+$('.singleClick').click(function(e) {
+    e.stopPropagation();
+    //do other stuff when a click happens
+    $('.singleClick').addClass('disabled'); //1225 ticket
+});
 function enableDeleteNews(){
     $('.delete-newsfeeds').show();
 }
