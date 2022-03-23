@@ -203,7 +203,8 @@ class Support extends Model {
                 $create = new self();
                 $create->topic_num = $support->topic_num;
                 $create->nick_name_id = $support->nick_name_id;
-                $create->delegate_nick_name_id = 0;
+                //$create->delegate_nick_name_id = 0;
+                $create->delegate_nick_name_id = $support->delegate_nick_name_id;
                 $create->start = time();
                 $create->camp_num = $support->camp_num;
                 $create->support_order = ($support->support_order - 1);

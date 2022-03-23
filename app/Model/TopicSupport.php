@@ -205,17 +205,17 @@ class TopicSupport extends Model {
             
             if($as_of_time < time()){
                 if(in_array($array['index'],$userNicknames)){
-                    $html.="<a data-toggle='tooltip' data-original-title='History cannot be modified. In order to modify your current support select the default option in the \"As Of\" box' style='".$disabledCss."' href='javascript:void(0)' class='btn btn-info'>Remove Your Support</a>";
+                    $html.="<a data-toggle='tooltip' data-original-title='History cannot be modified. In order to modify your current support select the default option in the \"As Of\" box' style='".$disabledCss."' href='javascript:void(0)' class='btn btn-info singleClick'>Remove Your Support</a>";
                 }                
                 if(!in_array($array['index'],$userNicknames) && !in_array($array['index'],$myDelegator) && !in_array($array['index'],$myDelegation) && Auth::check()){
-                    $html.="<a data-toggle='tooltip' data-original-title='History cannot be modified. In order to modify your current support select the default option in the \"As Of\" box' style='".$disabledCss."' href='javascript:void(0)' class='btn btn-info'>Delegate Your Support</a>";
+                    $html.="<a data-toggle='tooltip' data-original-title='History cannot be modified. In order to modify your current support select the default option in the \"As Of\" box' style='".$disabledCss."' href='javascript:void(0)' class='btn btn-info singleClick'>Delegate Your Support</a>";
                 }
             }else{
                 if(in_array($array['index'],$userNicknames)){
-                    $html.='<a href="'.url('remove/mysupport/'.$topicnum.'/'. $campnum .'/' .$array['index']).'" class="btn btn-info">Remove Your Support</a>';
+                    $html.='<a href="'.url('remove/mysupport/'.$topicnum.'/'. $campnum .'/' .$array['index']).'" class="btn btn-info singleClick">Remove Your Support</a>';
                 }                
                 if(!in_array($array['index'],$userNicknames) && !in_array($array['index'],$myDelegator) && !in_array($array['index'],$myDelegation) && Auth::check()){
-                    $html.='<a href="'.url('support/'.$urlPortion.'_'.$array['index']).'" class="btn btn-info">Delegate Your Support</a>';
+                    $html.='<a href="'.url('support/'.$urlPortion.'_'.$array['index']).'" class="btn btn-info singleClick">Delegate Your Support</a>';
                 }
             }
             $html.="<ul>";

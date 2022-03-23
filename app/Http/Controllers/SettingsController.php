@@ -1071,7 +1071,7 @@ class SettingsController extends Controller
              ->where('end', '=',0)
              ->where('nick_name_id', '=', $delegator->nick_name_id)
              ->where('delegate_nick_name_id','=',$delegatedTo)
-             ->update(['end'=>time()]);
+             ->update(['end'=>time()]); 
 
             $supportTopic = new Support();
             $supportTopic->topic_num = $topic_num;
