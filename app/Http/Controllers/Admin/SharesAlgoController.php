@@ -217,7 +217,7 @@ class SharesAlgoController extends Controller {
             if(count($dataShares) > 0){
                 foreach($dataShares as $d){
                     $table.="<tr>";
-                    $table.="<td><a href='".route('user_supports',$d->usernickname->id)."'>".$d->usernickname->nick_name."</a></td><td>".date("F,Y",strtotime($d->as_of_date))."</td><td>".$d->share_value."</td><td>".number_format(sqrt($d->share_value),2)."</td>";
+                    $table.="<td><a href='".route('user_supports',$d->usernickname->id)."'>".$d->usernickname->nick_name."</a></td><td>".date("d F,Y",strtotime($d->as_of_date))."</td><td>".$d->share_value."</td><td>".number_format(sqrt($d->share_value),2)."</td>";
                     $table.="<td>
                         <a href='".url('/admin/shares/edit/'.$d->id) ."'><i class='fa fa-edit'></i>&nbsp;&nbsp;Edit</a>
                         &nbsp;&nbsp;<a href='javascript:void(0)' onClick='deleteShare(".$d->id.")'><i class='fa fa-trash'></i>&nbsp;&nbsp;Delete</a>
