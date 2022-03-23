@@ -274,7 +274,6 @@ class TopicSupport extends Model {
                 if(is_array($array['children']) && sizeof($array['children']) > 0){ 
                     return self::getDelegationTree($array['children'],$delegationTreeArray);
                 }else{
-                   // echo "<pre>"; print_r($delegationTreeArray); exit;
                     return $delegationTreeArray;
                 }
             }
