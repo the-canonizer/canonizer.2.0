@@ -36,14 +36,13 @@ class UpdateProcessedJobsTopicNumber extends Command
      *
      * @return mixed
      */
+    // 1. Get all response  
     public function handle()
     {
-        $getAllProcessedJobs = ProcessedJob::select('id', 'response->topic_id as topic_number')
-                                                ->orderBy('id', 'desc')
-                                                ->get();
-
+        $getAllProcessedJobs = ProcessedJob::select('id', 'response')->orderBy('id', 'desc')->get();
+        
         foreach($getAllProcessedJobs as $job) {
-            ProcessedJob::where('id', $job->id)->update(['topic_num' => $job->topic_number]);
+            ProcessedJob::where('id', $job->id)->update(['topic_num' => $job->response['topic_id'] ?? NULL]);
         }
     }
 }
