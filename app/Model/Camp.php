@@ -1018,6 +1018,8 @@ class Camp extends Model {
         
         if(count($data['data']) && $data['code'] == 200 ){
                 $reducedTree = $data['data'][0];
+        } else {
+            $reducedTree = [];
         }
         
         /* End of CS-17 Jira ticket */
