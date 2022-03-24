@@ -1,12 +1,15 @@
+from selenium.webdriver.common.by import By
+
 from CanonizerBase import Page
 from Identifiers import CampForumIdentifiers, BrowsePageIdentifiers, AddCampStatementPageIdentifiers
-from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import NoSuchElementException, WebDriverException
 from selenium.webdriver.common.keys import Keys
 
 
 class AddForumsPage(Page):
     forum_details = "Canonizer Forum Details"
     success_message = "Thread Created Successfully!"
+
     def load_camp_forum_page(self):
         """
         Go To Camp Forum
@@ -48,7 +51,6 @@ class AddForumsPage(Page):
         if page_title == 'Create a new thread for Camp : Agreement':
             return AddForumsPage(self.driver)
 
-
     def load_my_thread_page(self):
         self.hover(*CampForumIdentifiers.MY_THREADS)
         self.find_element(*CampForumIdentifiers.MY_THREADS).click()
@@ -84,6 +86,27 @@ class AddForumsPage(Page):
         statement = self.find_element(*CampForumIdentifiers.NO_THREAD_STATEMENT).text
         url = AddForumsPage(self.driver).get_url()
         if page_title == self.forum_details and 'No threads available for this topic' in statement:
+            return AddForumsPage(self.driver)
+
+    def verify_my_threads_created_by_logged_user(self):
+        self.hover(*CampForumIdentifiers.MY_THREADS)
+        self.find_element(*CampForumIdentifiers.MY_THREADS).click()
+
+        my_thread = self.find_element(*CampForumIdentifiers.MY_THREAD).text
+        self.hover(*CampForumIdentifiers.MY_THREAD)
+        self.find_element(*CampForumIdentifiers.MY_THREAD).click()
+
+        title = self.find_element(*CampForumIdentifiers.MY_THREAD_TITLE).text
+        if my_thread and "Pooja" in title:
+            return AddForumsPage(self.driver)
+
+    def camp_form_count_of_threads_on_all_threads_page(self):
+        self.hover(*CampForumIdentifiers.ALL_THREADS)
+        self.find_element(*CampForumIdentifiers.ALL_THREADS).click()
+
+        rows = self.find_element(*CampForumIdentifiers.TABLE_BODY)
+        row = rows.find_elements(By.TAG_NAME, "tr")
+        if len(row) == 11:
             return AddForumsPage(self.driver)
 
     def create_thread_mandatory_fields_are_marked_with_asteris(self):
@@ -165,6 +188,9 @@ class AddForumsPage(Page):
         if success_message == self.success_message:
             return AddForumsPage(self.driver)
 
+    def create_thread_with_duplicate_title(self, thread_title, nickname):
+        self.create_thread(thread_title, nickname)
+
     def create_thread_with_valid_data_with_enter_key(self, thread_title, nickname):
         self.enter_title_of_thread(thread_title)
         self.enter_nickname(nickname)
@@ -183,8 +209,8 @@ class AddForumsPage(Page):
 
     def verify_camp_link_form(self):
         self.find_element(*CampForumIdentifiers.AGREEMENT).click()
-        page_title = self.find_element(*CampForumIdentifiers.CAMP_TITLE).text
-        if page_title == 'News Feeds':
+        page_title = self.find_element(*CampForumIdentifiers.AGREEMENT_HEADING).text
+        if page_title == 'Agreement':
             return AddForumsPage(self.driver)
 
     def create_thread_with_invalid_data_with_enter_key(self, thread_title, nickname):
@@ -276,6 +302,42 @@ class AddForumsPage(Page):
         if self.find_element(*CampForumIdentifiers.NICK_NAME_ASTRK):
             return AddForumsPage(self.driver)
 
+    def post_thread_reply(self, reply):
+        self.hover(*CampForumIdentifiers.THREAD_TITLE)
+        self.find_element(*CampForumIdentifiers.THREAD_TITLE).click()
+        self.enter_post_reply(reply)
+        self.click_post_submit_button()
+
+    def thread_post_with_valid_data(self, reply):
+        self.post_thread_reply(reply)
+        text = self.find_element(*CampForumIdentifiers.REPLY_PATH).text
+        if text in reply:
+            return AddForumsPage(self.driver)
+
+    def thread_post_with_invalid_data(self, reply):
+        self.post_thread_reply(reply)
+        error = self.find_element(*CampForumIdentifiers.ERROR_THREAD_REPLY).text
+        if error == 'The reply field is required.':
+            return AddForumsPage(self.driver)
+
+    def thread_post_with_valid_data_with_enter_key(self, reply):
+        self.hover(*CampForumIdentifiers.THREAD_TITLE)
+        self.find_element(*CampForumIdentifiers.THREAD_TITLE).click()
+        self.enter_post_reply(reply)
+        self.find_element(*CampForumIdentifiers.POST_SUBMIT).send_keys(Keys.ENTER)
+        text = self.find_element(*CampForumIdentifiers.REPLY_PATH).text
+        if text in reply:
+            return AddForumsPage(self.driver)
+
+    def thread_post_with_invalid_data_with_enter_key(self, reply):
+        self.hover(*CampForumIdentifiers.THREAD_TITLE)
+        self.find_element(*CampForumIdentifiers.THREAD_TITLE).click()
+        self.enter_post_reply(reply)
+        self.find_element(*CampForumIdentifiers.POST_SUBMIT).send_keys(Keys.ENTER)
+        error = self.find_element(*CampForumIdentifiers.ERROR_THREAD_REPLY).text
+        if error == 'The reply field is required.':
+            return AddForumsPage(self.driver)
+
     def post_reply_to_thread(self, reply):
         self.hover(*CampForumIdentifiers.THREAD_TITLE)
         self.find_element(*CampForumIdentifiers.THREAD_TITLE).click()
@@ -309,4 +371,3 @@ class AddForumsPage(Page):
             heading = self.find_element(*CampForumIdentifiers.SUPPORTED_CAMPS_LIST).text
             if heading == 'List of supported camps':
                 return AddForumsPage(self.driver)
-

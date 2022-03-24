@@ -94,17 +94,17 @@ class CanonizerCampPage(Page):
         self.enter_camp_about_nick_name(args[6])
         self.click_create_camp_button()
 
-    def create_camp_with_blank_nick_name(self, CREATE_CAMP_LIST_1):
-        self.create_camp(CREATE_CAMP_LIST_1)
+    def create_camp_with_blank_nick_name(self, create_camp_list_1):
+        self.create_camp(create_camp_list_1)
         error = self.find_element(*CreateNewCampPageIdentifiers.ERROR_NICK_NAME)
         if error == 'The nick name field is required.':
-            CanonizerCampPage(self.driver)
+            return CanonizerCampPage(self.driver)
 
-    def create_camp_with_blank_camp_name(self, CREATE_CAMP_LIST_2):
-        self.create_camp(CREATE_CAMP_LIST_2)
+    def create_camp_with_blank_camp_name(self, create_camp_list_1):
+        self.create_camp(create_camp_list_1)
         error = self.find_element(*CreateNewCampPageIdentifiers.ERROR_CAMP_NAME).text
-        if error == "Camp name is required.":
-            CanonizerCampPage(self.driver)
+        if error == 'Camp name is required.':
+            return CanonizerCampPage(self.driver)
 
     def create_camp_with_valid_data(self, nick_name, parent_camp_name, camp_name, keywords, note, camp_about_url,
                                     camp_about_nick_name):
@@ -127,15 +127,16 @@ class CanonizerCampPage(Page):
         except NoSuchElementException:
             return False
 
-    def create_camp_with_duplicate_camp_name(self, CREATE_CAMP_LIST_3):
-        self.create_camp(CREATE_CAMP_LIST_3)
+    def create_camp_with_duplicate_camp_name(self, create_camp_list_2):
+        self.create_camp(create_camp_list_2)
         error = self.find_element(*CreateNewCampPageIdentifiers.ERROR_DUPLICATE_CAMP_NAME).text
         if error == 'The camp name has already been taken':
             return CanonizerCampPage(self.driver)
 
-    def create_camp_with_invalid_camp_name(self, CREATE_CAMP_LIST_4):
-        self.create_camp(CREATE_CAMP_LIST_4)
+    def create_camp_with_invalid_camp_name(self, create_camp_list_3):
+        self.create_camp(create_camp_list_3)
         error = self.find_element(*CreateNewCampPageIdentifiers.ERROR_INVALID_CAMP_NAME).text
+        print(error)
         if error == 'Camp name can only contain space and alphanumeric characters.':
             return CanonizerCampPage(self.driver)
 
@@ -512,6 +513,45 @@ class CanonizerEditCampPage(Page):
         self.submit_update(CAMP_LIST_7)
         error = self.find_element(*CampEditPageIdentifiers.ERROR_DUPLICATE_CAMP_NAME).text
         if error == 'The camp name has already been taken':
+            return CanonizerEditCampPage(self.driver)
+
+    def click_parent_camp(self):
+        self.hover(*BrowsePageIdentifiers.BROWSE)
+        self.find_element(*BrowsePageIdentifiers.BROWSE).click()
+
+        # Browse to Topic Name
+        self.hover(*TopicUpdatePageIdentifiers.TOPIC_IDENTIFIER)
+        self.find_element(*TopicUpdatePageIdentifiers.TOPIC_IDENTIFIER).click()
+        time.sleep(3)
+
+        self.driver.execute_script(self.window_scroll)
+        time.sleep(3)
+        self.hover(*CampEditPageIdentifiers.MANAGE_EDIT_CAMP)
+        self.find_element(*CampEditPageIdentifiers.MANAGE_EDIT_CAMP).click()
+        # Click on SUBMIT_CAMP_UPDATE_BASED_ON_THIS
+        self.hover(*CampEditPageIdentifiers.SUBMIT_CAMP_UPDATE_BASED_ON_THIS)
+        self.find_element(*CampEditPageIdentifiers.SUBMIT_CAMP_UPDATE_BASED_ON_THIS).click()
+
+    def verify_camp_update_fields(self):
+        self.click_parent_camp()
+        camp_name = self.find_element(*CampEditPageIdentifiers.CAMP_NAME)
+        camp_read_only = camp_name.get_attribute('readonly')
+        keywords = self.find_element(*CampEditPageIdentifiers.KEYWORDS)
+        keywords_read_only = keywords.get_attribute('readonly')
+        note = self.find_element(*CampEditPageIdentifiers.ADDITIONAL_NOTE)
+        note_read_only = note.get_attribute('readonly')
+        camp_about_url = self.find_element(*CampEditPageIdentifiers.CAMP_ABOUT_URL)
+        camp_url_read_only = camp_about_url.get_attribute('readonly')
+        camp_id = self.find_element(*CampEditPageIdentifiers.CAMP_ABOUT_URL)
+        camp_id_read_only = camp_id.get_attribute('readonly')
+        if keywords_read_only and camp_read_only == False and note_read_only == False and camp_url_read_only == False and camp_id_read_only == False:
+            return CanonizerEditCampPage(self.driver)
+
+    def update_camp_validation_of_camp_name(self):
+        self.click_parent_camp()
+        camp_name = self.find_element(*CampEditPageIdentifiers.CAMP_NAME)
+        read_only = camp_name.get_attribute('readonly')
+        if read_only:
             return CanonizerEditCampPage(self.driver)
 
     def submit_camp_update_with_invalid_camp_name(self, CAMP_LIST_8):
