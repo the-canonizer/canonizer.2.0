@@ -1135,6 +1135,7 @@ class SettingsController extends Controller
         $support = Support::where('camp_num', $campNum)->where('topic_num', $topicNum)->where('nick_name_id', $nickNameId)->where('end', '=', 0)->first();
         $delegateNickNameId = $support->delegate_nick_name_id;
         $promoteDelegate = true;
+
         $ifSupportLeft = true; //default, only useful in case od direct supporter
         if(!$delegateNickNameId){
             $supportCount = Support::where('topic_num', $topicNum)
@@ -1172,6 +1173,7 @@ class SettingsController extends Controller
     public function removeSupport($topicNum,$campNum='',$nickNameId,$delegateNickNameId=0,$currentSupportOrder='',$promoteDelegate = true,$ifSupportLeft = true){
         $startSupportOrder = $currentSupportOrder;
         $as_of_time = time();
+        
         if($delegateNickNameId){  //A delegate supporter is removing its support
             $alldirectDelegates = Support::where('topic_num', $topicNum)->where('delegate_nick_name_id', $nickNameId)->where('end', '=', 0)->get();
             $campList = Support::where('topic_num','=',$topicNum)->where('nick_name_id', $nickNameId)->where('end', '=', 0)->pluck('camp_num')->toArray();

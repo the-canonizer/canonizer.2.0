@@ -196,15 +196,15 @@ class Support extends Model {
             $higherSupportNumbers = self::where('topic_num',$topicNum)
                 ->where('end','=',0)
                 ->where('nick_name_id',$value->nick_name_id)
-                ->where('support_order','>',$value->support_order)->get();
+                ->where('support_order','>',$value->support_order)->get(); 
             foreach($higherSupportNumbers as $support){
                 $support->end = time();
                 $support->save();
                 $create = new self();
                 $create->topic_num = $support->topic_num;
                 $create->nick_name_id = $support->nick_name_id;
-                //$create->delegate_nick_name_id = 0;
-                $create->delegate_nick_name_id = $support->delegate_nick_name_id;
+                //delegate nick name id add if any delegate
+                $create->delegate_nick_name_id = $support->delegate_nick_name_id; 
                 $create->start = time();
                 $create->camp_num = $support->camp_num;
                 $create->support_order = ($support->support_order - 1);
