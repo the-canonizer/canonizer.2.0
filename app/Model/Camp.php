@@ -1017,9 +1017,9 @@ class Camp extends Model {
         $data = json_decode($reducedTree, true);
         
         if(count($data['data']) && $data['code'] == 200 ){
-                $reducedTree = $data['data'][0];
+            $reducedTree = $data['data'][0];
         } else {
-            $reducedTree = [];
+            $reducedTree = $this->campTree(session('defaultAlgo', 'blind_popularity'), $activeAcamp = null, $supportCampCount = 0, $needSelected = 0);
         }
         
         /* End of CS-17 Jira ticket */
