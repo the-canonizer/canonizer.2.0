@@ -378,6 +378,7 @@
                 changeYear: true,
 				dateFormat: 'yy/mm/dd',
                 yearRange: "-"+yearRange+":+0",
+                maxDate: new Date(),
                 onSelect: function () {
                          $('#as_of').submit();
                 }

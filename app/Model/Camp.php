@@ -532,7 +532,6 @@ class Camp extends Model {
 
         $childCamps = array_unique(self::getAllChildCamps($onecamp));
 
-       // print_r($childCamps);die;
         // $mysupports = Support::where('topic_num', $topic_num)->whereIn('camp_num', $childCamps)->whereIn('nick_name_id', $userNicknames)->where('end', '=', 0)->where('delegate_nick_name_id','=',0)->orderBy('support_order', 'ASC')->groupBy('camp_num')->get();
         // Fixes #912: Warning is missing while supporting agreement camp (after delegate support)
         $mysupports = Support::where('topic_num', $topic_num)->whereIn('camp_num', $childCamps)->whereIn('nick_name_id', $userNicknames)->where('end', '=', 0)->orderBy('support_order', 'ASC')->groupBy('camp_num')->get();
@@ -950,7 +949,6 @@ class Camp extends Model {
 
         $titleKey = 'title';
         $linkKey = 'link';
-        $fromExistingCode = 1;
 
         $cronDate = env('CS_CRON_DATE'); 
         $cronDate =  isset($cronDate) ? strtotime($cronDate) : strtotime(date('Y-m-d'));
@@ -979,66 +977,51 @@ class Camp extends Model {
             $selectedAlgo = session('defaultAlgo');
         }
 
-        if( ($asOfDefaultDate >= $cronDate) && ($selectedAlgo == 'blind_popularity' || $selectedAlgo == "mind_experts")){
-            //change the keys if the asOf is review
-            if($asOf == 'review'){
-                $titleKey = 'review_title';
-                $linkKey = 'review_link';
-            }
-
-            $asOfDefaultDate = time();
-            $checkOfDefaultToday = time();
-
-            if(isset($_REQUEST['asof']) && $_REQUEST['asof'] == "bydate"){
-                $asOfDefaultDate = strtotime(date('Y-m-d H:i:s', strtotime($_REQUEST['asofdate'])));
-                $checkOfDefaultDate = $asOfDefaultDate;
-            } else if(($asOf == 'bydate') && session('asofdateDefault')){
-                $asOfDefaultDate =  strtotime(session('asofdateDefault'));
-                $checkOfDefaultDate = $asOfDefaultDate;
-            }
-
-            //check if bydate is greater than current date
-            if($checkOfDefaultDate > $checkOfDefaultToday){
-                $asOfDefaultDate = time();
-            }
-
-            $requestBody = [
-                'topic_num' => $topic->topic_num,
-                'algorithm' => $selectedAlgo,
-                'asofdate'  => $asOfDefaultDate,
-                'asOf'      => $asOf,
-                'update_all' => 0
-            ];
-
-            $appURL = env('CS_APP_URL');
-            $endpointCSGETTree =   env('CS_GET_TREE');
-            $endpoint = $appURL."/".$endpointCSGETTree;
-            $headers = array('Content-Type:multipart/form-data');
-
-            $reducedTree = Util::execute('POST', $endpoint, $headers, $requestBody);
-
-            $data = json_decode($reducedTree, true);
-
-            if(count($data['data']) && $data['code'] == 200 ){
-
-                /** title and review title field empty in most of the cases if any key is null or empty
-                 *  then fetch data from mysql
-                 */
-                $topicName =  strlen($data['data'][0]['topic_name'])?? null;
-                $title     =  strlen($data['data'][0]['tree_structure']['1']['title'])?? null;
-                $reviewTitle =  strlen($data['data'][0]['tree_structure']['1']['review_title'])?? null;
-                
-                if($topicName && $title && $reviewTitle){
-                    $reducedTree = $data['data'][0]['tree_structure'];
-                    $fromExistingCode = 0;
-                }
-            }
+        if($asOf == 'review'){
+            $titleKey = 'review_title';
+            $linkKey = 'review_link';
         }
-         
-        if($fromExistingCode){
+
+        $asOfDefaultDate = time();
+        $checkOfDefaultToday = time();
+
+        if(isset($_REQUEST['asof']) && $_REQUEST['asof'] == "bydate"){
+            $asOfDefaultDate = strtotime(date('Y-m-d H:i:s', strtotime($_REQUEST['asofdate'])));
+            $checkOfDefaultDate = $asOfDefaultDate;
+        } else if(($asOf == 'bydate') && session('asofdateDefault')){
+            $asOfDefaultDate =  strtotime(session('asofdateDefault'));
+            $checkOfDefaultDate = $asOfDefaultDate;
+        }
+
+        //check if bydate is greater than current date
+        if($checkOfDefaultDate > $checkOfDefaultToday){
+            $asOfDefaultDate = time();
+        }
+
+        $requestBody = [
+            'topic_num' => $topic->topic_num,
+            'algorithm' => $selectedAlgo,
+            'asofdate'  => $asOfDefaultDate,
+            'asOf'      => $asOf,
+            'update_all' => 0
+        ];
+        //dd($requestBody);
+
+        $appURL = env('CS_APP_URL');
+        $endpointCSGETTree =   env('CS_GET_TREE');
+        $endpoint = $appURL."/".$endpointCSGETTree;
+        $headers = array('Content-Type:multipart/form-data');
+
+        $reducedTree = Util::execute('POST', $endpoint, $headers, $requestBody);
+
+        $data = json_decode($reducedTree, true);
+        
+        if(count($data['data']) && $data['code'] == 200 ){
+            $reducedTree = $data['data'][0];
+        } else {
             $reducedTree = $this->campTree(session('defaultAlgo', 'blind_popularity'), $activeAcamp = null, $supportCampCount = 0, $needSelected = 0);
         }
-        //dd($reducedTree);
+        
         /* End of CS-17 Jira ticket */
        
         /* ticket 846 sunil */

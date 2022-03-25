@@ -202,7 +202,7 @@ change camps with them."><i class="fa fa-question"></i></a>
             </div>
             <div class="footer">
                 <?php 
-                if ((isset($_REQUEST['asof']) && $_REQUEST['asof'] == "bydate")  || (session()->has('asofDefault') && session('asofDefault') == 'bydate' && !isset($_REQUEST['asof']))) {
+                if ((isset($_REQUEST['asof']) && $_REQUEST['asof'] == "bydate" && $_REQUEST['asofdate'] && strtotime($_REQUEST['asofdate']) < time())  || (session()->has('asofDefault') && session('asofDefault') == 'bydate' && !isset($_REQUEST['asof']))) {
                     $href =  "javascript:void(0)";
                     $style =  "cursor: default;";
                     $class =  "disable-btn";
