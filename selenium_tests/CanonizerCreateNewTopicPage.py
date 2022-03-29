@@ -176,9 +176,17 @@ class CanonizerCreateNewTopicPage(Page):
         for i in row:
             temp = i.text
             temp = temp.split(" ")
-            nick_name_list_2.append(temp[2])
+            temp.pop(0)
+            temp.pop(0)
+            temp.pop()
+            str1 = ""
+            for ele in temp:
+                str1 += ele
+                str1 += " "
+            str1 = str1.rstrip()
+            nick_name_list_2.append(str1)
         nick_name_list_2.pop(0)
-        if nick_name_list == nick_name_list_2:
+        if nick_name_list.sort() == nick_name_list_2.sort():
             return CanonizerCreateNewTopicPage(self.driver)
         else:
             return False
