@@ -1144,7 +1144,7 @@ class Camp extends Model {
             $i=1;
             foreach($subscriptions as $subs){
                 if($camp_num!=1){
-                    if(!in_array($subs->camp_num, $childCamps)){
+                    if(!in_array($subs->camp_num, $childCamps) && $subs->camp_num != 0){
                         continue;
                     }
                 }
