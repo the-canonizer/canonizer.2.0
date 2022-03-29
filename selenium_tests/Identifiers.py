@@ -75,6 +75,8 @@ class LoginPageIdentifiers(object):
     REQUEST_OTP = (By.ID, 'request_opt')
     HEADING = (By.XPATH, '/html/body/div[1]/div[1]/h1')
     ERROR_BLANK_PASSWORD = (By.XPATH, '//*[@id="login_form"]/div[2]/p')
+    ERROR_UNVERIFIED = (By.XPATH, '/html/body/div[1]/div[2]/div')
+    ERROR_TOO_MANY_ATTEMPTS = (By.XPATH, '//*[@id="login_form"]/div[1]/p')
 
 
 class LoginOTPVerificationIdentifiers(object):
@@ -156,6 +158,9 @@ class UploadFileIdentifiers(object):
     SUCCESS_MESSAGE = (By.XPATH, '//*[@id="successMsg"]')
     RECENT_FILE_NAME = (By.XPATH, '/html/body/div[1]/div[3]/div/div/div/div/table/tbody/tr[2]/td[1]')
     ERROR_INVALID_FILE_FORMAT = (By.XPATH, '/html/body/div[1]/div[1]')
+    LOGIN = (By.XPATH, '//*[@id="navbarResponsive"]/ul[1]/li[2]/a[2]')
+    CHOOSE_FILE_BUTTON = (By.XPATH, '//*[@id="uploadForm"]/div[1]')
+    WARNING = (By.XPATH, '//*[@id="uploadForm"]/p')
 
 
 class HelpIdentifiers(object):
@@ -188,6 +193,7 @@ class ForgotPasswordIdentifiers(object):
     EMAIL_ASTRK = (By.XPATH, '/html/body/div[1]/div[3]/div/form/div/label/span')
     TITLE = (By.XPATH, '/html/body/div[1]/div[1]/h1')
     CONFIRMATION = (By.XPATH, '/html/body/div/div[1]/h1')
+    SAVE = (By.ID, 'submit_create')
 
 
 class BrowsePageIdentifiers(object):
@@ -204,6 +210,8 @@ class BrowsePageIdentifiers(object):
     # SUB_TOPIC_NAME = (By.XPATH, '//*[@id="outline_127"]/a')
     TITLE = (By.XPATH, '/html/body/div[1]/div[1]/h1')
     HEADING = (By.XPATH, '/html/body/div[1]/div[1]/div/div/h3/div[1]')
+    IDENTIFIERS = (By.XPATH, '//*[@id="outline_453"]/a')
+    LOAD_DATA = (By.ID, 'load-data')
 
 
 class CreateNewTopicPageIdentifiers(object):
@@ -234,7 +242,7 @@ class CreateNewTopicPageIdentifiers(object):
     NICK_NAME_HISTORY_PAGE = (By.XPATH, "/html/body/div[1]/div[4]/div[2]/div/div/div[1]/b[4]")
     BROWSE = (By.XPATH, "//*[@id='exampleAccordion']/ul/li[2]/a/span")
     NAMESPACE_LIST = (By.ID, 'load-data')
-    CREATED_TOPIC_NAME = (By.XPATH, '/html/body/div[1]/div[3]/h3[1]')
+    CREATED_TOPIC_NAME = (By.XPATH, '/html/body/div[1]/div[4]/h3[2]')
     SUPPORT_BADGE = (By.XPATH, '//*[@id="support-tree"]/li/div')
     JOIN_CAMP_SUPPORT = (By.ID, 'join_support_camp')
     DIRECT_JOIN_AND_SUPPORT = (By.XPATH, '//*[@id="outline_400"]/a')
@@ -245,7 +253,10 @@ class CreateNewTopicPageIdentifiers(object):
     LOGIN_TITLE = (By.XPATH, '/html/body/div[1]/div[1]/h1')
     EDIT_CAMP = (By.ID, 'edit_camp')
     HISTORY_DATA = (By.XPATH, '/html/body/div[1]/div[3]/div[2]/div/form/div/div[1]')
-
+    USERNAME = (By.XPATH, '//*[@id="navbarResponsive"]/ul[1]/li[2]/div/a/span')
+    ACCOUNT_SETTING= (By.XPATH, '//*[@id="navbarResponsive"]/ul[1]/li[2]/div/ul/li[1]/a')
+    NICK_NAME_TAB = (By.XPATH, '/html/body/div[1]/div[2]/div/div/div[1]/ul/li[4]/a')
+    NICK_NAME_TABLE = (By.XPATH, '/html/body/div[1]/div[2]/div/div/div/div[1]/table')
 
 class LogoutIdentifiers(object):
     """
@@ -338,6 +349,7 @@ class AccountSettingsManageProfileInfoIdentifiers(object):
     PHONE_NUMBER_ASTRK = (By.XPATH, '//*[@id="myTabContent"]/form[1]/div/div[1]/label/span')
     ERROR_PHONE_NUMBER_VERIFICATION = (By.XPATH, '//*[@id="myTabContent"]/form[1]/div/div[3]')
     PAGE_TITLE = (By.XPATH, '/html/body/div[1]/div[1]/h1')
+    SUCCESS_MESSAGE = (By.XPATH, '/html/body/div[1]/div[2]')
 
 
 class AlgorithmInformationIdentifiers(object):
@@ -398,7 +410,8 @@ class TopicUpdatePageIdentifiers(object):
     SELECTED_NICK_NAME = (By.XPATH, '//*[@id="nick_name"]/option[1]')
     ERROR_DUPLICATE_TOPIC_NAME = (By.XPATH, '//*[@id="topicForm"]/div[2]/p')
     HEADING = (By.XPATH, '/html/body/div[1]/div[2]/h1')
-    CAMP_HEADING = (By.XPATH, '/html/body/div[1]/div[3]/div/div[1]/h3/div[1]')
+    CAMP_HEADING = (By.XPATH, '/html/body/div[1]/div[4]/div/div[2]/h3/div[1]')
+    SUCCESS_MESSAGE = (By.XPATH, '/html/body/div[1]/div[3]')
 
 
 class TopicObjectPageIdentifiers(object):
@@ -430,10 +443,10 @@ class CreateNewCampPageIdentifiers(object):
     CAMP_NAME_ASTRK = (By.XPATH, '/html/body/div[1]/div[3]/div/div/form/div[2]/label/span')
     CREATE_CAMP_BUTTON = (By.ID, 'submit')
     ERROR_NICK_NAME = (By.XPATH, '/html/body/div[1]/div[3]/div/div/form/div[1]/p')
-    ERROR_CAMP_NAME = (By.XPATH, '/html/body/div/div[3]/div/div/form/div[3]/p')
+    ERROR_CAMP_NAME = (By.XPATH, '//*[@id="campForm"]/div[3]/p')
     ADDNEWNICKNAME = (By.LINK_TEXT, 'Add New Nick Name')
     ERROR_DUPLICATE_CAMP_NAME = (By.XPATH, '/html/body/div/div[3]/div/div/form/div[3]/p')
-    ERROR_INVALID_CAMP_NAME = (By.XPATH, '/html/body/div/div[3]/div/div/form/div[3]/p')
+    ERROR_INVALID_CAMP_NAME = (By.XPATH, '//*[@id="campForm"]/div[3]/p')
     PARENT_CAMP = (By.ID, 'parent_camp_num')
     TITLE = (By.XPATH, '/html/body/div[1]/div[2]/h1')
     HEADING = (By.XPATH, '/html/body/div[1]/div[1]/h1')
@@ -493,6 +506,12 @@ class CampStatementEditPageIdentifiers(object):
     TOPIC_IDENTIFIER = (By.XPATH, '//*[@id="outline_173"]/a')
     PAGE_TITLE = (By.XPATH, "/html/body/div[1]/div[1]/h3[2]")
     PAGE_HEADING = (By.XPATH, "/html/body/div[1]/div[2]/h1")
+    OBJECT_COLOR = (By.XPATH, '/html/body/div[1]/div[3]/div[1]/div/div/div[1]/div[1]')
+    LIVE_COLOR = (By.XPATH, '/html/body/div[1]/div[3]/div[1]/div/div/div[2]/div[1]')
+    IN_REVIEW = (By.XPATH, '/html/body/div[1]/div[3]/div[1]/div/div/div[3]/div[1]')
+    OLD = (By.XPATH, '/html/body/div[1]/div[3]/div[1]/div/div/div[4]/div[1]')
+    PAGE_TITLE_2 = (By.XPATH, '/html/body/div[1]/div[3]/h3[2]/a')
+    SUCCESS_MESSAGE = (By.XPATH, '/html/body/div[1]/div[3]')
 
 
 class AddNewsPageIdentifiers(object):
@@ -513,7 +532,7 @@ class AddNewsPageIdentifiers(object):
     ERROR_INVALID_LINK = (By.XPATH, '//*[@id="topicForm"]/div[2]/p')
     SUCCESS_MESSAGE = (By.XPATH, "/html/body/div[1]/div[1]")
     TITLE = (By.XPATH, '/html/body/div[1]/div[1]/h1')
-    HEADING = (By.XPATH, '/html/body/div[1]/div[2]/h3[2]')
+    HEADING = (By.XPATH, '/html/body/div[1]/div[3]/h3[2]')
 
 
 class EditNewsPageIdentifiers(object):
@@ -557,6 +576,9 @@ class MySupportsPageIdentifiers(object):
         By.XPATH, '//*[@id="positions_5869"]/b/a')
     HEADING = (By.XPATH, '/html/body/div[1]/div[2]/h3[2]/a')
     SUB_HEADING = (By.XPATH, '/html/body/div[1]/div[3]/div/div[1]/h3/div[1]')
+    DELETE_SUPPORT = (By.XPATH, '//*[@id="submit_5406"]/i')  # It will change everytime
+    SUCCESS_MESSAGE = (By.XPATH, '/html/body/div[1]/div[2]')
+    SUPPORT = (By.XPATH, '/html/body/div[1]/div[2]/div/div/div[1]/ul/li[5]/a')
 
 
 class AddCampStatementPageIdentifiers(object):
@@ -617,16 +639,35 @@ class JoinSupportCampPageIdentifiers(object):
     """
     Class to hold the Join/manage support crumbs links Identifiers
     """
+    BROWSE = (By.XPATH, '//*[@id="exampleAccordion"]/ul[1]/li[2]/a/span')
+    TOPIC_IDENTIFIER = (By.XPATH, '//*[@id="outline_598"]/a')
     JOINSUPPORTCAMP = (By.ID, 'join_support_camp')
     ADDNEWNICKNAME = (By.ID, 'add_new_nickname')
     PAGE_TITLE = (By.XPATH, '/html/body/div[1]/div[1]/h1')
     JOIN_CAMP_SUPPORT = (By.ID, 'join_support_camp')
-    CHILD_CAMP = (By.XPATH, '//*[@id="tree_591_1_2"]/div/a')
+    CHILD_CAMP = (By.XPATH, '//*[@id="tree_598_1_2"]/div/a')
+    CHILD_CAMP_2 = (By.XPATH, '//*[@id="tree_598_1_3"]/div/a')
     WARNING = (By.XPATH, '/html/body/div[1]/div[2]')
     COUNT_BEFORE_SUPPORT = (By.XPATH, '//*[@id="tree_589_1_2"]/div/div')
     SUBMIT = (By.ID, 'submit')
-    PARENT_CAMP = (By.XPATH, '//*[@id="tree_589_2-Supporting-Camp-Testing-Camp_1"]/div/a')
+    PARENT_CAMP = (By.XPATH, '//*[@id="tree_598_2-Child-camp-1_1"]/div/a')
     TITLE = (By.XPATH, '/html/body/div[1]/div[1]/h1')
+    SUPPORT = (By.XPATH, '//*[@id="selected_camp_support"]')
+    CHILD_SUPPORT = (By.XPATH, '//*[@id="support-tree"]/li/a[1]')
+    BADGE = (By.XPATH, '//*[@id="support-tree"]/li/div')
+    CONFIRM_SUBMIT = (By.ID, 'confirm_submit')
+    PARENT_BADGE = (By.XPATH, '//*[@id="tree_598_3-Child-camp-2_1"]/div/div')
+    CHILD_01_BADGE = (By.XPATH, '//*[@id="tree_598_1_2"]/div/div')
+    CHILD_02_BADGE = (By.XPATH, '//*[@id="tree_598_1_3"]/div/div')
+
+
+class JoinAndSupportCampPage(object):
+    BROWSE = (By.XPATH, '//*[@id="exampleAccordion"]/ul[1]/li[2]/a/span')
+    TOPIC_IDENTIFIER = (By.XPATH, '//*[@id="outline_589"]/a')
+    CHILD_CAMP = (By.XPATH, '//*[@id="tree_589_1_2"]/div/a')
+    PARENT_CAMP = (By.XPATH, '//*[@id="tree_589_2-camp1_1"]/div/a')
+    COUNT_BEFORE_SUPPORT = (By.XPATH, '//*[@id="tree_589_1_2"]/div/div')
+    REMOVE_SUPPORT = (By.XPATH, '//*[@id="support-tree"]/li/a[2]')
 
 
 class CampForumIdentifiers(object):
@@ -651,6 +692,7 @@ class CampForumIdentifiers(object):
     ERROR_IN_EDIT_TITLE = (By.XPATH, '/html/body/div[1]/div[1]/div/ul/li')
 
     THREAD_TITLE = (By.XPATH, '/html/body/div[1]/div[2]/div/div[3]/table/tbody/tr[1]/td[1]/a')
+    THREAD_LINK = (By.LINK_TEXT, 'Creating Thread With Trailing Spaces With Data')
     THREAD_REPLY = (By.XPATH, '//*[@id="postForm"]/div[1]/div/div[3]/div[3]')
     POST_SUBMIT = (By.ID, 'postSubmitBtn')
     EDIT_REPLY_BUTTON = (By.XPATH, '/html/body/div[1]/div[2]/div/div[2]/ul/li[1]/div/div[1]/div/a[3]/i')
@@ -678,3 +720,11 @@ class CampForumIdentifiers(object):
     TITLE_REPLY_ALL = (By.XPATH, '/html/body/div[1]/div[2]/div/div[1]/div/span[1]')
 
     NEWS_FEED = (By.XPATH, '/html/body/div[1]/div[3]/div/div[1]/h3/span')
+    THREAD_TABLE = (By.XPATH, '/html/body/div[1]/div[2]/div/div[3]/table')
+    MY_THREAD = (By.XPATH, '/html/body/div[1]/div[2]/div/div[3]/table/tbody/tr[1]/td[1]/a[2]')
+    MY_THREAD_TITLE = (By.XPATH, '/html/body/div[1]/div[1]/h3[2]/span')
+    TABLE_BODY = (By.XPATH, '/html/body/div[1]/div[2]/div/div[3]/table')
+
+    AGREEMENT_HEADING = (By.XPATH, '/html/body/div[1]/div[3]/h3[2]/a')
+    REPLY_PATH = (By.XPATH, '/html/body/div[1]/div[2]/div/div[2]/ul/li[1]/div/div[2]/p')
+    ERROR_THREAD_REPLY = (By.XPATH, '//*[@id="postForm"]/div[1]/p')

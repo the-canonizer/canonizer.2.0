@@ -27,7 +27,10 @@ elif platform.system() == 'Linux':
 else:
     print("Unknown OS")
     exit(1)
+
 # Login Page Configuration Parameters
+UNVERIFY_EMAIL = "meghana@zibtek.in"
+UNVERIFY_PASS = "Pooja@123456"
 
 DEFAULT_USER = "pooja.khatri@zibtek.in"
 DEFAULT_PASS = "Pooja@123456"
@@ -40,12 +43,17 @@ DEFAULT_INVALID_PHONE_NUMBER = "1212121212"
 DEFAULT_VALID_PHONE_NUMBER = ""
 DEFAULT_INVALID_OTP = "123456789"
 DEFAULT_INVALID_EMAIL_FORMAT = "test@test"
+VERIFY_EMAIL = "anil.podi@zibtek.in"
+VERIFY_PASS = "Zibtek#2455"
+PASS_UPPERCASE = "POOJA@123456"
+PASS_LOWERCASE = "pooja@123456"
 
 # Registration Page Configuration Parameters
 DEFAULT_FIRST_NAME = "Rupali"
 DEFAULT_MIDDLE_NAME = "A"
 DEFAULT_LAST_NAME = "Chavan"
 INVALID_NAME_REGISTER = "invalidname!@#$%1"
+
 REG_LIST_1 = [
     "      ",
     DEFAULT_MIDDLE_NAME,
@@ -183,7 +191,7 @@ DEFAULT_FILE_SIZE = ""
 # FILE_WITH_MORE_THAN_5MB = "H:\\Astronomy\\Images\\PIA00272.jpg"
 FILE_WITH_MORE_THAN_5MB = "/home/bhavya/Pictures/image_5mb.jpg"
 FILE_WITH_SAME_NAME = "/home/bhavya/Pictures/sample.gif"
-FILE_WITH_ZERO_BYTES = "/home/bhavya/Pictures/test.png"
+FILE_WITH_ZERO_BYTES ="/home/bhavya/Pictures/zero.jpg"
 RECENT_FILE = "/home/bhavya/Pictures/sample.gif"
 OTHER_FILE_TYPE = "/home/bhavya/Pictures/text.txt"
 
@@ -282,7 +290,7 @@ CAMP_LIST_10 = [
     ""
 ]
 CREATE_CAMP_LIST_1 = [
-    "Test",
+    "",
     "",
     "",
     "",
@@ -291,15 +299,6 @@ CREATE_CAMP_LIST_1 = [
     ""
 ]
 CREATE_CAMP_LIST_2 = [
-    "Test",
-    "",
-    "",
-    "",
-    "",
-    "",
-    ""
-]
-CREATE_CAMP_LIST_3 = [
     "",
     "",
     DUPLICATE_CAMP_NAME,
@@ -308,7 +307,7 @@ CREATE_CAMP_LIST_3 = [
     "",
     ""
 ]
-CREATE_CAMP_LIST_4 = [
+CREATE_CAMP_LIST_3 = [
     "",
     "",
     INVALID_CAMP_NAME,
@@ -317,6 +316,7 @@ CREATE_CAMP_LIST_4 = [
     "",
     ""
 ]
+
 # Change Password Configuration Parameters
 DEFAULT_CURRENT_PASSWORD = "Pooja@123456"
 DEFAULT_NEW_PASSWORD = "Test@12345"

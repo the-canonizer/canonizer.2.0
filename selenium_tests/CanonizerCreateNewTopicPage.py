@@ -1,3 +1,5 @@
+from selenium.webdriver.common.by import By
+
 from CanonizerBase import Page
 from Identifiers import CreateNewTopicPageIdentifiers, BrowsePageIdentifiers
 from selenium.common.exceptions import NoSuchElementException
@@ -124,17 +126,14 @@ class CanonizerCreateNewTopicPage(Page):
         self.create_topic(nickname, topic_name, namespace, note)
 
         success_message = self.find_element(*CreateNewTopicPageIdentifiers.SUCCESS_MESSAGE_TOPIC_CREATION).text
-        if success_message == 'Success! Topic created successfully.':
+        if 'Success! Topic created successfully.' in success_message:
             self.hover(*CreateNewTopicPageIdentifiers.CREATED_TOPIC_NAME)
             self.find_element(*CreateNewTopicPageIdentifiers.CREATED_TOPIC_NAME).click()
             support_badge = self.find_element(*CreateNewTopicPageIdentifiers.SUPPORT_BADGE).text
             manage_support = self.find_element(*CreateNewTopicPageIdentifiers.JOIN_CAMP_SUPPORT).text
             if support_badge == '1' and manage_support == 'Manage Support':
                 return CanonizerCreateNewTopicPage(self.driver)
-            else:
-                return False
-        else:
-            return False
+
 
     def create_topic_with_invalid_topic_name(self, nickname, topic_name, namespace, note):
         self.create_topic(nickname, topic_name, namespace, note)
@@ -166,9 +165,20 @@ class CanonizerCreateNewTopicPage(Page):
         nick_names = Select(self.find_element(*CreateNewTopicPageIdentifiers.NICK_NAME))
         nick_name_values = nick_names.options
         nick_name_list = []
+        nick_name_list_2 = []
         for ele in nick_name_values:
             nick_name_list.append(ele.text)
-        if nick_name_list:
+        self.find_element(*CreateNewTopicPageIdentifiers.USERNAME).click()
+        self.find_element(*CreateNewTopicPageIdentifiers.ACCOUNT_SETTING).click()
+        self.find_element(*CreateNewTopicPageIdentifiers.NICK_NAME_TAB).click()
+        rows = self.find_element(*CreateNewTopicPageIdentifiers.NICK_NAME_TABLE)
+        row = rows.find_elements(By.TAG_NAME, "tr")
+        for i in row:
+            temp = i.text
+            temp = temp.split(" ")
+            nick_name_list_2.append(temp[2])
+        nick_name_list_2.pop(0)
+        if nick_name_list == nick_name_list_2:
             return CanonizerCreateNewTopicPage(self.driver)
         else:
             return False
@@ -177,7 +187,7 @@ class CanonizerCreateNewTopicPage(Page):
         self.entering_data_fields(nickname, topic_name, namespace, note)
         self.find_element(*CreateNewTopicPageIdentifiers.CREATETOPIC).send_keys(Keys.ENTER)
         success_message = self.find_element(*CreateNewTopicPageIdentifiers.SUCCESS_MESSAGE_TOPIC_CREATION).text
-        if success_message == "Success! Topic created successfully.":
+        if success_message == "Success! Topic created successfull":
             return CanonizerCreateNewTopicPage(self.driver)
 
     def create_topic_name_with_trailing_space(self, nickname, topic_name, namespace, note):

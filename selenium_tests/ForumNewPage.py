@@ -292,7 +292,7 @@ class AddForumsPage(Page):
             return AddForumsPage(self.driver)
 
     def load_thread_posts_page(self):
-        self.find_element(*CampForumIdentifiers.THREAD_TITLE).click()
+        self.find_element(*CampForumIdentifiers.THREAD_LINK).click()
         page_title = self.find_element(*CampForumIdentifiers.CAMP_FORUM_HEADING).text
         if page_title == '« List of All Camp Threads':
             return AddForumsPage(self.driver)

@@ -141,6 +141,7 @@ class CanonizerWhitePaper(Page):
 
 
 class CanonizerBlog(Page):
+
     def check_blog_page_should_open(self):
         self.hover(*HomePageIdentifiers.BLOG)
         self.find_element(*HomePageIdentifiers.BLOG).click()
@@ -159,6 +160,7 @@ class CanonizerBlog(Page):
         currentyear = datetime.now().year
         if '(2006 -' + str(currentyear) + ')' in text:
             return CanonizerBlog(self.driver)
+
 
 
 class CanonizerAlgorithmInformation(Page):

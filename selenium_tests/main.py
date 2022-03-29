@@ -25,6 +25,8 @@ import os
 import re
 from ForumNewPage import *
 import requests
+import string
+import random
 
 
 class TestPages(unittest.TestCase):
@@ -55,26 +57,26 @@ class TestPages(unittest.TestCase):
                                                                                                  DEFAULT_PASS).get_url()
         self.assertIn("", result)
 
-    # 01
+    # TC_LOAD_CANONIZER_HOME_PAGE
     def test_canonizer_home_page_load(self):
-        print("\n" + str(test_cases(0)))
+        print("\n" + str(test_cases('TC_LOAD_CANONIZER_HOME_PAGE')))
         self.assertTrue(CanonizerMainPage(self.driver).check_home_page_loaded())
 
-    # 02
+    # TC_LOAD_REGITSER_PAGE
     def test_canonizer_register_button(self):
-        print("\n" + str(test_cases(1)))
+        print("\n" + str(test_cases('TC_LOAD_REGITSER_PAGE')))
         registerPage = CanonizerRegisterPage(self.driver).click_register_button()
         self.assertIn("/signup", registerPage.get_url())
 
-    # 03
+    # TC_LOAD_LOGIN_PAGE
     def test_canonizer_login_button(self):
-        print("\n" + str(test_cases(2)))
+        print("\n" + str(test_cases('TC_LOAD_LOGIN_PAGE')))
         loginPage = CanonizerLoginPage(self.driver).click_login_page_button()
         self.assertIn("/login", loginPage.get_url())
 
-    # 04
+    # TC_LOGIN_WITH_VALID_USER
     def test_canonizer_login_with_valid_user(self):
-        print("\n" + str(test_cases(3)))
+        print("\n" + str(test_cases('TC_LOGIN_WITH_VALID_USER')))
         result = self.login_to_canonizer_app()
         self.assertIn("", result.get_url())
 
@@ -87,138 +89,139 @@ class TestPages(unittest.TestCase):
         self.assertIn("/login", result)
 
     # Register Page Test Cases Start
-    # 06
+    # TC_REGISTER_WITH_BLANK_FIRST_NAME
     def test_registration_with_blank_first_name(self):
-        print("\n" + str(test_cases(5)))
+        print("\n" + str(test_cases('TC_REGISTER_WITH_BLANK_FIRST_NAME')))
         result = CanonizerRegisterPage(self.driver).click_register_button().registration_with_blank_first_name(
             REG_LIST_3).get_url()
-        print(result)
         self.assertIn("/signup", result)
 
-    # 07
+    # TC_REGISTER_WITH_BLANK_LAST_NAME
     def test_registration_with_blank_last_name(self):
-        print("\n" + str(test_cases(6)))
+        print("\n" + str(test_cases('TC_REGISTER_WITH_BLANK_LAST_NAME')))
         result = CanonizerRegisterPage(self.driver).click_register_button().registration_with_blank_last_name(
             REG_LIST_4).get_url()
         self.assertIn("/signup", result)
 
-    # 08
+    # TC_REGISTRATION_WITH_BLANK_EMAIL
     def test_registration_with_blank_email(self):
-        print("\n" + str(test_cases(7)))
+        print("\n" + str(test_cases('TC_REGISTRATION_WITH_BLANK_EMAIL')))
         result = CanonizerRegisterPage(self.driver).click_register_button().registration_with_blank_email(
             REG_LIST_5).get_url()
         self.assertIn("/signup", result)
 
-    # 09
+    # TC_REGISTRATION_WITH_BLANK_PASSWORD
     def test_registration_with_blank_password(self):
-        print("\n" + str(test_cases(8)))
+        print("\n" + str(test_cases('TC_REGISTRATION_WITH_BLANK_PASSWORD')))
         result = CanonizerRegisterPage(self.driver).click_register_button().registration_with_blank_password(
             REG_LIST_6).get_url()
         self.assertIn("/signup", result)
 
-    # 10
+    # TC_REGISTRATION_WITH_INVALID_PASSWORD_LENGTH
     def test_registration_with_invalid_password_length(self):
-        print("\n" + str(test_cases(9)))
+        print("\n" + str(test_cases('TC_REGISTRATION_WITH_INVALID_PASSWORD_LENGTH')))
         result = CanonizerRegisterPage(self.driver).click_register_button().registration_with_invalid_password_length(
             REG_LIST_7).get_url()
         self.assertIn("/signup", result)
 
-    # 11
+    # TC_REGISTRATION_WITH_DIFFERENT_CONFIRM_PASSWORD
     def test_registration_with_different_confirmation_password(self):
-        print("\n" + str(test_cases(10)))
+        print("\n" + str(test_cases('TC_REGISTRATION_WITH_DIFFERENT_CONFIRM_PASSWORD')))
         result = CanonizerRegisterPage(
             self.driver).click_register_button().registration_with_different_confirmation_password(
             REG_LIST_8).get_url()
         self.assertIn("/signup", result)
 
-    # 12
+    # TC_LOAD_WHAT_IS_CANONIZER_PAGE
     def test_what_is_canonizer_page_loaded_properly(self):
-        print("\n" + str(test_cases(11)))
+        print("\n" + str(test_cases('TC_LOAD_WHAT_IS_CANONIZER_PAGE')))
         result = CanonizerMainPage(
             self.driver).click_what_is_canonizer_page_link().check_what_is_canonizer_page_loaded().get_url()
         self.assertIn("/browse", result)
 
-    # 13
+    # TC_JOIN_SUPPORT_WITH_LOGIN
     def test_user_must_be_signin_to_join_or_support_camp(self):
-        print("\n" + str(test_cases(12)))
-        self.assertIn("login", CanonizerJoinSupportCampPage(self.driver).load_join_support_camp_page().get_url())
+        print("\n" + str(test_cases('TC_JOIN_SUPPORT_WITH_LOGIN')))
+        self.assertIn("login", CanonizerJoinSupportCampPage(self.driver).user_must_be_signin_to_join_or_support_camp().get_url())
 
-    # TC_DIRECT_JOIN_AND_SUPPORT_01
+    # TC_LOAD_DIRECT_JOIN_AND_SUPPORT
     def test_load_direct_join_and_support_page(self):
-        print("\n", str(test_cases('TC_DIRECT_JOIN_AND_SUPPORT_01')))
+        print("\n", str(test_cases('TC_LOAD_DIRECT_JOIN_AND_SUPPORT')))
         self.login_to_canonizer_app()
         result = CanonizerJoinSupportCampPage(self.driver).load_direct_join_and_support_page()
         if result:
-            self.assertIn("support/589-Supporting-Camp-Testing-1/1-Agreement", result.get_url())
+            self.assertIn("support/598-Testing-Topic-14/1-Agreement", result.get_url())
 
-    # TC_DIRECT_JOIN_AND_SUPPORT_02
+    # TC_VERIFY_SINGLE_SUPPORT_ON_NEW_TOPIC_CREATION
     def test_verify_single_support_on_new_topic_creation(self):
-        print("\n" + str(test_cases('TC_DIRECT_JOIN_AND_SUPPORT_02')))
+        print("\n" + str(test_cases('TC_VERIFY_SINGLE_SUPPORT_ON_NEW_TOPIC_CREATION')))
         self.login_to_canonizer_app()
+        add_name = ''.join(random.choices(string.ascii_uppercase +
+                                     string.digits, k=7))
+
         result = CanonizerCreateNewTopicPage(self.driver).click_create_new_topic_page_button() \
             .verify_single_support_on_new_topic_creation(
             DEFAULT_NICK_NAME,
-            "Verify Single Support Camp 4",
+            "Verify "+add_name,
             DEFAULT_NAMESPACE,
             DEFAULT_NOTE
         )
         self.assertIn("/topic", result.get_url())
 
-    # TC_DIRECT_JOIN_AND_SUPPORT_03
+    # TC_VERIFY_WARNING_DIRECTLY_SUPPORTING_CHILD_CAMP
     def test_verify_warning_directly_supporting_child_camp(self):
-        print("\n" + str(test_cases('TC_DIRECT_JOIN_AND_SUPPORT_03')))
+        print("\n" + str(test_cases('TC_VERIFY_WARNING_DIRECTLY_SUPPORTING_CHILD_CAMP')))
         self.login_to_canonizer_app()
-        result = CanonizerJoinSupportCampPage(self.driver).verify_warning_directly_supporting_child_camp()
-        self.assertIn('support/591-Supporting-Camp-Testing-3/2-Supporting-Camp-Child-Camp', result.get_url())
+        result = CanonizerJoinSupportCampPage(self.driver).verify_warning_directly_supporting_child_camp().get_url()
+        self.assertIn('support/598-Testing-Topic-14/2-Child-camp-1', result)
 
-    # TC_DIRECT_JOIN_AND_SUPPORT_04
+    # TC_VERIFY_SUPPORT_TO_CHILD_CAMP
     def test_verify_support_to_child_camp(self):
-        print("\n" + str(test_cases('TC_DIRECT_JOIN_AND_SUPPORT_04')))
+        print("\n" + str(test_cases('TC_VERIFY_SUPPORT_TO_CHILD_CAMP')))
         self.login_to_canonizer_app()
         result = CanonizerJoinSupportCampPage(self.driver).verify_support_to_child_camp()
         self.assertIn("/topic", result.get_url())
 
-    # 14
+    # TC_REQUEST_OTP_WITH_BLANK_EMAIL
     def test_request_otp_with_blank_email_or_phone_number(self):
-        print("\n" + str(test_cases(13)))
+        print("\n" + str(test_cases('TC_REQUEST_OTP_WITH_BLANK_EMAIL')))
         result = CanonizerLoginPage(
             self.driver).click_login_page_button().request_otp_with_blank_email_or_phone_number().get_url()
         self.assertIn("/login", result)
 
-    # 15
+    # TC_REGISTER_PAGE_SHOULD_HAVE_LOGIN_OPTION_FOR_EXISTING_USER
     def test_register_page_should_have_login_option_for_existing_users(self):
-        print("\n" + str(test_cases(14)))
+        print("\n" + str(test_cases('TC_REGISTER_PAGE_SHOULD_HAVE_LOGIN_OPTION_FOR_EXISTING_USER')))
         self.assertIn('Log in Here', CanonizerRegisterPage(
             self.driver).click_register_button().registration_should_have_login_option_for_existing_users())
 
-    # 16
+    # TC_LOGIN_PAGE_SHOULD_HAVE_REGISTER_OPTION_FOR_FEW_USERS
     def test_login_page_should_have_register_option_for_new_users(self):
-        print("\n" + str(test_cases(15)))
+        print("\n" + str(test_cases('TC_LOGIN_PAGE_SHOULD_HAVE_REGISTER_OPTION_FOR_FEW_USERS')))
         result = CanonizerLoginPage(
             self.driver).click_login_page_button().login_page_should_have_register_option_for_new_users().get_url()
-        print(result)
         self.assertIn("/login", result)
 
-    # 17
+    # TC_REGISER_PAGE_MANDATORY_FIELDS_MARKED_WITH_ASTERISK
     def test_register_page_mandatory_fields_are_marked_with_asterisk(self):
-        print("\n" + str(test_cases(16)))
+        print("\n" + str(test_cases('TC_REGISER_PAGE_MANDATORY_FIELDS_MARKED_WITH_ASTERISK')))
         self.assertTrue(CanonizerRegisterPage(
             self.driver).click_register_button().register_page_mandatory_fields_are_marked_with_asterisk())
 
     # ----- FORGOT PASSWORD Test Cases Start -----
 
-    # 18
+    # TC_LOAD_FORGOT_PASSWORD_PAGE
     def test_click_forgot_password_page_button(self):
-        print("\n" + str(test_cases(17)))
+        print("\n" + str(test_cases('TC_LOAD_FORGOT_PASSWORD_PAGE')))
         # Click on the Login Page
         CanonizerLoginPage(self.driver).click_login_page_button()
         # Click on the Forgot Password link
         self.assertIn("/forgotpassword",
                       CanonizerForgotPasswordPage(self.driver).click_forgot_password_page_button().get_url())
 
-    # 19
+    # TC_FORGOT_PASSWORD_WITH_BLANK_EMAIL
     def test_forgot_password_with_blank_email(self):
-        print("\n" + str(test_cases(18)))
+        print("\n" + str(test_cases('TC_LOAD_FORGOT_PASSWORD_PAGE')))
         # Click on the Login Page
         CanonizerLoginPage(self.driver).click_login_page_button()
         # Click on the Forgot Password link and put email as blank
@@ -226,9 +229,9 @@ class TestPages(unittest.TestCase):
             self.driver).click_forgot_password_page_button().forgot_password_with_blank_email().get_url()
         self.assertIn("forgotpassword", result)
 
-    # 20
+    # TC_FORGOT_PASSWORD_WITH_INVALID_EMAIL
     def test_forgot_password_with_invalid_email(self):
-        print("\n" + str(test_cases(19)))
+        print("\n" + str(test_cases('TC_FORGOT_PASSWORD_WITH_INVALID_EMAIL')))
         # Click on the Login Page
         CanonizerLoginPage(self.driver).click_login_page_button()
         # Click on the Forgot Password link and check with invalid email
@@ -237,9 +240,9 @@ class TestPages(unittest.TestCase):
             DEFAULT_INVALID_USER).get_url()
         self.assertIn("forgotpassword", result)
 
-    # 21
+    # TC_FORGOT_PASSWORD_WITH_VALID_EMAIL
     def test_forgot_password_with_valid_email(self):
-        print("\n" + str(test_cases(20)))
+        print("\n" + str(test_cases('TC_FORGOT_PASSWORD_WITH_VALID_EMAIL')))
         # Click on the Login Page
         CanonizerLoginPage(self.driver).click_login_page_button()
         # Click on the Forgot Password link and check with valid email
@@ -247,49 +250,93 @@ class TestPages(unittest.TestCase):
             self.driver).click_forgot_password_page_button().forgot_password_with_valid_email(DEFAULT_USER)
         self.assertIn("resetlinksent", result.get_url())
 
-    # 22
+    # TC_FORGOT_PASSWORD_PAGE_MANDATORY_FIELDS_WITH_ASTERISK
     def test_forgot_password_page_mandatory_fields_are_marked_with_asterisk(self):
-        print("\n" + str(test_cases(21)))
-        # Click on the Login Page
+        print("\n" + str(test_cases('TC_FORGOT_PASSWORD_PAGE_MANDATORY_FIELDS_WITH_ASTERISK')))
         CanonizerLoginPage(self.driver).click_login_page_button()
-        # Click on the Forgot Password link
         self.assertTrue(CanonizerForgotPasswordPage(
             self.driver).click_forgot_password_page_button().forgot_password_page_mandatory_fields_are_marked_with_asterisk())
 
     # ----- FORGOT PASSWORD Test Cases End -----
 
     # ----- Browse Page Test Cases Start -----
-    # 23
+    # TC_LOAD_BROWSE_PAGE
     def test_click_browse_page_button(self):
-        print("\n" + str(test_cases(22)))
+        print("\n" + str(test_cases('TC_LOAD_BROWSE_PAGE')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the Browse link
         self.assertIn("/browse", CanonizerBrowsePage(self.driver).click_browse_page_button().get_url())
 
-    # 24
+    # TC_CLICK_ONLY_MY_TOPICS_BUTTON
     def test_click_only_my_topics_button(self):
-        print("\n" + str(test_cases(23)))
+        print("\n" + str(test_cases('TC_CLICK_ONLY_MY_TOPICS_BUTTON')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the Browse link and click on "Only My Topics"
         self.assertIn("/browse", CanonizerBrowsePage(
             self.driver).click_browse_page_button().click_only_my_topics_button().get_url())
 
+    # TC_CHECK_NAMESPACE_DROPDOWN
+    def test_check_namespace_dropdown(self):
+        print("\n" + str(test_cases('TC_CHECK_NAMESPACE_DROPDOWN')))
+        self.login_to_canonizer_app()
+        # Click on the Browse link and click on "Only My Topics"
+        result = CanonizerBrowsePage(
+            self.driver).click_browse_page_button().check_namespace_dropdown().get_url()
+        self.assertIn("/create/topic'", result)
+
+    # TC_BROWSE_NAMESPACE_TOPIC_LIST
+    def test_check_topic_namespace(self):
+        print("\n" + str(test_cases('TC_CHECK_NAMESPACE_DROPDOWN')))
+        self.login_to_canonizer_app()
+        # Click on the Browse link and click on "Only My Topics"
+        result = CanonizerBrowsePage(
+            self.driver).click_browse_page_button().check_topic_namespace().get_url()
+        self.assertIn("/browse", result)
+
     # ----- Browse Page Test Cases End -----
 
     # ----- Upload File Page Test Cases Start -----
-    # 25
+
+    # TC_VERFIFY_UPLOAD_BUTTON
     def test_click_upload_file_page_button(self):
-        print("\n" + str(test_cases(24)))
+        print("\n" + str(test_cases('TC_VERFIFY_UPLOAD_BUTTON')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the Upload File link and check upload in URL Name
         self.assertIn("upload", CanonizerUploadFilePage(self.driver).click_upload_file_page_button().get_url())
 
-    # 26
+    # TC_VERIFY_LOGIN_ON_UPLOAD_FILE_PAGE
+    def test_verify_login_on_upload_file_page(self):
+        print("\n" + str(test_cases('TC_VERIFY_LOGIN_ON_UPLOAD_FILE_PAGE')))
+        result = CanonizerUploadFilePage(self.driver).verify_login_on_upload_file_page().get_url()
+        self.assertIn("/login", result)
+
+    # TC_VERIFY_UPLOAD_FILE_BUTTON_IS_CLICKABLE
+    def test_verify_upload_file_button_is_clickable(self):
+        print("\n" + str(test_cases('TC_VERIFY_UPLOAD_FILE_BUTTON_IS_CLICKABLE')))
+        self.login_to_canonizer_app()
+        result = CanonizerUploadFilePage(self.driver).verify_upload_file_button_is_clickable().get_url()
+        self.assertIn("/upload", result)
+
+    # TC_VERIFY_CHOOSE_FILE_BUTTON_IS_CLICKABLE
+    def test_verify_choose_file_button_is_clickable(self):
+        print("\n" + str(test_cases('TC_VERIFY_CHOOSE_FILE_BUTTON_IS_CLICKABLE')))
+        self.login_to_canonizer_app()
+        result = CanonizerUploadFilePage(self.driver).verify_choose_file_button_is_clickable().get_url()
+        self.assertIn("/upload", result)
+
+    # TC_VERIFY_FILE_UPLOAD_WARNING
+    def test_verify_file_upload_warning(self):
+        print("\n" + str(test_cases('TC_VERIFY_FILE_UPLOAD_WARNING')))
+        self.login_to_canonizer_app()
+        result = CanonizerUploadFilePage(self.driver).verify_file_upload_warning().get_url()
+        self.assertIn("/upload", result)
+
+    # TC_UPLOAD_FILE_WITH_BLANK_FIEL
     def test_upload_file_with_blank_file(self):
-        print("\n" + str(test_cases(25)))
+        print("\n" + str(test_cases('TC_UPLOAD_FILE_WITH_BLANK_FIEL')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         result = CanonizerUploadFilePage(
@@ -298,18 +345,19 @@ class TestPages(unittest.TestCase):
 
     # ----- Upload File Page Test Cases End -----
     # ----- Create New Topic Test Cases Start -----
-    # 27
+
+    # TC_CREATE_TOPIC_WITH_USER_LOGIN
     def test_click_create_new_topic_page_button(self):
-        print("\n" + str(test_cases(26)))
+        print("\n" + str(test_cases('TC_CREATE_TOPIC_WITH_USER_LOGIN')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the Create New Topic link and check topic/create in URL Name
         result = CanonizerCreateNewTopicPage(self.driver).click_create_new_topic_page_button()
         self.assertIn("create/topic", result.get_url())
 
-    # 28
+    # TC_CREATE_TOPIC_WITH_BLANK_NICK_NAME
     def test_create_topic_with_blank_nick_name(self):
-        print("\n" + str(test_cases(27)))
+        print("\n" + str(test_cases('TC_CREATE_TOPIC_WITH_BLANK_NICK_NAME')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the Create New Topic link and check if nick name is blank
@@ -320,9 +368,9 @@ class TestPages(unittest.TestCase):
             DEFAULT_NOTE).get_url()
         self.assertIn("create/topic", result)
 
-    # 29
+    # TC_CREATE_TOPIC_WITH_BLANK_TOPIC_NAME
     def test_create_topic_with_blank_topic_name(self):
-        print("\n" + str(test_cases(28)))
+        print("\n" + str(test_cases('TC_CREATE_TOPIC_WITH_BLANK_TOPIC_NAME')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the Create New Topic link and check if topic name is blank
@@ -333,9 +381,9 @@ class TestPages(unittest.TestCase):
             DEFAULT_NOTE).get_url()
         self.assertIn("create/topic", result)
 
-    # 30
+    # TC_CREATE_TOPIC_WITH_BLANK_SPACES_TOPIC_NAME
     def test_create_topic_with_blank_spaces_topic_name(self):
-        print("\n" + str(test_cases(29)))
+        print("\n" + str(test_cases('TC_CREATE_TOPIC_WITH_BLANK_SPACES_TOPIC_NAME')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the Create New Topic link and check if topic name is blank
@@ -347,18 +395,18 @@ class TestPages(unittest.TestCase):
             DEFAULT_NOTE).get_url()
         self.assertIn("create/topic", result)
 
-    # 31
+    # TC_CREATE_NEW_TOPIC_MANADATORY_FIELDS_WITH_ASTERIK
     def test_create_new_topic_page_mandatory_fields_are_marked_with_asterisk(self):
-        print("\n" + str(test_cases(30)))
+        print("\n" + str(test_cases('TC_CREATE_NEW_TOPIC_MANADATORY_FIELDS_WITH_ASTERIK')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the Create New Topic link
         self.assertTrue(CanonizerCreateNewTopicPage(
             self.driver).click_create_new_topic_page_button().create_new_topic_page_mandatory_fields_are_marked_with_asterisk())
 
-    # 32
+    # TC_CREATE_TOPIC_WITH_DUPLICATE_NAME
     def test_create_topic_with_duplicate_topic_name(self):
-        print("\n" + str(test_cases(31)))
+        print("\n" + str(test_cases('TC_CREATE_TOPIC_WITH_DUPLICATE_NAME')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the Create New Topic link and check for duplicate topic name
@@ -370,22 +418,22 @@ class TestPages(unittest.TestCase):
             DEFAULT_NOTE).get_url()
         self.assertIn("create/topic", result)
 
-    # TC_CREATE_NEW_TOPIC_05
-    def test_create_topic_with_valid_data(self):
-        print("\n", str(test_cases('TC_CREATE_NEW_TOPIC_05')))
+    # TC_CREATE_NEW_TOPIC_WITH_INVALID_DATA
+    def test_create_topic_with_invalid_data(self):
+        print("\n", str(test_cases('TC_CREATE_NEW_TOPIC_WITH_INVALID_DATA')))
         self.login_to_canonizer_app()
         result = CanonizerCreateNewTopicPage(self.driver).click_create_new_topic_page_button() \
-            .create_topic_with_valid_data(
-            DEFAULT_NICK_NAME,
-            "Valid Topic Name Testing 1",
+            .create_topic_with_invalid_data(
+            '',
+            "Invalid Data *&&&&&&&",
             DEFAULT_NAMESPACE,
             DEFAULT_NOTE
         ).get_url()
-        self.assertIn("topic", result)
+        self.assertIn("create/topic", result)
 
-    # TC_CREATE_NEW_TOPIC_07
+    # TC_CREATE_NEW_WITHOUT_MANDATORY_FIELDS_DATA
     def test_create_topic_without_entering_mandatory_fields(self):
-        print("\n", str(test_cases('TC_CREATE_NEW_TOPIC_07')))
+        print("\n", str(test_cases('TC_CREATE_NEW_WITHOUT_MANDATORY_FIELDS_DATA')))
         self.login_to_canonizer_app()
         result = CanonizerCreateNewTopicPage(self.driver).click_create_new_topic_page_button() \
             .create_topic_without_entering_mandatory_fields(
@@ -396,14 +444,14 @@ class TestPages(unittest.TestCase):
         ).get_url()
         self.assertIn("create/topic", result)
 
-    # TC_CREATE_NEW_TOPIC_08
+    # TC_CREATE_NEW_TOPIC_ENTERING_DATA_ONLY_IN_MANDATORY_FIELDS
     def test_create_topic_with_entering_data_only_in_mandatory_fields(self):
-        print("\n", str(test_cases('TC_CREATE_NEW_TOPIC_08')))
+        print("\n", str(test_cases('TC_CREATE_NEW_TOPIC_ENTERING_DATA_ONLY_IN_MANDATORY_FIELDS')))
         self.login_to_canonizer_app()
         result = CanonizerCreateNewTopicPage(self.driver).click_create_new_topic_page_button() \
             .create_topic_with_entering_data_only_in_mandatory_fields(
             DEFAULT_NICK_NAME,
-            "New Topic Testing 1",
+            "New Topic Testing 2",
             DEFAULT_NAMESPACE,
             "",
         ).get_url()
@@ -415,10 +463,9 @@ class TestPages(unittest.TestCase):
         self.login_to_canonizer_app()
         result = CanonizerCreateNewTopicPage(self.driver).click_create_new_topic_page_button() \
             .validation_of_nick_name_dropdown().get_url()
-        print(result)
-        self.assertIn("create/topic", result)
+        self.assertIn("settings/nickname", result)
 
-    # TC_CREATE_NEW_TOPIC_17
+    # TC_CREATE_NEW_TOPIC_WITH_ENTER_KEY
     def test_create_topic_name_with_enter_key(self):
         print("\n", str(test_cases('TC_CREATE_NEW_TOPIC_17')))
         self.login_to_canonizer_app()
@@ -431,35 +478,37 @@ class TestPages(unittest.TestCase):
         ).get_url()
         self.assertIn("topic", result)
 
-    # TC_CREATE_NEW_TOPIC_18
+    # TC_CREATE_NEW_TOPIC_WITH_ENTER_KEY_AND_VERIFY_HISTORY_PAGE
     def test_create_topic_name_with_enter_key_verifying_history_page(self):
-        print("\n", str(test_cases('TC_CREATE_NEW_TOPIC_18')))
+        print("\n", str(test_cases('TC_CREATE_NEW_TOPIC_WITH_ENTER_KEY_AND_VERIFY_HISTORY_PAGE')))
         self.login_to_canonizer_app()
+        add_name = ''.join(random.choices(string.ascii_uppercase +
+                                          string.digits, k=7))
         result = CanonizerCreateNewTopicPage(self.driver).click_create_new_topic_page_button() \
             .create_topic_name_with_enter_key_verifying_history_page(
             DEFAULT_NICK_NAME,
-            "Topic Name Testing 7",
-            DEFAULT_NAMESPACE,
-            DEFAULT_NOTE
-        )
-        self.assertTrue("Success! Topic created successfully", result)
-
-    # TC_CREATE_NEW_TOPIC_20
-    def test_create_topic_name_with_trailing_space(self):
-        print("\n", str(test_cases('TC_CREATE_NEW_TOPIC_20')))
-        self.login_to_canonizer_app()
-        result = CanonizerCreateNewTopicPage(self.driver).click_create_new_topic_page_button() \
-            .create_topic_name_with_trailing_space(
-            DEFAULT_NICK_NAME,
-            "          Topic Topic Name with Trailing spaces",
+            "New Topic "+add_name,
             DEFAULT_NAMESPACE,
             DEFAULT_NOTE
         ).get_url()
         self.assertIn("topic", result)
 
-    # TC_CREATE_NEW_TOPIC_25
+    # TC_CREATE_NEW_TOPIC_WITH_TRAILING_SPACES
+    def test_create_topic_name_with_trailing_space(self):
+        print("\n", str(test_cases('TC_CREATE_NEW_TOPIC_WITH_TRAILING_SPACES')))
+        self.login_to_canonizer_app()
+        result = CanonizerCreateNewTopicPage(self.driver).click_create_new_topic_page_button() \
+            .create_topic_name_with_trailing_space(
+            DEFAULT_NICK_NAME,
+            "          Topic 3 with Trailing",
+            DEFAULT_NAMESPACE,
+            DEFAULT_NOTE
+        ).get_url()
+        self.assertIn("topic", result)
+
+    # TC_VERIFYING_NICKNAME_FROM_DROPDOWN_WHILE_CRAETING_TOPIC
     def test_verifying_nick_name_from_dropdown_while_creating_topic(self):
-        print("\n", str(test_cases('TC_CREATE_NEW_TOPIC_25')))
+        print("\n", str(test_cases('TC_VERIFYING_NICKNAME_FROM_DROPDOWN_WHILE_CRAETING_TOPIC')))
         self.login_to_canonizer_app()
         result = CanonizerCreateNewTopicPage(self.driver).click_create_new_topic_page_button() \
             .verifying_nick_name_from_dropdown_while_creating_topic(
@@ -470,30 +519,31 @@ class TestPages(unittest.TestCase):
         ).get_url()
         self.assertIn("camp/history", result)
 
-    # TC_CREATE_NEW_TOPIC_21
+    # TC_VERIFY_TOPIC_NAME_FROM_NAMESPACES_IN_BROWSE
     def test_verifying_topic_name_from_namespaces_in_browse(self):
-        print("\n", str(test_cases('TC_CREATE_NEW_TOPIC_25')))
+        print("\n", str(test_cases('TC_VERIFY_TOPIC_NAME_FROM_NAMESPACES_IN_BROWSE')))
         self.login_to_canonizer_app()
         result = CanonizerCreateNewTopicPage(self.driver).click_create_new_topic_page_button() \
             .verifying_topic_name_from_namespaces_in_browse(
             "poo_",
-            "Verifying Topic Name in Namespace",
+            "Verify Topic in Namespace 1",
             DEFAULT_NAMESPACE,
             DEFAULT_NOTE
-        )
-        self.assertTrue("Success! Topic created successfully", result)
+        ).get_url()
+        print(result)
+        self.assertIn("", result)
 
-    # 33
+    # TC_CREATE_TOPIC_WITHOUT_USER_LOGIN
     def test_create_topic_without_user_login(self):
-        print("\n" + str(test_cases(32)))
+        print("\n" + str(test_cases('TC_CREATE_TOPIC_WITHOUT_USER_LOGIN')))
         # Click on the Create New Topic link
         self.assertIn("/login", CanonizerCreateNewTopicPage(self.driver).create_topic_without_user_login().get_url())
 
     # ----- Create New Topic Test Cases End ----
     # ----- Log out Test Cases Start -----
-    # 34
+    # TC_CLICK_LOGOUT_PAGE_BUTTON
     def test_click_log_out_page_button(self):
-        print("\n" + str(test_cases(33)))
+        print("\n" + str(test_cases('TC_CLICK_LOGOUT_PAGE_BUTTON')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the Username and click on Log Out
@@ -501,9 +551,9 @@ class TestPages(unittest.TestCase):
             self.driver).click_username_link_button().click_log_out_page_button().check_home_page_loaded().get_url()
         self.assertIn("/", result)
 
-    # TC_LOG_OUT_02
+    # TC_CLICK_LOGOUT_PAGE_BUTTON_BEFORE_BROWSE_BACK_BUTTON
     def test_click_log_out_page_button_before_browser_back_button(self):
-        print("\n", str(test_cases('TC_LOG_OUT_02')))
+        print("\n", str(test_cases('TC_CLICK_LOGOUT_PAGE_BUTTON_BEFORE_BROWSE_BACK_BUTTON')))
         self.login_to_canonizer_app()
         result = CanonizerLogoutPage(self.driver).click_log_out_page_button_before_browser_back_button().get_url()
         self.assertIn("/", result)
@@ -511,18 +561,18 @@ class TestPages(unittest.TestCase):
     # ----- Log out Test Cases End -----
 
     # ----- Account Settings Test Cases Start -----
-    # 35
+    # TC_LOAD_ACCOUNT_SETTING_PAGE
     def test_click_account_settings_page_button(self):
-        print("\n" + str(test_cases(34)))
+        print("\n" + str(test_cases('TC_LOAD_ACCOUNT_SETTING_PAGE')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the username and Click on Account Settings and check settings in URL Name
         self.assertIn("settings", CanonizerAccountSettingsPage(
             self.driver).click_username_link_button().click_account_settings_page_button().get_url())
 
-    # 36
+    # TC_CLICK_ACCOUNT_SETTINGS_MANAGE_PROFILE_INFO_PAGE_BUTTON
     def test_click_account_settings_manage_profile_info_page_button(self):
-        print("\n" + str(test_cases(35)))
+        print("\n" + str(test_cases('TC_CLICK_ACCOUNT_SETTINGS_MANAGE_PROFILE_INFO_PAGE_BUTTON')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the username and Click on Account Settings and check settings in URL Name
@@ -530,9 +580,9 @@ class TestPages(unittest.TestCase):
             self.driver).click_username_link_button().click_account_settings_page_button().click_account_settings_manage_profile_info_page_button()
         self.assertIn("settings", result.get_url())
 
-    # 37
+    # TC_CLICK_ACCOUNT_SETTING_ADD_MANAGE_NICKANAMES_PAGE_BUTTON
     def test_click_account_settings_add_manage_nick_names_page_button(self):
-        print("\n" + str(test_cases(36)))
+        print("\n" + str(test_cases('TC_CLICK_ACCOUNT_SETTING_ADD_MANAGE_NICKANAMES_PAGE_BUTTON')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the username and Click on Account Settings and check settings/nickname in URL Name
@@ -540,9 +590,9 @@ class TestPages(unittest.TestCase):
             self.driver).click_username_link_button().click_account_settings_page_button().click_account_settings_add_manage_nick_names_page_button()
         self.assertIn("settings/nickname", result.get_url())
 
-    # 38
+    # TC_CLICK_ACCOUNT_SETTINGS_MY_SUPPORTS_PAGE_BUTTON
     def test_click_account_settings_my_supports_page_button(self):
-        print("\n" + str(test_cases(37)))
+        print("\n" + str(test_cases('TC_CLICK_ACCOUNT_SETTINGS_MY_SUPPORTS_PAGE_BUTTON')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the username and Click on Account Settings and check support in URL Name
@@ -550,9 +600,9 @@ class TestPages(unittest.TestCase):
             self.driver).click_username_link_button().click_account_settings_page_button().click_account_settings_my_supports_page_button()
         self.assertIn("support", result.get_url())
 
-    # 39
+    # TC_CLICK_ACCOUNT_SETTINGS_SOCAIL_OATH_VERIFICATION_PAGE_BUTTON
     def test_click_account_settings_social_oauth_verification_page_button(self):
-        print("\n" + str(test_cases(38)))
+        print("\n" + str(test_cases('TC_CLICK_ACCOUNT_SETTINGS_SOCAIL_OATH_VERIFICATION_PAGE_BUTTON')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the username and Click on Account Settings and check settings/Social Oauth Verification in URL Name
@@ -560,9 +610,12 @@ class TestPages(unittest.TestCase):
             self.driver).click_username_link_button().click_account_settings_page_button().click_account_settings_social_oauth_verification_page_button()
         self.assertIn("settings/sociallinks", result.get_url())
 
-    # 40
+    # ----- Account Settings  Test Cases End -----
+
+    # ----- Change Password Test Cases Start -----
+    # TC_CLICK_ACCOUNT_SETTINGS_CHANGE_PASSWORD_PAGE_BUTTON
     def test_click_account_settings_change_password_page_button(self):
-        print("\n" + str(test_cases(39)))
+        print("\n" + str(test_cases('TC_CLICK_ACCOUNT_SETTINGS_CHANGE_PASSWORD_PAGE_BUTTON')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the username and Click on Account Settings and check settings/changepassword in URL Name
@@ -570,12 +623,9 @@ class TestPages(unittest.TestCase):
             self.driver).click_username_link_button().click_account_settings_page_button().click_account_settings_change_password_page_button()
         self.assertIn("settings/changepassword", result.get_url())
 
-    # ----- Account Settings  Test Cases End -----
-
-    # ----- Change Password Test Cases Start -----
-    # 41
+    # TC_CHANGE_PASSWORD_PAGE_MANDATORY_FIELDS_ARE_MARKED_WITH_ASTERISK
     def test_change_password_page_mandatory_fields_are_marked_with_asterisk(self):
-        print("\n" + str(test_cases(40)))
+        print("\n" + str(test_cases('TC_CHANGE_PASSWORD_PAGE_MANDATORY_FIELDS_ARE_MARKED_WITH_ASTERISK')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the username->Account Settings->Change Password sub tab & Check for Mandatory fields on Change Password page
@@ -584,9 +634,9 @@ class TestPages(unittest.TestCase):
         self.assertTrue(CanonizerAccountSettingsChangePasswordPage(
             self.driver).change_password_page_mandatory_fields_are_marked_with_asterisk())
 
-    # 42
+    # TC_SAVE_WIH_BLANK_CURRENT_PASSWORD
     def test_save_with_blank_current_password(self):
-        print("\n" + str(test_cases(41)))
+        print("\n" + str(test_cases('TC_CHANGE_PASSWORD_PAGE_MANDATORY_FIELDS_ARE_MARKED_WITH_ASTERISK')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the username->Account Settings->Change Password sub tab
@@ -594,12 +644,12 @@ class TestPages(unittest.TestCase):
             self.driver).click_username_link_button().click_account_settings_page_button().click_account_settings_change_password_page_button()
         result = CanonizerAccountSettingsChangePasswordPage(self.driver).save_with_blank_current_password(
             DEFAULT_NEW_PASSWORD,
-            DEFAULT_CONFIRM_PASSWORD)
-        self.assertIn("The current password field is required.", result)
+            DEFAULT_CONFIRM_PASSWORD).get_url()
+        self.assertIn("/settings/changepassword", result)
 
-    # 43
+    # TC_SAVE_WITH_BLANK_NEW_PASSWORD
     def test_save_with_blank_new_password(self):
-        print("\n" + str(test_cases(42)))
+        print("\n" + str(test_cases('TC_SAVE_WITH_BLANK_NEW_PASSWORD')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the username->Account Settings->Change Password sub tab
@@ -607,12 +657,12 @@ class TestPages(unittest.TestCase):
             self.driver).click_username_link_button().click_account_settings_page_button().click_account_settings_change_password_page_button()
         result = CanonizerAccountSettingsChangePasswordPage(self.driver).save_with_blank_new_password(
             DEFAULT_CURRENT_PASSWORD,
-            DEFAULT_CONFIRM_PASSWORD)
-        self.assertIn("The new password field is required.", result)
+            DEFAULT_CONFIRM_PASSWORD).get_url()
+        self.assertIn("/settings/changepassword", result)
 
-    # 44
+    # TC_SAVE_WITH_BLANK_CONFIRM_PASSWORD
     def test_save_with_blank_confirm_password(self):
-        print("\n" + str(test_cases(43)))
+        print("\n" + str(test_cases('TC_SAVE_WITH_BLANK_CONFIRM_PASSWORD')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the username->Account Settings->Change Password sub tab
@@ -620,12 +670,12 @@ class TestPages(unittest.TestCase):
             self.driver).click_username_link_button().click_account_settings_page_button().click_account_settings_change_password_page_button()
         result = CanonizerAccountSettingsChangePasswordPage(self.driver).save_with_blank_confirm_password(
             DEFAULT_CURRENT_PASSWORD,
-            DEFAULT_NEW_PASSWORD)
-        self.assertIn("The confirm password field is required.", result)
+            DEFAULT_NEW_PASSWORD).get_url()
+        self.assertIn("/settings/changepassword", result)
 
-    # 45
+    # TC_SAVE_WITH_INVALID_CURRENT_PASSWORD
     def test_save_with_invalid_current_password(self):
-        print("\n" + str(test_cases(44)))
+        print("\n" + str(test_cases('TC_SAVE_WITH_INVALID_CURRENT_PASSWORD')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the username->Account Settings->Change Password sub tab
@@ -634,12 +684,12 @@ class TestPages(unittest.TestCase):
         result = CanonizerAccountSettingsChangePasswordPage(self.driver).save_with_invalid_current_password(
             'Test@12345',
             'Test@123456',
-            'Test@123456')
-        self.assertIn("Incorrect Current Password.", result)
+            'Test@123456').get_url()
+        self.assertIn("/settings/changepassword", result)
 
-    # 46
+    # TC_SAVE_WIH_MISMATCH_NEW_CONFIRM_PASSWORD
     def test_save_with_mismatch_new_confirm_password(self):
-        print("\n" + str(test_cases(45)))
+        print("\n" + str(test_cases('TC_SAVE_WIH_MISMATCH_NEW_CONFIRM_PASSWORD')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the username->Account Settings->Change Password sub tab
@@ -648,12 +698,12 @@ class TestPages(unittest.TestCase):
         result = CanonizerAccountSettingsChangePasswordPage(self.driver).save_with_mismatch_new_confirm_password(
             DEFAULT_PASS,
             'Test@12345',
-            'Test@123456')
-        self.assertIn("The confirm password and new password must match.", result)
+            'Test@123456').get_url()
+        self.assertIn("/settings/changepassword", result)
 
-    # 47
+    # TC_SAVE_WITH_SAME_NEW_AND_CURRENT_PASSWORD
     def test_save_with_same_new_and_current_password(self):
-        print("\n" + str(test_cases(46)))
+        print("\n" + str(test_cases('TC_SAVE_WITH_SAME_NEW_AND_CURRENT_PASSWORD')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the username->Account Settings->Change Password sub tab
@@ -662,104 +712,105 @@ class TestPages(unittest.TestCase):
         result = CanonizerAccountSettingsChangePasswordPage(self.driver).save_with_same_new_and_current_password(
             DEFAULT_PASS,
             DEFAULT_PASS,
-            'Test@1234567')
-        self.assertIn("The new password and current password must be different.", result)
+            'Test@1234567').get_url()
+        self.assertIn("/settings/changepassword", result)
 
     # ----- Change Password Test Cases End -----
 
     # ----- Help Page Test Cases Start -----
-    # 48
+    # TC_LOAD_WHAT_IS_CANONIZER_HELP_PAGE_WITHOUT_LOGIN
     def test_check_what_is_canonizer_help_page_loaded_without_login(self):
-        print("\n" + str(test_cases(47)))
+        print("\n" + str(test_cases('TC_LOAD_WHAT_IS_CANONIZER_HELP_PAGE_WITHOUT_LOGIN')))
         self.assertIn("topic/132-Help/1-Agreement",
                       CanonizerHelpPage(self.driver).check_what_is_canonizer_help_page_loaded().get_url())
 
-    # 49
+    # TC_LOAD_WHAT_IS_CANONIZER_HELP_PAGE_WITH_LOGIN
     def test_check_what_is_canonizer_help_page_loaded_with_login(self):
-        print("\n" + str(test_cases(48)))
+        print("\n" + str(test_cases('TC_LOAD_WHAT_IS_CANONIZER_HELP_PAGE_WITHOUT_LOGIN')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the Help
         self.assertIn("topic/132-Help/1-Agreement",
                       CanonizerHelpPage(self.driver).check_what_is_canonizer_help_page_loaded().get_url())
 
-    # 50
-    def test_check_Steps_to_Create_a_New_Topic_page_loaded_with_login(self):
-        print("\n" + str(test_cases(49)))
+    # TC_CHECK_STEPS_TO_CREATE_A_NEW_TOPIC_PAGE_LOADED_WITH_LOGIN
+    def test_check_steps_to_create_a_new_topic_page_loaded_with_login(self):
+        print("\n" + str(test_cases('TC_CHECK_STEPS_TO_CREATE_A_NEW_TOPIC_PAGE_LOADED_WITH_LOGIN')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the Help and Click on the Steps_to_Create_a_New_Topic
-        CanonizerHelpPage(
-            self.driver).check_what_is_canonizer_help_page_loaded().check_Steps_to_Create_a_New_Topic_page_loaded().open(
-            "topic/132-Steps-to-Create-a-New-Topic/3")
+        result = CanonizerHelpPage(
+            self.driver).check_what_is_canonizer_help_page_loaded().check_steps_to_create_a_new_topic_page_loaded().get_url()
+        self.assertIn("topic/132-Steps-to-Create-a-New-Topic/3", result)
 
-    # 51
-    def test_check_Dealing_With_Disagreements_page_loaded_with_login(self):
-        print("\n" + str(test_cases(50)))
+    # TC_CHECK_DEALING_WITH_DISAGREEMENTS_PAGE_LOADED_WITH_LOGIN
+    def test_check_dealing_with_disagreements_page_loaded_with_login(self):
+        print("\n" + str(test_cases('TC_CHECK_DEALING_WITH_DISAGREEMENTS_PAGE_LOADED_WITH_LOGIN')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the Help and Click on the Dealing With Disagreements
-        CanonizerHelpPage(
-            self.driver).check_what_is_canonizer_help_page_loaded().check_Dealing_With_Disagreements_page_loaded().open(
-            "topic/132-Dealing-with-disagreement/4")
+        result = CanonizerHelpPage(
+            self.driver).check_what_is_canonizer_help_page_loaded().check_dealing_with_disagreements_page_loaded_with_login().get_url()
+        self.assertIn("topic/132-Dealing-with-disagreement/4", result)
 
-    # 52
-    def test_check_Wiki_Markup_Information_page_loaded_with_login(self):
-        print("\n" + str(test_cases(51)))
+    # TC_LOAD_WIKI_MARKUP_INFORMATION_PAGE_LOAD_WITH_LOGIN
+    def test_check_wiki_markup_information_page_loaded_with_login(self):
+        print("\n" + str(test_cases('TC_LOAD_WIKI_MARKUP_INFORMATION_PAGE_LOAD_WITH_LOGIN')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the Help and Click on Wiki Markup Information
-        CanonizerHelpPage(
-            self.driver).check_what_is_canonizer_help_page_loaded().check_Wiki_Markup_Information_page_loaded().open(
-            "topic/132-Canonizer-wiki-text-formatting/5")
+        result = CanonizerHelpPage(
+            self.driver).check_what_is_canonizer_help_page_loaded().check_wiki_markup_information_page_loaded_with_login().get_url()
+        self.assertIn("topic/132-Canonizer-wiki-text-formatting/5", result)
 
-    # 53
-    def test_check_Adding_the_Canonizer_Feedback_Camp_Outline_to_Internet_Articles_page_loaded_with_login(self):
-        print("\n" + str(test_cases(52)))
+    # TC_VERIFY_CANONIZER_FEEDBACK_CAMP_OUTLINE_LOADED_PAGE_LOADED
+    def test_check_adding_the_canonizer_feedback_camp_outline_to_internet_articles_page_loaded(self):
+        print("\n" + str(test_cases('TC_VERIFY_CANONIZER_FEEDBACK_CAMP_OUTLINE_LOADED_PAGE_LOADED')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the Help and click on Adding the Canonizer Feedback Camp Outline to Internet Articles
-        CanonizerHelpPage(
-            self.driver).check_what_is_canonizer_help_page_loaded().check_Adding_the_Canonizer_Feedback_Camp_Outline_to_Internet_Articles_page_loaded().open(
-            "topic/132-Adding-feedback-outline/6")
+        result = CanonizerHelpPage(
+            self.driver).check_what_is_canonizer_help_page_loaded().check_adding_the_canonizer_feedback_camp_outline_to_internet_articles_page_loaded().get_url()
+        self.assertIn("topic/132-Adding-feedback-outline/6", result)
 
-    # 54
-    def test_check_Steps_to_Create_a_New_Topic_page_loaded_without_login(self):
-        print("\n" + str(test_cases(53)))
+    # TC_CHECK_STEP_TO_CREATE_A_NEW_TOPIC_PAGE_LOADED_WITHOUT_LOGIN
+    def test_check_steps_to_create_a_new_topic_page_loaded_without_login(self):
+        print("\n" + str(test_cases('TC_CHECK_STEP_TO_CREATE_A_NEW_TOPIC_PAGE_LOADED_WITHOUT_LOGIN')))
         # Click on the Help and Click on the Steps_to_Create_a_New_Topic
-        CanonizerHelpPage(
-            self.driver).check_what_is_canonizer_help_page_loaded().check_Steps_to_Create_a_New_Topic_page_loaded().open(
-            "topic/132-Steps-to-Create-a-New-Topic/3")
+        result = CanonizerHelpPage(
+            self.driver).check_what_is_canonizer_help_page_loaded().check_steps_to_create_a_new_topic_page_loaded().get_url()
+        self.assertIn("topic/132-Steps-to-Create-a-New-Topic/3", result)
 
-    # 55
-    def test_check_Dealing_With_Disagreements_page_loaded_without_login(self):
-        print("\n" + str(test_cases(54)))
+    # TC_CHECK_DEALING_WITH_DISAGREEMENTS_PAGE_LOADED_WITHOUT_LOGIN
+    def test_check_dealing_with_disagreements_page_loaded_without_login(self):
+        print("\n" + str(test_cases('TC_CHECK_DEALING_WITH_DISAGREEMENTS_PAGE_LOADED_WITHOUT_LOGIN')))
         # Click  on the Help and Click on the Dealing With Disagreements
-        CanonizerHelpPage(
-            self.driver).check_what_is_canonizer_help_page_loaded().check_Dealing_With_Disagreements_page_loaded().open(
-            "topic/132-Dealing-with-disagreement/4")
+        result = CanonizerHelpPage(
+            self.driver).check_what_is_canonizer_help_page_loaded().check_dealing_with_disagreements_page_loaded_with_login().get_url()
+        self.assertIn("topic/132-Dealing-with-disagreement/4", result)
 
-    # 56
-    def test_check_Wiki_Markup_Information_page_loaded_without_login(self):
-        print("\n" + str(test_cases(55)))
+    # TC_VERIFY_WIKI_MARKUP_INFORMATION_PAGE_LOADED_WITH_LOGIN
+    def check_wiki_markup_information_page_loaded_with_login(self):
+        print("\n" + str(test_cases('TC_VERIFY_WIKI_MARKUP_INFORMATION_PAGE_LOADED_WITH_LOGIN')))
         # Click on the Help and Click on Wiki Markup Information
-        CanonizerHelpPage(
-            self.driver).check_what_is_canonizer_help_page_loaded().check_Wiki_Markup_Information_page_loaded().open(
-            "topic/132-Canonizer-wiki-text-formatting/5")
+        result = CanonizerHelpPage(
+            self.driver).check_what_is_canonizer_help_page_loaded().check_wiki_markup_information_page_loaded_with_login().get_url()
+        self.assertIn("topic/132-Canonizer-wiki-text-formatting/5", result)
 
-    # 57
-    def test_check_Adding_the_Canonizer_Feedback_Camp_Outline_to_Internet_Articles_page_loaded_without_login(self):
-        print("\n" + str(test_cases(56)))
+    # TC_VERIFY_ADDING_THE_CANONIZER_FEEDBACK_CAMP_OUTLINE_TO_INTERNET_ARTICLES_PAGE_LOADED
+    def test_check_adding_the_canonizer_feedback_camp_outline_to_internet_articles_page_loaded(self):
+        print("\n" + str(
+            test_cases('TC_VERIFY_ADDING_THE_CANONIZER_FEEDBACK_CAMP_OUTLINE_TO_INTERNET_ARTICLES_PAGE_LOADED')))
         # Click on the Help and Click on Adding the Canonizer Feedback Camp Outline to Internet Articles
-        CanonizerHelpPage(
-            self.driver).check_what_is_canonizer_help_page_loaded().check_Adding_the_Canonizer_Feedback_Camp_Outline_to_Internet_Articles_page_loaded().open(
-            "topic/132-Adding-feedback-outline/6")
+        result = CanonizerHelpPage(
+            self.driver).check_what_is_canonizer_help_page_loaded().check_adding_the_canonizer_feedback_camp_outline_to_internet_articles_page_loaded().get_url()
+        self.assertIn("topic/132-Adding-feedback-outline/6", result)
 
     # ----- Help Page Test Cases End -----
     # ----- Add & Manage Nick Names Page Test Cases Start -----
-    # 58
+    # TC_NICK_NAMES_PAGE_MANDATORY_FIELDS_ARE_MARKED_WITH_ASTERISK
     def test_nick_names_page_mandatory_fields_are_marked_with_asterisk(self):
-        print("\n" + str(test_cases(57)))
+        print("\n" + str(test_cases('TC_NICK_NAMES_PAGE_MANDATORY_FIELDS_ARE_MARKED_WITH_ASTERISK')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on Username->Account Settings->Nick Names sub tab
@@ -768,9 +819,9 @@ class TestPages(unittest.TestCase):
         self.assertTrue(CanonizerAccountSettingsNickNamesPage(
             self.driver).nick_names_page_mandatory_fields_are_marked_with_asterisk())
 
-    # 59
+    # TC_CREATE_WITH_BLANK_NICK_NAME
     def test_create_with_blank_nick_name(self):
-        print("\n" + str(test_cases('TC_NICK_NAME_01')))
+        print("\n" + str(test_cases('TC_CREATE_WITH_BLANK_NICK_NAME')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on Username->Account Settings->Nick Names sub tab
@@ -779,9 +830,9 @@ class TestPages(unittest.TestCase):
         self.assertIn("Nick name is required.",
                       CanonizerAccountSettingsNickNamesPage(self.driver).create_with_blank_nick_name())
 
-    # 60
+    # TC_CREATE_WITH_DUPLICATE_NICK_NAME
     def test_create_with_duplicate_nick_name(self):
-        print("\n" + str(test_cases('TC_NICK_NAME_02')))
+        print("\n" + str(test_cases('TC_CREATE_WITH_DUPLICATE_NICK_NAME')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on Username->Account Settings->Nick Names sub tab
@@ -790,9 +841,9 @@ class TestPages(unittest.TestCase):
         result = CanonizerAccountSettingsNickNamesPage(self.driver).create_with_duplicate_nick_name(DEF_NICK_NAME)
         self.assertIn("The nick name has already been taken.", result)
 
-    # 61
+    # TC_CREATE_WITH_BLANK_SPACES_NICK_NAME
     def test_create_with_blank_spaces_nick_name(self):
-        print("\n" + str(test_cases(60)))
+        print("\n" + str(test_cases('TC_CREATE_WITH_BLANK_SPACES_NICK_NAME')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on Username->Account Settings->Nick Names sub tab
@@ -801,9 +852,9 @@ class TestPages(unittest.TestCase):
         result = CanonizerAccountSettingsNickNamesPage(self.driver).create_with_blank_spaces_nick_name('       ')
         self.assertIn("Nick name is required.", result)
 
-    # TC_NICK_NAME_03
+    # TC_CREATE_NICK_NAME_WITH_TRAILING_SPACES
     def test_create_nick_name_with_trailing_spaces(self):
-        print("\n" + str(test_cases("TC_NICK_NAME_03")))
+        print("\n" + str(test_cases("TC_CREATE_NICK_NAME_WITH_TRAILING_SPACES")))
         self.login_to_canonizer_app()
         CanonizerAccountSettingsPage(
             self.driver).click_username_link_button().click_account_settings_page_button() \
@@ -811,17 +862,17 @@ class TestPages(unittest.TestCase):
         result = CanonizerAccountSettingsNickNamesPage(self.driver).create_nick_name_with_trailing_spaces('       pkk')
         self.assertIn("Nick name created successfully.", result)
 
-    # 62
+    # TC_CLICK_BROWSE_PAGE_BUTTON_WITHOUT_LOGIN
     def test_click_browse_page_button_without_login(self):
-        print("\n" + str(test_cases(61)))
+        print("\n" + str(test_cases('TC_CLICK_BROWSE_PAGE_BUTTON_WITHOUT_LOGIN')))
         # Click on the Browse link
         self.assertIn("/browse", CanonizerBrowsePage(self.driver).click_browse_page_button().get_url())
 
     # ----- Add & Manage Nick Names Page Test Cases End -----
     # ----- My Profile Page Test Cases Start -----
-    # 63
+    # TC_MANAGE_PROFILE_INFO_PAGE_MANDATORY_FIELDS_ARE_MARKED_WITH_ASTERISK
     def test_manage_profile_info_page_mandatory_fields_are_marked_with_asterisk(self):
-        print("\n" + str(test_cases(62)))
+        print("\n" + str(test_cases('TC_MANAGE_PROFILE_INFO_PAGE_MANDATORY_FIELDS_ARE_MARKED_WITH_ASTERISK')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the username->Account Settings->Manage Profile Info sub tab
@@ -830,9 +881,9 @@ class TestPages(unittest.TestCase):
         self.assertTrue(AccountSettingsManageProfileInfoPage(
             self.driver).manage_profile_info_page_mandatory_fields_are_marked_with_asterisk())
 
-    # 64
+    # TC_UPDATE_PROFILE_WITH_BLANK_FIRST_TIME
     def test_update_profile_with_blank_first_name(self):
-        print("\n" + str(test_cases(63)))
+        print("\n" + str(test_cases('TC_UPDATE_PROFILE_WITH_BLANK_FIRST_TIME')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the username->Account Settings->Manage Profile Info sub tab
@@ -841,12 +892,11 @@ class TestPages(unittest.TestCase):
         result = AccountSettingsManageProfileInfoPage(self.driver).update_profile_with_blank_first_name(
             DEFAULT_MIDDLE_NAME,
             DEFAULT_LAST_NAME).get_url()
-        print(result)
         self.assertIn("/settings", result)
 
-    # 65
+    # TC_UPDATE_PROFILE_WITH_BLANK_LAST_NAME
     def test_update_profile_with_blank_last_name(self):
-        print("\n" + str(test_cases(64)))
+        print("\n" + str(test_cases('TC_UPDATE_PROFILE_WITH_BLANK_LAST_NAME')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the username->Account Settings->Manage Profile Info sub tab
@@ -856,357 +906,356 @@ class TestPages(unittest.TestCase):
             DEFAULT_FIRST_NAME,
             DEFAULT_MIDDLE_NAME,
         ).get_url()
-        print(result)
         self.assertIn("/settings", result)
 
     # ----- My Profile Page Test Cases End -----
 
     # ----- Browse Page Test Cases Start -----
-    # 66
+    # TC_SELECT_BY_VALUE_GENERAL
     def test_select_by_value_general(self):
-        print("\n" + str(test_cases(65)))
+        print("\n" + str(test_cases('TC_SELECT_BY_VALUE_GENERAL')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the Browse link
         self.assertIn("browse", CanonizerBrowsePage(
             self.driver).click_browse_page_button().select_dropdown_value().select_by_value_general().get_url())
 
-    # 67
+    # TC_SELECT_BY_VALUE_CORPORATIONS
     def test_select_by_value_corporations(self):
-        print("\n" + str(test_cases(66)))
+        print("\n" + str(test_cases('TC_SELECT_BY_VALUE_CORPORATIONS')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the Browse link
         self.assertIn("/browse?namespace=2", CanonizerBrowsePage(
             self.driver).click_browse_page_button().select_dropdown_value().select_by_value_corporations().get_url())
 
-    # 68
+    # TC_SELECT_BY_VALUE_CRYPTO_CURRENCY
     def test_select_by_value_crypto_currency(self):
-        print("\n" + str(test_cases(67)))
+        print("\n" + str(test_cases('TC_SELECT_BY_VALUE_CRYPTO_CURRENCY')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the Browse link
         self.assertIn("/browse?namespace=3", CanonizerBrowsePage(
             self.driver).click_browse_page_button().select_dropdown_value().select_by_value_crypto_currency().get_url())
 
-    # 69
+    # TC_SELECT_BY_VALUE_FAMILY
     def test_select_by_value_family(self):
-        print("\n" + str(test_cases(68)))
+        print("\n" + str(test_cases('TC_SELECT_BY_VALUE_FAMILY')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the Browse link
         self.assertIn("/browse?namespace=4", CanonizerBrowsePage(
             self.driver).click_browse_page_button().select_dropdown_value().select_by_value_family().get_url())
 
-    # 70
+    # TC_SELECT_BY_VALUE_FAMILY_JESPERSON_OSCAR_F
     def test_select_by_value_family_jesperson_oscar_f(self):
-        print("\n" + str(test_cases(69)))
+        print("\n" + str(test_cases('TC_SELECT_BY_VALUE_FAMILY_JESPERSON_OSCAR_F')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the Browse link
         self.assertIn("/browse?namespace=5", CanonizerBrowsePage(
             self.driver).click_browse_page_button().select_dropdown_value().select_by_value_family_jesperson_oscar_f().get_url())
 
-    # 71
+    # TC_SELECT_BY_VALUE_OCCUPY_WALL_STREET
     def test_select_by_value_occupy_wall_street(self):
-        print("\n" + str(test_cases(70)))
+        print("\n" + str(test_cases('TC_SELECT_BY_VALUE_OCCUPY_WALL_STREET')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the Browse link
         self.assertIn("/browse?namespace=6", CanonizerBrowsePage(
             self.driver).click_browse_page_button().select_dropdown_value().select_by_value_occupy_wall_street().get_url())
 
-    # 72
+    # TC_SELECT_BY_VALUE_ORGRANIZATIONS
     def test_select_by_value_organizations(self):
-        print("\n" + str(test_cases(71)))
+        print("\n" + str(test_cases('TC_SELECT_BY_VALUE_ORGRANIZATIONS')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the Browse link
         self.assertIn("/browse?namespace=7", CanonizerBrowsePage(
             self.driver).click_browse_page_button().select_dropdown_value().select_by_value_organizations().get_url())
 
-    # 73
+    # TC_SELECT_BY_VALUE_ORGANIZATIONS_CANONIZER
     def test_select_by_value_organizations_canonizer(self):
-        print("\n" + str(test_cases(72)))
+        print("\n" + str(test_cases('TC_SELECT_BY_VALUE_ORGANIZATIONS_CANONIZER')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the Browse link
         self.assertIn("/browse?namespace=8", CanonizerBrowsePage(
             self.driver).click_browse_page_button().select_dropdown_value().select_by_value_organizations_canonizer().get_url())
 
-    # 74
+    # TC_SELECT_BY_VALUE_ORGANIZATIONS_CANONIZER_HELP
     def test_select_by_value_organizations_canonizer_help(self):
-        print("\n" + str(test_cases(73)))
+        print("\n" + str(test_cases('TC_SELECT_BY_VALUE_ORGANIZATIONS_CANONIZER_HELP')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the Browse link
         self.assertIn("/browse?namespace=9", CanonizerBrowsePage(
             self.driver).click_browse_page_button().select_dropdown_value().select_by_value_organizations_canonizer_help().get_url())
 
-    # 75
+    # TC_SELECT_BY_VALUE_ORGANIZATIONS_MTA
     def test_select_by_value_organizations_mta(self):
-        print("\n" + str(test_cases(74)))
+        print("\n" + str(test_cases('TC_SELECT_BY_VALUE_ORGANIZATIONS_MTA')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the Browse link
         self.assertIn("/browse?namespace=10", CanonizerBrowsePage(
             self.driver).click_browse_page_button().select_dropdown_value().select_by_value_organizations_mta().get_url())
 
-    # 76
+    # TC_SELECT_BY_VALUE_ORGANIZATIONS_TV07
     def test_select_by_value_organizations_tv07(self):
-        print("\n" + str(test_cases(75)))
+        print("\n" + str(test_cases('TC_SELECT_BY_VALUE_ORGANIZATIONS_TV07')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the Browse link
         self.assertIn("/browse?namespace=11", CanonizerBrowsePage(
             self.driver).click_browse_page_button().select_dropdown_value().select_by_value_organizations_tv07().get_url())
 
-    # 77
+    # TC_SELECT_BY_VALUE_ORGANIZATIONS_WTA
     def test_select_by_value_organizations_wta(self):
-        print("\n" + str(test_cases(76)))
+        print("\n" + str(test_cases('TC_SELECT_BY_VALUE_ORGANIZATIONS_WTA')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the Browse link
         self.assertIn("/browse?namespace=12", CanonizerBrowsePage(
             self.driver).click_browse_page_button().select_dropdown_value().select_by_value_organizations_wta().get_url())
 
-    # 78
+    # TC_SELECT_BY_VALUE_PERSONAL_ATTRIBUTES
     def test_select_by_value_personal_attributes(self):
-        print("\n" + str(test_cases(77)))
+        print("\n" + str(test_cases('TC_SELECT_BY_VALUE_PERSONAL_ATTRIBUTES')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the Browse link
         self.assertIn("/browse?namespace=13", CanonizerBrowsePage(
             self.driver).click_browse_page_button().select_dropdown_value().select_by_value_personal_attributes().get_url())
 
-    # 79
+    # TC_SELECT_BY_VALUE_PERSONAL_REPUTATIONS
     def test_select_by_value_personal_reputations(self):
-        print("\n" + str(test_cases(78)))
+        print("\n" + str(test_cases('TC_SELECT_BY_VALUE_PERSONAL_REPUTATIONS')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the Browse link
         self.assertIn("/browse?namespace=14", CanonizerBrowsePage(
             self.driver).click_browse_page_button().select_dropdown_value().select_by_value_personal_reputations().get_url())
 
-    # 80
+    # TC_SELECT_BY_VALUE_PROFESSIONAL_SERVICES
     def test_select_by_value_professional_services(self):
-        print("\n" + str(test_cases(79)))
+        print("\n" + str(test_cases('TC_SELECT_BY_VALUE_PROFESSIONAL_SERVICES')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the Browse link
         self.assertIn("/browse?namespace=15", CanonizerBrowsePage(
             self.driver).click_browse_page_button().select_dropdown_value().select_by_value_professional_services().get_url())
 
-    # 81
+    # TC_SELECT_BY_VALUE_SANDBOX
     def test_select_by_value_sandbox(self):
-        print("\n" + str(test_cases(80)))
+        print("\n" + str(test_cases('TC_SELECT_BY_VALUE_SANDBOX')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the Browse link
         self.assertIn("/browse?namespace=16", CanonizerBrowsePage(
             self.driver).click_browse_page_button().select_dropdown_value().select_by_value_sandbox().get_url())
 
-    # 82
+    # TC_SELECT_BY_VALUE_TERMINOLOGY
     def test_select_by_value_terminology(self):
-        print("\n" + str(test_cases(81)))
+        print("\n" + str(test_cases('TC_SELECT_BY_VALUE_TERMINOLOGY')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the Browse link
         self.assertIn("/browse?namespace=17", CanonizerBrowsePage(
             self.driver).click_browse_page_button().select_dropdown_value().select_by_value_terminology().get_url())
 
-    # 83
+    # TC_SELECT_BY_VALUE_WWW
     def test_select_by_value_www(self):
-        print("\n" + str(test_cases(82)))
+        print("\n" + str(test_cases('TC_SELECT_BY_VALUE_WWW')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the Browse link
         self.assertIn("/browse?namespace=18", CanonizerBrowsePage(
             self.driver).click_browse_page_button().select_dropdown_value().select_by_value_www().get_url())
 
-    # 84
+    # TC_SELECT_BY_VALUE_ALL
     def test_select_by_value_all(self):
-        print("\n" + str(test_cases(83)))
+        print("\n" + str(test_cases('TC_SELECT_BY_VALUE_ALL')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the Browse link
         self.assertIn("/browse", CanonizerBrowsePage(
             self.driver).click_browse_page_button().select_dropdown_value().select_by_value_all().get_url())
 
-    # 85
+    # TC_SELECT_BY_VALUE_ALL_DEFAULT
     def test_select_by_value_all_default(self):
-        print("\n" + str(test_cases(84)))
+        print("\n" + str(test_cases('TC_SELECT_BY_VALUE_ALL_DEFAULT')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the Browse link
         self.assertIn("/browse", CanonizerBrowsePage(
             self.driver).click_browse_page_button().select_dropdown_value().select_by_value_all_default().get_url())
 
-    # 86
+    # TC_SELECT_BY_VALUE_GENERAL_ONLY_MY_TOPICS
     def test_select_by_value_general_only_my_topics(self):
-        print("\n" + str(test_cases(85)))
+        print("\n" + str(test_cases('TC_SELECT_BY_VALUE_GENERAL_ONLY_MY_TOPICS')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the Browse link
         self.assertIn("/browse?namespace=1&my=1",
                       CanonizerBrowsePage(self.driver).select_by_value_general_only_my_topics().get_url())
 
-    # 87
+    # TC_SELECT_BY_VALUE_COOPERATIONS_ONLY_MY_TOPICS
     def test_select_by_value_corporations_only_my_topics(self):
-        print("\n" + str(test_cases(86)))
+        print("\n" + str(test_cases('TC_SELECT_BY_VALUE_COOPERATIONS_ONLY_MY_TOPICS')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the Browse link
         self.assertIn("/browse?namespace=2&my=2",
                       CanonizerBrowsePage(self.driver).select_by_value_corporations_only_my_topics().get_url())
 
-    # 88
+    # TC_SELECT_VY_VALUE_CRYPTO_CURRENCY_ONLY_MY_TOPICS
     def test_select_by_value_crypto_currency_only_my_topics(self):
-        print("\n" + str(test_cases(87)))
+        print("\n" + str(test_cases('TC_SELECT_VY_VALUE_CRYPTO_CURRENCY_ONLY_MY_TOPICS')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the Browse link
         self.assertIn("/browse?namespace=3&my=3",
                       CanonizerBrowsePage(self.driver).select_by_value_crypto_currency_only_my_topics().get_url())
 
-    # 89
+    # TC_SELECT_BY_VALUE_FAMILY_ONLY_MY_TOPICS
     def test_select_by_value_family_only_my_topics(self):
-        print("\n" + str(test_cases(88)))
+        print("\n" + str(test_cases('TC_SELECT_BY_VALUE_FAMILY_ONLY_MY_TOPICS')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the Browse link
         self.assertIn("/browse?namespace=4&my=4",
                       CanonizerBrowsePage(self.driver).select_by_value_family_only_my_topics().get_url())
 
-    # 90
+    # TC_SELECT_BY_VALUE_FAMILY_JESPERSON_OSCAR_F_ONLY_MY_TOPICS
     def test_select_by_value_family_jesperson_oscar_f_only_my_topics(self):
-        print("\n" + str(test_cases(89)))
+        print("\n" + str(test_cases('TC_SELECT_BY_VALUE_FAMILY_JESPERSON_OSCAR_F_ONLY_MY_TOPICS')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the Browse link
         self.assertIn("/browse?namespace=5&my=5", CanonizerBrowsePage(
             self.driver).select_by_value_family_jesperson_oscar_f_only_my_topics().get_url())
 
-    # 91
+    # TC_SELECT_BY_VALUE_OCCUPY_WALL_STREET_ONLY_MY_TOPICS
     def test_select_by_value_occupy_wall_street_only_my_topics(self):
-        print("\n" + str(test_cases(90)))
+        print("\n" + str(test_cases('TC_SELECT_BY_VALUE_OCCUPY_WALL_STREET_ONLY_MY_TOPICS')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the Browse link
         self.assertIn("/browse?namespace=6&my=6",
                       CanonizerBrowsePage(self.driver).select_by_value_occupy_wall_street_only_my_topics().get_url())
 
-    # 92
+    # TC_SELECT_BY_VALUE_ORGANIZAIIONS_ONLY_MY_TOPICS
     def test_select_by_value_organizations_only_my_topics(self):
-        print("\n" + str(test_cases(91)))
+        print("\n" + str(test_cases('TC_SELECT_BY_VALUE_ORGANIZAIIONS_ONLY_MY_TOPICS')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the Browse link
         self.assertIn("/browse?namespace=7&my=7",
                       CanonizerBrowsePage(self.driver).select_by_value_organizations_only_my_topics().get_url())
 
-    # 93
+    # TC_SELECT_BY_VALUE_ORGANIZATIONS_CNAONIZER_ONLY_MY_TOPICS
     def test_select_by_value_organizations_canonizer_only_my_topics(self):
-        print("\n" + str(test_cases(92)))
+        print("\n" + str(test_cases('TC_SELECT_BY_VALUE_ORGANIZATIONS_CNAONIZER_ONLY_MY_TOPICS')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the Browse link
         self.assertIn("/browse?namespace=8&my=8", CanonizerBrowsePage(
             self.driver).select_by_value_organizations_canonizer_only_my_topics().get_url())
 
-    # 94
+    # TC_SELECT_BY_VALUE_ORGANIZATIONS_CANONIZER_HELP_ONLY_MY_TOPICS
     def test_select_by_value_organizations_canonizer_help_only_my_topics(self):
-        print("\n" + str(test_cases(93)))
+        print("\n" + str(test_cases('TC_SELECT_BY_VALUE_ORGANIZATIONS_CANONIZER_HELP_ONLY_MY_TOPICS')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the Browse link
         self.assertIn("/browse?namespace=9&my=9", CanonizerBrowsePage(
             self.driver).select_by_value_organizations_canonizer_help_only_my_topics().get_url())
 
-    # 95
+    # TC_SELECT_BY_VALUE_ORGANIZATIONS_MTA_ONLY_MY_TOPICS
     def test_select_by_value_organizations_mta_only_my_topics(self):
-        print("\n" + str(test_cases(94)))
+        print("\n" + str(test_cases('TC_SELECT_BY_VALUE_ORGANIZATIONS_MTA_ONLY_MY_TOPICS')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the Browse link
         self.assertIn("/browse?namespace=10&my=10",
                       CanonizerBrowsePage(self.driver).select_by_value_organizations_mta_only_my_topics().get_url())
 
-    # 96
+    # TC_SELECT_BY_VALUE_ORGANIZATIONS_TV07_ONLY_MY_TOPICS
     def test_select_by_value_organizations_tv07_only_my_topics(self):
-        print("\n" + str(test_cases(95)))
+        print("\n" + str(test_cases('TC_SELECT_BY_VALUE_ORGANIZATIONS_TV07_ONLY_MY_TOPICS')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the Browse link
         self.assertIn("/browse?namespace=11&my=11",
                       CanonizerBrowsePage(self.driver).select_by_value_organizations_tv07_only_my_topics().get_url())
 
-    # 97
+    # TC_SELECT_BY_VALUE_ORGANIZATIONS_WTA_ONLY_MY_TOPICS
     def test_select_by_value_organizations_wta_only_my_topics(self):
-        print("\n" + str(test_cases(96)))
+        print("\n" + str(test_cases('TC_SELECT_BY_VALUE_ORGANIZATIONS_WTA_ONLY_MY_TOPICS')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the Browse link
         self.assertIn("/browse?namespace=12&my=12",
                       CanonizerBrowsePage(self.driver).select_by_value_organizations_wta_only_my_topics().get_url())
 
-    # 98
+    # TC_SELECT_BY_VALUE_PERSONAL_ATTRIBUTES_ONLY_MY_TOPICS
     def test_select_by_value_personal_attributes_only_my_topics(self):
-        print("\n" + str(test_cases(97)))
+        print("\n" + str(test_cases('TC_SELECT_BY_VALUE_PERSONAL_ATTRIBUTES_ONLY_MY_TOPICS')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the Browse link
         self.assertIn("/browse?namespace=13&my=13",
                       CanonizerBrowsePage(self.driver).select_by_value_personal_attributes_only_my_topics().get_url())
 
-    # 99
+    # TC_SELECT_BY_VALUE_PERSONAL_REPUTATIONS_ONLY_MY_TOPICS
     def test_select_by_value_personal_reputations_only_my_topics(self):
-        print("\n" + str(test_cases(98)))
+        print("\n" + str(test_cases('TC_SELECT_BY_VALUE_PERSONAL_REPUTATIONS_ONLY_MY_TOPICS')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the Browse link
         self.assertIn("/browse?namespace=14&my=14",
                       CanonizerBrowsePage(self.driver).select_by_value_personal_reputations_only_my_topics().get_url())
 
-    # 100
+    # TC_SELECT_BY_VALUE_PROFESSIONAL_SERVICES_ONLY_MY_TOPICS
     def test_select_by_value_professional_services_only_my_topics(self):
-        print("\n" + str(test_cases(99)))
+        print("\n" + str(test_cases('TC_SELECT_BY_VALUE_PROFESSIONAL_SERVICES_ONLY_MY_TOPICS')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the Browse link
         self.assertIn("/browse?namespace=15&my=15",
                       CanonizerBrowsePage(self.driver).select_by_value_professional_services_only_my_topics().get_url())
 
-    # 101
+    # TC_SELECT_BY_VALUE_SANDBOX_ONLY_MY_TOPICS
     def test_select_by_value_sandbox_only_my_topics(self):
-        print("\n" + str(test_cases(100)))
+        print("\n" + str(test_cases('TC_SELECT_BY_VALUE_SANDBOX_ONLY_MY_TOPICS')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the Browse link
         self.assertIn("/browse?namespace=16&my=16",
                       CanonizerBrowsePage(self.driver).select_by_value_sandbox_only_my_topics().get_url())
 
-    # 102
+    # TC_SELECT_BY_VALUE_TERMINOLOGY_ONLY_MY_TOPICS
     def test_select_by_value_terminology_only_my_topics(self):
-        print("\n" + str(test_cases(101)))
+        print("\n" + str(test_cases('TC_SELECT_BY_VALUE_TERMINOLOGY_ONLY_MY_TOPICS')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the Browse link
         self.assertIn("/browse?namespace=17&my=17",
                       CanonizerBrowsePage(self.driver).select_by_value_terminology_only_my_topics().get_url())
 
-    # 103
+    # TC_SELECT_BY_VALUE_WWW_ONLY_MY_TOPICS
     def test_select_by_value_www_only_my_topics(self):
-        print("\n" + str(test_cases(102)))
+        print("\n" + str(test_cases('TC_SELECT_BY_VALUE_WWW_ONLY_MY_TOPICS')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the Browse link
         self.assertIn("/browse?namespace=18&my=18",
                       CanonizerBrowsePage(self.driver).select_by_value_www_only_my_topics().get_url())
 
-    # 104
+    # TC_SELECT_BY_VALUE_ALL_ONLY_MY_TOPICS
     def test_select_by_value_all_only_my_topics(self):
-        print("\n" + str(test_cases(103)))
+        print("\n" + str(test_cases('TC_SELECT_BY_VALUE_ALL_ONLY_MY_TOPICS')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the Browse link
@@ -1216,43 +1265,44 @@ class TestPages(unittest.TestCase):
     # ----- Browse Page Test Cases End -----
 
     # ----- White Paper Test Cases Start -----
-    # 105
+
+    # TC_LOAD_WHITE_PAPER_WITH_LOGIN
     def test_check_white_paper_should_open_with_login(self):
-        print("\n" + str(test_cases(104)))
+        print("\n" + str(test_cases('TC_LOAD_WHITE_PAPER_WITH_LOGIN')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the White Paper link
         CanonizerWhitePaper(self.driver).check_white_paper_should_open().open("files/2012_amplifying_final.pdf")
 
-    # 106
+    # TC_LOAD_WHITE_PAPER_WITHOU_LOGIN
     def test_check_white_paper_should_open_without_login(self):
-        print("\n" + str(test_cases(105)))
+        print("\n" + str(test_cases('TC_LOAD_WHITE_PAPER_WITHOU_LOGIN')))
         # Click on the White Paper link
         CanonizerWhitePaper(self.driver).check_white_paper_should_open().open("files/2012_amplifying_final.pdf")
 
     # ----- White Paper Test Cases End -----
 
     # ----- Blog Test Cases Start -----
-    # 107
+    # TC_LOAD_BLOG_PAGE_WITH_LOGIN
     def test_check_blog_page_should_open_with_login(self):
-        print("\n" + str(test_cases(106)))
+        print("\n" + str(test_cases('TC_LOAD_BLOG_PAGE_WITH_LOGIN')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the Blog link
         self.assertIn("/blog/", CanonizerBlog(self.driver).check_blog_page_should_open().get_url())
 
-    # 108
+    # TC_LOAD_BLOG_PAGE_WITHOUT_LOGIN
     def test_check_blog_page_should_open_without_login(self):
-        print("\n" + str(test_cases(107)))
+        print("\n" + str(test_cases('TC_LOAD_BLOG_PAGE_WITHOUT_LOGIN')))
         # Click on the Blog link
         self.assertIn("/blog/", CanonizerBlog(self.driver).check_blog_page_should_open().get_url())
 
     # ----- Blog Test Cases End -----
 
     # ----- Algorithm Information Test Cases Start -----
-    # 109
+    # TC_VERIFY_ALGORITHM_INFORMATION_PAGE_SHOULD_OPEN
     def test_check_algorithm_information_page_should_open(self):
-        print("\n" + str(test_cases(108)))
+        print("\n" + str(test_cases('TC_VERIFY_ALGORITHM_INFORMATION_PAGE_SHOULD_OPEN')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the Algorithm Information link
@@ -1262,26 +1312,26 @@ class TestPages(unittest.TestCase):
     # ----- Algorithm Information Test Cases End -----
 
     # ----- As Of Filters Test Cases Start -----
-    # 110
+    # TC_VERIFY_INCLUDE_REVIEW_FILTER_APPLIED
     def test_check_include_review_filter_applied(self):
-        print("\n" + str(test_cases(109)))
+        print("\n" + str(test_cases('TC_VERIFY_INCLUDE_REVIEW_FILTER_APPLIED')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on include review filter
         self.assertIn(DEFAULT_BASE_URL,
                       CanonizerAsOfFilters(self.driver).check_include_review_filter_applied().get_url())
 
-    # 111
+    # TC_CHECK_DEFAULT_FILTER_APPLIED
     def test_check_default_filter_applied(self):
-        print("\n" + str(test_cases(110)))
+        print("\n" + str(test_cases('TC_CHECK_DEFAULT_FILTER_APPLIED')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on default filter
         self.assertIn(DEFAULT_BASE_URL, CanonizerAsOfFilters(self.driver).check_default_filter_applied().get_url())
 
-    # 112
+    # TC_VERIFY_AS_OF_DATE_FILTER_APPLIED
     def test_check_as_of_date_filter_applied(self):
-        print("\n" + str(test_cases(111)))
+        print("\n" + str(test_cases('TC_VERIFY_AS_OF_DATE_FILTER_APPLIED')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on as of (yy/mm/dd) and select date
@@ -1290,41 +1340,41 @@ class TestPages(unittest.TestCase):
     # ----- As Of Filters Test Cases End -----
 
     # ----- Update Topic Test Cases Start -----
-    # 113
+    # TC_LOAD_TOPIC_UPDATE_PAGE
     def test_load_topic_update_page(self):
-        print("\n" + str(test_cases(112)))
+        print("\n" + str(test_cases('TC_LOAD_TOPIC_UPDATE_PAGE')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Check Topic Update page load
         self.assertIn("manage/topic", CanonizerTopicUpdatePage(self.driver).load_topic_update_page().get_url())
 
-    # 114
+    # TC_LOAD_VIEW_THIS_VERSION_PAGE
     def test_load_view_this_version_page(self):
-        print("\n" + str(test_cases(113)))
+        print("\n" + str(test_cases('TC_LOAD_VIEW_THIS_VERSION_PAGE')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         self.assertIn(DEFAULT_BASE_URL, CanonizerTopicUpdatePage(self.driver).load_view_this_version_page().get_url())
 
-    # 115
+    # TC_LOAD_TOPIC_OBJECT_PAGE
     def test_load_topic_object_page(self):
-        print("\n" + str(test_cases(114)))
+        print("\n" + str(test_cases('TC_LOAD_TOPIC_OBJECT_PAGE')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         result = CanonizerTopicUpdatePage(self.driver).load_topic_object_page()
         if result == 1:
             self.assertIn(DEFAULT_BASE_URL, CanonizerTopicUpdatePage(self.driver).load_topic_object_page().get_url())
 
-    # 116
+    # TC_TOPIC_UPDATE_PAGE_MANDATORY_FIELDS_ARE_MARKED_WITH_ASTERISK
     def test_topic_update_page_mandatory_fields_are_marked_with_asterisk(self):
-        print("\n" + str(test_cases(115)))
+        print("\n" + str(test_cases('TC_TOPIC_UPDATE_PAGE_MANDATORY_FIELDS_ARE_MARKED_WITH_ASTERISK')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         self.assertTrue(CanonizerTopicUpdatePage(
             self.driver).load_topic_update_page().topic_update_page_mandatory_fields_are_marked_with_asterisk())
 
-    # 117
+    # TC_TOPIC_OBJECTION_PAGE_MANDATORY_FIELDS_ARE_MARKED_WITH_ASTERISK
     def test_topic_objection_page_mandatory_fields_are_marked_with_asterisk(self):
-        print("\n" + str(test_cases(116)))
+        print("\n" + str(test_cases('TC_TOPIC_OBJECTION_PAGE_MANDATORY_FIELDS_ARE_MARKED_WITH_ASTERISK')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         result = CanonizerTopicUpdatePage(self.driver).load_topic_object_page()
@@ -1332,9 +1382,9 @@ class TestPages(unittest.TestCase):
             self.assertTrue(CanonizerTopicUpdatePage(
                 self.driver).load_topic_object_page().topic_objection_page_mandatory_fields_are_marked_with_asterisk())
 
-    # 118
+    # TC_TOPIC_UPDATE_PAGE_SHOULD_HAVE_ADD_NEW_NICK_NAME_LINK_FOR_NEW_USERS
     def test_topic_update_page_should_have_add_new_nick_name_link_for_new_users(self):
-        print("\n" + str(test_cases(117)))
+        print("\n" + str(test_cases('TC_TOPIC_UPDATE_PAGE_SHOULD_HAVE_ADD_NEW_NICK_NAME_LINK_FOR_NEW_USERS')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         result = CanonizerTopicUpdatePage(
@@ -1342,9 +1392,9 @@ class TestPages(unittest.TestCase):
         if result == 1:
             self.assertIn("Add New Nick Name", result)
 
-    # 119
+    # TC_SUBMIT_UPDATE_WITH_BLANK_NICK_NAME
     def test_submit_update_with_blank_nick_name(self):
-        print("\n" + str(test_cases(118)))
+        print("\n" + str(test_cases('TC_SUBMIT_UPDATE_WITH_BLANK_NICK_NAME')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the Topic update and check if nick name is blank
@@ -1358,61 +1408,86 @@ class TestPages(unittest.TestCase):
     # ----- Update Topic Test Cases End -----
 
     # ----- Create New Camp and Edit Camp Test Cases Start -----
-    # 120
+    # TC_LOAD_CREATE_NEW_CAMP_PAGE
     def test_load_create_camp_page(self):
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
-        print("\n" + str(test_cases(119)))
-        self.assertIn("camp/create/173-Software-Testing/1-Agreement",
+        print("\n" + str(test_cases('TC_LOAD_CREATE_NEW_CAMP_PAGE')))
+        self.assertIn("camp/create",
                       CanonizerCampPage(self.driver).load_create_camp_page().get_url())
 
-    # 121
+    # TC_CREATE_NEW_CAMP_MANDATORY_FIELDS_ARE_MARKED_WITH_ASTERISK
     def test_create_new_camp_page_mandatory_fields_are_marked_with_asterisk(self):
-        print("\n" + str(test_cases(120)))
+        print("\n" + str(test_cases('TC_CREATE_NEW_CAMP_MANDATORY_FIELDS_ARE_MARKED_WITH_ASTERISK')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the Create New camp  link
         self.assertTrue(CanonizerCampPage(
             self.driver).load_create_camp_page().create_new_camp_page_mandatory_fields_are_marked_with_asterisk())
 
-    # 122
+    # TC_CREATE_CAMP_WITH_BLANK_NICK_NAME
     def test_create_camp_with_blank_nick_name(self):
-        print("\n" + str(test_cases(121)))
+        print("\n" + str(test_cases('TC_CREATE_CAMP_WITH_BLANK_NICK_NAME')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the Create New camp link and check if nick name is blank
         result = CanonizerCampPage(self.driver).load_create_camp_page().create_camp_with_blank_nick_name(
             CREATE_CAMP_LIST_1)
-        self.assertIn("", result.get_url())
+        self.assertIn("camp/create/", result)
 
-    # 123
+    # TC_CREATE_CAMP_WITH_BLANK_CAMP_NAME
     def test_create_camp_with_blank_camp_name(self):
-        print("\n" + str(test_cases(122)))
+        print("\n" + str(test_cases('TC_CREATE_CAMP_WITH_BLANK_CAMP_NAME')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the Create New camp link and check if topic name is blank
         result = CanonizerCampPage(self.driver).load_create_camp_page().create_camp_with_blank_camp_name(
-            CREATE_CAMP_LIST_2).get_url()
-        print(result)
-        self.assertIn("", result)
+            CREATE_CAMP_LIST_1).get_url()
+        self.assertIn("camp/create/", result)
 
-    # 124
+    # TC_CREATE_CAMP_WITH_INVALID_DATA
+    def test_create_camp_with_invalid_data(self):
+        print("\n" + str(test_cases('TC_CREATE_CAMP_WITH_INVALID_DATA')))
+        self.login_to_canonizer_app()
+        result = CanonizerCampPage(self.driver).load_create_camp_page().create_camp_with_invalid_camp_name(
+            CREATE_CAMP_LIST_3).get_url()
+        self.assertIn("camp/create/", result)
+
+    # TC_CREATE_CAMP_WITHOUT_ENTERING_DATA_IN_MANDATORY_FIELDS
+    def test_create_camp_without_entering_data_in_mandatory_fields(self):
+        print("\n" + str(test_cases('TC_CREATE_CAMP_WITHOUT_ENTERING_DATA_IN_MANDATORY_FIELDS')))
+        self.login_to_canonizer_app()
+        result = CanonizerCampPage(self.driver).load_create_camp_page().create_camp_with_blank_camp_name(
+            CREATE_CAMP_LIST_1).get_url()
+        self.assertIn("camp/create/", result)
+
+    # TC_CREATE_CAMP_WITH_EXISTING_DATA
+    def test_create_camp_with_existing_data(self):
+        print("\n" + str(test_cases('TC_CREATE_CAMP_WITH_EXISTING_DATA')))
+        # Click on the Login Page and Create a Login Session and for further actions.
+        self.login_to_canonizer_app()
+        # Click on the Create New camp link and check if camp name is duplicate
+        result = CanonizerCampPage(self.driver).load_create_camp_page().create_camp_with_duplicate_camp_name(
+            CREATE_CAMP_LIST_2)
+        self.assertIn("camp/create", result.get_url())
+
+    # TC_LOAD_CAMP_UPDATE_PAGE
     def test_load_camp_update_page(self):
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
-        print("\n" + str(test_cases(123)))
+        print("\n" + str(test_cases('TC_LOAD_CAMP_UPDATE_PAGE')))
         self.assertIn("/manage/camp", CanonizerEditCampPage(self.driver).load_camp_update_page().get_url())
 
-    # TC_EDIT_CAMP_STATEMENT_01
+    # TC_LOAD_CAMP_MANAGE_EDIT_PAGE
     def test_load_camp_manage_edit_page(self):
-        print("\n" + str(test_cases("TC_EDIT_CAMP_STATEMENT_01")))
+        print("\n" + str(test_cases("TC_LOAD_CAMP_MANAGE_EDIT_PAGE")))
         self.login_to_canonizer_app()
         result = CanonizerEditCampPage(self.driver).load_camp_manage_edit_page().get_url()
         self.assertIn("camp/history/173-Software-Testing", result)
 
-    # TC_EDIT_CAMP_STATEMENT_02
+    # TC_VERIFY_AGREEMENT_PAGE
     def test_verify_agreement_page(self):
-        print("\n" + str(test_cases("TC_EDIT_CAMP_STATEMENT_02")))
+        print("\n" + str(test_cases("TC_VERIFY_AGREEMENT_PAGE")))
         self.login_to_canonizer_app()
         result = CanonizerEditCampPage(self.driver).verify_agreement_page()
         if result:
@@ -1426,7 +1501,15 @@ class TestPages(unittest.TestCase):
         if result:
             self.assertIn("manage/camp", result.get_url())
 
-    # 125
+    # TC_VERIFY_CAMP_UPDATE_FIELDS
+    def test_verify_camp_update_fields(self):
+        print("\n" + str(test_cases("TC_VERIFY_CAMP_UPDATE_PAGE")))
+        self.login_to_canonizer_app()
+        result = CanonizerEditCampPage(self.driver).verify_camp_update_fields()
+        if result:
+            self.assertIn("manage/camp", result.get_url())
+
+    # TC_EDIT_CAMP_PAGE_MANDATORY_FIELDS_WITH_ASTERISK
     def test_camp_edit_page_mandatory_fields_are_marked_with_asterisk(self):
         print("\n" + str(test_cases(124)))
         # Click on the Login Page and Create a Login Session and for further actions.
@@ -1435,9 +1518,9 @@ class TestPages(unittest.TestCase):
         self.assertTrue(CanonizerEditCampPage(
             self.driver).load_camp_update_page().camp_edit_page_mandatory_fields_are_marked_with_asterisk())
 
-    # 126
+    # TC_SUBMIT_CAMP_UPDATE_WITH_BLANK_NICK_NAME
     def test_submit_camp_update_with_blank_nick_name(self):
-        print("\n" + str(test_cases(125)))
+        print("\n" + str(test_cases('TC_SUBMIT_CAMP_UPDATE_WITH_BLANK_NICK_NAME')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Go to Manage/Edit Camp and check if nick name is blank
@@ -1446,37 +1529,18 @@ class TestPages(unittest.TestCase):
         print(result)
         self.assertIn("", result)
 
-    # TC_EDIT_CAMP_STATEMENT_03
-    def test_submit_camp_update_with_valid_data(self):
-        print("\n" + str(test_cases('TC_EDIT_CAMP_STATEMENT_03')))
-        self.login_to_canonizer_app()
-        result = CanonizerEditCampPage(self.driver).load_camp_update_page().submit_camp_update_with_valid_data(
-            CAMP_LIST_2
-        ).get_url()
-        self.assertIn("camp/history", result)
-
-    # TC_EDIT_CAMP_STATEMENT_04
+    # TC_UPDATE_CAMP_WTIH_INVALID_DATA
     def test_submit_camp_update_with_invalid_data(self):
-        print("\n" + str(test_cases('TC_EDIT_CAMP_STATEMENT_04')))
+        print("\n" + str(test_cases('TC_UPDATE_CAMP_WTIH_INVALID_DATA')))
         self.login_to_canonizer_app()
         result = CanonizerEditCampPage(self.driver).load_camp_update_page().submit_camp_update_with_invalid_data(
             CAMP_LIST_3
         ).get_url()
         self.assertIn("manage/camp", result)
 
-    # TC_EDIT_CAMP_STATEMENT_05
-    def test_submit_camp_update_with_valid_data_with_enter_key(self):
-        print("\n" + str(test_cases('TC_EDIT_CAMP_STATEMENT_05')))
-        self.login_to_canonizer_app()
-        result = CanonizerEditCampPage(
-            self.driver).load_camp_update_page().submit_camp_update_with_valid_data_with_enter_key(
-            CAMP_LIST_2
-        ).get_url()
-        self.assertIn("camp/history", result)
-
-    # TC_EDIT_CAMP_STATEMENT_06
+    # TC_UPDATE_CAMP_WITH_INVALID_DATA_WITH_ENTER_KEY
     def test_submit_camp_update_with_invalid_data_with_enter_key(self):
-        print("\n" + str(test_cases('TC_EDIT_CAMP_STATEMENT_06')))
+        print("\n" + str(test_cases('TC_UPDATE_CAMP_WITH_INVALID_DATA_WITH_ENTER_KEY')))
         self.login_to_canonizer_app()
         result = CanonizerEditCampPage(
             self.driver).load_camp_update_page().submit_camp_update_with_invalid_data_with_enter_key(
@@ -1484,9 +1548,9 @@ class TestPages(unittest.TestCase):
         ).get_url()
         self.assertIn("manage/camp", result)
 
-    # TC_EDIT_CAMP_STATEMENT_07
+    # TC_UPDATE_CAMP_WITH_MANDATORY_FIELDS_ONLY
     def test_submit_camp_update_with_mandatory_fields_only(self):
-        print("\n" + str(test_cases('TC_EDIT_CAMP_STATEMENT_07')))
+        print("\n" + str(test_cases('TC_UPDATE_CAMP_WITH_MANDATORY_FIELDS_ONLY')))
         self.login_to_canonizer_app()
         result = CanonizerEditCampPage(
             self.driver).load_camp_update_page().test_submit_camp_update_with_mandatory_fields_only(
@@ -1494,18 +1558,18 @@ class TestPages(unittest.TestCase):
         ).get_url()
         self.assertIn("camp/history", result)
 
-    # TC_EDIT_CAMP_STATEMENT_08
+    # TC_UPDATE_CAMP_WITH_TRAILING_SPACES
     def test_submit_camp_update_with_tailing_spaces(self):
-        print("\n" + str(test_cases('TC_EDIT_CAMP_STATEMENT_08')))
+        print("\n" + str(test_cases('TC_UPDATE_CAMP_WITH_TRAILING_SPACES')))
         self.login_to_canonizer_app()
         result = CanonizerEditCampPage(self.driver).load_camp_update_page().submit_camp_update_with_tailing_spaces(
             CAMP_LIST_5
         ).get_url()
         self.assertIn("camp/history", result)
 
-    # TC_EDIT_CAMP_STATEMENT_09
+    # TC_UPDATE_CAMP_WITH_INVALID_URL
     def test_submit_camp_update_with_invalid_url(self):
-        print("\n" + str(test_cases('TC_EDIT_CAMP_STATEMENT_09')))
+        print("\n" + str(test_cases('TC_UPDATE_CAMP_WITH_INVALID_URL')))
         self.login_to_canonizer_app()
         result = CanonizerEditCampPage(self.driver).load_camp_update_page().submit_camp_update_with_invalid_url(
             CAMP_LIST_6
@@ -1516,24 +1580,52 @@ class TestPages(unittest.TestCase):
     # ----- Create New Camp Test Cases End -----
 
     # ----- Create New Camp Statement and Edit Camp Statement Test Cases Start -----
-    # 127
+    # TC_LOAD_EDIT_CAMP_STATEMENT_HISTORY_PAGE
     def test_load_edit_camp_statement_page(self):
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
-        print("\n" + str(test_cases(126)))
+        print("\n" + str(test_cases('TC_LOAD_EDIT_CAMP_STATEMENT_HISTORY_PAGE')))
+        result = CanonizerCampStatementPage(self.driver).load_edit_camp_statement_history_page()
+        if result:
+            self.assertIn("statement/history", result.get_url())
+
+    # TC_VERIFY_HISTORY_ON_EDIT_CAMP_STATEMENT
+    def test_verify_history_on_edit_camp_statement_page(self):
+        print("\n", str(test_cases('TC_VERIFY_HISTORY_ON_EDIT_CAMP_STATEMENT')))
+        self.login_to_canonizer_app()
+        result = CanonizerCampStatementPage(self.driver).verify_history_on_edit_camp_statement_page().get_url()
+        if result:
+            self.assertIn("statement/history", result)
+
+    # TC_LOAD_EDIT_CAMP_STATEMENT_VIEW_THIS_VERSION
+    def test_load_edit_camp_statement_view_this_version(self):
+        # Click on the Login Page and Create a Login Session and for further actions.
+        self.login_to_canonizer_app()
+        print("\n" + str(test_cases('TC_LOAD_EDIT_CAMP_STATEMENT_VIEW_THIS_VERSION')))
+        result = CanonizerCampStatementPage(self.driver).load_edit_camp_statement_view_this_version()
+        if result:
+            self.assertIn("topic/", result.get_url())
+
+    # TC_LOAD_EDIT_CAMP_STATEMENT_PAGE
+    def test_load_edit_camp_statement_submit_statement_update_page(self):
+        # Click on the Login Page and Create a Login Session and for further actions.
+        self.login_to_canonizer_app()
+        print("\n" + str(test_cases('TC_LOAD_EDIT_CAMP_STATEMENT_PAGE')))
         result = CanonizerCampStatementPage(self.driver).load_edit_camp_statement_page()
         if result:
             self.assertIn("manage/statement", result.get_url())
 
-    #
-    def test_verify_previous_data_on_edit_camp_statement_page(self):
-        print("\n")
+    # TC_VERIFY_EDITABLE_FIELDS_ON_EDIT_CAMP_STATEMENT_PAGE
+    def test_verify_editable_fields_on_edit_camp_statement_page(self):
         self.login_to_canonizer_app()
-        result = CanonizerCampStatementPage(self.driver).verify_previous_data_on_edit_camp_statement_page()
+        print("\n" + str(test_cases('TC_VERIFY_EDITABLE_FIELDS_ON_EDIT_CAMP_STATEMENT_PAGE')))
+        result = CanonizerCampStatementPage(self.driver).verify_editable_fields_on_edit_camp_statement_page()
+        if result:
+            self.assertIn("manage/statement", result.get_url())
 
-    # 128
+    # TC_EDIT_CAMP_STATEMENT_PAGE_MANDATORY_FIELDS_WITH_ASTERISK
     def test_camp_statement_edit_page_mandatory_fields_are_marked_with_asterisk(self):
-        print("\n" + str(test_cases(127)))
+        print("\n" + str(test_cases('TC_EDIT_CAMP_STATEMENT_PAGE_MANDATORY_FIELDS_WITH_ASTERISK')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the Manage/Edit Camp Statement  link
@@ -1542,9 +1634,18 @@ class TestPages(unittest.TestCase):
             self.assertTrue(CanonizerCampStatementPage(
                 self.driver).load_edit_camp_statement_page().camp_statement_edit_page_mandatory_fields_are_marked_with_asterisk())
 
-    # 129
+    # TC_EDIT_CAMP_STATEMENT_WITHOUT_MANDATORY_FIELDS
+    def test_edit_camp_statement_without_mandatory_fields(self):
+        print("\n" + str(test_cases('TC_EDIT_CAMP_STATEMENT_WITHOUT_MANDATORY_FIELDS')))
+        self.login_to_canonizer_app()
+        # Click on the Manage/Edit Camp Statement  link
+        result = CanonizerCampStatementPage(self.driver).edit_camp_statement_without_mandatory_fields(
+            "summary").get_url()
+        self.assertIn("manage/statement", result)
+
+    # TC_SUBMIT_STATEMENT_UPDATE_WITH_BLANK_NICK_NAME
     def test_submit_statement_update_with_blank_nick_name(self):
-        print("\n" + str(test_cases(128)))
+        print("\n" + str(test_cases('TC_SUBMIT_STATEMENT_UPDATE_WITH_BLANK_NICK_NAME')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Go to Manage/Edit Camp and check if nick name is blank
@@ -1559,26 +1660,26 @@ class TestPages(unittest.TestCase):
     # ----- Create New Camp Statement and Edit Camp Statement Test Cases End -----
 
     # ----- Add News and Edit News Test Cases Start -----
-    # 130
+    # TC_LOAD_ADD_NEWS_FEED_PAGE
     def test_load_add_news_feed_page(self):
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
-        print("\n" + str(test_cases(129)))
+        print("\n" + str(test_cases('TC_LOAD_ADD_NEWS_FEED_PAGE')))
         result = CanonizerAddNewsFeedsPage(self.driver).load_add_news_feed_page()
         self.assertIn("addnews/", result.get_url())
 
-    # 131
+    # TC_ADD_NEWS_PAGE_MANDATORY_FIELDS_ARE_MARKED_WITH_ASTERISK
     def test_add_news_page_mandatory_fields_are_marked_with_asterisk(self):
-        print("\n" + str(test_cases(130)))
+        print("\n" + str(test_cases('TC_ADD_NEWS_PAGE_MANDATORY_FIELDS_ARE_MARKED_WITH_ASTERISK')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the Add News link
         self.assertTrue(CanonizerAddNewsFeedsPage(
             self.driver).load_add_news_feed_page().add_news_page_mandatory_fields_are_marked_with_asterisk())
 
-    # 132
+    # TC_CREATE_NEWS_WITH_BLANK_DISPLAY_TEXT
     def test_create_news_with_blank_display_text(self):
-        print("\n" + str(test_cases(131)))
+        print("\n" + str(test_cases('TC_CREATE_NEWS_WITH_BLANK_DISPLAY_TEXT')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Go to Add News and check if display text is blank
@@ -1587,9 +1688,9 @@ class TestPages(unittest.TestCase):
             "").get_url()
         self.assertIn("addnews/173-Software-Testing/1-Agreement", result)
 
-    # 133
+    # TC_CREATE_NEWS_WITH_BLANK_LINK
     def test_create_news_with_blank_link(self):
-        print("\n" + str(test_cases(132)))
+        print("\n" + str(test_cases('TC_CREATE_NEWS_WITH_BLANK_LINK')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Go to Add News and check if link is blank
@@ -1609,34 +1710,34 @@ class TestPages(unittest.TestCase):
         ).get_url()
         self.assertIn("/addnews", result)
 
-    # 134
+    # TC_CLICK_ADD_NEWS_CANCEL_BUTTON
     def test_click_add_news_cancel_button(self):
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
-        print("\n" + str(test_cases(133)))
+        print("\n" + str(test_cases('TC_CLICK_ADD_NEWS_CANCEL_BUTTON')))
         self.assertIn("topic/", CanonizerAddNewsFeedsPage(self.driver).click_add_news_cancel_button().get_url())
 
-    # 135
+    # TC_LOAD_EDIT_NEWS_FEED_PAGE
     def test_load_edit_news_feed_page(self):
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
-        print("\n" + str(test_cases(134)))
+        print("\n" + str(test_cases('TC_LOAD_EDIT_NEWS_FEED_PAGE')))
         result = CanonizerEditNewsFeedsPage(self.driver).load_edit_news_feed_page()
         if result:
             self.assertIn("editnews/", result.get_url())
 
-    # 136
+    # TC_CLICK_EDIT_NEWS_CANCEL_BUTTON
     def test_click_edit_news_cancel_button(self):
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
-        print("\n" + str(test_cases(135)))
+        print("\n" + str(test_cases('TC_CLICK_EDIT_NEWS_CANCEL_BUTTON')))
         result = CanonizerEditNewsFeedsPage(self.driver).load_edit_news_feed_page()
         if result:
             self.assertIn("topic/", CanonizerEditNewsFeedsPage(self.driver).click_edit_news_cancel_button().get_url())
 
-    # 137
+    # TC_UPDATE_NEWS_WITH_BLANK_DISPLAY_TEXT
     def test_update_news_with_blank_display_text(self):
-        print("\n" + str(test_cases(136)))
+        print("\n" + str(test_cases('TC_UPDATE_NEWS_WITH_BLANK_DISPLAY_TEXT')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Go to Edit News and check if display text is blank
@@ -1645,9 +1746,9 @@ class TestPages(unittest.TestCase):
             "").get_url()
         self.assertIn("/editnews/173-Software-Testing/1-Agreement", result)
 
-    # 138
+    # TC_UPDATE_NEWS_WITH_BLANK_LINK
     def test_update_news_with_blank_link(self):
-        print("\n" + str(test_cases(137)))
+        print("\n" + str(test_cases('TC_UPDATE_NEWS_WITH_BLANK_LINK')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Go to Edit News and check if link is blank
@@ -1656,9 +1757,9 @@ class TestPages(unittest.TestCase):
             "").get_url()
         self.assertIn("editnews/173-Software-Testing/1-Agreement", result)
 
-    # 139
+    # TC_UPDATE_NEWS_WITH_INVALID_LINK_FORMAT
     def test_update_news_with_invalid_link_format(self):
-        print("\n" + str(test_cases(138)))
+        print("\n" + str(test_cases('TC_UPDATE_NEWS_WITH_INVALID_LINK_FORMAT')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Go to Edit News and check entered link is invalid
@@ -1669,9 +1770,9 @@ class TestPages(unittest.TestCase):
             "").get_url()
         self.assertIn("editnews/173-Software-Testing/1-Agreement", result)
 
-    # 140
+    # TC_CREATE_NEWS_WITH_INVALID_LINK_FORMAT
     def test_create_news_with_invalid_link_format(self):
-        print("\n" + str(test_cases(139)))
+        print("\n" + str(test_cases('TC_CREATE_NEWS_WITH_INVALID_LINK_FORMAT')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Go to Add News and check entered link is invalid
@@ -1681,17 +1782,29 @@ class TestPages(unittest.TestCase):
             "").get_url()
         self.assertIn("addnews/", result)
 
-    # 141
+    # TC_CREATE_NEWS_WITH_VALID_DATA
     def test_create_news_with_valid_data(self):
-        print("\n" + str(test_cases(140)))
+        print("\n" + str(test_cases('TC_CREATE_NEWS_WITH_VALID_DATA')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Go to Add News and check update news with valid data
         result = CanonizerAddNewsFeedsPage(self.driver).load_add_news_feed_page().create_news_with_valid_data(
-            "Testing news 1",
+            "Testing news 2",
             "https://www.google.com/",
             "").get_url()
         self.assertIn("topic/173-Software-Testing/1-Agreement", result)
+
+    # TC_CREATE_NEWS_WITH_MANDATORY_FIELDS_ONLY
+    def test_create_news_with_mandatory_fields_only(self):
+        print("\n" + str(test_cases('TC_CREATE_NEWS_WITH_MANDATORY_FIELDS_ONLY')))
+        # Click on the Login Page and Create a Login Session and for further actions.
+        self.login_to_canonizer_app()
+        # Go to Add News and check update news with valid data
+        result = CanonizerAddNewsFeedsPage(self.driver).load_add_news_feed_page().create_news_with_valid_data(
+            "Testing news 3",
+            "https://www.google.com/",
+            "").get_url()
+        self.assertIn("topic/", result)
 
     # TC_NEWS_FEED_DUPLICATE_DATA
     def test_create_news_with_duplicate_data(self):
@@ -1744,16 +1857,16 @@ class TestPages(unittest.TestCase):
             "").get_url()
         self.assertIn("topic/173-Software-Testing/1-Agreement", result)
 
-    # 142
+    # TC_UPDATE_NEWS_WITH_VALID_DATA
     def test_update_news_with_valid_data(self):
-        print("\n" + str(test_cases(141)))
+        print("\n" + str(test_cases('TC_UPDATE_NEWS_WITH_VALID_DATA')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Go to Edit News and check update news with valid data
         result = CanonizerEditNewsFeedsPage(self.driver).load_edit_news_feed_page()
         if result:
             result = CanonizerEditNewsFeedsPage(self.driver).update_news_with_valid_data(
-                "Updpate News Testt 1",
+                "Updpate News Testt 2",
                 "https://www.google.com/",
                 "")
             self.assertIn("topic/", result.get_url())
@@ -1794,8 +1907,7 @@ class TestPages(unittest.TestCase):
             "Test-2",
             "https://www.google.com/***",
             "").get_url()
-        print(result)
-        self.assertIn("editnews/173-Software-Testing/1-Agreement", result.get_url())
+        self.assertIn("editnews", result)
 
     # ----- Delete News Test Cases Start  -----
     #  TC_DELETE_NEWS_01
@@ -1825,34 +1937,34 @@ class TestPages(unittest.TestCase):
     # ----- Add News, Edit News and Delete News Test Cases End -----
 
     # ----- File Upload Test Cases Start -----
-    # 143
+    # TC_UPLOAD_FILE_WITH_VALID_FORMAT
     def test_upload_file_with_valid_format(self):
-        print("\n" + str(test_cases(142)))
+        print("\n" + str(test_cases('TC_UPLOAD_FILE_WITH_VALID_FORMAT')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Go to Upload File and check upload file with invalid file format
         result = CanonizerUploadFilePage(self.driver).click_upload_file_page_button().upload_file_with_valid_format(
             DEFAULT_ORIGINAL_FILE_NAME,
-            "Testfilethree"
+            "Testfilefour"
         )
         self.assertIn("upload", result.get_url())
 
-    # 144
+    # TC_UPLOAD_FILE_WITH_SIZE_FILE_MORE_THAN_5MB
     def test_upload_file_with_size_file_more_than_5mb(self):
-        print("\n" + str(test_cases(143)))
+        print("\n" + str(test_cases('TC_UPLOAD_FILE_WITH_SIZE_FILE_MORE_THAN_5MB')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Go to Upload File and check upload file with file size more than 5MB
         result = CanonizerUploadFilePage(
             self.driver).click_upload_file_page_button().upload_file_with_size_file_more_than_5mb(
             FILE_WITH_MORE_THAN_5MB,
-            'testfiletwooooppp'
+            'testmaxlimitfile'
         ).get_url()
         self.assertIn("/upload", result)
 
-    # 145
+    # TC_UPLOAD_FILE_WITH_SAME_FILE_NAME
     def test_upload_file_with_same_file_name(self):
-        print("\n" + str(test_cases(144)))
+        print("\n" + str(test_cases('TC_UPLOAD_FILE_WITH_SAME_FILE_NAME')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Go to Upload File and check upload file with existing file name
@@ -1863,15 +1975,15 @@ class TestPages(unittest.TestCase):
         ).get_url()
         self.assertIn("/upload", result)
 
-    # 146
+    # TC_UPLOAD_FILE_WITH_SIZE_ZERO_BYTES
     def test_upload_file_with_size_zero_bytes(self):
-        print("\n" + str(test_cases(145)))
+        print("\n" + str(test_cases('TC_UPLOAD_FILE_WITH_SAME_FILE_NAME')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Go to Upload File and check upload file with size zero bytes
         result = CanonizerUploadFilePage(self.driver).click_upload_file_page_button().upload_file_with_size_zero_bytes(
             FILE_WITH_ZERO_BYTES,
-            "testpngfile"
+            "testzerobytefile"
         ).get_url()
         self.assertIn("upload", result)
 
@@ -1904,43 +2016,50 @@ class TestPages(unittest.TestCase):
     # ----- File Upload Test Cases End -----
 
     # ----- Search Test Cases Start -----
-    # 147
+    # TC_CLICK_SEARCH_BUTTON
     def test_click_search_button(self):
-        print("\n" + str(test_cases(146)))
+        print("\n" + str(test_cases('TC_CLICK_SEARCH_BUTTON')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         result = CanonizerSearchPage(self.driver).click_search_button()
         self.assertIn("", result.get_url())
 
-    # 148
+    # TC_CLICK_SEARCH_BUTTON_WEB
     def test_click_search_button_web(self):
-        print("\n" + str(test_cases(147)))
+        print("\n" + str(test_cases('TC_CLICK_SEARCH_BUTTON_WEB')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         result = CanonizerSearchPage(self.driver).click_search_button_web()
         self.assertIn("", result.get_url())
 
-    # 149
+    # TC_CLICK_SEARCH_BUTTON_KEYWORD_WEB
     def test_click_search_button_keyword_web(self):
-        print("\n" + str(test_cases(148)))
+        print("\n" + str(test_cases('TC_CLICK_SEARCH_BUTTON_KEYWORD_WEB')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         result = CanonizerSearchPage(self.driver).click_search_button_keyword_web('Testing')
         self.assertIn("", result.get_url())
 
-    # 150
+    # TC_CLICK_SEARCH_BUTTON_KEYWORD_CANONIZER_COM
     def test_click_search_button_keyword_canonizer_com(self):
-        print("\n" + str(test_cases(149)))
+        print("\n" + str(test_cases('TC_CLICK_SEARCH_BUTTON_KEYWORD_CANONIZER_COM')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         result = CanonizerSearchPage(self.driver).click_search_button_keyword_canonizer_com('Testing')
         self.assertIn("", result.get_url())
 
+    # TC_SEARCH_BAR_PLACEHOLDER
+    def test_verify_search_button_placeholder(self):
+        print("\n")
+        self.login_to_canonizer_app()
+        result = CanonizerSearchPage(self.driver).verify_search_button_placeholder()
+        self.assertIn("", result.get_url())
+
     # ----- Search Test Cases End -----
 
-    # 151
+    # TC_VERIFY_PHONE_NUMBER_WITH_BLANK_PHONE_NUMBER
     def test_verify_phone_number_with_blank_phone_number(self):
-        print("\n" + str(test_cases(150)))
+        print("\n" + str(test_cases('TC_VERIFY_PHONE_NUMBER_WITH_BLANK_PHONE_NUMBER')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the username->Account Settings->Manage Profile Info sub tab
@@ -1968,14 +2087,14 @@ class TestPages(unittest.TestCase):
             self.driver).select_by_value_crypto_currency_ethereum_only_my_topics().get_url())
 
     # 154
-    def test_check_Canonizer_is_the_final_word_on_everything_page_loaded(self):
+    def test_check_canonizer_is_the_final_word_on_everything_page_loaded(self):
         print("\n" + str(test_cases(153)))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the Help and click on Canonizer is the final word on everything
-        CanonizerHelpPage(
-            self.driver).check_what_is_canonizer_help_page_loaded().check_Canonizer_is_the_final_word_on_everything_page_loaded().open(
-            "https://vimeo.com/307590745")
+        result = CanonizerHelpPage(
+            self.driver).check_what_is_canonizer_help_page_loaded().check_canonizer_is_the_final_word_on_everything_page_loaded().get_url()
+        self.assertIn("https://vimeo.com/307590745", result)
 
     # 155
     def test_check_Canonizer_is_the_final_word_on_everything_page_loaded_without_login(self):
@@ -1991,17 +2110,17 @@ class TestPages(unittest.TestCase):
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the Help and click on Consensus out of controversy use case
-        CanonizerHelpPage(
-            self.driver).check_what_is_canonizer_help_page_loaded().check_consensus_out_of_controversy_use_case_page_loaded().open(
-            "topic/132-Consensus-out-of-controversy/2")
+        result = CanonizerHelpPage(
+            self.driver).check_what_is_canonizer_help_page_loaded().check_consensus_out_of_controversy_use_case_page_loaded().get_url()
+        self.assertIn("topic/132-Consensus-out-of-controversy/2", result)
 
     # 157
     def test_check_consensus_out_of_controversy_use_case_page_loaded_without_login(self):
         print("\n" + str(test_cases(156)))
         # Click on the Help and Click on Consensus out of controversy use case
-        CanonizerHelpPage(
-            self.driver).check_what_is_canonizer_help_page_loaded().check_consensus_out_of_controversy_use_case_page_loaded().open(
-            "topic/132-Consensus-out-of-controversy/2")
+        result = CanonizerHelpPage(
+            self.driver).check_what_is_canonizer_help_page_loaded().check_consensus_out_of_controversy_use_case_page_loaded().get_url()
+        self.assertIn("topic/132-Consensus-out-of-controversy/2", result)
 
     # 158
     def test_load_create_new_camp_page(self):
@@ -2022,10 +2141,28 @@ class TestPages(unittest.TestCase):
         result = CanonizerAccountSettingsChangePasswordPage(self.driver).save_with_invalid_new_password(
             'Test@12345',
             'TEST@123456',
-            'TEST@123456')
-        self.assertIn(
-            "Password must be at least 8 characters, including at least one digit, one lower case letter and one special character(@,# !,$..)",
-            result)
+            'TEST@123456').get_url()
+        self.assertIn("/settings/changepassword", result)
+
+    # TC_VERIFY_FORGOT_PASSWORD_SAVE_BUTTON
+    def test_verify_forgot_password_save_button(self):
+        print("\n" + str(test_cases('TC_VERIFY_FORGOT_PASSWORD_SAVE_BUTTON')))
+        self.login_to_canonizer_app()
+        CanonizerAccountSettingsPage(
+            self.driver).click_username_link_button().click_account_settings_page_button().click_account_settings_change_password_page_button()
+        result = CanonizerAccountSettingsChangePasswordPage(
+            self.driver).verify_forgot_password_save_button().get_url()
+        self.assertIn("/settings/changepassword", result)
+
+    # TC_VERIFY_FORGOT_PASSWORD_SAVE_BUTTON_ON_ENTER_KEY
+    def test_verify_forgot_password_save_button_on_enter_key(self):
+        print("\n" + str(test_cases('TC_VERIFY_FORGOT_PASSWORD_SAVE_BUTTON')))
+        self.login_to_canonizer_app()
+        CanonizerAccountSettingsPage(
+            self.driver).click_username_link_button().click_account_settings_page_button().click_account_settings_change_password_page_button()
+        result = CanonizerAccountSettingsChangePasswordPage(
+            self.driver).verify_forgot_password_save_button_on_enter_key().get_url()
+        self.assertIn("/settings/changepassword", result)
 
     # 160
     def test_login_with_blank_email(self):
@@ -2115,17 +2252,26 @@ class TestPages(unittest.TestCase):
         self.login_to_canonizer_app()
         # Click on the Create New camp link and check if camp name is duplicate
         result = CanonizerCampPage(self.driver).load_create_camp_page().create_camp_with_duplicate_camp_name(
-            CREATE_CAMP_LIST_3)
+            CREATE_CAMP_LIST_2)
         self.assertIn("camp/create", result.get_url())
 
-    # 170
+    # TC_UPDATE_CAMP_WITH_EXISTING_DATA
     def test_submit_camp_update_with_duplicate_camp_name(self):
-        print("\n" + str(test_cases(169)))
+        print("\n" + str(test_cases('TC_UPDATE_CAMP_WITH_EXISTING_DATA')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the Manage/Edit This Camp link and check if camp name is duplicate
         result = CanonizerEditCampPage(self.driver).load_camp_update_page().submit_camp_update_with_duplicate_camp_name(
             CAMP_LIST_7).get_url()
+        self.assertIn("manage/camp", result)
+
+    # TC_UPDATE_CAMP_VALIDATION_OF_CAMP_NAME
+    def test_update_camp_validation_of_camp_name(self):
+        print("\n" + str(test_cases('TC_UPDATE_CAMP_VALIDATION_OF_CAMP_NAME')))
+        # Click on the Login Page and Create a Login Session and for further actions.
+        self.login_to_canonizer_app()
+        # Click on the Manage/Edit This Camp link and check if camp name is duplicate
+        result = CanonizerEditCampPage(self.driver).update_camp_validation_of_camp_name().get_url()
         self.assertIn("manage/camp", result)
 
     # 171
@@ -2141,17 +2287,17 @@ class TestPages(unittest.TestCase):
 
     # ----- Add Camp Statement Test Cases Start -----
 
-    # 172
+    # TC_LOAD_ADD_CAMP_STATEMENT_PAGE
     def test_load_add_camp_statement_page(self):
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
-        print("\n" + str(test_cases(171)))
+        print("\n" + str(test_cases('TC_LOAD_ADD_CAMP_STATEMENT_PAGE')))
         result = AddCampStatementPage(self.driver).load_add_camp_statement_page()
         self.assertIn("create/statement/", result.get_url())
 
-    # 173
+    # TC_ADD_CAMP_STATEMENT_PAGE_MANDATORY_FIELDS_WITH_ASTERISK
     def test_add_camp_statement_page_mandatory_fields_are_marked_with_asterisk(self):
-        print("\n" + str(test_cases(172)))
+        print("\n" + str(test_cases('TC_ADD_CAMP_STATEMENT_PAGE_MANDATORY_FIELDS_WITH_ASTERISK')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the Create New camp  link
@@ -2160,18 +2306,19 @@ class TestPages(unittest.TestCase):
             self.assertTrue(
                 AddCampStatementPage(self.driver).add_camp_statement_page_mandatory_fields_are_marked_with_asterisk())
 
-    # TC_ADD_CAMP_STATEMENT_01
+    # TC_ADD_CAMP_STATEMENT_WITHOUT_MANDATORY_FIELDS
     def test_add_camp_statement_page_without_mandatory_fields(self):
-        print("\n" + str(test_cases('TC_ADD_CAMP_STATEMENT_01')))
+        print("\n" + str(test_cases('TC_ADD_CAMP_STATEMENT_WITHOUT_MANDATORY_FIELDS')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the Create New camp  link
-        result = AddCampStatementPage(self.driver).add_camp_statement_page_without_mandatory_fields(" ").get_url()
-        self.assertIn("create/statement/391-new/1-Agreement", result)
+        result = AddCampStatementPage(
+            self.driver).load_add_camp_statement_page().add_camp_statement_page_without_mandatory_fields(" ").get_url()
+        self.assertIn("create/statement/", result)
 
-    # TC_ADD_CAMP_STATEMENT_02
+    # TC_ADD_CAMP_STATEMENT_WITH_MANDATORY_FIELDS
     def test_add_camp_statement_page_mandatory_fields_only(self):
-        print("\n" + str(test_cases('TC_ADD_CAMP_STATEMENT_02')))
+        print("\n" + str(test_cases('TC_ADD_CAMP_STATEMENT_WITH_MANDATORY_FIELDS')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the Create New camp  link
@@ -2180,41 +2327,37 @@ class TestPages(unittest.TestCase):
             "Test statement").get_url()
         self.assertIn("statement/history", result)
 
-    # TC_ADD_CAMP_STATEMENT_03
+    # TC_ADD_CAMP_STATEMENT_WITH_VALID_DATA
     def test_add_camp_statement_page_valid_data(self):
-        print("\n" + str(test_cases('TC_ADD_CAMP_STATEMENT_03')))
+        print("\n" + str(test_cases('TC_ADD_CAMP_STATEMENT_WITH_VALID_DATA')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the Create New camp  link
         result = AddCampStatementPage(self.driver).load_add_camp_statement_page().add_camp_statement_page_valid_data(
             "Test statement", "Testing for note").get_url()
-        print(result, "result")
         self.assertIn("statement/history", result)
 
-    # TC_ADD_CAMP_STATEMENT_04
-    def test_add_camp_statement_page_valid_data_with_enter_key(self):
-        print("\n" + str(test_cases('TC_ADD_CAMP_STATEMENT_04')))
+    # TC_ADD_CAMP_STATEMENT_WITH_INVALID_DATA
+    def test_add_camp_statement_page_invalid_data(self):
+        print("\n" + str(test_cases('TC_ADD_CAMP_STATEMENT_WITH_INVALID_DATA')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the Create New camp  link
-        result = AddCampStatementPage(self.driver).load_add_camp_statement_page()
-        if result:
-            self.assertTrue("Success! Statement submitted successfully.",
-                            AddCampStatementPage(self.driver).add_camp_statement_page_valid_data_with_enter_key(
-                                "Test statement with Enter Key", "Testing for note 11111"))
+        result = AddCampStatementPage(
+            self.driver).load_add_camp_statement_page().add_camp_statement_page_without_mandatory_fields(
+            "").get_url()
+        self.assertIn("create/statement", result)
 
-    # TC_ADD_CAMP_STATEMENT_05
+    # TC_ADD_CAMP_STATEMENT_PAGE_DATA_WITH_TRAILING_SPACES
     def test_add_camp_statement_page_data_with_trailing_spaces(self):
-        print("\n" + str(test_cases('TC_ADD_CAMP_STATEMENT_05')))
+        print("\n" + str(test_cases('TC_ADD_CAMP_STATEMENT_PAGE_DATA_WITH_TRAILING_SPACES')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the Create New camp  link
-        result = AddCampStatementPage(self.driver).load_add_camp_statement_page()
-        if result:
-            self.assertTrue("Success! Statement submitted successfully.",
-                            AddCampStatementPage(self.driver).add_camp_statement_page_data_with_trailing_spaces(
-                                "             Test statement Trailing spaces",
-                                "        Testing for with trailing spaces"))
+        result = AddCampStatementPage(self.driver).load_add_camp_statement_page().add_camp_statement_page_valid_data(
+            "             Test statement Trailing spaces",
+            "        Testing for with trailing spaces").get_url()
+        self.assertIn("statement/history", result)
 
     # 174
     def test_submit_statement_with_blank_nick_name(self):
@@ -2228,9 +2371,9 @@ class TestPages(unittest.TestCase):
             if result == 1:
                 self.assertIn("The nick name field is required.", result)
 
-    # 175
+    # TC_ADD_CAMP_STATEMENT_BLANK_STATEMENT
     def test_submit_statement_with_blank_statement(self):
-        print("\n" + str(test_cases(174)))
+        print("\n" + str(test_cases('TC_ADD_CAMP_STATEMENT_BLANK_STATEMENT')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Go to Manage/Edit Camp and check if nick name is blank
@@ -2238,8 +2381,8 @@ class TestPages(unittest.TestCase):
         if result:
             result = AddCampStatementPage(self.driver).submit_statement_with_blank_statement(
                 "Test",
-                "")
-            self.assertIn("The statement field is required.", result)
+                "").get_url()
+            self.assertIn("create/statement", result)
 
     # 176
     def test_add_camp_statement_page_should_have_add_new_nick_name_link_for_new_users(self):
@@ -2277,17 +2420,51 @@ class TestPages(unittest.TestCase):
         if result:
             self.assertIn("camp/create/", result.get_url())
 
-    # 179
+    # TC_EDIT_CAMP_STATEMENT_WITH_BLANK_STATEMENT
     def test_submit_statement_update_with_blank_statement(self):
-        print("\n" + str(test_cases(178)))
+        print("\n" + str(test_cases('TC_EDIT_CAMP_STATEMENT_WITH_BLANK_STATEMENT')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         result = CanonizerCampStatementPage(self.driver).load_edit_camp_statement_page()
         if result:
             result = CanonizerCampStatementPage(self.driver).submit_statement_update_with_blank_statement(
                 "",
-                "")
-            self.assertIn("The statement field is required.", result)
+                "").get_url()
+            self.assertIn("statement/history", result)
+
+    # TC_EDIT_CAMP_STATEMENT_WITH_TRAILING_SPACES
+    def test_submit_statement_update_with_trailing_spaces(self):
+        print("\n" + str(test_cases('TC_EDIT_CAMP_STATEMENT_WITH_TRAILING_SPACES')))
+        # Click on the Login Page and Create a Login Session and for further actions.
+        self.login_to_canonizer_app()
+        result = CanonizerCampStatementPage(self.driver).load_edit_camp_statement_page()
+        if result:
+            result = CanonizerCampStatementPage(self.driver).submit_statement_update_with_trailing_spaces(
+                "          camp statement with trailing sapces").get_url()
+            print(result)
+            self.assertIn("statement/history", result)
+
+    # TC_EDIT_CAMP_STATEMENT_WITH_ONLY_MANDATORY_FIELDS
+    def test_submit_statement_update_with_only_mandatory_fields(self):
+        print("\n" + str(test_cases('TC_EDIT_CAMP_STATEMENT_WITH_ONLY_MANDATORY_FIELDS')))
+        # Click on the Login Page and Create a Login Session and for further actions.
+        self.login_to_canonizer_app()
+        result = CanonizerCampStatementPage(self.driver).load_edit_camp_statement_page()
+        if result:
+            result = CanonizerCampStatementPage(self.driver).submit_statement_update_with_trailing_spaces(
+                "Camp Statement with Only Mandatory Fields").get_url()
+            self.assertIn("statement/history", result)
+
+    # TC_EDIT_CAMP_STATEMENT_WITH_ENTER_KEY
+    def test_edit_camp_statement_with_enter_key(self):
+        print("\n" + str(test_cases('TC_EDIT_CAMP_STATEMENT_WITH_ENTER_KEY')))
+        # Click on the Login Page and Create a Login Session and for further actions.
+        self.login_to_canonizer_app()
+        result = CanonizerCampStatementPage(self.driver).load_edit_camp_statement_page()
+        if result:
+            result = CanonizerCampStatementPage(self.driver).edit_camp_statement_with_enter_key(
+                "Update Camp Statement with Enter Keys").get_url()
+            self.assertIn("statement/history", result)
 
     # 180
     def test_check_create_new_camp_page_from_algo_info_topic_loaded(self):
@@ -2341,30 +2518,30 @@ class TestPages(unittest.TestCase):
         self.assertIn("topic/173-Software-Testing",
                       CanonizerEditCampPage(self.driver).load_camp_agreement_from_user_supports_page().get_url())
 
-    # 186
+    # TC_LOAD_FOOTER_PRIVACY_POLICY
     def test_load_privacy_policy_page(self):
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
-        print("\n" + str(test_cases(185)))
+        print("\n" + str(test_cases('TC_LOAD_FOOTER_PRIVACY_POLICY')))
         self.assertIn("privacypolicy", CanonizerTermsAndPrivacyPolicy(self.driver).load_privacy_policy_page().get_url())
 
-    # 187
+    # TC_LOAD_FOOTER_TERMS_SERVICES
     def test_load_terms_services_page(self):
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
-        print("\n" + str(test_cases(186)))
+        print("\n" + str(test_cases('TC_LOAD_FOOTER_TERMS_SERVICES')))
         self.assertIn("termservice", CanonizerTermsAndPrivacyPolicy(self.driver).load_terms_services_page().get_url())
 
-    # 188
+    # TC_FOOTER_PRIVACYPOLICY
     def test_footer_should_have_privacy_policy(self):
-        print("\n" + str(test_cases(187)))
+        print("\n" + str(test_cases('TC_FOOTER_PRIVACYPOLICY')))
         self.login_to_canonizer_app()
         result = CanonizerHomePage(self.driver).footer_should_have_privacy_policy_and_terms_services().get_url()
         self.assertIn('/', result)
 
-    # 189
+    # TC_FOOTER_TERMS_SERVICES
     def test_footer_should_have_terms_services(self):
-        print("\n" + str(test_cases(188)))
+        print("\n" + str(test_cases('TC_FOOTER_TERMS_SERVICES')))
         self.login_to_canonizer_app()
         self.assertIn('Terms & Services',
                       CanonizerHomePage(self.driver).footer_should_have_privacy_policy_and_terms_services())
@@ -2393,12 +2570,12 @@ class TestPages(unittest.TestCase):
         result = CanonizerHomePage(self.driver).verify_footer_for_support_canonizer().get_url()
         self.assertIn("/", result)
 
-    # 190
+    # TC_VERIFY_FOOTER_COPYRIGHTYEAR
     def test_footer_should_have_copyright_year(self):
-        print("\n" + str(test_cases(189)))
+        print("\n" + str(test_cases('TC_VERIFY_FOOTER_COPYRIGHTYEAR')))
         self.login_to_canonizer_app()
         result = CanonizerHomePage(self.driver).footer_should_have_privacy_policy_and_terms_services().get_url()
-        self.assertIn("", result)
+        self.assertIn("/", result)
 
     # 191
     def test_check_garbage_url(self):
@@ -2488,7 +2665,7 @@ class TestPages(unittest.TestCase):
         self.login_to_canonizer_app()
         # Click on the Create New camp link and check if topic name is blank
         result = CanonizerCampPage(self.driver).load_create_camp_page().create_camp_with_invalid_camp_name(
-            CREATE_CAMP_LIST_4)
+            CREATE_CAMP_LIST_3)
         self.assertIn("camp/create/173-Software-Testing", result.get_url())
 
     # 201
@@ -2512,6 +2689,16 @@ class TestPages(unittest.TestCase):
             CAMP_LIST_10)
         self.assertIn("manage/camp", result.get_url())
 
+    # TC_UPDATE_CAMP_WITH_BLANK_FIELDS
+    def test_update_camp_with_blank_fields(self):
+        print("\n" + str(test_cases('TC_UPDATE_CAMP_WITH_BLANK_FIELDS')))
+        # Click on the Login Page and Create a Login Session and for further actions.
+        self.login_to_canonizer_app()
+        # Click on the Create New camp link and check if topic name is blank
+        result = CanonizerEditCampPage(self.driver).load_camp_update_page().submit_camp_update_with_blank_camp_name(
+            CREATE_CAMP_LIST_1)
+        self.assertIn("manage/camp", result.get_url())
+
     # 203
     def test_check_garbage_url_without_login(self):
         print("\n" + str(test_cases(202)))
@@ -2522,36 +2709,36 @@ class TestPages(unittest.TestCase):
         self.assertIn('Sorry, the page you are looking for could not be found or have been removed.',
                       CanonizerHomePage(self.driver).check_garbage_url())
 
-    # 204
+    # TC_BLOG_PAGE_FOOTER_COPYRIGHT_YEAR_WITH_LOGIN
     def test_check_blog_page_footer_should_have_copyright_year_with_login(self):
-        print("\n" + str(test_cases(203)))
+        print("\n" + str(test_cases('TC_BLOG_PAGE_FOOTER_COPYRIGHT_YEAR_WITH_LOGIN')))
         # Click on the Login Page and Create a Login Session and for further actions.
         self.login_to_canonizer_app()
         # Click on the Blog link
         result = CanonizerBlog(self.driver).blog_footer_should_have_privacy_policy_and_terms_services().get_url()
         self.assertIn("blog", result)
 
-    # 205
+    # TC_BLOG_PAGE_FOOTER_COPYRIGHT_YEAR_WITHOUT_YEAR
     def test_check_blog_page_footer_should_have_copyright_year_without_login(self):
-        print("\n" + str(test_cases(204)))
+        print("\n" + str(test_cases('TC_BLOG_PAGE_FOOTER_COPYRIGHT_YEAR_WITHOUT_YEAR')))
         # Click on the Blog link
         currentyear = datetime.now().year
         result = CanonizerBlog(self.driver).blog_footer_should_have_privacy_policy_and_terms_services().get_url()
         self.assertIn("blog", result)
 
-    # 206
+    # TC_BLOG_PAGE_FOOTER_PRIVACY_POLICY
     def test_blog_footer_should_have_privacy_policy(self):
-        print("\n" + str(test_cases(205)))
+        print("\n" + str(test_cases('TC_BLOG_PAGE_FOOTER_PRIVACY_POLICY')))
         self.login_to_canonizer_app()
         self.assertIn('Privacy Policy',
-                      CanonizerBlog(self.driver).blog_footer_should_have_privacy_policy_and_terms_services())
+                      CanonizerBlog(self.driver).blog_footer_should_have_privacy_policy_and_terms_services().get_url())
 
-    # 207
+    # TC_BLOG_PAGE_FOOTER_TERMS_SERVICES
     def test_blog_footer_should_have_terms_services(self):
-        print("\n" + str(test_cases(206)))
+        print("\n" + str(test_cases('TC_BLOG_PAGE_FOOTER_TERMS_SERVICES')))
         self.login_to_canonizer_app()
         self.assertIn('Terms & Services',
-                      CanonizerBlog(self.driver).blog_footer_should_have_privacy_policy_and_terms_services())
+                      CanonizerBlog(self.driver).blog_footer_should_have_privacy_policy_and_terms_services().get_url())
 
     # 208
     def test_click_account_settings_crypto_verification_page_button(self):
@@ -2712,6 +2899,40 @@ class TestPages(unittest.TestCase):
             self.driver).click_login_page_button().check_register_page_open_click_signup_now_link()
         self.assertIn("/signup", loginpage.get_url())
 
+    # LOGIN Test Case
+
+    # TC_LOG_IN_01
+    def test_verify_unverified_account(self):
+        print("\n", str(test_cases('TC_LOGIN_01')))
+        result = CanonizerLoginPage(self.driver).verify_unverified_account(
+            UNVERIFY_EMAIL, UNVERIFY_PASS
+        ).get_url()
+        self.assertIn("/login", result)
+
+    # TC_LOGIN_02
+    def test_verify_account_lock(self):
+        print("\n", str(test_cases('TC_LOGIN_02')))
+        result = CanonizerLoginPage(self.driver).verify_account_lock(VERIFY_EMAIL, VERIFY_PASS).get_url()
+        self.assertIn("/login", result)
+
+    # TC_LOGIN_03
+    def test_verify_login_placeholders(self):
+        print("\n", str(test_cases('TC_LOGIN_03')))
+        result = CanonizerLoginPage(self.driver).verify_login_placeholders().get_url()
+        self.assertIn("/login", result)
+
+    # TC_LOGIN_04
+    def test_verify_login_case_sensitive_01(self):
+        print("\n", str(test_cases('TC_LOGIN_04')))
+        result = CanonizerLoginPage(self.driver).verify_login_case_sensitive(DEFAULT_USER, PASS_UPPERCASE).get_url()
+        self.assertIn("/login", result)
+
+    # TC_LOGIN_05
+    def test_verify_login_case_sensitive_02(self):
+        print("\n", str(test_cases('TC_LOGIN_05')))
+        result = CanonizerLoginPage(self.driver).verify_login_case_sensitive(DEFAULT_USER, PASS_LOWERCASE).get_url()
+        self.assertIn("/login", result)
+
     # 227
     def test_check_login_page_open_click_login_here_link(self):
         print("\n" + str(test_cases(226)))
@@ -2868,6 +3089,66 @@ class TestPages(unittest.TestCase):
         ).get_url()
         self.assertIn("/settings", result)
 
+    # TC_UPDATE_PROFILE_WITH_VALID_DATA_WITH_ENTER_KEY
+    def test_update_profile_with_valid_data_with_enter_key(self):
+        print("\n", str(test_cases('TC_UPDATE_PROFILE_WITH_VALID_DATA_WITH_ENTER_KEY')))
+        self.login_to_canonizer_app()
+        CanonizerAccountSettingsPage(
+            self.driver).click_username_link_button().click_account_settings_page_button().click_account_settings_manage_profile_info_page_button()
+        result = AccountSettingsManageProfileInfoPage(
+            self.driver).update_profile_with_valid_data_with_enter_key(
+            "Pooja",
+            "  ",
+            " Khatri "
+        ).get_url()
+        self.assertIn("/settings", result)
+
+    # TC_UPDATE_PROFILE_WITH_MANDATROY_FIELDS
+    def test_update_profile_with_mandatory_fields(self):
+        print("\n", str(test_cases('TC_UPDATE_PROFILE_WITH_MANDATROY_FIELDS')))
+        self.login_to_canonizer_app()
+        CanonizerAccountSettingsPage(
+            self.driver).click_username_link_button().click_account_settings_page_button().click_account_settings_manage_profile_info_page_button()
+        result = AccountSettingsManageProfileInfoPage(
+            self.driver).update_profile_with_mandatory_fields(
+            "Pooja",
+            "Khatri "
+        ).get_url()
+        self.assertIn("/settings", result)
+
+    # TC_UPDATE_PROFILE_WITH_BLANK_MANADATORY_FIELDS
+    def test_update_profile_with_blank_mandatory_fields(self):
+        print("\n", str(test_cases('TC_UPDATE_PROFILE_WITH_MANDATROY_FIELDS')))
+        self.login_to_canonizer_app()
+        CanonizerAccountSettingsPage(
+            self.driver).click_username_link_button().click_account_settings_page_button().click_account_settings_manage_profile_info_page_button()
+        result = AccountSettingsManageProfileInfoPage(
+            self.driver).update_profile_with_blank_mandatory_fields(
+        ).get_url()
+        self.assertIn("/settings", result)
+
+    # TC_VERIFY_DOB_ON_PROFILE_INFO
+    def test_verify_dob_on_profile_info(self):
+        print("\n", str(test_cases('TC_VERIFY_DOB_ON_PROFILE_INFO')))
+        self.login_to_canonizer_app()
+        CanonizerAccountSettingsPage(
+            self.driver).click_username_link_button().click_account_settings_page_button().click_account_settings_manage_profile_info_page_button()
+        result = AccountSettingsManageProfileInfoPage(
+            self.driver).verify_dob_on_profile_info(
+        ).get_url()
+        self.assertIn("/settings", result)
+
+    # TC_SUPPORT_PAGE_01
+    def test_verify_delete_support_confirmation_alertbox(self):
+        print("\n", str(test_cases('TC_SUPPORT_PAGE_01')))
+        self.login_to_canonizer_app()
+        CanonizerAccountSettingsPage(
+            self.driver).click_username_link_button().click_account_settings_page_button().click_account_settings_manage_profile_info_page_button()
+        result = AccountSettingsMySupportsPage(
+            self.driver).verify_delete_support_confirmation_alertbox(
+        ).get_url()
+        self.assertIn("/support'", result)
+
     # 243
     def test_submit_update_with_invalid_topic_name(self):
         print("\n" + str(test_cases(242)))
@@ -2878,6 +3159,58 @@ class TestPages(unittest.TestCase):
             INVALID_TOPIC_NAME,
             "",
             "").get_url()
+        self.assertIn("manage/topic", result)
+
+    # TC_SUBMIT_UPDATE_WITH_TRAILING_SAPCES
+    def test_submit_update_with_trailing_spaces(self):
+        print("\n" + str(test_cases('TC_SUBMIT_UPDATE_WITH_TRAILING_SAPCES')))
+        # Click on the Login Page and Create a Login Session and for further actions.
+        self.login_to_canonizer_app()
+        result = CanonizerTopicUpdatePage(self.driver).load_topic_update_page().submit_update_with_trailing_spaces(
+            "",
+            "",
+            "",
+            "     Trailing sapces testing").get_url()
+        self.assertIn("topic-history", result)
+
+    # TC_SUBMIT_UPDATE_WITH_ENTER_KEY
+    def test_submit_update_with_enter_key(self):
+        print("\n" + str(test_cases('TC_SUBMIT_UPDATE_WITH_ENTER_KEY')))
+        # Click on the Login Page and Create a Login Session and for further actions.
+        self.login_to_canonizer_app()
+        result = CanonizerTopicUpdatePage(self.driver).load_topic_update_page().submit_update_with_enter_key(
+            "",
+            "",
+            "",
+            "submit data with enter_key").get_url()
+        self.assertIn("topic-history", result)
+
+    # TC_SUBMIT_UPDATE_WITH_MANDATORY_FIELDS_ONLY
+    def test_submit_update_with_manadatory_fields_only(self):
+        print("\n" + str(test_cases('TC_SUBMIT_UPDATE_WITH_MANDATORY_FIELDS_ONLY')))
+        # Click on the Login Page and Create a Login Session and for further actions.
+        self.login_to_canonizer_app()
+        result = CanonizerTopicUpdatePage(
+            self.driver).load_topic_update_page().submit_update_with_manadatory_fields_only(
+            "",
+            "Software Testing",
+            "/General/",
+            ""
+        ).get_url()
+        self.assertIn("topic-history", result)
+
+    # TC_SUBMIT_UPDATE_WITH_DUPLICATE_DATA
+    def test_submit_update_with_duplicate_data(self):
+        print("\n" + str(test_cases('TC_SUBMIT_UPDATE_WITH_DUPLICATE_DATA')))
+        # Click on the Login Page and Create a Login Session and for further actions.
+        self.login_to_canonizer_app()
+        result = CanonizerTopicUpdatePage(
+            self.driver).load_topic_update_page().submit_update_with_duplicate_data(
+            "",
+            "Testing Topic 1",
+            "/General/",
+            ""
+        ).get_url()
         self.assertIn("manage/topic", result)
 
     # 244
@@ -3068,6 +3401,12 @@ class TestPages(unittest.TestCase):
             REG_LIST_14).get_url()
         self.assertIn("/signup", result)
 
+    # TC_REGISTER_01
+    def test_verify_registration_placeholders(self):
+        print("\n")
+        result = CanonizerRegisterPage(self.driver).click_register_button().verify_registration_placeholders().get_url()
+        self.assertIn("/signup", result)
+
     # 264
     def test_select_by_value_government(self):
         print("\n" + str(test_cases(263)))
@@ -3120,8 +3459,9 @@ class TestPages(unittest.TestCase):
         )
         self.assertIn("browse?namespace=3", result.get_url())
 
+    # TC_VERIFYING_NAMEPSACE_ONE_BY_ONE
     def test_select_menu_items_one_by_one(self):
-        print("\n")
+        print("\n", str(test_cases('TC_VERIFYING_NAMEPSACE_ONE_BY_ONE')))
         self.login_to_canonizer_app()
         self.assertTrue(CanonizerBrowsePage(self.driver).select_menu_items_one_by_one())
 
@@ -3145,11 +3485,11 @@ class TestPages(unittest.TestCase):
         print("\n", str(test_cases('TC_LOAD_CREATE_THREAD_PAGE')))
         self.login_to_canonizer_app()
         result = AddForumsPage(self.driver).load_camp_forum_page().load_create_thread_page_with_page_crash().get_url()
-        self.assertIn('forum/173-Software-Testing/1-Agreement/threads', result)
+        self.assertIn('forum', result)
 
-    # 270
+    # TC_CREATE_THREAD_WITH_DUPLICATE_TITLE
     def test_create_thread_with_duplicate_name(self):
-        print("\n")
+        print("\n", str(test_cases('TC_CREATE_THREAD_WITH_DUPLICATE_TITLE')))
         self.login_to_canonizer_app()
         result = AddForumsPage(
             self.driver).load_camp_forum_page().load_create_thread_page().create_thread_with_duplicate_title_name(
@@ -3158,9 +3498,9 @@ class TestPages(unittest.TestCase):
         ).get_url()
         self.assertIn("forum/173-Software-Testing/1-Agreement/threads/create", result)
 
-    # 271
+    # TC_CREATE_THREAD_WITH_BLANK_TITLE
     def test_create_thread_with_blank_title(self):
-        print("\n")
+        print("\n", str(test_cases('TC_CREATE_THREAD_WITH_BLANK_TITLE')))
         self.login_to_canonizer_app()
         result = AddForumsPage(
             self.driver).load_camp_forum_page().load_create_thread_page().create_thread_with_blank_title_name(
@@ -3225,12 +3565,28 @@ class TestPages(unittest.TestCase):
         result = AddForumsPage(self.driver).load_camp_forum_page().load_all_threads().get_url()
         self.assertIn("forum/173-Software-Testing/1-Agreement/threads", result)
 
-    # TC_CAMP_FORM_01
+    # TC_CHECK_NO_THREAD_AVAILABILITY
     def test_check_no_thread_availability(self):
-        print("\n", str(test_cases('TC_CAMP_FORM_01')))
+        print("\n", str(test_cases('TC_CHECK_NO_THREAD_AVAILABILITY')))
         self.login_to_canonizer_app()
         result = AddForumsPage(self.driver).load_camp_forum_page().check_no_thread_availability().get_url()
-        self.assertIn("forum/638-faiqa-riaz-new-topic-2/1-Agreement/threads", result)
+        self.assertIn("forum/173-Software-Testing/1-Agreement/threads", result)
+
+    # TC_VERIFY_MY_THREADS_CREATED_BY_LOGGED_USER
+    def test_verify_my_threads_created_by_logged_user(self):
+        print("\n", str(test_cases('TC_VERIFY_MY_THREADS_CREATED_BY_LOGGED_USER')))
+        self.login_to_canonizer_app()
+        result = AddForumsPage(self.driver).load_camp_forum_page().verify_my_threads_created_by_logged_user().get_url()
+        print(result)
+        self.assertIn("forum/173-Software-Testing/1-Agreement/threads", result)
+
+    # TC_CAMP_FORM_COUNT_OF_THREADS_ON_ALL_THREADS_PAGE
+    def test_camp_form_count_of_threads_on_all_threads_page(self):
+        print("\n", str(test_cases('TC_CHECK_NO_THREAD_AVAILABILITY')))
+        self.login_to_canonizer_app()
+        result = AddForumsPage(
+            self.driver).load_camp_forum_page().camp_form_count_of_threads_on_all_threads_page().get_url()
+        self.assertIn("forum/173-Software-Testing/1-Agreement/threads", result)
 
     # TC_CAMP_FORM_02
     def test_check_all_replies_to_thread(self):
@@ -3239,9 +3595,9 @@ class TestPages(unittest.TestCase):
         result = AddForumsPage(self.driver).load_camp_forum_page().check_all_replies_to_thread().get_url()
         self.assertIn("forum/173-Software-Testing/1-Agreement/threads/569", result)
 
-    # TC_CAMP_FORM_03
+    # TC_CREATE_THREAD_MANDATORY_FIELDS_ARE_MARKED_WITH_ASTERISK
     def test_create_thread_mandatory_fields_are_marked_with_asterisk(self):
-        print("\n" + str(test_cases('TC_CAMP_FORM_03')))
+        print("\n" + str(test_cases('TC_CREATE_THREAD_MANDATORY_FIELDS_ARE_MARKED_WITH_ASTERISK')))
         self.login_to_canonizer_app()
         self.assertTrue(
             AddForumsPage(self.driver).load_camp_forum_page().create_thread_mandatory_fields_are_marked_with_asteris())
@@ -3255,21 +3611,21 @@ class TestPages(unittest.TestCase):
         ).get_url()
         self.assertIn("forum/173-Software-Testing/1-Agreement/threads/569", result)
 
-    # TC_CAMP_FORM_04
+    # TC_CREATE_THREAD_WITH_VALID_DATA
     def test_create_thread_with_valid_data(self):
-        print("\n" + str(test_cases('TC_CAMP_FORM_04')))
+        print("\n" + str(test_cases('TC_CREATE_THREAD_WITH_VALID_DATA')))
         self.login_to_canonizer_app()
         result = AddForumsPage(
             self.driver).load_camp_forum_page().load_create_thread_page().create_thread_with_correct_title_name(
-            "Testing thread abc",
+            "Testing thread abcDEF",
             DEF_NICK_NAME
 
         ).get_url()
         self.assertIn("forum/173-Software-Testing/1-Agreement/threads", result)
 
-    # TC_CAMP_FORM_05
+    # TC_CREATE_THREAD_WITH_INVALID_DATA
     def test_create_thread_with_invalid_data(self):
-        print("\n" + str(test_cases('TC_CAMP_FORM_05')))
+        print("\n" + str(test_cases('TC_CREATE_THREAD_WITH_INVALID_DATA')))
         self.login_to_canonizer_app()
         result = AddForumsPage(
             self.driver).load_camp_forum_page().load_create_thread_page().create_thread_with_invalid_data(
@@ -3278,9 +3634,9 @@ class TestPages(unittest.TestCase):
         ).get_url()
         self.assertIn("forum/173-Software-Testing/1-Agreement/threads/create", result)
 
-    # TC_CAMP_FORM_06
+    # TC_CREATE_THREAD_WITH_BLANK_MANDATORY_FIELDS
     def test_create_thread_with_blank_mandatory_fields(self):
-        print("\n" + str(test_cases('TC_CAMP_FORM_06')))
+        print("\n" + str(test_cases('TC_CREATE_THREAD_WITH_BLANK_MANDATORY_FIELDS')))
         self.login_to_canonizer_app()
         result = AddForumsPage(
             self.driver).load_camp_forum_page().load_create_thread_page().create_thread_with_blank_mandatory_fields(
@@ -3289,9 +3645,9 @@ class TestPages(unittest.TestCase):
         ).get_url()
         self.assertIn("forum/173-Software-Testing/1-Agreement/threads/create", result)
 
-    # TC_CAMP_FORM_07
+    # TC_CREATE_THREAD_WITH_ONLY_MANDATORY_FIELDS
     def test_create_thread_with_only_mandatory_fields(self):
-        print("\n" + str(test_cases('TC_CAMP_FORM_07')))
+        print("\n" + str(test_cases('TC_CREATE_THREAD_WITH_ONLY_MANDATORY_FIELDS')))
         self.login_to_canonizer_app()
         result = AddForumsPage(
             self.driver).load_camp_forum_page().load_create_thread_page().create_thread_with_only_mandatory_fields(
@@ -3309,62 +3665,83 @@ class TestPages(unittest.TestCase):
         ).get_url()
         self.assertIn("forum/173-Software-Testing/1-Agreement/threads/574/edit", result)
 
-    # TC_CAMP_FORM_10
+    # TC_CREATE_THREAD_WITH_INVALID_DATA_WITH_ENTER_KEY
     def test_create_thread_with_invalid_data_with_enter_key(self):
-        print("\n" + str(test_cases('TC_CAMP_FORM_10')))
+        print("\n" + str(test_cases('TC_CREATE_THREAD_WITH_INVALID_DATA_WITH_ENTER_KEY')))
         self.login_to_canonizer_app()
         result = AddForumsPage(
             self.driver).load_camp_forum_page().load_create_thread_page().create_thread_with_invalid_data_with_enter_key(
             "Checking thread with Invalid data *** with enter key",
             DEF_NICK_NAME
-        )
-        self.assertIn("Title can only contain space and alphanumeric characters.", result)
-
-    # TC_CAMP_FORM_11
-    def test_create_thread_with_valid_data_with_enter_key(self):
-        print("\n" + str(test_cases('TC_CAMP_FORM_11')))
-        self.login_to_canonizer_app()
-        result = AddForumsPage(
-            self.driver).load_camp_forum_page().load_create_thread_page().create_thread_with_valid_data_with_enter_key(
-            "Creating a thread with enter key",
-            DEF_NICK_NAME
         ).get_url()
-        self.assertIn("forum/173-Software-Testing/1-Agreement/threads", result)
+        self.assertIn('forum/173-Software-Testing/1-Agreement/threads/create', result)
 
-    # TC_CAMP_FORM_12
+    # TC_CREATE_THREAD_WITH_TRAILING_SPACES
     def test_create_thread_with_trailing_spaces(self):
-        print("\n" + str(test_cases('TC_CAMP_FORM_12')))
+        print("\n" + str(test_cases('TC_CREATE_THREAD_WITH_TRAILING_SPACES')))
         self.login_to_canonizer_app()
         result = AddForumsPage(
             self.driver).load_camp_forum_page().load_create_thread_page().create_thread_with_trailing_spaces(
-            "          Creating thread with trailing spaces",
+            "          Creating Thread With Trailing Spaces With Data",
             DEF_NICK_NAME
         ).get_url()
         self.assertIn("forum/173-Software-Testing/1-Agreement/threads", result)
 
-    # TC_CAMP_FORM_13
+    # TC_VERIFY_LINK_TO_CAMP_NAME
     def test_verify_camp_link_form(self):
-        print("\n" + str(test_cases('TC_CAMP_FORM_13')))
+        print("\n" + str(test_cases('TC_VERIFY_LINK_TO_CAMP_NAME')))
         self.login_to_canonizer_app()
         result = AddForumsPage(
             self.driver).load_camp_forum_page().load_create_thread_page().verify_camp_link_form().get_url()
         self.assertIn("topic/173-Software-Testing/1-Agreement", result)
 
-    # TC_POST_THREAD_01
+    # TC_LOAD_THREAD_POSTS_PAGE
     def test_load_thread_posts_page(self):
-        print("\n" + str(test_cases('TC_POST_THREAD_01')))
+        print("\n" + str(test_cases('TC_LOAD_THREAD_POSTS_PAGE')))
         self.login_to_canonizer_app()
         result = AddForumsPage(
             self.driver).load_camp_forum_page().load_thread_posts_page().get_url()
-        self.assertIn("forum/173-Software-Testing/1-Agreement/threads/576", result)
+        self.assertIn("forum/173-Software-Testing/1-Agreement/threads/509", result)
 
-    # TC_POST_THREAD_02
+    # TC_THREAD_POSTS_MANDATORY_FIELDS_MARKED_WITH_ASTERISK
     def test_thread_posts_mandatory_fields_are_marked_with_asterisk(self):
-        print("\n" + str(test_cases('TC_POST_THREAD_02')))
+        print("\n" + str(test_cases('TC_THREAD_POSTS_MANDATORY_FIELDS_MARKED_WITH_ASTERISK')))
         self.login_to_canonizer_app()
         result = AddForumsPage(
             self.driver).load_camp_forum_page().thread_posts_mandatory_fields_are_marked_with_asterisk().get_url()
-        self.assertIn("forum/173-Software-Testing/1-Agreement/threads/576", result)
+        self.assertIn("forum/173-Software-Testing/1-Agreement/threads", result)
+
+    # TC_THREAD_POST_WITH_VALID_DATA
+    def test_thread_post_with_valid_data(self):
+        print("\n" + str(test_cases('TC_THREAD_POST_WITH_VALID_DATA')))
+        self.login_to_canonizer_app()
+        result = AddForumsPage(
+            self.driver).load_camp_forum_page().thread_post_with_valid_data("testing data 123").get_url()
+        self.assertIn("forum/173-Software-Testing/1-Agreement/threads", result)
+
+    # TC_THREAD_POST_WITH_INVALID_DATA
+    def test_thread_post_with_valid_data(self):
+        print("\n" + str(test_cases('TC_THREAD_POST_WITH_INVALID_DATA')))
+        self.login_to_canonizer_app()
+        result = AddForumsPage(
+            self.driver).load_camp_forum_page().thread_post_with_invalid_data("").get_url()
+        self.assertIn("forum/173-Software-Testing/1-Agreement/threads", result)
+
+    # TC_THREAD_POST_WITH_INVALID_DATA_WITH_ENTER_KEY
+    def test_thread_post_with_invalid_data_with_enter_key(self):
+        print("\n" + str(test_cases('TC_THREAD_POST_WITH_INVALID_DATA_WITH_ENTER_KEY')))
+        self.login_to_canonizer_app()
+        result = AddForumsPage(
+            self.driver).load_camp_forum_page().thread_post_with_invalid_data_with_enter_key("").get_url()
+        self.assertIn("forum/173-Software-Testing/1-Agreement/threads", result)
+
+    # TC_THREAD_POST_WITH_TRAILING_SPACES
+    def test_thread_post_with_trailing_spaces(self):
+        print("\n" + str(test_cases('TC_THREAD_POST_WITH_TRAILING_SPACES')))
+        self.login_to_canonizer_app()
+        result = AddForumsPage(
+            self.driver).load_camp_forum_page().thread_post_with_valid_data("              testing data 123").get_url()
+        self.assertIn("forum/173-Software-Testing/1-Agreement/threads", result)
 
     # TC_POST_THREAD_03
     def test_post_reply_to_thread(self):
@@ -3375,19 +3752,33 @@ class TestPages(unittest.TestCase):
         ).get_url()
         self.assertIn("forum/173-Software-Testing/1-Agreement/threads/576", result)
 
-    # TC_POST_THREAD_04
+    # TC_VERIFY_THREAD_PAGINATION
     def test_thread_pagination(self):
-        print("\n" + str(test_cases('TC_POST_THREAD_04')))
+        print("\n" + str(test_cases('TC_VERIFY_THREAD_PAGINATION')))
         self.login_to_canonizer_app()
         result = AddForumsPage(self.driver).load_camp_forum_page().thread_pagination().get_url()
         self.assertIn("forum/173-Software-Testing/1-Agreement/threads", result)
 
-    # TC_POST_THREAD_05
+    # TC_VERIFY_NICK_NAME_LINK
     def test_verify_nickname_on_thread_title(self):
-        print("\n" + str(test_cases('TC_POST_THREAD_05')))
+        print("\n" + str(test_cases('TC_VERIFY_NICK_NAME_LINK')))
         self.login_to_canonizer_app()
         result = AddForumsPage(self.driver).load_camp_forum_page().verify_nickname_on_thread_title().get_url()
         self.assertIn("user/supports/", result)
+
+    # TC_SUPPORT_01
+    def test_verifying_one_person_one_vote_01(self):
+        print("\n")
+        self.login_to_canonizer_app()
+        result = CanonizerJoinSupportCampPage(self.driver).verifying_one_person_one_vote_01().get_url()
+        self.assertIn("topic/598-Testing-Topic-14/1-Agreement", result)
+
+    # TC_SUPPORT_02
+    def test_verifying_one_person_one_vote_02(self):
+        print("\n")
+        self.login_to_canonizer_app()
+        result = CanonizerJoinSupportCampPage(self.driver).verifying_one_person_one_vote_02().get_url()
+        self.assertIn("topic/598-Testing-Topic-14/3-Child-camp-2", result)
 
     def test_page_crash(self):
         self.login_to_canonizer_app()

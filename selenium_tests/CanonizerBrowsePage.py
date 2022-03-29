@@ -1,5 +1,5 @@
 from CanonizerBase import Page
-from Identifiers import BrowsePageIdentifiers
+from Identifiers import BrowsePageIdentifiers, CreateNewTopicPageIdentifiers
 from selenium.webdriver.support.ui import Select
 import time
 from Config import NAME_SPACE_1
@@ -28,6 +28,44 @@ class CanonizerBrowsePage(Page):
     def click_only_my_topics_button(self):
         self.hover(*BrowsePageIdentifiers.ONLY_MY_TOPICS)
         self.find_element(*BrowsePageIdentifiers.ONLY_MY_TOPICS).click()
+        return CanonizerBrowsePage(self.driver)
+
+    def check_namespace_dropdown(self):
+        self.hover(*BrowsePageIdentifiers.NAMESPACE)
+        topics = Select(self.find_element(*BrowsePageIdentifiers.NAMESPACE))
+        options = topics.options
+        index = []
+        topic_list = []
+        for ele in options:
+            index.append(ele.get_attribute("value"))
+            topic_list.append(ele.text)
+        self.hover(*CreateNewTopicPageIdentifiers.CREATE_NEW_TOPIC)
+        self.find_element(*CreateNewTopicPageIdentifiers.CREATE_NEW_TOPIC).click()
+        name_spaces = Select(self.find_element(*CreateNewTopicPageIdentifiers.NAMESPACE))
+        options = name_spaces.options
+        index = []
+        topic_list2 = []
+        for ele in options:
+            index.append(ele.get_attribute("value"))
+            topic_list2.append(ele.text)
+        topic_list.pop(0)
+        if topic_list == topic_list2:
+            return CanonizerBrowsePage(self.driver)
+
+    def check_topic_namespace(self):
+        self.hover(*BrowsePageIdentifiers.NAMESPACE)
+        topics = Select(self.find_element(*BrowsePageIdentifiers.NAMESPACE))
+        options = topics.options
+        index = []
+        topic_list = []
+        for ele in options:
+            index.append(ele.get_attribute("value"))
+            topic_list.append(ele.text)
+        list_ = self.find_element(*BrowsePageIdentifiers.LOAD_DATA)
+        items = list_.find_elements_by_tag_name("li")
+        for item in items:
+            text = item.text
+            print(text,"Text")
         return CanonizerBrowsePage(self.driver)
 
     def select_dropdown_value(self):
