@@ -45,7 +45,6 @@ class CanonizerMainPage(Page):
 
     def check_scroll_to_top_click(self):
         self.driver.execute_script(self.window_scroll)
-        time.sleep(3)
         self.hover(*HomePageIdentifiers.CANONIZER_LOGO)
         self.find_element(*HomePageIdentifiers.CANONIZER_LOGO).click()
         return CanonizerHomePage(self.driver)
@@ -258,5 +257,4 @@ class CanonizerServices(Page):
     def check_services_page_should_open(self):
         self.hover(*HomePageIdentifiers.SERVICES)
         self.find_element(*HomePageIdentifiers.SERVICES).click()
-        time.sleep(2)
         return CanonizerServices(self.driver)

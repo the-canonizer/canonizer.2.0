@@ -235,3 +235,4 @@ class CanonizerCreateNewTopicPage(Page):
                 return CanonizerCreateNewTopicPage(self.driver)
         except NoSuchElementException:
             return False
+

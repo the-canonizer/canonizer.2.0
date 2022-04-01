@@ -54,7 +54,7 @@ class HomePageIdentifiers(object):
     COPY_RIGHT = (By.XPATH, '/html/body/footer/div/div/div/small[1]')
     SUPPORT = (By.XPATH, '/html/body/footer/div/div/div/small[2]/a')
     TERMS_AND_SERVICES = (By.XPATH, '/html/body/footer/div/div/div/small[3]/a[2]')
-    JOB_TITLE = (By.XPATH, '/html/body/div[1]/div[2]/h3[1]')
+    JOB_TITLE = (By.XPATH, '/html/body/div[1]/div[3]/h3[1]')
 
 
 class LoginPageIdentifiers(object):
@@ -412,6 +412,18 @@ class TopicUpdatePageIdentifiers(object):
     HEADING = (By.XPATH, '/html/body/div[1]/div[2]/h1')
     CAMP_HEADING = (By.XPATH, '/html/body/div[1]/div[4]/div/div[2]/h3/div[1]')
     SUCCESS_MESSAGE = (By.XPATH, '/html/body/div[1]/div[3]')
+    EDIT_TOPIC = (By.ID, 'edit_topic')
+    EDIT_CAMP = (By.ID, 'edit_camp')
+    CAMP_HISTORY = (By.XPATH, '/html/body/div[1]/div[3]/div[2]/div')
+    # CmpHistoryPnl = (By.XPATH,)
+    TOPIC_NAME_EDIT_PAGE = (By.XPATH, '/html/body/div[1]/div[1]/h3/a')
+    TOPIC_TITLE = (By.XPATH, '/html/body/div[1]/div[3]/h3[1]')
+    TOPIC_NAME_TREE = (By.XPATH, '//*[@id="tree_173_1-Agreement_1"]/div/a')
+    CURRENT_TOPIC_NAME = (By.XPATH, '/html/body/div[1]/div[4]/div/div[5]/div[1]/div/div')
+    SORTED_TREE_CAMP_NAME = (By.XPATH, '//*[@id="tree_173_1_3"]/div/a')
+    BREADCRUM_CAMP_NAME = (By.XPATH, '/html/body/div[1]/div[3]/h3[2]')
+    SUPPORT_TREE_CAMP_NAME = (By.XPATH, '/html/body/div[1]/div[4]/div/div[3]/h3/div[1]')
+    CURRENT_CAMP_NAME = (By.XPATH, '/html/body/div[1]/div[4]/div/div[5]/div[1]/div/div')
 
 
 class TopicObjectPageIdentifiers(object):

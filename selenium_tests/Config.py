@@ -31,9 +31,12 @@ else:
 # Login Page Configuration Parameters
 UNVERIFY_EMAIL = "meghana@zibtek.in"
 UNVERIFY_PASS = "Pooja@123456"
-
-DEFAULT_USER = "pooja.khatri@zibtek.in"
-DEFAULT_PASS = "Pooja@123456"
+# DEFAULT_USER = "rupali.chavan9860@gmail.com "
+# DEFAULT_PASS = "Rupali@12345"
+DEFAULT_USER = "sonali@zibtek.in"
+DEFAULT_PASS = "Zibtek@123"
+# DEFAULT_USER = "pooja.khatri@zibtek.in"
+# DEFAULT_PASS = "Pooja@123456"
 #DEFAULT_USER = "r_canonizer_user@yopmail.com"
 #DEFAULT_PASS = "Rupali@12345"
 DEFAULT_INVALID_USER = 'invaliduser@gmail.com'

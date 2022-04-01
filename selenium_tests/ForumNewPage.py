@@ -1,7 +1,11 @@
+import random
+import string
+
 from selenium.webdriver.common.by import By
 
 from CanonizerBase import Page
-from Identifiers import CampForumIdentifiers, BrowsePageIdentifiers, AddCampStatementPageIdentifiers
+from Identifiers import CampForumIdentifiers, BrowsePageIdentifiers, AddCampStatementPageIdentifiers, \
+    CreateNewTopicPageIdentifiers
 from selenium.common.exceptions import NoSuchElementException, WebDriverException
 from selenium.webdriver.common.keys import Keys
 
@@ -79,7 +83,18 @@ class AddForumsPage(Page):
         if page_title == self.forum_details:
             return AddForumsPage(self.driver)
 
+    def create_new_topic(self):
+        self.hover(*CreateNewTopicPageIdentifiers.CREATE_NEW_TOPIC)
+        self.find_element(*CreateNewTopicPageIdentifiers.CREATE_NEW_TOPIC).click()
+        topic_name = ''.join(random.choices(string.ascii_uppercase +
+                                            string.digits, k=7))
+        self.find_element(*CreateNewTopicPageIdentifiers.TOPIC_NAME).send_keys("New Topic" + topic_name)
+        self.find_element(*CreateNewTopicPageIdentifiers.CREATETOPIC).click()
+
     def check_no_thread_availability(self):
+        self.create_new_topic()
+        self.hover(*CampForumIdentifiers.CAMP_FORUM)
+        self.find_element(*CampForumIdentifiers.CAMP_FORUM).click()
         self.hover(*CampForumIdentifiers.ALL_THREADS)
         self.find_element(*CampForumIdentifiers.ALL_THREADS).click()
         page_title = self.find_element(*CampForumIdentifiers.MY_THREAD_HEADING).text
@@ -97,8 +112,40 @@ class AddForumsPage(Page):
         self.find_element(*CampForumIdentifiers.MY_THREAD).click()
 
         title = self.find_element(*CampForumIdentifiers.MY_THREAD_TITLE).text
-        if my_thread and "Pooja" in title:
+        index = title.find('started')
+        name = title[0:index]
+        name = name.rstrip()
+        nick_name_list_2 = []
+        self.find_element(*CreateNewTopicPageIdentifiers.USERNAME).click()
+        self.find_element(*CreateNewTopicPageIdentifiers.ACCOUNT_SETTING).click()
+        self.find_element(*CreateNewTopicPageIdentifiers.NICK_NAME_TAB).click()
+        rows = self.find_element(*CreateNewTopicPageIdentifiers.NICK_NAME_TABLE)
+        row = rows.find_elements(By.TAG_NAME, "tr")
+        for i in row:
+            temp = i.text
+            temp = temp.split(" ")
+            temp.pop(0)
+            temp.pop(0)
+            temp.pop()
+            str1 = ""
+            for ele in temp:
+                str1 += ele
+                str1 += " "
+            str1 = str1.rstrip()
+            nick_name_list_2.append(str1)
+        nick_name_list_2.pop(0)
+        if my_thread in title and name in nick_name_list_2:
+            self.verify_my_threads_created_by_logged_user_01()
             return AddForumsPage(self.driver)
+
+    def verify_my_threads_created_by_logged_user_01(self):
+        self.load_camp_forum_page()
+        self.hover(*CampForumIdentifiers.MY_THREADS)
+        self.find_element(*CampForumIdentifiers.MY_THREADS).click()
+
+        my_thread = self.find_element(*CampForumIdentifiers.MY_THREAD).text
+        self.hover(*CampForumIdentifiers.MY_THREAD)
+        self.find_element(*CampForumIdentifiers.MY_THREAD).click()
 
     def camp_form_count_of_threads_on_all_threads_page(self):
         self.hover(*CampForumIdentifiers.ALL_THREADS)
@@ -264,13 +311,16 @@ class AddForumsPage(Page):
         self.load_all_threads()
         self.hover(*CampForumIdentifiers.THREAD_TITLE)
         self.find_element(*CampForumIdentifiers.THREAD_TITLE).click()
-        self.hover(*CampForumIdentifiers.EDIT_REPLY_BUTTON)
-        self.find_element(*CampForumIdentifiers.EDIT_REPLY_BUTTON).click()
-        self.find_element(*CampForumIdentifiers.EDI_REPLY_TEXT_BOX).clear()
-        self.find_element(*CampForumIdentifiers.EDI_REPLY_TEXT_BOX).send_keys(reply)
-        self.click_post_submit_button()
-        title = self.find_element(*CampForumIdentifiers.TITLE_REPLY_ALL).text
-        if 'Thread Created' in title:
+        try:
+            self.hover(*CampForumIdentifiers.EDIT_REPLY_BUTTON)
+            self.find_element(*CampForumIdentifiers.EDIT_REPLY_BUTTON).click()
+            self.find_element(*CampForumIdentifiers.EDI_REPLY_TEXT_BOX).clear()
+            self.find_element(*CampForumIdentifiers.EDI_REPLY_TEXT_BOX).send_keys(reply)
+            self.click_post_submit_button()
+            title = self.find_element(*CampForumIdentifiers.TITLE_REPLY_ALL).text
+            if 'Thread Created' in title:
+                return AddForumsPage(self.driver)
+        except NoSuchElementException:
             return AddForumsPage(self.driver)
 
     def check_page_crash(self):

@@ -28,6 +28,8 @@ testCases = {
     'TC_REGISTRATION_WITH_DIFFERENT_CONFIRM_PASSWORD': [moderate,
                                                         'In User Registration Page, when user puts different password '
                                                         'for confirmation,user must see Error Message'],
+    'TC_VERIFY_REGISTRATION_PLACEHOLDERS': [moderate,
+                                            'Verifing registration text box placeholders, every text box must have placeholder'],
     'TC_LOAD_WHAT_IS_CANONIZER_PAGE': [critical, 'When user clicks on What is Canonizer.com, page should be loaded.'],
     'TC_JOIN_SUPPORT_WITH_LOGIN': [critical,
                                    'If any unauthenticated user wants to join the camp, User should be directed to '
@@ -446,23 +448,36 @@ testCases = {
                                                           'see Error Message'],
     'TC_CREATE_NEWS_WITH_VALID_DATA': [moderate, 'On Add News page, When user put valid data , news should get added'],
     'TC_CREATE_NEWS_WITH_MANDATORY_FIELDS_ONLY': [moderate,
-                                                   'On Add News page, use enter data only in manadatory fields, '
-                                                   'news should get added.'],
-    'TC_UPDATE_NEWS_WITH_VALID_DATA': [moderate, 'On Edit News page, When user put valid data , news should get updated'],
-    142: [critical,
-          'On File Upload page, When user upload file other than jpeg,bmp,png,jpg,gif ,user should see error message'],
-    143: [critical, 'On File Upload page, When user upload file more than 5mb size ,user should see error message'],
-    'TC_UPLOAD_FILE_WITH_SAME_FILE_NAME': [critical, 'On File Upload page, When user upload file with same file name ,user should see error message'],
-    'TC_UPLOAD_FILE_WITH_SIZE_ZERO_BYTES': [critical, 'On File Upload page, When user upload file with 0 bytes ,user should see error message'],
+                                                  'On Add News page, use enter data only in manadatory fields, '
+                                                  'news should get added.'],
+    'TC_UPDATE_NEWS_WITH_VALID_DATA': [moderate,
+                                       'On Edit News page, When user put valid data , news should get updated'],
+    'TC_UPLOAD_FILE_WITH_VALID_FORMAT': [critical,
+                                         'On File Upload page, When user upload file other than jpeg,bmp,png,jpg,'
+                                         'gif ,user should see error message'],
+    'TC_UPLOAD_FILE_WITH_SIZE_FILE_MORE_THAN_5MB': [critical, 'On File Upload page, When user upload file more than '
+                                                              '5mb size ,user should see error message'],
+    'TC_UPLOAD_FILE_WITH_SAME_FILE_NAME': [critical,
+                                           'On File Upload page, When user upload file with same file name ,'
+                                           'user should see error message'],
+    'TC_UPLOAD_FILE_WITH_SIZE_ZERO_BYTES': [critical,
+                                            'On File Upload page, When user upload file with 0 bytes ,user should see '
+                                            'error message'],
     'TC_CLICK_SEARCH_BUTTON': [low,
-          'When user check canonizer.com and click on Google Search button, user should redirect to canonizer.com search page'],
-    'TC_CLICK_SEARCH_BUTTON_WEB': [low, 'When user check web and click on Google Search button, user should redirect to google search page'],
+                               'When user check canonizer.com and click on Google Search button, user should redirect '
+                               'to canonizer.com search page'],
+    'TC_CLICK_SEARCH_BUTTON_WEB': [low,
+                                   'When user check web and click on Google Search button, user should redirect to '
+                                   'google search page'],
     'TC_CLICK_SEARCH_BUTTON_KEYWORD_WEB': [low,
-          'When user enters search keyword,check web and click on Google Search button, user should redirect to google search page'],
+                                           'When user enters search keyword,check web and click on Google Search '
+                                           'button, user should redirect to google search page'],
     'TC_CLICK_SEARCH_BUTTON_KEYWORD_CANONIZER_COM': [low,
-          'When user enters search keyword,check canonizer.com and click on Google Search button, user should '
-          'redirect to canonizer.com search page'],
-    150: [low, 'On Manage Profile Info Page, When user doesn\'t put Phone Number , user must see Error Message'],
+                                                     'When user enters search keyword,check canonizer.com and click '
+                                                     'on Google Search button, user should '
+                                                     'redirect to canonizer.com search page'],
+    'TC_VERIFY_PHONE_NUMBER_WITH_BLANK_PHONE_NUMBER': [low,
+                                                       'On Manage Profile Info Page, When user doesn\'t put Phone Number , user must see Error Message'],
     'TC_SEARCH_BAR_PLACEHOLDER': [critical, 'On Main page user must see placeholder, once user start typing the '
                                             'placeholder text should get disappear.'],
     'TC_PHONE_NUMBER_02': ['low',
@@ -475,45 +490,58 @@ testCases = {
     'TC_VERIFY_FORGOT_PASSWORD_SAVE_BUTTON_ON_ENTER_KEY': [critical,
                                                            'On Change Password when user press Enter Key without entering '
                                                            'anything in the fields, user must see error messages'],
-    151: [low,
-          'On Browse Page,When user select /crypto_currency/ethereum/ namespace from drop down, User must see topics '
-          'under /crypto_currency/ethereum/ namespace'],
-    152: [low,
-          'On Browse Page,When user select /crypto_currency/ethereum/ namespace and Only My Topics, User must see own topics under /crypto_currency/ethereum/ namespace'],
-    153: [low,
-          'When user click on Canonizer is the final word on everything with login, page should be loaded Properly'],
-    154: [low,
-          'When user click on Canonizer is the final word on everything without login, page should be loaded Properly'],
-    155: [low, 'When user click on Consensus out of controversy use case with login, page should be loaded Properly'],
-    156: [low,
-          'When user click on Consensus out of controversy use case without login, page should be loaded Properly'],
-    157: [moderate, 'When user click on Create New Camp link from left menu ,user should see Create New Camp page'],
-    158: [moderate, 'On Change Password Page, When user puts invalid new password, user must see Error Message '],
-    159: [moderate, 'In Login Page, When user doesn\'t put Email, user must see Error Message'],
-    160: [moderate, 'In Login Page, When user doesn\'t put Password, user must see Error Message'],
-    161: [low, 'On Login Page, All Mandatory Fields are marked with * Sign'],
-    162: [low, 'Login page should have "Forgot Password" link'],
-    163: [moderate, 'In Registration page, When user enter duplicate Email, should see error message'],
-    164: [moderate, 'In My Supports page, When user click on Topic name, user should redirect to respective page'],
-    165: [moderate, 'In My Supports page, When user click on Camp name, user should redirect to respective page'],
-    166: [low, 'On Topic Update, When user doesn\'t put Topic Name, user must see Error Message'],
-    167: [moderate, 'In Topic Update page, When user enter duplicate Topic name, should see error message'],
-    168: [moderate, 'In Create New Camp page, When user enter duplicate Camp name, should see error message'],
+    'TC_SELECT_BY_VALUE_CRYPTO_CURRENCY_ETHEREUM': [low,
+                                                    'On Browse Page,When user select /crypto_currency/ethereum/ namespace from drop down, User must see topics '
+                                                    'under /crypto_currency/ethereum/ namespace'],
+    'TC_SELECT_BY_VALUE_CRYPTO_CURRENCY_ETHEREUM_ONLY_MY_TOPICS': [low,
+                                                                   'On Browse Page,When user select /crypto_currency/ethereum/ namespace and Only My Topics, User must see own topics under /crypto_currency/ethereum/ namespace'],
+    'TC_VERIFY_CANONIZER_IS_THE_FINAL_WORD_ON_EVERYTHING_PAGE_LOADED': [low,
+                                                                        'When user click on Canonizer is the final word on everything with login, page should be loaded Properly'],
+    'TC_VERIFY_CANONIZER_IS_THE_FINAL_WORD_ON_EVERYTHING_PAGE_LOADED_WITHOUT_LOGIN': [low,
+                                                                                      'When user click on Canonizer is the final word on everything without login, page should be loaded Properly'],
+    'TC_VERIFY_CONSENSUS_OUT_OF_CONTROVERSY_USER_CASE_PAGE_LOADED': [low,
+                                                                     'When user click on Consensus out of controversy use case with login, page should be loaded Properly'],
+    'TC_VERIFY_CONSENSUS_OUT_OF_CONTROVERSY_USE_CASE_PAGE_LOADED_WITHOUT_LOGIN': [low,
+                                                                                  'When user click on Consensus out of controversy use case without login, page should be loaded Properly'],
+    'TC_LOAD_CREATE_NEW_CAMP_PAGE': [moderate,
+                                     'When user click on Create New Camp link from left menu ,user should see Create New Camp page'],
+    'TC_SAVE_WITH_INVALID_NEW_PASSWORD': [moderate,
+                                          'On Change Password Page, When user puts invalid new password, user must see Error Message '],
+    'TC_LOGIN_WITH_BLANK_EMAIL': [moderate, 'In Login Page, When user doesn\'t put Email, user must see Error Message'],
+    'TC_LOGIN_WITH_BLANK_PASSWORD': [moderate,
+                                     'In Login Page, When user doesn\'t put Password, user must see Error Message'],
+    'TC_LOGIN_PAGE_MANDATORY_FIELDS_ARE_MARKED_WITH_ASTERISK': [low,
+                                                                'On Login Page, All Mandatory Fields are marked with * Sign'],
+    'TC_LOGIN_SHOULD_HAVE_FORGOT_PASSWORD_LINK': [low, 'Login page should have "Forgot Password" link'],
+    'TC_REGISTRATION_WITH_DUPLICATE_EMAIL': [moderate,
+                                             'In Registration page, When user enter duplicate Email, should see error message'],
+    'TC_VERIFY_TOPIC_PAGE_FROM_MY_SUPPORTS_LOADED': [moderate,
+                                                     'In My Supports page, When user click on Topic name, user should redirect to respective page'],
+    'TC_CHECK_CAMP_PAGE_FROM_MY_SUPPORTS_LOADED': [moderate,
+                                                   'In My Supports page, When user click on Camp name, user should redirect to respective page'],
+    'TC_SUBMIT_UPDATE_WIH_BLANK_TOPIC_NAME': [low,
+                                              'On Topic Update, When user doesn\'t put Topic Name, user must see Error Message'],
+    'TC_SUBMIT_TOPIC_UPDATE_WITH_DUPLICATE_TOPIC_NAME': [moderate,
+                                                         'In Topic Update page, When user enter duplicate Topic name, should see error message'],
+    'TC_CREATE_CAMP_WITH_DUPLICATE_CAMP_NAME': [moderate,
+                                                'In Create New Camp page, When user enter duplicate Camp name, should see error message'],
     'TC_UPDATE_CAMP_WITH_EXISTING_DATA': [moderate, 'In Camp Update page, When user enter duplicate Camp name, should '
                                                     'see error message'],
     'TC_UPDATE_CAMP_VALIDATION_OF_CAMP_NAME': [moderate, 'In Camp Update camp, Camp name shoude be disabled.'],
     'TC_VERIFY_CAMP_UPDATE_FIELDS': [moderate, 'In Camp Update camp, Camp name should be disabled, and other fields '
                                                'should be editiable '],
-    170: [moderate, 'On Edit News Page, All mandatory fields are marked with # sign'],
+    'TC_EDIT_NEWS_PAGE_MANDATORY_FIELDS_ARE_MARKED_WITH_ASTERISK': [moderate,
+                                                                    'On Edit News Page, All mandatory fields are marked with # sign'],
     'TC_LOAD_ADD_CAMP_STATEMENT_PAGE': [moderate, 'When user click on Add Camp Statement ,user should see Add Camp '
                                                   'Statement page'],
     'TC_ADD_CAMP_STATEMENT_PAGE_MANDATORY_FIELDS_WITH_ASTERISK': [low, 'On Add Camp Statement page, All Mandatory '
                                                                        'Fields are marked with * Sign'],
-    173: [low, 'On Add Camp Statement page, When user doesn\'t put Nick Name, user must see Error Message'],
+    'TC_SUBMIT_STATEMENT_WITH_BLANK_NICK_NAME': [low,
+                                                 'On Add Camp Statement page, When user doesn\'t put Nick Name, user must see Error Message'],
     'TC_ADD_CAMP_STATEMENT_BLANK_STATEMENT': [low,
                                               'On Add Camp Statement page, When user doesn\'t put Statement, user must see Error Message'],
-    175: [low,
-          'On Add Camp Statement, Add New Nick Name link should present for users who doesn\'t have nick name yet'],
+    'TC_ADD_CAMP_STATEMENT_PAGE_SHOULD_HAVE_ADD_NEW_NICK_NAME_LINK_FOR_NEW_USERS': [low,
+                                                                                    'On Add Camp Statement, Add New Nick Name link should present for users who doesn\'t have nick name yet'],
     176: [moderate,
           'In User Registration Page, When user put blank spaces in  First Name, user must see Error Message'],
     177: [moderate,
@@ -590,10 +618,10 @@ testCases = {
     223: [critical, 'When user clicks on What is Canonizer.com, page should be loaded.'],
     224: [critical, 'When user clicks on Canonizer logo,canonizer main page should be loaded.'],
     225: [critical, 'On Login page, when user click "Signup Now" link, User should see User Registration Page'],
-    226: [critical, 'On Register page, when user click "Login here" link, User should see User Login Page'],
-    227: [critical,
+    'TC_VERIFY_LOGIN_PAGE_OPEN_CLICK_LOGIN_HERE_LINK': [critical, 'On Register page, when user click "Login here" link, User should see User Login Page'],
+    'TC_CHECK_SCROLL_TO_TOP_CLICK': [critical,
           'On Canonizer Main Page, when user goes to bottom of the page click on UP icon , User should reach to of the page'],
-    228: [low, 'On Login OTP Verification page when user doesn\'t put OTP, User should see error message'],
+    'TC_LOGIN_WITH_BLANK_OTP': [low, 'On Login OTP Verification page when user doesn\'t put OTP, User should see error message'],
     229: [low, 'On Login OTP Verification page , All Mandatory Fields are marked with * Sign'],
     230: [low, 'On Login OTP Verification page when user put invalid OTP, User should see error message'],
     231: [low, 'In User Registration Page, When user doesn\'t put Captcha, user must see Error Message'],
@@ -610,41 +638,74 @@ testCases = {
     'TC_UPDATE_PROFILE_WITH_VALID_DATA_WITH_ENTER_KEY': [critical, 'On Manage Profile Info Page, When user try to '
                                                                    'update the profile with valid data with enter '
                                                                    'key, Profile should get update.'],
-    'TC_UPDATE_PROFILE_WITH_MANDATROY_FIELDS': [critical, 'On Manage Profile Page, When user try to update the '
-                                                          'profile with manadatory fields, profile should get '
+    'TC_UPDATE_PROFILE_WITH_MANDATORY_FIELDS': [critical, 'On Manage Profile Page, When user try to update the '
+                                                          'profile with mandatory fields, profile should get '
                                                           'update.'],
-    'TC_UPDATE_PROFILE_WITH_BLANK_MANADATORY_FIELDS': [critical, 'On Manage Profile Page, When user try to update the '
-                                                                 'profile with blank manadatory fields, user must see '
-                                                                 'error messages'],
+    'TC_UPDATE_PROFILE_WITH_BLANK_MANDATORY_FIELDS': [critical, 'On Manage Profile Page, When user try to update the '
+                                                                'profile with blank mandatory fields, user must see '
+                                                                'error messages'],
     'TC_VERIFY_DOB_ON_PROFILE_INFO': [critical, 'On Manage Profile Page, DOB should be in "DD/MM/YYYY" format'],
-    'TC_SUBMIT_UPDATE_WITH_TRAILING_SAPCES': [critical, 'In Topic Update page, if user give trailing space while '
+    'TC_SUBMIT_UPDATE_WITH_TRAILING_SPACES': [critical, 'In Topic Update page, if user give trailing space while '
                                                         'updating data, The data should get update.'],
     'TC_SUBMIT_UPDATE_WITH_ENTER_KEY': [critical, 'In Topic Update page,if user edit data and press enter key, '
                                                   'The data should get update.'],
     'TC_SUBMIT_UPDATE_WITH_MANDATORY_FIELDS_ONLY': [critical,
-                                                    'In Topic Update, If user enter data only in mandatory fields, Data should get update.'],
+                                                    'In Topic Update, If user enter data only in mandatory fields, '
+                                                    'Data should get update.'],
     'TC_SUBMIT_UPDATE_WITH_DUPLICATE_DATA': [critical,
-                                             'On Topic Update, If user enter already existing data, user must see error message.'],
-    242: [moderate, 'In Update Topic page, When user enter invalid topic name,user should see error message'],
-    243: [moderate,
-          'When user click on Add New Nick Name link from Create New Topic page,user should redirect to nick name page'],
-    244: [moderate,
-          'When user click on Add New Nick Name link from Create New Camp page,user should redirect to nick name page'],
-    245: [moderate,
-          'When user click on Add New Nick Name link from update topic page,user should redirect to nick name page'],
-    246: [moderate,
-          'When user click on Add New Nick Name link from update camp page,user should redirect to nick name page'],
-    247: [moderate, 'When user click on Directly Join or Manage Support, user should redirect to support camp page'],
-    248: [moderate, 'When user with no nick name is trying to support any camp,user should see add new nick name link'],
-    249: [moderate,
-          'When user click on Add New Nick Name link from join support camp page,user should redirect to nick name page'],
-    250: [low, 'In User Registration Page, When user put invalid captcha , user must see Error Message'],
-    251: [low, 'On Manage Profile Info Page, When user put valid length Phone Number  , user must see Error Message'],
-    252: [critical, 'When user logged in and clicks on Jobs link, User should see Jobs page '],
-    253: [critical, 'When user logged in and clicks on Services link, User should see Services page '],
-    254: [critical, 'When user clicks on Jobs link without login, User should see Jobs page '],
-    255: [critical, 'When user clicks on Services link without login, User should see Services page '],
-    256: [low, 'On Update Camp page, When user put invalid Camp about URL , user must see Error Message'],
+                                             'On Topic Update, If user enter already existing data, user must see '
+                                             'error message.'],
+    'TC_SUBMIT_UPDATE_WITH_INVALID_TOPIC_NAME': [moderate,
+                                                 'In Update Topic page, When user enter invalid topic name,'
+                                                 'user should see error message'],
+    'TC_NICKNAME_PAGE_SHOULD_OPEN_CREATE_TOPIC_ADD_NEW_NICKNAME': [moderate,
+                                                                   'When user click on Add New Nick Name link from '
+                                                                   'Create New Topic page,user should redirect to '
+                                                                   'nick name page'],
+    'TC_NICKNAME_PAGE_SHOULD_OPEN_CREATE_CAMP_ADD_NEW_NICKNAME': [moderate,
+                                                                  'When user click on Add New Nick Name link from '
+                                                                  'Create New Camp page,user should redirect to nick '
+                                                                  'name page'],
+    'TC_NICKNAME_PAGE_SHOULD_OPEN_UPDATE_TOPIC_ADD_NEW_NICKNAME': [moderate,
+                                                                   'When user click on Add New Nick Name link from '
+                                                                   'update topic page,user should redirect to nick '
+                                                                   'name page'],
+    'TC_NICKNAME_PAGE_SHOULD_OPEN_UPDATE_CAMP_ADD_NEW_NICKNAME': [moderate,
+                                                                  'When user click on Add New Nick Name link from '
+                                                                  'update camp page,user should redirect to nick name '
+                                                                  'page'],
+    'TC_LOAD_JOIN_SUPPORT_CAMP_PAGE_WITH_LOGIN': [moderate,
+                                                  'When user click on Directly Join or Manage Support, user should '
+                                                  'redirect to support camp page'],
+    'TC_JOIN_SUPPORT_CAMP_PAGE_SHOULD_HAVE_ADD_NEW_NICKNAME_LINK_FOR_NEW_USERS': [moderate,
+                                                                                  'When user with no nick name is '
+                                                                                  'trying to support any camp,'
+                                                                                  'user should see add new nick name '
+                                                                                  'link'],
+    'TC_NICKNAME_PAGE_SHOULD_OPEN_JOIN_SUPPORT_CAMP_ADD_NEW_NICKNAME': [moderate,
+                                                                        'When user click on Add New Nick Name link '
+                                                                        'from join support camp page,user should '
+                                                                        'redirect to nick name page'],
+    'TC_REGISTRATION_WITH_INVALID_CAPTCHA': [low,
+                                             'In User Registration Page, When user put invalid captcha , user must '
+                                             'see Error Message'],
+    'TC_VERIFY_PHONE_NUMBER_WITH_VALID_LENGTH_PHONE_NUMBER': [low,
+                                                              'On Manage Profile Info Page, When user put valid '
+                                                              'length Phone Number  , user must see Error Message'],
+    'TC_CHECK_JOBS_PAGE_SHOULD_OPEN_WITH_LOGIN': [critical,
+                                                  'When user logged in and clicks on Jobs link, User should see Jobs '
+                                                  'page '],
+    'TC_CHECK_SERVICES_PAGE_SHOULD_OPEN_WITH_LOGIN': [critical,
+                                                      'When user logged in and clicks on Services link, User should '
+                                                      'see Services page '],
+    'TC_VERIFY_JOBS_PAGE_SHOULD_OPEN_WITHOUT_LOGIN': [critical,
+                                                      'When user clicks on Jobs link without login, User should see '
+                                                      'Jobs page '],
+    'TC_VERIFY_SERVICES_PAGE_SHOULD_OPEN_WITHOUT_LOGIN': [critical,
+                                                          'When user clicks on Services link without login, User '
+                                                          'should see Services page '],
+    'TC_SUBMIT_CAMP_UPDATE_WITH_INVALID_LENGTH_CAMP_ABOUT_URL': [low, 'On Update Camp page, When user put invalid '
+                                                                      'Camp about URL , user must see Error Message'],
     257: [low, 'On Login Page, when user request otp with a unverified phone number, user must see Error Message'],
     258: [low,
           'On Camp Statement Update, Add New Nick Name link should present for users who doesn\'t have nick name yet'],
@@ -668,13 +729,13 @@ testCases = {
                                                               'Click on Logout button and now press the back button of browser'],
     'TC_LOG_OUT_03': [low,
                       'Open browser and hit the application with URL,open new tab within the same browser,now click on log out from one tab'],
-    'TC_LOGIN_01': [critical, 'If user try to login with unverified account, user must see error message.'],
-    'TC_LOGIN_02': [critical,
+    'TC_VERIFY_UNVERIFIED_ACCOUNT': [critical, 'If user try to login with unverified account, user must see error message.'],
+    'TC_VERIFY_ACCOUNT_LOCK_AFTER_5_UNSUCCESSFUL_ATTEMPT': [critical,
                     'If user try to login with valid email and invalid password, user account should get lock for 60 seconds and user must see error message'],
-    'TC_LOGIN_03': [critical, 'Placeholder must be displayed for login fields.'],
-    'TC_LOGIN_04': [critical,
+    'TC_VERIFY_LOGIN_PLACEHOLDERS': [critical, 'Placeholder must be displayed for login fields.'],
+    'TC_VERIFY_LOGIN_CASE_SENSITIVE_UPPERCASE': [critical,
                     'If user type password in uppercase which original in lowercase, user must see error message'],
-    'TC_LOGIN_05': [critical,
+    'TC_VERIFY_LOGIN_CASE_SENSITIVE_LOWERCASE': [critical,
                     'If user type password in lowercase which original in uppercase, user must see error message'],
     'TC_NEWS_FEED_INVALID_DATA': [critical,
                                   'On Add News page, When user enter invalid data, user must see Error Message'],
@@ -713,8 +774,9 @@ testCases = {
     'TC_CREATE_NEW_TOPIC_ENTERING_DATA_ONLY_IN_MANDATORY_FIELDS': [critical, "In create New Topic page, When user "
                                                                              "enter data in mandatory fields only, "
                                                                              "topic should be created."],
-    'TC_CREATE_NEW_TOPIC_11': [critical, "In create New Topic page, When user click on nick name drop, dropdown "
-                                         "should show all the nick names"],
+    'TC_VALIDATION_OF_NICK_NAME_DROPDOWN': [critical, "In create New Topic page, When user click on nick name drop, "
+                                                      "dropdown "
+                                                      "should show all the nick names"],
     'TC_CREATE_NEW_TOPIC_WITH_ENTER_KEY': [critical, "In create New Topic page, When user enter data and "
                                                      "press the enter key "
                                                      "topic should be created."],
@@ -746,11 +808,12 @@ testCases = {
     'TC_VERIFY_MY_THREADS_CREATED_BY_LOGGED_USER': [critical, "When user click on thread, which is created by user "
                                                               "itself, user should see his name."],
     'TC_CAMP_FORM_COUNT_OF_THREADS_ON_ALL_THREADS_PAGE': [critical, "In all threads, user should see 10 threads only"],
-    'TC_CAMP_FORM_02': [critical, 'When user click on any thread, '
-                                  'user should see all the replies associated with that thread'],
+    'TC_CHECK_ALL_REPLIES_TO_THREAD': [critical, 'When user click on any thread, '
+                                                 'user should see all the replies associated with that thread'],
     'TC_CREATE_THREAD_MANDATORY_FIELDS_ARE_MARKED_WITH_ASTERISK': [critical, 'When user click on create thread page, '
                                                                              'All Mandatory Fields are marked with * '
                                                                              'Sign'],
+    'TC_EDIT_REPLY_TO_THREAD': [critical, 'When user click reply,add reply then the reply should get post'],
     'TC_CREATE_THREAD_WITH_VALID_DATA': [critical, 'When user click on create thread page and fill all the fields wih '
                                                    'valid data, '
                                                    'thread should get create.'],
@@ -768,8 +831,11 @@ testCases = {
                                                         'Error message should get display.'],
     'TC_CREATE_THREAD_WITH_BLANK_TITLE': [critical, 'When user enter duplicate title in create thread, user must see '
                                                     'error message'],
-    'TC_CAMP_FORM_09': [critical, 'When user click on create thread page and give duplicate thread title'
-                                  'Error message should get display.'],
+    'TC_CREATE_THREAD_WITH_SPECIAL_CHAR': [critical,
+                                           'When user try to create thead with special character, user must see error message'],
+    'TC_EDIT_THREAD_WITH_DUPLICATE_TITLE': [critical,
+                                            'When user click on create thread page and give duplicate thread title'
+                                            'Error message should get display.'],
     'TC_CREATE_THREAD_WITH_INVALID_DATA_WITH_ENTER_KEY': [critical, 'When user click on create thread page and fill '
                                                                     'all mandatory fields with '
                                                                     'invalid data and press enter key, '
@@ -800,20 +866,19 @@ testCases = {
                                                                   'and press Enter key, User must see error message'],
     'TC_THREAD_POST_WITH_TRAILING_SPACES': [critical, 'If user reply data with trailing spaces, trailing spaces '
                                                       'should get trimmed and reply should get post'],
-    'TC_POST_THREAD_03': [critical,
-                          'When user click on thread title on Agreement page, Post a reply, It should submit.'],
+    'TC_POST_REPLY_TO_THREAD': [critical,
+                                'When user click on thread title on Agreement page, Post a reply, It should submit.'],
     'TC_VERIFY_THREAD_PAGINATION': [critical, 'When user click on Camp Forum, If thread titles are more than 10, '
                                               'pagination '
                                               'should be visible'],
     'TC_VERIFY_NICK_NAME_LINK': [critical,
                                  'When user click on Camp Forum, Click on any thread title, and click on "Thread '
-                                 'Creaty by user" '
+                                 'Created by user" '
                                  'should be redirected to user supported camp page'],
     'TC_LOAD_CAMP_MANAGE_EDIT_PAGE': [critical, 'When user click on Manage/Edi Camp, should see Camp History page.'],
     'TC_VERIFY_AGREEMENT_PAGE': [critical, 'When user Click on View this version, user should see agreement page'],
     'TC_VERIFY_CAMP_UPDATE_PAGE': [critical, 'When user click on view this version, user should see update camp page'],
-    'TC_UPDATE_CAMP_WTIH_VALID_DATA': [critical, 'When user update the camp with valid data, it should get update'],
-    'TC_UPDATE_CAMP_WTIH_INVALID_DATA': [critical, 'When user update the camp with invalid data, user must see Error '
+    'TC_UPDATE_CAMP_WITH_INVALID_DATA': [critical, 'When user update the camp with invalid data, user must see Error '
                                                    'Message'],
     'TC_UPDATE_CAMP_WITH_BLANK_FIELDS': [critical, 'When user update the camp with blank fields, user must see Error '
                                                    'Message'],
@@ -822,7 +887,8 @@ testCases = {
                                                       'user must see Success '
                                                       'Message on Camp History Page'],
     'TC_UPDATE_CAMP_WITH_INVALID_DATA_WITH_ENTER_KEY': [critical,
-                                                        'When user update the camp with invalid data and Press Enter Key, '
+                                                        'When user update the camp with invalid data and Press Enter '
+                                                        'Key, '
                                                         'user must see Error '
                                                         'Message'],
 
@@ -855,5 +921,19 @@ testCases = {
     'TC_FOOTER_TERMS_AND_SERVICES': [critical, 'Without login User should see Terms and Services in Footer'],
     'TC_UPLOAD_FILE_16': [critical, 'On File Upload page, When user upload file, user should see file uploaded file '
                                     'on top of the list'],
+    'TC_VERIFY_LIVE_TOPIC_NAME_WITH_TOPIC_NAME': [critical, 'Topic name should be similar to live topic name.'],
+    'TC_VERIFY_LIVE_TOPIC_NAME_WITH_CAMP_TREE_TOPIC_NAME': [critical, 'Camp Tree Topic name should be similar to live '
+                                                                      'topic name.'],
+    'TC_VERIFY_LIVE_TOPIC_NAME_WITH_CURRENT_TOPIC_NAME': [critical, 'Topic name in current topic name, should be '
+                                                                    'similar to live topic name.'],
+    'TC_SORTED_TREE_NAME_WITH_LIVE_CAMP_NAME': [critical, 'Camp name in sorted tree should be '
+                                                                    'similar to live topic name.'],
+    'TC_BREADCRUM_CAMP_NAME_WITH_LIVE_CAMP_NAME': [critical, 'Camp name in breadcrum , should be '
+                                                                    'similar to live topic name.'],
+    'TC_SUPPORT_TREE_CAMP_NAME_WITH_LIVE_CAMP_NAME': [critical, 'Camp name in support tree should be '
+                                                                        'similar to live topic name.'],
+    'TC_CURRENT_CAMP_NAME_WITH_LIVE_CAMP_NAME': [critical, 'Camp name in current Camp, should be '
+                                                                        'similar to live topic name.'],
+
 
 }

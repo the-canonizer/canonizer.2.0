@@ -1,3 +1,5 @@
+import re
+
 from selenium.webdriver.common.keys import Keys
 
 from CanonizerBase import Page
@@ -136,7 +138,6 @@ class CanonizerCampPage(Page):
     def create_camp_with_invalid_camp_name(self, create_camp_list_3):
         self.create_camp(create_camp_list_3)
         error = self.find_element(*CreateNewCampPageIdentifiers.ERROR_INVALID_CAMP_NAME).text
-        print(error)
         if error == 'Camp name can only contain space and alphanumeric characters.':
             return CanonizerCampPage(self.driver)
 
@@ -299,7 +300,6 @@ class CanonizerEditCampPage(Page):
 
     def load_camp_update_page(self):
         self.load_topic_agreement_page()
-
         self.driver.execute_script(self.window_scroll)
         time.sleep(3)
         self.hover(*CampEditPageIdentifiers.MANAGE_EDIT_CAMP)
@@ -578,3 +578,124 @@ class CanonizerEditCampPage(Page):
         error = self.find_element(*CampEditPageIdentifiers.ERROR_CAMP_ABOUT_URL).text
         if error == "Camp's about url can not be more than 1024 characters.":
             return CanonizerEditCampPage(self.driver)
+
+    def get_live_topic_name(self):
+        self.hover(*BrowsePageIdentifiers.BROWSE)
+        self.find_element(*BrowsePageIdentifiers.BROWSE).click()
+
+        # Browse to Topic Name
+        self.hover(*TopicUpdatePageIdentifiers.TOPIC_IDENTIFIER)
+        self.find_element(*TopicUpdatePageIdentifiers.TOPIC_IDENTIFIER).click()
+
+        self.driver.execute_script(self.window_scroll)
+        self.find_element(*TopicUpdatePageIdentifiers.EDIT_TOPIC).click()
+
+        camp_history = self.find_element(*TopicUpdatePageIdentifiers.CAMP_HISTORY)
+        divs = camp_history.find_elements_by_class_name("CmpHistoryPnl")
+        for i in divs:
+            r = i.value_of_css_property("background-color")
+            if r == 'rgba(0, 128, 0, 0.5)':
+                data = i.text
+                temp = data.split(":")
+                data = temp[1]
+                text = data.split("\n")
+                live_topic_name = text[0]
+
+        return live_topic_name
+
+    def verify_live_topic_name_with_topic_name(self):
+        live_topic_name = self.get_live_topic_name()
+        self.find_element(*TopicUpdatePageIdentifiers.TOPIC_NAME_EDIT_PAGE).click()
+        topic_name = self.find_element(*TopicUpdatePageIdentifiers.TOPIC_TITLE).text
+        temp_topic_name = topic_name.split(":")
+        topic_name = temp_topic_name[1]
+        if topic_name == live_topic_name:
+            return CanonizerEditCampPage(self.driver)
+
+    def test_verify_live_topic_name_with_camp_tree_topic_name(self):
+        live_topic_name = self.get_live_topic_name()
+        self.find_element(*TopicUpdatePageIdentifiers.TOPIC_NAME_EDIT_PAGE).click()
+        topic_name = self.find_element(*TopicUpdatePageIdentifiers.TOPIC_NAME_TREE).text
+        print(topic_name)
+        if topic_name == live_topic_name:
+            return CanonizerEditCampPage(self.driver)
+
+    def test_verify_live_topic_name_with_current_topic_name(self):
+        live_topic_name = self.get_live_topic_name()
+        self.find_element(*TopicUpdatePageIdentifiers.TOPIC_NAME_EDIT_PAGE).click()
+        topic_name = self.find_element(*TopicUpdatePageIdentifiers.CURRENT_TOPIC_NAME).text
+        topic_name = topic_name.split(":")
+        data = topic_name[1]
+        text = data.split("\n")
+        topic_name = text[0]
+        print(topic_name)
+        if topic_name == live_topic_name:
+            return CanonizerEditCampPage(self.driver)
+
+    def verify_camp_name(self):
+        self.hover(*BrowsePageIdentifiers.BROWSE)
+        self.find_element(*BrowsePageIdentifiers.BROWSE).click()
+
+        # Browse to Topic Name
+        self.hover(*TopicUpdatePageIdentifiers.TOPIC_IDENTIFIER)
+        self.find_element(*TopicUpdatePageIdentifiers.TOPIC_IDENTIFIER).click()
+
+        self.find_element(*TopicUpdatePageIdentifiers.SORTED_TREE_CAMP_NAME).click()
+
+        self.driver.execute_script(self.window_scroll)
+        self.find_element(*TopicUpdatePageIdentifiers.EDIT_CAMP).click()
+        camp_history = self.find_element(*TopicUpdatePageIdentifiers.CAMP_HISTORY)
+        divs = camp_history.find_elements_by_class_name("CmpHistoryPnl")
+        for i in divs:
+            r = i.value_of_css_property("background-color")
+            if r == 'rgba(0, 128, 0, 0.5)':
+                data = i.text
+                temp = data.split(":")
+                data = temp[1]
+                text = data.split("\n")
+                live_topic_name = text[0]
+        return live_topic_name
+
+    def verify_sorted_tree_name_with_live(self):
+        live_topic_name = self.verify_camp_name()
+        self.find_element(*TopicUpdatePageIdentifiers.TOPIC_NAME_EDIT_PAGE).click()
+        tree_topic_name = self.find_element(*TopicUpdatePageIdentifiers.SORTED_TREE_CAMP_NAME).text
+        self.find_element(*TopicUpdatePageIdentifiers.SORTED_TREE_CAMP_NAME).click()
+        if tree_topic_name in live_topic_name:
+            return CanonizerEditCampPage(self.driver)
+
+    def verify_breadcrum_camp_name_with_live_name(self):
+        live_topic_name = self.verify_camp_name()
+        self.find_element(*TopicUpdatePageIdentifiers.TOPIC_NAME_EDIT_PAGE).click()
+        self.find_element(*TopicUpdatePageIdentifiers.SORTED_TREE_CAMP_NAME).click()
+        breadcrum_camp_name = self.find_element(*TopicUpdatePageIdentifiers.BREADCRUM_CAMP_NAME).text
+        print(len(breadcrum_camp_name))
+        print(len(live_topic_name))
+        print(live_topic_name)
+        print(breadcrum_camp_name)
+        if breadcrum_camp_name in live_topic_name:
+            return CanonizerEditCampPage(self.driver)
+
+    def verify_support_tree_camp_name_with_live_name(self):
+        live_topic_name = self.verify_camp_name()
+        self.find_element(*TopicUpdatePageIdentifiers.TOPIC_NAME_EDIT_PAGE).click()
+        self.find_element(*TopicUpdatePageIdentifiers.SORTED_TREE_CAMP_NAME).click()
+        amp_name = self.find_element(*TopicUpdatePageIdentifiers.SUPPORT_TREE_CAMP_NAME).text
+        camp_name_temp = re.findall('"([^"]*)"', amp_name)
+        support_tree_camp_name = camp_name_temp[0]
+        if support_tree_camp_name in live_topic_name:
+            return CanonizerEditCampPage(self.driver)
+
+    def verify_current_camp_name_with_live_name(self):
+        live_topic_name = self.verify_camp_name()
+        self.find_element(*TopicUpdatePageIdentifiers.TOPIC_NAME_EDIT_PAGE).click()
+        self.find_element(*TopicUpdatePageIdentifiers.SORTED_TREE_CAMP_NAME).click()
+        data = self.find_element(*TopicUpdatePageIdentifiers.CURRENT_CAMP_NAME).text
+        temp = data.split(":")
+        data = temp[1]
+        text = data.split("\n")
+        current_camp_name = text[0]
+        if current_camp_name in live_topic_name:
+            return CanonizerEditCampPage(self.driver)
+
+
