@@ -23,7 +23,7 @@ class NewsFeedController extends Controller
     
     public function store(Request $request){
         $all = $request->all();
-        $regex = "/\b(?:(?:https?|ftp):\/\/|www\.)[-a-z0-9+&@#\/%?=~_|!:,.;]*[-a-z0-9+&@#\/%=~_|]/i";
+        $regex = '/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/';
        
         $validatorArray = [
             'display_text'=>'required|max:256|regex:/^[a-zA-Z0-9.\s]+$/',
@@ -68,8 +68,7 @@ class NewsFeedController extends Controller
     
     public function update(Request $request){
        $all = $request->all();
-       $regex = "/\b(?:(?:https?|ftp):\/\/|www\.)[-a-z0-9+&@#\/%?=~_|!:,.;]*[-a-z0-9+&@#\/%=~_|]/i";
-       
+       $regex = '/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/';
         $validatorArray = [
             'display_text.*'=>'required|max:256|regex:/^[a-zA-Z0-9.\s]+$/',
             "link.*" => array("required", "regex:".$regex)
@@ -122,8 +121,14 @@ class NewsFeedController extends Controller
             $newsData = NewsFeed::where('id','=',$id)->first();
             $topicnum = $newsData->topic_num;
             $campnum = $newsData->camp_num;
-            NewsFeed::find($id)->delete();
-            return redirect(\App\Model\Camp::getTopicCampUrl($topicnum,$campnum))->with(['success' => "News deleted successfully"]);
+            $get_id = NewsFeed::find($id);
+            if($get_id != null){
+                NewsFeed::find($id)->delete();
+                return redirect(\App\Model\Camp::getTopicCampUrl($topicnum,$campnum))->with(['success' => "News deleted successfully"]);
+            }
+            else{
+                return redirect()->back()->with([ 'error' => 'News has already been deleted by another user' ]);
+            }
         }
     }
     

@@ -11,6 +11,7 @@ use App\Model\Nickname;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 
 use App\Mail\ForumThreadCreatedMail;
@@ -50,7 +51,12 @@ class CThreadsController extends Controller
         {
             $partcipateFlag = 0;
             $myThreads = 0;
-            if (request('by') == 'me') {
+            if (Auth::check()) {
+                $request_by = request('by');
+            }else{
+                $request_by = "";
+            }
+            if ($request_by == 'me') {
                 /**
                  * Filter out the Threads by User
                  * @var [type]
@@ -68,7 +74,7 @@ class CThreadsController extends Controller
                     $threads = [];
                 }
             }
-            elseif (request('by') == 'participate') {
+            elseif ($request_by == 'participate') {
                 /**
                  * Filter out the threads on the basis of users Participation in Threads
                  * @var [type]
@@ -89,7 +95,7 @@ class CThreadsController extends Controller
                 $partcipateFlag = 1;
                 //dd($threads);
             }
-            elseif (request('by') == 'most_replies') {
+            elseif ($request_by == 'most_replies') {
                 /**
                  * Filter out the threads on the basis of most replies or the most popular threads
                  * @var [type]
@@ -141,6 +147,7 @@ class CThreadsController extends Controller
                                              ->first()->topic_name,
                 'parentcamp'       => Camp::campNameWithAncestors($camp,'',$topicname),
                 'participateFlag'  => $partcipateFlag,
+                'request_by'  => $request_by,
             ],
             compact('threads')
         );
@@ -227,6 +234,7 @@ class CThreadsController extends Controller
             'title.max' => 'Title can not be more than 100 characters.',
             'nick_name.required' => 'The nick name field is required.',
         ];
+        //993 ticket
           $this->validate(
               $request, [
                   'title'    => 'required|max:100|regex:/^[a-zA-Z0-9\s]+$/',
@@ -253,8 +261,8 @@ class CThreadsController extends Controller
         );
 
         // Return Url after creating thread Successfully
-        $return_url = 'forum/'.$topicid.'-'.$topicname.'/'.$campnum.'/threads';
-
+        $return_url = 'forum/'.$topicid.'-'.$topicname.'/'.$campnum.'/threads'; //create
+        
         CommonForumFunctions::sendEmailToSupportersForumThread($topicid, $campnum,
                               $return_url, request('title'), request('nick_name'), $topicname);
 
@@ -311,7 +319,6 @@ class CThreadsController extends Controller
 
         $campArr = preg_split("/[-]/", $campNum);
         $topicArr = preg_split("/[-]/", $topicName);
-
         $messagesVal = [
             'title.regex' => 'Title must only contain space and alphanumeric characters.',
             'title.required' => 'Title is required.',
@@ -321,21 +328,27 @@ class CThreadsController extends Controller
           $this->validate(
             $request, [
                 'title' => [
-                    'required', 'max:100', Rule::unique('thread')
+                    'required', 'regex:/^[a-zA-Z0-9\s]+$/', 'max:100', Rule::unique('thread')->ignore($threadId)
                         ->where(function ($query) use ($campArr, $topicArr) {
                             return $query->where('camp_id', $campArr[0])->where('topic_id', $topicArr[0]);
                         })
                 ],
             ], $messagesVal
           );
-
+          
 
           $title = request('title');
+          $old_title = request('thread_title_name');
           DB::update('update thread set title =?, updated_at = ? where id = ?', [$title, time(), $threadId]);
 
-          $return_url = 'forum/'.$topicName.'/'.$campNum.'/threads/'.$threadId.'/edit';
-
-          return redirect($return_url)->with('success', 'Thread title updated.');
+          $return_url = 'forum/'.$topicName.'/'.$campNum.'/threads/';//.$threadId.'/edit';
+          if (strcmp($title, $old_title) !== 0) {
+            return redirect($return_url)->with('success', 'Thread title updated.');
+          }
+          else {
+            return redirect($return_url);
+          }
+          //return redirect($return_url)->with('success', 'Thread title updated.');
 
     }
  

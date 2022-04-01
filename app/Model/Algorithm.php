@@ -37,7 +37,7 @@ class Algorithm{
     }
 	
 	/**
-    @return all the available algorithm key values
+        @return all the available algorithm key values
     */
     public static function getKeyList(){
         return array('blind_popularity','mind_experts','computer_science_experts','PhD','christian','secular','mormon','uu','atheist','transhumanist','united_utah','republican','democrat', 'ether','shares','shares_sqrt'
@@ -146,6 +146,12 @@ class Algorithm{
         $as_of_time = time();
         if(isset($_REQUEST['asof']) && $_REQUEST['asof']=='bydate'){
             $as_of_time = strtotime($_REQUEST['asofdate']);
+        }else{
+            // get the last month shares added for user as current share #1055
+            $latest_record = SharesAlgorithm::where('nick_name_id',$nick_name_id)->orderBy('as_of_date','desc')->first();
+            if(isset($latest_record) && isset($latest_record->as_of_date)){
+                $as_of_time = strtotime($latest_record->as_of_date);  
+            }
         }
         $year = date('Y',$as_of_time);
         $month = date('m',$as_of_time);
@@ -376,9 +382,7 @@ class Algorithm{
         });
         
 		# start with one person one vote canonize.
-		
-        $expertCampReducedTree = $expertCamp->campTree('blind_popularity'); # only need to canonize this branch
-
+		$expertCampReducedTree = $expertCamp->campTree('blind_popularity',$nick_name_id); # only need to canonize this branch
         // Check if user supports himself
         $num_of_camps_supported = 0;
         
@@ -386,27 +390,33 @@ class Algorithm{
             ->whereRaw("(start < $as_of_time) and ((end = 0) or (end > $as_of_time))")
             ->where('nick_name_id', '=', $nick_name_id)
             ->get();
-        
+        $topic_num_array = array();
+        $camp_num_array = array();
+    
         foreach ($user_support_camps as $scamp) {
-            $ret_camp = Camp::where('topic_num', '=', $scamp->topic_num)
-                ->where('camp_num', '=', $scamp->camp_num)
-                ->whereNotNull('camp_about_nick_id')
-                ->where('camp_about_nick_id', '<>', 0)
-                ->whereRaw('go_live_time in (select max(go_live_time) from camp where topic_num='.$topicnum.' and objector_nick_id is null and go_live_time < "'.time().'" group by camp_num)')				
-                ->where('go_live_time','<',time())
-                ->groupBy('camp_num')				
-				->orderBy('submit_time', 'desc')
-                ->get();
-
-            if ( $ret_camp->count() ) {
-                $num_of_camps_supported++;
-            }
+            $topic_num_array[] = $scamp->topic_num;
+            $camp_num_array[] = $scamp->camp_num;
         }
+
         
+        $ret_camp = Camp::whereIn('topic_num', array_unique($topic_num_array))
+            ->whereIn('camp_num', array_unique($camp_num_array))
+            ->whereNotNull('camp_about_nick_id')
+            ->where('camp_about_nick_id', '<>', 0)
+            ->whereRaw('go_live_time in (select max(go_live_time) from camp where topic_num=' . $topicnum . ' and objector_nick_id is null and go_live_time < "' . time() . '" group by camp_num)')
+            ->where('go_live_time', '<', time())
+            ->groupBy('camp_num')
+            ->orderBy('submit_time', 'desc')
+            ->get();
+        if ($ret_camp->count()) {
+            $num_of_camps_supported = $ret_camp->count();
+        }
+       
         if( ( $directSupports->count() > 0 || $delegatedSupports->count() > 0 ) && $num_of_camps_supported > 1 ) {
-             return $expertCampReducedTree[$expertCamp->camp_num]['score'] * 5;
+             return $expertCampReducedTree[$expertCamp->camp_num]['score'] * 5;             
         }else{
              return $expertCampReducedTree[$expertCamp->camp_num]['score'] * 1;
         }
+        
     }
 }

@@ -2,7 +2,7 @@
 Hello {{ $user->first_name }} {{ $user->last_name }}, <br/>
 
 <p>
-    {{ $data['nick_name']->nick_name }} has created the new thread
+    <a target="_blank" href="<?= route('user_supports',$data['nick_name_id']) .'?topicnum=&campnum=&namespace=' . $data['namespace_id']; ?>">{{ $data['nick_name']->nick_name }}</a> has created the new thread
     <a href="{{ url('/').'/'.$link }}">{{ $data['thread_title'] }}</a>
 
 </p>
@@ -42,7 +42,7 @@ Hello {{ $user->first_name }} {{ $user->last_name }}, <br/>
 		</ul>
 	<h4>Note:</h4>
 	<p>
-	 We request that all <b>direct</b> supporters of a camp continue to receive notifications and take responsibility for the camp. You can avoid being notified by <b>delegating</b> your support to someone else.
+		We request that all <b>direct</b> supporters of a camp continue to receive notifications and take responsibility for the camp. If you <b>delegate</b> your support to someone else, you will no longer receive these notifications. <b>Delegating</b> your support to someone else will also result in your support following them for all camps in this topic.
 	</p>
 @endif
 </p>

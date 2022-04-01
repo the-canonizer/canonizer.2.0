@@ -48,7 +48,7 @@
                     <li class="nav-item col-sm-7">
                        <form method="get" action="https://www.google.com/custom" target="_top">
                             <div class="input-group search-panel">
-                               <table>
+                               <table class="radio-button-top">
 									<tr>
 										<td class="radio radio-primary">
 										<input type="radio" name="sitesearch" value="" checked id="ss0"></input>
@@ -74,7 +74,7 @@
                     <li class="nav-item col-sm-5 text-right" style="padding-right:0px;">
                         @if(Auth::check())
 						<div class="dropdown">
-                            Browsing as: <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-fw fa-user"></i> <span class="brsr-name">{{ Auth::user()->first_name . ' ' . Auth::user()->last_name}} </span></a>
+                            Browsing as: <a href="javascript:void(0)" class="dropdown-toggle login-icon" data-toggle="dropdown"><i class="fa fa-fw fa-user"></i> <span class="brsr-name">{{ Auth::user()->first_name . ' ' . Auth::user()->last_name}} </span></a>
                             <span class="caret"></span>
                             <ul class="dropdown-menu">
                                 <li><a href="{{ route('settings')}}">Account Settings</a></li>
@@ -85,7 +85,7 @@
                         @else
 						<a class="nav-link guestLogin" style="cursor:default;">Browsing as: Guest</a>
                         <a class="nav-link @if(Request::url() == url('/login')) active @endif" href="{{ url('/login')}}"><i class="fa fa-fw fa-user"></i> Log in</a>
-                        <a class="nav-link @if(Request::url() == url('/register')) active @endif" href="{{ url('/register')}}"><i class="fa fa-fw fa-user-plus"></i> Sign up </a>
+                        <a class="nav-link @if(Request::url() == url('/signup')) active @endif" href="{{ url('/signup')}}"><i class="fa fa-fw fa-user-plus"></i> Sign up </a>
                         @endif
                     </li>
                 </ul>
@@ -195,7 +195,9 @@
                       session(['asofDefault'=>$_REQUEST['asof']]);
                     }
                     if(isset($_REQUEST['asofdate']) && $_REQUEST['asofdate']) {
-                      session(['asofdateDefault'=>$_REQUEST['asofdate']]);
+                        //$date = date_create($_REQUEST['asofdate']);
+                        //$date = date_format($date,"m/d/Y h:s:i A"); //added by Ali Ahmad ticket# 1001, 1011, 1020
+                        session(['asofdateDefault'=>$_REQUEST['asofdate']]);
                     }
 
                     $visibleRoutes = array("index","show");
@@ -204,7 +206,7 @@
                         <ul class="lowermneu canoalgo">
 
                         <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Components">
-                            <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#canoalgo">
+                            <a class="nav-link nav-link-collapse" data-toggle="collapse" href="#canoalgo">
                                 <span class="nav-link-text">Canonizer</span>
                             </a>
                             <ul class="sidenav-second-level collapse show" id="canoalgo">
@@ -242,13 +244,13 @@
                       <?php } ?>
                     <ul class="lowermneu asof">
                         <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Components">
-                            <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#asof">
+                            <a class="nav-link nav-link-collapse" data-toggle="collapse" href="#asof">
                                 <span class="nav-link-text">As Of</span>
                             </a>
                             <ul class="sidenav-second-level collapse show" id="asof">
                                 <li>
 								 <form name="as_of" id="as_of" method="GET">
-                                 <input type="hidden" id="filter" name="filter" value="{{ isset($_REQUEST['filter']) && !empty($_REQUEST['filter']) ? $_REQUEST['filter'] : '0.001' }}"/>
+                                 <input type="hidden" id="filter" name="filter" value="{{ isset($_REQUEST['filter']) && !empty($_REQUEST['filter']) ? $_REQUEST['filter'] : '0.000' }}"/>
 								   <input type="hidden" name="_token" value="{{ csrf_token() }}">
 									<div class="radio radio-primary">
 										<input type="radio" <?php echo (session('asofDefault')=="review") ? "checked='checked'" : '';?> class="asofdate" name="asof" id="radio1" value="review">
@@ -266,9 +268,12 @@
 									
 									<div><input readonly type="text" id="asofdate" name="asofdate" value=""/></div>
 								    <script>
-                                        <?php if(session('asofdateDefault')!=null && session('asofdateDefault')!='') { ?>
+                                        <?php if(session('asofdateDefault')!=null && session('asofdateDefault')!='') { 
+                                            ?>
+                                           
     									var date = new Date(<?= strtotime(session('asofdateDefault')) ?> * 1000).toLocaleString();
-                                       $('#asofdate').val(date);
+                                       
+                                       $('#asofdate').val("<?php echo session('asofdateDefault');  ?>");
                                    <?php } ?>
 									</script>
 								</form>
@@ -305,6 +310,38 @@
             <!-- Logout Modal-->
         </div>
     </div>
+
+    <!-- disagreemetn popup -->
+    <div id="dsiagreementPopup" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">                    
+                    <h4 class="modal-title">Why can't I object?
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    To object to this change, you should be a direct supporter of the topic/camp and should have supported it before the change was submitted.
+                    <br/>For more information about disagreement, please read topic:<br/>
+                    <a href="https://canonizer.com/topic/132-Help/4-Disagreement" target="_blank">https://canonizer.com/topic/132-Help/4-Disagreement</a>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">
+                        Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
     <script>
         
         $('button[type="submit"]').removeAttr('disabled');
@@ -394,7 +431,30 @@
             $('#as_of').submit();
 		  }
         }
+
+        function disagreementPopup(e){
+           $("#dsiagreementPopup").modal('show');
+           return false;
+        }
     </script>
 
 </body>
 </html>
+
+<style>
+
+table.radio-button-top .radio label::before{
+    top:0px !important;
+}
+table.radio-button-top .radio label::after{
+    top:3px !important;
+}
+.login-icon::after{
+     margin-top:7px !important;
+}
+
+.search-panel table.radio-button-top{
+    top: 43px !important;
+}
+
+</style>

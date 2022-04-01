@@ -33,22 +33,27 @@
         <div class="form-group">
             <label for="pwd">Password <span style="color:red">*</span> 
                 <div class="pass_info"><i class="fa fa-info-circle" aria-hidden="true"></i>
-                    <ul class="ps_tooltp"><li>Password must be atleast 8 characters</li><li>Must have atleast one lower case letter</li><li>Must have atleast one digit</li><li>Must have atleast one special character(@,# !,$..)</li></ul>
+                    <ul class="ps_tooltp"><li>Password must be at least 8 characters</li><li>Must have at least one lower case letter</li><li>Must have at least one digit</li><li>Must have at least one special character(@,# !,$..)</li></ul>
                 </div>
             </label>
             <input type="password" name="password" class="form-control" id="password" placeholder="Password">
-             <!--<span style="display:none;" class="passStrengthCheck">Password must be atleast 8 characters, including atleast one digit and one special character(@,# !,$..)</span>-->
-             <p class="help-block" id="pwd-help" style="display: none"></p>
-             @if ($errors->has('password')) <p class="help-block">{{ $errors->first('password') }}</p> @endif
+            @if ($errors->has('password'))
+            <p class="help-block">{{ $errors->first('password') }}</p>
+            @endif 
+             <!--<span style="display:none;" class="passStrengthCheck">Password must be at least 8 characters, including at least one digit and one special character(@,# !,$..)</span>-->
         </div>
         
         <div class="form-group">
             <label for="pwd">Confirm Password <span style="color:red">*</span></label>
-            <input type="password" name="password_confirmation" class="form-control" id="pwd_confirm" placeholder="Confirm Password">           
+            <input type="password" name="password_confirmation" class="form-control" id="pwd_confirm" placeholder="Confirm Password">
+            @if ($errors->has('password_confirmation')) <p class="help-block" id="pwd-help">{{ $errors->first('password_confirmation') }}</p> 
+            @else
+            <p class="help-block" id="pwd-help" style="display: none"></p>   
+            @endif      
         </div>
 
          <div class="form-group">
-            <label for="captcha">Captcha</label>
+            <label for="captcha">Captcha <span style="color:red">*</span> </label>
                 {!! captcha_image_html('ContactCaptcha') !!}
                 <input class="form-control" type="text" id="CaptchaCode" name="CaptchaCode" style="margin-top:5px;">
 
@@ -77,7 +82,6 @@
     $('.pinfo').tooltip();
 
     $(document).ready(function(e){
-        $("#pwd-help").hide();
         $("#pwd_confirm").on('blur', function(e){
             let confirmPassword = $(this).val().trim();
             let password = $('#password').val().trim();
@@ -111,6 +115,8 @@
                 $("#pwd-help").hide();
             }
         });
+
+        $('.')
     });
 /*
 function validatePassword(){

@@ -2,6 +2,7 @@ from CanonizerBase import Page
 from Identifiers import BrowsePageIdentifiers
 from selenium.webdriver.support.ui import Select
 import time
+from Config import NAME_SPACE_1
 
 
 class CanonizerBrowsePage(Page):
@@ -16,9 +17,13 @@ class CanonizerBrowsePage(Page):
             Return the result to the main page.
         """
 
-        self.hover(*BrowsePageIdentifiers.BROWSE)
-        self.find_element(*BrowsePageIdentifiers.BROWSE).click()
-        return CanonizerBrowsePage(self.driver)
+        title = self.find_element(*BrowsePageIdentifiers.TITLE).text
+        if title == 'Canonizer Main Page':
+            self.hover(*BrowsePageIdentifiers.BROWSE)
+            self.find_element(*BrowsePageIdentifiers.BROWSE).click()
+            heading = self.find_element(*BrowsePageIdentifiers.HEADING).text
+            if heading == 'Select Namespace':
+                return CanonizerBrowsePage(self.driver)
 
     def click_only_my_topics_button(self):
         self.hover(*BrowsePageIdentifiers.ONLY_MY_TOPICS)
@@ -343,7 +348,6 @@ class CanonizerBrowsePage(Page):
     def select_by_value_crypto_currency_ethereum(self):
         select = Select(self.find_element(*BrowsePageIdentifiers.NAMESPACE))
         select.select_by_value("21")
-        time.sleep(3)
         return CanonizerBrowsePage(self.driver)
 
     def select_by_value_crypto_currency_ethereum_only_my_topics(self):
@@ -436,15 +440,64 @@ class CanonizerBrowsePage(Page):
         time.sleep(3)
         return CanonizerBrowsePage(self.driver)
 
+    def select_menu_item(self, menu_item):
+        self.click_browse_page_button()
+        self.hover(*BrowsePageIdentifiers.NAMESPACE)
+        select = Select(self.find_element(*BrowsePageIdentifiers.NAMESPACE))
+        select.select_by_visible_text(menu_item)
+        self.hover(*BrowsePageIdentifiers.TOPIC_NAME)
+        return CanonizerBrowsePage(self.driver)
 
+    def select_menu_item_with_only_my_topics(self, menu_item):
+        self.select_menu_item(menu_item)
+        self.hover(*BrowsePageIdentifiers.ONLY_MY_TOPICS)
+        self.find_element(*BrowsePageIdentifiers.ONLY_MY_TOPICS).click()
+        time.sleep(3)
+        return CanonizerBrowsePage(self.driver)
 
+    def select_menu_item_without_only_my_topics(self, menu_item):
+        self.select_menu_item(menu_item)
+        return CanonizerBrowsePage(self.driver)
 
+    def one_by_one(self, menu_item):
+        element = self.find_element(*BrowsePageIdentifiers.ONLY_MY_TOPICS)
+        if element.is_selected():
+            self.find_element(*BrowsePageIdentifiers.ONLY_MY_TOPICS).click()
+        select = Select(self.find_element(*BrowsePageIdentifiers.NAMESPACE))
+        select.select_by_visible_text(menu_item)
+        time.sleep(4)
+        return CanonizerBrowsePage(self.driver)
 
+    def one_by_one_only_my_topics(self):
+        self.hover(*BrowsePageIdentifiers.ONLY_MY_TOPICS)
+        self.find_element(*BrowsePageIdentifiers.ONLY_MY_TOPICS).click()
+        time.sleep(3)
+        return CanonizerBrowsePage(self.driver)
 
+    def select_menu_items_one_by_one(self):
+        self.click_browse_page_button()
+        self.hover(*BrowsePageIdentifiers.NAMESPACE)
+        topics = Select(self.find_element(*BrowsePageIdentifiers.NAMESPACE))
+        options = topics.options
+        index = []
+        topic_list = []
+        for ele in options:
+            index.append(ele.get_attribute("value"))
+            topic_list.append(ele.text)
+        index.pop(0)
+        topic_list.pop(0)
+        for i in range(len(topic_list)):
+            result1 = self.one_by_one(topic_list[i])
+            name_space1 = NAME_SPACE_1 + str(index[i])
+            if name_space1 != result1.get_url():
+                return False
 
+            name_space2 = NAME_SPACE_1 + str(index[i])+"&my="+str(index[i])
+            result2 = self.one_by_one_only_my_topics()
+            if name_space2 != result2.get_url():
+                return False
 
-
-
+        return CanonizerBrowsePage(self.driver)
 
 
 

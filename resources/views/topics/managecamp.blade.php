@@ -70,10 +70,7 @@
                 <label for="parent_camp_num">Parent Camp <span style="color:red">*</span></label>
                 <select  name="parent_camp_num" id="parent_camp_num" class="form-control" <?php if($objection=="objection") { ?> disabled <?php } ?>>
                     @foreach($parentcampsData as $parent)
-					<?php if(($camp->camp_num != $parent->camp_num ) && ($parent->parent_camp_num<=$parentcampnum)) { 
-                    //#787 #861 both
-                    //($parent->parent_camp_num<=$parentcampnum) /*siblings and parent both show */
-                    //($parent->camp_num<=$parentcampnum) /*only parent show */
+					<?php if(($camp->camp_num != $parent->camp_num ) && (  !in_array($parent->camp_num, $childCamps))) {
                     ?>
                     <option <?php if($camp->parent_camp_num==$parent->camp_num) echo "selected=selected";?> value="{{ $parent->camp_num }}">{{ $parent->camp_name}}</option>
                     <?php } ?>
@@ -147,40 +144,7 @@
 			<?php if($objection=="objection") { ?> Submit Objection <?php } else {?>
 			Submit Update <?php } ?>
 			</button> 
-            <?php if($objection!="objection") { ?>			
-            <button type="button" id="preview" class="btn btn-default" onclick="showPreview()">Preview</button>
-            <?php } ?>
             
-            <!-- preview Form -->
-            <div id="previewModal" class="modal fade preview-camp" role="dialog">
-              <div class="modal-dialog">
-
-                <!-- Modal content-->
-                <div class="modal-content">
-                    <div class="modal-header">
-                     <h4 class="modal-title">Updated camp record preview</h4>
-                    </div>
-                    <div class="modal-body">
-                        <div class="tree col-sm-12">
-                            <!--#903 issue -->
-                            @if($camp->camp_name!="Agreement")
-                            Parent Camp : <span id="parent_camp_name">{!! $parentcamp !!}</span> <br/>
-                            @endif
-                            Camp Name : <span id="pre_camp_name"></span> <br/>
-                            Keywords : <span id="pre_keywords"></span><br/>
-                            Camp About URL : <span id="pre_related_url"></span><br/>
-                            Camp About Nick Name : <span id="pre_nickname"></span><br/>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                      <button type="submit" id="submit" class="btn btn-login">Submit Update</button>
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-            <!--ends preview -->
         </form>
 </div>
 </div>
@@ -196,27 +160,6 @@
             });
         })
         
-        function showPreview(){
-            var campname = $('#camp_name').val();
-            var keywords = $('#keywords').val();
-            var nicknameval = $("#camp_about_nick_id option:selected").val();
-            var nickname = $("#camp_about_nick_id option:selected").text();
-			var nicknameid = $("#camp_about_nick_id").val();
-            var related_url = $('#camp_about_url').val();
-            var parentcamp = $("#parent_camp_num option:selected").text();
-            $('#pre_camp_name').text(campname);
-			$('#parent_camp_name').text(parentcamp);
-           
-            $('#pre_nickname').text((nicknameid != 0) ? nickname : 'No nickname associated');
-       
-            $('#pre_keywords').text(keywords);
-            var urlNew = validateURL(related_url);
-            $('#pre_related_url').html("<a href='"+urlNew+"' target='_blank'>"+related_url+"</a>");
-            
-            $('#previewModal').modal('show');
-            
-            
-        }
         function validateURL(link)
         {
             if(link!=""){

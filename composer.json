@@ -8,6 +8,7 @@
         "php": ">=5.6.4",
         "captcha-com/laravel-captcha": "4.*",
         "doctrine/dbal": "v2.5.13",
+        "enimiste/laravel-uniqueable-jobs-l54": "5.4.*",
         "laravel/framework": "5.4.36",
         "laravel/socialite": "3.0",
         "laravel/tinker": "~1.0",
@@ -52,6 +53,9 @@
     "config": {
         "preferred-install": "dist",
         "sort-packages": true,
-        "optimize-autoloader": true
+        "optimize-autoloader": true,
+        "allow-plugins": {
+            "kylekatarnls/update-helper": true
+        }
     }
 }

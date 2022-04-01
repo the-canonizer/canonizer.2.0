@@ -63,7 +63,7 @@
                 </form>
             </div>
             </h3>
-            <div class="content supported_camp">	  
+            <div class="content supported_camp" style="word-break: break-word;">	  
             <h5>List of supported camps</h5>
             @if(count($supportedCamps) > 0)
 			   @foreach($supportedCamps as $key=>$supports)
@@ -91,7 +91,7 @@
 
                       ?>
                       <ul>
-                          <li style="list-style:none;">
+                          <li style="list-style:none;word-break: break-all;">
                                     Support delegated to {{$delegatedNickDetail->nick_name }}
                                     <?php if($supported_camp_list != '' && $supported_camp_list!= null){ ?>
                                       <span style="font-size:10px; width:100%; float:left;"><b>Supported camp list</b> : {!!$supported_camp_list !!}</span>
@@ -127,7 +127,7 @@
                                     $supported_camp_list = $nickName->getSupportCampListNames($supported_camp,$key);
                                     $delegate_flag = 1;
                                 ?>
-                                <li style="list-style:none;">
+                                <li style="list-style:none;word-break: break-all;">
                                     Support delegated to {{$delegatedNickDetail->nick_name }}
                                     <?php if($supported_camp_list != '' && $supported_camp_list!= null){ ?>
                                       <span style="font-size:10px; width:100%; float:left;"><b>Supported camp list</b> : {!!$supported_camp_list !!}</span>

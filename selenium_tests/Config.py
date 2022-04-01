@@ -33,6 +33,7 @@ DEFAULT_USER = "sania.mohan@talentelgia.in"
 DEFAULT_PASS = "Test@123"
 DEFAULT_UNVERIFIED_EMAIL = "sania@gmail.com"
 DEFAULT_UNVERIFIED_PASSWORD = 'Test@123'
+
 #DEFAULT_USER = "r_canonizer_user@yopmail.com"
 #DEFAULT_PASS = "Rupali@12345"
 DEFAULT_INVALID_USER = 'invaliduser@gmail.com'
@@ -48,6 +49,134 @@ DEFAULT_FIRST_NAME = "Rupali"
 DEFAULT_MIDDLE_NAME = "A"
 DEFAULT_LAST_NAME = "Chavan"
 INVALID_NAME_REGISTER = "invalidname!@#$%1"
+REG_LIST_1 = [
+    "      ",
+    DEFAULT_MIDDLE_NAME,
+    DEFAULT_LAST_NAME,
+    DEFAULT_USER,
+    DEFAULT_PASS,
+    DEFAULT_PASS,
+    ''
+]
+REG_LIST_2 = [
+    DEFAULT_FIRST_NAME,
+    DEFAULT_MIDDLE_NAME,
+    DEFAULT_LAST_NAME,
+    DEFAULT_USER,
+    DEFAULT_PASS,
+    DEFAULT_PASS,
+    ''
+]
+REG_LIST_3 = [
+    '',
+    DEFAULT_MIDDLE_NAME,
+    DEFAULT_LAST_NAME,
+    DEFAULT_USER,
+    DEFAULT_PASS,
+    DEFAULT_PASS,
+    ''
+]
+REG_LIST_4 = [
+    DEFAULT_FIRST_NAME,
+    DEFAULT_MIDDLE_NAME,
+    '',
+    DEFAULT_USER,
+    DEFAULT_PASS,
+    DEFAULT_PASS,
+    ''
+]
+REG_LIST_5 = [
+    DEFAULT_FIRST_NAME,
+    DEFAULT_MIDDLE_NAME,
+    DEFAULT_LAST_NAME,
+    '',
+    DEFAULT_PASS,
+    DEFAULT_PASS,
+    ''
+]
+REG_LIST_6 = [
+    DEFAULT_FIRST_NAME,
+    DEFAULT_MIDDLE_NAME,
+    DEFAULT_LAST_NAME,
+    DEFAULT_USER,
+    '',
+    '',
+    ''
+]
+REG_LIST_7 =[
+    DEFAULT_FIRST_NAME,
+    DEFAULT_MIDDLE_NAME,
+    DEFAULT_LAST_NAME,
+    DEFAULT_USER,
+    '12345',
+    '12345',
+    ''
+]
+REG_LIST_8 = [
+    DEFAULT_FIRST_NAME,
+    DEFAULT_MIDDLE_NAME,
+    DEFAULT_LAST_NAME,
+    DEFAULT_USER,
+    'Test@1234567',
+    'Test@123456',
+    ''
+]
+REG_LIST_9 = [
+    DEFAULT_FIRST_NAME,
+    DEFAULT_MIDDLE_NAME,
+    DEFAULT_LAST_NAME,
+    DEFAULT_USER,
+    DEFAULT_PASS,
+    DEFAULT_PASS,
+    ''
+]
+REG_LIST_10 = [
+    INVALID_NAME_REGISTER,
+    DEFAULT_MIDDLE_NAME,
+    DEFAULT_LAST_NAME,
+    DEFAULT_USER,
+    DEFAULT_PASS,
+    DEFAULT_PASS,
+    ''
+]
+REG_LIST_11 = [
+    DEFAULT_FIRST_NAME,
+    DEFAULT_MIDDLE_NAME,
+    INVALID_NAME_REGISTER,
+    DEFAULT_USER,
+    DEFAULT_PASS,
+    DEFAULT_PASS,
+    ''
+]
+REG_LIST_12 = [
+    DEFAULT_FIRST_NAME,
+    INVALID_NAME_REGISTER,
+    DEFAULT_LAST_NAME,
+    DEFAULT_USER,
+    DEFAULT_PASS,
+    DEFAULT_PASS,
+    ''
+]
+REG_LIST_13 = [
+    DEFAULT_FIRST_NAME,
+    DEFAULT_MIDDLE_NAME,
+    DEFAULT_LAST_NAME,
+    DEFAULT_USER,
+    DEFAULT_PASS,
+    DEFAULT_PASS,
+    'INVALID'
+]
+REG_LIST_14= [
+    DEFAULT_FIRST_NAME,
+    DEFAULT_MIDDLE_NAME,
+    DEFAULT_LAST_NAME,
+    DEFAULT_INVALID_EMAIL_FORMAT,
+    DEFAULT_PASS,
+    DEFAULT_PASS,
+    ''
+]
+
+# Account Setting
 
 # File Upload Page Configuration Parameters
 DEFAULT_ORIGINAL_FILE_NAME = "/Users/himmatpratapsinghgill/Desktop/female-silhoutte-avatar-default-profile-260nw-1219366543.jpeg"
@@ -62,7 +191,7 @@ FILE_WITH_ZERO_BYTES = "C:\\Users\\Ajay\\Desktop\\Canonizer\\New Bitmap Image.bm
 INVALID_FILE_FORMAT = "/Users/himmatpratapsinghgill/Desktop/sample files/file_example_PPT_1MB.ppt"
 
 # Create New Topic Configuration Parameters
-DEFAULT_NICK_NAME = ""
+DEFAULT_NICK_NAME = "Pooja"
 DEFAULT_TOPIC_NAME = ""
 DEFAULT_NAMESPACE = ""
 DEFAULT_NOTE = ""
@@ -71,15 +200,146 @@ DUPLICATE_CAMP_NAME = "Levels Of Testing"
 INVALID_TOPIC_NAME = "Test@1234567"
 INVALID_CAMP_NAME = "Test@1234567"
 INVALID_CAMP_ABOUT_URL = "TestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestATestA1"
-
+CAMP_LIST_1 = [
+    "Test", "", "", "", "", "",""
+]
+CAMP_LIST_2 = [
+    "Agreement",
+    "Types Of Testing 1",
+    "Test",
+    "Testing Keywords, Keywords",
+    "Just Note for testing",
+    "www.google.com",
+    "Pooja"
+]
+CAMP_LIST_3 = [
+    "Agreement",
+    "Types Of Testing 1",
+    "Test",
+    "Testing Keywords, Keywords",
+    "Just Note for testing",
+    "invalid url",
+    "Pooja",
+]
+CAMP_LIST_4= [
+    "Agreement",
+    "Types Of Testing 1",
+    "",
+    "",
+    "",
+    "",
+    "",
+]
+CAMP_LIST_5 = [
+    "Agreement",
+    "Types Of Testing 1",
+    "",
+    "           keywords with trailing spaces.",
+    "          notes with trailing spaces.",
+    "      www.google.com",
+    "",
+]
+CAMP_LIST_6 = [
+    "",
+    "",
+    "",
+    "",
+    "",
+    "invalid url",
+    "",
+]
+CAMP_LIST_7 = [
+    "",
+    "",
+    DUPLICATE_CAMP_NAME,
+    "",
+    "",
+    "",
+    ""
+]
+CAMP_LIST_8 = [
+    "",
+    "",
+    INVALID_CAMP_NAME,
+    "",
+    "",
+    "",
+    ""
+]
+CAMP_LIST_9 = [
+    "",
+    "",
+    "",
+    "",
+    "",
+    INVALID_CAMP_ABOUT_URL,
+    ""
+]
+CAMP_LIST_10 = [
+    "Test",
+    "",
+    "",
+    "",
+    "",
+    "",
+    ""
+]
+CREATE_CAMP_LIST_1 = [
+    "Test",
+    "",
+    "",
+    "",
+    "",
+    "",
+    ""
+]
+CREATE_CAMP_LIST_2 = [
+    "Test",
+    "",
+    "",
+    "",
+    "",
+    "",
+    ""
+]
+CREATE_CAMP_LIST_3 = [
+    "",
+    "",
+    DUPLICATE_CAMP_NAME,
+    "",
+    "",
+    "",
+    ""
+]
+CREATE_CAMP_LIST_4 = [
+    "",
+    "",
+    INVALID_CAMP_NAME,
+    "",
+    "",
+    "",
+    ""
+]
 # Change Password Configuration Parameters
-DEFAULT_CURRENT_PASSWORD = "Rupali@12345"
+DEFAULT_CURRENT_PASSWORD = "Pooja@123456"
 DEFAULT_NEW_PASSWORD = "Test@12345"
 DEFAULT_CONFIRM_PASSWORD = "Test@12345"
 
 # Add New Nick Name Configuration Parameters
+
 DEF_NICK_NAME = "saniaqa"
 
+# Browse Page
+DEF_MENU_ITEM = "/crypto_currency/"
+NAME_SPACE_1 = "https://staging.canonizer.com/browse?namespace="
 
+# Create New Thread Configure Parameters
+DEFAULT_THREAD_NAME = "Test Thread Name 2"
+DUPLICATE_THREAD_NAME = "Test Thread Name 1"
+DEFAULT_THREAD_WITH_SPECIAL_CHAR = "Thread With $pecial char"
+UPDATED_THREAD_TITLE = "Updated Test Thread Name 3"
+UPDATED_THREAD_WITH_SPECIAL_CHAR = "Thread With $pecial char &&&"
 
-print(DEFAULT_CHROME_DRIVER_LOCATION)
+DEFAULT_REPLY = "Test Reply 1"
+DEFAULT_EDIT_REPLY = "Edited Reply 1"
+# print(DEFAULT_CHROME_DRIVER_LOCATION)

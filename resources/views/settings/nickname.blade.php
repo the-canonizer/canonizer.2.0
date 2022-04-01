@@ -34,11 +34,11 @@
 
          <!-- exsisting Nick Names -->
          <div class="">
-           <table class="table">
+           <table class="table nickname-table">
            <thead class="thead-default">
               <tr>
                 <th>Sr.No</th>
-                <th>Unique Number</th>
+                <th>Nick Name ID</th>
                 <th>Nick Name</th>
                 <th>Visibility Status</th>
                 <!--th>Manage Actions</th-->
@@ -47,10 +47,10 @@
            <tbody>
                  @foreach($nicknames as $k=>$nickname)
                    <tr>
-                       <th scope="row">{{ $k+1 }}</th>
-                       <td>{{ $nickname->id }}</td>
-                       <td>{{ $nickname->nick_name}}</td>
-                       <td>{{ ($nickname->private == 1) ? 'Private' : 'Public'}}</td>
+                       <th data-content="Sr.No" scope="row">{{ $k+1 }}</th>
+                       <td data-content="Nick Name ID">{{ $nickname->id }}</td>
+                       <td data-content="Nick Name">{{ $nickname->nick_name}}</td>
+                       <td data-content="Visibility Status">{{ ($nickname->private == 1) ? 'Private' : 'Public'}}</td>
                        <!--td>
                           <a href="">Edit</a>
                           <a href=""><i class="fa fa-trash" aria-hidden="true"></i></a>

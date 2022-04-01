@@ -21,20 +21,30 @@ class CanonizerForgotPasswordPage(Page):
 
     def forgot_password_with_blank_email(self):
         self.submit('')
-        return self.find_element(*ForgotPasswordIdentifiers.ERROR_MESSAGE_EMAIL).text
+        error = self.find_element(*ForgotPasswordIdentifiers.ERROR_MESSAGE_EMAIL).text
+        if error == 'The email field is required.':
+            return CanonizerForgotPasswordPage(self.driver)
 
     def forgot_password_with_invalid_email(self, email):
         self.submit(email)
-        return self.find_element(*ForgotPasswordIdentifiers.ERROR_INVALID_EMAIL).text
+        error = self.find_element(*ForgotPasswordIdentifiers.ERROR_INVALID_EMAIL).text
+        if error == 'Email not found in our record':
+            return CanonizerForgotPasswordPage(self.driver)
 
     def forgot_password_with_invalid_email_format(self, email):
         self.submit(email)
-        return self.find_element(*ForgotPasswordIdentifiers.ERROR_INVALID_EMAIL).text
+        error = self.find_element(*ForgotPasswordIdentifiers.ERROR_INVALID_EMAIL).text
+        if error == 'The email must be a valid email address.':
+            return CanonizerForgotPasswordPage(self.driver)
 
     def forgot_password_with_valid_email(self, email):
         self.submit(email)
-        return self
+        confirmation_text = self.find_element(*ForgotPasswordIdentifiers.CONFIRMATION).text
+        if confirmation_text == 'Confirmation':
+            return CanonizerForgotPasswordPage(self.driver)
 
     def forgot_password_page_mandatory_fields_are_marked_with_asterisk(self):
         return \
             self.find_element(*ForgotPasswordIdentifiers.EMAIL_ASTRK)
+
+

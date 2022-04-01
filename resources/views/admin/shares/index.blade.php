@@ -21,13 +21,18 @@
             <div class="row">
                 <div class="form-group">
                     <!-- <label class="forl-label">Month</label> -->
-                  
+                   
                     <select id="selectMonth" class="form-control" onChange="changeMonthData()">
                         <option value="">Select Month</option>
                             <?php
 
-                                    for($m=1; $m<=date('m'); $m++){
-                                       echo '<option value="'.date('F,Y', mktime(0, 0, 0, $m)).'">'.date('F,Y', mktime(0, 0, 0, $m)).'</option>';
+                                    foreach($month_range as $m){
+                                       if(isset($_REQUEST['month']) && $_REQUEST['month'] !='' && date('Y-m-d', strtotime($m)) ==  date('Y-m-d', strtotime($_REQUEST['month'])) ){
+                                         echo '<option value="'.date('Y-m-d', strtotime($m)).'" selected="selected">'.date('F,Y', strtotime($m)).'</option>';
+                                       }else{
+                                           echo '<option value="'.date('Y-m-d', strtotime($m)).'">'.date('F,Y', strtotime($m)).'</option>';
+
+                                       }
                                      }
                             ?>
                     </select>
@@ -45,7 +50,7 @@
                 @if(isset($shares) && count($shares) > 0)
                 @foreach($shares as $share)
                 <tr>
-                    <td>{{ $share->usernickname->nick_name }}</td>
+                    <td><a href="{{route('user_supports',$share->usernickname->id)}}">{{ $share->usernickname->nick_name }}</a></td>
                     <td>{{ date("F,Y",strtotime($share->as_of_date)) }}</td>
                     <td>{{ $share->share_value}}</td>
                     <td>{{ number_format(sqrt($share->share_value),2)}}</td>
@@ -59,7 +64,12 @@
                 <tr><td colspan="5"><span>No Share data found!</span></td></tr>                
                 @endif
             </table>
-            {{ $shares->links() }}
+            @if (isset($_REQUEST['month']) && $_REQUEST['month'] !='')
+              {{ $shares->appends(['month'=>$_REQUEST['month']])->links() }}
+            @else
+              {{ $shares->links() }}
+            @endif
+            
             </div>
             
 
@@ -67,9 +77,31 @@
     </div>
 </div>
 <script>
+    function getParameterByName(name, url = window.location.href) {
+        name = name.replace(/[\[\]]/g, '\\$&');
+        var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, ' '));
+    }
     function changeMonthData(){
 
         var val = $('#selectMonth option:selected').val();
+        if(val == ''){
+            var uri = window.location.toString();
+            let page = getParameterByName('page',uri);
+            if (uri.indexOf("?") > 0) {
+                var clean_uri = uri.substring(0, uri.indexOf("?"));
+                window.history.replaceState({}, document.title, clean_uri+"?page="+page);            
+            }
+        }else{
+            var uri = window.location.toString();
+            let page = getParameterByName('page',uri) || 1;     
+            var clean_uri = uri.substring(0, uri.indexOf("?"));
+            window.history.replaceState({}, document.title, clean_uri+"?month="+val+"&page="+page);     
+           
+        }
         var csrf_token = "<?php echo csrf_token(); ?>";
         $.ajax({
             url:"<?php echo url('/admin/shares/getshares'); ?>",
@@ -81,7 +113,6 @@
         })
     }
    function deleteShare(id){
-    console.log('i m here');
      var delete_url = "<?php echo url('/admin/shares/delete') ?>/"+id;
        var check = confirm("Are you sure to delete this record?");
         if(check == true){

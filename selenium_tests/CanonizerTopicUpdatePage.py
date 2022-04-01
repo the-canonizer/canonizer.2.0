@@ -1,6 +1,7 @@
+from selenium.webdriver.common.keys import Keys
+
 from CanonizerBase import Page
 from Identifiers import TopicUpdatePageIdentifiers, BrowsePageIdentifiers, TopicObjectPageIdentifiers
-from selenium.webdriver.support.ui import Select
 from selenium.common.exceptions import NoSuchElementException
 import time
 
@@ -37,7 +38,9 @@ class CanonizerTopicUpdatePage(Page):
         # Click on SUBMIT_TOPIC_UPDATE_BASED_ON_THIS
         self.hover(*TopicUpdatePageIdentifiers.SUBMIT_TOPIC_UPDATE_BASED_ON_THIS)
         self.find_element(*TopicUpdatePageIdentifiers.SUBMIT_TOPIC_UPDATE_BASED_ON_THIS).click()
-        return CanonizerTopicUpdatePage(self.driver)
+        heading = self.find_element(*TopicUpdatePageIdentifiers.HEADING).text
+        if heading == 'Topic Update':
+            return CanonizerTopicUpdatePage(self.driver)
 
     def load_view_this_version_page(self):
         """
@@ -48,8 +51,9 @@ class CanonizerTopicUpdatePage(Page):
         # Click on View This Version
         self.hover(*TopicUpdatePageIdentifiers.VIEW_THIS_VERSION)
         self.find_element(*TopicUpdatePageIdentifiers.VIEW_THIS_VERSION).click()
-
-        return CanonizerTopicUpdatePage(self.driver)
+        camp_heading = self.find_element(*TopicUpdatePageIdentifiers.CAMP_HEADING).text
+        if camp_heading == 'Canonizer Sorted Camp Tree':
+            return CanonizerTopicUpdatePage(self.driver)
 
     def load_topic_object_page(self):
         """
@@ -60,12 +64,11 @@ class CanonizerTopicUpdatePage(Page):
         try:
             self.hover(*TopicUpdatePageIdentifiers.OBJECT)
             self.find_element(*TopicUpdatePageIdentifiers.OBJECT).click()
+            temp = CanonizerTopicUpdatePage(self.driver)
             return CanonizerTopicUpdatePage(self.driver)
 
         except NoSuchElementException:
             return False
-
-        return True
 
     def topic_update_page_mandatory_fields_are_marked_with_asterisk(self):
         """
@@ -95,12 +98,10 @@ class CanonizerTopicUpdatePage(Page):
             self.find_element(*TopicObjectPageIdentifiers.OBJECTION_REASON_ASTRK)
 
     def topic_update_page_should_have_add_new_nick_name_link_for_new_users(self):
-            #return self.find_element(*TopicUpdatePageIdentifiers.ADDNEWNICKNAME).text
         try:
             return self.find_element(*TopicUpdatePageIdentifiers.ADDNEWNICKNAME)
         except NoSuchElementException:
             return False
-        return True
 
     def enter_nick_name(self, nickname):
         self.find_element(*TopicUpdatePageIdentifiers.NICK_NAME).send_keys(nickname)
@@ -130,17 +131,17 @@ class CanonizerTopicUpdatePage(Page):
 
     def submit_update_with_blank_nick_name(self, topic_name, namespace, note):
         self.submit_update('', topic_name, namespace, note)
-        #return self.find_element(*TopicUpdatePageIdentifiers.ERROR_NICK_NAME).text
         try:
             return self.find_element(*TopicUpdatePageIdentifiers.ERROR_NICK_NAME)
         except NoSuchElementException:
             return False
-        return True
 
     def submit_update_with_blank_topic_name(self, nickname, namespace, note):
         self.find_element(*TopicUpdatePageIdentifiers.TOPIC_NAME).clear()
         self.submit_update(nickname, '', namespace, note)
-        return self.find_element(*TopicUpdatePageIdentifiers.ERROR_TOPIC_NAME).text
+        error = self.find_element(*TopicUpdatePageIdentifiers.ERROR_TOPIC_NAME).text
+        if error == "Topic name is required.":
+            return CanonizerTopicUpdatePage(self.driver)
 
     def submit_update_with_blank_other_namespace_name(self, nickname, topic_name, namespace, note):
         self.submit_update(nickname, topic_name, namespace, '', note)
@@ -149,12 +150,47 @@ class CanonizerTopicUpdatePage(Page):
     def submit_topic_update_with_duplicate_topic_name(self, nick_name, topic_name, namespace, note):
         self.find_element(*TopicUpdatePageIdentifiers.TOPIC_NAME).clear()
         self.submit_update(nick_name, topic_name, namespace, note)
-        return self.find_element(*TopicUpdatePageIdentifiers.ERROR_DUPLICATE_TOPIC_NAME).text
+        error = self.find_element(*TopicUpdatePageIdentifiers.ERROR_DUPLICATE_TOPIC_NAME).text
+        if error == "The topic name has already been taken.":
+            return CanonizerTopicUpdatePage(self.driver)
 
     def submit_update_with_invalid_topic_name(self, nick_name, topic_name, namespace, note):
         self.find_element(*TopicUpdatePageIdentifiers.TOPIC_NAME).clear()
         self.submit_update(nick_name, topic_name, namespace, note)
-        return self.find_element(*TopicUpdatePageIdentifiers.ERROR_TOPIC_NAME).text
+        error = self.find_element(*TopicUpdatePageIdentifiers.ERROR_TOPIC_NAME).text
+        if error == "Topic name can only contain space and alphanumeric characters.":
+            return CanonizerTopicUpdatePage(self.driver)
+
+    def submit_update_with_trailing_spaces(self, nick_name, topic_name, namespace, note):
+        self.submit_update(nick_name, topic_name, namespace, note)
+        success_message = self.find_element(*TopicUpdatePageIdentifiers.SUCCESS_MESSAGE).text
+        if success_message == 'Success! Topic change submitted successfully.':
+            return CanonizerTopicUpdatePage(self.driver)
+
+    def submit_update_with_enter_key(self, nick_name, topic_name, namespace, note):
+        self.enter_nick_name(nick_name)
+        self.enter_topic_name(topic_name)
+        self.enter_namespace(namespace)
+        self.enter_note(note)
+        self.find_element(*TopicUpdatePageIdentifiers.SUBMIT_UPDATE).send_keys(Keys.ENTER)
+        success_message = self.find_element(*TopicUpdatePageIdentifiers.SUCCESS_MESSAGE).text
+        if success_message == 'Success! Topic change submitted successfully.':
+            return CanonizerTopicUpdatePage(self.driver)
+
+    def submit_update_with_manadatory_fields_only(self, nick_name, topic_name, namespace, note):
+        self.find_element(*TopicUpdatePageIdentifiers.TOPIC_NAME).clear()
+        self.submit_update(nick_name, topic_name, namespace, note)
+        success_message = self.find_element(*TopicUpdatePageIdentifiers.SUCCESS_MESSAGE).text
+        if success_message == 'Success! Topic change submitted successfully.':
+            return CanonizerTopicUpdatePage(self.driver)
+
+    def submit_update_with_duplicate_data(self, nick_name, topic_name, namespace, note):
+        self.find_element(*TopicUpdatePageIdentifiers.TOPIC_NAME).clear()
+        self.submit_update(nick_name, topic_name, namespace, note)
+        error = self.find_element(*TopicUpdatePageIdentifiers.ERROR_DUPLICATE_TOPIC_NAME).text
+        if error == "The topic name has already been taken.":
+            return CanonizerTopicUpdatePage(self.driver)
+
 
     def nick_name_page_should_open_update_topic_add_new_nick_name(self):
         try:
@@ -165,5 +201,4 @@ class CanonizerTopicUpdatePage(Page):
                 return CanonizerTopicUpdatePage(self.driver)
         except NoSuchElementException:
             return False
-        return True
 

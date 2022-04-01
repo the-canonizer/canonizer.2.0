@@ -58,7 +58,7 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         $message = [
-            'password.regex'=>'Password must be atleast 8 characters, including atleast one digit, one lower case letter and one special character(@,# !,$..).',
+            'password.regex'=>'Password must be at least 8 characters, including at least one digit, one lower case letter and one special character(@,# !,$..).',
             'first_name.regex' => 'The first name must be in alphabets and space only.',
             'first_name.required' => 'The first name field is required.',
             'first_name.max' => 'The first name can not be more than 100.',
@@ -67,6 +67,8 @@ class RegisterController extends Controller
             'last_name.regex' => 'The last name must be in alphabets and space only.',
             'last_name.required' => 'The last name field is required.',
             'last_name.max' => 'The last name can not be more than 100.',
+            'password_confirmation.required' => 'The confirm password field is required.',
+            'password_confirmation.same' => 'The password confirmation does not match.'
         ];
         return Validator::make($data, [
             'first_name' => 'required|regex:/^[a-zA-Z ]*$/|string|max:100',
@@ -74,7 +76,8 @@ class RegisterController extends Controller
 			'middle_name' => 'nullable|regex:/^[a-zA-Z ]*$/|max:100',
             'email' => 'required|string|email|max:255|unique:person',
             'CaptchaCode' => 'required|valid_captcha',
-            'password' => ['required','regex:/^(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^\w\s]).{8,}$/','confirmed'],
+            'password' => ['required','regex:/^(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^\w\s]).{8,}$/'],
+            'password_confirmation' => 'required|same:password',
         ],$message);
     }
     
