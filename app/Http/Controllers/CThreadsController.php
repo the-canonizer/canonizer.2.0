@@ -8,6 +8,8 @@ use App\Model\Camp;
 use App\Model\Topic;
 use App\Model\Nickname;
 
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Mail;
@@ -17,6 +19,7 @@ use Illuminate\Validation\Rule;
 use App\Mail\ForumThreadCreatedMail;
 use App\Model\Support;
 use App\CommonForumFunctions;
+use Illuminate\View\View;
 
 /**
  * CThreadsController Class Doc Comment
@@ -128,7 +131,6 @@ class CThreadsController extends Controller
         $topic = getArray($topicid, $topicname, $campnum);
         $camp  = Camp::getLiveCamp($topicid,$campnum);
 
-        //dd($partcipateFlag);
         return view(
             'threads.index',
             $topic,
@@ -273,7 +275,7 @@ class CThreadsController extends Controller
      * Display the specified resource.
      *
      * @parameter $CThread
-     * @return    \Illuminate\Http\Response
+     * @return Application|Factory|View
      */
     public function show($topicid, $topicname, $campnum, $CThread,$reply_id=null)
     {
@@ -285,11 +287,29 @@ class CThreadsController extends Controller
         else{
           $replies=CThread::findOrFail($CThread)->replies()->paginate(10);
         }
+
+        $userNickNames = (auth()->check()) ? Nickname::topicNicknameUsed($topicid) : array();
+
+        // Not efficient if user has more than 20 nickname. Though not practically possible but feasible
+        foreach ($userNickNames as $nickName) {
+            $ifNickNameUsed = Reply::where('user_id', $nickName->id)->where('c_thread_id', $CThread)->first();
+            if ( $ifNickNameUsed ) {
+                $name = Nickname::where('id', $ifNickNameUsed->user_id)->first();
+                $nickNameUsed[] = (object)(
+                    ['id' => $ifNickNameUsed->user_id, 'nick_name' => $name->nick_name]
+                );
+            }
+        }
+
+        if ( $nickNameUsed ) {
+            $userNickNames = $nickNameUsed;
+        }
+
         return view(
             'threads.show',
              $topic, [
                 'parentcamp'    => Camp::campNameWithAncestors($camp,'',$topicname),
-                'userNicknames' => (auth()->check()) ? Nickname::topicNicknameUsed($topicid) : array(),
+                'userNicknames' => $userNickNames,
                 'threads' => CThread::findOrFail($CThread),
                 'replies' => $replies,
                 'reply_id' => $reply_id,
