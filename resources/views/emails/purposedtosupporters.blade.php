@@ -1,7 +1,7 @@
  @component('mail::message')
  Hello {{ $user->first_name }} {{ $user->last_name }},<br/>
 <p> 
-	<a target="_blank" href="<?= route('user_supports',$data['nick_name_id']) .'?topicnum=&campnum=&namespace=' . $data['namespace_id']; ?>">{{ $data['nick_name'] }}</a> has proposed a change to this {{$data['type']}} <a href="{{ url('/') . '/' . $link }}">{{ $data['object']}} </a> which you currently {{(isset($data['subscriber']) && $data['subscriber'] == 1) ? 'subscribed' :'directly support'}}.  If no supporters of this {{$data['type']}} <a href="{{ url('/') . '/' . $link }}">{{ $data['object']}} </a> object to this change, it will go live in {{ config('app.go_live_text') }}
+	<a target="_blank" href="<?= route('user_supports',$data['nick_name_id']) .'?topicnum=&campnum=&namespace=' . $data['namespace_id']; ?>">{{ $data['nick_name'] }}</a> has proposed a change to this {{$data['type']}} <a href="{{ url('/') . '/' . $link }}">{{ $data['object']}} </a> which you currently {{(isset($data['subscriber']) && $data['subscriber'] == 1) ? 'subscribed' :'directly support'}}.  If no supporters of this {{$data['type']}} <a href="{{ url('/') . '/' . $link }}">{{ $data['object']}} </a> object to this change, it will go live in {{ config('app.go_live_text') }}.
 @if(!empty($data['note']))
 	<p>Edit summary : {{ $data['note'] }}</p>
 @endif	
