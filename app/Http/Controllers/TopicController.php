@@ -780,6 +780,11 @@ class TopicController extends Controller {
                 $camp->go_live_time = strtotime(date('Y-m-d H:i:s', strtotime('+'.config('app.go_live_day_limit').' days')));
                 $message = "Camp change submitted successfully.";
                 $go_live_time = $camp->go_live_time;
+            }else {
+                //#1101 start
+                //Updating grace_period
+                $camp->grace_period = 0;
+                #1101 end
             }
 
             if (isset($all['objection']) && $all['objection'] == 1) {
@@ -806,6 +811,9 @@ class TopicController extends Controller {
                 $message = "Updation in your changed camp made successfully.";
             }
         } else {
+            #1101 start
+            $camp->grace_period = 0;
+            #1101 end
             $message = 'Camp created successfully.';
         }
 
@@ -821,7 +829,7 @@ class TopicController extends Controller {
             if ($eventtype == "CREATE") {
                 // Dispatch Job
                 if(isset($topic)) {
-                Util::dispatchJob($topic, $camp->camp_num, 1);
+                    Util::dispatchJob($topic, $camp->camp_num, 1);
                 }
 
                 // send history link in email
@@ -836,6 +844,22 @@ class TopicController extends Controller {
                 }catch(\Swift_TransportException $e){
                     throw new \Swift_TransportException($e);
                 } 
+                #1101 start
+                if($camp->grace_period == 0){
+                    $data['support_camp'] = $livecamp->camp_name;
+                    $data['is_live'] = ($camp->go_live_time <= $currentTime) ? 1 : 0;
+                    $data['note'] = $camp->note;
+                    $data['camp_num'] = $camp->camp_num;
+                    $nickName = Nickname::getNickName($camp->submitter_nick_id);
+                    $data['topic_num'] = $camp->topic_num;
+                    $data['nick_name'] = $nickName->nick_name;
+                    $data['subject'] = "Proposed change to " . $livecamp->topic->topic_name . ' / ' . $livecamp->camp_name . " submitted";
+                    $data['namespace_id'] = (isset($livecamp->topic->namespace_id) && $livecamp->topic->namespace_id)  ?  $livecamp->topic->namespace_id : 1;
+                    $data['nick_name_id'] = $nickName->id;
+                    $subscribers = Camp::getCampSubscribers($camp->topic_num, $camp->camp_num);
+                    $this->mailSubscribersAndSupporters([],$subscribers,$link, $data);
+                }
+                #1101 end
             } else if ($eventtype == "OBJECTION") {
                 // Dispatch Job
                 if(isset($topic)) {
@@ -867,6 +891,28 @@ class TopicController extends Controller {
                     } 
             } // #951 removed the update email event from here as we will send email after commit or after one hour refer notify_change or console->command->notifyUser classs
             else if ($eventtype == "UPDATE") {
+                #1101 start
+                if($camp->grace_period == 0){
+                    $link = 'camp/history/' . $camp->topic_num . '/' . $camp->camp_num;
+                    $data['type'] = "camp";
+                    $camp_id= isset($camp->camp_num) ? $camp->camp_num:1;
+                    $livecamp = Camp::getLiveCamp($camp->topic_num,$camp->camp_num);
+                    $data['object'] = $livecamp->topic->topic_name . " / " . $camp->camp_name;
+                    $data['link'] = \App\Model\Camp::getTopicCampUrl($camp->topic_num,$camp_id);
+                    $data['support_camp'] = $livecamp->camp_name;
+                    $data['is_live'] = ($camp->go_live_time <= $currentTime) ? 1 : 0;
+                    $data['note'] = $camp->note;
+                    $data['camp_num'] = $camp->camp_num;
+                    $nickName = Nickname::getNickName($camp->submitter_nick_id);
+                    $data['topic_num'] = $camp->topic_num;
+                    $data['nick_name'] = $nickName->nick_name;
+                    $data['subject'] = "Proposed change to " . $livecamp->topic->topic_name . ' / ' . $livecamp->camp_name . " submitted";
+                    $data['namespace_id'] = (isset($livecamp->topic->namespace_id) && $livecamp->topic->namespace_id)  ?  $livecamp->topic->namespace_id : 1;
+                    $data['nick_name_id'] = $nickName->id;
+                    $subscribers = Camp::getCampSubscribers($camp->topic_num, $camp->camp_num);
+                    $this->mailSubscribersAndSupporters([],$subscribers,$link, $data);
+                }
+                #1101 end
                 // Dispatch Job
                 if(isset($topic)) {
                     Util::dispatchJob($topic, $camp->camp_num, 1);
