@@ -212,4 +212,23 @@ class Support extends Model {
             }
         }
     }
+
+    public static function getAllChildDelegateNicknameId($topic_num,$nick_name_id, $supportId=[]) {
+        $as_of_time = time();
+           
+            $support = Support::where('topic_num','=',$topic_num)
+                    ->where('delegate_nick_name_id',$nick_name_id)
+                    ->whereRaw("(start <= $as_of_time) and ((end = 0) or (end > $as_of_time))")
+                    ->orderBy('start','DESC')
+                    ->groupBy('nick_name_id')
+                    ->select(['nick_name_id'])
+                    ->get();  
+            if(isset($support[0]->nick_name_id)){ 
+                array_push($supportId,$nick_name_id);
+                return  self::getAllChildDelegateNicknameId($topic_num, $support[0]->nick_name_id,$supportId);
+            }
+            else{
+                return $supportId;
+            }       
+    }
 }
