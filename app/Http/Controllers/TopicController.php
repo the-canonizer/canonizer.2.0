@@ -162,7 +162,7 @@ class TopicController extends Controller {
             $current_time = time();
             $eventtype = "CREATE";
             $topic = new Topic();
-            $topic->topic_name = isset($all['topic_name']) ? $all['topic_name'] : "";
+            $topic->topic_name = isset($all['topic_name']) ? trim(preg_replace('/\s+/', ' ', $all['topic_name'])) : "";
             $topic->namespace_id = isset($all['namespace']) ? $all['namespace'] : "";
             $topic->submit_time = $current_time;
             $topic->submitter_nick_id = isset($all['nick_name']) ? $all['nick_name'] : "";
@@ -749,7 +749,7 @@ class TopicController extends Controller {
         $camp = new Camp();
         $camp->topic_num = $all['topic_num'];
         $camp->parent_camp_num = isset($all['parent_camp_num']) ? $all['parent_camp_num'] : "";
-        $camp->camp_name = isset($all['camp_name']) ? $all['camp_name'] : "";
+        $camp->camp_name = isset($all['camp_name']) ? trim(preg_replace('/\s+/', ' ', $all['camp_name'])) : "";
         $camp->submit_time = strtotime(date('Y-m-d H:i:s'));
         $camp->go_live_time = $currentTime; //strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
         $camp->language = 'English';
