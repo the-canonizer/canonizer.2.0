@@ -158,46 +158,55 @@
 					
 					<div class="col-sm-6">
 						<div class="row column">
-							<?php $key = 0; 
-								$topicSupport = $supportedTopic->topic->Getsupports($supportedTopic->topic_num,[$supportedTopic->nick_name_id],['nofilter'=>true]);
-							?>
+						<?php $key = 0; 
+							$topicSupport = $supportedTopic->topic->Getsupports($supportedTopic->topic_num,[$supportedTopic->nick_name_id],['nofilter'=>true]);
+						?>
 
-							@foreach($topicSupport as $k=>$support)					   
-							<?php 
-									$liveCamp = \App\Model\Camp::getLiveCamp($support->topic_num,$support->camp_num,['nofilter'=>true]);
-									$url =  \App\Model\Camp::getTopicCampUrl($support->topic_num,$support->camp_num);
-								?>
-								<?php $key = $key + 1; ?>
-								@if(!in_array($support->camp->camp_num,$removedCampList)) 
+						@foreach($topicSupport as $k=>$support)					   
+						<?php 
+							$liveCamp = \App\Model\Camp::getLiveCamp($support->topic_num,$support->camp_num,['nofilter'=>true]);
+							$url =  \App\Model\Camp::getTopicCampUrl($support->topic_num,$support->camp_num);
+						?>
+						@if(!in_array($support->camp->camp_num,$removedCampList)) <?php $key = $key + 1; ?>
+						
+						<div class="col-sm-12 column sortCamp">
+							<div id="positions_{{ $support->support_id }}" class="SpCmpBDY  support-sorter-element ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
 							
-									<div class="col-sm-12 column sortCamp">
-										<div id="positions_{{ $support->support_id }}" class="SpCmpBDY  support-sorter-element ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
-											<input type="hidden" class="final_support_order" name="support_order[{{$support->camp->camp_num}}]" id="support_order_{{ $support->support_id }}" value="{{ $key  }}">
-											<input type="hidden" name="camp[{{$support->camp->camp_num}}]" value="{{ $support->camp->camp_num }}">
-											<input type="hidden" name="delegated[{{$support->camp->camp_num}}]" value="{{ $support->delegate_nick_name_id }}">
-											<b><a class="mr-5" href="<?= $url; ?>"><span class="support_order">{{ $key }} </span> . {{ $liveCamp->camp_name }} </b></a><br/>
-											<?php if(isset($topic->topic_num) && isset($supportedTopic->topic_num) &&  $topic->topic_num==$supportedTopic->topic_num) $lastsupportOrder++;?>
-											<span rel="{{$support->camp->camp_num}}" order="{{ $key }}" delegated="{{ $support->delegate_nick_name_id }}" class="x-btn remove_camp">X</span>
-										</div>
-									</div>
-								@else
-									@if(Session::get('confirm') !='samecamp' && !Session::has('warningDelegate')) 
-										<!-- CASE: When adding support to new camp  and already  have other supported List  --> 
-										<?php $lastsupportOrder++;
-											$url =  \App\Model\Camp::getTopicCampUrl($topic->topic_num,session('campnum'));
-										?>
-										<div class="col-sm-12 column sortCamp">   
-											<div id="positions_0" class="SpCmpBDY  support-sorter-element ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
-												<input type="hidden" class="final_support_order" name="support_order[{{$camp->camp_num}}]" id="support_order_0" value="{{ $key  }}">
-												<input type="hidden" name="camp[{{$camp->camp_num}}]" value="{{ $camp->camp_num }}">
-												<input type="hidden" name="delegated[{{$camp->camp_num}}]" value="{{ $delegate_nick_name_id }}">
-												<b><a class="mr-5" href="<?= $url; ?>"><span class="support_order">{{ $key}} </span> . {{ $camp->camp_name }} </a></b><br/>
-												<span rel="{{$camp->camp_num}}" order="{{ $key  }}" delegated="{{ $delegate_nick_name_id }}" class="x-btn remove_camp">X</span>                        
-											</div>
-										</div>	
-									@endif 
-								@endif					  
-							@endforeach
+							<input type="hidden" class="final_support_order" name="support_order[{{$support->camp->camp_num}}]" id="support_order_{{ $support->support_id }}" value="{{ $key  }}">
+								
+							<input type="hidden" name="camp[{{$support->camp->camp_num}}]" value="{{ $support->camp->camp_num }}">
+							<input type="hidden" name="delegated[{{$support->camp->camp_num}}]" value="{{ $support->delegate_nick_name_id }}">
+							<b><a class="mr-5" href="<?= $url; ?>"><span class="support_order">{{ $key }} </span> . {{ $liveCamp->camp_name }} </b></a><br/>
+								
+						
+							<?php if(isset($topic->topic_num) && isset($supportedTopic->topic_num) &&  $topic->topic_num==$supportedTopic->topic_num) $lastsupportOrder++;
+								
+							?>
+							<span rel="{{$support->camp->camp_num}}" order="{{ $key }}" delegated="{{ $support->delegate_nick_name_id }}" class="x-btn remove_camp">X</span>
+						
+							</div>
+						</div>
+						@endif					  
+						@endforeach
+						
+					@if(Session::get('confirm') !='samecamp' && !Session::has('warningDelegate')) 
+					 <!-- CASE: When adding support to new camp  and already  have other supported List  --> 
+					<?php $lastsupportOrder++;
+						$url =  \App\Model\Camp::getTopicCampUrl($topic->topic_num,session('campnum'));
+					?>
+					<div class="col-sm-12 column sortCamp">   
+						<div id="positions_0" class="SpCmpBDY  support-sorter-element ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
+							
+							<input type="hidden" class="final_support_order" name="support_order[{{$camp->camp_num}}]" id="support_order_0" value="{{ $key + 1  }}">
+							
+							<input type="hidden" name="camp[{{$camp->camp_num}}]" value="{{ $camp->camp_num }}">
+							<input type="hidden" name="delegated[{{$camp->camp_num}}]" value="{{ $delegate_nick_name_id }}">
+							
+							<b><a class="mr-5" href="<?= $url; ?>"><span class="support_order">{{ $key+1}} </span> . {{ $camp->camp_name }} </a></b><br/>
+							<span rel="{{$camp->camp_num}}" order="{{ $key + 1  }}" delegated="{{ $delegate_nick_name_id }}" class="x-btn remove_camp">X</span>                        
+						</div>
+					</div>	
+					@endif 
 						</div>
 					</div>   
 					</div>
