@@ -115,7 +115,7 @@
 					<div class="SpCmpHd col-sm-12"><b>Your supporting camps list for topic "{{ $supportedTopic->topic->topic_name}}"</b></div>
 					<div class="quick-filter col-sm-12">
 						<label class="quick-actn-lbl" >Quick Actions:</label>
-						<span class="btn btn-sm btn-info"><input type="checkbox" name="remove_all" id="remove_all" />Remove All</span>
+						<span class="btn btn-sm btn-info"><input type="checkbox" name="remove_all" id="remove_all" autocomplete="off" />Remove All</span>
 						<span class="btn btn-sm btn-secondary" id="undo_all">Clear All Changes</span>
 					</div>
 					<div class="col-sm-12" style="min-height:120px">
