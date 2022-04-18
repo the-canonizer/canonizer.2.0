@@ -277,7 +277,8 @@ class SettingsController extends Controller
                 return back();
             }
             //get nicknames
-            $nicknames = Nickname::topicCampNicknameUsed($topicnum,$campnum,$encode);
+            //Fix #1130
+            $nicknames = Nickname::topicNicknameUsed($topicnum);
             $userNickname = Nickname::personNicknameArray();
             $confirm_support = 0;
             $alreadySupport = Support::where('topic_num', $topicnum)->where('camp_num', $campnum)->where('end', '=', 0)->whereIn('nick_name_id', $userNickname)->get();
