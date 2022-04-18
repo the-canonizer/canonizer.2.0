@@ -115,7 +115,7 @@
 					<div class="SpCmpHd col-sm-12"><b>Your supporting camps list for topic "{{ $supportedTopic->topic->topic_name}}"</b></div>
 					<div class="quick-filter col-sm-12">
 						<label class="quick-actn-lbl" >Quick Actions:</label>
-						<span class="btn btn-sm btn-info"><input type="checkbox" name="remove_all" id="remove_all" />Remove All</span>
+						<span class="btn btn-sm btn-info"><input type="checkbox" name="remove_all" id="remove_all" autocomplete="off" />Remove All</span>
 						<span class="btn btn-sm btn-secondary" id="undo_all">Clear All Changes</span>
 					</div>
 					<div class="col-sm-12" style="min-height:120px">
@@ -155,7 +155,7 @@
 						</div>					  
 					@else  
 										
-					
+					<?php $isChildCamp = 0; ?>
 					<div class="col-sm-6">
 						<div class="row column">
 						<?php $key = 0; 
@@ -166,8 +166,9 @@
 						<?php 
 							$liveCamp = \App\Model\Camp::getLiveCamp($support->topic_num,$support->camp_num,['nofilter'=>true]);
 							$url =  \App\Model\Camp::getTopicCampUrl($support->topic_num,$support->camp_num);
+							$key = $key + 1;
 						?>
-						@if(!in_array($support->camp->camp_num,$removedCampList)) <?php $key = $key + 1; ?>
+						@if(!in_array($support->camp->camp_num,$removedCampList)) <?php  ?>
 						
 						<div class="col-sm-12 column sortCamp">
 							<div id="positions_{{ $support->support_id }}" class="SpCmpBDY  support-sorter-element ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
@@ -186,10 +187,32 @@
 						
 							</div>
 						</div>
+						@else
+							
+							@if(Session::get('confirm') !='samecamp' && !Session::has('warningDelegate')) 
+							
+								<!-- CASE: When adding support to new camp which is a sub-camp of a specific camp  --> 
+								<?php $lastsupportOrder++;
+									$isChildCamp = 1;
+									$url =  \App\Model\Camp::getTopicCampUrl($topic->topic_num,session('campnum'));
+								?>
+								<div class="col-sm-12 column sortCamp">   
+									<div id="positions_0" class="SpCmpBDY  support-sorter-element ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
+										
+										<input type="hidden" class="final_support_order" name="support_order[{{$camp->camp_num}}]" id="support_order_0" value="{{ $key  }}">
+										
+										<input type="hidden" name="camp[{{$camp->camp_num}}]" value="{{ $camp->camp_num }}">
+										<input type="hidden" name="delegated[{{$camp->camp_num}}]" value="{{ $delegate_nick_name_id }}">
+										
+										<b><a class="mr-5" href="<?= $url; ?>"><span class="support_order">{{ $key}} </span> . {{ $camp->camp_name }} </a></b><br/>
+										<span rel="{{$camp->camp_num}}" order="{{ $key }}" delegated="{{ $delegate_nick_name_id }}" class="x-btn remove_camp">X</span>                        
+									</div>
+								</div>	
+							@endif
 						@endif					  
 						@endforeach
 						
-					@if(Session::get('confirm') !='samecamp' && !Session::has('warningDelegate')) 
+					@if(Session::get('confirm') !='samecamp' && !Session::has('warningDelegate') && !$isChildCamp) 
 					 <!-- CASE: When adding support to new camp  and already  have other supported List  --> 
 					<?php $lastsupportOrder++;
 						$url =  \App\Model\Camp::getTopicCampUrl($topic->topic_num,session('campnum'));

@@ -1394,7 +1394,7 @@ class TopicController extends Controller {
             $data['typeobject'] = 'topic';
 			$data['note'] = $topicData->note;
             $data['camp_num'] = 1;
-            $nickName = Nickname::getNickName($topic->submitter_nick_id);
+            $nickName = Nickname::getNickName($topicData->submitter_nick_id);
             $data['topic_num'] = $topic->topic_num;
             $data['nick_name'] = $nickName->nick_name;
             $data['forum_link'] = 'forum/' . $topic->topic_num . '-' . $topic->topic_name . '/1/threads';
