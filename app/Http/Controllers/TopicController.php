@@ -1592,7 +1592,7 @@ class TopicController extends Controller {
          
     //Sunil Talentelgia This function only work when we changes parent camp. In that case we remove support of parent camp 
     private function checkParentCampChanged($topic_num, $camp_num, $parent_camp_num) {
-        //Sunil Talentelgia while updating camp check if any old support then remove it if parent camp changed
+        //while updating camp check if any old support then remove it if parent camp changed
         $campOldData = Camp::getLiveCamp($topic_num,$camp_num);
         if(isset($parent_camp_num) && $parent_camp_num!=''){ // && $parent_camp_num != $campOldData->parent_camp_num){
             $allParentCamps = Camp::getAllParent($campOldData);
@@ -1601,7 +1601,7 @@ class TopicController extends Controller {
             //get supporters of all child camps of current camp
             $allChildSupporters = Support::where('topic_num',$topic_num)
                 ->where('end',0)
-                ->whereIn('camp_num',$allChildCamps)
+                ->whereIn('camp_num',$allParentCamps) //$allChildCamps changes with $allParentCamps 1262 and 1191
                 ->pluck('nick_name_id');
             //remove all supports from parent camp if there any child supporter
             if(sizeof($allChildSupporters) > 0){
@@ -1609,7 +1609,6 @@ class TopicController extends Controller {
                     Support::removeSupport($topic_num,$p,$allChildSupporters);
                 }
             }
-            //#924 end
         }
     }
 }

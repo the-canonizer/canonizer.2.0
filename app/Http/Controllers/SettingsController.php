@@ -430,11 +430,15 @@ class SettingsController extends Controller
             if(isset($data['removed_camp']) && isset($data['support_order']) && count($data['support_order']) > 0){
                 $promoteDelegate = false;
             }
-            /** check point 2 if all suppot removed  */
+
+          
+            /** check point 2 if all support removed  */
             $ifSupportLeft = true;
             if(isset($data['removed_camp']) && count($mysupports) == count($data['removed_camp'])){
                 $ifSupportLeft = false;
             }
+
+            
             if (isset($mysupports) && count($mysupports) > 0 && isset($data['removed_camp']) && count($data['removed_camp']) > 0) {
                foreach ($mysupports as $singleSupport) { 
                     if(in_array($singleSupport->camp_num,$data['removed_camp'])){
@@ -1226,9 +1230,9 @@ class SettingsController extends Controller
                         $currentSupportOrder++;                 
                     }
 
-                    if($promoteDelegate){
+                   // if($promoteDelegate){
                         $this->deleteDelegateSupport($topicNum,$campNum,$nickNameId,$remaingSupportWithHighOrder,$startSupportOrder);
-                    }
+                   // }
                 }   
             } 
             /* send support deleted mail to all supporter and subscribers */
