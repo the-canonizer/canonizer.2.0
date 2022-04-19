@@ -1139,7 +1139,7 @@ class Camp extends Model {
          self::clearChildCampArray();
         $childCamps = array_unique(self::getAllChildCamps($onecamp));
        
-        $subscriptions = \App\Model\CampSubscription::where('user_id','=',$userid)->where('topic_num','=',$topic_num)->where('subscription_start','<=',strtotime(date('Y-m-d H:i:s')))->where('subscription_end','=',null)->orWhere('subscription_end','>=',strtotime(date('Y-m-d H:i:s')))->get();
+        $subscriptions = \App\Model\CampSubscription::where('user_id','=',$userid)->where('topic_num','=',$topic_num)->where('subscription_start','<=',strtotime(date('Y-m-d H:i:s')))->whereNull('subscription_end')->get();
         if(isset($subscriptions ) && count($subscriptions ) > 0){
             $i=1;
             foreach($subscriptions as $subs){
@@ -1171,6 +1171,7 @@ class Camp extends Model {
         $users_data = [];
         $users = \App\Model\CampSubscription::select('user_id')->where('topic_num','=',$topic_num)
                 ->whereIn('camp_num',[0,$camp_num])
+                ->whereNull('subscription_end')
                 ->get();
         if(count($users)){
             foreach($users as $user){
