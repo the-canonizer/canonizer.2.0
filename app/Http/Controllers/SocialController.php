@@ -2,19 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Socialite;
-use App\User;
-use App\Model\SocialUser;
-use App\Model\Nickname;
-use App\Model\Support;
-use App\Library\General;
 use Auth;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Session;
+use App\User;
+use Exception;
+use Socialite;
+use App\Model\Support;
+use App\Model\Nickname;
+use App\Library\General;
 use App\Mail\WelcomeMail;
+use App\Model\SocialUser;
+use Illuminate\Http\Request;
 use App\Mail\OtpVerificationMail;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 
 class SocialController extends Controller
@@ -107,6 +108,11 @@ class SocialController extends Controller
 					                'provider'      => $provider,
 					                 'social_name'   => $social_name,
 					            ]);
+
+								if(!empty($user)) {
+									$nickname = str_replace(' ','-',$user->first_name);
+									$this->createNickname($user->id, $nickname);
+								}
 					             //otp email
 					            try{
 
@@ -136,6 +142,40 @@ class SocialController extends Controller
 		}   
         
 	}
+
+	protected function createNickname($userID, $nickname) {
+        $nicknameCreated = false;
+        if(empty($userID) || empty($nickname)) {
+            return $nicknameCreated;
+        }
+        // Check whether user exists or not for the given id
+        $user = User::getById($userID);
+        if(empty($user)) {
+            return $nicknameCreated;
+        }
+
+        // Check whether nickname exists for the given nickname
+        $isExists = Nickname::isNicknameExists($nickname);
+        if($isExists === true) {
+            $randNumber = mt_rand(000, 999);
+            $nickname = $nickname.$randNumber;
+        }
+
+        try {
+            // Create nickname
+            $nicknameObj = new Nickname();
+            $nicknameObj->owner_code = General::canon_encode($userID);
+            $nicknameObj->nick_name = $nickname;
+            $nicknameObj->private = 0;
+            $nicknameObj->create_time = time();
+            $nicknameObj->save();
+            $nicknameCreated = true;
+
+        } catch(Exception $ex) {
+            $nicknameCreated = false;
+        }
+        return $nicknameCreated;
+    }
 
 	public function delete(Request $request)
     {
