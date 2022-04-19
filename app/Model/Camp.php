@@ -1312,4 +1312,37 @@ class Camp extends Model {
                         ->get()->unique('camp_num');
         return $childsData;
     }
+
+    /**
+     * Function Name : getAllChildrenCampsNum
+     * Coder Name : Sunil Singh 
+     * $camp : have Live Camp record information
+     * $campChildren : return array of children camp num 
+     */
+
+    public static function getAllChildrenCampsNum($camp) {
+        if ($camp) {
+            $key = $camp->topic_num . '-' . $camp->camp_num . '-' . $camp->parent_camp_num;
+            $key1 = $camp->topic_num . '-' . $camp->parent_camp_num . '-' . $camp->camp_num;
+            if (in_array($key, Camp::$chilcampArray) || in_array($key1, Camp::$chilcampArray)) {
+                return [];/** Skip repeated recursions* */
+             }
+            Camp::$chilcampArray[] = $key;
+            Camp::$chilcampArray[] = $key1;
+            Camp::$campChildren[] = $camp->camp_num;
+            //adding go_live_time condition Sunil Talentelgia
+            $childCamps = Camp::where('topic_num', $camp->topic_num)->where('parent_camp_num', $camp->camp_num)->where('go_live_time', '<=', time())->groupBy('camp_num')->latest('submit_time')->get();
+            foreach ($childCamps as $child) {
+                //adding go_live_time condition Sunil Talentelgia
+                $latestParent = Camp::where('topic_num', $child->topic_num)
+                ->where('camp_num', $child->camp_num)->where('go_live_time', '<=', time())->latest('submit_time')->first();
+                if($latestParent->parent_camp_num == $camp->camp_num ){ 
+                    Camp::$campChildren = array_merge(Camp::$campChildren, self::getAllChildrenCampsNum($child)); 
+                }
+                
+            }
+         }
+ 
+        return Camp::$campChildren;
+    }
 }

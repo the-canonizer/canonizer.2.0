@@ -167,25 +167,28 @@ class TopicSupport extends Model {
         }
         return $i;
     }
-    public static function buildTree($topicnum,$campnum,$traversedTreeArray,$parentNode=false,$add_supporter = false,$delegationTreeArray = []){
+    public static function buildTree($topicnum,$campnum,$traversedTreeArray,$parentNode=false,$add_supporter = false,$delegationTreeArray = [],$remove_support=FALSE){
         $html= "";
         $userId = null;
         if(Auth::check()){
-            $userId = Auth::user()->id;
+          $userId = Auth::user()->id;
         }
         // check if anyone is delegating to logged in user
         $delegatingToCurrentUser = [];
         $userNicknames = Nickname::personNicknameArray();
         $myDelegator =  Support::where('topic_num', $topicnum)->whereIn('delegate_nick_name_id', $userNicknames)->where('end', '=', 0)->groupBy('nick_name_id')->pluck('nick_name_id')->toArray();
         $myDelegation = Support::where('topic_num', $topicnum)->whereIn('nick_name_id', $userNicknames)->where('delegate_nick_name_id','!=',0)->where('end', '=', 0)->groupBy('nick_name_id')->pluck('delegate_nick_name_id')->toArray();
+       
         foreach($traversedTreeArray as $array){
             $space_html = '';
             $nickName = Nickname::where('id',$array['index'])->first();
+            $deluserFromNickname = $nickName->getUser();
             $topicData = Topic::getLiveTopic($topicnum,['nofilter'=>true]);
             $namespace_id = (isset($topicData->namespace_id)) ? $topicData->namespace_id:1;
             $supports = $nickName->getSupportCampList($namespace_id, [], $topicnum);
             $support_number = self::getSupportNumber($topicnum,$campnum,$supports);
             $support_txt = ($support_number) ? $support_number.":": '';
+            //$childDelegateNickId= support::getAllChildDelegateNicknameId($topicnum,$array['index'],$supportId=[]);
 
             /**
              * #1138
@@ -202,24 +205,31 @@ class TopicSupport extends Model {
             $urlPortion = Camp::getSeoBasedUrlPortion($topicnum,$campnum);
             $disabledCss =  "border: 1px solid #999999; background-color: #cccccc; color: #666666;";
             $html.= "<li class='main-parent'>".$space_html."<a href='".route('user_supports',$nickName->id)."?topicnum=".$topicnum."&campnum=".$campnum."&namespace=".$namespace_id."#camp_".$topicnum."_".$campnum."'>{$support_txt}{$nickName->nick_name}</a><div class='badge'>".round($array['score'],2)."</div>";
-            
+
             if($as_of_time < time()){
                 if(in_array($array['index'],$userNicknames)){
-                    $html.="<a data-toggle='tooltip' data-original-title='History cannot be modified. In order to modify your current support select the default option in the \"As Of\" box' style='".$disabledCss."' href='javascript:void(0)' class='btn btn-info singleClick'>Remove Your Support</a>";
+                    $remove_support =TRUE;
+                    $html.="<a data-toggle='tooltip' data-original-title='History cannot be modified. In order to modify your current support select the default option in the \"As Of\" box' style='".$disabledCss."' href='javascript:void(0)' class='btn btn-info singleClick'>Remove Your Support 1</a>";
                 }                
-                if(!in_array($array['index'],$userNicknames) && !in_array($array['index'],$myDelegator) && !in_array($array['index'],$myDelegation) && Auth::check() && ($nickName->id==$array['index'])){
-                    $html.="<a data-toggle='tooltip' data-original-title='History cannot be modified. In order to modify your current support select the default option in the \"As Of\" box' style='".$disabledCss."' href='javascript:void(0)' class='btn btn-info singleClick'>Delegate Your Support</a>";
+                //if(!in_array($array['index'],$userNicknames) && !in_array($array['index'],$myDelegator) && !in_array($array['index'],$myDelegation) && Auth::check() ){
+                if($remove_support ==FALSE && Auth::check()){
+                    $html.="<a data-toggle='tooltip' data-original-title='History cannot be modified. In order to modify your current support select the default option in the \"As Of\" box' style='".$disabledCss."' href='javascript:void(0)' class='btn btn-info singleClick'>Delegate Your Support </a>";
                 }
             }else{
                 if(in_array($array['index'],$userNicknames)){
+                    $remove_support =TRUE;
                     $html.='<a href="'.url('remove/mysupport/'.$topicnum.'/'. $campnum .'/' .$array['index']).'" class="btn btn-info singleClick">Remove Your Support</a>';
-                }       
-                if(!in_array($array['index'],$userNicknames) && !in_array($array['index'],$myDelegator) && !in_array($array['index'],$myDelegation) && Auth::check() && ($nickName->id==$array['index'])){
-                    $html.='<a href="'.url('support/'.$urlPortion.'_'.$array['index']).'" class="btn btn-info singleClick">Delegate Your Support</a>';
                 }
+               // if(!in_array($array['index'],$userNicknames) && !in_array($array['index'],$myDelegator) && !in_array($array['index'],$myDelegation) && Auth::check() ){
+                if($remove_support ==FALSE && Auth::check() && !in_array($array['index'],$userNicknames) && !in_array($array['index'],$myDelegator) && !in_array($array['index'],$myDelegation)){
+                    $html.='<a href="'.url('support/'.$urlPortion.'_'.$array['index']).'" class="btn btn-info singleClick">Delegate Your Support </a>';
+                }
+               
+                 
+               
             }
             $html.="<ul>";
-            $html.=self::buildTree($topicnum,$campnum,$array['children'],false,$add_supporter,$delegationTreeArray);
+            $html.=self::buildTree($topicnum,$campnum,$array['children'],false,$add_supporter,$delegationTreeArray,$remove_support);
             $html.="</ul></li>";
         }
         return $html;
@@ -299,8 +309,7 @@ class TopicSupport extends Model {
         
         $traversedSupportCountTreeArray = self::sortTraversedSupportCountTreeArray(self::sumTranversedArraySupportCount(self::traverseTree($algorithm,$topicnum,$campnum)));
         $delegationTreeArray = self::getDelegationTree($traversedSupportCountTreeArray,[]);
-        
-		return self::buildTree($topicnum,$campnum,$traversedSupportCountTreeArray,true,$add_supporter,$delegationTreeArray);
+        return self::buildTree($topicnum,$campnum,$traversedSupportCountTreeArray,true,$add_supporter,$delegationTreeArray,$remove_support=FALSE);
     }
 
    

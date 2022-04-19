@@ -11,7 +11,8 @@
   <form class="form-inline mt-5" method="POST" action="{{ URL::to('/')}}/forum/{{ $topicName }}/{{ $campNum }}/threads/{{ $thread->id }}/edit">
     {{ csrf_field() }}
     <div class="form-group  col-sm-8 mb-2">
-      <label for="title"> <span style="color:red">*</span> </label> &nbsp;
+      <label for="title" class="edit_label_star"> 
+        <span style="color:red;margin-right:5px;">* </span> </label>
       <input type="text" 
         onkeydown="restrictTextField(event,100)" 
         class="form-control  col-sm-10" 

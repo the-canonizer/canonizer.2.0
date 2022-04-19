@@ -162,7 +162,7 @@ class TopicController extends Controller {
             $current_time = time();
             $eventtype = "CREATE";
             $topic = new Topic();
-            $topic->topic_name = isset($all['topic_name']) ? trim(preg_replace('/\s+/', ' ', $all['topic_name'])) : "";
+            $topic->topic_name = isset($all['topic_name']) ? trim(preg_replace('/\s\s+/', ' ', str_replace("\n", " ", $all['topic_name']))) : "";
             $topic->namespace_id = isset($all['namespace']) ? $all['namespace'] : "";
             $topic->submit_time = $current_time;
             $topic->submitter_nick_id = isset($all['nick_name']) ? $all['nick_name'] : "";
@@ -749,7 +749,7 @@ class TopicController extends Controller {
         $camp = new Camp();
         $camp->topic_num = $all['topic_num'];
         $camp->parent_camp_num = isset($all['parent_camp_num']) ? $all['parent_camp_num'] : "";
-        $camp->camp_name = isset($all['camp_name']) ? trim(preg_replace('/\s+/', ' ', $all['camp_name'])) : "";
+        $camp->camp_name = isset($all['camp_name']) ? trim(preg_replace('/\s\s+/', ' ', str_replace("\n", " ", $all['camp_name'])))  : "";
         $camp->submit_time = strtotime(date('Y-m-d H:i:s'));
         $camp->go_live_time = $currentTime; //strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
         $camp->language = 'English';
@@ -1592,7 +1592,7 @@ class TopicController extends Controller {
          
     //Sunil Talentelgia This function only work when we changes parent camp. In that case we remove support of parent camp 
     private function checkParentCampChanged($topic_num, $camp_num, $parent_camp_num) {
-        //Sunil Talentelgia while updating camp check if any old support then remove it if parent camp changed
+        //while updating camp check if any old support then remove it if parent camp changed
         $campOldData = Camp::getLiveCamp($topic_num,$camp_num);
         if(isset($parent_camp_num) && $parent_camp_num!=''){ // && $parent_camp_num != $campOldData->parent_camp_num){
             $allParentCamps = Camp::getAllParent($campOldData);
@@ -1601,7 +1601,7 @@ class TopicController extends Controller {
             //get supporters of all child camps of current camp
             $allChildSupporters = Support::where('topic_num',$topic_num)
                 ->where('end',0)
-                ->whereIn('camp_num',$allChildCamps)
+                ->whereIn('camp_num',$allParentCamps) //$allChildCamps changes with $allParentCamps 1262 and 1191
                 ->pluck('nick_name_id');
             //remove all supports from parent camp if there any child supporter
             if(sizeof($allChildSupporters) > 0){
@@ -1609,7 +1609,6 @@ class TopicController extends Controller {
                     Support::removeSupport($topic_num,$p,$allChildSupporters);
                 }
             }
-            //#924 end
         }
     }
 }

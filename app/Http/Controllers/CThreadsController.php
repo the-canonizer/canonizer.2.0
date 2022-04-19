@@ -290,21 +290,6 @@ class CThreadsController extends Controller
 
         $userNickNames = (auth()->check()) ? Nickname::topicNicknameUsed($topicid) : array();
 
-        // Not efficient if user has more than 20 nickname. Though not practically possible but feasible
-        foreach ($userNickNames as $nickName) {
-            $ifNickNameUsed = Reply::where('user_id', $nickName->id)->where('c_thread_id', $CThread)->first();
-            if ( $ifNickNameUsed ) {
-                $name = Nickname::where('id', $ifNickNameUsed->user_id)->first();
-                $nickNameUsed[] = (object)(
-                    ['id' => $ifNickNameUsed->user_id, 'nick_name' => $name->nick_name]
-                );
-            }
-        }
-
-        if ( $nickNameUsed ) {
-            $userNickNames = $nickNameUsed;
-        }
-
         return view(
             'threads.show',
              $topic, [
