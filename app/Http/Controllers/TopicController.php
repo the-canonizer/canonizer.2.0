@@ -1573,7 +1573,7 @@ class TopicController extends Controller {
                 $msg = "You have successfully subscribed to this Topic.";
              }else{
                 if($id){
-                    $camp_subs_data = \App\Model\CampSubscription::where('topic_num','=',$all['topic_num'])->where('user_id', '=', $all['userid'])->get();
+                    $camp_subs_data = \App\Model\CampSubscription::where('id','=',$id)->get();
                     $camp_subscription = $camp_subs_data[0];
                     $camp_subscription->subscription_end = strtotime(date('Y-m-d H:i:s'));
                 }
