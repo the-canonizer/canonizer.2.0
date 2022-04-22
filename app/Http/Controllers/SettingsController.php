@@ -838,7 +838,7 @@ class SettingsController extends Controller
                 $this->removeSupport($topic_num,$currentSupportRec->camp_num,$nick_name_id,'',$currentSupportRec->support_order,$promoteDelegate,$ifSupportLeft);
                 Session::flash('success', "Your support has been removed successfully.");                
             } 
-            $topicSupport = Topic::where('id', $topic_num)->first();
+            $topicSupport = Topic::where('topic_num', $topic_num)->get()->last();
             // Dispatch Job
             if(isset($topicSupport)) {
                 Util::dispatchJob($topicSupport, 1, 1);
