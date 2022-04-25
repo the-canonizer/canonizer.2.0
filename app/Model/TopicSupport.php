@@ -167,7 +167,7 @@ class TopicSupport extends Model {
         }
         return $i;
     }
-    public static function buildTree($topicnum,$campnum,$traversedTreeArray,$parentNode=false,$add_supporter = false,$delegationTreeArray = [],$remove_support=[]){
+    public static function buildTree($topicnum,$campnum,$traversedTreeArray,$parentNode=false,$add_supporter = false,$delegationTreeArray = [],$remove_support=FALSE){
         $html= "";
         $userId = null;
         if(Auth::check()){
@@ -208,21 +208,21 @@ class TopicSupport extends Model {
 
             if($as_of_time < time()){
                 if(in_array($array['index'],$userNicknames)){
-                    $remove_support[$array['index']]=TRUE;
+                    $remove_support=TRUE;
                     $html.="<a data-toggle='tooltip' data-original-title='History cannot be modified. In order to modify your current support select the default option in the \"As Of\" box' style='".$disabledCss."' href='javascript:void(0)' class='btn btn-info singleClick'>Remove Your Support </a>";
                 }                
                 //if(!in_array($array['index'],$userNicknames) && !in_array($array['index'],$myDelegator) && !in_array($array['index'],$myDelegation) && Auth::check() ){
-                if($remove_support[$array['index']] ==FALSE && Auth::check() && !in_array($array['index'],$userNicknames) && !in_array($array['index'],$myDelegator) && !in_array($array['index'],$myDelegation)){
+                if($remove_support ==FALSE && Auth::check() && !in_array($array['index'],$userNicknames) && !in_array($array['index'],$myDelegator) && !in_array($array['index'],$myDelegation)){
                 
                     $html.="<a data-toggle='tooltip' data-original-title='History cannot be modified. In order to modify your current support select the default option in the \"As Of\" box' style='".$disabledCss."' href='javascript:void(0)' class='btn btn-info singleClick'>Delegate Your Support </a>";
                 }
             }else{
                 if(in_array($array['index'],$userNicknames)){
-                    $remove_support[$array['index']] =TRUE;
+                    $remove_support =TRUE;
                     $html.='<a href="'.url('remove/mysupport/'.$topicnum.'/'. $campnum .'/' .$array['index']).'" class="btn btn-info singleClick">Remove Your Support</a>';
                 }
                // if(!in_array($array['index'],$userNicknames) && !in_array($array['index'],$myDelegator) && !in_array($array['index'],$myDelegation) && Auth::check() ){
-                if($remove_support[$array['index']] ==FALSE && Auth::check() && !in_array($array['index'],$userNicknames) && !in_array($array['index'],$myDelegator) && !in_array($array['index'],$myDelegation)){
+                if($remove_support ==FALSE && Auth::check() && !in_array($array['index'],$userNicknames) && !in_array($array['index'],$myDelegator) && !in_array($array['index'],$myDelegation)){
                     $html.='<a href="'.url('support/'.$urlPortion.'_'.$array['index']).'" class="btn btn-info singleClick">Delegate Your Support </a>';
                 }
                
@@ -232,7 +232,9 @@ class TopicSupport extends Model {
             $html.="<ul>";
             $html.=self::buildTree($topicnum,$campnum,$array['children'],false,$add_supporter,$delegationTreeArray,$remove_support);
             $html.="</ul></li>";
+            $remove_support=FALSE;
         }
+        
         return $html;
     }
 

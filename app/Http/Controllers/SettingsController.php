@@ -439,11 +439,14 @@ class SettingsController extends Controller
                 $ifSupportLeft = false;
             }
 
-            
+            $endDelegatesForOld = false;
             if (isset($mysupports) && count($mysupports) > 0 && isset($data['removed_camp']) && count($data['removed_camp']) > 0) {
                foreach ($mysupports as $singleSupport) { 
                     if(in_array($singleSupport->camp_num,$data['removed_camp'])){
-                        $this->removeSupport($topic_num,$singleSupport->camp_num,$singleSupport->nick_name_id,'',$singleSupport->support_order,$promoteDelegate,$ifSupportLeft);
+                        $endDelegatesForOld = true;
+                        $this->removeSupport($topic_num,$singleSupport->camp_num,$singleSupport->nick_name_id,'',$singleSupport->support_order,$promoteDelegate,$ifSupportLeft, $endDelegatesForOld);
+                        
+                        //remove support from delegated for previous camp
                     } 
                  }    
             }
@@ -734,7 +737,7 @@ class SettingsController extends Controller
     private function emailForSupportAdded($data)
     {
         //mail return
-       // return;
+        //return;
         $parentUser = Nickname::getUserByNickName($data['nick_name']);
         $nickName = Nickname::getNickName($data['nick_name']);
         $topic = Camp::getAgreementTopic($data['topic_num'],['nofilter'=>true]);
@@ -1183,7 +1186,7 @@ class SettingsController extends Controller
      * 3. re-order the preference number for other supported camps AND
      * 4. Same will be done for their delegates tree.
      */
-    public function removeSupport($topicNum,$campNum='',$nickNameId,$delegateNickNameId=0,$currentSupportOrder='',$promoteDelegate = true,$ifSupportLeft = true){
+    public function removeSupport($topicNum,$campNum='',$nickNameId,$delegateNickNameId=0,$currentSupportOrder='',$promoteDelegate = true,$ifSupportLeft = true, $endDelegatesForOld =false){
         $startSupportOrder = $currentSupportOrder;
         $as_of_time = time();
         
@@ -1231,9 +1234,9 @@ class SettingsController extends Controller
                         $currentSupportOrder++;                 
                     }
 
-                   // if($promoteDelegate){
+                    if($promoteDelegate || $endDelegatesForOld){
                         $this->deleteDelegateSupport($topicNum,$campNum,$nickNameId,$remaingSupportWithHighOrder,$startSupportOrder);
-                   // }
+                    }
                 }   
             } 
             /* send support deleted mail to all supporter and subscribers */
