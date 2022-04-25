@@ -823,7 +823,7 @@ class TopicController extends Controller {
 
             //note- objection case it will be not update parent camp support 
             if ($eventtype == "CAMP_UPDATE" || $eventtype == "UPDATE") {
-                $this->checkParentCampChanged($all['topic_num'],$all['camp_num'],$all['parent_camp_num']);   
+                $this->checkParentCampChanged($all['topic_num'],$all['camp_num'],$all['parent_camp_num'],$in_review_status=false);   
             }
             
             if ($eventtype == "CREATE") {
@@ -1270,7 +1270,7 @@ class TopicController extends Controller {
             $camp = Camp::where('id', $changeID)->first();
 			if(isset($camp)) {
                 //sunil Talentelgia- while updating camp check if any old support then remove it if parent camp changed 1076 / 1211
-                $this->checkParentCampChanged($camp->topic_num,$camp->camp_num,$camp->parent_camp_num); 
+                $this->checkParentCampChanged($camp->topic_num,$camp->camp_num,$camp->parent_camp_num,$in_review_status=true); 
                 //end 1076
                 $submitterNickId = $camp->submitter_nick_id;
                 $agreeCount = ChangeAgreeLog::where('topic_num', '=', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('change_id', '=', $changeID)->where('change_for', '=', $data['change_for'])->count();
@@ -1573,7 +1573,7 @@ class TopicController extends Controller {
                 $msg = "You have successfully subscribed to this Topic.";
              }else{
                 if($id){
-                    $camp_subs_data = \App\Model\CampSubscription::where('topic_num','=',$all['topic_num'])->where('user_id', '=', $all['userid'])->get();
+                    $camp_subs_data = \App\Model\CampSubscription::where('id','=',$id)->get();
                     $camp_subscription = $camp_subs_data[0];
                     $camp_subscription->subscription_end = strtotime(date('Y-m-d H:i:s'));
                 }
@@ -1591,22 +1591,38 @@ class TopicController extends Controller {
     }
          
     //Sunil Talentelgia This function only work when we changes parent camp. In that case we remove support of parent camp 
-    private function checkParentCampChanged($topic_num, $camp_num, $parent_camp_num) {
+    private function checkParentCampChanged($topic_num, $camp_num, $parent_camp_num, $in_review_status) {
+        
         //while updating camp check if any old support then remove it if parent camp changed
         $campOldData = Camp::getLiveCamp($topic_num,$camp_num);
-        if(isset($parent_camp_num) && $parent_camp_num!=''){ // && $parent_camp_num != $campOldData->parent_camp_num){
-            $allParentCamps = Camp::getAllParent($campOldData);
-            //#924 start
-            $allChildCamps = Camp::getAllChildCamps($campOldData);
-            //get supporters of all child camps of current camp
-            $allChildSupporters = Support::where('topic_num',$topic_num)
-                ->where('end',0)
-                ->whereIn('camp_num',$allParentCamps) //$allChildCamps changes with $allParentCamps 1262 and 1191
-                ->pluck('nick_name_id');
-            //remove all supports from parent camp if there any child supporter
-            if(sizeof($allChildSupporters) > 0){
-                foreach($allParentCamps as $p ){
-                    Support::removeSupport($topic_num,$p,$allChildSupporters);
+        
+        if(isset($parent_camp_num) && $parent_camp_num!=''){// && $parent_camp_num != $campOldData->parent_camp_num){
+            if($in_review_status){
+                //#924 start
+                $allChildCamps = Camp::getAllChildCamps($campOldData);
+                //get supporters of all child camps of current camp
+                $allChildSupporters = Support::where('topic_num',$topic_num)
+                    ->where('end',0)
+                    ->whereIn('camp_num',$allChildCamps) //$allChildCamps changes with $allParentCamps 1262 and 1191
+                    ->pluck('nick_name_id');
+                //remove all supports from parent camp if there any child supporter
+                if(sizeof($allChildSupporters) > 0){  
+                    Support::removeSupport($topic_num,$parent_camp_num,$allChildSupporters);
+                }
+            }
+            else{
+                //1262 and 1191
+                $allParentCamps = Camp::getAllParent($campOldData);
+                //get supporters of all child camps of current camp
+                $allChildSupporters = Support::where('topic_num',$topic_num)
+                    ->where('end',0)
+                    ->whereIn('camp_num',$allParentCamps) //$allChildCamps changes with $allParentCamps 1262 and 1191
+                    ->pluck('nick_name_id');
+                //remove all supports from parent camp if there any child supporter
+                if(sizeof($allChildSupporters) > 0){
+                    foreach($allParentCamps as $p ){
+                        Support::removeSupport($topic_num,$p,$allChildSupporters);
+                    }
                 }
             }
         }

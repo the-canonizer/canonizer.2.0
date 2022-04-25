@@ -166,9 +166,8 @@
 						<?php 
 							$liveCamp = \App\Model\Camp::getLiveCamp($support->topic_num,$support->camp_num,['nofilter'=>true]);
 							$url =  \App\Model\Camp::getTopicCampUrl($support->topic_num,$support->camp_num);
-							$key = $key + 1;
 						?>
-						@if(!in_array($support->camp->camp_num,$removedCampList)) <?php  ?>
+						@if(!in_array($support->camp->camp_num,$removedCampList)) <?php $key = $key + 1; ?>
 						
 						<div class="col-sm-12 column sortCamp">
 							<div id="positions_{{ $support->support_id }}" class="SpCmpBDY  support-sorter-element ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
@@ -189,11 +188,12 @@
 						</div>
 						@else
 							
-							@if(Session::get('confirm') !='samecamp' && !Session::has('warningDelegate')) 
+							@if(Session::get('confirm') !='samecamp' && !Session::has('warningDelegate') && $camp->camp_name !== 'Agreement') 
 							
 								<!-- CASE: When adding support to new camp which is a sub-camp of a specific camp  --> 
 								<?php $lastsupportOrder++;
 									$isChildCamp = 1;
+									$key++;
 									$url =  \App\Model\Camp::getTopicCampUrl($topic->topic_num,session('campnum'));
 								?>
 								<div class="col-sm-12 column sortCamp">   
