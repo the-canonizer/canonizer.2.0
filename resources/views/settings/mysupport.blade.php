@@ -58,7 +58,7 @@
 						  <button type="submit" id="submit_{{ $support->support_id }}" class="btn-sptclose" title="Remove Support"><i class="fa fa-close"></i></button>
 						 </form>
 						    <?php  
-                     $link = \App\Model\Camp::getTopicCampUrl($data->topic_num,isset($support->camp->camp_num) ? $support->camp->camp_num : '1' );
+                     $link = \App\Model\Camp::getTopicCampUrl($data->topic_num,isset($support->camp->camp_num) ? $support->camp->camp_num : '1');
 
                  ?>
 					     <b><span class="support_order">{{ $support->support_order }}</span> . <a style="text-decoration: underline; color: blue;" href="<?php echo $link; ?>"> {{ isset($camp->camp_name) ? $camp->camp_name : '' }}  </a> <br/>

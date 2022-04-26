@@ -96,6 +96,9 @@ class CommonForumFunctions
                 if (isset($supporter_and_subscriber[$user->id]) && isset($supporter_and_subscriber[$user->id]['also_subscriber']) && $supporter_and_subscriber[$user->id]['also_subscriber']) {
                     $data['also_subscriber'] = $supporter_and_subscriber[$user->id]['also_subscriber'];
                     $data['sub_support_list'] = $supporter_and_subscriber[$user->id]['sub_support_list'];
+                }else {
+                    $data['also_subscriber'] = 0;
+                    $data['sub_support_list'] = [];
                 }
 
                 CommonForumFunctions::sendEmailToUserWithPrivateCheck($bcc_email, $user, $link, $data, false);
@@ -194,6 +197,9 @@ class CommonForumFunctions
                 if (isset($supporter_and_subscriber[$user->id]) && isset($supporter_and_subscriber[$user->id]['also_subscriber']) && $supporter_and_subscriber[$user->id]['also_subscriber']) {
                     $data['also_subscriber'] = $supporter_and_subscriber[$user->id]['also_subscriber'];
                     $data['sub_support_list'] = $supporter_and_subscriber[$user->id]['sub_support_list'];
+                }else {
+                    $data['also_subscriber'] = 0;
+                    $data['sub_support_list'] = [];
                 }
 
                 CommonForumFunctions::sendEmailToUserWithPrivateCheck($bcc_email, $user, $link, $data, true);

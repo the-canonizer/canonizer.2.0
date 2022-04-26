@@ -16,6 +16,8 @@ class Kernel extends ConsoleKernel
         'App\Console\Commands\AdminUser',
         'App\Console\Commands\NotifyUserForChangeSubmit',
         'App\Console\Commands\FixSupport',
+        'App\Console\Commands\DeleteProcessedJobs',
+        'App\Console\Commands\UpdateProcessedJobsTopicNumber',
     ];
 
     /**
@@ -29,6 +31,7 @@ class Kernel extends ConsoleKernel
         // $schedule->command('inspire')
         //          ->hourly();
         $schedule->command('notify:supporters')->everyFiveMinutes();
+        $schedule->command('processJob:delete')->dailyAt('00:01');
     }
 
     /**

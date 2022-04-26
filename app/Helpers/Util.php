@@ -88,7 +88,7 @@ class Util
             // Dispact job when create a camp
             CanonizerService::dispatch($canonizerServiceData)
                 ->onQueue('canonizer-service')
-                ->unique(Topic::class, $topic->id);
+                ->unique(Topic::class, $topic->topic_num);
 
             // Incase the topic is mind expert then find all the affected topics 
             if($topic->topic_num == 81) {
@@ -109,7 +109,7 @@ class Util
                         // Dispact job when create a camp
                         CanonizerService::dispatch($canonizerServiceData)
                             ->onQueue('canonizer-service')
-                            ->unique(Topic::class, $topic->id);
+                            ->unique(Topic::class, $topic->topic_num);
                     }
                 }
             }

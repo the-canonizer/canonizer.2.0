@@ -277,7 +277,8 @@ class SettingsController extends Controller
                 return back();
             }
             //get nicknames
-            $nicknames = Nickname::topicCampNicknameUsed($topicnum,$campnum,$encode);
+            //Fix #1130
+            $nicknames = Nickname::topicNicknameUsed($topicnum);
             $userNickname = Nickname::personNicknameArray();
             $confirm_support = 0;
             $alreadySupport = Support::where('topic_num', $topicnum)->where('camp_num', $campnum)->where('end', '=', 0)->whereIn('nick_name_id', $userNickname)->get();
@@ -381,6 +382,7 @@ class SettingsController extends Controller
      */
     public function add_support(Request $request)
     {
+       
         $id = Auth::user()->id;
         $alreadyMailed = [];
         $as_of_time = time();
@@ -429,11 +431,15 @@ class SettingsController extends Controller
             if(isset($data['removed_camp']) && isset($data['support_order']) && count($data['support_order']) > 0){
                 $promoteDelegate = false;
             }
-            /** check point 2 if all suppot removed  */
+
+          
+            /** check point 2 if all support removed  */
             $ifSupportLeft = true;
             if(isset($data['removed_camp']) && count($mysupports) == count($data['removed_camp'])){
                 $ifSupportLeft = false;
             }
+
+            
             if (isset($mysupports) && count($mysupports) > 0 && isset($data['removed_camp']) && count($data['removed_camp']) > 0) {
                foreach ($mysupports as $singleSupport) { 
                     if(in_array($singleSupport->camp_num,$data['removed_camp'])){
@@ -441,7 +447,8 @@ class SettingsController extends Controller
                     } 
                  }    
             }
-              /** if user is delegating to someone else or is directly supporting  then all the old delegated  supports will be removed #702 **/
+           
+            /** if user is delegating to someone else or is directly supporting  then all the old delegated  supports will be removed #702 **/
             if(isset($myDelegatedSupports) && count($myDelegatedSupports) > 0){
                 foreach ($mysupports as $singleSupport) {
                      if(in_array($singleSupport->camp_num,$myDelegatedSupports)){
@@ -450,10 +457,10 @@ class SettingsController extends Controller
                         $mailData = $data;
                         $mailData['camp_num'] = $singleSupport->camp_num;
                         /* send support deleted mail to all supporter and subscribers */
-                       $this->emailForSupportDeleted($mailData);    
+                        $this->emailForSupportDeleted($mailData);    
                     }             
                 }
-            }            
+            }           
             $last_camp =  $data['camp_num'];
             $newcamp_mail_flag = false;           
             if(isset($myDelegatedSupports) && count($myDelegatedSupports) > 0 && isset($data['delegate_nick_name_id']) && $data['delegate_nick_name_id'] == 0 ){ // removing delegte support and directly supporting camp
@@ -467,6 +474,11 @@ class SettingsController extends Controller
                 $supportTopic->camp_num = $data['camp_num'];
                 $supportTopic->support_order = 1;
                 $supportTopic->save();
+                //all delegator of $data['nick_name] should also assigned with this support #1088
+                if(isset($anyDelegator) && !empty($anyDelegator))
+                {
+                    $this->addSupportToDelegates($anyDelegator,$supportTopic,$data['nick_name']);
+                }
                 /* clear the existing session for the topic to get updated support count */
                 session()->forget("topic-support-{$topic_num}");
                 session()->forget("topic-support-nickname-{$topic_num}");
@@ -477,7 +489,7 @@ class SettingsController extends Controller
                     $this->emailForSupportAdded($data);   
                 }
             }else if (isset($data['support_order']) && isset($data['delegate_nick_name_id']) && $data['delegate_nick_name_id'] == 0 ) {
-               foreach ($data['support_order'] as $camp_num => $support_order) {
+                foreach ($data['support_order'] as $camp_num => $support_order) {
                     $last_camp = $camp_num;
                     if(!in_array($camp_num,$mysupportArray)) {
                         $newcamp_mail_flag = true;
@@ -545,10 +557,11 @@ class SettingsController extends Controller
                     }
                  }                
             }
+
             if ($last_camp == $data['camp_num']) {
                 Session::flash('confirm', "samecamp");
             }
-            
+
             /* remove delegate support if user is support directly */
             if(isset($data['delegated']) && count($data['delegated']) > 0 && $data['delegate_nick_name_id'] == 0){
                 foreach($data['delegated'] as $k=>$d){
@@ -607,7 +620,7 @@ class SettingsController extends Controller
 
             }
             
-            return redirect(\App\Model\Camp::getTopicCampUrl($data['topic_num'],session('campnum'), $currentTime = time()));            
+            return redirect(\App\Model\Camp::getTopicCampUrl($data['topic_num'],session('campnum')));            
         } else {
             return redirect()->route('login');
         }
@@ -825,7 +838,7 @@ class SettingsController extends Controller
                 $this->removeSupport($topic_num,$currentSupportRec->camp_num,$nick_name_id,'',$currentSupportRec->support_order,$promoteDelegate,$ifSupportLeft);
                 Session::flash('success', "Your support has been removed successfully.");                
             } 
-            $topicSupport = Topic::where('id', $topic_num)->first();
+            $topicSupport = Topic::where('topic_num', $topic_num)->get()->last();
             // Dispatch Job
             if(isset($topicSupport)) {
                 Util::dispatchJob($topicSupport, 1, 1);
@@ -1066,10 +1079,11 @@ class SettingsController extends Controller
     public function addDelegatedSupport($myDelegator,$topic_num,$camp_num,$support_order,$delegatedTo){
         foreach($myDelegator as $delegator){
             Support::where('topic_num',$topic_num)
+             ->where('camp_num', '=',$camp_num)
              ->where('end', '=',0)
              ->where('nick_name_id', '=', $delegator->nick_name_id)
              ->where('delegate_nick_name_id','=',$delegatedTo)
-             ->update(['end'=>time()]);
+             ->update(['end'=>time()]); 
 
             $supportTopic = new Support();
             $supportTopic->topic_num = $topic_num;
@@ -1085,6 +1099,7 @@ class SettingsController extends Controller
             $subLevelDelegates = Support::where('topic_num', $topic_num)->whereIn('delegate_nick_name_id', $userNicknames)->where('end', '=', 0)->groupBy('nick_name_id')->get();
              //ending support of child for previous camps and adding new 
              Support::where('topic_num',$topic_num)
+             ->where('camp_num', '=',$camp_num)
              ->where('end', '=',0)
              ->whereIN('delegate_nick_name_id',  $userNicknames)->update(['end'=>time()]);
             if(count($subLevelDelegates) > 0){
@@ -1133,6 +1148,7 @@ class SettingsController extends Controller
         $support = Support::where('camp_num', $campNum)->where('topic_num', $topicNum)->where('nick_name_id', $nickNameId)->where('end', '=', 0)->first();
         $delegateNickNameId = $support->delegate_nick_name_id;
         $promoteDelegate = true;
+
         $ifSupportLeft = true; //default, only useful in case od direct supporter
         if(!$delegateNickNameId){
             $supportCount = Support::where('topic_num', $topicNum)
@@ -1154,7 +1170,7 @@ class SettingsController extends Controller
             Util::dispatchJob($topic, $campNum, 1);
         }
 
-        return redirect(\App\Model\Camp::getTopicCampUrl($topicNum ,$campNum, $currentTime = time()));
+        return redirect(\App\Model\Camp::getTopicCampUrl($topicNum ,$campNum));
 
     }
     
@@ -1170,6 +1186,7 @@ class SettingsController extends Controller
     public function removeSupport($topicNum,$campNum='',$nickNameId,$delegateNickNameId=0,$currentSupportOrder='',$promoteDelegate = true,$ifSupportLeft = true){
         $startSupportOrder = $currentSupportOrder;
         $as_of_time = time();
+        
         if($delegateNickNameId){  //A delegate supporter is removing its support
             $alldirectDelegates = Support::where('topic_num', $topicNum)->where('delegate_nick_name_id', $nickNameId)->where('end', '=', 0)->get();
             $campList = Support::where('topic_num','=',$topicNum)->where('nick_name_id', $nickNameId)->where('end', '=', 0)->pluck('camp_num')->toArray();
@@ -1214,9 +1231,9 @@ class SettingsController extends Controller
                         $currentSupportOrder++;                 
                     }
 
-                    if($promoteDelegate){
+                   // if($promoteDelegate){
                         $this->deleteDelegateSupport($topicNum,$campNum,$nickNameId,$remaingSupportWithHighOrder,$startSupportOrder);
-                    }
+                   // }
                 }   
             } 
             /* send support deleted mail to all supporter and subscribers */
@@ -1385,7 +1402,7 @@ class SettingsController extends Controller
         // Dispact job when create a camp
         CanonizerService::dispatch($canonizerServiceData)
             ->onQueue('canonizer-service')
-            ->unique(Topic::class, $topic->id);
+            ->unique(Topic::class, $topic->topic_num);
     }
 
     /**

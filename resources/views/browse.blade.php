@@ -23,7 +23,7 @@
                 <select onchange="submitBrowseForm(this)" name="namespace" id="namespace" class="namespace-select">
                     <option value="">All</option>
                     @foreach($namespaces as $namespace)
-                        <option data-namespace="{{ $namespace->name }}" value="{{ $namespace->id }}" {{ $namespace->id == session('defaultNamespaceId') ? 'selected' : ''}}>{{namespace_label($namespace)}}</option>
+                        <option data-namespace="{{ $namespace->name }}" value="{{ $namespace->id }}" {{ $namespace->id == session('defaultNamespaceId') || (isset($_REQUEST['namespace']) && $namespace->id == $_REQUEST['namespace']) ? 'selected' : ''}}>{{namespace_label($namespace)}}</option>
                     @endforeach
                 </select>
                 </div>
