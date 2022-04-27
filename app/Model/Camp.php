@@ -430,7 +430,7 @@ class Camp extends Model {
         return $camparray;
     }
 
-    public static function getAllChildCamps($camp) {
+    public static function getAllChildCamps($camp, $includeLiveCamps=false) {
         $camparray = [];
         if ($camp) {
             $key = $camp->topic_num . '-' . $camp->camp_num . '-' . $camp->parent_camp_num;
@@ -441,12 +441,23 @@ class Camp extends Model {
             Camp::$chilcampArray[] = $key;
             Camp::$chilcampArray[] = $key1;
             $camparray[] = $camp->camp_num;
-            //adding go_live_time condition Sunil Talentelgia //->where('go_live_time', '<=', time())
-            $childCamps = Camp::where('topic_num', $camp->topic_num)->where('parent_camp_num', $camp->camp_num)->groupBy('camp_num')->latest('submit_time')->get();
-            foreach ($childCamps as $child) {
+            if($includeLiveCamps){
                 //adding go_live_time condition Sunil Talentelgia //->where('go_live_time', '<=', time())
-                $latestParent = Camp::where('topic_num', $child->topic_num)
-                ->where('camp_num', $child->camp_num)->latest('submit_time')->first();
+                $childCamps = Camp::where('topic_num', $camp->topic_num)->where('parent_camp_num', $camp->camp_num)->where('go_live_time', '<=', time())->groupBy('camp_num')->latest('submit_time')->get();
+           
+            }
+            else{
+                $childCamps = Camp::where('topic_num', $camp->topic_num)->where('parent_camp_num', $camp->camp_num)->groupBy('camp_num')->latest('submit_time')->get();
+            }
+            foreach ($childCamps as $child) {
+                if($includeLiveCamps){
+                    //adding go_live_time condition Sunil Talentelgia //->where('go_live_time', '<=', time())
+                    $latestParent = Camp::where('topic_num', $child->topic_num)->where('camp_num', $child->camp_num)->latest('submit_time')->where('go_live_time', '<=', time())->first();
+                }
+                else{
+                    $latestParent = Camp::where('topic_num', $child->topic_num)->where('camp_num', $child->camp_num)->latest('submit_time')->first();
+               
+                }
                 if($latestParent->parent_camp_num == $camp->camp_num ){ 
                     $camparray = array_merge($camparray, self::getAllChildCamps($child)); 
 
@@ -530,7 +541,7 @@ class Camp extends Model {
 
         $onecamp = self::getLiveCamp($topic_num, $camp_num);
 
-        $childCamps = array_unique(self::getAllChildCamps($onecamp));
+        $childCamps = array_unique(self::getAllChildCamps($onecamp,$includeLiveCamps=true));
 
         // $mysupports = Support::where('topic_num', $topic_num)->whereIn('camp_num', $childCamps)->whereIn('nick_name_id', $userNicknames)->where('end', '=', 0)->where('delegate_nick_name_id','=',0)->orderBy('support_order', 'ASC')->groupBy('camp_num')->get();
         // Fixes #912: Warning is missing while supporting agreement camp (after delegate support)
