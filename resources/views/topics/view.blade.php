@@ -87,9 +87,9 @@ if(isset($topic) && count($topic) > 0 ) {?>
                 <a style="float: right;font-size: medium; margin-right: 20px; margin-top: 5px;"><input id="camp_subscription" type="checkbox" name="subscribe" /> Subscribe</a>
             <?php } ?>
              <?php if(Auth::check() && Auth::user()->id && $topic_subscriptions == 1){  ?>
-                <a style="float: right;font-size: medium; margin-right: 20px; margin-top: 5px;"><input id="topic_subscription" type="checkbox" name="topic_subscription" checked="checked" />Entire Topic Subscribe</a>
+                <a style="float: right;font-size: medium; margin-right: 20px; margin-top: 5px;"><input id="topic_subscription" type="checkbox" name="topic_subscription" checked="checked" />Subscribe to Entire Topic</a>
             <?php }else if(Auth::check() && Auth::user()->id){ ?>
-                <a style="float: right;font-size: medium; margin-right: 20px; margin-top: 5px;"><input id="topic_subscription" type="checkbox" name="topic_subscription" />Entire Topic Subscribe</a>
+                <a style="float: right;font-size: medium; margin-right: 20px; margin-top: 5px;"><input id="topic_subscription" type="checkbox" name="topic_subscription" />Subscribe to Entire Topic</a>
             <?php } ?>
             </div>
 			
