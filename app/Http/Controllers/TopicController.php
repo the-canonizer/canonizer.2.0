@@ -701,6 +701,12 @@ class TopicController extends Controller {
         $topicnum = (isset($all['topic_num'])) ? $all['topic_num'] : null;
         if($topicnum!=null){
 
+            if(trim($all['camp_name']) == 'Agreement'){
+                $validator->after(function ($validator){
+                      $validator->errors()->add('camp_name', 'The camp name has already been taken');
+                 }); 
+             }
+
             $old_parent_camps = Camp::getAllTopicCamp($topicnum);
             /**
              * @updated By Talentelgia
