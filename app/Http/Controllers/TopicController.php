@@ -701,7 +701,7 @@ class TopicController extends Controller {
         $topicnum = (isset($all['topic_num'])) ? $all['topic_num'] : null;
         if($topicnum!=null){
 
-            if(trim($all['camp_name']) == 'Agreement'){
+            if(strtolower(trim($all['camp_name'])) == 'agreement'){
                 $validator->after(function ($validator){
                       $validator->errors()->add('camp_name', 'The camp name has already been taken');
                  }); 
@@ -717,7 +717,7 @@ class TopicController extends Controller {
             $camp_existsNL = 0;
             if(!empty($liveCamps)){
                 foreach($liveCamps as $value){
-                    if($value->camp_name == $all['camp_name']){
+                    if(strtolower(trim($value->camp_name)) == strtolower(trim($all['camp_name']))){
                         if(isset($all['camp_num']) && array_key_exists('camp_num', $all) && $all['camp_num'] == $value->camp_num){
                             $camp_existsLive = 0;
                         }else{
@@ -729,7 +729,7 @@ class TopicController extends Controller {
 
             if(!empty($nonLiveCamps)){
                 foreach($nonLiveCamps as $value){
-                    if($value->camp_name == $all['camp_name']){
+                    if(strtolower(trim($value->camp_name)) == strtolower(trim($all['camp_name']))){
                         if(isset($all['camp_num']) && array_key_exists('camp_num', $all) && $all['camp_num'] == $value->camp_num){
                             $camp_existsNL = 0;
                         }else{ 
