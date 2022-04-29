@@ -624,10 +624,11 @@ class Camp extends Model {
 				   0.25 after and half, again, for each one after that. */
                     if($nick_name_id && $currentCampSupport && $supported->nick_name_id == $nick_name_id){
                         $supportPoint = Algorithm::{$algorithm}($supported->nick_name_id,$supported->topic_num,$supported->camp_num);
+                        echo $supportPoint.":".$nick_name_id;
                         $multiSupport = false; //default;
                          if ($nickNameSupports->count() > 1) {
                             $multiSupport = true;
-                            $supportCountTotal += round($supportPoint / (2 ** ($currentCampSupport->support_order)), 2);
+                            $supportCountTotal += round($supportPoint * 1 / (2 ** ($currentCampSupport->support_order)), 2);
                         } else if ($nickNameSupports->count() == 1) {
                              $supportCountTotal += $supportPoint;
                         }
@@ -640,7 +641,7 @@ class Camp extends Model {
                         if($algorithm =='mind_experts'){
                             $supportCountTotal +=  $supportPoint;
                         }else{
-                            $supportCountTotal +=  round($supportPoint / (2 ** ($currentCampSupport->support_order)), 2);
+                            $supportCountTotal +=  round($supportPoint * 1 / (2 ** ($currentCampSupport->support_order)), 2);
                         }
                     } else if ($nickNameSupports->count() == 1) {
                          $supportCountTotal += $supportPoint;

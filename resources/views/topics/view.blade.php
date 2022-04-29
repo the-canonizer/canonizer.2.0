@@ -71,25 +71,25 @@ if(isset($topic) && count($topic) > 0 ) {?>
             according to these canonized scores.  Each entry is a link to the camp
             page which can contain a statement of belief.  The green line
             indicates the camp page you are currently on and the statement below
-            is for that camp."><i class="fa fa-question"></i></a>
+            is for that camp."><i class="fa fa-question" style="font-size: smaller"></i></a>
             <input type="hidden" id="subs_id" value="<?php echo ($camp_subscription_data && count($camp_subscription_data) > 0) ? $camp_subscription_data[0]->id: null; ?>" />
             <input type="hidden" id="topic_subs_id" value="<?php echo ($topic_subscriptionsData['id'] && count($topic_subscriptionsData['id']) > 0) ? $topic_subscriptionsData['id']: null; ?>" />
-            <a class="pull-right news-feed" href="{{ url('/addnews/' . $id . '/' . $parentcampnum)}}">Add News</a>
+            <a class="pull-right news-feed" href="{{ url('/addnews/' . $id . '/' . $parentcampnum)}}" style="font-size: smaller">Add News</a>
              <?php if(Auth::check() && Auth::user()->id && $camp_subscriptions == 1){  ?>
-                <a style="float: right;font-size: medium; margin-right: 20px; margin-top: 5px;"><input id="camp_subscription" type="checkbox" name="subscribe" checked="checked" /> Subscribe</a>
+                <a style="float: right;font-size: smaller; margin-right: 20px; margin-top: 5px;"><input id="camp_subscription" type="checkbox" name="subscribe" checked="checked" /> Subscribe to the Camp</a>
             <?php }else if(Auth::check() && Auth::user()->id && isset($subscribedCamp) && isset($subscribedCamp->topic_num)  && $camp_subscriptions == 2){ 
                  $title = preg_replace('/[^A-Za-z0-9\-]/', '-', $subscribedCamp->topic->topic_name);
                  $topic_id = $subscribedCamp->topic_num . "-" . $title;
                  $link = \App\Model\Camp::getTopicCampUrl($subscribedCamp->topic_num,$subscribedCamp->camp_num);
              ?> 
-                <a href="<?php echo $link; ?>"  data-toggle="tooltip" data-placement="top" title="You are subscribed to  {{$subscribedCamp->camp_name}} camp" style="float: right;font-size: medium; margin-right: 20px; margin-top: 5px;"><input disabled="true" id="camp_subscription" type="checkbox" name="subscribe" checked="checked" /> Subscribe</a>
+                <a href="<?php echo $link; ?>"  data-toggle="tooltip" data-placement="top" title="You are subscribed to  {{$subscribedCamp->camp_name}} camp" style="float: right;font-size: smaller; margin-right: 20px; margin-top: 5px;"><input disabled="true" id="camp_subscription" type="checkbox" name="subscribe" checked="checked" /> Subscribe to the Camp</a>
             <?php }else if(Auth::check() && Auth::user()->id){ ?>
-                <a style="float: right;font-size: medium; margin-right: 20px; margin-top: 5px;"><input id="camp_subscription" type="checkbox" name="subscribe" /> Subscribe</a>
+                <a style="float: right;font-size: smaller; margin-right: 20px; margin-top: 5px;"><input id="camp_subscription" type="checkbox" name="subscribe" /> Subscribe to the Camp</a>
             <?php } ?>
              <?php if(Auth::check() && Auth::user()->id && $topic_subscriptions == 1){  ?>
-                <a style="float: right;font-size: medium; margin-right: 20px; margin-top: 5px;"><input id="topic_subscription" type="checkbox" name="topic_subscription" checked="checked" />Entire Topic Subscribe</a>
+                <a style="float: right;font-size: smaller; margin-right: 20px; margin-top: 5px;"><input id="topic_subscription" type="checkbox" name="topic_subscription" checked="checked" />Subscribe to entire Topic</a>
             <?php }else if(Auth::check() && Auth::user()->id){ ?>
-                <a style="float: right;font-size: medium; margin-right: 20px; margin-top: 5px;"><input id="topic_subscription" type="checkbox" name="topic_subscription" />Entire Topic Subscribe</a>
+                <a style="float: right;font-size: smaller; margin-right: 20px; margin-top: 5px;"><input id="topic_subscription" type="checkbox" name="topic_subscription" />Subscribe to entire Topic</a>
             <?php } ?>
             </div>
 			
