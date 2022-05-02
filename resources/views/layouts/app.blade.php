@@ -51,10 +51,10 @@
                                <table class="radio-button-top">
 									<tr>
 										<td class="radio radio-primary">
-										<input type="radio" name="sitesearch" value="" checked id="ss0"></input>
+										<input type="radio" name="sitesearch" value="" checked id="ss0" class="top_radio"></input>
 										<label for="ss0" title="Search the Web"><font size="-1" color="black">Web</font></label></td>
 										<td class="radio radio-primary">
-										<input type="radio" name="sitesearch" value="canonizer.com" id="ss1" checked></input>
+										<input type="radio" name="sitesearch" value="canonizer.com" id="ss1" checked class="top_radio"></input>
 										<label for="ss1" title="Search canonizer.com"><font size="-1" color="black">Canonizer.com</font></label></td>
 									</tr>
 								</table>
@@ -441,21 +441,3 @@
 
 </body>
 </html>
-
-<style>
-
-table.radio-button-top .radio label::before{
-    top:0px !important;
-}
-table.radio-button-top .radio label::after{
-    top:3px !important;
-}
-.login-icon::after{
-     margin-top:7px !important;
-}
-
-.search-panel table.radio-button-top{
-    top: 43px !important;
-}
-
-</style>
