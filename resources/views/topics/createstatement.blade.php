@@ -52,6 +52,7 @@
              <div class="form-group">
                 <label for="">Statement <span style="color:red">*</span></label>
                 <textarea class="form-control" rows="6" id="name" name="statement">{{ old('statement')}}</textarea>
+                <p class="font-italic m-0">Note: We support wiki markup. To get reference <a href="{{ \App\Model\Camp::getTopicCampUrl(132,5) }}" target="_blank">click here</a>.</p>
                 @if ($errors->has('statement')) <p class="help-block">{{ $errors->first('statement') }}</p> @endif
              </div> 
             
