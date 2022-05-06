@@ -1131,6 +1131,7 @@ class TopicController extends Controller {
             $dataObject['nick_name_id'] = $nickName->id;
 
             if($statement->grace_period == 0){
+                $dataObject['is_live'] = ($statement->go_live_time <= $currentTime) ? 1 : 0;
                 $this->mailSubscribersAndSupporters($directSupporter,$subscribers,$link, $dataObject);
             }
            
