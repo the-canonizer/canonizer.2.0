@@ -1026,7 +1026,7 @@ class Camp extends Model {
 
         $reducedTree = Util::execute('POST', $endpoint, $headers, $requestBody);
 
-        $data = json_decode($reducedTree, true);
+        $data = [];//json_decode($reducedTree, true);
         
         if(count($data['data']) && $data['code'] == 200 ){
             $reducedTree = $data['data'][0];
