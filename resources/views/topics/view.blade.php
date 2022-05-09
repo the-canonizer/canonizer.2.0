@@ -100,14 +100,13 @@ if(isset($topic) && count($topic) > 0 ) {?>
             <div class="row">
                 <div class="tree treeview col-sm-12">
                     <ul class="mainouter">
-                    <?php 
-					    session(['supportCountTotal'=>0]);
-                        $title      = preg_replace('/[^A-Za-z0-9\-]/', '-', $topic->topic_name);						  
-                        $topic_id  = $topic->topic_num."-".$title;
-						 ?>
-                    {!! $topic->campTreeHtml($parentcampnum, 1, false, 'fa-arrow-down', $topic) !!} 
+                        <?php 
+                            session(['supportCountTotal'=>0]);
+                            $title      = preg_replace('/[^A-Za-z0-9\-]/', '-', $topic->topic_name);						  
+                            $topic_id  = $topic->topic_num."-".$title;
+                        ?>
+                        {!! $topic->campTreeHtml($parentcampnum, 1, false, 'fa-arrow-down', $topic, $fetchTopicHistory) !!} 
                     </ul>
-                    
                 </div>
               
             </div>    
