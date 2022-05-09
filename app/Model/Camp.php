@@ -377,7 +377,7 @@ class Camp extends Model {
                             ->where('camp_num', '=', $campnum)
                             ->where('objector_nick_id', '=', NULL)
                             ->where('go_live_time', '<=', time())
-                            ->latest('submit_time')->first();
+                            ->orderBy('go_live_time','desc')->first();
         } else {
 
             if ((isset($_REQUEST['asof']) && $_REQUEST['asof'] == "review") || (session('asofDefault')=="review" && !isset($_REQUEST['asof']))) {
@@ -386,7 +386,7 @@ class Camp extends Model {
                                 ->where('camp_num', '=', $campnum)
                                 ->where('objector_nick_id', '=', NULL)
                                 ->where('grace_period', 0) // ticket 1219 Muhammad Ahmad
-                                ->latest('submit_time')->first();
+                                ->orderBy('go_live_time','desc')->first();
             } else if ((isset($_REQUEST['asof']) && $_REQUEST['asof'] == "bydate")  || (session()->has('asofDefault') && session('asofDefault') == 'bydate' && !isset($_REQUEST['asof']))) {
                 if(isset($_REQUEST['asof']) && $_REQUEST['asof'] == "bydate"){
                     $asofdate = strtotime(date('Y-m-d H:i:s', strtotime($_REQUEST['asofdate'])));
@@ -401,7 +401,7 @@ class Camp extends Model {
                                 ->where('camp_num', '=', $campnum)
                                 //->where('objector_nick_id', '=', NULL)
                                 ->where('go_live_time', '<=', $asofdate)
-                                ->latest('submit_time')->first();
+                                ->orderBy('go_live_time','desc')->first();
             }
         }
     }
