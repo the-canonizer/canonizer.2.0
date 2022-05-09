@@ -159,13 +159,16 @@ class Camp extends Model {
                 }else
                 $campname = "<a href='" . $url . "'>" . ($camp->camp_name) . '</a>';
             }
-
+            
             if (isset($camp) && $camp->parent_camp_num) {
-                
                 $pcamp = Camp::where('topic_num', $camp->topic_num)
                     ->where('camp_num', $camp->parent_camp_num)
                     // ->where('camp_name', '!=', 'Agreement')  
-                    ->where('objector_nick_id', '=', NULL)
+                    /**
+                     * Fetch objected ones as well for topic history
+                     * ticket 1219 Muhammad Ahmad
+                     */
+                    //->where('objector_nick_id', '=', NULL)
                     //->whereRaw('go_live_time in (select max(go_live_time) from camp where topic_num=' . $camp->topic_num . ' and objector_nick_id is null group by camp_num)')
                     ->where('go_live_time', '<=', $as_of_time)
                     ->orderBy('submit_time', 'DESC')->first();
@@ -226,14 +229,33 @@ class Camp extends Model {
         } else {
 
             if ((isset($filter['asof']) && $filter['asof'] == "review") || (session('asofDefault')=="review" && !isset($filter['asof']))) {
-                return self::select('topic.topic_name', 'topic.namespace_id','camp.*', 'namespace.name as namespace_name','namespace.name')
+                /**
+                 * Fetch topic with grace period 0 as need to fetch reveiw topic only with change commited 
+                 * If not topic found with change committed, fetch live topic
+                 * ticket 1219 Muhammad Ahmad
+                 */
+                $query = self::select('topic.topic_name', 'topic.namespace_id','camp.*', 'namespace.name as namespace_name','namespace.name')
                                 ->join('topic', 'topic.topic_num', '=', 'camp.topic_num')
                                 ->join('namespace', 'topic.namespace_id', '=', 'namespace.id')
                                 ->where('camp.topic_num', $topicnum)->where('camp_name', '=', 'Agreement')
                                 ->where('camp.objector_nick_id', '=', NULL)
                                 ->where('topic.objector_nick_id', '=', NULL)
+                                ->where('topic.grace_period', 0)
                                 ->latest('topic.submit_time')->first();
 
+                if(!$query) {
+                    $query = self::select('topic.topic_name','topic.namespace_id', 'camp.*', 'namespace.name as namespace_name', 'namespace.name')
+                                ->join('topic', 'topic.topic_num', '=', 'camp.topic_num')
+                                ->join('namespace', 'topic.namespace_id', '=', 'namespace.id')
+                                ->where('topic.topic_num', $topicnum)->where('camp_name', '=', 'Agreement')
+                                ->where('camp.objector_nick_id', '=', NULL)
+                                ->where('topic.objector_nick_id', '=', NULL)
+                                ->where('camp.go_live_time', '<=', time())
+                                ->where('topic.go_live_time', '<=', time())
+                                ->latest('topic.submit_time')->first();
+                }
+
+                return $query;
             } else if (isset($filter['asof']) && $filter['asof'] == "bydate" || (session()->has('asofDefault') && session('asofDefault') == 'bydate' && !isset($filter['asof']))) {
                 if(isset($filter['asof']) && $filter['asof'] == "bydate"){
                     $asofdate = strtotime(date('Y-m-d H:i:s', strtotime($filter['asofdate'])));   
@@ -244,12 +266,16 @@ class Camp extends Model {
                 if(isset($filter['nofilter']) && $filter['nofilter']){
                     $asofdate  = time();
                 }
+                /**
+                 * Fetch objected topics as well to show topic history for rejected changes
+                 * ticket 1219 Muhammad Ahmad
+                 */
                 return self::select('topic.topic_name','topic.namespace_id', 'camp.*', 'namespace.name as namespace_name','namespace.name')
                                 ->join('topic', 'topic.topic_num', '=', 'camp.topic_num')
                                 ->join('namespace', 'topic.namespace_id', '=', 'namespace.id')
                                 ->where('camp.topic_num', $topicnum)->where('camp_name', '=', 'Agreement')
-                                ->where('camp.objector_nick_id', '=', NULL)
-                                ->where('topic.objector_nick_id', '=', NULL)
+                                // ->where('camp.objector_nick_id', '=', NULL)
+                                // ->where('topic.objector_nick_id', '=', NULL)
                                 ->where('topic.go_live_time', '<=', $asofdate)
                                 ->latest('topic.go_live_time')->first();
                 
@@ -359,6 +385,7 @@ class Camp extends Model {
                 return self::where('topic_num', $topicnum)
                                 ->where('camp_num', '=', $campnum)
                                 ->where('objector_nick_id', '=', NULL)
+                                ->where('grace_period', 0) // ticket 1219 Muhammad Ahmad
                                 ->latest('submit_time')->first();
             } else if ((isset($_REQUEST['asof']) && $_REQUEST['asof'] == "bydate")  || (session()->has('asofDefault') && session('asofDefault') == 'bydate' && !isset($_REQUEST['asof']))) {
                 if(isset($_REQUEST['asof']) && $_REQUEST['asof'] == "bydate"){
@@ -372,7 +399,7 @@ class Camp extends Model {
 
                 return self::where('topic_num', $topicnum)
                                 ->where('camp_num', '=', $campnum)
-                                ->where('objector_nick_id', '=', NULL)
+                                //->where('objector_nick_id', '=', NULL)
                                 ->where('go_live_time', '<=', $asofdate)
                                 ->latest('submit_time')->first();
             }
@@ -872,7 +899,8 @@ class Camp extends Model {
         }
 
     }
-    public function campTree($algorithm,$nick_name_id=null) {
+    public function campTree($algorithm,$nick_name_id=null, $supportCampCount = 0, $needSelected = 0, $fetchTopicHistory) {
+        
         $as_of_time = time();
         Camp::$traversetempArray = []; 
         if ((isset($_REQUEST['asof']) && $_REQUEST['asof'] == 'bydate')) {
@@ -938,7 +966,7 @@ class Camp extends Model {
             }
         }
 
-        $topic = Topic::getLiveTopic($this->topic->topic_num,['nofilter'=>false]);
+        $topic = Topic::getLiveTopic($this->topic->topic_num,['nofilter'=>false], $fetchTopicHistory);
 
         $topic_name = (isset($topic) && isset($topic->topic_name)) ? $topic->topic_name: '';
         $title = preg_replace('/[^A-Za-z0-9\-]/', '-', $topic_name);        
@@ -952,7 +980,7 @@ class Camp extends Model {
         return $reducedTree = TopicSupport::sumTranversedArraySupportCount($tree);
     }
 
-    public function campTreeHtml($activeCamp = null, $activeCampDefault = false,$add_supporter = false, $arrowposition ='fa-arrow-down', $topic = null) {
+    public function campTreeHtml($activeCamp = null, $activeCampDefault = false,$add_supporter = false, $arrowposition ='fa-arrow-down', $topic = null, $fetchTopicHistory) {
         /**  
          * Added by Ali Ahmad 
         * Jira Ticket CS-17
@@ -1006,7 +1034,7 @@ class Camp extends Model {
 
         //check if bydate is greater than current date
         if($checkOfDefaultDate > $checkOfDefaultToday){
-            $asOfDefaultDate = time();
+            // $asOfDefaultDate = time();  ticket 1219 Muhammad Ahmad
         }
 
         $requestBody = [
@@ -1014,9 +1042,9 @@ class Camp extends Model {
             'algorithm' => $selectedAlgo,
             'asofdate'  => $asOfDefaultDate,
             'asOf'      => $asOf,
-            'update_all' => 0
+            'update_all' => 0,
+            'fetch_topic_history' => $fetchTopicHistory
         ];
-        //dd($requestBody);
 
         $appURL = env('CS_APP_URL');
         $endpointCSGETTree =   env('CS_GET_TREE');
@@ -1030,7 +1058,7 @@ class Camp extends Model {
         if(count($data['data']) && $data['code'] == 200 ){
             $reducedTree = $data['data'][0];
         } else {
-            $reducedTree = $this->campTree(session('defaultAlgo', 'blind_popularity'), $activeAcamp = null, $supportCampCount = 0, $needSelected = 0);
+            $reducedTree = $this->campTree(session('defaultAlgo', 'blind_popularity'), $activeAcamp = null, $supportCampCount = 0, $needSelected = 0, $fetchTopicHistory);
         }
         
         /* End of CS-17 Jira ticket */
