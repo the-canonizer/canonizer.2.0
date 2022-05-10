@@ -241,7 +241,7 @@ class Camp extends Model {
                                 ->where('camp.objector_nick_id', '=', NULL)
                                 ->where('topic.objector_nick_id', '=', NULL)
                                 ->where('topic.grace_period', 0)
-                                ->latest('topic.submit_time')->first();
+                                ->latest('topic.go_live_time')->first();
 
                 if(!$query) {
                     $query = self::select('topic.topic_name','topic.namespace_id', 'camp.*', 'namespace.name as namespace_name', 'namespace.name')
