@@ -1135,17 +1135,16 @@ class Camp extends Model {
     
     public static function getSubscriptionList($userid,$topic_num,$camp_num=1){
         $list = [];
-        $onecamp = self::getLiveCamp($topic_num, $camp_num);
-        self::clearChildCampArray();
+         $onecamp = self::getLiveCamp($topic_num, $camp_num);
+         self::clearChildCampArray();
         $childCamps = array_unique(self::getAllChildCamps($onecamp));
-        $parentCamps = array_unique(self::getAllParent($onecamp));
-        $camps = array_unique(array_merge($childCamps, $parentCamps));
+       
         $subscriptions = \App\Model\CampSubscription::where('user_id','=',$userid)->where('topic_num','=',$topic_num)->where('subscription_start','<=',strtotime(date('Y-m-d H:i:s')))->whereNull('subscription_end')->get();
         if(isset($subscriptions ) && count($subscriptions ) > 0){
             $i=1;
             foreach($subscriptions as $subs){
                 if($camp_num!=1){
-                    if(!in_array($subs->camp_num, $camps) && $subs->camp_num != 0){
+                    if(!in_array($subs->camp_num, $childCamps) && $subs->camp_num != 0){
                         continue;
                     }
                 }
@@ -1185,15 +1184,12 @@ class Camp extends Model {
             $onecamp = self::getLiveCampFromTopic($topic_num,['nofilter'=>true]);
         }
         $childCampData = [];
-        $parent_camps = [];
         if(isset($onecamp) && isset($onecamp->camp_name)){
             if($camp_num){
                 $childCampData = $onecamp->campChild($topic_num,$camp_num);   
             }else{
                 $childCampData = self::campChildFromTopic($topic_num);
             }
-            // #1291 notify parent camps subscribers
-            $parent_camps = self::getAllParent($onecamp);
         }
         $child_camps = [];
         if(count($childCampData) > 0){
@@ -1201,11 +1197,10 @@ class Camp extends Model {
                 $child_camps[$key] = $child->camp_num;
             }
         }
-        if(count($child_camps) > 0 || count($parent_camps) > 0){
-            // #1291 notify parent camps subscribers
-            $camps = array_unique(array_merge($child_camps, $parent_camps));
+        if(count($child_camps) > 0){
+
             $usersData = \App\Model\CampSubscription::select('user_id')->where('topic_num','=',$topic_num)
-                ->whereIn('camp_num',$camps)
+                ->whereIn('camp_num',$child_camps)
                 ->where('subscription_end','=',null)
                 ->get();
 
