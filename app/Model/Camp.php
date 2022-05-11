@@ -899,7 +899,7 @@ class Camp extends Model {
         }
 
     }
-    public function campTree($algorithm,$nick_name_id=null, $supportCampCount = 0, $needSelected = 0, $fetchTopicHistory) {
+    public function campTree($algorithm,$nick_name_id=null, $supportCampCount = 0, $needSelected = 0, $fetchTopicHistory = 0) {
         
         $as_of_time = time();
         Camp::$traversetempArray = []; 
