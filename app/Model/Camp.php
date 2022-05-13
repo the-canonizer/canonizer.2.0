@@ -779,9 +779,10 @@ class Camp extends Model {
             $title = $onecamp->camp_name;//preg_replace('/[^A-Za-z0-9\-]/', '-', $onecamp->camp_name);
             $topic_id = $child->topic_num . "-" . $title;
             $array[$child->camp_num]['title'] = $title;
+            $array[$child->camp_num]['review_title'] = $title;
 			$queryString = (app('request')->getQueryString()) ? '?'.app('request')->getQueryString() : "";
-            //dd($child->topic_num,$child->camp_num, $queryString);
             $array[$child->camp_num]['link'] = self::getTopicCampUrl($child->topic_num,$child->camp_num). $queryString .'#statement';
+            $array[$child->camp_num]['review_link'] = self::getTopicCampUrl($child->topic_num,$child->camp_num). $queryString .'#statement';
             $array[$child->camp_num]['score'] = $this->getCamptSupportCount($algorithm, $child->topic_num, $child->camp_num);
             $children = $this->traverseCampTree($algorithm, $child->topic_num, $child->camp_num, $child->parent_camp_num);
             $array[$child->camp_num]['children'] = is_array($children) ? $children : [];
@@ -973,7 +974,9 @@ class Camp extends Model {
         $topic_id = $this->topic_num . "-" . $title;
         $tree = [];
         $tree[$this->camp_num]['title'] = $topic_name;
+        $tree[$this->camp_num]['review_title'] = $topic_name;
         $tree[$this->camp_num]['link'] = self::getTopicCampUrl($this->topic_num,$this->camp_num);//  url('topic/' . $topic_id . '/' . $this->camp_num.'#statement');
+        $tree[$this->camp_num]['review_link'] = self::getTopicCampUrl($this->topic_num,$this->camp_num);
         $tree[$this->camp_num]['score'] =  $this->getCamptSupportCount($algorithm, $this->topic_num, $this->camp_num,$nick_name_id);
         $tree[$this->camp_num]['children'] = $this->traverseCampTree($algorithm, $this->topic_num, $this->camp_num);
                
@@ -989,7 +992,7 @@ class Camp extends Model {
         $titleKey = 'title';
         $linkKey = 'link';
 
-        $cronDate = env('CS_CRON_DATE'); 
+        $cronDate = config('app.CS_CRON_DATE');
         $cronDate =  isset($cronDate) ? strtotime($cronDate) : strtotime(date('Y-m-d'));
   
         $asOf = 'default';
@@ -1046,8 +1049,8 @@ class Camp extends Model {
             'fetch_topic_history' => $fetchTopicHistory
         ];
 
-        $appURL = env('CS_APP_URL');
-        $endpointCSGETTree =   env('CS_GET_TREE');
+        $appURL = config('app.CS_APP_URL');
+        $endpointCSGETTree =   config('app.CS_GET_TREE');
         $endpoint = $appURL."/".$endpointCSGETTree;
         $headers = array('Content-Type:multipart/form-data');
 
