@@ -171,7 +171,6 @@
                                 <span class="nav-link-text">Services</span>
                             </a>
                         </li> --}}
-
                     </ul>
 					<?php
 					$routeArray = app('request')->route()->getAction();
