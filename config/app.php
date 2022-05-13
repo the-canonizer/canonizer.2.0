@@ -37,7 +37,13 @@ return [
     |
     */
 
-    'env' => env('APP_ENV', 'development'),   // development , staging, production
+    'env'                   => env('APP_ENV', 'development'),   // development , staging, production
+    'CS_APP_URL'            => env('CS_APP_URL', ''),
+    'CS_STORE_TREE'         => env('CS_STORE_TREE', ''),
+    'CS_GET_TREE'           => env('CS_GET_TREE', ''),
+    'CS_GET_HOME_PAGE_DATA' => env('CS_GET_HOME_PAGE_DATA', ''),
+    'CS_CRON_DATE'          => env('CS_CRON_DATE', ''),
+    'PAGE_PER_RECORD'       => env('PAGE_PER_RECORD', 20),
 
     /*
     |--------------------------------------------------------------------------

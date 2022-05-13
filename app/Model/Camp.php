@@ -950,7 +950,7 @@ class Camp extends Model {
         $titleKey = 'title';
         $linkKey = 'link';
 
-        $cronDate = env('CS_CRON_DATE'); 
+        $cronDate = config('app.CS_CRON_DATE');
         $cronDate =  isset($cronDate) ? strtotime($cronDate) : strtotime(date('Y-m-d'));
   
         $asOf = 'default';
@@ -1007,8 +1007,8 @@ class Camp extends Model {
         ];
         //dd($requestBody);
 
-        $appURL = env('CS_APP_URL');
-        $endpointCSGETTree =   env('CS_GET_TREE');
+        $appURL = config('app.CS_APP_URL');
+        $endpointCSGETTree =   config('app.CS_GET_TREE');
         $endpoint = $appURL."/".$endpointCSGETTree;
         $headers = array('Content-Type:multipart/form-data');
 
