@@ -341,15 +341,16 @@ function changeNamespace(element){
             if(pageNo > 1){
               pageNo = 1;
             }
-            @if(env('APP_DEBUG'))
-                 window.location.href="{{ url('/') }}"+"?page="+pageNo;//window.location.reload();
-            @else
-            try{
-                window.location.href="{{ url('/') }}"+$(element).find('option:selected').attr('data-namespace')+"?page="+pageNo;
-            }catch(err){
-                window.location.href="{{ url('/') }}"+"?page="+pageNo;
-            }
-            @endif
+            window.location.href="{{ url('/') }}"+"?page="+pageNo;
+{{--            @if(env('APP_DEBUG'))--}}
+{{--                 window.location.href="{{ url('/') }}"+"?page="+pageNo;//window.location.reload();--}}
+{{--            @else--}}
+{{--            try{--}}
+{{--                window.location.href="{{ url('/') }}"+$(element).find('option:selected').attr('data-namespace')+"?page="+pageNo;--}}
+{{--            }catch(err){--}}
+{{--                window.location.href="{{ url('/') }}"+"?page="+pageNo;--}}
+{{--            }--}}
+{{--            @endif--}}
         }
     });
 }

@@ -53,8 +53,11 @@ class CanonizerService implements ShouldQueue
             'update_all'    => $updateAll
         ];
 
-        $appURL = env('CS_APP_URL');
-        $endpointCSStoreTree = env('CS_STORE_TREE');
+        //$appURL = env('CS_APP_URL');
+        //$endpointCSStoreTree = env('CS_STORE_TREE');
+        $appURL = config('app.CS_APP_URL');
+        $endpointCSStoreTree = config('app.CS_STORE_TREE');
+
         if(empty($appURL) || empty($endpointCSStoreTree)) {
             Log::error("App url or endpoints of store tree is not defined");
             return;
