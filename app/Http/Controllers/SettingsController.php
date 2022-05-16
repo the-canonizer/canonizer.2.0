@@ -148,7 +148,7 @@ class SettingsController extends Controller
         $messages = [
             'phone_number.required' => 'Phone number is required.',
             'phone_number.numeric' => 'Enter the valid phone number.',
-            'phone_number.digits:10' => 'The phone number must be 10 digits.'
+            'phone_number.digits' => 'The phone number must be 10 digits.'
         ];
         $validateArr = [
             'phone_number' => 'required|numeric|digits:10',
