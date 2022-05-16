@@ -315,7 +315,7 @@
         $('#agree_to_camp').val(id);
         $('#changeAgreeForm').submit();
         } else{
-        alert('uncheck - ' + id);
+            console.log('uncheck - ' + id);
         }
     }
     
@@ -329,7 +329,7 @@
             success:function(res){
 
             },
-            error:function(res){ alert('error occured');}
+            error:function(res){ console.log('error occured');}
         })
     }
 </script>

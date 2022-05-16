@@ -257,7 +257,7 @@ if (!empty($topics)) {
             $('#agree_to_topic').val(id);
             $('#changeAgreeForm').submit();
         } else{
-            alert('uncheck - ' + id);
+            console.log('uncheck - ' + id);
         }
     }
     
@@ -271,7 +271,7 @@ if (!empty($topics)) {
             success:function(res){
 
             },
-            error:function(res){ alert('error occured');}
+            error:function(res){ console.log('error occured');}
         })
     }
 </script>
