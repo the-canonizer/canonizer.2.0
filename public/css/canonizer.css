@@ -1576,7 +1576,6 @@ address p {
 
 .search-box a i.fa-user {
     float: left;
-    margin-top: 3px;
 }
 
 span.brsr-name {
@@ -2133,6 +2132,12 @@ a.verification-link:active {
         top: 10px;
     }
 }
+
 .overflow-hidden {
     overflow: hidden !important;
+}
+
+.loggedin-user a.dropdown-toggle {
+    display: flex;
+    align-items: center;
 }
