@@ -71,7 +71,7 @@
                               </div>
                         </form>
                     </li>
-                    <li class="nav-item col-sm-5 text-right" style="padding-right:0px;">
+                    <li class="nav-item col-sm-5 text-right loggedin-user" style="padding-right:0px;">
                         @if(Auth::check())
 						<div class="dropdown">
                             Browsing as: <a href="javascript:void(0)" class="dropdown-toggle login-icon" data-toggle="dropdown"><i class="fa fa-fw fa-user"></i> <span class="brsr-name">{{ Auth::user()->first_name . ' ' . Auth::user()->last_name}} </span></a>
