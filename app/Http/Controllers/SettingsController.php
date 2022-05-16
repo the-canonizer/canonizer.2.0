@@ -147,10 +147,11 @@ class SettingsController extends Controller
 
         $messages = [
             'phone_number.required' => 'Phone number is required.',
-            'phone_number.digits' => 'Enter the valid phone number.'
+            'phone_number.numeric' => 'Enter the valid phone number.',
+            'phone_number.digits' => 'The phone number must be 10 digits.'
         ];
         $validateArr = [
-            'phone_number' => 'required|digits:10',
+            'phone_number' => 'required|numeric|digits:10',
             'mobile_carrier' => 'required',
         ];
         if (array_key_exists("verify_code", $input)) {
