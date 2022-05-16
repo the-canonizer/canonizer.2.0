@@ -462,6 +462,10 @@ $('#widget').draggable();
 	.greay-out{
 		background: #ECECE5;
 	}
+
+	#draggable-area{
+		position: relative !important;
+	}
 </style>
 
 {{ Session::forget('warning')}} 
