@@ -897,6 +897,7 @@ class SettingsController extends Controller
             session()->forget("topic-support-$topic_num");
             session()->forget("topic-support-nickname-$topic_num");
             session()->forget("topic-support-tree-$topic_num");
+            Session::save();
         }
     }
 

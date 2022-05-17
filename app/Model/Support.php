@@ -181,18 +181,41 @@ class Support extends Model {
         return $supporters;
     }
 
-    public static function removeSupport($topicNum,$campNum,$nickName = []) {
-        if(empty($topicNum) || empty($campNum) || empty($nickName)){
+    public static function removeSupport($topicNum,$p_campNum,$nickName = [],$campNum="") {
+        if(empty($topicNum) || empty($p_campNum) || empty($nickName)){
             return;
         }
-        $supportData = self::where('topic_num',$topicNum)->where('camp_num',$campNum)->where('end','=',0);
+        $supportData = self::where('topic_num',$topicNum)->where('camp_num',$p_campNum)->where('end','=',0);
         if(!empty($nickName)){
             $supportData->whereIn('nick_name_id',$nickName);
         }
         $results = $supportData->get();
+
         foreach($results as $value){
             $value->end = time();
             $value->save();
+
+            //1311 and 1334
+            //if child camp have no same support of parent camp then adding support
+            if($campNum!=""){
+                $supportData_child = self::where('topic_num',$topicNum)->where('camp_num',$campNum)->where('end','=',0);
+                if(!empty($nickName)){
+                    $supportData_child->whereIn('nick_name_id',$nickName);
+                }
+                $results_child = $supportData_child->get()->toArray();
+                if(empty($results_child)){
+                    $supportTopic =  new self();
+                    $supportTopic->topic_num = $value->topic_num;
+                    $supportTopic->nick_name_id = $value->nick_name_id;
+                    $supportTopic->delegate_nick_name_id = $value->delegate_nick_name_id;
+                    $supportTopic->start = time();
+                    $supportTopic->camp_num = $campNum; //add child camp with support
+                    $supportTopic->support_order = $value->support_order;
+                    $supportTopic->save();         
+                }
+            }
+
+            //support order changes 
             $higherSupportNumbers = self::where('topic_num',$topicNum)
                 ->where('end','=',0)
                 ->where('nick_name_id',$value->nick_name_id)
@@ -211,6 +234,9 @@ class Support extends Model {
                 $create->save();
             }
         }
+
+        
+       
     }
 
     public static function getAllChildDelegateNicknameId($topic_num,$nick_name_id, $supportId=[]) {

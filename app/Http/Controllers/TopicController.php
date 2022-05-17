@@ -1626,9 +1626,13 @@ class TopicController extends Controller {
                     ->whereIn('camp_num',$allParentCamps) //$allChildCamps changes with $allParentCamps 1262 and 1191
                     ->pluck('nick_name_id');
                 //remove all supports from parent camp if there any child supporter
+               // echo "<pre>allParentCamps"; print_r($allParentCamps);
+                //echo "<pre>allChildSupporters"; print_r($allChildSupporters);
+              //  echo $parent_camp_num ."mmm".  $camp_num;
+               // die;
                 if(sizeof($allChildSupporters) > 0){
                     foreach($allParentCamps as $p ){
-                        Support::removeSupport($topic_num,$p,$allChildSupporters);
+                        Support::removeSupport($topic_num,$p,$allChildSupporters,$camp_num); //$p
                     }
                 }
             }
