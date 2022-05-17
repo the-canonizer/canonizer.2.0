@@ -147,10 +147,11 @@ class SettingsController extends Controller
 
         $messages = [
             'phone_number.required' => 'Phone number is required.',
-            'phone_number.digits' => 'Enter the valid phone number.'
+            'phone_number.numeric' => 'Enter the valid phone number.',
+            'phone_number.digits' => 'The phone number must be 10 digits.'
         ];
         $validateArr = [
-            'phone_number' => 'required|digits:10',
+            'phone_number' => 'required|numeric|digits:10',
             'mobile_carrier' => 'required',
         ];
         if (array_key_exists("verify_code", $input)) {
@@ -883,7 +884,7 @@ class SettingsController extends Controller
 
     public function supportReorder(Request $request)
     {
-        $data = $request->only(['positions', 'topicnum']);
+        $data = $request->only(['positions', 'topicnum', 'camp_num']);
         if (isset($data['positions']) && !empty($data['positions'])) {
             foreach ($data['positions'] as $position => $support_id) {
                 /** By Reena Nalwa Talentelgia #749 II part (re-order) */ 
@@ -894,6 +895,12 @@ class SettingsController extends Controller
                 Support::where('support_id', $support_id)->update(array('support_order' => $position + 1));
             }
             $topic_num = $data['topicnum'];
+            $topic = Topic::where('topic_num', $topic_num)->get()->last();
+            
+            if(isset($topic)) {
+                Util::dispatchJob($topic, $data['camp_num'], 1);
+            }
+            
             session()->forget("topic-support-$topic_num");
             session()->forget("topic-support-nickname-$topic_num");
             session()->forget("topic-support-tree-$topic_num");
