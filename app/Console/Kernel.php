@@ -18,6 +18,7 @@ class Kernel extends ConsoleKernel
         'App\Console\Commands\FixSupport',
         'App\Console\Commands\DeleteProcessedJobs',
         'App\Console\Commands\UpdateProcessedJobsTopicNumber',
+        'App\Console\Commands\updateTopicGracePeriod',
     ];
 
     /**

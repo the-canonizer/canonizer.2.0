@@ -410,8 +410,14 @@ class TopicController extends Controller {
                         ->orderBy('order_id', 'ASC')->get();
             $editFlag = false;
         }
+
+        /**
+         * Check if topic_history parameter is added in request -- get topic old version
+         * ticket 1219 Muhammad
+         */
+        $fetchTopicHistory = $_REQUEST['topic_history'] ?? 0;
        
-        return view('topics.view', compact('topic', 'parentcampnum','topic_subscriptions','topic_subscriptionsData','camp_subscriptions','camp_subscription_data','subscribedCamp', 'parentcamp', 'camp', 'wiky', 'id','news','editFlag','topicData','campData','ifIamSupporter'));
+        return view('topics.view', compact('topic', 'parentcampnum','topic_subscriptions','topic_subscriptionsData','camp_subscriptions','camp_subscription_data','subscribedCamp', 'parentcamp', 'camp', 'wiky', 'id','news','editFlag','topicData','campData','ifIamSupporter','fetchTopicHistory'));
     }
 
     /**
@@ -1137,6 +1143,7 @@ class TopicController extends Controller {
             $dataObject['nick_name_id'] = $nickName->id;
 
             if($statement->grace_period == 0){
+                $dataObject['is_live'] = ($statement->go_live_time <= $currentTime) ? 1 : 0;
                 $this->mailSubscribersAndSupporters($directSupporter,$subscribers,$link, $dataObject);
             }
            
