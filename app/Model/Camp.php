@@ -478,7 +478,7 @@ class Camp extends Model {
             }
             foreach ($childCamps as $child) {
                 /**
-                 * Adding check to skip camps in review or rejected ones
+                 * Adding check to skip camps rejected ones
                  * ticket # 1310 - Muhammad Ahmad
                  */
                 if($includeLiveCamps){
@@ -486,7 +486,7 @@ class Camp extends Model {
                     $latestParent = Camp::where('topic_num', $child->topic_num)->where('camp_num', $child->camp_num)->latest('submit_time')->where('go_live_time', '<=', time())->where('objector_nick_id', NULL)->first();
                 }
                 else{
-                    $latestParent = Camp::where('topic_num', $child->topic_num)->where('camp_num', $child->camp_num)->latest('submit_time')->where('go_live_time', '<=', time())->where('objector_nick_id', NULL)->first();
+                    $latestParent = Camp::where('topic_num', $child->topic_num)->where('camp_num', $child->camp_num)->latest('submit_time')->where('objector_nick_id', NULL)->first();
                
                 }
                 if($latestParent->parent_camp_num == $camp->camp_num ){ 
