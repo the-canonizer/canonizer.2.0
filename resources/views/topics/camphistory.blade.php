@@ -57,7 +57,7 @@
 
                 <?php  
                 if (!empty($camps) && !empty($topic)) { 
-                    $currentLive = 0;
+                    //$currentLive = 0;
                     $currentTime = time();
                     $ifIamDelegatedSupporter = 0;
                     foreach ($camps as $key => $data) {
@@ -182,7 +182,7 @@
                             }
                         } else if ($liveCamp->id == $data->id) {
                             // $currentLive != 1 && $currentTime >= $data->go_live_time
-                            $currentLive = 1;
+                            //$currentLive = 1;
                             $bgcolor = "rgba(0, 128, 0, 0.5);"; // green
                         } else {
                             $bgcolor = "#4e4ef3;"; //blue
