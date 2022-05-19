@@ -354,6 +354,14 @@ function changeNamespace(element){
         }
     });
 }
+
+$(document).ready(function() {
+    $('ul.pagination li:not(.active,.disabled)').click(function(e) {
+        e.stopPropagation();
+        // console.log($(this).children('a'));
+        $(this).children('a')[0].click();
+    });
+})
 </script>
 
 @endsection
@@ -367,5 +375,8 @@ function changeNamespace(element){
 }
 .tree ul.mainouter ul {
     padding-left: 10px !important;
+}
+ul.pagination li:not(.active,.disabled) {
+    cursor: pointer;
 }
 </style>
