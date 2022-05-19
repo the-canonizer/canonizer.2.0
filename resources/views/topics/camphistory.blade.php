@@ -180,7 +180,8 @@
                          if($IFNOtSubmissterNotSupporterAndInGracePeriod){
                                 continue;
                             }
-                        } else if ($currentLive != 1 && $currentTime >= $data->go_live_time) {
+                        } else if ($liveCamp->id == $data->id) {
+                            // $currentLive != 1 && $currentTime >= $data->go_live_time
                             $currentLive = 1;
                             $bgcolor = "rgba(0, 128, 0, 0.5);"; // green
                         } else {
