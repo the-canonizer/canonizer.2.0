@@ -151,7 +151,12 @@ class Camp extends Model {
                 if($breadcrum){
                     $campname = "<a href='" . $url . "'>" . ($title) . '</a> / ' . ($campname);
                 }else
-                $campname = "<a href='" . $url . "'>" . ($camp->camp_name) . '</a> / ' . ($campname);
+                if (isset($_REQUEST['asof']) && $_REQUEST['asof'] == 'review') {
+                    $mode_camp = self::getLiveCamp($camp->topic_num,$camp->camp_num,['nofilter'=>true]);
+                    $campname = "<a href='" . $url . "'>" . ($mode_camp->camp_name) . '</a> / ' . ($campname);
+                } else {
+                    $campname = "<a href='" . $url . "'>" . ($camp->camp_name) . '</a> / ' . ($campname);
+                }
             } else { 
                 $url = self::getTopicCampUrl($camp->topic_num,$camp->camp_num);
                 if($breadcrum){
@@ -161,17 +166,17 @@ class Camp extends Model {
             }
             
             if (isset($camp) && $camp->parent_camp_num) {
+                /**
+                 * Fetch objected ones as well for topic history
+                 * ticket 1219 Muhammad Ahmad
+                 */
                 $pcamp = Camp::where('topic_num', $camp->topic_num)
                     ->where('camp_num', $camp->parent_camp_num)
-                    // ->where('camp_name', '!=', 'Agreement')  
-                    /**
-                     * Fetch objected ones as well for topic history
-                     * ticket 1219 Muhammad Ahmad
-                     */
+                    // ->where('camp_name', '!=', 'Agreement')   
                     //->where('objector_nick_id', '=', NULL)
                     //->whereRaw('go_live_time in (select max(go_live_time) from camp where topic_num=' . $camp->topic_num . ' and objector_nick_id is null group by camp_num)')
                     ->where('go_live_time', '<=', $as_of_time)
-                    ->orderBy('submit_time', 'DESC')->first();
+                    ->orderBy('go_live_time', 'DESC')->first();
 
                 return self::campNameWithAncestors($pcamp, $campname,$title,$breadcrum);
             }
