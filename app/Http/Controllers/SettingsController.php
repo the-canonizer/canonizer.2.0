@@ -146,10 +146,12 @@ class SettingsController extends Controller
 
 
         $messages = [
-            'phone_number.required' => 'Phone number is required.'
+            'phone_number.required' => 'Phone number is required.',
+            'phone_number.numeric' => 'Enter the valid phone number.',
+            'phone_number.digits' => 'The phone number must be 10 digits.'
         ];
         $validateArr = [
-            'phone_number' => 'required|digits:10',
+            'phone_number' => 'required|numeric|digits:10',
             'mobile_carrier' => 'required',
         ];
         if (array_key_exists("verify_code", $input)) {
@@ -261,7 +263,7 @@ class SettingsController extends Controller
             $campnum = explode("-",$campnumArray[0])[0];
             session(['campnum' => $campnum]);
             $delegate_nick_name_id = (isset($campnumArray[1])) ? $campnumArray[1] : 0;
-           // echo $delegate_nick_name_id; exit;
+
             if(!$delegate_nick_name_id){
                 $delegate_nick_name_id = 0;
             }
@@ -406,6 +408,7 @@ class SettingsController extends Controller
 
             /** IN case of delegated support check for any direct support and remove them */
             $anyDelegator = Support::where('topic_num', $data['topic_num'])->whereIn('delegate_nick_name_id', [$data['nick_name']])->where('end', '=', 0)->groupBy('nick_name_id')->get(); //#1088
+ 
             if(isset($data['delegate_nick_name_id']) && $data['delegate_nick_name_id']){
                 $data = $this->removeDirectSupport($data);
             }
@@ -428,6 +431,7 @@ class SettingsController extends Controller
              * in that case delegate should not promted it should simply shifted with DS
             */
             $promoteDelegate = true;
+            $endDelegatesForOld = false;
             if(isset($data['removed_camp']) && isset($data['support_order']) && count($data['support_order']) > 0){
                 $promoteDelegate = false;
             }
@@ -439,14 +443,17 @@ class SettingsController extends Controller
                 $ifSupportLeft = false;
             }
 
-            
+            /* code is commented for 1295, same code add inside 
             if (isset($mysupports) && count($mysupports) > 0 && isset($data['removed_camp']) && count($data['removed_camp']) > 0) {
                foreach ($mysupports as $singleSupport) { 
                     if(in_array($singleSupport->camp_num,$data['removed_camp'])){
-                        $this->removeSupport($topic_num,$singleSupport->camp_num,$singleSupport->nick_name_id,'',$singleSupport->support_order,$promoteDelegate,$ifSupportLeft);
+                        //$endDelegatesForOld = true;
+                        $this->removeSupport($topic_num,$singleSupport->camp_num,$singleSupport->nick_name_id,'',$singleSupport->support_order,$promoteDelegate,$ifSupportLeft, $endDelegatesForOld);
+
+                        //remove support from delegated for previous camp
                     } 
                  }    
-            }
+            }*/
            
             /** if user is delegating to someone else or is directly supporting  then all the old delegated  supports will be removed #702 **/
             if(isset($myDelegatedSupports) && count($myDelegatedSupports) > 0){
@@ -477,6 +484,7 @@ class SettingsController extends Controller
                 //all delegator of $data['nick_name] should also assigned with this support #1088
                 if(isset($anyDelegator) && !empty($anyDelegator))
                 {
+                   
                     $this->addSupportToDelegates($anyDelegator,$supportTopic,$data['nick_name']);
                 }
                 /* clear the existing session for the topic to get updated support count */
@@ -503,7 +511,16 @@ class SettingsController extends Controller
                         $supportTopic->support_order = $support_order;
                         $supportTopic->save();
                         /** If any user hase delegated their support to this user, record/add there delegated support #749 including sub-level delegates(&49 II Part) */
-                        $this->addDelegatedSupport($myDelegator,$topic_num,$camp_num,$support_order,$data['nick_name']);                        
+                        $this->addDelegatedSupport($myDelegator,$topic_num,$camp_num,$support_order,$data['nick_name']); 
+                        if (isset($mysupports) && count($mysupports) > 0 && isset($data['removed_camp']) && count($data['removed_camp']) > 0) {
+                            foreach ($mysupports as $singleSupport) { 
+                                if(in_array($singleSupport->camp_num,$data['removed_camp'])){
+                                    $endDelegatesForOld = true;
+                                    $this->removeSupport($topic_num,$singleSupport->camp_num,$singleSupport->nick_name_id,'',$singleSupport->support_order,$promoteDelegate,$ifSupportLeft, $endDelegatesForOld);       
+                                    //remove support from delegated for previous camp
+                                } 
+                            }    
+                        }                    
                     }else{
                         $support = Support::where('topic_num', $topic_num)->where('camp_num','=', $camp_num)->where('nick_name_id','=',$data['nick_name'])->where('end', '=', 0)->first();
                         if(!empty($support)){
@@ -734,7 +751,7 @@ class SettingsController extends Controller
     private function emailForSupportAdded($data)
     {
         //mail return
-       // return;
+        //return;
         $parentUser = Nickname::getUserByNickName($data['nick_name']);
         $nickName = Nickname::getNickName($data['nick_name']);
         $topic = Camp::getAgreementTopic($data['topic_num'],['nofilter'=>true]);
@@ -867,7 +884,7 @@ class SettingsController extends Controller
 
     public function supportReorder(Request $request)
     {
-        $data = $request->only(['positions', 'topicnum']);
+        $data = $request->only(['positions', 'topicnum', 'camp_num']);
         if (isset($data['positions']) && !empty($data['positions'])) {
             foreach ($data['positions'] as $position => $support_id) {
                 /** By Reena Nalwa Talentelgia #749 II part (re-order) */ 
@@ -878,6 +895,12 @@ class SettingsController extends Controller
                 Support::where('support_id', $support_id)->update(array('support_order' => $position + 1));
             }
             $topic_num = $data['topicnum'];
+            $topic = Topic::where('topic_num', $topic_num)->get()->last();
+            
+            if(isset($topic)) {
+                Util::dispatchJob($topic, $data['camp_num'], 1);
+            }
+            
             session()->forget("topic-support-$topic_num");
             session()->forget("topic-support-nickname-$topic_num");
             session()->forget("topic-support-tree-$topic_num");
@@ -1183,7 +1206,7 @@ class SettingsController extends Controller
      * 3. re-order the preference number for other supported camps AND
      * 4. Same will be done for their delegates tree.
      */
-    public function removeSupport($topicNum,$campNum='',$nickNameId,$delegateNickNameId=0,$currentSupportOrder='',$promoteDelegate = true,$ifSupportLeft = true){
+    public function removeSupport($topicNum,$campNum='',$nickNameId,$delegateNickNameId=0,$currentSupportOrder='',$promoteDelegate = true,$ifSupportLeft = true, $endDelegatesForOld =false){
         $startSupportOrder = $currentSupportOrder;
         $as_of_time = time();
         
@@ -1231,9 +1254,9 @@ class SettingsController extends Controller
                         $currentSupportOrder++;                 
                     }
 
-                   // if($promoteDelegate){
+                    if($promoteDelegate || $endDelegatesForOld){
                         $this->deleteDelegateSupport($topicNum,$campNum,$nickNameId,$remaingSupportWithHighOrder,$startSupportOrder);
-                   // }
+                    }
                 }   
             } 
             /* send support deleted mail to all supporter and subscribers */
@@ -1455,6 +1478,7 @@ class SettingsController extends Controller
             return;
         }
     }
+
 }
 
 

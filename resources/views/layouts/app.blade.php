@@ -51,10 +51,10 @@
                                <table class="radio-button-top">
 									<tr>
 										<td class="radio radio-primary">
-										<input type="radio" name="sitesearch" value="" checked id="ss0"></input>
+										<input type="radio" name="sitesearch" value="" checked id="ss0" class="top_radio"></input>
 										<label for="ss0" title="Search the Web"><font size="-1" color="black">Web</font></label></td>
 										<td class="radio radio-primary">
-										<input type="radio" name="sitesearch" value="canonizer.com" id="ss1" checked></input>
+										<input type="radio" name="sitesearch" value="canonizer.com" id="ss1" checked class="top_radio"></input>
 										<label for="ss1" title="Search canonizer.com"><font size="-1" color="black">Canonizer.com</font></label></td>
 									</tr>
 								</table>
@@ -71,7 +71,7 @@
                               </div>
                         </form>
                     </li>
-                    <li class="nav-item col-sm-5 text-right" style="padding-right:0px;">
+                    <li class="nav-item col-sm-5 text-right loggedin-user" style="padding-right:0px;">
                         @if(Auth::check())
 						<div class="dropdown">
                             Browsing as: <a href="javascript:void(0)" class="dropdown-toggle login-icon" data-toggle="dropdown"><i class="fa fa-fw fa-user"></i> <span class="brsr-name">{{ Auth::user()->first_name . ' ' . Auth::user()->last_name}} </span></a>
@@ -171,7 +171,6 @@
                                 <span class="nav-link-text">Services</span>
                             </a>
                         </li> --}}
-
                     </ul>
 					<?php
 					$routeArray = app('request')->route()->getAction();
@@ -268,6 +267,7 @@
 									</div>
 									
 									<div><input readonly type="text" id="asofdate" name="asofdate" value=""/></div>
+                                    <input type="hidden" name="topic_history" value="0">
 								    <script>
                                         <?php if(session('asofdateDefault')!=null && session('asofdateDefault')!='') { 
                                             ?>
@@ -391,19 +391,18 @@
             $(".asofdate, #asofdate").change(function(){
 				// Do something interesting here
                 var value = $('#asofdate').val();
-                 var bydate = $("input[name='asof']:checked"). val();  
-
-                 if(value=="" && bydate == 'bydate') {                    
-                     $("#asofdate").removeAttr('disabled');
-					 $('#asofdate').focus();
+                var bydate = $("input[name='asof']:checked"). val();
+                if(value=="" && bydate == 'bydate') {   
+                    $("#asofdate").removeAttr('disabled');
+                    $('#asofdate').focus();
                     return false;
-				 }else if(value !='' && bydate == 'bydate'){
-                     $("#asofdate").removeAttr('disabled');
-                     //return false;
-                 }else if(bydate!='bydate'){
+				} else if(value !='' && bydate == 'bydate'){
+                    $('input[name="topic_history"]').val('1');
+                    $("#asofdate").removeAttr('disabled');
+                } else if(bydate!='bydate'){
                     $('#asofdate').prop('disabled','disabled');
-                 }
-				 $('#as_of').submit();
+                }
+				$('#as_of').submit();
 			});
 
         });
@@ -442,21 +441,3 @@
 
 </body>
 </html>
-
-<style>
-
-table.radio-button-top .radio label::before{
-    top:0px !important;
-}
-table.radio-button-top .radio label::after{
-    top:3px !important;
-}
-.login-icon::after{
-     margin-top:7px !important;
-}
-
-.search-panel table.radio-button-top{
-    top: 43px !important;
-}
-
-</style>

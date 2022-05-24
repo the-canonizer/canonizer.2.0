@@ -90,20 +90,21 @@ class Topic extends Model {
 		return self::where('topic_num',$topicnum)->latest('submit_time')->get();
 	}
 
-    public static function getLiveTopic($topicnum, $filter = array()) {
+    public static function getLiveTopic($topicnum, $filter = array(), $fetchTopicHistory = 0) {
         if ((!isset($_REQUEST['asof']) && !session()->has('asofDefault')) || (isset($_REQUEST['asof']) && $_REQUEST['asof'] == "default")  || (session()->has('asofDefault') && session('asofDefault') == 'default' && !isset($_REQUEST['asof']))) {
 
             return self::where('topic_num', $topicnum)
                             ->where('objector_nick_id', '=', NULL)
                             ->where('go_live_time', '<=', time())
-                            ->latest('submit_time')->first();
+                            ->orderBy('go_live_time', 'desc')->first(); // ticket 1219 Muhammad Ahmad
         } else {
 
             if ((isset($_REQUEST['asof']) && $_REQUEST['asof'] == "review") || (session('asofDefault')=="review" && !isset($_REQUEST['asof']))) {
 
                 return self::where('topic_num', $topicnum)
                                 ->where('objector_nick_id', '=', NULL)
-                                ->latest('submit_time')->first();
+                                ->where('topic.grace_period', 0) // ticket 1219 Muhammad Ahmad
+                                ->orderBy('go_live_time', 'desc')->first(); // ticket 1219 Muhammad Ahmad
             } else if ((isset($_REQUEST['asof']) && $_REQUEST['asof'] == "bydate")  || (session()->has('asofDefault') && session('asofDefault') == 'bydate' && !isset($_REQUEST['asof']))) {
                 if(isset($_REQUEST['asof']) && $_REQUEST['asof'] == "bydate"){
                     $asofdate = strtotime(date('Y-m-d H:i:s', strtotime($_REQUEST['asofdate'])));
@@ -114,10 +115,17 @@ class Topic extends Model {
                     $asofdate  = time();
                 }
                 
-                return self::where('topic_num', $topicnum)
+                /* ticket 1219 Muhammad */
+                if($fetchTopicHistory) {
+                    return  self::where('topic_num', $topicnum)
+                                ->where('go_live_time', '=', $asofdate)
+                                ->first();
+                } else {
+                    return self::where('topic_num', $topicnum)
                                 ->where('objector_nick_id', '=', NULL)
                                 ->where('go_live_time', '<=', $asofdate)
-                                ->latest('submit_time')->first();
+                                ->orderBy('go_live_time', 'desc')->first();
+                }
             }
         }
     }

@@ -50,11 +50,12 @@ class Statement extends Model {
                             ->first();
         } else {
 
-            if (session('asofDefault')=="review") {
+            if (session('asofDefault')=="review" && !isset($_REQUEST['asof'])) {
 
                 return self::where('topic_num', $topicnum)
                                 ->where('camp_num', $campnum)
                                 ->where('objector_nick_id', '=', NULL)
+                                ->where('grace_period', 0) // ticket 1219 Muhammad Ahmad
                                 ->orderBy('submit_time', 'desc')
                                 ->first();
             }
@@ -64,24 +65,23 @@ class Statement extends Model {
                 return self::where('topic_num', $topicnum)
                                 ->where('camp_num', $campnum)
                                 ->where('objector_nick_id', '=', NULL)
-                                ->orderBy('submit_time', 'desc')
+                                ->where('grace_period', 0) // ticket 1219 Muhammad Ahmad
+                                ->orderBy('go_live_time', 'desc') // ticket 1219 Muhammad Ahmad
                                 ->first();
             } else if (isset($_REQUEST['asof']) && $_REQUEST['asof'] == "bydate") {
 
                 $asofdate = strtotime(date('Y-m-d H:i:s', strtotime($_REQUEST['asofdate'])));
                 return self::where('topic_num', $topicnum)
                                 ->where('camp_num', $campnum)
-                                ->where('objector_nick_id', '=', NULL)
                                 ->where('go_live_time', '<=', $asofdate)
-                                ->orderBy('submit_time', 'desc')
+                                ->orderBy('go_live_time', 'desc')
                                 ->first();
             } else {
 				
 				return self::where('topic_num', $topicnum)
                             ->where('camp_num', $campnum)
-                            ->where('objector_nick_id', '=', NULL)
                             ->where('go_live_time', '<=', time())
-                            ->orderBy('submit_time', 'desc')
+                            ->orderBy('go_live_time', 'desc') // ticket 1219 Muhammad Ahmad
                             ->first();
 			}
         }
