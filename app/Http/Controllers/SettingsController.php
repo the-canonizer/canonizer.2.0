@@ -444,16 +444,18 @@ class SettingsController extends Controller
             }
 
             /* code is commented for 1295, same code add inside 
-            if (isset($mysupports) && count($mysupports) > 0 && isset($data['removed_camp']) && count($data['removed_camp']) > 0) {
+            /* uncomment below code for thsi ticket 1346  and adding removeCampStatus condition here*/
+            if ((isset($mysupports) && count($mysupports) > 0) && (isset($data['removed_camp']) && count($data['removed_camp']) > 0) && (isset($data['removeCampStatus']) && count($data['removeCampStatus']) > 0)) {
                foreach ($mysupports as $singleSupport) { 
                     if(in_array($singleSupport->camp_num,$data['removed_camp'])){
-                        //$endDelegatesForOld = true;
+                        $endDelegatesForOld = true;
                         $this->removeSupport($topic_num,$singleSupport->camp_num,$singleSupport->nick_name_id,'',$singleSupport->support_order,$promoteDelegate,$ifSupportLeft, $endDelegatesForOld);
 
                         //remove support from delegated for previous camp
                     } 
                  }    
-            }*/
+            }
+            /** end of this commentted code */
            
             /** if user is delegating to someone else or is directly supporting  then all the old delegated  supports will be removed #702 **/
             if(isset($myDelegatedSupports) && count($myDelegatedSupports) > 0){
