@@ -69,6 +69,9 @@ class CanonizerService implements ShouldQueue
         
         if(isset($response)) {
             $responseData = json_decode($response, true)['data'];
+            $responseStatus = (bool) json_decode($response, true)['success'] === true ? 'Success' : 'Failed';
+            $responseCode = json_decode($response, true)['code'] ? json_decode($response, true)['code'] : 404;
+
             if(isset($responseData)) {
                 $responseData = json_encode($responseData[0]);
             } else {
@@ -76,8 +79,8 @@ class CanonizerService implements ShouldQueue
             }
             ProcessedJob::create([
                 'payload'   => $jobPayload,
-                'status'    => (bool)$response['success'] === true ? 'Success' : 'Failed',
-                'code'      => $response['code'],
+                'status'    => $responseStatus,
+                'code'      => $responseCode,
                 'response'  => $responseData,
                 'topic_num' => $this->canonizerData['topic_num'],
             ]);

@@ -488,11 +488,12 @@ class Camp extends Model {
                  */
                 if($includeLiveCamps){
                     //adding go_live_time condition Sunil Talentelgia //->where('go_live_time', '<=', time())
-                    $latestParent = Camp::where('topic_num', $child->topic_num)->where('camp_num', $child->camp_num)->latest('submit_time')->where('go_live_time', '<=', time())->where('objector_nick_id', NULL)->first();
+                    // $latestParent = Camp::where('topic_num', $child->topic_num)->where('camp_num', $child->camp_num)->latest('submit_time')->where('go_live_time', '<=', time())->where('objector_nick_id', NULL)->first();
+                    $latestParent = Camp::where('topic_num', $child->topic_num)->where('camp_num', $child->camp_num)->latest('submit_time')->where('go_live_time', '<=', time())->first();
                 }
                 else{
-                    $latestParent = Camp::where('topic_num', $child->topic_num)->where('camp_num', $child->camp_num)->latest('submit_time')->where('objector_nick_id', NULL)->first();
-               
+                    //$latestParent = Camp::where('topic_num', $child->topic_num)->where('camp_num', $child->camp_num)->latest('submit_time')->where('objector_nick_id', NULL)->first();
+                    $latestParent = Camp::where('topic_num', $child->topic_num)->where('camp_num', $child->camp_num)->latest('submit_time')->first();
                 }
                 if($latestParent->parent_camp_num == $camp->camp_num ){ 
                     $camparray = array_merge($camparray, self::getAllChildCamps($child)); 
