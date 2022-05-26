@@ -685,7 +685,8 @@ class TopicController extends Controller {
             'objection_reason.max' => 'Objection reason can not be more than 100.'
         ];
         //Reena Talentelgia #850
-        $regex = '/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/';
+        //#1197 : Fix camp about url validation pattern
+        $regex = '/(http(s?):\/\/)([a-z0-9\-]+\.)+[a-z]{2,4}(\.[a-z]{2,4})*(\/[^ ]+)*/i';
         $validator = Validator::make($request->all(), [
             'nick_name' => 'required',
             'camp_name' => 'required|max:30|regex:/^[a-zA-Z0-9\s]+$/',
