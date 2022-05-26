@@ -84,7 +84,7 @@
                         </div>
                         @else
 						<a class="nav-link guestLogin" style="cursor:default;">Browsing as: Guest</a>
-                        <a class="nav-link @if(Request::url() == url('/login')) active @endif" href="{{ url('/login')}}"><i class="fa fa-fw fa-user"></i> Log in</a>
+                        <a class="nav-link @if(Request::url() == url('/login')) active @endif" href="{{ url('/login')}}"><i class="fa fa-fw fa-user" style="float: unset"></i> Log in</a>
                         <a class="nav-link @if(Request::url() == url('/signup')) active @endif" href="{{ url('/signup')}}"><i class="fa fa-fw fa-user-plus"></i> Sign up </a>
                         @endif
                     </li>
