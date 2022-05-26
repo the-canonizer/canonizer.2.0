@@ -29,7 +29,7 @@
                 </div>
                 @if(Auth::check())
                     <div class="col-sm-4 checkbox pd-2-0">
-                    <label><input type="checkbox" name="my" value="{{(session()->has('defaultNamespaceId')) ? session('defaultNamespaceId') : ''}}" {{ isset($_REQUEST['my']) &&  $_REQUEST['my'] == session('defaultNamespaceId') ? 'checked' : ''}} onchange="submitBrowseForm(this)"> Only My Topics</label>
+                    <label><input type="checkbox" name="my" value="{{(session()->has('defaultNamespaceId')) ? session('defaultNamespaceId') : ''}}" {{ isset($_REQUEST['my']) &&  $_REQUEST['my'] == session('defaultNamespaceId') ? 'checked' : ''}} onchange="submitBrowseForm(this)">My Created Topics</label>
                     </div>
                 @endif
                 </form>
