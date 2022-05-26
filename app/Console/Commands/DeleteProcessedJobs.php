@@ -57,7 +57,7 @@ class DeleteProcessedJobs extends Command
                 $this->error("No proccessed job deleted");
             }
         } else {
-            $this->error("No proccessed jobs found");
+            $this->error("No proccessed job found");
         }
     }
 }

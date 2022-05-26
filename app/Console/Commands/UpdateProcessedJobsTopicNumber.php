@@ -51,7 +51,7 @@ class UpdateProcessedJobsTopicNumber extends Command
             }
             $this->info("Job executed successfully");
         } else {
-            $this->error("No proccessed jobs found");
+            $this->error("No proccessed job found");
         }
     }
 }
