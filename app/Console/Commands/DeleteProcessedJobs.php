@@ -40,17 +40,24 @@ class DeleteProcessedJobs extends Command
      */
     public function handle()
     {
-        $items = DB::table('processed_jobs')->select('topic_num')->distinct()->get();
+        $processedJobs = DB::table('processed_jobs')->select(DB::raw('MAX(id) as latest_topic_id'))->where('topic_num', '!=', NULL)->groupBy('topic_num')->get();
         $notDelId = [];
-        foreach ($items as $val) {
-            $delId =  ProcessedJob::where('topic_num', $val->topic_num)
-                ->where('status','=','Failed')
-                ->latest('created_at')->first();
-                $notDelId[] = $delId->id;
+        
+        if(count($processedJobs) > 0) {
+            foreach($processedJobs as $processedJob) {
+                $notDelId[] = $processedJob->latest_topic_id;
+            }
         }
-
-        ProcessedJob::whereNotIn('id', $notDelId)->delete();
-
-
+        
+        if(count($processedJobs) > 0) {
+            if(count($notDelId) > 0) {
+                ProcessedJob::whereNotIn('id', $notDelId)->delete();
+                $this->info("Job executed successfully");
+            } else {
+                $this->error("No proccessed job deleted");
+            }
+        } else {
+            $this->error("No proccessed jobs found");
+        }
     }
 }
