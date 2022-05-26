@@ -79,6 +79,11 @@ class SocialController extends Controller
     		$social_user = SocialUser::where(['social_email' => $user_email,'provider'=>$provider,'provider_id'=>$userSocial->getId()])->first();
 	        if(isset($social_user) && isset($social_user->user_id)){
 	        	$users       =   User::where(['id' => $social_user->user_id])->first();
+				$checkForNickname = $this->checkForNickname($users->id);
+				if($checkForNickname == 0) {
+					$nickname = str_replace(' ','-',$users->first_name);
+					$this->createNickname($users->id, $nickname);
+				}
 	        	Auth::login($users);
 			    return redirect('/');
 	        }else{
@@ -91,6 +96,11 @@ class SocialController extends Controller
 				                'provider'      => $provider,
 				                'social_name'   => $social_name,
 				            ]);
+							$checkForNickname = $this->checkForNickname($users->id);
+							if($checkForNickname == 0) {
+								$nickname = str_replace(' ','-',$users->first_name);
+								$this->createNickname($users->id, $nickname);
+							}
 				            Auth::login($users);
 				            return redirect('/');
 				        }else{
@@ -177,6 +187,11 @@ class SocialController extends Controller
         return $nicknameCreated;
     }
 
+	protected function checkForNickname($userID) {
+		$encoded = General::canon_encode($userID);
+		return Nickname::where('owner_code', $encoded)->count();
+	}
+
 	public function delete(Request $request)
     {
     	$input = $request->all();
@@ -220,6 +235,11 @@ class SocialController extends Controller
 				                'provider'      => $provider,
 				                'social_name'   => $social_name,
 				            ]);
+							$checkForNickname = $this->checkForNickname($users->id);
+							if($checkForNickname == 0) {
+								$nickname = str_replace(' ','-',$users->first_name);
+								$this->createNickname($users->id, $nickname);
+							}
 				            Auth::login($users);
 				            session()->forget('social_user');
     						session()->forget('provider');
@@ -248,6 +268,11 @@ class SocialController extends Controller
 					                'provider'      => $provider,
 					                 'social_name'   => $social_name,
 					            ]);
+
+								if(!empty($user)) {
+									$nickname = str_replace(' ','-',$user->first_name);
+									$this->createNickname($user->id, $nickname);
+								}
 					             //otp email
 					           
 						       try{
