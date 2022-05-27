@@ -80,6 +80,7 @@ class Statement extends Model {
 				
 				return self::where('topic_num', $topicnum)
                             ->where('camp_num', $campnum)
+                            ->where('objector_nick_id', '=', NULL)
                             ->where('go_live_time', '<=', time())
                             ->orderBy('go_live_time', 'desc') // ticket 1219 Muhammad Ahmad
                             ->first();
