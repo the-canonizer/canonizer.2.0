@@ -114,7 +114,7 @@
     <script>
     $(document).ready(function () {
         $("#campForm").submit(function (e) {
-            console.log("log");          
+              
             //disable the submit button
             $("#submit").attr("disabled", true);
             return true;

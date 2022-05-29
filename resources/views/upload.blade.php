@@ -36,8 +36,10 @@
                     <form method="post" id="uploadForm" class="form-horizontal" enctype="multipart/form-data">
                         <input type="hidden" name="_token" value="{{ csrf_token() }}" />
                         <div class="form-group">
-                            <input class="form-control" id="file" name="file" type="file" />
-
+                            <div class="custom-file w-100">
+                                <input class="custom-file-input w-100" id="file" name="file" type="file" />
+                                <label for="file" class="custom-file-control text-nowrap overflow-hidden">Choose File...</label>
+                            </div>
                         </div>
                         <div class="form-group">
                             <input class="form-control" onkeydown="restrictTextField(event,200)" id="file_name"
@@ -47,9 +49,9 @@
                         <p style="color:red">Warning : Once a file will be uploaded there is no way to delete the file.</p>
                         <button id="upload_file" class="btn btn-sm btn-primary">Upload</button>
                     </form>
-                    <div style="margin-top:10px;background:#fff;">
+                    <div class="mt-3 bg-white table-responsive">
                         <table class="table table-striped">
-                            <tr>
+                            <tr class="text-nowrap">
                                 <th>File Name</th>
                                 <th>Short Code</th>
                                 <th style="width:30%">Uploaded Date </th>
@@ -125,6 +127,7 @@
         $(document).ready(function() {
             $('input[type="file"]').change(function(event) {
                 var _size = this.files[0].size;
+                $(this).next(".custom-file-control").html(this.files[0].name);
                 //var fSExt = new Array('Bytes', 'KB', 'MB', 'GB'),
                 //i=0;while(_size>900){_size/=1024;i++;}
                 //var exactSize = (Math.round(_size*100)/100)+' '+fSExt[i];

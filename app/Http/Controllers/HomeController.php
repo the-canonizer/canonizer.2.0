@@ -49,9 +49,9 @@ class HomeController extends Controller {
         ### Canonizer Service ticket CS17
         ### Date : 18-01-2022
         
-        $page_per_record = env('PAGE_PER_RECORD');
+        $page_per_record = config('app.PAGE_PER_RECORD');
         $page_per_record = isset($page_per_record) ? $page_per_record: 20;
-        $cronDate = env('CS_CRON_DATE'); 
+        $cronDate = config('app.CS_CRON_DATE');
         $cronDate =  isset($cronDate) ? strtotime($cronDate) : strtotime(date('Y-m-d'));
 
         $asOf = 'default';
@@ -63,10 +63,10 @@ class HomeController extends Controller {
             $asOf = session('asofDefault');
         }
 
-        $asOfDefaultDate = date('Y-m-d');
+        $asOfDefaultDate = date('Y-m-d H:i:s');
 
         if(isset($_REQUEST['asof']) && $_REQUEST['asof'] == "bydate"){
-            $asOfDefaultDate = date('Y-m-d', strtotime($_REQUEST['asofdate']));
+            $asOfDefaultDate = date('Y-m-d H:i:s', strtotime($_REQUEST['asofdate']));
          }else if(($asOf == 'bydate') && session('asofdateDefault')){
             $asOfDefaultDate =  session('asofdateDefault');
          }
@@ -95,8 +95,8 @@ class HomeController extends Controller {
                 "asof"=>$asOf
             ];
 
-            $appURL = env('CS_APP_URL');
-            $endpointCSGETTree =   env('CS_GET_HOME_PAGE_DATA');
+            $appURL = config('app.CS_APP_URL');
+            $endpointCSGETTree =   config('app.CS_GET_HOME_PAGE_DATA');
             $endpoint = $appURL."/".$endpointCSGETTree;
             $headers = array('Content-Type:multipart/form-data');
 

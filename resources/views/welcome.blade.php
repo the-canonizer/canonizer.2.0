@@ -341,18 +341,27 @@ function changeNamespace(element){
             if(pageNo > 1){
               pageNo = 1;
             }
-            @if(env('APP_DEBUG'))
-                 window.location.href="{{ url('/') }}"+"?page="+pageNo;//window.location.reload();
-            @else
-            try{
-                window.location.href="{{ url('/') }}"+$(element).find('option:selected').attr('data-namespace')+"?page="+pageNo;
-            }catch(err){
-                window.location.href="{{ url('/') }}"+"?page="+pageNo;
-            }
-            @endif
+            window.location.href="{{ url('/') }}"+"?page="+pageNo;
+{{--            @if(env('APP_DEBUG'))--}}
+{{--                 window.location.href="{{ url('/') }}"+"?page="+pageNo;//window.location.reload();--}}
+{{--            @else--}}
+{{--            try{--}}
+{{--                window.location.href="{{ url('/') }}"+$(element).find('option:selected').attr('data-namespace')+"?page="+pageNo;--}}
+{{--            }catch(err){--}}
+{{--                window.location.href="{{ url('/') }}"+"?page="+pageNo;--}}
+{{--            }--}}
+{{--            @endif--}}
         }
     });
 }
+
+$(document).ready(function() {
+    $('ul.pagination li:not(.active,.disabled)').click(function(e) {
+        e.stopPropagation();
+        // console.log($(this).children('a'));
+        $(this).children('a')[0].click();
+    });
+})
 </script>
 
 @endsection
@@ -366,5 +375,8 @@ function changeNamespace(element){
 }
 .tree ul.mainouter ul {
     padding-left: 10px !important;
+}
+ul.pagination li:not(.active,.disabled) {
+    cursor: pointer;
 }
 </style>

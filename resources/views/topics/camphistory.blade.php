@@ -57,7 +57,7 @@
 
                 <?php  
                 if (!empty($camps) && !empty($topic)) { 
-                    $currentLive = 0;
+                    //$currentLive = 0;
                     $currentTime = time();
                     $ifIamDelegatedSupporter = 0;
                     foreach ($camps as $key => $data) {
@@ -180,8 +180,9 @@
                          if($IFNOtSubmissterNotSupporterAndInGracePeriod){
                                 continue;
                             }
-                        } else if ($currentLive != 1 && $currentTime >= $data->go_live_time) {
-                            $currentLive = 1;
+                        } else if ($liveCamp->id == $data->id) {
+                            // $currentLive != 1 && $currentTime >= $data->go_live_time
+                            //$currentLive = 1;
                             $bgcolor = "rgba(0, 128, 0, 0.5);"; // green
                         } else {
                             $bgcolor = "#4e4ef3;"; //blue
@@ -239,7 +240,7 @@
                                 <?php
                                   $link = \App\Model\Camp::getTopicCampUrl($data->topic_num,$data->camp_num);
                                 ?>
-                                 <a id="version" class="btn btn-historysmt mb-1" href="<?php echo $link. '?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $data->go_live_time); ?>">View This Version</a>
+                                 <a id="version" class="btn btn-historysmt mb-1" href="<?php echo $link. '?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $data->go_live_time) . '&topic_history=1' ?>">View This Version</a>
                                  <script>
                                      var href = $('#version').attr('href');
                                      var date = new Date(<?= $data->go_live_time ?> * 1000).toLocaleString();
@@ -315,7 +316,7 @@
         $('#agree_to_camp').val(id);
         $('#changeAgreeForm').submit();
         } else{
-        alert('uncheck - ' + id);
+            console.log('uncheck - ' + id);
         }
     }
     
@@ -329,7 +330,7 @@
             success:function(res){
 
             },
-            error:function(res){ alert('error occured');}
+            error:function(res){ console.log('error occured');}
         })
     }
 </script>

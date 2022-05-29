@@ -71,7 +71,7 @@
                               </div>
                         </form>
                     </li>
-                    <li class="nav-item col-sm-5 text-right" style="padding-right:0px;">
+                    <li class="nav-item col-sm-5 text-right loggedin-user" style="padding-right:0px;">
                         @if(Auth::check())
 						<div class="dropdown">
                             Browsing as: <a href="javascript:void(0)" class="dropdown-toggle login-icon" data-toggle="dropdown"><i class="fa fa-fw fa-user"></i> <span class="brsr-name">{{ Auth::user()->first_name . ' ' . Auth::user()->last_name}} </span></a>
@@ -84,7 +84,7 @@
                         </div>
                         @else
 						<a class="nav-link guestLogin" style="cursor:default;">Browsing as: Guest</a>
-                        <a class="nav-link @if(Request::url() == url('/login')) active @endif" href="{{ url('/login')}}"><i class="fa fa-fw fa-user"></i> Log in</a>
+                        <a class="nav-link @if(Request::url() == url('/login')) active @endif" href="{{ url('/login')}}"><i class="fa fa-fw fa-user" style="float: unset"></i> Log in</a>
                         <a class="nav-link @if(Request::url() == url('/signup')) active @endif" href="{{ url('/signup')}}"><i class="fa fa-fw fa-user-plus"></i> Sign up </a>
                         @endif
                     </li>
@@ -267,6 +267,7 @@
 									</div>
 									
 									<div><input readonly type="text" id="asofdate" name="asofdate" value=""/></div>
+                                    <input type="hidden" name="topic_history" value="0">
 								    <script>
                                         <?php if(session('asofdateDefault')!=null && session('asofdateDefault')!='') { 
                                             ?>
@@ -390,19 +391,18 @@
             $(".asofdate, #asofdate").change(function(){
 				// Do something interesting here
                 var value = $('#asofdate').val();
-                 var bydate = $("input[name='asof']:checked"). val();  
-
-                 if(value=="" && bydate == 'bydate') {                    
-                     $("#asofdate").removeAttr('disabled');
-					 $('#asofdate').focus();
+                var bydate = $("input[name='asof']:checked"). val();
+                if(value=="" && bydate == 'bydate') {   
+                    $("#asofdate").removeAttr('disabled');
+                    $('#asofdate').focus();
                     return false;
-				 }else if(value !='' && bydate == 'bydate'){
-                     $("#asofdate").removeAttr('disabled');
-                     //return false;
-                 }else if(bydate!='bydate'){
+				} else if(value !='' && bydate == 'bydate'){
+                    $('input[name="topic_history"]').val('1');
+                    $("#asofdate").removeAttr('disabled');
+                } else if(bydate!='bydate'){
                     $('#asofdate').prop('disabled','disabled');
-                 }
-				 $('#as_of').submit();
+                }
+				$('#as_of').submit();
 			});
 
         });

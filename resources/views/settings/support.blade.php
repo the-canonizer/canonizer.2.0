@@ -258,7 +258,7 @@
 			@if(isset($topic))
 			<div id="myTabContent" class="add-nickname-section col-sm-12">  
 					<h5>Nick Name To Support Above Camps </h5>
-				<input type="hidden" name="_token" value="{{ csrf_token() }}">
+					<input type="hidden" name="_token" value="{{ csrf_token() }}">
 					<input type="hidden" id="topic_num" name="topic_num" value="{{ $topic->topic_num }}">
 					<input type="hidden" id="delegate_nick_name_id" name="delegate_nick_name_id" value="{{ $delegate_nick_name_id }}">
 					<input type="hidden" id="camp_num" name="camp_num" value="{{ $camp->camp_num }}">
@@ -405,6 +405,9 @@ $('#widget').draggable();
 			$(ref).parent(".support-sorter-element").find('.remove_camp').html('undo');
 			$(ref).parent(".support-sorter-element").find('.remove_camp').removeClass('x-btn');
 			$(ref).parent(".support-sorter-element").find('.remove_camp').addClass('undo_camp');
+			//adding this
+			$(ref).parent(".support-sorter-element").append('<input type="hidden"  name="removeCampStatus['+camp+']" value="1">');
+			//end
 			$( ".column" ).find('.x-btn').each(function(i,v){
 				//$(v).parent(".support-sorter-element").find('.support_order').text(i+1);
 				$(v).parent(".support-sorter-element").find('.final_support_order').val(i+1);
@@ -416,6 +419,9 @@ $('#widget').draggable();
 			$(ref).parent(".support-sorter-element").find('.remove_camp').html('X');
 			$(ref).parent(".support-sorter-element").find('.remove_camp').removeClass('undo_camp');
 			$(ref).parent(".support-sorter-element").find('.remove_camp').addClass('x-btn');
+			//adding this
+			$('input[name="removeCampStatus['+camp+']"]').remove();
+			//end
 			$('input[name="removed_camp[]"]').each(function() {
 				if($(this).val() == camp){
 					$(this).remove();
@@ -425,7 +431,6 @@ $('#widget').draggable();
 			$(ref).parent(".support-sorter-element").append('<input type="hidden"  name="support_order['+camp+']" value="'+order+'">');
 			$(ref).parent(".support-sorter-element").append('<input type="hidden"  name="camp['+camp+']" value="'+camp+'">');
 			$(ref).parent(".support-sorter-element").append('<input type="hidden"  name="delegated['+camp+']" value="'+delegated+'">');
-			
 			$('#remove_all').prop('checked', false); // Unchecks it
 		}
 
@@ -461,6 +466,10 @@ $('#widget').draggable();
 
 	.greay-out{
 		background: #ECECE5;
+	}
+
+	#draggable-area{
+		position: relative !important;
 	}
 </style>
 

@@ -99,7 +99,7 @@
                             cursor: 'move',
                             opacity: 0.6,
                             update: function(event, ui) {
-                                $.post('{{ route("settings.support-reorder") }}', $(this).sortable('serialize')+"&_token={{ csrf_token() }}&topicnum={{ $data->topic_num }}", function(data) {
+                                $.post('{{ route("settings.support-reorder") }}', $(this).sortable('serialize')+"&_token={{ csrf_token() }}&topicnum={{ $data->topic_num }}&camp_num={{ $data->camp_num ?? 1 }}", function(data) {
                                     if(!data.success) {
                                         alert('Whoops, something went wrong :/');
                                     }
