@@ -597,9 +597,48 @@ class Camp extends Model {
         return $score;
     }
 
+    public function getCamptSupportCountLatest($algorithm, $topicnum, $campnum,$nick_name_id=null) {
+         $topic_support = Support::where('topic_num',$topicnum)->where('end','')->get();
+         $nick_name_wise_support = [];
+         $support_total = 0;
+         if(count($topic_support) > 0){
+            foreach($topic_support as $support){
+                    if(array_key_exists($support->nick_name_id, $nick_name_wise_support)){
+                         array_push($nick_name_wise_support[$support->nick_name_id],$support);
+                    }else{
+                        $nick_name_wise_support[$support->nick_name_id] = [];
+                        array_push($nick_name_wise_support[$support->nick_name_id],$support);
+                    }                    
+            }
+         }
+         foreach($nick_name_wise_support as $nick_name=>$support){
+
+            $multiSupport = false || count($support) > 1;
+            $currentCampSupport = array_filter($support,function ($item) use($campnum) {
+                            return $item->camp_num == $campnum; /* Current camp support */
+                        })[0];
+              $supportPoint = Algorithm::{$algorithm}($support->nick_name_id,$support->topic_num,$support->camp_num);
+            $delegateSupportCount = $this->getDeletegatedSupportCount($algorithm, $topicnum, $campnum, $support->nick_name_id, $currentCampSupport->support_order, $multiSupport);
+            echo "multiSupport=".$multiSupport." or camp= ".$campnum.", $nick_name ".(count($currentCampSupport) > 0).",dele= $delegateSupportCount"."<br/>";
+           
+            if($currentCampSupport){
+                if($multiSupport){
+                    $support_total = $support_total + round($supportPoint * 1 / (2 ** ($currentCampSupport->support_order)), 2);
+                    echo "support_total = ".$support_total;
+                }else{
+                    $support_total = $support_total + $supportPoint;
+                    echo "sssupport_total = ".$support_total." ,$supportPoint";
+                }
+                $support_total = $support_total + $delegateSupportCount;
+            }
+
+         }
+        return $support_total;
+    }
+
     public function getCamptSupportCount($algorithm, $topicnum, $campnum,$nick_name_id=null) {
         $supportCountTotal = 0;
-        
+       
         try {
             foreach (session("topic-support-nickname-$topicnum") as $supported) {
                 if($nick_name_id !=null && $supported->nick_name_id == $nick_name_id ){
@@ -755,8 +794,10 @@ class Camp extends Model {
 			$queryString = (app('request')->getQueryString()) ? '?'.app('request')->getQueryString() : "";
             //dd($child->topic_num,$child->camp_num, $queryString);
             $array[$child->camp_num]['link'] = self::getTopicCampUrl($child->topic_num,$child->camp_num). $queryString .'#statement';
-            $array[$child->camp_num]['score'] = $this->getCamptSupportCount($algorithm, $child->topic_num, $child->camp_num);
             $children = $this->traverseCampTree($algorithm, $child->topic_num, $child->camp_num, $child->parent_camp_num);
+            //$array[$child->camp_num]['score'] = $this->getCamptSupportCount($algorithm, $child->topic_num, $child->camp_num);
+            $array[$child->camp_num]['score'] = $this->getCamptSupportCountLatest($algorithm, $child->topic_num, $child->camp_num);
+           
             $array[$child->camp_num]['children'] = is_array($children) ? $children : [];
         }
         return $array;
@@ -800,7 +841,9 @@ class Camp extends Model {
         $topic_id = $this->topic_num . "-" . $title;
        
         $treeNew = [];
-        $treeNew[$this->camp_num]['score'] = $this->getCamptSupportCount($algorithm, $this->topic_num, $this->camp_num);
+        // $treeNew[$this->camp_num]['score'] = $this->getCamptSupportCount($algorithm, $this->topic_num, $this->camp_num);
+        $treeNew[$this->camp_num]['score'] = $this->getCamptSupportCountLatest($algorithm, $this->topic_num, $this->camp_num);
+        
         $treeNew[$this->camp_num]['children'] = $this->traverseCampTree($algorithm, $this->topic_num, $this->camp_num);
         
         return $reducedTree = TopicSupport::sumTranversedArraySupportCount($treeNew);
@@ -946,7 +989,9 @@ class Camp extends Model {
         $tree = [];
         $tree[$this->camp_num]['title'] = $topic_name;
         $tree[$this->camp_num]['link'] = self::getTopicCampUrl($this->topic_num,$this->camp_num);//  url('topic/' . $topic_id . '/' . $this->camp_num.'#statement');
-        $tree[$this->camp_num]['score'] =  $this->getCamptSupportCount($algorithm, $this->topic_num, $this->camp_num,$nick_name_id);
+        // $tree[$this->camp_num]['score'] =  $this->getCamptSupportCount($algorithm, $this->topic_num, $this->camp_num,$nick_name_id);
+        $tree[$this->camp_num]['score'] =  $this->getCamptSupportCountLatest($algorithm, $this->topic_num, $this->camp_num,$nick_name_id);
+        
         $tree[$this->camp_num]['children'] = $this->traverseCampTree($algorithm, $this->topic_num, $this->camp_num);
                
         return $reducedTree = TopicSupport::sumTranversedArraySupportCount($tree);
