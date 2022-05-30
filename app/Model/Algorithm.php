@@ -383,9 +383,19 @@ class Algorithm{
         
 		# start with one person one vote canonize.
        
-	    $expertCampReducedTree = $expertCamp->campTree('blind_popularity'); # only need to canonize this branch
-         
-        // Check if user supports himself
+	     //$expertCampReducedTree = $expertCamp->campTree('blind_popularity'); # only need to canonize this branch
+        $expertCampReducedTree = $expertCamp->getCampAndNickNameWiseSupportTree('blind_popularity',$topicnum); # only need to canonize this branch
+         // Check if user supports himself
+        $total_score = 0;
+        if(count($expertCampReducedTree['camp_wise_tree'][$expertCamp->camp_num]) > 0){
+            foreach($expertCampReducedTree['camp_wise_tree'][$expertCamp->camp_num] as $tree_node){
+                if(count($tree_node) > 0){
+                    foreach($tree_node as $score){
+                        $total_score = $total_score + $score;
+                    }
+                }                
+            }
+        }
         $num_of_camps_supported = 0;
         $user_support_camps = Support::where('topic_num','=',$topicnum)
             ->whereRaw("(start < $as_of_time) and ((end = 0) or (end > $as_of_time))")
@@ -418,9 +428,11 @@ class Algorithm{
         }
        
         if( !$is_supporting_own_expert && ( $directSupports->count() > 0 || $delegatedSupports->count() > 0 ) && $num_of_camps_supported > 0 ) {
-             return $expertCampReducedTree[$expertCamp->camp_num]['score'] * 5;             
+           return $total_score * 5;
+            //return $expertCampReducedTree[$expertCamp->camp_num]['score'] * 5;             
         }else{
-             return $expertCampReducedTree[$expertCamp->camp_num]['score'] * 1;
+            return $total_score;
+            // return $expertCampReducedTree[$expertCamp->camp_num]['score'] * 1;
         }
         
     }
