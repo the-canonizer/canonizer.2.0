@@ -95,7 +95,7 @@ function changeNamespace(element){
     $.ajax({
         url:"{{ url('/change-namespace') }}",
         type:"POST",
-        data:{namespace:$(element).val()},
+        data:{namespace:$("select[name='namespace']").val()},
         success:function(response){
             var namespace = $("select[name='namespace']").val();
             var my = $("input[name='my']").val();
