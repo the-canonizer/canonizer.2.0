@@ -82,10 +82,24 @@ $(document).ready(function(){
         var clean_uri = uri.substring(0, uri.indexOf("?"));
         window.history.replaceState({}, document.title, clean_uri);            
     }
+
+    var requestParams = new URLSearchParams(window.location.search)
+    var myRequestParam = requestParams.has('my') ? requestParams.get('my') : null;
+    
+    if(myRequestParam) {
+        $("input[name='my']").prop('checked', true);
+        $("input[name='my']").val(myRequestParam);
+    }
 });
 function submitBrowseForm(element){
     if(($(element).val() == null) || ($(element).val() == "")){
-        $("input[name='my']").val('');
+        var namespace = $("select[name='namespace']").val();
+        if(namespace) {
+            $("input[name='my']").val(namespace);
+        } else {
+            $("input[name='my']").val('');
+        }
+    
         $(element).parents('form').submit();
     }else{
       changeNamespace(element);  
