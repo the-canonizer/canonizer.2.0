@@ -611,9 +611,27 @@ class Camp extends Model {
     public function getDeletegatedSupportCount($algorithm, $topicnum, $campnum, $delegateNickId, $parent_support_order, $multiSupport) {
 
         /* Delegated Support */
-        $delegatedSupports = session("topic-support-{$topicnum}")->filter(function($item) use ($delegateNickId) {
-            return $item->delegate_nick_name_id == $delegateNickId;
-        });
+        if(session()->has("topic-support-{$topicnum}")){
+            $delegatedSupports = session("topic-support-{$topicnum}")->filter(function($item) use ($delegateNickId) {
+                return $item->delegate_nick_name_id == $delegateNickId;
+            });
+        }else{
+            $as_of_time = time();
+            if ((isset($_REQUEST['asof']) && $_REQUEST['asof'] == 'bydate')) {
+                $as_of_time = strtotime($_REQUEST['asofdate']);
+            }else if((session()->has('asof') && session('asof') == 'bydate' && !isset($_REQUEST['asof']))){
+                $as_of_time = strtotime(session('asofdateDefault'));
+            } 
+            session(["topic-support-{$this->topic_num}" => Support::where('topic_num', '=', $this->topic_num)
+                        ->whereRaw("(start <= $as_of_time) and ((end = 0) or (end > $as_of_time))")
+                        ->orderBy('start', 'DESC')
+                        ->select(['support_order', 'camp_num', 'nick_name_id', 'delegate_nick_name_id', 'topic_num'])
+                        ->get()]);
+            $delegatedSupports = session("topic-support-{$topicnum}")->filter(function($item) use ($delegateNickId) {
+                return $item->delegate_nick_name_id == $delegateNickId;
+            });
+        }
+        
 
 
         $score = 0;
@@ -1137,7 +1155,7 @@ class Camp extends Model {
 
         $reducedTree = Util::execute('POST', $endpoint, $headers, $requestBody);
 
-        $data = json_decode($reducedTree, true);
+        $data = [];//json_decode($reducedTree, true);
         
         if(count($data['data']) && $data['code'] == 200 ){
             $reducedTree = $data['data'][0];
