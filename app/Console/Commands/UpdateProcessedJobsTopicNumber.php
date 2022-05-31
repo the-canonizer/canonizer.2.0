@@ -39,10 +39,19 @@ class UpdateProcessedJobsTopicNumber extends Command
     // 1. Get all response  
     public function handle()
     {
-        $getAllProcessedJobs = ProcessedJob::select('id', 'response')->orderBy('id', 'desc')->get();
+        $allProcessedJobs = ProcessedJob::select('id', 'response')->orderBy('id', 'desc')->get();
         
-        foreach($getAllProcessedJobs as $job) {
-            ProcessedJob::where('id', $job->id)->update(['topic_num' => $job->response['topic_id'] ?? NULL]);
+        if(count($allProcessedJobs) > 0) {
+            foreach($allProcessedJobs as $job) {
+                $topicNumber = json_decode($job->response)->topic_id ?? NULL;
+                
+                if(isset($topicNumber)) {
+                    ProcessedJob::where('id', $job->id)->update(['topic_num' => $topicNumber]);
+                }
+            }
+            $this->info("Job executed successfully");
+        } else {
+            $this->error("No proccessed job found");
         }
     }
 }
