@@ -678,11 +678,11 @@ class Camp extends Model {
                             $nick_name_support_tree[$nick_name_id][1][$support->camp_num] = $nick_name_support_tree[$nick_name_id][1][$support->camp_num] + $support_total; 
                         }
                    }
-                    $nick_name_support_tree[$support->nick_name_id][$support->support_order][$support->camp_num] = $support_total;
+                  $nick_name_support_tree[$support->nick_name_id][$support->support_order][$support->camp_num] = $support_total;
                 
            }
         }
-
+          
         return ['camp_wise_tree'=>$camp_wise_score,'nick_name_wise_tree'=>$nick_name_support_tree];
     }
 
