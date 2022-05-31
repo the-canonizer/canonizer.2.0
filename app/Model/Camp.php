@@ -656,15 +656,24 @@ class Camp extends Model {
     public function getCampAndNickNameWiseSupportTree($algorithm, $topicnum){
         $as_of_time = time();
         $nick_name_support_tree=[];
+        $nick_name_wise_support=[];
+        $camp_wise_support = [];
+        $camp_wise_score = [];
 		if(isset($_REQUEST['asof']) && $_REQUEST['asof']=='bydate'){
 			$as_of_time = strtotime($_REQUEST['asofdate']);
 		}
         $topic_support = Support::where('topic_num',$topicnum)->whereRaw("(start <= $as_of_time) and ((end = 0) or (end > $as_of_time))")
         ->orderBy('camp_num','ASC')->orderBy('support_order','ASC')->get();
-        $camp_wise_support = [];
-        $camp_wise_score = [];
+        
+
         if(count($topic_support) > 0){
            foreach($topic_support as $support){
+                    if(array_key_exists($support->nick_name_id, $nick_name_wise_support)){
+                            array_push($nick_name_wise_support[$support->nick_name_id],$support);
+                    }else{
+                        $nick_name_wise_support[$support->nick_name_id] = [];
+                        array_push($nick_name_wise_support[$support->nick_name_id],$support);
+                    }  
                    if(array_key_exists($support->camp_num, $camp_wise_support)){
                         array_push($camp_wise_support[$support->camp_num],$support);
                    }else{
@@ -674,8 +683,9 @@ class Camp extends Model {
            }
         }
         foreach($camp_wise_support as $camp_num=>$support_camp){
-           $multiSupport =  count($support_camp) > 1 ? 1 : 0;
+          
            foreach($support_camp as $support){
+                $multiSupport =  count($nick_name_wise_support[$support->nick_name_id]) > 1 ? 1 : 0;
                 $support_total = 0; 
                 $nick_name_support_tree[$support->nick_name_id][$support->support_order][$support->camp_num] = 0;
                 $camp_wise_score[$support->camp_num][$support->support_order][$support->nick_name_id] = 0;
