@@ -687,6 +687,12 @@ class Camp extends Model {
     }
 
     public function getCamptSupportCount($algorithm, $topicnum, $campnum,$nick_name_id=null) {
+        // calling this to fill data in sessions as on main page data is loading from mongo so sessions remian blank
+        if (!session("topic-support-nickname-{$this->topic_num}")) { 
+            $this->campTreeData(session('defaultAlgo', 'blind_popularity'), $activeAcamp = null, $supportCampCount = 0, $needSelected = 0);
+        } 
+         // calling this to fill data in sessions as on main page data is loading from mongo so sessions remian blank
+       
          $score_tree = $this->getCampAndNickNameWiseSupportTree($algorithm, $topicnum);
          $support_total = 0;
          if(array_key_exists('camp_wise_tree',$score_tree) && count($score_tree['camp_wise_tree']) > 0 && array_key_exists($campnum,$score_tree['camp_wise_tree'])){
@@ -756,7 +762,7 @@ class Camp extends Model {
                
     //         } 
     //     } catch (\Exception $e) {
-    //         echo "topic-support-nickname-$topicnum" . $e->getMessage();
+    //         echo "nickname-$topicnum" . $e->getMessage();
     //     }
     //     return $supportCountTotal;
     // }
