@@ -169,7 +169,8 @@ class TopicController extends Controller {
             $topic->go_live_time = $current_time; //strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
             $topic->language = 'English';
             $topic->note = isset($all['note']) ? $all['note'] : "";
-            $topic->grace_period = 1;
+            //#1373 grace period for the topic when no supporter is there should be 0
+            $topic->grace_period = 0;
 
             if (isset($all['topic_num'])) {
                 $topic->topic_num = $all['topic_num'];
@@ -183,6 +184,8 @@ class TopicController extends Controller {
                     //$topic->go_live_time = strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
                     $topic->go_live_time = strtotime(date('Y-m-d H:i:s', strtotime('+'.config('app.go_live_day_limit').' days')));
                     $go_live_time = $topic->go_live_time;
+                    //#1373 grace period for the topic when other supporters is there should be 1
+                    $topic->grace_period = 1;
                     $message = "Topic change submitted successfully.";
                 }
 
