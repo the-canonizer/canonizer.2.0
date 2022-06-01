@@ -93,11 +93,11 @@ class TopicSupport extends Model {
                         ->groupBy('nick_name_id')
                         ->select(['nick_name_id', 'delegate_nick_name_id', 'support_order', 'topic_num', 'camp_num'])
                         ->get();
-        $nick_supports = Support::where('topic_num', '=', $topicnum)
-                        ->whereRaw("(start <= $as_of_time) and ((end = 0) or (end > $as_of_time))")
-                        ->orderBy('start', 'DESC')
-                        ->select(['nick_name_id', 'delegate_nick_name_id', 'support_order', 'topic_num', 'camp_num'])
-                        ->get();
+        // $nick_supports = Support::where('topic_num', '=', $topicnum)
+        //                 ->whereRaw("(start <= $as_of_time) and ((end = 0) or (end > $as_of_time))")
+        //                 ->orderBy('start', 'DESC')
+        //                 ->select(['nick_name_id', 'delegate_nick_name_id', 'support_order', 'topic_num', 'camp_num'])
+        //                 ->get();
         $array = [];
         foreach($supports as $key =>$support){
             $array[$support->nick_name_id]['score'] = 0;
@@ -129,6 +129,7 @@ class TopicSupport extends Model {
            
             }
         }
+        // echo "arr<pre>"; print_r($array);
         return $array;
     }
     /*1 Person :: 1 Vote Nicknames*/
@@ -367,7 +368,7 @@ class TopicSupport extends Model {
         
         $traversedSupportCountTreeArray = self::sortTraversedSupportCountTreeArray(self::sumTranversedArraySupportCount(self::traverseTree($algorithm,$topicnum,$campnum)));
         $delegationTreeArray = self::getDelegationTree($traversedSupportCountTreeArray,[]);
-        return self::buildTree($topicnum,$campnum,$traversedSupportCountTreeArray,true,$add_supporter,$delegationTreeArray,$remove_support=FALSE);
+       return self::buildTree($topicnum,$campnum,$traversedSupportCountTreeArray,true,$add_supporter,$delegationTreeArray,$remove_support=FALSE);
     }
 
    

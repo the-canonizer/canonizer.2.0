@@ -662,8 +662,13 @@ class Camp extends Model {
 		if(isset($_REQUEST['asof']) && $_REQUEST['asof']=='bydate'){
 			$as_of_time = strtotime($_REQUEST['asofdate']);
 		}
-        $topic_support = Support::where('topic_num',$topicnum)->whereRaw("(start <= $as_of_time) and ((end = 0) or (end > $as_of_time))")
-        ->orderBy('camp_num','ASC')->orderBy('support_order','ASC')->get();
+        $topic_support = Support::where('topic_num', '=', $topicnum)
+        ->where('delegate_nick_name_id', 0)
+        ->whereRaw("(start <= $as_of_time) and ((end = 0) or (end > $as_of_time))")
+        ->orderBy('start', 'DESC')
+        ->groupBy('nick_name_id')
+        ->select(['nick_name_id', 'delegate_nick_name_id', 'support_order', 'topic_num', 'camp_num'])
+        ->get();
         
 
         if(count($topic_support) > 0){
@@ -695,10 +700,11 @@ class Camp extends Model {
                         $support_total = $support_total + round($supportPoint * 1 / (2 ** ($support->support_order)), 2);
                     }else{
                         $support_total = $support_total + $supportPoint;
-                    }
+                    }                    
+                    $nick_name_support_tree[$support->nick_name_id][$support->support_order][$support->camp_num] = $support_total;
                     $support_total = $support_total + $delegateSupportCount;
                     $camp_wise_score[$support->camp_num][$support->support_order][$support->nick_name_id] =  $support_total;
-                    if($support->support_order > 1){
+                    if($support->support_order > 1 ){
                         if(count(array_keys($camp_wise_score[$support->camp_num][1])) > 1){
                         }else if(count(array_keys($camp_wise_score[$support->camp_num][1])) > 0){
                             $nick_name_id = array_keys($camp_wise_score[$support->camp_num][1])[0];
@@ -706,7 +712,6 @@ class Camp extends Model {
                             $nick_name_support_tree[$nick_name_id][1][$support->camp_num] = $nick_name_support_tree[$nick_name_id][1][$support->camp_num] + $support_total; 
                         }
                    }
-                  $nick_name_support_tree[$support->nick_name_id][$support->support_order][$support->camp_num] = $support_total;
                 
            }
         }
