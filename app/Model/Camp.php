@@ -723,7 +723,6 @@ class Camp extends Model {
 
     public function getCamptSupportCount($algorithm, $topicnum, $campnum,$nick_name_id=null) {
          $score_tree = $this->getCampAndNickNameWiseSupportTree($algorithm, $topicnum);
-         echo "<pre>"; print_r( $score_tree);
          $support_total = 0;
          if(array_key_exists('camp_wise_tree',$score_tree) && count($score_tree['camp_wise_tree']) > 0 && array_key_exists($campnum,$score_tree['camp_wise_tree'])){
              if(count($score_tree['camp_wise_tree'][$campnum]) > 0){
