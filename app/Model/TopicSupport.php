@@ -81,6 +81,7 @@ class TopicSupport extends Model {
     public static function traverseTree($algorithm,$topicnum,$campnum,$delegateNickId=0){
         $camp = Camp::where('topic_num',$topicnum)->where('camp_num',$campnum)->first();
         $score_tree = $camp->getCampAndNickNameWiseSupportTree($algorithm, $topicnum);
+       // echo "<pre>"; print_r($score_tree);
         $as_of_time = time();
 		if(isset($_REQUEST['asof']) && $_REQUEST['asof']=='bydate'){
 			$as_of_time = strtotime($_REQUEST['asofdate']);
@@ -93,11 +94,11 @@ class TopicSupport extends Model {
                         ->groupBy('nick_name_id')
                         ->select(['nick_name_id', 'delegate_nick_name_id', 'support_order', 'topic_num', 'camp_num'])
                         ->get();
-        // $nick_supports = Support::where('topic_num', '=', $topicnum)
-        //                 ->whereRaw("(start <= $as_of_time) and ((end = 0) or (end > $as_of_time))")
-        //                 ->orderBy('start', 'DESC')
-        //                 ->select(['nick_name_id', 'delegate_nick_name_id', 'support_order', 'topic_num', 'camp_num'])
-        //                 ->get();
+        $nick_supports = Support::where('topic_num', '=', $topicnum)
+                        ->whereRaw("(start <= $as_of_time) and ((end = 0) or (end > $as_of_time))")
+                        ->orderBy('start', 'DESC')
+                        ->select(['nick_name_id', 'delegate_nick_name_id', 'support_order', 'topic_num', 'camp_num'])
+                        ->get();
         $array = [];
         foreach($supports as $key =>$support){
             $array[$support->nick_name_id]['score'] = 0;
@@ -129,7 +130,6 @@ class TopicSupport extends Model {
            
             }
         }
-        // echo "arr<pre>"; print_r($array);
         return $array;
     }
     /*1 Person :: 1 Vote Nicknames*/
