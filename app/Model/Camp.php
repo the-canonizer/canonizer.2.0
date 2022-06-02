@@ -666,7 +666,7 @@ class Camp extends Model {
         ->where('delegate_nick_name_id', 0)
         ->whereRaw("(start <= $as_of_time) and ((end = 0) or (end > $as_of_time))")
         ->orderBy('start', 'DESC')
-        ->groupBy('nick_name_id')
+       // ->groupBy('nick_name_id')
         ->select(['nick_name_id', 'delegate_nick_name_id', 'support_order', 'topic_num', 'camp_num'])
         ->get();
         
@@ -687,6 +687,7 @@ class Camp extends Model {
                    }                    
            }
         }
+        // echo "<pre>"; print_r($nick_name_wise_support);
         foreach($camp_wise_support as $camp_num=>$support_camp){
           
            foreach($support_camp as $support){
@@ -701,9 +702,10 @@ class Camp extends Model {
                     }else{
                         $support_total = $support_total + $supportPoint;
                     }                    
-                    $nick_name_support_tree[$support->nick_name_id][$support->support_order][$support->camp_num] = $support_total;
+                    
                     $support_total = $support_total + $delegateSupportCount;
                     $camp_wise_score[$support->camp_num][$support->support_order][$support->nick_name_id] =  $support_total;
+                    $nick_name_support_tree[$support->nick_name_id][$support->support_order][$support->camp_num] = $support_total;
                     if($support->support_order > 1 ){
                         if(count(array_keys($camp_wise_score[$support->camp_num][1])) > 1){
                         }else if(count(array_keys($camp_wise_score[$support->camp_num][1])) > 0){
@@ -721,6 +723,7 @@ class Camp extends Model {
 
     public function getCamptSupportCount($algorithm, $topicnum, $campnum,$nick_name_id=null) {
          $score_tree = $this->getCampAndNickNameWiseSupportTree($algorithm, $topicnum);
+         echo "<pre>"; print_r( $score_tree);
          $support_total = 0;
          if(array_key_exists('camp_wise_tree',$score_tree) && count($score_tree['camp_wise_tree']) > 0 && array_key_exists($campnum,$score_tree['camp_wise_tree'])){
              if(count($score_tree['camp_wise_tree'][$campnum]) > 0){
