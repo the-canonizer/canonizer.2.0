@@ -68,7 +68,7 @@
             else 
             { 
             ?>
-			 <div class="form-group">
+             <div class="form-group">
                 <label for="parent_camp_num">Parent Camp <span style="color:red">*</span></label>
                 @php
                     $parentcampsData = $parentcampsData->toArray();
@@ -77,11 +77,12 @@
                     }
                     usort($parentcampsData, 'sortByCampName');
                 @endphp
-                <select  name="parent_camp_num" id="parent_camp_num" class="form-control">
+                <select  name="parent_camp_num" id="parent_camp_num" class="form-control" <?php if($objection=="objection") { ?> disabled <?php } ?>>
                     @foreach($parentcampsData as $parent)
-					
-                    <option <?php if($camp->camp_num==$parent['camp_num']) echo "selected=selected";?> value="{{ $parent['camp_num'] }}">{{ $parent['camp_name']}}</option>
-                  
+					<?php if(($camp->camp_num != $parent['camp_num'] ) && (  !in_array($parent['camp_num'], $childCamps))) {
+                    ?>
+                    <option <?php if($camp->parent_camp_num==$parent['camp_num']) echo "selected=selected";?> value="{{ $parent['camp_num'] }}">{{ $parent['camp_name']}}</option>
+                    <?php } ?>
 					@endforeach
 					
                 </select>
@@ -89,7 +90,7 @@
                 
                  @if ($errors->has('parent_camp_num')) <p class="help-block">{{ $errors->first('parent_camp_num') }}</p> @endif
 				 
-             </div> 
+             </div>
 			<?php } ?>
 			<div class="form-group">
                 <label for="camp_name">Nick Name <span style="color:red">*</span></label>
