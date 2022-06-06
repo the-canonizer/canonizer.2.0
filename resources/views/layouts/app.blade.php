@@ -13,6 +13,8 @@
         <link rel="shortcut icon" href="/img/favicon.ico" >
         <!-- Bootstrap core CSS-->
         <link href="{{ URL::asset('/css/bootstrap.min.css') }}" rel="stylesheet">
+        <!-- Select 2 CSS-->
+        <link href="{{ URL::asset('/select2/dist/css/select2.min.css') }}" rel="stylesheet">
         <!-- Custom fonts for this template-->
         <link href="{{ URL::asset('/font-awesome/css/font-awesome.min.css') }}" rel="stylesheet" type="text/css">
         <!-- Custom styles for this template-->
@@ -30,6 +32,8 @@
         <!--countdown timers -->
         <script src="{{ URL::asset('/js/jquery.countdownTimer.min.js') }}"></script>
         <link href="{{ URL::asset('/css/jquery.countdownTimer.css') }}" rel="stylesheet" type="text/css">
+        <!-- Select 2 js-->
+        <script src="{{ URL::asset('/select2/dist/js/select2.min.js') }}"></script>
 
 
 
