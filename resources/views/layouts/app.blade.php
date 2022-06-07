@@ -400,7 +400,7 @@
                     $("#asofdate").removeAttr('disabled');
                     $('#asofdate').focus();
                     return false;
-				} else if(value !='' && bydate == 'bydate'){
+				} else if(value !='' && (bydate == 'bydate' || bydate == 'review')){
                     $('input[name="topic_history"]').val('1');
                     $("#asofdate").removeAttr('disabled');
                 } else if(bydate!='bydate'){
