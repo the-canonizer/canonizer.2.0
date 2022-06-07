@@ -608,6 +608,8 @@ class Camp extends Model {
         return ($a > $b) ? -1 : 1;
     }
 
+    
+
     public function getDeletegatedSupportCount($algorithm, $topicnum, $campnum, $delegateNickId, $parent_support_order, $multiSupport) {
 
         /* Delegated Support */
@@ -631,6 +633,17 @@ class Camp extends Model {
                 return $item->delegate_nick_name_id == $delegateNickId;
             });
         }
+
+        if(count($delegatedSupports) > 0){
+            foreach($delegatedSupports as $support){
+                     if(array_key_exists($support->nick_name_id, $nick_name_wise_support)){
+                             array_push($nick_name_wise_support[$support->nick_name_id],$support);
+                     }else{
+                         $nick_name_wise_support[$support->nick_name_id] = [];
+                         array_push($nick_name_wise_support[$support->nick_name_id],$support);
+                     }                    
+            }
+         }
         
 
 
@@ -651,6 +664,57 @@ class Camp extends Model {
         }
         
         return $score;
+    }
+
+    public function delegateSupportTree($algorithm, $topicnum, $campnum, $delegateNickId, $parent_support_order, $parent_score,$array=[]){
+        $nick_name_support_tree=[];
+        $nick_name_wise_support=[];
+		/* Delegated Support */
+        if(session()->has("topic-support-{$topicnum}")){
+            $delegatedSupports = session("topic-support-{$topicnum}")->filter(function($item) use ($delegateNickId) {
+                return $item->delegate_nick_name_id == $delegateNickId;
+            });
+        }else{
+            $as_of_time = time();
+            if ((isset($_REQUEST['asof']) && $_REQUEST['asof'] == 'bydate')) {
+                $as_of_time = strtotime($_REQUEST['asofdate']);
+            }else if((session()->has('asof') && session('asof') == 'bydate' && !isset($_REQUEST['asof']))){
+                $as_of_time = strtotime(session('asofdateDefault'));
+            } 
+            session(["topic-support-{$this->topic_num}" => Support::where('topic_num', '=', $this->topic_num)
+                        ->whereRaw("(start <= $as_of_time) and ((end = 0) or (end > $as_of_time))")
+                        ->orderBy('start', 'DESC')
+                        ->select(['support_order', 'camp_num', 'nick_name_id', 'delegate_nick_name_id', 'topic_num'])
+                        ->get()]);
+            $delegatedSupports = session("topic-support-{$topicnum}")->filter(function($item) use ($delegateNickId) {
+                return $item->delegate_nick_name_id == $delegateNickId;
+            });
+        }
+
+        
+        
+        if(count($delegatedSupports) > 0){
+           foreach($delegatedSupports as $support){
+                    if(array_key_exists($support->nick_name_id, $nick_name_wise_support)){
+                            array_push($nick_name_wise_support[$support->nick_name_id],$support);
+                    }else{
+                        $nick_name_wise_support[$support->nick_name_id] = [];
+                        array_push($nick_name_wise_support[$support->nick_name_id],$support);
+                    }              
+           }
+        }
+        
+        foreach($nick_name_wise_support as $nickNameId=>$support_camp){
+           foreach($support_camp as $support){ 
+               if($support->camp_num == $campnum){
+                    $support_total = 0; 
+                    $nick_name_support_tree[$support->nick_name_id]['score'] = $parent_score;
+                    $delegateTree = $this->delegateSupportTree($algorithm, $topicnum,$campnum, $support->nick_name_id, $parent_support_order,$parent_score,[]);
+                    $nick_name_support_tree[$support->nick_name_id]['delegates'] = $delegateTree;
+                }               
+               }
+        }
+       return $nick_name_support_tree;
     }
 
     public function getCampAndNickNameWiseSupportTree($algorithm, $topicnum){
@@ -676,31 +740,25 @@ class Camp extends Model {
                     }else{
                         $nick_name_wise_support[$support->nick_name_id] = [];
                         array_push($nick_name_wise_support[$support->nick_name_id],$support);
-                    }  
-                //    if(array_key_exists($support->camp_num, $camp_wise_support)){
-                //         array_push($camp_wise_support[$support->camp_num],$support);
-                //    }else{
-                //        $camp_wise_support[$support->camp_num] = [];
-                //        array_push($camp_wise_support[$support->camp_num],$support);
-                //    }                    
+                    }                   
            }
         }
         foreach($nick_name_wise_support as $nickNameId=>$support_camp){
             $multiSupport =  count($support_camp) > 1 ? 1 : 0;
            foreach($support_camp as $support){                
                 $support_total = 0; 
-                $nick_name_support_tree[$support->nick_name_id][$support->support_order][$support->camp_num] = 0;
-                $camp_wise_score[$support->camp_num][$support->support_order][$support->nick_name_id] = 0;
+                $nick_name_support_tree[$support->nick_name_id][$support->support_order][$support->camp_num]['score'] = 0;
+                $camp_wise_score[$support->camp_num][$support->support_order][$support->nick_name_id]['score'] = 0;
                 $supportPoint = Algorithm::{$algorithm}($support->nick_name_id,$support->topic_num,$support->camp_num);
-                $delegateSupportCount = $this->getDeletegatedSupportCount($algorithm, $support->topic_num,$support->camp_num, $support->nick_name_id, $support->support_order, $multiSupport);
+                //$delegateSupportCount = $this->getDeletegatedSupportCount($algorithm, $support->topic_num,$support->camp_num, $support->nick_name_id, $support->support_order, $multiSupport);
                 if($multiSupport){
                         $support_total = $support_total + round($supportPoint * 1 / (2 ** ($support->support_order)), 2);
                     }else{
                         $support_total = $support_total + $supportPoint;
                     }                    
-                    $nick_name_support_tree[$support->nick_name_id][$support->support_order][$support->camp_num] = $support_total;
-                    $support_total = $support_total + $delegateSupportCount;
-                    $camp_wise_score[$support->camp_num][$support->support_order][$support->nick_name_id] =  $support_total;
+                    $nick_name_support_tree[$support->nick_name_id][$support->support_order][$support->camp_num]['score'] = $support_total;
+                    //$support_total = $support_total + $delegateSupportCount;
+                    $camp_wise_score[$support->camp_num][$support->support_order][$support->nick_name_id]['score'] =  $support_total;
                                   
            }
         }
@@ -712,11 +770,17 @@ class Camp extends Model {
                         if($support_order > 1 ){
                             if(count(array_keys($nick_name_support_tree[$nickNameId][1])) > 0){
                             $campNumber = array_keys($nick_name_support_tree[$nickNameId][1])[0];
-                            $nick_name_support_tree[$nickNameId][1][$campNumber]=$nick_name_support_tree[$nickNameId][1][$campNumber] + $score;
-                            $camp_wise_score[$campNumber][1][$nickNameId] = $camp_wise_score[$campNumber][1][$nickNameId] + $score;
+                            $nick_name_support_tree[$nickNameId][1][$campNumber]['score']=$nick_name_support_tree[$nickNameId][1][$campNumber]['score'] + $score['score'];
+                            $camp_wise_score[$campNumber][1][$nickNameId]['score'] = $camp_wise_score[$campNumber][1][$nickNameId]['score'] + $score['score'];
+                            $delegateTree = $this->delegateSupportTree($algorithm, $topicnum,$campNumber, $nickNameId, 1,$camp_wise_score[$campNumber][1][$nickNameId]['score'] ,[]);
+                            $nick_name_support_tree[$nickNameId][1][$campNumber]['delegates'] = $delegateTree;
                         }
                     }
+                    $delegateTree = $this->delegateSupportTree($algorithm, $topicnum,$campNum, $nickNameId, $support_order, $nick_name_support_tree[$nickNameId][$support_order][$campNum]['score'],[]);
+                    $nick_name_support_tree[$nickNameId][$support_order][$campNum]['delegates'] = $delegateTree;
                    }
+                   
+                  
                 
                 }
             }
@@ -724,16 +788,38 @@ class Camp extends Model {
     
         return ['camp_wise_tree'=>$camp_wise_score,'nick_name_wise_tree'=>$nick_name_support_tree];
     }
+    
+    public function getDelegatesScore($tree){
+        $score = 0;
+        if(count($tree['delegates']) > 0){
+            foreach($tree['delegates'] as $nick=>$delScore){
+                $score = $score + $delScore['score'];
+                if(count($delScore['delegates']) > 0){
+                    $score = $score + $this->getDelegatesScore($delScore);
+                }
+            }
+        }
+        return $score;
+    }
 
     public function getCamptSupportCount($algorithm, $topicnum, $campnum,$nick_name_id=null) {
-         $score_tree = $this->getCampAndNickNameWiseSupportTree($algorithm, $topicnum);
+        if(session()->has("score_tree_{$topicnum}")){
+            $score_tree = session("score_tree_{$topicnum}");
+        }else{
+            $score_tree = $this->getCampAndNickNameWiseSupportTree($algorithm, $topicnum);
+            session(["score_tree_{$topicnum}"=>$score_tree]);
+        }
+         
+
          $support_total = 0;
          if(array_key_exists('camp_wise_tree',$score_tree) && count($score_tree['camp_wise_tree']) > 0 && array_key_exists($campnum,$score_tree['camp_wise_tree'])){
              if(count($score_tree['camp_wise_tree'][$campnum]) > 0){
-                 foreach($score_tree['camp_wise_tree'][$campnum] as $tree_node){
+                 foreach($score_tree['camp_wise_tree'][$campnum] as $order=>$tree_node){                                        
                      if(count($tree_node) > 0){
-                         foreach($tree_node as $score){
-                            $support_total =$support_total +$score;
+                         foreach($tree_node as $nick=>$score){
+                            $delegate_arr = $score_tree['nick_name_wise_tree'][$nick][$order][$campnum];
+                            $delegate_score = $this->getDelegatesScore($delegate_arr); 
+                            $support_total =$support_total + $score['score'] + $delegate_score;
                          }
                      }
                  }    
