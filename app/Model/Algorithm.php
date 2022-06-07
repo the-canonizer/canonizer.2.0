@@ -454,7 +454,7 @@ class Algorithm{
                 foreach($expertCampReducedTree['camp_wise_tree'][$expertCamp->camp_num] as $tree_node){
                     if(count($tree_node) > 0){
                         foreach($tree_node as $score){
-                            $total_score = $total_score + $score;
+                            $total_score = $total_score + $score['score'];
                         }
                     }                
                 }
@@ -468,7 +468,7 @@ class Algorithm{
                 foreach($expertCampReducedTree as $tree_node){
                     if(count($tree_node) > 0){
                         foreach($tree_node as $score){
-                            $total_score = $total_score + $score;
+                            $total_score = $total_score + $score['score'];
                         }
                     }                
                 }

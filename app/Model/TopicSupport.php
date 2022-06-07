@@ -79,11 +79,11 @@ class TopicSupport extends Model {
     }
     public static function traverseTree($algorithm,$topicnum,$campnum,$delegateNickId=0){
         $camp = Camp::where('topic_num',$topicnum)->where('camp_num',$campnum)->first();
-        if(session()->has("score_tree_{$topicnum}")){
-            $score_tree = session("score_tree_{$topicnum}");
+        if(session()->has("score_tree_{$topicnum}_{$algorithm}")){
+            $score_tree = session("score_tree_{$topicnum}_{$algorithm}");
         }else{            
             $score_tree = $camp->getCampAndNickNameWiseSupportTree($algorithm, $topicnum);
-            session(["score_tree_{$topicnum}"=>$score_tree]);
+            session(["score_tree_{$topicnum}_{$algorithm}"=>$score_tree]);
         }
         $as_of_time = time();
 		if(isset($_REQUEST['asof']) && $_REQUEST['asof']=='bydate'){
