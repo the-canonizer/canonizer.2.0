@@ -803,11 +803,13 @@ class Camp extends Model {
     }
 
     public function getCamptSupportCount($algorithm, $topicnum, $campnum,$nick_name_id=null) {
-        if(session()->has("score_tree_{$topicnum}")){
-            $score_tree = session("score_tree_{$topicnum}");
+        $score_tree = $this->getCampAndNickNameWiseSupportTree($algorithm, $topicnum);
+        session(["score_tree_{$topicnum}_{$algorithm}"=>$score_tree]);
+        if(session()->has("score_tree_{$topicnum}_{$algorithm}")){
+            $score_tree = session("score_tree_{$topicnum}_{$algorithm}");
         }else{
             $score_tree = $this->getCampAndNickNameWiseSupportTree($algorithm, $topicnum);
-            session(["score_tree_{$topicnum}"=>$score_tree]);
+            session(["score_tree_{$topicnum}_{$algorithm}"=>$score_tree]);
         }
          
 

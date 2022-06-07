@@ -353,6 +353,7 @@ class TopicController extends Controller {
      */
     public function show($id, $parentcampnum = 1) {
         $topicnumArray = explode("-", $id);
+        $algorithm = session('defaultAlgo', 'blind_popularity');
         $topicnum = $topicnumArray[0];
         if(Auth::user() && Auth::user()->id){
             $userid = Auth::user()->id;
@@ -390,6 +391,7 @@ class TopicController extends Controller {
         session()->forget("topic-support-{$topicnum}");
         session()->forget("topic-support-nickname-{$topicnum}");
         session()->forget("topic-support-tree-{$topicnum}");
+        session()->forget("score_tree_{$topicnum}_{$algorithm}");
         if (count($camp) > 0 && count($topic) > 0) {
           $parentcamp = Camp::campNameWithAncestors($camp, '',$topic->topic_name);
         } else {
