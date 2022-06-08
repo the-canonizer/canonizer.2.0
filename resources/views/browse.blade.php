@@ -29,7 +29,7 @@
                 </div>
                 @if(Auth::check())
                     <div class="col-sm-4 checkbox pd-2-0">
-                    <label><input type="checkbox" name="my" value="{{(session()->has('defaultNamespaceId')) ? session('defaultNamespaceId') : ''}}" {{ isset($_REQUEST['my']) &&  $_REQUEST['my'] == session('defaultNamespaceId') ? 'checked' : ''}} onchange="submitBrowseForm(this)"> Only My Topics</label>
+                    <label><input type="checkbox" name="my" value="{{(session()->has('defaultNamespaceId')) ? session('defaultNamespaceId') : ''}}" {{ isset($_REQUEST['my']) &&  $_REQUEST['my'] == session('defaultNamespaceId') ? 'checked' : ''}} onchange="submitBrowseForm(this)">My Created Topics</label>
                     </div>
                 @endif
                 </form>
@@ -77,14 +77,29 @@ $(document).ready(function(){
     var uri = window.location.toString();
     var namespace = $("select[name='namespace']").val();
     var my = $("input[name='my']").val();
-    if (uri.indexOf("?") > 0 && !namespace && !my) {
+    var isMyTopicsOptionChecked = $("input[name='my']").is(":checked");
+    if (uri.indexOf("?") > 0 && !namespace && !my && !isMyTopicsOptionChecked) {
         var clean_uri = uri.substring(0, uri.indexOf("?"));
         window.history.replaceState({}, document.title, clean_uri);            
+    }
+
+    var requestParams = new URLSearchParams(window.location.search)
+    var myRequestParam = requestParams.has('my') ? requestParams.get('my') : null;
+    
+    if(myRequestParam) {
+        $("input[name='my']").prop('checked', true);
+        $("input[name='my']").val(myRequestParam);
     }
 });
 function submitBrowseForm(element){
     if(($(element).val() == null) || ($(element).val() == "")){
-        $("input[name='my']").val('');
+        var namespace = $("select[name='namespace']").val();
+        if(namespace) {
+            $("input[name='my']").val(namespace);
+        } else {
+            $("input[name='my']").val('');
+        }
+    
         $(element).parents('form').submit();
     }else{
       changeNamespace(element);  
@@ -94,7 +109,7 @@ function changeNamespace(element){
     $.ajax({
         url:"{{ url('/change-namespace') }}",
         type:"POST",
-        data:{namespace:$(element).val()},
+        data:{namespace:$("select[name='namespace']").val()},
         success:function(response){
             var namespace = $("select[name='namespace']").val();
             var my = $("input[name='my']").val();

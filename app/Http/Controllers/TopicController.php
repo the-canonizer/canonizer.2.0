@@ -169,7 +169,8 @@ class TopicController extends Controller {
             $topic->go_live_time = $current_time; //strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
             $topic->language = 'English';
             $topic->note = isset($all['note']) ? $all['note'] : "";
-            $topic->grace_period = 1;
+            //#1373 grace period for the topic when no supporter is there should be 0
+            $topic->grace_period = 0;
 
             if (isset($all['topic_num'])) {
                 $topic->topic_num = $all['topic_num'];
@@ -183,6 +184,8 @@ class TopicController extends Controller {
                     //$topic->go_live_time = strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
                     $topic->go_live_time = strtotime(date('Y-m-d H:i:s', strtotime('+'.config('app.go_live_day_limit').' days')));
                     $go_live_time = $topic->go_live_time;
+                    //#1373 grace period for the topic when other supporters is there should be 1
+                    $topic->grace_period = 1;
                     $message = "Topic change submitted successfully.";
                 }
 
@@ -350,6 +353,7 @@ class TopicController extends Controller {
      */
     public function show($id, $parentcampnum = 1) {
         $topicnumArray = explode("-", $id);
+        $algorithm = session('defaultAlgo', 'blind_popularity');
         $topicnum = $topicnumArray[0];
         if(Auth::user() && Auth::user()->id){
             $userid = Auth::user()->id;
@@ -387,6 +391,7 @@ class TopicController extends Controller {
         session()->forget("topic-support-{$topicnum}");
         session()->forget("topic-support-nickname-{$topicnum}");
         session()->forget("topic-support-tree-{$topicnum}");
+        session()->forget("score_tree_{$topicnum}_{$algorithm}");
         if (count($camp) > 0 && count($topic) > 0) {
           $parentcamp = Camp::campNameWithAncestors($camp, '',$topic->topic_name);
         } else {
@@ -685,7 +690,8 @@ class TopicController extends Controller {
             'objection_reason.max' => 'Objection reason can not be more than 100.'
         ];
         //Reena Talentelgia #850
-        $regex = '/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/';
+        //#1197 : Fix camp about url validation pattern
+        $regex = '/(http(s?):\/\/)([a-z0-9\-]+\.)+[a-z]{2,4}(\.[a-z]{2,4})*(\/[^ ]+)*/i';
         $validator = Validator::make($request->all(), [
             'nick_name' => 'required',
             'camp_name' => 'required|max:30|regex:/^[a-zA-Z0-9\s]+$/',
@@ -707,6 +713,12 @@ class TopicController extends Controller {
         $topicnum = (isset($all['topic_num'])) ? $all['topic_num'] : null;
         if($topicnum!=null){
 
+            if(strtolower(trim($all['camp_name'])) == 'agreement'){
+                $validator->after(function ($validator){
+                      $validator->errors()->add('camp_name', 'The camp name has already been taken');
+                 }); 
+             }
+
             $old_parent_camps = Camp::getAllTopicCamp($topicnum);
             /**
              * @updated By Talentelgia
@@ -717,7 +729,7 @@ class TopicController extends Controller {
             $camp_existsNL = 0;
             if(!empty($liveCamps)){
                 foreach($liveCamps as $value){
-                    if($value->camp_name == $all['camp_name']){
+                    if(strtolower(trim($value->camp_name)) == strtolower(trim($all['camp_name']))){
                         if(isset($all['camp_num']) && array_key_exists('camp_num', $all) && $all['camp_num'] == $value->camp_num){
                             $camp_existsLive = 0;
                         }else{
@@ -729,7 +741,7 @@ class TopicController extends Controller {
 
             if(!empty($nonLiveCamps)){
                 foreach($nonLiveCamps as $value){
-                    if($value->camp_name == $all['camp_name']){
+                    if(strtolower(trim($value->camp_name)) == strtolower(trim($all['camp_name']))){
                         if(isset($all['camp_num']) && array_key_exists('camp_num', $all) && $all['camp_num'] == $value->camp_num){
                             $camp_existsNL = 0;
                         }else{ 

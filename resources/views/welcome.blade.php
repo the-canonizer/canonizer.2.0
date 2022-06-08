@@ -91,7 +91,7 @@
                         <?php  }  ?>
 
                          <?php   
-                         
+                            if($topics['data']['number_of_pages'] > 1) {
                              ### Pagination ###   
                               $disabled = isset($page_no) && $page_no == 1 ? 'disabled' : '';
                               $next = $page_no+1;
@@ -119,7 +119,11 @@
                                 
                                     <!-- if the current selected page is less than 12 then show all in a row -->
                                     @if($topics['data']['number_of_pages'] <= 12 )
-                                          <li><a href="@php echo url('/').'?page='.$idx;  @endphp"><?php echo $idx; ?></a></li>
+                                        @if ($page_no == $idx)
+                                            <li class="@php echo $active; @endphp"> <span><?php echo $idx; ?></span></li>
+                                        @else
+                                            <li><a href="@php echo url('/').'?page='.$idx;  @endphp"><?php echo $idx; ?></a></li>
+                                        @endif
                                     @endif
 
                                     <!-- 
@@ -210,7 +214,7 @@
                                 @endif
                             </li>
                        </ul>
-                    
+                        <?php } ?>
                         <?php  } else { ?>
 
                           <p>There are no topics on this page, given the current algorithm and filter setting.</p>
@@ -354,6 +358,14 @@ function changeNamespace(element){
         }
     });
 }
+
+$(document).ready(function() {
+    $('ul.pagination li:not(.active,.disabled)').click(function(e) {
+        e.stopPropagation();
+        // console.log($(this).children('a'));
+        $(this).children('a')[0].click();
+    });
+})
 </script>
 
 @endsection
@@ -367,5 +379,8 @@ function changeNamespace(element){
 }
 .tree ul.mainouter ul {
     padding-left: 10px !important;
+}
+ul.pagination li:not(.active,.disabled) {
+    cursor: pointer;
 }
 </style>

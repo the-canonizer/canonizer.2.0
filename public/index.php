@@ -4,6 +4,7 @@ error_reporting(E_ALL);
 @session_start();
 ini_set('display_errors', TRUE);
 ini_set('display_startup_errors', TRUE);
+ini_set('max_execution_time', 300);
 if(isset($_REQUEST['filter'])) {
 	 $_SESSION['filterchange'] = $_REQUEST['filter'];
 			

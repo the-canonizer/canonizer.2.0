@@ -49,10 +49,17 @@
              </div> 
             <div class="form-group">
                 <label for="parent_camp_num">Parent Camp <span style="color:red">*</span></label>
+                @php
+                    $parentcampsData = $parentcampsData->toArray();
+                    function sortByCampName($a, $b) {
+                        return $a['camp_name'] >= $b['camp_name'];
+                    }
+                    usort($parentcampsData, 'sortByCampName');
+                @endphp
                 <select  name="parent_camp_num" id="parent_camp_num" class="form-control">
                     @foreach($parentcampsData as $parent)
 					
-                    <option <?php if($camp->camp_num==$parent->camp_num) echo "selected=selected";?> value="{{ $parent->camp_num }}">{{ $parent->camp_name}}</option>
+                    <option <?php if($camp->camp_num==$parent['camp_num']) echo "selected=selected";?> value="{{ $parent['camp_num'] }}">{{ $parent['camp_name']}}</option>
                   
 					@endforeach
 					
@@ -114,11 +121,13 @@
     <script>
     $(document).ready(function () {
         $("#campForm").submit(function (e) {
-            console.log("log");          
+              
             //disable the submit button
             $("#submit").attr("disabled", true);
             return true;
         });
+
+        $('#parent_camp_num').select2();
     });
     </script>
 

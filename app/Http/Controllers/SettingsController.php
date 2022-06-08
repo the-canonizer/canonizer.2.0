@@ -273,7 +273,7 @@ class SettingsController extends Controller
             $topic = Camp::where('topic_num', $topicnum)->where('camp_name', '=', 'Agreement')->latest('submit_time')->first();
             $topicData = Camp::getAgreementTopic($topicnum,['nofilter'=>true]);
             //$camp = Camp::where('topic_num',$topicnum)->where('camp_num','=', $campnum)->latest('submit_time','objector')->get();
-            $onecamp = Camp::where('topic_num', $topicnum)->where('camp_num', '=', $campnum)->where('go_live_time', '<=', $as_of_time)->latest('submit_time')->first();
+            $onecamp = Camp::where('topic_num', $topicnum)->where('camp_num', '=', $campnum)->where('objector_nick_id', NULL)->where('go_live_time', '<=', $as_of_time)->latest('submit_time')->first();
             $campWithParents = Camp::campNameWithAncestors($onecamp, '', $topicData->topic_name);
             if (!count($onecamp)) {
                 return back();
@@ -443,13 +443,28 @@ class SettingsController extends Controller
                 $ifSupportLeft = false;
             }
 
+            /**
+             * Ticket # 1149 - Muhammad Ahmed
+             */
+
+            $ifSupportChildCamp = false;
+
+            if(isset($topic_num) && isset($data) && array_key_exists('camp_num',$data)) {
+                $camp = Camp::where('topic_num', $topic_num)->where('camp_num', '=', $data['camp_num'])->where('go_live_time', '<=', time())->latest('submit_time')->first();
+                if(isset($camp) && $camp->parent_camp_num) {
+                    if(in_array($camp->parent_camp_num, $data['removed_camp'])) {
+                        $ifSupportChildCamp = true;
+                    }
+                }
+            }
+            
             /* code is commented for 1295, same code add inside 
             /* uncomment below code for thsi ticket 1346  and adding removeCampStatus condition here*/
             if ((isset($mysupports) && count($mysupports) > 0) && (isset($data['removed_camp']) && count($data['removed_camp']) > 0) && (isset($data['removeCampStatus']) && count($data['removeCampStatus']) > 0)) {
                foreach ($mysupports as $singleSupport) { 
                     if(in_array($singleSupport->camp_num,$data['removed_camp'])){
                         $endDelegatesForOld = true;
-                        $this->removeSupport($topic_num,$singleSupport->camp_num,$singleSupport->nick_name_id,'',$singleSupport->support_order,$promoteDelegate,$ifSupportLeft, $endDelegatesForOld);
+                        $this->removeSupport($topic_num,$singleSupport->camp_num,$singleSupport->nick_name_id,'',$singleSupport->support_order,$promoteDelegate,$ifSupportLeft, $endDelegatesForOld, $ifSupportChildCamp);
 
                         //remove support from delegated for previous camp
                     } 
@@ -518,7 +533,7 @@ class SettingsController extends Controller
                             foreach ($mysupports as $singleSupport) { 
                                 if(in_array($singleSupport->camp_num,$data['removed_camp'])){
                                     $endDelegatesForOld = true;
-                                    $this->removeSupport($topic_num,$singleSupport->camp_num,$singleSupport->nick_name_id,'',$singleSupport->support_order,$promoteDelegate,$ifSupportLeft, $endDelegatesForOld);       
+                                    $this->removeSupport($topic_num,$singleSupport->camp_num,$singleSupport->nick_name_id,'',$singleSupport->support_order,$promoteDelegate,$ifSupportLeft, $endDelegatesForOld, $ifSupportChildCamp);       
                                     //remove support from delegated for previous camp
                                 } 
                             }    
@@ -1209,7 +1224,7 @@ class SettingsController extends Controller
      * 3. re-order the preference number for other supported camps AND
      * 4. Same will be done for their delegates tree.
      */
-    public function removeSupport($topicNum,$campNum='',$nickNameId,$delegateNickNameId=0,$currentSupportOrder='',$promoteDelegate = true,$ifSupportLeft = true, $endDelegatesForOld =false){
+    public function removeSupport($topicNum,$campNum='',$nickNameId,$delegateNickNameId=0,$currentSupportOrder='',$promoteDelegate = true,$ifSupportLeft = true, $endDelegatesForOld =false, $ifSupportChildCamp = false){
         $startSupportOrder = $currentSupportOrder;
         $as_of_time = time();
         
@@ -1262,8 +1277,17 @@ class SettingsController extends Controller
                     }
                 }   
             } 
-            /* send support deleted mail to all supporter and subscribers */
-            $this->emailForSupportDeleted($mailData);
+
+            /**
+             * Send support deleted email to all supportors and subscribers except in case if person
+             * support child camp as by supporting child camp, parent camp support get removed but, from product point of view, 
+             * implicitly support parent camp of any child camp a person do support
+             * Ticket # 1149 - Muhammad Ahmed
+             */
+            
+            if(!$ifSupportChildCamp) {
+                $this->emailForSupportDeleted($mailData);
+            }   
         }
         return;
     }

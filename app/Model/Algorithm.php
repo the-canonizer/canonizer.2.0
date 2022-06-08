@@ -40,7 +40,7 @@ class Algorithm{
         @return all the available algorithm key values
     */
     public static function getKeyList(){
-        return array('blind_popularity','mind_experts','computer_science_experts','PhD','christian','secular','mormon','uu','atheist','transhumanist','united_utah','republican','democrat', 'ether','shares','shares_sqrt'
+        return array('blind_popularity','mind_experts','computer_science_experts','PhD','christian','secular','mormon','uu','atheist','transhumanist','united_utah','republican','democrat', 'ether','shares','shares_sqrt','mind_experts_special'
         );
     }
     
@@ -192,7 +192,7 @@ class Algorithm{
     }
 
     public static function mind_experts($nick_name_id = null,$topicnum=0,$campnum=0){
-        return self::camp_tree_count(81,$nick_name_id);
+        return self::camp_tree_count(81,$nick_name_id,$topicnum,$campnum);
     }
 
     public static function shares($nick_name_id = null,$topicnum=0,$campnum=0,$algo='shares'){
@@ -204,7 +204,7 @@ class Algorithm{
 
 
     public static function computer_science_experts($nick_name_id,$topicnum=0,$campnum=0){
-        return self::camp_tree_count(124,$nick_name_id);
+        return self::camp_tree_count(124,$nick_name_id,$topicnum,$campnum);
     }
 
     /**
@@ -308,8 +308,7 @@ class Algorithm{
         return self::camp_count($nick_name_id,$condition,true,231,4);
     }
 
-    public static function camp_tree_count($topicnum,$nick_name_id){
-
+    public static function get_expert_camp($topicnum,$nick_name_id){
         $camps = new Collection;
         if(!isset($_REQUEST['asof']) || (isset($_REQUEST['asof']) && $_REQUEST['asof']=="default")) {
 		
@@ -352,11 +351,28 @@ class Algorithm{
         $expertCamp = $camps->filter(function($item) use($nick_name_id){
             return  $item->camp_about_nick_id == $nick_name_id;
         })->last();
-        
+        return $expertCamp;
+    }
+    public static function mind_experts_special($topicnum,$nick_name_id){
+        $expertCamp = self::get_expert_camp($topicnum,$nick_name_id);
         if(!$expertCamp){ # not an expert canonized nick.
             return 0;
         }
 
+        $score_multiplier = self::get_mind_expert_score_multiplier($topicnum,$nick_name_id);
+        $expertCampReducedTree = $expertCamp->getCampAndNickNameWiseSupportTree('mind_experts',$topicnum); # only need to canonize this branch
+             // Check if user supports himself
+        if(array_key_exists('camp_wise_tree',$expertCampReducedTree) && array_key_exists($expertCamp->camp_num,$expertCampReducedTree['camp_wise_tree'])){
+            return $expertCampReducedTree['camp_wise_tree'][$expertCamp->camp_num];
+
+        }else{
+            return [];
+        }
+        
+    }
+
+    public static function get_mind_expert_score_multiplier($topicnum=0,$nick_name_id=0){
+        #Calculations to check if user is supporting other mind experts or not
         $as_of_time = time();
         $key = '';
 		if(isset($_REQUEST['asof']) && $_REQUEST['asof']=='bydate'){
@@ -380,12 +396,7 @@ class Algorithm{
         $delegatedSupports = $supports->filter(function($item) use($nick_name_id){
              return $item->nick_name_id == $nick_name_id && $item->delegate_nick_name_id != 0;
         });
-        
-		# start with one person one vote canonize.
-       
-	    $expertCampReducedTree = $expertCamp->campTree('blind_popularity'); # only need to canonize this branch
-         
-        // Check if user supports himself
+
         $num_of_camps_supported = 0;
         $user_support_camps = Support::where('topic_num','=',$topicnum)
             ->whereRaw("(start < $as_of_time) and ((end = 0) or (end > $as_of_time))")
@@ -416,12 +427,55 @@ class Algorithm{
         if ($ret_camp->count()) {
             $num_of_camps_supported = $ret_camp->count();
         }
-       
+        $score_multiplier = 1;
         if( !$is_supporting_own_expert && ( $directSupports->count() > 0 || $delegatedSupports->count() > 0 ) && $num_of_camps_supported > 0 ) {
-             return $expertCampReducedTree[$expertCamp->camp_num]['score'] * 5;             
-        }else{
-             return $expertCampReducedTree[$expertCamp->camp_num]['score'] * 1;
+            $score_multiplier = 5; 
+         }
+        #Calculations to check if user is supporting other mind experts or not Ends
+        return $score_multiplier;
+    }
+
+    public static function camp_tree_count($topicnum,$nick_name_id,$topic_num,$camp_num){
+        $expertCamp = self::get_expert_camp($topicnum,$nick_name_id);
+        if(!$expertCamp){ # not an expert canonized nick.
+            return 0;
         }
+        $score_multiplier = self::get_mind_expert_score_multiplier($topicnum,$nick_name_id);
+        
+        
+		# start with one person one vote canonize.
+       
+	     //$expertCampReducedTree = $expertCamp->campTree('blind_popularity'); # only need to canonize this branch
+         if($topic_num == 81){
+            $expertCampReducedTree = $expertCamp->getCampAndNickNameWiseSupportTree('blind_popularity',$topicnum); # only need to canonize this branch
+            $total_score = 0;
+           
+            if(array_key_exists('camp_wise_tree',$expertCampReducedTree) && array_key_exists($expertCamp->camp_num,$expertCampReducedTree['camp_wise_tree']) && count($expertCampReducedTree['camp_wise_tree'][$expertCamp->camp_num]) > 0){
+                foreach($expertCampReducedTree['camp_wise_tree'][$expertCamp->camp_num] as $tree_node){
+                    if(count($tree_node) > 0){
+                        foreach($tree_node as $score){
+                            $total_score = $total_score + $score['score'];
+                        }
+                    }                
+                }
+            }  
+            return $total_score * $score_multiplier;
+        }else{
+            // $expertCampReducedTree = $expertCamp->getCampAndNickNameWiseSupportTree('blind_popularity',$topic_num); # only need to canonize this branch
+            $expertCampReducedTree = self::mind_experts_special($topicnum,$nick_name_id); # only need to canonize this branch
+            $total_score = 0;
+            if(count($expertCampReducedTree) > 0){
+                foreach($expertCampReducedTree as $tree_node){
+                    if(count($tree_node) > 0){
+                        foreach($tree_node as $score){
+                            $total_score = $total_score + $score['score'];
+                        }
+                    }                
+                }
+            }
+            return $total_score;
+        }
+       
         
     }
 }
