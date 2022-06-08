@@ -856,6 +856,10 @@ class SettingsController extends Controller
             }else{  // removing direct support
                 $currentSupport = Support::where('support_id', $support_id);
                 $currentSupportRec = $currentSupport->first();
+                if(empty($currentSupportRec) || $currentSupportRec->end != 0) {
+                    Session::flash('error', "You have already removed your support from this camp.");
+                    return redirect()->back();
+                }
                 $input['camp_num'] = $currentSupportRec->camp_num;
                 $input['nick_name'] = $currentSupportRec->nick_name_id;
                 $input['topic_num'] = $topic_num;
@@ -1187,6 +1191,10 @@ class SettingsController extends Controller
     public function remove_support($topicNum,$campNum,$nickNameId){
         $as_of_time = time();
         $support = Support::where('camp_num', $campNum)->where('topic_num', $topicNum)->where('nick_name_id', $nickNameId)->where('end', '=', 0)->first();
+        if(empty($support)) {
+            Session::flash('error', "You have already removed your support from this camp.");
+            return redirect()->back();
+        }
         $delegateNickNameId = $support->delegate_nick_name_id;
         $promoteDelegate = true;
 
