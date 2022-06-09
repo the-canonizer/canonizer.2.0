@@ -298,6 +298,7 @@ class CThreadsController extends Controller
                 'parentcamp'    => Camp::campNameWithAncestors($camp,'',$topicname),
                 'userNicknames' => $userNickNames,
                 'threads' => CThread::findOrFail($CThread),
+                'topicGeneralName' => $camp->topic->topic_name,
                 'replies' => $replies,
                 'reply_id' => $reply_id,
             ]
