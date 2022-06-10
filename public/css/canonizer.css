@@ -2166,5 +2166,6 @@ a.verification-link:active {
 .select2-container--default .select2-search--dropdown .select2-search__field {
     border: 1px solid rgba(0,0,0,.15);
     border-radius: 0.25rem;
+    outline-color: rgba(0,0,0,.15);
 }
 
