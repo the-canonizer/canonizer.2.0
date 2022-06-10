@@ -459,16 +459,15 @@ class SettingsController extends Controller
             }
             
             /* code is commented for 1295, same code add inside 
-            /* uncomment below code for thsi ticket 1346  and adding removeCampStatus condition here*/
+            /* uncomment below code for this ticket 1346  and adding removeCampStatus condition here*/
             if ((isset($mysupports) && count($mysupports) > 0) && (isset($data['removed_camp']) && count($data['removed_camp']) > 0) && (isset($data['removeCampStatus']) && count($data['removeCampStatus']) > 0)) {
                foreach ($mysupports as $singleSupport) { 
                     if(in_array($singleSupport->camp_num,$data['removed_camp'])){
                         $endDelegatesForOld = true;
                         $this->removeSupport($topic_num,$singleSupport->camp_num,$singleSupport->nick_name_id,'',$singleSupport->support_order,$promoteDelegate,$ifSupportLeft, $endDelegatesForOld, $ifSupportChildCamp);
-
                         //remove support from delegated for previous camp
                     } 
-                 }    
+                }    
             }
             /** end of this commentted code */
            
@@ -529,7 +528,8 @@ class SettingsController extends Controller
                         $supportTopic->save();
                         /** If any user hase delegated their support to this user, record/add there delegated support #749 including sub-level delegates(&49 II Part) */
                         $this->addDelegatedSupport($myDelegator,$topic_num,$camp_num,$support_order,$data['nick_name']); 
-                        if (isset($mysupports) && count($mysupports) > 0 && isset($data['removed_camp']) && count($data['removed_camp']) > 0) {
+                        if (isset($mysupports) && count($mysupports) > 0 && isset($data['removed_camp']) && count($data['removed_camp']) > 0 ) {
+                            
                             foreach ($mysupports as $singleSupport) { 
                                 if(in_array($singleSupport->camp_num,$data['removed_camp'])){
                                     $endDelegatesForOld = true;

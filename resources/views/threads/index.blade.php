@@ -3,7 +3,7 @@
 @section('content')
 <div class="camp top-head">
   <h3><b>Canonizer Forum Details</b></h3>
-  <h3><b>Topic: {{ $topicGeneralName }}</b></h3>
+  <h3><b>Topic: <a href="{{ URL::to('/')}}/topic/{{ $topicname }}">{{ $topicGeneralName }}</a></b></h3>
   <h3><b>Camp:</b>
     @php
     echo $parentcamp
