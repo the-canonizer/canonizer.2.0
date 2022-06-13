@@ -7,14 +7,11 @@
 
 </p>
 
-<h4>Thread Title: </h4>
-<p> <a href="{{ url('/').'/'.$link }}">{{ $data['thread'][0]->title }}</a> </p>
+<h4>Thread Title: <span> <a href="{{ url('/').'/'.$link }}">{{ $data['thread'][0]->title }}</a></span> </h4>
 
-<h4>Post: </h4>
+<h4 style=" display: flex; margin-bottom: 0px; ">Post : <span style="padding-left: 5px;"> {!! $data['post'] !!}</span> </h4>
 
-<p> {!! $data['post'] !!}. </p>
-
-<p>
+<p style="margin-top: 0px;">
 @if(isset($data['subscriber']) && $data['subscriber'] == 1)
 <h4>You are receiving this e-mail because:</h4>
 	<ul>
