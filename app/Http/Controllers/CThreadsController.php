@@ -85,7 +85,7 @@ class CThreadsController extends Controller
                 $userNicknames = Nickname::topicNicknameUsed($topicid);
 
                 if (count($userNicknames) > 0) {
-                    $threads = CThread::join('post', 'thread.id', '=', 'post.thread_id' )->
+                    $threads = CThread::join('post', 'thread.id', '=', 'post.c_thread_id' )->
                                         select('thread.*', 'post.body')->
                                         where('camp_id', $campnum)->
                                         where('topic_id', $topicid)->
@@ -103,8 +103,8 @@ class CThreadsController extends Controller
                  * Filter out the threads on the basis of most replies or the most popular threads
                  * @var [type]
                  */
-                $threads = CThread::join('post', 'thread.id', '=', 'post.thread_id' )->
-                  select('thread.*', DB::raw('count(post.thread_id) as post_count')) ->
+                $threads = CThread::join('post', 'thread.id', '=', 'post.c_thread_id' )->
+                  select('thread.*', DB::raw('count(post.c_thread_id) as post_count')) ->
                   where('camp_id', $campnum)->
                   where('topic_id', $topicid)->
                   groupBy('thread.id')->
