@@ -258,6 +258,7 @@ class TopicController extends Controller {
                 $link = 'topic-history/' . $topic->topic_num;
 				$data['type'] = "topic";
                 $data['object'] = $topic->topic_name;
+                $data['namespace_id'] = $topic->namespace_id;
 				$data['link'] = \App\Model\Camp::getTopicCampUrl($topic->topic_num,1);	
                 try{
                      Mail::to(Auth::user()->email)->bcc(config('app.admin_bcc'))->send(new ThankToSubmitterMail(Auth::user(), $link,$data));
@@ -281,6 +282,7 @@ class TopicController extends Controller {
                 $nickName = Nickname::getNickName($all['nick_name']);
                 $data['topic_link'] = \App\Model\Camp::getTopicCampUrl($topic->topic_num,1);  
                 $data['type'] = "Topic";
+                $data['namespace_id'] = $topic->namespace_id;
                 $data['object'] = $liveTopic->topic_name;
                 $data['object_type'] = ""; 
                 $data['nick_name'] = $nickName->nick_name;
@@ -857,6 +859,7 @@ class TopicController extends Controller {
                 $livecamp = Camp::getLiveCamp($camp->topic_num,$camp->camp_num);
 				$data['object'] = $livecamp->topic->topic_name . " / " . $camp->camp_name;
 				$data['link'] = \App\Model\Camp::getTopicCampUrl($camp->topic_num,$camp_id);
+                $data['namespace_id'] = $topic->namespace_id;
                 try{
                     Mail::to(Auth::user()->email)->bcc(config('app.admin_bcc'))->send(new ThankToSubmitterMail(Auth::user(), $link,$data));
                 }catch(\Swift_TransportException $e){
@@ -1122,6 +1125,9 @@ class TopicController extends Controller {
 			$data['type'] = "statement";
 			$data['object'] = $livecamp->topic->topic_name . " / " . $livecamp->camp_name;
 			$data['link'] = \App\Model\Camp::getTopicCampUrl($statement->topic_num,1);
+            $topic = Topic::getLiveTopic($statement->topic_num);
+            $data['namespace_id'] = $topic->namespace_id;
+            
             try{
 
             //Mail::to(Auth::user()->email)->bcc(config('app.admin_bcc'))->send(new ThankToSubmitterMail(Auth::user(), $link,$data));
@@ -1449,6 +1455,7 @@ class TopicController extends Controller {
                 $supported_camp_list = $nickName->getSupportCampListNamesEmail($supported_camp,$supportData['topic_num'],$supportData['camp_num']);
                 $supportData['support_list'] = $supported_camp_list; 
                 $ifalsoSubscriber = Camp::checkifSubscriber($subscribers,$user);
+                $data['namespace_id'] =  $topic_name_space_id ;
                 if($ifalsoSubscriber) {
                     $supportData['also_subscriber'] = 1;
                     $supportData['sub_support_list'] = Camp::getSubscriptionList($user->id,$supportData['topic_num'],$supportData['camp_num']);      
@@ -1472,6 +1479,8 @@ class TopicController extends Controller {
                     $subscriberData['support_list'] = $subscriptions_list; 
                     $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $userSub->email : config('app.admin_email');
                     $subscriberData['subscriber'] = 1;
+                    $topic = Topic::getLiveTopic($subscriberData['topic_num']);
+                    $data['namespace_id'] = $topic->namespace_id;
                     try{
                         Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new PurposedToSupportersMail($userSub, $link, $subscriberData));
                     }catch(\Swift_TransportException $e){
@@ -1492,6 +1501,7 @@ class TopicController extends Controller {
             $supported_camp = $nickName->getSupportCampList($topic_name_space_id,['nofilter'=>true]);
             $supported_camp_list = $nickName->getSupportCampListNamesEmail($supported_camp,$data['topic_num'],$data['camp_num']);
             $data['support_list'] = $supported_camp_list; 
+            $data['namespace_id'] =  $topic_name_space_id ;
             $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
             try{
 
@@ -1511,6 +1521,8 @@ class TopicController extends Controller {
                 
             $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
             $data['subscriber'] = 1;
+            $topic = Topic::getLiveTopic($data['topic_num']);
+            $data['namespace_id'] = $topic->namespace_id;
             try{
 
             Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new PurposedToSupportersMail($user, $link, $data));

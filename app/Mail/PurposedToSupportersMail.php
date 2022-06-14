@@ -2,11 +2,12 @@
 
 namespace App\Mail;
 
+use App\User;
+use App\Facades\Util;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use App\User;
 
 class PurposedToSupportersMail extends Mailable
 {
@@ -34,6 +35,7 @@ class PurposedToSupportersMail extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.purposedtosupporters')->subject(config('app.mail_env').$this->data['subject']);
+        $subject = Util::getEmailSubjectForSandbox($this->data['namespace_id']);
+        return $this->markdown('emails.purposedtosupporters')->subject($subject.' '.$this->data['subject']);
     }
 }
