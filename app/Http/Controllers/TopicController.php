@@ -840,10 +840,11 @@ class TopicController extends Controller {
         if ($camp->save()) {
             Session::flash('test_case_success', 'true');
             $topic = $camp->topic;
-
+            
             //note- objection case it will be not update parent camp support 
             if ($eventtype == "CAMP_UPDATE" || $eventtype == "UPDATE") {
-                $this->checkParentCampChanged($all['topic_num'],$all['camp_num'],$all['parent_camp_num'],$in_review_status=false);   
+                $old_parent_camp_num = isset($all['old_parent_camp_num']) ? $all['old_parent_camp_num'] : "";
+                $this->checkParentCampChanged($all['topic_num'],$all['camp_num'],$all['parent_camp_num'],$in_review_status=false, $old_parent_camp_num);   
             }
             
             if ($eventtype == "CREATE") {
@@ -1622,7 +1623,7 @@ class TopicController extends Controller {
     }
          
     //Sunil Talentelgia This function only work when we changes parent camp. In that case we remove support of parent camp 
-    private function checkParentCampChanged($topic_num, $camp_num, $parent_camp_num, $in_review_status) {
+    private function checkParentCampChanged($topic_num, $camp_num, $parent_camp_num, $in_review_status,$old_parent_camp_num="") {
         
         //while updating camp check if any old support then remove it if parent camp changed
         $campOldData = Camp::getLiveCamp($topic_num,$camp_num);
@@ -1643,7 +1644,7 @@ class TopicController extends Controller {
             }
             else{
                 //$parent_camp_num != $campOldData->parent_camp_num = 1338
-                if($parent_camp_num != $campOldData->parent_camp_num){
+                if($parent_camp_num != $old_parent_camp_num){
                     //1262 and 1191
                     $allParentCamps = Camp::getAllParent($campOldData);
                     //get supporters of all child camps of current camp
