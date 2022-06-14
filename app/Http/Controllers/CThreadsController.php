@@ -213,7 +213,8 @@ class CThreadsController extends Controller
             $topic,
             [
                 'parentcamp'    => Camp::campNameWithAncestors($camp,'',$topicname),
-                'userNicknames'   => $userNicknames
+                'userNicknames'   => $userNicknames,
+                'topicGeneralName' => $camp->topic->topic_name,
 
             ],
             compact('threads', 'topicGeneralName')
