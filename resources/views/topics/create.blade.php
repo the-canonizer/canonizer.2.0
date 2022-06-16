@@ -26,7 +26,7 @@
                 <label for="camp_name">Nick Name <span style="color:red">*</span><p class="help-block">(Once you pick a nick name, for any contribution to a topic, you must always use the same nick name for any other contribution or forum post to this topic.)</p></label>
                 <select name="nick_name" id="nick_name" class="form-control">
                     @foreach($nickNames as $nick)
-                    <option value="{{ $nick->id }}">{{ $nick->nick_name}}</option>
+                    <option value="{{ $nick->id }}" @if(old('nick_name') == $nick->id) selected @endif>{{ $nick->nick_name}}</option>
                     @endforeach
 					
                 </select>
