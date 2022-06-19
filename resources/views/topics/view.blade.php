@@ -186,7 +186,7 @@ change camps with them."><i class="fa fa-question"></i></a>
                     Total Support for This Camp (including sub-camps): 
 					
 					<div class="badge" id="selected_camp_support">
-					 {{ session('supportCountTotal',0) }}
+					 {{ round(session('supportCountTotal',0),2) }}
 					</div>
 					
                     <ul class="support-tree" id="support-tree">
