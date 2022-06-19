@@ -643,13 +643,11 @@ class Camp extends Model {
                          array_push($nick_name_wise_support[$support->nick_name_id],$support);
                      }                    
             }
-         }
-        
+         }   
 
 
         $score = 0;
         foreach ($delegatedSupports as $support) {
-
             $supportPoint = Algorithm::{$algorithm}($support->nick_name_id,$support->topic_num, $support->camp_num);
             //Check for campnum
             if($campnum == $support['camp_num']){
@@ -750,14 +748,12 @@ class Camp extends Model {
                 $nick_name_support_tree[$support->nick_name_id][$support->support_order][$support->camp_num]['score'] = 0;
                 $camp_wise_score[$support->camp_num][$support->support_order][$support->nick_name_id]['score'] = 0;
                 $supportPoint = Algorithm::{$algorithm}($support->nick_name_id,$support->topic_num,$support->camp_num);
-                //$delegateSupportCount = $this->getDeletegatedSupportCount($algorithm, $support->topic_num,$support->camp_num, $support->nick_name_id, $support->support_order, $multiSupport);
                 if($multiSupport){
-                        $support_total = $support_total + round($supportPoint * 1 / (2 ** ($support->support_order)), 2);
+                        $support_total = $support_total + round($supportPoint * 1 / (2 ** ($support->support_order)), 3);
                     }else{
                         $support_total = $support_total + $supportPoint;
                     }                    
                     $nick_name_support_tree[$support->nick_name_id][$support->support_order][$support->camp_num]['score'] = $support_total;
-                    //$support_total = $support_total + $delegateSupportCount;
                     $camp_wise_score[$support->camp_num][$support->support_order][$support->nick_name_id]['score'] =  $support_total;
                                   
            }
@@ -765,9 +761,11 @@ class Camp extends Model {
         if(count($nick_name_support_tree) > 0){
             foreach($nick_name_support_tree as $nickNameId=>$scoreData){
                 ksort($scoreData);
+                $index = 0;
                 foreach($scoreData as $support_order=>$camp_score){
+                    $index = $index +1;
                    foreach($camp_score as $campNum=>$score){
-                        if($support_order > 1 ){
+                        if($support_order > 1 && $index ==count($scoreData)){
                             if(count(array_keys($nick_name_support_tree[$nickNameId][1])) > 0){
                             $campNumber = array_keys($nick_name_support_tree[$nickNameId][1])[0];
                             $nick_name_support_tree[$nickNameId][1][$campNumber]['score']=$nick_name_support_tree[$nickNameId][1][$campNumber]['score'] + $score['score'];
@@ -936,7 +934,7 @@ class Camp extends Model {
                     $support_tree_html.= '<ul>'.$support_tree.'</ul>';
                     $support_tree_html .= '</li></ul></div>';
                 }
-                $html .= '<span class="' . $class . '">' . $icon . '</span><div class="tp-title"><a style="' . $selected . '" href="' . $array[$linkKey] . '">' . $array[$titleKey] . '</a> <div class="badge">' . $array['score'] .'</div>'.$support_tree_html;
+                $html .= '<span class="' . $class . '">' . $icon . '</span><div class="tp-title"><a style="' . $selected . '" href="' . $array[$linkKey] . '">' . $array[$titleKey] . '</a> <div class="badge">' . round($array['score'] ,2).'</div>'.$support_tree_html;
                
                 $html .= '</div>';
                 $html .= $this->buildCampTree($array['children'], $campnum, $activeCamp, $activeCampDefault,$add_supporter,$arrowposition, $linkKey, $titleKey);
@@ -1323,7 +1321,7 @@ class Camp extends Model {
  	      $icon = '<i class="fa '.$arrowposition.'"></i>';
         
 		$html .= '<span class="' . $parentClass . '">'. $icon.' </span>';
-        $html .= '<div class="tp-title"><a style="' . $selected . '" href="' . $reducedTree[$this->camp_num][$linkKey] . '">' . $reducedTree[$this->camp_num][$titleKey] . '</a><div class="badge">' . round($reducedTree[$this->camp_num]['score'], 2) . '</div>'.$support_tree_html.'</div>';         
+        $html .= '<div class="tp-title"><a style="' . $selected . '" href="' . $reducedTree[$this->camp_num][$linkKey] . '">' . $reducedTree[$this->camp_num][$titleKey] . '</a><div class="badge">' .round($reducedTree[$this->camp_num]['score'], 2) . '</div>'.$support_tree_html.'</div>';         
         $html .= $this->buildCampTree($reducedTree[$this->camp_num]['children'], $this->camp_num, $activeCamp, $activeCampDefault,$add_supporter,$arrowposition, $linkKey, $titleKey);
         $html .= "</li>";
         return $html;

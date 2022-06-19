@@ -15,10 +15,10 @@
 <div class="right-whitePnl">
     <div class="container-fluid">
         <?php $user = $nickName->getUser();
-            $privateFlags = explode(',',$user->private_flags);
-            $supportedCamps = $nickName->getSupportCampList($namespace_id,['nofilter'=>true]);
+            $privateFlags = explode(',',$user->private_flags);            
             $camp_num = app('request')->input('campnum');
             $topic_num = app('request')->input('topicnum');
+            $supportedCamps = $nickName->getSupportCampList($namespace_id,['nofilter'=>true]);
          ?>
          @if($nickName->private === 0)
          <address class="user-address">
