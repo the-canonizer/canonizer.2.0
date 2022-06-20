@@ -60,7 +60,7 @@
                 <label for="camp_name">Nick Name <span style="color:red">*</span></label>
                 <select name="nick_name" id="nick_name" class="form-control">
                     @foreach($nickNames as $nick)
-                    <option value="{{ $nick->id }}">{{ $nick->nick_name }}</option>
+                    <option value="{{ $nick->id }}" @if(old('nick_name') == $nick->id) selected @endif>{{ $nick->nick_name }}</option>
                     @endforeach
 					
                 </select>
@@ -71,7 +71,7 @@
              </div> 
 			<div class="form-group">
                 <label for="topic name">Topic Name ( Limit 30 Chars ) <span style="color:red">*</span></label>
-                <input type="text" name="topic_name" onkeydown="restrictTextField(event,30)" class="form-control" id="topic_name" value="{{ $topic->topic_name}}" <?php if($objection=="objection") { ?> readonly="true" <?php } ?>>
+                <input type="text" name="topic_name" onkeydown="restrictTextField(event,30)" class="form-control" id="topic_name" value="@if(sizeof(old()) > 0) {{ old('topic_name') }} @else {{ $topic->topic_name}} @endif" <?php if($objection=="objection") { ?> readonly="true" <?php } ?>>
 				@if ($errors->has('topic_name')) <p class="help-block">{{ $errors->first('topic_name') }}</p> @endif
             </div> 
 			<?php if($objection=="objection") { ?>			
@@ -87,7 +87,7 @@
                 <select  onchange="selectNamespace(this)" name="namespace" id="namespace" class="form-control">
                    
                     @foreach($namespaces as $namespace)
-                    <option value="{{ $namespace->id }}" @if($topic->namespace_id == $namespace->id) selected @endif>{{namespace_label($namespace)}}</option>
+                    <option value="{{ $namespace->id }}" @if(sizeof(old()) > 0 && old('namespace') == $namespace->id) selected @elseif(sizeof(old()) == 0 && $topic->namespace_id == $namespace->id) selected @endif>{{namespace_label($namespace)}}</option>
                     @endforeach
                     <!-- <option value="other" @if(old('namespace') == 'other') selected @endif>Other</option> -->
                 </select>
@@ -107,7 +107,7 @@
            
             <div class="form-group">
                 <label for="">Edit summary (Briefly describe your changes)</label>
-                <textarea class="form-control" rows="4" name="note" id="note">{{$topicupdate == 'update'? $topic->note : ""}}</textarea>
+                <textarea class="form-control" rows="4" name="note" id="note">@if(sizeof(old() > 0)) {{ old('note') }} @else {{$topicupdate == 'update'? $topic->note : ""}} @endif</textarea>
 				@if ($errors->has('note')) <p class="help-block">{{ $errors->first('note') }}</p> @endif
             </div>
             <?php } ?>
