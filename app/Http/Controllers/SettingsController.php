@@ -481,7 +481,7 @@ class SettingsController extends Controller
                         $mailData['camp_num'] = $singleSupport->camp_num;
 
                         /** 
-                         *  send support deleted mail to all supporter and subscribers except 
+                         *  send support deleted mail to all supporter and subscribers 
                          *  except in case of removing parent camp support
                          *  ticket # 1149 - Muhammad Ahmed
                          */
