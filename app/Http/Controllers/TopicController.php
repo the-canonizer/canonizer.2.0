@@ -566,6 +566,13 @@ class TopicController extends Controller {
 
         //if(!count($onecamp)) return back();
         $wiky = new Wiky;
+
+        /**
+         * As of filters should not be applied on the camp history page
+         * ticket # 1381 - Muhammad Ahmed
+         */
+        session()->forget('asofDefault');
+
         return view('topics.camphistory', compact('topic', 'camps', 'parentcampnum', 'onecamp', 'parentcamp', 'wiky', 'ifIamSupporter','submit_time','ifSupportDelayed','ifIamImplicitSupporter'));
     }
 
