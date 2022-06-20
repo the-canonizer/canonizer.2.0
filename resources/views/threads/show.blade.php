@@ -63,7 +63,7 @@
     @endif 
     <div class="form-group">
       <br>
-      <textarea name="body" id="body" class="form-control" placeholder="Reply to thread Here" rows="5">@if($reply_id != null){{ $replies->body }}@endif</textarea>
+      <textarea name="body" id="body" class="form-control" placeholder="Reply to thread Here" rows="5">@if(sizeof(old()) > 0) {{ old('body') }} @elseif($reply_id != null){{ $replies->body }}@endif</textarea>
         @if ($errors->has('body')) <p class="help-block">The reply field is required.</p> @endif
 
 
@@ -76,7 +76,7 @@
       </label>
       <select name="nick_name" id="nick_name" class="form-control">
         @foreach($userNicknames as $nick)
-        <option value="{{ $nick->id }}">{{ $nick->nick_name}}</option>
+        <option value="{{ $nick->id }}" @if(sizeof(old()) > 0 && old('nick_name') == $nick->id) selected @endif>{{ $nick->nick_name}}</option>
         @endforeach
       </select>
       @if ($errors->has('nick_name')) <p class="help-block">{{ $errors->first('nick_name') }}</p> @endif
