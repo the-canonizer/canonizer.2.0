@@ -116,16 +116,13 @@ class Topic extends Model {
                 }
                 
                 /* ticket 1219 Muhammad */
-                if($fetchTopicHistory) {
-                    return  self::where('topic_num', $topicnum)
-                                ->where('go_live_time', '=', $asofdate)
-                                ->first();
-                } else {
-                    return self::where('topic_num', $topicnum)
-                                ->where('objector_nick_id', '=', NULL)
-                                ->where('go_live_time', '<=', $asofdate)
-                                ->orderBy('go_live_time', 'desc')->first();
-                }
+                $query = self::where('topic_num', $topicnum)
+                            ->where('go_live_time', '<=', $asofdate);
+                                if(!$fetchTopicHistory) {
+                                    $query->where('objector_nick_id', '=', NULL);
+                                }
+                return $query->orderBy('go_live_time', 'desc')->first();
+                
             }
         }
     }
