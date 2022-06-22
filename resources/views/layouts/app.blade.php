@@ -326,7 +326,7 @@
                     </h4>
                 </div>
                 <div class="modal-body">
-                    To object to this change, you should be a direct supporter of the topic/camp and should have supported it before the change was submitted.
+                    Only direct supporters at the time this change was submitted can object.
                     <br/>For more information about disagreement, please read topic:<br/>
                     <a href="https://canonizer.com/topic/132-Help/4-Disagreement" target="_blank">https://canonizer.com/topic/132-Help/4-Disagreement</a>
                 </div>

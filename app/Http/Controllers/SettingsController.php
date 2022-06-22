@@ -482,8 +482,15 @@ class SettingsController extends Controller
                         $singleSupport->save();
                         $mailData = $data;
                         $mailData['camp_num'] = $singleSupport->camp_num;
-                        /* send support deleted mail to all supporter and subscribers */
-                        $this->emailForSupportDeleted($mailData);    
+
+                        /** 
+                         *  send support deleted mail to all supporter and subscribers 
+                         *  except in case of removing parent camp support
+                         *  ticket # 1149 - Muhammad Ahmed
+                         */
+                        if(!$ifSupportChildCamp) {
+                            $this->emailForSupportDeleted($mailData);
+                        }    
                     }             
                 }
             }           
@@ -673,6 +680,7 @@ class SettingsController extends Controller
         $supported_camp = $nickName->getSupportCampList($topic_name_space_id,['nofilter'=>true]);
         $supported_camp_list = $nickName->getSupportCampListNamesEmail($supported_camp, $data['topic_num'],$data['camp_num']);
         $dataObject['support_list'] = $supported_camp_list;
+        $dataObject['namespace_id'] = $topic_name_space_id;
         $ifalsoSubscriber = Camp::checkifSubscriber($subscribers, $parentUser);
         if ($ifalsoSubscriber) {
             $dataObject['also_subscriber'] = 1;
@@ -702,6 +710,7 @@ class SettingsController extends Controller
             $supported_camp = $nickName->getSupportCampList($topic_name_space_id,['nofilter'=>true]);
             $supported_camp_list = $nickName->getSupportCampListNamesEmail($supported_camp, $supportData['topic_num'],$supportData['camp_num']);
             $supportData['support_list'] = $supported_camp_list;
+            $dataObject['namespace_id'] = $topic_name_space_id;
             $ifalsoSubscriber = Camp::checkifSubscriber($subscribers, $user);
             if ($ifalsoSubscriber) {
                 $supportData['also_subscriber'] = 1;
@@ -725,6 +734,8 @@ class SettingsController extends Controller
                 $subscriberData['support_list'] = $subscriptions_list;
                 $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $userSub->email : config('app.admin_email');
                 $subscriberData['subscriber'] = 1;
+                $topic = Topic::getLiveTopic($subscriberData['topic_num']);
+                $subscriberData['namespace_id'] = $topic->namespace_id;
                 try{
                 Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new NewDelegatedSupporterMail($userSub, $link, $subscriberData));
                 }catch(\Swift_TransportException $e){
@@ -1320,7 +1331,8 @@ class SettingsController extends Controller
         $data['camp'] = $camp;
         $data['subject'] ="You have been promoted";
         $data['topic_link'] = \App\Model\Camp::getTopicCampUrl($topicNum,1);
-        $data['camp_link'] = \App\Model\Camp::getTopicCampUrl($topicNum,$camp->camp_num);        
+        $data['camp_link'] = \App\Model\Camp::getTopicCampUrl($topicNum,$camp->camp_num);  
+        $data['namespace_id'] = $topic->namespace_id;      
         foreach ($alldirectDelegates as $supporter) {
             $user = Nickname::getUserByNickName($supporter->nick_name_id);
             $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
@@ -1352,7 +1364,8 @@ class SettingsController extends Controller
         $data['subject'] ="You have been promoted as direct supporter";
         $data['topic_link'] = Camp::getTopicCampUrl($topicNum,1);
         $data['camp_link'] = Camp::getTopicCampUrl($topicNum,$campNum);   
-        $data['url_portion'] =  Camp::getSeoBasedUrlPortion($topicNum,$campNum);     
+        $data['url_portion'] =  Camp::getSeoBasedUrlPortion($topicNum,$campNum);  
+        $data['namespace_id'] = $topic->namespace_id;   
         foreach ($alldirectDelegates as $supporter) {
             $user = Nickname::getUserByNickName($supporter->nick_name_id);
             $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');

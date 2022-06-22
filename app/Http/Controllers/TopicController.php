@@ -258,6 +258,7 @@ class TopicController extends Controller {
                 $link = 'topic-history/' . $topic->topic_num;
 				$data['type'] = "topic";
                 $data['object'] = $topic->topic_name;
+                $data['namespace_id'] = $topic->namespace_id;
 				$data['link'] = \App\Model\Camp::getTopicCampUrl($topic->topic_num,1);	
                 try{
                      Mail::to(Auth::user()->email)->bcc(config('app.admin_bcc'))->send(new ThankToSubmitterMail(Auth::user(), $link,$data));
@@ -281,6 +282,7 @@ class TopicController extends Controller {
                 $nickName = Nickname::getNickName($all['nick_name']);
                 $data['topic_link'] = \App\Model\Camp::getTopicCampUrl($topic->topic_num,1);  
                 $data['type'] = "Topic";
+                $data['namespace_id'] = $topic->namespace_id;
                 $data['object'] = $liveTopic->topic_name;
                 $data['object_type'] = ""; 
                 $data['nick_name'] = $nickName->nick_name;
@@ -564,6 +566,13 @@ class TopicController extends Controller {
 
         //if(!count($onecamp)) return back();
         $wiky = new Wiky;
+
+        /**
+         * As of filters should not be applied on the camp history page
+         * ticket # 1381 - Muhammad Ahmed
+         */
+        session()->forget('asofDefault');
+
         return view('topics.camphistory', compact('topic', 'camps', 'parentcampnum', 'onecamp', 'parentcamp', 'wiky', 'ifIamSupporter','submit_time','ifSupportDelayed','ifIamImplicitSupporter'));
     }
 
@@ -858,6 +867,7 @@ class TopicController extends Controller {
                 $livecamp = Camp::getLiveCamp($camp->topic_num,$camp->camp_num);
 				$data['object'] = $livecamp->topic->topic_name . " / " . $camp->camp_name;
 				$data['link'] = \App\Model\Camp::getTopicCampUrl($camp->topic_num,$camp_id);
+                $data['namespace_id'] = $topic->namespace_id;
                 try{
                     Mail::to(Auth::user()->email)->bcc(config('app.admin_bcc'))->send(new ThankToSubmitterMail(Auth::user(), $link,$data));
                 }catch(\Swift_TransportException $e){
@@ -1086,23 +1096,11 @@ class TopicController extends Controller {
         
         /**
          * Scenario 4
-         * User A creates topic -> support will be added automatically to agreement camp -> remove support
-         * User B add support (to agreemnt or camp) and camp statement - It should go "live"(Grace period = 0)
+         * User A creates topic -> support will be added automatically to agreement camp
+         * User A is only direct supportor of agreement camp - It should go "live"(Grace period = 0)
          */
         if(isset($all['camp_num']) && isset($all['topic_num'])) {
             if($all['camp_num'] == 1 && $ifIamSingleSupporter) {
-                $statement->grace_period = 0;
-            } 
-        }
-        
-        /**
-         * Scenario 4
-         * User A create topic -> support will be added automatically to agreement camp
-         * When User B add support and camp statement to Agreement - It should go "live"(Grace period = 0)
-         */
-        
-        if(isset($all['camp_num']) && isset($all['objection'])) {
-            if($all['objection']) {
                 $statement->grace_period = 0;
             } 
         }
@@ -1114,6 +1112,20 @@ class TopicController extends Controller {
         }
         // #1183 end
 
+        /**
+         * Scenario 4
+         * User A create topic -> support will be added automatically to agreement camp
+         * When User B add support and then add camp statement to Agreement or sibling camp 
+         * User A or User B (submitter of the statement change request itself) rejected statement change- It should go "live"(Grace period = 0)
+         * Ticket # 1382 - Muhammad Ahmed
+         */
+        
+        if(isset($all['camp_num']) && isset($all['objection'])) {
+            if($all['objection']) {
+                $statement->grace_period = 0;
+            } 
+        }
+
         $statement->save();
         if ($eventtype == "CREATE") {
            // send history link in email
@@ -1123,6 +1135,9 @@ class TopicController extends Controller {
 			$data['type'] = "statement";
 			$data['object'] = $livecamp->topic->topic_name . " / " . $livecamp->camp_name;
 			$data['link'] = \App\Model\Camp::getTopicCampUrl($statement->topic_num,1);
+            $topic = Topic::getLiveTopic($statement->topic_num);
+            $data['namespace_id'] = $topic->namespace_id;
+            
             try{
 
             //Mail::to(Auth::user()->email)->bcc(config('app.admin_bcc'))->send(new ThankToSubmitterMail(Auth::user(), $link,$data));
@@ -1450,6 +1465,7 @@ class TopicController extends Controller {
                 $supported_camp_list = $nickName->getSupportCampListNamesEmail($supported_camp,$supportData['topic_num'],$supportData['camp_num']);
                 $supportData['support_list'] = $supported_camp_list; 
                 $ifalsoSubscriber = Camp::checkifSubscriber($subscribers,$user);
+                $data['namespace_id'] =  $topic_name_space_id ;
                 if($ifalsoSubscriber) {
                     $supportData['also_subscriber'] = 1;
                     $supportData['sub_support_list'] = Camp::getSubscriptionList($user->id,$supportData['topic_num'],$supportData['camp_num']);      
@@ -1473,6 +1489,8 @@ class TopicController extends Controller {
                     $subscriberData['support_list'] = $subscriptions_list; 
                     $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $userSub->email : config('app.admin_email');
                     $subscriberData['subscriber'] = 1;
+                    $topic = Topic::getLiveTopic($subscriberData['topic_num']);
+                    $data['namespace_id'] = $topic->namespace_id;
                     try{
                         Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new PurposedToSupportersMail($userSub, $link, $subscriberData));
                     }catch(\Swift_TransportException $e){
@@ -1493,6 +1511,7 @@ class TopicController extends Controller {
             $supported_camp = $nickName->getSupportCampList($topic_name_space_id,['nofilter'=>true]);
             $supported_camp_list = $nickName->getSupportCampListNamesEmail($supported_camp,$data['topic_num'],$data['camp_num']);
             $data['support_list'] = $supported_camp_list; 
+            $data['namespace_id'] =  $topic_name_space_id ;
             $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
             try{
 
@@ -1512,6 +1531,8 @@ class TopicController extends Controller {
                 
             $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
             $data['subscriber'] = 1;
+            $topic = Topic::getLiveTopic($data['topic_num']);
+            $data['namespace_id'] = $topic->namespace_id;
             try{
 
             Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new PurposedToSupportersMail($user, $link, $data));

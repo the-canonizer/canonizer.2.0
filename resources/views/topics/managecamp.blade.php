@@ -96,7 +96,7 @@
                 <label for="camp_name">Nick Name <span style="color:red">*</span></label>
                 <select name="nick_name" id="nick_name" class="form-control">
                     @foreach($nickNames as $nick)
-                    <option <?php if($camp->submitter_nick_id==$nick->id) echo "selected=selected";?> value="{{ $nick->id }}">{{ $nick->nick_name}}</option>
+                    <option @if(old('nick_name') == $nick->id) selected @endif value="{{ $nick->id }}">{{ $nick->nick_name}}</option>
                     @endforeach
 					
                 </select>
@@ -109,7 +109,7 @@
             
              <div class="form-group">
                 <label for="camp_name">Camp Name ( Limit 30 Chars ) <span style="color:red">*</span></label>
-                <input type="text" maxlength="30" onkeydown="restrictTextField(event,30)" name="camp_name" <?php if($camp->camp_name=="Agreement") echo "readonly";?> class="form-control" id="camp_name" value="{{ $camp->camp_name}}" <?php if($objection=="objection") { ?> readonly="true" <?php } ?>>
+                <input type="text" maxlength="30" onkeydown="restrictTextField(event,30)" name="camp_name" <?php if($camp->camp_name=="Agreement") echo "readonly";?> class="form-control" id="camp_name" value="@if(sizeof(old()) > 0) {{ old('camp_name') }} @else {{ $camp->camp_name}} @endif" <?php if($objection=="objection") { ?> readonly="true" <?php } ?>>
                  @if ($errors->has('camp_name')) <p class="help-block">{{ $errors->first('camp_name') }}</p> @endif
              </div> 
              		
@@ -122,7 +122,7 @@
             <?php } else { ?>
 			<div class="form-group">
                 <label for="keywords">Keywords </label>
-                <input type="text" name="keywords" class="form-control" id="keywords" value="{{ $camp->key_words }}">
+                <input type="text" name="keywords" class="form-control" id="keywords" value="@if(sizeof(old()) > 0) {{ old('keywords') }} @else {{ $camp->key_words }} @endif">
                 @if ($errors->has('keywords')) <p class="help-block">{{ $errors->first('keywords') }}</p> @endif
             </div> 
            
@@ -130,14 +130,14 @@
             <div class="form-group">
                 <label for="">Edit summary (Briefly describe your changes) </label>
              
-                <textarea class="form-control" rows="4" name="note" id="note">{{$campupdate == 'update'? $camp->note : ""}}</textarea>
+                <textarea class="form-control" rows="4" name="note" id="note">@if(sizeof(old()) > 0) {{ old('note') }} @else {{$campupdate == 'update'? $camp->note : ""}} @endif</textarea>
 
                 @if ($errors->has('note')) <p class="help-block">{{ $errors->first('note') }}</p> @endif
             </div>   
             <div class="form-group">
 			     <p style="color:red">The following fields are rarely used and are for advanced users only.</p>
                 <label for="camp_about_url">Camp About URL ( Limit 1024 Chars ) </label>
-                <input type="text" name="camp_about_url" class="form-control" id="camp_about_url" value="{{ $camp->camp_about_url }}">
+                <input type="text" name="camp_about_url" class="form-control" id="camp_about_url" value="@if(sizeof(old()) > 0) {{ old('camp_about_url') }} @else {{ $camp->camp_about_url }} @endif">
                 @if ($errors->has('camp_about_url')) <p class="help-block">{{ $errors->first('camp_about_url') }}</p> @endif
             </div>
             <div class="form-group" id="camp_about_nickname">
@@ -145,7 +145,7 @@
                 <select name="camp_about_nick_id" id="camp_about_nick_id" class="form-control">
                     <option value="0">--Select Camp About Nick Name--</option>
 					@foreach($allNicknames as $aboutnick)
-                    <option <?php if($camp->camp_about_nick_id==$aboutnick->id) echo "selected=selected";?> value="{{ $aboutnick->id }}">{{ $aboutnick->nick_name}}</option>
+                    <option <?php if( sizeof(old()) > 0 && old('camp_about_nick_id') == $aboutnick->id){ echo 'selected'; }  elseif(sizeof(old()) == 0 && $camp->camp_about_nick_id==$aboutnick->id) { echo "selected=selected"; }?> value="{{ $aboutnick->id }}">{{ $aboutnick->nick_name}}</option>
                     @endforeach
 					
                 </select>    
