@@ -444,15 +444,18 @@ class SettingsController extends Controller
             }
 
             /**
-             * Ticket # 1149 - Muhammad Ahmed
+             *  Send support deleted mail to all supporter (direct or delegated) and subscribers 
+             *  Except in case of removing any parent camp support
+             *  Ticket # 1149 - Muhammad Ahmed
              */
 
             $ifSupportChildCamp = false;
 
-            if(isset($topic_num) && isset($data) && array_key_exists('camp_num',$data)) {
+            if(isset($topic_num) && isset($data) && array_key_exists('camp_num',$data) && array_key_exists('removed_camp',$data)) {
                 $camp = Camp::where('topic_num', $topic_num)->where('camp_num', '=', $data['camp_num'])->where('go_live_time', '<=', time())->latest('submit_time')->first();
-                if(isset($camp) && $camp->parent_camp_num) {
-                    if(in_array($camp->parent_camp_num, $data['removed_camp'])) {
+                if(isset($camp) && count($camp) > 0) {
+                    $allParentCampsNumbers = Camp::getAllParent($camp);
+                    if(!empty(array_intersect($data['removed_camp'], $allParentCampsNumbers))) {
                         $ifSupportChildCamp = true;
                     }
                 }
@@ -480,11 +483,6 @@ class SettingsController extends Controller
                         $mailData = $data;
                         $mailData['camp_num'] = $singleSupport->camp_num;
 
-                        /** 
-                         *  send support deleted mail to all supporter and subscribers 
-                         *  except in case of removing parent camp support
-                         *  ticket # 1149 - Muhammad Ahmed
-                         */
                         if(!$ifSupportChildCamp) {
                             $this->emailForSupportDeleted($mailData);
                         }    
