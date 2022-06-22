@@ -81,7 +81,7 @@
                     @foreach($parentcampsData as $parent)
 					<?php if(($camp->camp_num != $parent['camp_num'] ) && (  !in_array($parent['camp_num'], $childCamps))) {
                     ?>
-                    <option <?php if($camp->parent_camp_num==$parent['camp_num']) echo "selected=selected";?> value="{{ $parent['camp_num'] }}">{{ $parent['camp_name']}}</option>
+                    <option @if( sizeof(old()) > 0 && old('parent_camp_num') == $parent['camp_num']) selected @elseif (sizeof(old()) == 0 && $camp->camp_num == $parent['camp_num']) selected @endif value="{{ $parent['camp_num'] }}">{{ $parent['camp_name']}}</option>
                     <?php } ?>
 					@endforeach
 					
