@@ -566,6 +566,13 @@ class TopicController extends Controller {
 
         //if(!count($onecamp)) return back();
         $wiky = new Wiky;
+
+        /**
+         * As of filters should not be applied on the camp history page
+         * ticket # 1381 - Muhammad Ahmed
+         */
+        session()->forget('asofDefault');
+
         return view('topics.camphistory', compact('topic', 'camps', 'parentcampnum', 'onecamp', 'parentcamp', 'wiky', 'ifIamSupporter','submit_time','ifSupportDelayed','ifIamImplicitSupporter'));
     }
 
@@ -1089,23 +1096,11 @@ class TopicController extends Controller {
         
         /**
          * Scenario 4
-         * User A creates topic -> support will be added automatically to agreement camp -> remove support
-         * User B add support (to agreemnt or camp) and camp statement - It should go "live"(Grace period = 0)
+         * User A creates topic -> support will be added automatically to agreement camp
+         * User A is only direct supportor of agreement camp - It should go "live"(Grace period = 0)
          */
         if(isset($all['camp_num']) && isset($all['topic_num'])) {
             if($all['camp_num'] == 1 && $ifIamSingleSupporter) {
-                $statement->grace_period = 0;
-            } 
-        }
-        
-        /**
-         * Scenario 4
-         * User A create topic -> support will be added automatically to agreement camp
-         * When User B add support and camp statement to Agreement - It should go "live"(Grace period = 0)
-         */
-        
-        if(isset($all['camp_num']) && isset($all['objection'])) {
-            if($all['objection']) {
                 $statement->grace_period = 0;
             } 
         }
@@ -1116,6 +1111,20 @@ class TopicController extends Controller {
             $statement->grace_period = 1;
         }
         // #1183 end
+
+        /**
+         * Scenario 4
+         * User A create topic -> support will be added automatically to agreement camp
+         * When User B add support and then add camp statement to Agreement or sibling camp 
+         * User A or User B (submitter of the statement change request itself) rejected statement change- It should go "live"(Grace period = 0)
+         * Ticket # 1382 - Muhammad Ahmed
+         */
+        
+        if(isset($all['camp_num']) && isset($all['objection'])) {
+            if($all['objection']) {
+                $statement->grace_period = 0;
+            } 
+        }
 
         $statement->save();
         if ($eventtype == "CREATE") {

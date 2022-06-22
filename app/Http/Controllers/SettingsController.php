@@ -479,8 +479,15 @@ class SettingsController extends Controller
                         $singleSupport->save();
                         $mailData = $data;
                         $mailData['camp_num'] = $singleSupport->camp_num;
-                        /* send support deleted mail to all supporter and subscribers */
-                        $this->emailForSupportDeleted($mailData);    
+
+                        /** 
+                         *  send support deleted mail to all supporter and subscribers 
+                         *  except in case of removing parent camp support
+                         *  ticket # 1149 - Muhammad Ahmed
+                         */
+                        if(!$ifSupportChildCamp) {
+                            $this->emailForSupportDeleted($mailData);
+                        }    
                     }             
                 }
             }           
