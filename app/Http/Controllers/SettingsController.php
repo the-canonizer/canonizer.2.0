@@ -291,25 +291,24 @@ class SettingsController extends Controller
             //warning message for delegate support 
             $parentSupport = Camp::validateParentsupport($topicnum, $campnum, $userNickname, $confirm_support);
             $childSupport = Camp::validateChildsupport($topicnum, $campnum, $userNickname, $confirm_support);
-
+           
             if ($alreadySupport->count() > 0) {
                 if($alreadySupport[0]->delegate_nick_name_id!=0){
                     $nickName = Nickname::where('id',$alreadySupport[0]->delegate_nick_name_id)->first();
                     $userFromNickname = $nickName->getUser();
                     //Session::flash('warningDelegate', "You have already delegated your support for this camp to user ".$nickName->nick_name.". If you continue your delegated support will be removed.");
-                    Session::flash('warning', "You have already delegated your support for this camp to user ".$nickName->nick_name.". If you continue your delegated support will be removed.");   
-                    Session::flash('confirm', 1);
+                    Session::flash('warningDelegate', "You have already delegated your support for this camp to user ".$nickName->nick_name.". If you continue your delegated support will be removed.");   
                 }
             }
-            else if ($delegateSupportInTopic->count() > 0) {
+            if ($delegateSupportInTopic->count() > 0) {
                 $nickName = Nickname::where('id',$delegateSupportInTopic[0]->delegate_nick_name_id)->first();
                 $userFromNickname = $nickName->getUser(); 
                 Session::flash('warning', "You have delegated your support to user ".$nickName->nick_name." under this topic. If you continue your delegated support will be removed.");
                 Session::flash('confirm', 1);
             }
-            else if(count($alreadyDirectSupported) && $delegate_nick_name_id){
-                                   
+            else if(count($alreadyDirectSupported) && $delegate_nick_name_id){    
                 Session::flash('warning', "You are directly supporting one or more camps under this topic. If you continue your direct support will be removed.");
+                Session::flash('confirm', 1);
             }
             else{
                 if ($parentSupport === "notlive") {
