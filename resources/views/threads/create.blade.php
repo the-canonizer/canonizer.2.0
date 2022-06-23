@@ -13,13 +13,12 @@
   @endphp
   </h3>
   <h3>
-  <b> Thread: 
-  <a href="{{ URL::to('/')}}/forum/{{ $topicname }}/{{ $campnum }}/threads" style="color:#08b608;">{{ $threads->title }} </a>/
-  <a href="{{ URL::to('/')}}/forum/{{ $topicname }}/{{ $campnum }}/threads">
+  <b> Thread: <a href="{{ URL::to('/')}}/forum/{{ $topicname }}/{{ $campnum }}/threads">
   &laquo; List of All Camp Threads</a>
   </b>
+  <!--
   <h3>Create a new thread for Camp : @php echo $parentcamp @endphp
-  </h3>
+  </h3>-->
 </div>
 <div class="right-whitePnl">
   <div class="panel panel-group">
