@@ -59,7 +59,7 @@
                 <select  name="parent_camp_num" id="parent_camp_num" class="form-control">
                     @foreach($parentcampsData as $parent)
 					
-                    <option <?php if($camp->camp_num==$parent['camp_num']) echo "selected=selected";?> value="{{ $parent['camp_num'] }}">{{ $parent['camp_name']}}</option>
+                    <option @if( sizeof(old()) > 0 && old('parent_camp_num') == $parent['camp_num']) selected @elseif (sizeof(old()) == 0 && $camp->camp_num == $parent['camp_num']) selected @endif value="{{ $parent['camp_num'] }}">{{ $parent['camp_name']}}</option>
                   
 					@endforeach
 					
@@ -97,7 +97,7 @@
                 <select name="camp_about_nick_id" id="camp_about_nick_id" class="form-control">
                     <option value="0">--Select Camp About Nick Name--</option>
 					@foreach($allNicknames as $aboutnick)
-                    <option value="{{ $aboutnick->id }}">{{ $aboutnick->nick_name}}</option>
+                    <option @if( sizeof(old()) > 0 && old('camp_about_nick_id') == $aboutnick->id) selected @endif value="{{ $aboutnick->id }}">{{ $aboutnick->nick_name}}</option>
                     @endforeach
 					
                 </select>            

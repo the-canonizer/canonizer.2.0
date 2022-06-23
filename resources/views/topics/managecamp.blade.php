@@ -57,7 +57,22 @@
             } 
             ?>
            
-            <?php if($camp->camp_name=="Agreement") 
+			<div class="form-group">
+                <label for="camp_name">Nick Name <span style="color:red">*</span></label>
+                <select name="nick_name" id="nick_name" class="form-control">
+                    @foreach($nickNames as $nick)
+                    <option @if(old('nick_name') == $nick->id) selected @endif value="{{ $nick->id }}">{{ $nick->nick_name}}</option>
+                    @endforeach
+					
+                </select>
+                 @if ($errors->has('nick_name')) <p class="help-block">{{ $errors->first('nick_name') }}</p> @endif
+				<?php if(count($nickNames) == 0) { ?> 
+                     <p style="color:red" class="help-block">Note:You have not yet added a nick name. A public or private nick name must be added then selected here when contributing.</p>
+				<a href="<?php echo url('settings/nickname');?>">Add New Nick Name</a>
+				<?php } ?>
+             </div> 
+
+             <?php if($camp->camp_name=="Agreement") 
             {
             ?>
 			 <input type="hidden" id="parent_camp_num" name="parent_camp_num" value="{{ $parentcampnum }}">
@@ -81,7 +96,7 @@
                     @foreach($parentcampsData as $parent)
 					<?php if(($camp->camp_num != $parent['camp_num'] ) && (  !in_array($parent['camp_num'], $childCamps))) {
                     ?>
-                    <option <?php if($camp->parent_camp_num==$parent['camp_num']) echo "selected=selected";?> value="{{ $parent['camp_num'] }}">{{ $parent['camp_name']}}</option>
+                    <option @if( sizeof(old()) > 0 && old('parent_camp_num') == $parent['camp_num']) selected @elseif (sizeof(old()) == 0 && $camp->camp_num == $parent['camp_num']) selected @endif value="{{ $parent['camp_num'] }}">{{ $parent['camp_name']}}</option>
                     <?php } ?>
 					@endforeach
 					
@@ -92,20 +107,6 @@
 				 
              </div>
 			<?php } ?>
-			<div class="form-group">
-                <label for="camp_name">Nick Name <span style="color:red">*</span></label>
-                <select name="nick_name" id="nick_name" class="form-control">
-                    @foreach($nickNames as $nick)
-                    <option @if(old('nick_name') == $nick->id) selected @endif value="{{ $nick->id }}">{{ $nick->nick_name}}</option>
-                    @endforeach
-					
-                </select>
-                 @if ($errors->has('nick_name')) <p class="help-block">{{ $errors->first('nick_name') }}</p> @endif
-				<?php if(count($nickNames) == 0) { ?> 
-                     <p style="color:red" class="help-block">Note:You have not yet added a nick name. A public or private nick name must be added then selected here when contributing.</p>
-				<a href="<?php echo url('settings/nickname');?>">Add New Nick Name</a>
-				<?php } ?>
-             </div> 
             
              <div class="form-group">
                 <label for="camp_name">Camp Name ( Limit 30 Chars ) <span style="color:red">*</span></label>
