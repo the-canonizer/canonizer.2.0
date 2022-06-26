@@ -2155,7 +2155,7 @@ a.verification-link:active {
 }
 
 .select2-container--default .select2-selection--single .select2-selection__rendered {
-    line-height: calc(2.25rem + 2px);
+    line-height: 2.25rem
 }
 
 .select2-container--default .select2-selection--single {
@@ -2169,3 +2169,7 @@ a.verification-link:active {
     outline: none;
 }
 
+.select2-selection.select2-selection--single {
+    padding-left: 0.5rem;
+
+}

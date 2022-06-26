@@ -7,6 +7,7 @@ use App\Model\Camp;
 use App\Model\Topic;
 use App\Model\Support;
 use App\Jobs\CanonizerService;
+use App\Model\Namespaces;
 use Illuminate\Support\Facades\Log;
 
 /*
@@ -117,5 +118,27 @@ class Util
             Log::error("Util :: DispatchJob :: message: ".$ex->getMessage());
         }
         
+    }
+
+
+     /**
+     * getEmailSubjectForSandbox
+     * @param int $namespace_id
+     */
+    public function getEmailSubjectForSandbox($namespace_id)
+    {
+        try {
+            $subject = 'canon';
+            $namespace = Namespaces::find($namespace_id);
+            if(preg_match('/sandbox/i',$namespace->name)){
+                $subject = 'canon/sandbox/';
+            }
+            if(preg_match('/sandbox testing/i',$namespace->name)){
+                $subject = 'canon/sandbox testing/';
+            }
+            return (env('APP_ENV', 'development') == 'staging' || (env('APP_ENV', 'development') == 'local')) ? (env('APP_ENV', 'development') == 'local') ? '[local.' . $subject . ']' : '[staging.' . $subject . ']' : '[' . $subject . ']';
+        } catch (Exception $ex) {
+            Log::error("Util :: GetEmailSubjectForSandbox :: message: " . $ex->getMessage());
+        }
     }
 }

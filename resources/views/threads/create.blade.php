@@ -37,7 +37,7 @@
           <label for="title">Title of Thread ( Limit 100 Chars ) <span style="color:red">*</span> </label>
 
           <input type="text" onkeydown="restrictTextField(event,100)" class="form-control" id="title"
-            placeholder="Title" name="title">
+            placeholder="Title" name="title" value="@if(sizeof(old()) > 0) {{ old('title') }} @endif">
 
         </div>
 
@@ -48,7 +48,7 @@
           </label>
           <select name="nick_name" id="nick_name" class="form-control">
             @foreach($userNicknames as $nick)
-            <option value="{{ $nick->id }}">{{ $nick->nick_name}}</option>
+            <option value="{{ $nick->id }}" @if(sizeof(old()) > 0 && old('nick_name') == $nick->id) selected @endif>{{ $nick->nick_name}}</option>
             @endforeach
 
           </select>

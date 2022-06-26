@@ -301,7 +301,7 @@ class Camp extends Model {
                             ->where('topic.objector_nick_id', '=', NULL)
                             ->whereIn('namespace_id', explode(',', session('defaultNamespaceId', 1)))
                             ->where('camp.go_live_time', '<=', $as_of_time)
-                            ->whereRaw('topic.go_live_time in (select max(topic.go_live_time) from topic where topic.topic_num=topic.topic_num and topic.objector_nick_id is null and topic.go_live_time <=' . $as_of_time . ' group by topic.topic_num)')
+                            ->whereRaw('topic.go_live_time in (select max(topic.go_live_time) from topic where topic.objector_nick_id is null and topic.go_live_time <=' . $as_of_time . ' group by topic.topic_num)')
                             ->latest('support')->groupBy('topic.topic_num')->orderBy('topic.topic_name', 'DESC')->paginate($limit,['camp.topic_num']);
 
         } else {
@@ -311,7 +311,7 @@ class Camp extends Model {
                             ->where('camp_name', '=', 'Agreement')
                             ->where('topic.objector_nick_id', '=', NULL)
                             ->whereIn('namespace_id', explode(',', session('defaultNamespaceId', 1)))
-                            ->whereRaw('topic.go_live_time in (select max(topic.go_live_time) from topic where topic.topic_num=topic.topic_num and topic.objector_nick_id is null group by topic.topic_num)')
+                            ->whereRaw('topic.go_live_time in (select max(topic.go_live_time) from topic where topic.objector_nick_id is null group by topic.topic_num)')
                             ->latest('support')->groupBy('topic.topic_num')->orderBy('topic.topic_name', 'DESC')->paginate($limit,['camp.topic_num']);
 
 			} else if ((isset($filter['asof']) && $filter['asof'] == "bydate") || (session()->has('asofDefault') && session('asofDefault') == 'bydate' && !isset($filter['asof']))) {
@@ -327,6 +327,7 @@ class Camp extends Model {
                     ->whereIn('namespace_id', explode(',', session('defaultNamespaceId',1)))
                     ->where('topic.objector_nick_id', '=', NULL)
                     ->where('camp.go_live_time', '<=', $asofdate)
+                    ->whereRaw('topic.go_live_time in (select max(topic.go_live_time) from topic where topic.objector_nick_id is null and topic.go_live_time <=' . $asofdate . ' group by topic.topic_num)')
                     ->latest('support')->groupBy('topic.topic_num')->orderBy('topic.topic_name', 'DESC')->paginate($limit,['camp.topic_num']);
             }
         }
@@ -979,7 +980,7 @@ class Camp extends Model {
         $array = [];
         foreach ($childs as $key => $child) {
             //$childCount  = count($child->children($child->topic_num,$child->camp_num));
-            $onecamp = self::getLiveCamp($child->topic_num,$child->camp_num,['nofilter'=>true]);
+            $onecamp = self::getLiveCamp($child->topic_num,$child->camp_num,['nofilter'=>false]);
             $title = $onecamp->camp_name;//preg_replace('/[^A-Za-z0-9\-]/', '-', $onecamp->camp_name);
             $topic_id = $child->topic_num . "-" . $title;
             $array[$child->camp_num]['title'] = $title;

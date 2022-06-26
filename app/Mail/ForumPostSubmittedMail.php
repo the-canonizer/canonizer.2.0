@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Facades\Util;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
@@ -15,7 +16,7 @@ class ForumPostSubmittedMail extends Mailable
     public $link;
     public $data;
 
-    public function __construct (User $user, $link, $data)
+    public function __construct(User $user, $link, $data)
     {
         $this->user = $user;
         $this->link = $link;
@@ -28,9 +29,7 @@ class ForumPostSubmittedMail extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.forumpostsubmitemail')->
-                      subject(config('app.mail_env').$this->data['subject']);
+        $sub = Util::getEmailSubjectForSandbox($this->data['namespace_id']);
+        return $this->markdown('emails.forumpostsubmitemail')->subject($sub .' '. $this->data['subject']);
     }
 }
-
-?>
