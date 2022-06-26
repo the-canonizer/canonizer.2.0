@@ -120,7 +120,7 @@ class TopicSupport extends Model {
                                 $currentCampSupport = 1;
                                 $support_order = $supp_order;
                                 $delegate_tree = $camp_score['delegates'];               
-                                $supportPoint = $camp_score['score'];
+                                $supportPoint = $supportPoint + $camp_score['score'];
                                 break; 
                             }
                         }
