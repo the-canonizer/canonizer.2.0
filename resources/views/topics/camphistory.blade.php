@@ -175,7 +175,11 @@
                                       });
                                 </script>
                             <?php } }else{
-                                $IFNOtSubmissterNotSupporterAndInGracePeriod = true;
+                                if(!$data->grace_period) {
+                                    $IFNOtSubmissterNotSupporterAndInGracePeriod = false;
+                                } else {
+                                    $IFNOtSubmissterNotSupporterAndInGracePeriod = true;
+                                }
                             } 
                          if($IFNOtSubmissterNotSupporterAndInGracePeriod){
                                 continue;
