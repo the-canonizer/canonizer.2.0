@@ -631,7 +631,7 @@ class TopicController extends Controller {
                 $starttime = $currentTime = time();
                 $endtime = $submittime + 60*60;
                 $interval = $endtime - $starttime;
-                if(($arr->grace_period < 1 && $interval < 0 ) || $currentTime > $arr->go_live_time || $arr->objector_nick_id != NULL){
+                if(($arr->grace_period < 1) || $arr->objector_nick_id != NULL){
                     array_push($statement,$arr);
                 }
                }
