@@ -140,11 +140,11 @@ if (!empty($topics)) {
                     } else {
                         $bgcolor = "#4e4ef3;"; //blue
                     }
-                    if($ifIamSupporter && $interval > 0 && $data->grace_period > 0  && Auth::user()->id != $submitterUserID){
+                    if($ifIamSupporter && $interval > 0 && $data->grace_period > 0  && Auth::user()->id != $submitterUserID && !$data->objector_nick_id) {
                         continue;
-                    }else if(Auth::check() && $data->grace_period > 0 && $interval > 0 && $currentTime < $data->go_live_time && Auth::user()->id != $submitterUserID){
+                    } else if(Auth::check() && $data->grace_period > 0 && $interval > 0 && $currentTime < $data->go_live_time && Auth::user()->id != $submitterUserID && !$data->objector_nick_id) {
                         continue;
-                    }else if(!Auth::check() && $data->grace_period > 0 && $interval > 0 && $currentTime < $data->go_live_time ){
+                    } else if(!Auth::check() && $data->grace_period > 0 && $interval > 0 && $currentTime < $data->go_live_time && !$data->objector_nick_id) {
                         continue;
                     }
                     ?>
