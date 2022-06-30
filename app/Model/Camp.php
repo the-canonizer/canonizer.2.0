@@ -718,6 +718,7 @@ class Camp extends Model {
 
     public function getCampAndNickNameWiseSupportTree($algorithm, $topicnum){
         $as_of_time = time();
+        $is_add_reminder_back_flag = ($algorithm == 'blind_popularity') ? 1 : 0;
         $nick_name_support_tree=[];
         $nick_name_wise_support=[];
         $camp_wise_support = [];
@@ -766,7 +767,7 @@ class Camp extends Model {
                 foreach($scoreData as $support_order=>$camp_score){
                     $index = $index +1;
                    foreach($camp_score as $campNum=>$score){
-                        if($support_order > 1 && $index ==count($scoreData)){
+                        if($support_order > 1 && $index ==count($scoreData)  && $is_add_reminder_back_flag){
                             if(count(array_keys($nick_name_support_tree[$nickNameId][1])) > 0){
                             $campNumber = array_keys($nick_name_support_tree[$nickNameId][1])[0];
                             $nick_name_support_tree[$nickNameId][1][$campNumber]['score']=$nick_name_support_tree[$nickNameId][1][$campNumber]['score'] + $score['score'];
@@ -778,9 +779,6 @@ class Camp extends Model {
                     $delegateTree = $this->delegateSupportTree($algorithm, $topicnum,$campNum, $nickNameId, $support_order, $nick_name_support_tree[$nickNameId][$support_order][$campNum]['score'],[]);
                     $nick_name_support_tree[$nickNameId][$support_order][$campNum]['delegates'] = $delegateTree;
                    }
-                   
-                  
-                
                 }
             }
         }
@@ -810,6 +808,7 @@ class Camp extends Model {
             $score_tree = $this->getCampAndNickNameWiseSupportTree($algorithm, $topicnum);
             session(["score_tree_{$topicnum}_{$algorithm}"=>$score_tree]);
         }
+        
          
 
          $support_total = 0;
