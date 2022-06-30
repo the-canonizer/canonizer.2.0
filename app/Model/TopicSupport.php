@@ -85,7 +85,8 @@ class TopicSupport extends Model {
             $score_tree = $camp->getCampAndNickNameWiseSupportTree($algorithm, $topicnum);
             session(["score_tree_{$topicnum}_{$algorithm}"=>$score_tree]);
         }
-        $as_of_time = time();
+        
+         $as_of_time = time();
 		if(isset($_REQUEST['asof']) && $_REQUEST['asof']=='bydate'){
 			$as_of_time = strtotime($_REQUEST['asofdate']);
 		}
