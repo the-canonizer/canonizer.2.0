@@ -665,9 +665,10 @@ class Camp extends Model {
         return $score;
     }
 
-    public function delegateSupportTree($algorithm, $topicnum, $campnum, $delegateNickId, $parent_support_order, $parent_score,$array=[]){
+    public function delegateSupportTree($algorithm, $topicnum, $campnum, $delegateNickId, $parent_support_order, $parent_score,$multiSupport,$array=[]){
         $nick_name_support_tree=[];
         $nick_name_wise_support=[];
+        $is_add_reminder_back_flag = ($algorithm == 'blind_popularity') ? 1 : 0;
 		/* Delegated Support */
         if(session()->has("topic-support-{$topicnum}")){
             $delegatedSupports = session("topic-support-{$topicnum}")->filter(function($item) use ($delegateNickId) {
@@ -707,8 +708,13 @@ class Camp extends Model {
            foreach($support_camp as $support){ 
                if($support->camp_num == $campnum){
                     $support_total = 0; 
-                    $nick_name_support_tree[$support->nick_name_id]['score'] = $parent_score;
-                    $delegateTree = $this->delegateSupportTree($algorithm, $topicnum,$campnum, $support->nick_name_id, $parent_support_order,$parent_score,[]);
+                    if($multiSupport){
+                        $support_total = $support_total + round($supportPoint * 1 / (2 ** ($support->support_order)), 3);
+                    }else{
+                        $support_total = $support_total + $supportPoint;
+                    } 
+                    $nick_name_support_tree[$support->nick_name_id]['score'] = ($is_add_reminder_back_flag) ? $parent_score : $support_total;
+                    $delegateTree = $this->delegateSupportTree($algorithm, $topicnum,$campnum, $support->nick_name_id, $parent_support_order,$parent_score,$multiSupport,[]);
                     $nick_name_support_tree[$support->nick_name_id]['delegates'] = $delegateTree;
                 }               
                }
@@ -766,17 +772,18 @@ class Camp extends Model {
                 $index = 0;
                 foreach($scoreData as $support_order=>$camp_score){
                     $index = $index +1;
+                    $multiSupport =  count($camp_score) > 1 ? 1 : 0;
                    foreach($camp_score as $campNum=>$score){
-                        if($support_order > 1 && $index ==count($scoreData)  && $is_add_reminder_back_flag){
+                        if($support_order > 1 && $index == count($scoreData)  && $is_add_reminder_back_flag){
                             if(count(array_keys($nick_name_support_tree[$nickNameId][1])) > 0){
                             $campNumber = array_keys($nick_name_support_tree[$nickNameId][1])[0];
                             $nick_name_support_tree[$nickNameId][1][$campNumber]['score']=$nick_name_support_tree[$nickNameId][1][$campNumber]['score'] + $score['score'];
                             $camp_wise_score[$campNumber][1][$nickNameId]['score'] = $camp_wise_score[$campNumber][1][$nickNameId]['score'] + $score['score'];
-                            $delegateTree = $this->delegateSupportTree($algorithm, $topicnum,$campNumber, $nickNameId, 1,$camp_wise_score[$campNumber][1][$nickNameId]['score'] ,[]);
+                            $delegateTree = $this->delegateSupportTree($algorithm, $topicnum,$campNumber, $nickNameId, 1,$camp_wise_score[$campNumber][1][$nickNameId]['score'],$multiSupport ,[]);
                             $nick_name_support_tree[$nickNameId][1][$campNumber]['delegates'] = $delegateTree;
                         }
                     }
-                    $delegateTree = $this->delegateSupportTree($algorithm, $topicnum,$campNum, $nickNameId, $support_order, $nick_name_support_tree[$nickNameId][$support_order][$campNum]['score'],[]);
+                    $delegateTree = $this->delegateSupportTree($algorithm, $topicnum,$campNum, $nickNameId, $support_order, $nick_name_support_tree[$nickNameId][$support_order][$campNum]['score'],$multiSupport,[]);
                     $nick_name_support_tree[$nickNameId][$support_order][$campNum]['delegates'] = $delegateTree;
                    }
                 }
