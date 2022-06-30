@@ -63,10 +63,10 @@ class HomeController extends Controller {
             $asOf = session('asofDefault');
         }
 
-        $asOfDefaultDate = date('Y-m-d');
+        $asOfDefaultDate = date('Y-m-d H:i:s');
 
         if(isset($_REQUEST['asof']) && $_REQUEST['asof'] == "bydate"){
-            $asOfDefaultDate = date('Y-m-d', strtotime($_REQUEST['asofdate']));
+            $asOfDefaultDate = date('Y-m-d H:i:s', strtotime($_REQUEST['asofdate']));
          }else if(($asOf == 'bydate') && session('asofdateDefault')){
             $asOfDefaultDate =  session('asofdateDefault');
          }

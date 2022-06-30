@@ -13,6 +13,8 @@
         <link rel="shortcut icon" href="/img/favicon.ico" >
         <!-- Bootstrap core CSS-->
         <link href="{{ URL::asset('/css/bootstrap.min.css') }}" rel="stylesheet">
+        <!-- Select 2 CSS-->
+        <link href="{{ URL::asset('/select2/dist/css/select2.min.css') }}" rel="stylesheet">
         <!-- Custom fonts for this template-->
         <link href="{{ URL::asset('/font-awesome/css/font-awesome.min.css') }}" rel="stylesheet" type="text/css">
         <!-- Custom styles for this template-->
@@ -30,6 +32,8 @@
         <!--countdown timers -->
         <script src="{{ URL::asset('/js/jquery.countdownTimer.min.js') }}"></script>
         <link href="{{ URL::asset('/css/jquery.countdownTimer.css') }}" rel="stylesheet" type="text/css">
+        <!-- Select 2 js-->
+        <script src="{{ URL::asset('/select2/dist/js/select2.min.js') }}"></script>
 
 
 
@@ -84,7 +88,7 @@
                         </div>
                         @else
 						<a class="nav-link guestLogin" style="cursor:default;">Browsing as: Guest</a>
-                        <a class="nav-link @if(Request::url() == url('/login')) active @endif" href="{{ url('/login')}}"><i class="fa fa-fw fa-user"></i> Log in</a>
+                        <a class="nav-link @if(Request::url() == url('/login')) active @endif" href="{{ url('/login')}}"><i class="fa fa-fw fa-user" style="float: unset"></i> Log in</a>
                         <a class="nav-link @if(Request::url() == url('/signup')) active @endif" href="{{ url('/signup')}}"><i class="fa fa-fw fa-user-plus"></i> Sign up </a>
                         @endif
                     </li>
@@ -322,7 +326,7 @@
                     </h4>
                 </div>
                 <div class="modal-body">
-                    To object to this change, you should be a direct supporter of the topic/camp and should have supported it before the change was submitted.
+                    Only direct supporters at the time this change was submitted can object.
                     <br/>For more information about disagreement, please read topic:<br/>
                     <a href="https://canonizer.com/topic/132-Help/4-Disagreement" target="_blank">https://canonizer.com/topic/132-Help/4-Disagreement</a>
                 </div>
@@ -396,7 +400,7 @@
                     $("#asofdate").removeAttr('disabled');
                     $('#asofdate').focus();
                     return false;
-				} else if(value !='' && bydate == 'bydate'){
+				} else if(value !='' && (bydate == 'bydate' || bydate == 'review')){
                     $('input[name="topic_history"]').val('1');
                     $("#asofdate").removeAttr('disabled');
                 } else if(bydate!='bydate'){

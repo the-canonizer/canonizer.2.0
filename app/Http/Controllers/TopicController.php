@@ -169,7 +169,8 @@ class TopicController extends Controller {
             $topic->go_live_time = $current_time; //strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
             $topic->language = 'English';
             $topic->note = isset($all['note']) ? $all['note'] : "";
-            $topic->grace_period = 1;
+            //#1373 grace period for the topic when no supporter is there should be 0
+            $topic->grace_period = 0;
 
             if (isset($all['topic_num'])) {
                 $topic->topic_num = $all['topic_num'];
@@ -183,6 +184,8 @@ class TopicController extends Controller {
                     //$topic->go_live_time = strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
                     $topic->go_live_time = strtotime(date('Y-m-d H:i:s', strtotime('+'.config('app.go_live_day_limit').' days')));
                     $go_live_time = $topic->go_live_time;
+                    //#1373 grace period for the topic when other supporters is there should be 1
+                    $topic->grace_period = 1;
                     $message = "Topic change submitted successfully.";
                 }
 
@@ -255,6 +258,7 @@ class TopicController extends Controller {
                 $link = 'topic-history/' . $topic->topic_num;
 				$data['type'] = "topic";
                 $data['object'] = $topic->topic_name;
+                $data['namespace_id'] = $topic->namespace_id;
 				$data['link'] = \App\Model\Camp::getTopicCampUrl($topic->topic_num,1);	
                 try{
                      Mail::to(Auth::user()->email)->bcc(config('app.admin_bcc'))->send(new ThankToSubmitterMail(Auth::user(), $link,$data));
@@ -278,6 +282,7 @@ class TopicController extends Controller {
                 $nickName = Nickname::getNickName($all['nick_name']);
                 $data['topic_link'] = \App\Model\Camp::getTopicCampUrl($topic->topic_num,1);  
                 $data['type'] = "Topic";
+                $data['namespace_id'] = $topic->namespace_id;
                 $data['object'] = $liveTopic->topic_name;
                 $data['object_type'] = ""; 
                 $data['nick_name'] = $nickName->nick_name;
@@ -350,6 +355,7 @@ class TopicController extends Controller {
      */
     public function show($id, $parentcampnum = 1) {
         $topicnumArray = explode("-", $id);
+        $algorithm = session('defaultAlgo', 'blind_popularity');
         $topicnum = $topicnumArray[0];
         if(Auth::user() && Auth::user()->id){
             $userid = Auth::user()->id;
@@ -387,6 +393,7 @@ class TopicController extends Controller {
         session()->forget("topic-support-{$topicnum}");
         session()->forget("topic-support-nickname-{$topicnum}");
         session()->forget("topic-support-tree-{$topicnum}");
+        session()->forget("score_tree_{$topicnum}_{$algorithm}");
         if (count($camp) > 0 && count($topic) > 0) {
           $parentcamp = Camp::campNameWithAncestors($camp, '',$topic->topic_name);
         } else {
@@ -559,6 +566,13 @@ class TopicController extends Controller {
 
         //if(!count($onecamp)) return back();
         $wiky = new Wiky;
+
+        /**
+         * As of filters should not be applied on the camp history page
+         * ticket # 1381 - Muhammad Ahmed
+         */
+        session()->forget('asofDefault');
+
         return view('topics.camphistory', compact('topic', 'camps', 'parentcampnum', 'onecamp', 'parentcamp', 'wiky', 'ifIamSupporter','submit_time','ifSupportDelayed','ifIamImplicitSupporter'));
     }
 
@@ -617,7 +631,7 @@ class TopicController extends Controller {
                 $starttime = $currentTime = time();
                 $endtime = $submittime + 60*60;
                 $interval = $endtime - $starttime;
-                if(($arr->grace_period < 1 && $interval < 0 ) || $currentTime > $arr->go_live_time){
+                if(($arr->grace_period < 1) || $arr->objector_nick_id != NULL){
                     array_push($statement,$arr);
                 }
                }
@@ -685,7 +699,8 @@ class TopicController extends Controller {
             'objection_reason.max' => 'Objection reason can not be more than 100.'
         ];
         //Reena Talentelgia #850
-        $regex = '/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/';
+        //#1197 : Fix camp about url validation pattern
+        $regex = '/(http(s?):\/\/)([a-z0-9\-]+\.)+[a-z]{2,4}(\.[a-z]{2,4})*(\/[^ ]+)*/i';
         $validator = Validator::make($request->all(), [
             'nick_name' => 'required',
             'camp_name' => 'required|max:30|regex:/^[a-zA-Z0-9\s]+$/',
@@ -707,6 +722,12 @@ class TopicController extends Controller {
         $topicnum = (isset($all['topic_num'])) ? $all['topic_num'] : null;
         if($topicnum!=null){
 
+            if(strtolower(trim($all['camp_name'])) == 'agreement'){
+                $validator->after(function ($validator){
+                      $validator->errors()->add('camp_name', 'The camp name has already been taken');
+                 }); 
+             }
+
             $old_parent_camps = Camp::getAllTopicCamp($topicnum);
             /**
              * @updated By Talentelgia
@@ -717,7 +738,7 @@ class TopicController extends Controller {
             $camp_existsNL = 0;
             if(!empty($liveCamps)){
                 foreach($liveCamps as $value){
-                    if($value->camp_name == $all['camp_name']){
+                    if(strtolower(trim($value->camp_name)) == strtolower(trim($all['camp_name']))){
                         if(isset($all['camp_num']) && array_key_exists('camp_num', $all) && $all['camp_num'] == $value->camp_num){
                             $camp_existsLive = 0;
                         }else{
@@ -729,7 +750,7 @@ class TopicController extends Controller {
 
             if(!empty($nonLiveCamps)){
                 foreach($nonLiveCamps as $value){
-                    if($value->camp_name == $all['camp_name']){
+                    if(strtolower(trim($value->camp_name)) == strtolower(trim($all['camp_name']))){
                         if(isset($all['camp_num']) && array_key_exists('camp_num', $all) && $all['camp_num'] == $value->camp_num){
                             $camp_existsNL = 0;
                         }else{ 
@@ -826,10 +847,11 @@ class TopicController extends Controller {
         if ($camp->save()) {
             Session::flash('test_case_success', 'true');
             $topic = $camp->topic;
-
+            
             //note- objection case it will be not update parent camp support 
             if ($eventtype == "CAMP_UPDATE" || $eventtype == "UPDATE") {
-                $this->checkParentCampChanged($all['topic_num'],$all['camp_num'],$all['parent_camp_num'],$in_review_status=false);   
+                $old_parent_camp_num = isset($all['old_parent_camp_num']) ? $all['old_parent_camp_num'] : "";
+                $this->checkParentCampChanged($all['topic_num'],$all['camp_num'],$all['parent_camp_num'],$in_review_status=false, $old_parent_camp_num);   
             }
             
             if ($eventtype == "CREATE") {
@@ -845,6 +867,7 @@ class TopicController extends Controller {
                 $livecamp = Camp::getLiveCamp($camp->topic_num,$camp->camp_num);
 				$data['object'] = $livecamp->topic->topic_name . " / " . $camp->camp_name;
 				$data['link'] = \App\Model\Camp::getTopicCampUrl($camp->topic_num,$camp_id);
+                $data['namespace_id'] = $topic->namespace_id;
                 try{
                     Mail::to(Auth::user()->email)->bcc(config('app.admin_bcc'))->send(new ThankToSubmitterMail(Auth::user(), $link,$data));
                 }catch(\Swift_TransportException $e){
@@ -1073,23 +1096,11 @@ class TopicController extends Controller {
         
         /**
          * Scenario 4
-         * User A creates topic -> support will be added automatically to agreement camp -> remove support
-         * User B add support (to agreemnt or camp) and camp statement - It should go "live"(Grace period = 0)
+         * User A creates topic -> support will be added automatically to agreement camp
+         * User A is only direct supportor of agreement camp - It should go "live"(Grace period = 0)
          */
         if(isset($all['camp_num']) && isset($all['topic_num'])) {
             if($all['camp_num'] == 1 && $ifIamSingleSupporter) {
-                $statement->grace_period = 0;
-            } 
-        }
-        
-        /**
-         * Scenario 4
-         * User A create topic -> support will be added automatically to agreement camp
-         * When User B add support and camp statement to Agreement - It should go "live"(Grace period = 0)
-         */
-        
-        if(isset($all['camp_num']) && isset($all['objection'])) {
-            if($all['objection']) {
                 $statement->grace_period = 0;
             } 
         }
@@ -1101,6 +1112,20 @@ class TopicController extends Controller {
         }
         // #1183 end
 
+        /**
+         * Scenario 4
+         * User A create topic -> support will be added automatically to agreement camp
+         * When User B add support and then add camp statement to Agreement or sibling camp 
+         * User A or User B (submitter of the statement change request itself) rejected statement change- It should go "live"(Grace period = 0)
+         * Ticket # 1382 - Muhammad Ahmed
+         */
+        
+        if(isset($all['camp_num']) && isset($all['objection'])) {
+            if($all['objection']) {
+                $statement->grace_period = 0;
+            } 
+        }
+
         $statement->save();
         if ($eventtype == "CREATE") {
            // send history link in email
@@ -1110,6 +1135,9 @@ class TopicController extends Controller {
 			$data['type'] = "statement";
 			$data['object'] = $livecamp->topic->topic_name . " / " . $livecamp->camp_name;
 			$data['link'] = \App\Model\Camp::getTopicCampUrl($statement->topic_num,1);
+            $topic = Topic::getLiveTopic($statement->topic_num);
+            $data['namespace_id'] = $topic->namespace_id;
+            
             try{
 
             //Mail::to(Auth::user()->email)->bcc(config('app.admin_bcc'))->send(new ThankToSubmitterMail(Auth::user(), $link,$data));
@@ -1437,6 +1465,7 @@ class TopicController extends Controller {
                 $supported_camp_list = $nickName->getSupportCampListNamesEmail($supported_camp,$supportData['topic_num'],$supportData['camp_num']);
                 $supportData['support_list'] = $supported_camp_list; 
                 $ifalsoSubscriber = Camp::checkifSubscriber($subscribers,$user);
+                $data['namespace_id'] =  $topic_name_space_id ;
                 if($ifalsoSubscriber) {
                     $supportData['also_subscriber'] = 1;
                     $supportData['sub_support_list'] = Camp::getSubscriptionList($user->id,$supportData['topic_num'],$supportData['camp_num']);      
@@ -1460,6 +1489,8 @@ class TopicController extends Controller {
                     $subscriberData['support_list'] = $subscriptions_list; 
                     $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $userSub->email : config('app.admin_email');
                     $subscriberData['subscriber'] = 1;
+                    $topic = Topic::getLiveTopic($subscriberData['topic_num']);
+                    $data['namespace_id'] = $topic->namespace_id;
                     try{
                         Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new PurposedToSupportersMail($userSub, $link, $subscriberData));
                     }catch(\Swift_TransportException $e){
@@ -1480,6 +1511,7 @@ class TopicController extends Controller {
             $supported_camp = $nickName->getSupportCampList($topic_name_space_id,['nofilter'=>true]);
             $supported_camp_list = $nickName->getSupportCampListNamesEmail($supported_camp,$data['topic_num'],$data['camp_num']);
             $data['support_list'] = $supported_camp_list; 
+            $data['namespace_id'] =  $topic_name_space_id ;
             $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
             try{
 
@@ -1499,6 +1531,8 @@ class TopicController extends Controller {
                 
             $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
             $data['subscriber'] = 1;
+            $topic = Topic::getLiveTopic($data['topic_num']);
+            $data['namespace_id'] = $topic->namespace_id;
             try{
 
             Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new PurposedToSupportersMail($user, $link, $data));
@@ -1598,12 +1632,12 @@ class TopicController extends Controller {
     }
          
     //Sunil Talentelgia This function only work when we changes parent camp. In that case we remove support of parent camp 
-    private function checkParentCampChanged($topic_num, $camp_num, $parent_camp_num, $in_review_status) {
+    private function checkParentCampChanged($topic_num, $camp_num, $parent_camp_num, $in_review_status,$old_parent_camp_num="") {
         
         //while updating camp check if any old support then remove it if parent camp changed
         $campOldData = Camp::getLiveCamp($topic_num,$camp_num);
-        
-        if(isset($parent_camp_num) && $parent_camp_num!=''){// && $parent_camp_num != $campOldData->parent_camp_num){
+
+        if(isset($parent_camp_num) && $parent_camp_num!=''){
             if($in_review_status){
                 //#924 start
                 $allChildCamps = Camp::getAllChildCamps($campOldData);
@@ -1618,17 +1652,20 @@ class TopicController extends Controller {
                 }
             }
             else{
-                //1262 and 1191
-                $allParentCamps = Camp::getAllParent($campOldData);
-                //get supporters of all child camps of current camp
-                $allChildSupporters = Support::where('topic_num',$topic_num)
-                    ->where('end',0)
-                    ->whereIn('camp_num',$allParentCamps) //$allChildCamps changes with $allParentCamps 1262 and 1191
-                    ->pluck('nick_name_id');
-                //remove all supports from parent camp if there any child supporter
-                if(sizeof($allChildSupporters) > 0){
-                    foreach($allParentCamps as $p ){
-                        Support::removeSupport($topic_num,$p,$allChildSupporters);
+                //$parent_camp_num != $campOldData->parent_camp_num = 1338
+                if($parent_camp_num != $old_parent_camp_num){
+                    //1262 and 1191
+                    $allParentCamps = Camp::getAllParent($campOldData);
+                    //get supporters of all child camps of current camp
+                    $allChildSupporters = Support::where('topic_num',$topic_num)
+                        ->where('end',0)
+                        ->whereIn('camp_num',$allParentCamps) //$allChildCamps changes with $allParentCamps 1262 and 1191
+                        ->pluck('nick_name_id');
+                    //remove all supports from parent camp if there any child supporter
+                    if(sizeof($allChildSupporters) > 0){
+                        foreach($allParentCamps as $p ){
+                            Support::removeSupport($topic_num,$p,$allChildSupporters,$camp_num); //$p
+                        }
                     }
                 }
             }

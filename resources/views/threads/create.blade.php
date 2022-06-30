@@ -6,13 +6,18 @@
 
 <div class="camp top-head">
   <hr>
-  <h3>
-    <b>
-      <a href="{{ URL::to('/') }}/forum/{{ $topicname }}/{{ $campnum }}/threads">
-        &laquo; List of All Camp Threads
-      </a>
-    </b>
+  <h3><b>Topic: <a href="{{ URL::to('/')}}/topic/{{ $topicname }}"> {{ $topicGeneralName }}</a></b></h3>
+  <h3><b>Camp:</b>
+  @php
+  echo $parentcamp
+  @endphp
   </h3>
+  <h3>
+  <b> Thread: 
+  <a href="{{ URL::to('/')}}/forum/{{ $topicname }}/{{ $campnum }}/threads" style="color:#08b608;">{{ $threads->title }} </a>/
+  <a href="{{ URL::to('/')}}/forum/{{ $topicname }}/{{ $campnum }}/threads">
+  &laquo; List of All Camp Threads</a>
+  </b>
   <h3>Create a new thread for Camp : @php echo $parentcamp @endphp
   </h3>
 </div>
@@ -32,7 +37,7 @@
           <label for="title">Title of Thread ( Limit 100 Chars ) <span style="color:red">*</span> </label>
 
           <input type="text" onkeydown="restrictTextField(event,100)" class="form-control" id="title"
-            placeholder="Title" name="title">
+            placeholder="Title" name="title" value="@if(sizeof(old()) > 0) {{ old('title') }} @endif">
 
         </div>
 
@@ -43,7 +48,7 @@
           </label>
           <select name="nick_name" id="nick_name" class="form-control">
             @foreach($userNicknames as $nick)
-            <option value="{{ $nick->id }}">{{ $nick->nick_name}}</option>
+            <option value="{{ $nick->id }}" @if(sizeof(old()) > 0 && old('nick_name') == $nick->id) selected @endif>{{ $nick->nick_name}}</option>
             @endforeach
 
           </select>

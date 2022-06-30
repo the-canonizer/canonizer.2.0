@@ -3,7 +3,7 @@
 @section('content')
 <div class="camp top-head">
   <h3><b>Canonizer Forum Details</b></h3>
-  <h3><b>Topic: {{ $topicGeneralName }}</b></h3>
+  <h3><b>Topic: <a href="{{ URL::to('/')}}/topic/{{ $topicname }}">{{ $topicGeneralName }}</a></b></h3>
   <h3><b>Camp:</b>
     @php
     echo $parentcamp
@@ -71,7 +71,11 @@
             <td>{{ $thread->replies->count() }}</td>
             <td>
               @if ( $thread->replies->count() )
-                {{ $thread->replies[0]->owner->nick_name }} replied {{ Carbon\Carbon::createFromTimestamp( $date )->diffForHumans() }}
+                @php
+                  $supportUrlPortion = $thread->replies[0]->user_id . '/' . '?topicnum=' . $thread->topic_id . '&campnum=' . $thread->camp_id . '&namespace=' . $namespace_id . '#camp_' . $thread->topic_id . '_' . $thread->camp_id;
+                  $userSupportUrl = url('user/supports/' . $supportUrlPortion);
+                @endphp
+                <a href="{{ $userSupportUrl }}">{{ $thread->replies[0]->owner->nick_name }}</a> replied {{ Carbon\Carbon::createFromTimestamp( $date )->diffForHumans() }}
               ({{ to_local_time( $date )  }})
               @else
                 This thread doesn't have any posts yet.

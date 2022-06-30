@@ -4,12 +4,23 @@
 
 <div class="camp top-head">
   <hr>
+  <h3><b>Topic: <a href="{{ URL::to('/')}}/topic/{{ $topicname }}"> {{ $topicGeneralName }}</a></b></h3>
+  <h3><b>Camp:</b>
+    @php
+    echo $parentcamp
+    @endphp
+  </h3>
   <h3>
-    <b>
+    <b> Thread: 
+      <a href="{{ URL::to('/')}}/forum/{{ $topicname }}/{{ $campnum }}/threads" style="color:#08b608;">{{ $threads->title }} </a>/
       <a href="{{ URL::to('/')}}/forum/{{ $topicname }}/{{ $campnum }}/threads">
         &laquo; List of All Camp Threads</a>
 
     </b>
+    <hr />
+
+<span class="forum-thread-title"><a href="{{$userUrl}}">{{ $threads->creator->nick_name }}
+</a> started this thread : "{{ $threads->title }}"</span>
   </h3>
   <?php
       $topic = App\Model\Topic::getLiveTopic($threads->topic_id); 
@@ -19,15 +30,6 @@
       }
       $userUrl = route('user_supports',$threads->creator->id)."?topicnum=".$threads->topic_id."&campnum=".$threads->camp_id."&namespace=".$namespace_id."#camp_".$threads->topic_id."_".$threads->camp_id;
   ?>
-  <h3><b>Camp:</b>
-    @php
-    echo $parentcamp
-    @endphp
-    <hr />
-
-    <span class="forum-thread-title"><a href="{{$userUrl}}">{{ $threads->creator->nick_name }}
-    </a> started this thread : "{{ $threads->title }}"</span>
-  </h3>
 
 
 </div>
@@ -61,7 +63,7 @@
     @endif 
     <div class="form-group">
       <br>
-      <textarea name="body" id="body" class="form-control" placeholder="Reply to thread Here" rows="5">@if($reply_id != null){{ $replies->body }}@endif</textarea>
+      <textarea name="body" id="body" class="form-control" placeholder="Reply to thread Here" rows="5">@if(sizeof(old()) > 0) {{ old('body') }} @elseif($reply_id != null){{ $replies->body }}@endif</textarea>
         @if ($errors->has('body')) <p class="help-block">The reply field is required.</p> @endif
 
 
@@ -74,7 +76,7 @@
       </label>
       <select name="nick_name" id="nick_name" class="form-control">
         @foreach($userNicknames as $nick)
-        <option value="{{ $nick->id }}">{{ $nick->nick_name}}</option>
+        <option value="{{ $nick->id }}" @if(sizeof(old()) > 0 && old('nick_name') == $nick->id) selected @endif>{{ $nick->nick_name}}</option>
         @endforeach
       </select>
       @if ($errors->has('nick_name')) <p class="help-block">{{ $errors->first('nick_name') }}</p> @endif

@@ -284,73 +284,75 @@ class SettingsController extends Controller
             $userNickname = Nickname::personNicknameArray();
             $confirm_support = 0;
             $alreadySupport = Support::where('topic_num', $topicnum)->where('camp_num', $campnum)->where('end', '=', 0)->whereIn('nick_name_id', $userNickname)->get();
+            /** #1037 */
+            $delegateSupportInTopic = Support::where('topic_num', $topicnum)->where('end', '=', 0)->where('delegate_nick_name_id','!=',0)->whereIn('nick_name_id', $userNickname)->get();
+            /** By Reena Nalwa #974 */
+            $alreadyDirectSupported = Support::where('topic_num', $topicnum)->where('end', '=', 0)->where('delegate_nick_name_id', '=', 0)->whereIn('nick_name_id', $userNickname)->pluck('camp_num')->toArray();
+            //warning message for delegate support 
+            $parentSupport = Camp::validateParentsupport($topicnum, $campnum, $userNickname, $confirm_support);
+            $childSupport = Camp::validateChildsupport($topicnum, $campnum, $userNickname, $confirm_support);
+           
             if ($alreadySupport->count() > 0) {
                 if($alreadySupport[0]->delegate_nick_name_id!=0){
                     $nickName = Nickname::where('id',$alreadySupport[0]->delegate_nick_name_id)->first();
                     $userFromNickname = $nickName->getUser();
-                    Session::flash('warningDelegate', "You have already delegated your support for this camp to user ".$nickName->nick_name.". If you continue your delegated support will be removed.");
-
+                    //Session::flash('warningDelegate', "You have already delegated your support for this camp to user ".$nickName->nick_name.". If you continue your delegated support will be removed.");
+                    Session::flash('warningDelegate', "You have already delegated your support for this camp to user ".$nickName->nick_name.". If you continue your delegated support will be removed.");   
                 }
             }
-            /** #1037 */
-            $delegateSupportInTopic = Support::where('topic_num', $topicnum)->where('end', '=', 0)->where('delegate_nick_name_id','!=',0)->whereIn('nick_name_id', $userNickname)->get();
             if ($delegateSupportInTopic->count() > 0) {
                 $nickName = Nickname::where('id',$delegateSupportInTopic[0]->delegate_nick_name_id)->first();
                 $userFromNickname = $nickName->getUser(); 
                 Session::flash('warning', "You have delegated your support to user ".$nickName->nick_name." under this topic. If you continue your delegated support will be removed.");
-
+                Session::flash('confirm', 1);
             }
-            /** By Reena Nalwa #974 */
-            $alreadyDirectSupported = Support::where('topic_num', $topicnum)->where('end', '=', 0)->where('delegate_nick_name_id', '=', 0)->whereIn('nick_name_id', $userNickname)->pluck('camp_num')->toArray();
-            if(count($alreadyDirectSupported) && $delegate_nick_name_id){
-                                   
+            else if(count($alreadyDirectSupported) && $delegate_nick_name_id){    
                 Session::flash('warning', "You are directly supporting one or more camps under this topic. If you continue your direct support will be removed.");
+                Session::flash('confirm', 1);
             }
-            $parentSupport = Camp::validateParentsupport($topicnum, $campnum, $userNickname, $confirm_support);
-            if ($parentSupport === "notlive") {
-                Session::flash('warning', "You cant submit your support to this camp as its not live yet.");
-                //return redirect()->back();
-            } else if ($parentSupport) {
-                if (count($parentSupport) == 1) {                   
-                    foreach ($parentSupport as $parent){                        
-                        $parentCampName = Camp::getCampNameByTopicIdCampId($onecamp->topic_num, $parent->camp_num, $as_of_time);
-                        if ($parent->camp_num == $campnum) {
-                            //Session::flash('warning', "You are already supporting this camp. You can't submit support again.");
-                            Session::flash('confirm', 'samecamp');
-                        } else {
-                            Session::flash('warning', '"'.$onecamp->camp_name .'" is a child camp to "' .$parentCampName .'", so if you commit support to "'.$onecamp->camp_name .'", the support of the parent camp "' .$parentCampName .'" will be removed.');
-                            Session::flash('confirm', 1);
-                        }
-                    }
-                } else {
-                    Session::flash('warning', 'The following  camps are parent camps to "' . $onecamp->camp_name . '" and will be removed if you commit this support.');
-                    Session::flash('confirm', 1);
-                }
-                //return redirect()->back();
-            }
-            
-            $childSupport = Camp::validateChildsupport($topicnum, $campnum, $userNickname, $confirm_support);
-
-            if ($childSupport) {
-                if (count($childSupport) == 1) {
-                    foreach ($childSupport as $child)
-                    {
-                        $childCampName = Camp::getCampNameByTopicIdCampId($topicnum, $child->camp_num, $as_of_time);
-                        if ($child->camp_num == $campnum && $child->delegate_nick_name_id == 0) {
-                            // Session::flash('warning', "You are already supporting this camp. You cant submit support again.");
-                            Session::flash('confirm', 'samecamp');
-                        } else {
-                                Session::flash('warning', '"'.$onecamp->camp_name .'" is a parent camp to "'. $childCampName. '", so if you commit support to "'.$onecamp->camp_name .'", the support of the child camp "'. $childCampName. '" will be removed.');
+            else{
+                if ($parentSupport === "notlive") {
+                    Session::flash('warning', "You cant submit your support to this camp as its not live yet.");
+                    //return redirect()->back();
+                } else if ($parentSupport) {
+                    if (count($parentSupport) == 1) {                   
+                        foreach ($parentSupport as $parent){                        
+                            $parentCampName = Camp::getCampNameByTopicIdCampId($onecamp->topic_num, $parent->camp_num, $as_of_time);
+                            if ($parent->camp_num == $campnum) {
+                                //Session::flash('warning', "You are already supporting this camp. You can't submit support again.");
+                                Session::flash('confirm', 'samecamp');
+                            } else {
+                                Session::flash('warning', '"'.$onecamp->camp_name .'" is a child camp to "' .$parentCampName .'", so if you commit support to "'.$onecamp->camp_name .'", the support of the parent camp "' .$parentCampName .'" will be removed.');
                                 Session::flash('confirm', 1);
                             }
-                    }
-                } else {
-                        
-                        Session::flash('warning', '"'.$onecamp->camp_name .'" is a parent camp to this list of child camps. If you commit support to "'.$onecamp->camp_name .'", the support of the camps in this list will be removed.');
-
+                        }
+                    } else {
+                        Session::flash('warning', 'The following  camps are parent camps to "' . $onecamp->camp_name . '" and will be removed if you commit this support.');
                         Session::flash('confirm', 1);
+                    }
+                    //return redirect()->back();
                 }
-                //return redirect()->back();
+                if ($childSupport) {
+                    if (count($childSupport) == 1) {
+                        foreach ($childSupport as $child)
+                        {
+                            $childCampName = Camp::getCampNameByTopicIdCampId($topicnum, $child->camp_num, $as_of_time);
+                            if ($child->camp_num == $campnum && $child->delegate_nick_name_id == 0) {
+                                // Session::flash('warning', "You are already supporting this camp. You cant submit support again.");
+                                Session::flash('confirm', 'samecamp');
+                            } else {
+                                    Session::flash('warning', '"'.$onecamp->camp_name .'" is a parent camp to "'. $childCampName. '", so if you commit support to "'.$onecamp->camp_name .'", the support of the child camp "'. $childCampName. '" will be removed.');
+                                    Session::flash('confirm', 1);
+                                }
+                        }
+                    } else {
+                            
+                            Session::flash('warning', '"'.$onecamp->camp_name .'" is a parent camp to this list of child camps. If you commit support to "'.$onecamp->camp_name .'", the support of the camps in this list will be removed.');
+    
+                            Session::flash('confirm', 1);
+                    }
+                    //return redirect()->back();
+                }
             }
             $supportedTopic = Support::where('topic_num', $topicnum)
                 ->whereIn('nick_name_id', $userNickname)
@@ -443,17 +445,36 @@ class SettingsController extends Controller
                 $ifSupportLeft = false;
             }
 
+            /**
+             *  Send support deleted mail to all supporter (direct or delegated) and subscribers 
+             *  Except in case of removing any parent camp support
+             *  Ticket # 1149 - Muhammad Ahmed
+             */
+
+            $ifSupportChildCamp = false;
+
+            if(isset($topic_num) && isset($data) && array_key_exists('camp_num',$data) && array_key_exists('removed_camp',$data)) {
+                $camp = Camp::where('topic_num', $topic_num)->where('camp_num', '=', $data['camp_num'])->where('go_live_time', '<=', time())->latest('submit_time')->first();
+                if(isset($camp) && count($camp) > 0) {
+                    $allParentCampsNumbers = Camp::getAllParent($camp);
+                    if(!empty(array_intersect($data['removed_camp'], $allParentCampsNumbers))) {
+                        $ifSupportChildCamp = true;
+                    }
+                }
+            }
+            
             /* code is commented for 1295, same code add inside 
-            if (isset($mysupports) && count($mysupports) > 0 && isset($data['removed_camp']) && count($data['removed_camp']) > 0) {
+            /* uncomment below code for this ticket 1346  and adding removeCampStatus condition here*/
+            if ((isset($mysupports) && count($mysupports) > 0) && (isset($data['removed_camp']) && count($data['removed_camp']) > 0) && (isset($data['removeCampStatus']) && count($data['removeCampStatus']) > 0)) {
                foreach ($mysupports as $singleSupport) { 
                     if(in_array($singleSupport->camp_num,$data['removed_camp'])){
-                        //$endDelegatesForOld = true;
-                        $this->removeSupport($topic_num,$singleSupport->camp_num,$singleSupport->nick_name_id,'',$singleSupport->support_order,$promoteDelegate,$ifSupportLeft, $endDelegatesForOld);
-
+                        $endDelegatesForOld = true;
+                        $this->removeSupport($topic_num,$singleSupport->camp_num,$singleSupport->nick_name_id,'',$singleSupport->support_order,$promoteDelegate,$ifSupportLeft, $endDelegatesForOld, $ifSupportChildCamp);
                         //remove support from delegated for previous camp
                     } 
-                 }    
-            }*/
+                }    
+            }
+            /** end of this commentted code */
            
             /** if user is delegating to someone else or is directly supporting  then all the old delegated  supports will be removed #702 **/
             if(isset($myDelegatedSupports) && count($myDelegatedSupports) > 0){
@@ -463,8 +484,10 @@ class SettingsController extends Controller
                         $singleSupport->save();
                         $mailData = $data;
                         $mailData['camp_num'] = $singleSupport->camp_num;
-                        /* send support deleted mail to all supporter and subscribers */
-                        $this->emailForSupportDeleted($mailData);    
+
+                        if(!$ifSupportChildCamp) {
+                            $this->emailForSupportDeleted($mailData);
+                        }    
                     }             
                 }
             }           
@@ -512,11 +535,12 @@ class SettingsController extends Controller
                         $supportTopic->save();
                         /** If any user hase delegated their support to this user, record/add there delegated support #749 including sub-level delegates(&49 II Part) */
                         $this->addDelegatedSupport($myDelegator,$topic_num,$camp_num,$support_order,$data['nick_name']); 
-                        if (isset($mysupports) && count($mysupports) > 0 && isset($data['removed_camp']) && count($data['removed_camp']) > 0) {
+                        if (isset($mysupports) && count($mysupports) > 0 && isset($data['removed_camp']) && count($data['removed_camp']) > 0 ) {
+                            
                             foreach ($mysupports as $singleSupport) { 
                                 if(in_array($singleSupport->camp_num,$data['removed_camp'])){
                                     $endDelegatesForOld = true;
-                                    $this->removeSupport($topic_num,$singleSupport->camp_num,$singleSupport->nick_name_id,'',$singleSupport->support_order,$promoteDelegate,$ifSupportLeft, $endDelegatesForOld);       
+                                    $this->removeSupport($topic_num,$singleSupport->camp_num,$singleSupport->nick_name_id,'',$singleSupport->support_order,$promoteDelegate,$ifSupportLeft, $endDelegatesForOld, $ifSupportChildCamp);       
                                     //remove support from delegated for previous camp
                                 } 
                             }    
@@ -653,6 +677,7 @@ class SettingsController extends Controller
         $supported_camp = $nickName->getSupportCampList($topic_name_space_id,['nofilter'=>true]);
         $supported_camp_list = $nickName->getSupportCampListNamesEmail($supported_camp, $data['topic_num'],$data['camp_num']);
         $dataObject['support_list'] = $supported_camp_list;
+        $dataObject['namespace_id'] = $topic_name_space_id;
         $ifalsoSubscriber = Camp::checkifSubscriber($subscribers, $parentUser);
         if ($ifalsoSubscriber) {
             $dataObject['also_subscriber'] = 1;
@@ -682,6 +707,7 @@ class SettingsController extends Controller
             $supported_camp = $nickName->getSupportCampList($topic_name_space_id,['nofilter'=>true]);
             $supported_camp_list = $nickName->getSupportCampListNamesEmail($supported_camp, $supportData['topic_num'],$supportData['camp_num']);
             $supportData['support_list'] = $supported_camp_list;
+            $dataObject['namespace_id'] = $topic_name_space_id;
             $ifalsoSubscriber = Camp::checkifSubscriber($subscribers, $user);
             if ($ifalsoSubscriber) {
                 $supportData['also_subscriber'] = 1;
@@ -705,6 +731,8 @@ class SettingsController extends Controller
                 $subscriberData['support_list'] = $subscriptions_list;
                 $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $userSub->email : config('app.admin_email');
                 $subscriberData['subscriber'] = 1;
+                $topic = Topic::getLiveTopic($subscriberData['topic_num']);
+                $subscriberData['namespace_id'] = $topic->namespace_id;
                 try{
                 Mail::to($receiver)->bcc(config('app.admin_bcc'))->send(new NewDelegatedSupporterMail($userSub, $link, $subscriberData));
                 }catch(\Swift_TransportException $e){
@@ -839,6 +867,10 @@ class SettingsController extends Controller
             }else{  // removing direct support
                 $currentSupport = Support::where('support_id', $support_id);
                 $currentSupportRec = $currentSupport->first();
+                if(empty($currentSupportRec) || $currentSupportRec->end != 0) {
+                    Session::flash('error', "Your support has already been removed from this camp.");
+                    return redirect()->back();
+                }
                 $input['camp_num'] = $currentSupportRec->camp_num;
                 $input['nick_name'] = $currentSupportRec->nick_name_id;
                 $input['topic_num'] = $topic_num;
@@ -904,6 +936,7 @@ class SettingsController extends Controller
             session()->forget("topic-support-$topic_num");
             session()->forget("topic-support-nickname-$topic_num");
             session()->forget("topic-support-tree-$topic_num");
+            Session::save();
         }
     }
 
@@ -1169,6 +1202,10 @@ class SettingsController extends Controller
     public function remove_support($topicNum,$campNum,$nickNameId){
         $as_of_time = time();
         $support = Support::where('camp_num', $campNum)->where('topic_num', $topicNum)->where('nick_name_id', $nickNameId)->where('end', '=', 0)->first();
+        if(empty($support)) {
+            Session::flash('error', "Your support has already been removed from this camp.");
+            return redirect()->back();
+        }
         $delegateNickNameId = $support->delegate_nick_name_id;
         $promoteDelegate = true;
 
@@ -1206,7 +1243,7 @@ class SettingsController extends Controller
      * 3. re-order the preference number for other supported camps AND
      * 4. Same will be done for their delegates tree.
      */
-    public function removeSupport($topicNum,$campNum='',$nickNameId,$delegateNickNameId=0,$currentSupportOrder='',$promoteDelegate = true,$ifSupportLeft = true, $endDelegatesForOld =false){
+    public function removeSupport($topicNum,$campNum='',$nickNameId,$delegateNickNameId=0,$currentSupportOrder='',$promoteDelegate = true,$ifSupportLeft = true, $endDelegatesForOld =false, $ifSupportChildCamp = false){
         $startSupportOrder = $currentSupportOrder;
         $as_of_time = time();
         
@@ -1259,8 +1296,17 @@ class SettingsController extends Controller
                     }
                 }   
             } 
-            /* send support deleted mail to all supporter and subscribers */
-            $this->emailForSupportDeleted($mailData);
+
+            /**
+             * Send support deleted email to all supportors and subscribers except in case if person
+             * support child camp as by supporting child camp, parent camp support get removed but, from product point of view, 
+             * implicitly support parent camp of any child camp a person do support
+             * Ticket # 1149 - Muhammad Ahmed
+             */
+            
+            if(!$ifSupportChildCamp) {
+                $this->emailForSupportDeleted($mailData);
+            }   
         }
         return;
     }
@@ -1282,7 +1328,8 @@ class SettingsController extends Controller
         $data['camp'] = $camp;
         $data['subject'] ="You have been promoted";
         $data['topic_link'] = \App\Model\Camp::getTopicCampUrl($topicNum,1);
-        $data['camp_link'] = \App\Model\Camp::getTopicCampUrl($topicNum,$camp->camp_num);        
+        $data['camp_link'] = \App\Model\Camp::getTopicCampUrl($topicNum,$camp->camp_num);  
+        $data['namespace_id'] = $topic->namespace_id;      
         foreach ($alldirectDelegates as $supporter) {
             $user = Nickname::getUserByNickName($supporter->nick_name_id);
             $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');
@@ -1314,7 +1361,8 @@ class SettingsController extends Controller
         $data['subject'] ="You have been promoted as direct supporter";
         $data['topic_link'] = Camp::getTopicCampUrl($topicNum,1);
         $data['camp_link'] = Camp::getTopicCampUrl($topicNum,$campNum);   
-        $data['url_portion'] =  Camp::getSeoBasedUrlPortion($topicNum,$campNum);     
+        $data['url_portion'] =  Camp::getSeoBasedUrlPortion($topicNum,$campNum);  
+        $data['namespace_id'] = $topic->namespace_id;   
         foreach ($alldirectDelegates as $supporter) {
             $user = Nickname::getUserByNickName($supporter->nick_name_id);
             $receiver = (config('app.env') == "production" || config('app.env') == "staging") ? $user->email : config('app.admin_email');

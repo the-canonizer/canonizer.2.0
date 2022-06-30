@@ -23,7 +23,7 @@ class NewsFeedController extends Controller
     
     public function store(Request $request){
         $all = $request->all();
-        $regex = '/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/';
+        $regex = '/(http(s?):\/\/)([a-z0-9\-]+\.)+[a-z]{2,4}(\.[a-z]{2,4})*(\/[^ ]+)*/i';
        
         $validatorArray = [
             'display_text'=>'required|max:256|regex:/^[a-zA-Z0-9.\s]+$/',
@@ -68,7 +68,7 @@ class NewsFeedController extends Controller
     
     public function update(Request $request){
        $all = $request->all();
-       $regex = '/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/';
+       $regex = '/(http(s?):\/\/)([a-z0-9\-]+\.)+[a-z]{2,4}(\.[a-z]{2,4})*(\/[^ ]+)*/i';
         $validatorArray = [
             'display_text.*'=>'required|max:256|regex:/^[a-zA-Z0-9.\s]+$/',
             "link.*" => array("required", "regex:".$regex)

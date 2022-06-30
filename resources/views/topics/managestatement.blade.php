@@ -6,7 +6,6 @@
     <h3><b>Camp:</b> {!! $parentcamp !!}</h3>  
 </div>
 
-
 <div class="page-titlePnl">
     <h1 class="page-title">
 	 <?php if($objection=="objection") { ?> 
@@ -53,7 +52,7 @@
                 <label for="camp_name">Nick Name <span style="color:red">*</span></label>
                 <select name="nick_name" id="nick_name" class="form-control">
                     @foreach($nickNames as $nick)
-                    <option value="{{ $nick->id }}">{{ $nick->nick_name}}</option>
+                    <option value="{{ $nick->id }}" @if(sizeof(old()) > 0 && old('nick_name') == $nick->id) selected @endif>{{ $nick->nick_name}}</option>
                     @endforeach
 					
                 </select>
@@ -65,7 +64,7 @@
              </div> 			   
              <div class="form-group">
                 <label for="">Statement <span style="color:red">*</span></label>
-                <textarea <?php if($objection=="objection") { ?> readonly <?php } ?> class="form-control" rows="6" id="name" name="statement">{!! htmlspecialchars($statement->value) !!} </textarea>
+                <textarea <?php if($objection=="objection") { ?> readonly <?php } ?> class="form-control" rows="6" id="name" name="statement">@if(sizeof(old()) > 0) {!! htmlspecialchars(old('statement')) !!} @else {!! htmlspecialchars($statement->value) !!} @endif</textarea>
                 <p class="font-italic m-0">Note: We support wiki markup. To get reference <a href="{{ \App\Model\Camp::getTopicCampUrl(132,5) }}" target="_blank">click here</a>.</p>
                 @if ($errors->has('statement')) <p class="help-block">{{ $errors->first('statement') }}</p> @endif
              </div>
@@ -82,7 +81,7 @@
             <?php }  else { ?>  
 			 <div class="form-group">
                 <label for="title">Edit summary (Briefly describe your changes)</label>
-                 <textarea class="form-control" id="note" rows="4" name="note">{{$statementupdate == 'update'? $statement->note : ""}}</textarea>
+                 <textarea class="form-control" id="note" rows="4" name="note">@if(sizeof(old()) > 0) {!! htmlspecialchars(old('note')) !!} @else {{$statementupdate == 'update'? $statement->note : ""}} @endif</textarea>
                 @if ($errors->has('note')) <p class="help-block">{{ $errors->first('note') }}</p> @endif
             </div> 
 			<?php } ?>

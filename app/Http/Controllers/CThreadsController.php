@@ -130,6 +130,11 @@ class CThreadsController extends Controller
 
         $topic = getArray($topicid, $topicname, $campnum);
         $camp  = Camp::getLiveCamp($topicid,$campnum);
+        $threadTopic = Topic::where('topic_num', $topicid)
+                ->where('go_live_time', '<=', time())
+				->where('objector_nick_id','=',NULL)
+                ->latest('submit_time')
+                ->first();
 
         return view(
             'threads.index',
@@ -142,11 +147,8 @@ class CThreadsController extends Controller
                                                     ->where('topic_num', $topicid)
                                                     ->value('camp_name'),
                 // Return the name of the Topic to index View
-                'topicGeneralName' => Topic::where('topic_num', $topicid)
-                                             ->where('go_live_time', '<=', time())
-											 ->where('objector_nick_id','=',NULL)
-                                             ->latest('submit_time')
-                                             ->first()->topic_name,
+                'topicGeneralName' => $threadTopic->topic_name,
+                'namespace_id'     => $threadTopic->namespace_id,
                 'parentcamp'       => Camp::campNameWithAncestors($camp,'',$topicname),
                 'participateFlag'  => $partcipateFlag,
                 'request_by'  => $request_by,
@@ -211,7 +213,8 @@ class CThreadsController extends Controller
             $topic,
             [
                 'parentcamp'    => Camp::campNameWithAncestors($camp,'',$topicname),
-                'userNicknames'   => $userNicknames
+                'userNicknames'   => $userNicknames,
+                'topicGeneralName' => $camp->topic->topic_name,
 
             ],
             compact('threads', 'topicGeneralName')
@@ -296,6 +299,7 @@ class CThreadsController extends Controller
                 'parentcamp'    => Camp::campNameWithAncestors($camp,'',$topicname),
                 'userNicknames' => $userNickNames,
                 'threads' => CThread::findOrFail($CThread),
+                'topicGeneralName' => $camp->topic->topic_name,
                 'replies' => $replies,
                 'reply_id' => $reply_id,
             ]
