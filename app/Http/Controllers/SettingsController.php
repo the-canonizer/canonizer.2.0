@@ -414,6 +414,8 @@ class SettingsController extends Controller
             if(isset($data['delegate_nick_name_id']) && $data['delegate_nick_name_id']){
                 $data = $this->removeDirectSupport($data);
             }
+
+            
             $userNicknames = Nickname::personNicknameArray();
             $topic_num = $data['topic_num'];
             $mysupportArray = [];
@@ -1508,6 +1510,7 @@ class SettingsController extends Controller
             $anyDelegator = Support::where('topic_num', $cmp->topic_num)->whereIn('delegate_nick_name_id', [  $delegator->nick_name_id ])->where('end', '=', 0)->groupBy('nick_name_id')->get(); //#1088
            //ending support of child as well
             Support::where('topic_num',$cmp->topic_num)
+            ->where('camp_num',$cmp->camp_num) // added for 1471
             ->where('end', '=',0)
             ->where('delegate_nick_name_id',  '=', $delegatedTo)->update(['end'=>time()]);
 
