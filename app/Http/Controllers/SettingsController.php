@@ -407,7 +407,7 @@ class SettingsController extends Controller
            
             /* Enter support record to support table */
             $data = $request->all();
-
+//echo "<pre>"; print_r($data); die;
             /** IN case of delegated support check for any direct support and remove them */
             $anyDelegator = Support::where('topic_num', $data['topic_num'])->whereIn('delegate_nick_name_id', [$data['nick_name']])->where('end', '=', 0)->groupBy('nick_name_id')->get(); //#1088
  
@@ -496,7 +496,7 @@ class SettingsController extends Controller
            
             $last_camp =  $data['camp_num'];
             $newcamp_mail_flag = false;           
-            if(isset($myDelegatedSupports) && count($myDelegatedSupports) > 0 && isset($data['delegate_nick_name_id']) && $data['delegate_nick_name_id'] == 0 &&  (!isset($data['removeCampStatus'])) ){ // removing delegte support and directly supporting camp
+            if(isset($myDelegatedSupports) && count($myDelegatedSupports) > 0 && isset($data['delegate_nick_name_id']) && $data['delegate_nick_name_id'] == 0 &&  (!isset($data['remove_all'])) ){ // removing delegte support and directly supporting camp
                 $last_camp = $data['camp_num'];
                 $newcamp_mail_flag = true;
                 $supportTopic = new Support();
