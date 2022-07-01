@@ -40,7 +40,7 @@ class Algorithm{
         @return all the available algorithm key values
     */
     public static function getKeyList(){
-        return array('blind_popularity','mind_experts','computer_science_experts','PhD','christian','secular','mormon','uu','atheist','transhumanist','united_utah','republican','democrat', 'ether','shares','shares_sqrt','mind_experts_special'
+        return array('blind_popularity','mind_experts','computer_science_experts','PhD','christian','secular','mormon','uu','atheist','transhumanist','united_utah','republican','democrat', 'ether','shares','shares_sqrt','mind_experts_non_special'
         );
     }
     
@@ -353,13 +353,13 @@ class Algorithm{
         })->last();
         return $expertCamp;
     }
-    public static function mind_experts_special($topicnum,$nick_name_id){
+    public static function mind_experts_non_special($topicnum,$nick_name_id){
         $expertCamp = self::get_expert_camp($topicnum,$nick_name_id);
         if(!$expertCamp){ # not an expert canonized nick.
             return 0;
         }
 
-        $score_multiplier = self::get_mind_expert_score_multiplier($topicnum,$nick_name_id);
+        $score_multiplier = self::get_mind_expert_score_multiplier($expertCamp,$topicnum,$nick_name_id);
         $expertCampReducedTree = $expertCamp->getCampAndNickNameWiseSupportTree('mind_experts',$topicnum); # only need to canonize this branch
              // Check if user supports himself
         if(array_key_exists('camp_wise_tree',$expertCampReducedTree) && array_key_exists($expertCamp->camp_num,$expertCampReducedTree['camp_wise_tree'])){
@@ -371,7 +371,7 @@ class Algorithm{
         
     }
 
-    public static function get_mind_expert_score_multiplier($topicnum=0,$nick_name_id=0){
+    public static function get_mind_expert_score_multiplier($expertCamp,$topicnum=0,$nick_name_id=0){
         #Calculations to check if user is supporting other mind experts or not
         $as_of_time = time();
         $key = '';
@@ -410,9 +410,9 @@ class Algorithm{
             $camp_num_array[] = $scamp->camp_num;
         }
 
-        $is_supporting_own_expert = false;
+        $is_supporting_own_expert = 0;
         if(in_array($expertCamp->camp_num,$camp_num_array) && in_array($expertCamp->topic_num,$topic_num_array)){
-            $is_supporting_own_expert = true;
+            $is_supporting_own_expert = 1;
         }
               
         $ret_camp = Camp::whereIn('topic_num', array_unique($topic_num_array))
@@ -428,9 +428,13 @@ class Algorithm{
             $num_of_camps_supported = $ret_camp->count();
         }
         $score_multiplier = 1;
-        if( !$is_supporting_own_expert && ( $directSupports->count() > 0 || $delegatedSupports->count() > 0 ) && $num_of_camps_supported > 0 ) {
+        if(!$is_supporting_own_expert || $num_of_camps_supported > 1) {
             $score_multiplier = 5; 
          }
+        //  else if($is_supporting_own_expert && (( $directSupports->count() > 1 || $delegatedSupports->count() > 1 ) && $num_of_camps_supported > 1)){
+        //     $score_multiplier = 5; 
+        //  }
+        
         #Calculations to check if user is supporting other mind experts or not Ends
         return $score_multiplier;
     }
@@ -440,18 +444,16 @@ class Algorithm{
         if(!$expertCamp){ # not an expert canonized nick.
             return 0;
         }
-        $score_multiplier = self::get_mind_expert_score_multiplier($topicnum,$nick_name_id);
+        $score_multiplier = self::get_mind_expert_score_multiplier($expertCamp,$topicnum,$nick_name_id);
         
         
 		# start with one person one vote canonize.
        
-	     //$expertCampReducedTree = $expertCamp->campTree('blind_popularity'); # only need to canonize this branch
-         if($topic_num == 81){
-            $expertCampReducedTree = $expertCamp->getCampAndNickNameWiseSupportTree('blind_popularity',$topicnum); # only need to canonize this branch
+         if($topic_num == 81){  // mind expert special case
+            $expertCampReducedTree = $expertCamp->getCampAndNickNameWiseSupportTree('blind_popularity',$topicnum,true); # only need to canonize this branch
             $total_score = 0;
-           
             if(array_key_exists('camp_wise_tree',$expertCampReducedTree) && array_key_exists($expertCamp->camp_num,$expertCampReducedTree['camp_wise_tree']) && count($expertCampReducedTree['camp_wise_tree'][$expertCamp->camp_num]) > 0){
-                foreach($expertCampReducedTree['camp_wise_tree'][$expertCamp->camp_num] as $tree_node){
+               foreach($expertCampReducedTree['camp_wise_tree'][$expertCamp->camp_num] as $tree_node){
                     if(count($tree_node) > 0){
                         foreach($tree_node as $score){
                             $total_score = $total_score + $score['score'];
@@ -459,10 +461,10 @@ class Algorithm{
                     }                
                 }
             }  
+            
             return $total_score * $score_multiplier;
         }else{
-            // $expertCampReducedTree = $expertCamp->getCampAndNickNameWiseSupportTree('blind_popularity',$topic_num); # only need to canonize this branch
-            $expertCampReducedTree = self::mind_experts_special($topicnum,$nick_name_id); # only need to canonize this branch
+           $expertCampReducedTree = self::mind_experts_non_special($topicnum,$nick_name_id); # only need to canonize this branch
             $total_score = 0;
             if(count($expertCampReducedTree) > 0){
                 foreach($expertCampReducedTree as $tree_node){

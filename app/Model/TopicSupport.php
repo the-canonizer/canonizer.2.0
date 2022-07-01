@@ -85,7 +85,8 @@ class TopicSupport extends Model {
             $score_tree = $camp->getCampAndNickNameWiseSupportTree($algorithm, $topicnum);
             session(["score_tree_{$topicnum}_{$algorithm}"=>$score_tree]);
         }
-        $as_of_time = time();
+        
+         $as_of_time = time();
 		if(isset($_REQUEST['asof']) && $_REQUEST['asof']=='bydate'){
 			$as_of_time = strtotime($_REQUEST['asofdate']);
 		}
@@ -120,7 +121,7 @@ class TopicSupport extends Model {
                                 $currentCampSupport = 1;
                                 $support_order = $supp_order;
                                 $delegate_tree = $camp_score['delegates'];               
-                                $supportPoint = $camp_score['score'];
+                                $supportPoint = $supportPoint + $camp_score['score'];
                                 break; 
                             }
                         }
