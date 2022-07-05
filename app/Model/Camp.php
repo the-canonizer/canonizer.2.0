@@ -541,7 +541,7 @@ class Camp extends Model {
         $childsData = Camp::where('topic_num', '=', $topicnum)
                         ->where('parent_camp_num', '=', $parentcamp)
                         ->where('camp_name', '!=', 'Agreement')
-                        //->where('objector_nick_id', '=', NULL)
+                        ->where('objector_nick_id', '=', NULL)
                         //->where('go_live_time','<=',time()) 				
                         //->orderBy('submit_time', 'desc')
                         ->get()->unique('camp_num');

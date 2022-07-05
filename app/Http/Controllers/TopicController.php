@@ -1458,8 +1458,8 @@ class TopicController extends Controller {
                 $supportData = $dataObject;
                 $user = Nickname::getUserByNickName($supporter->nick_name_id);
                 $alreadyMailed[] = $user->id;
-                $topic = \App\Model\Topic::where('topic_num','=',$supportData['topic_num'])->latest('submit_time')->get();
-                $topic_name_space_id = isset($topic[0]) ? $topic[0]->namespace_id:1;
+                $topic = Topic::getLiveTopic($supportData['topic_num']);
+                $topic_name_space_id = !empty($topic) ? $topic->namespace_id:1;
                 $nickName = \App\Model\Nickname::find($supporter->nick_name_id);
                 $supported_camp = $nickName->getSupportCampList($topic_name_space_id,['nofilter'=>true]);
                 $supported_camp_list = $nickName->getSupportCampListNamesEmail($supported_camp,$supportData['topic_num'],$supportData['camp_num']);
