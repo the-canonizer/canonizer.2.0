@@ -479,17 +479,19 @@ class SettingsController extends Controller
             /** end of this commentted code */
             /** if user is delegating to someone else or is directly supporting  then all the old delegated  supports will be removed #702 **/
             if(isset($myDelegatedSupports) && count($myDelegatedSupports) > 0){
+                $delegatedCampList = [];
+                $delegated_nick_name_id = 0;
                 foreach ($mysupports as $singleSupport) {
-                     if(in_array($singleSupport->camp_num,$myDelegatedSupports)){
+                    if(in_array($singleSupport->camp_num,$myDelegatedSupports)){
                         $singleSupport->end = time();
                         $singleSupport->save();
-                        $mailData = $data;
-                        $mailData['camp_num'] = $singleSupport->camp_num;
-
-                        if(!$ifSupportChildCamp) {
-                            $this->emailForSupportDeleted($mailData);
-                        }    
+                        $delegatedCampList[] = $singleSupport->camp_num;  
+                        $delegated_nick_name_id = $singleSupport->delegate_nick_name_id;
                     }             
+                }
+                
+                if(count($delegatedCampList) > 0) {
+                    $this->mailWhenDelegateSupportRemoved($data['topic_num'],$data['nick_name'],$delegated_nick_name_id,$delegatedCampList);
                 }
             }    
             
