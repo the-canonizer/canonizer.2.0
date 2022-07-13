@@ -407,13 +407,15 @@ class SettingsController extends Controller
            
             /* Enter support record to support table */
             $data = $request->all();
-
+            
             /** IN case of delegated support check for any direct support and remove them */
             $anyDelegator = Support::where('topic_num', $data['topic_num'])->whereIn('delegate_nick_name_id', [$data['nick_name']])->where('end', '=', 0)->groupBy('nick_name_id')->get(); //#1088
  
             if(isset($data['delegate_nick_name_id']) && $data['delegate_nick_name_id']){
                 $data = $this->removeDirectSupport($data);
             }
+
+            
             $userNicknames = Nickname::personNicknameArray();
             $topic_num = $data['topic_num'];
             $mysupportArray = [];
@@ -466,7 +468,7 @@ class SettingsController extends Controller
             /* code is commented for 1295, same code add inside 
             /* uncomment below code for this ticket 1346  and adding removeCampStatus condition here*/
             if ((isset($mysupports) && count($mysupports) > 0) && (isset($data['removed_camp']) && count($data['removed_camp']) > 0) && (isset($data['removeCampStatus']) && count($data['removeCampStatus']) > 0)) {
-               foreach ($mysupports as $singleSupport) { 
+                foreach ($mysupports as $singleSupport) { 
                     if(in_array($singleSupport->camp_num,$data['removed_camp'])){
                         $endDelegatesForOld = true;
                         $this->removeSupport($topic_num,$singleSupport->camp_num,$singleSupport->nick_name_id,'',$singleSupport->support_order,$promoteDelegate,$ifSupportLeft, $endDelegatesForOld, $ifSupportChildCamp);
@@ -475,7 +477,6 @@ class SettingsController extends Controller
                 }    
             }
             /** end of this commentted code */
-           
             /** if user is delegating to someone else or is directly supporting  then all the old delegated  supports will be removed #702 **/
             if(isset($myDelegatedSupports) && count($myDelegatedSupports) > 0){
                 foreach ($mysupports as $singleSupport) {
@@ -490,10 +491,12 @@ class SettingsController extends Controller
                         }    
                     }             
                 }
-            }           
+            }    
+            
+           
             $last_camp =  $data['camp_num'];
             $newcamp_mail_flag = false;           
-            if(isset($myDelegatedSupports) && count($myDelegatedSupports) > 0 && isset($data['delegate_nick_name_id']) && $data['delegate_nick_name_id'] == 0 ){ // removing delegte support and directly supporting camp
+            if(isset($myDelegatedSupports) && count($myDelegatedSupports) > 0 && isset($data['delegate_nick_name_id']) && $data['delegate_nick_name_id'] == 0 &&  (!isset($data['remove_all'])) ){ // removing delegte support and directly supporting camp
                 $last_camp = $data['camp_num'];
                 $newcamp_mail_flag = true;
                 $supportTopic = new Support();
@@ -1508,6 +1511,7 @@ class SettingsController extends Controller
             $anyDelegator = Support::where('topic_num', $cmp->topic_num)->whereIn('delegate_nick_name_id', [  $delegator->nick_name_id ])->where('end', '=', 0)->groupBy('nick_name_id')->get(); //#1088
            //ending support of child as well
             Support::where('topic_num',$cmp->topic_num)
+            ->where('camp_num',$cmp->camp_num) // added for 1471 ticket
             ->where('end', '=',0)
             ->where('delegate_nick_name_id',  '=', $delegatedTo)->update(['end'=>time()]);
 

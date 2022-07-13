@@ -41,6 +41,10 @@ class externallink implements startOfLine
             $url = $matches[2];
         }
 
+        if(!str_contains($url, '://') && !empty($url)) {
+            $url = 'https://' . $url;
+        }
+
         if(array_key_exists(3,$matches))
         {
             $title = $matches[3];
