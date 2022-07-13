@@ -102,7 +102,7 @@ class HomeController extends Controller {
 
             $reducedTree = Util::execute('POST', $endpoint, $headers, $requestBody);
 
-            $topics = [];// json_decode($reducedTree, true);
+            $topics = json_decode($reducedTree, true);
             
             if(count($topics['data']) && count($topics['data']['topic']) && $topics['status_code'] == 200){
                 $fromExistingCode = 0;
