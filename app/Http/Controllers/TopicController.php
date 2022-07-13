@@ -329,6 +329,12 @@ class TopicController extends Controller {
      */
     public function manage_topic(Request $request, $id) {
 
+        /**
+         * As of filters should not be applied on the manage topic page
+         * ticket # 1427 - Muhammad Ahmed
+         */
+        session()->forget('asofDefault');
+
         $paramArray = explode("-", $id);
         $id = $paramArray[0];
         $objection = (isset($paramArray[1]) && $paramArray[1] == 'objection') ? $paramArray[1] : null;
@@ -434,7 +440,13 @@ class TopicController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function create_camp(Request $request, $topicnum, $parentcampnum) {
+
+        /**
+         * As of filters should not be applied on the camp creation page
+         * ticket # 1427 - Muhammad Ahmed
+         */
         session()->forget('asofDefault');
+
         $topicnumArray = explode("-", $topicnum);
         $topicnum = $topicnumArray[0];
 		
@@ -458,6 +470,12 @@ class TopicController extends Controller {
      */
     public function manage_camp($id) {
 
+        /**
+         * As of filters should not be applied on the manage camp page
+         * ticket # 1427 - Muhammad Ahmed
+         */
+        session()->forget('asofDefault');
+
         $paramArray = explode("-", $id);
         $id = $paramArray[0];
         $objection = (isset($paramArray[1]) && $paramArray[1] == 'objection') ? $paramArray[1] : null;
@@ -470,8 +488,9 @@ class TopicController extends Controller {
 
         $topic = Camp::getAgreementTopic($camp->topic_num);
 
-        $parentcamp = Camp::campNameWithAncestors($camp, '',$topic->topic_name);
+        $onecamp = Camp::getLiveCamp($camp->topic_num, $camp->camp_num);
 
+        $parentcamp = Camp::campNameWithAncestors($onecamp, '',$topic->topic_name);
         //$parentcampsData = Camp::getAllParentCampNew($camp->topic_num);
 
         $parentcampsData = Camp::getAllParentCamp($camp->topic_num,['nofilter' => true]);//1070
@@ -493,6 +512,12 @@ class TopicController extends Controller {
      */
     public function manage_statement($id) {
 
+        /**
+         * As of filters should not be applied on the manage statement page
+         * ticket # 1427 - Muhammad Ahmed
+         */
+        session()->forget('asofDefault');
+        
         $paramArray = explode("-", $id);
         $id = $paramArray[0];
         $objection = (isset($paramArray[1]) && $paramArray[1] == 'objection') ? $paramArray[1] : null;
@@ -523,6 +548,13 @@ class TopicController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function create_statement($topic_num, $camp_num) {
+
+        /**
+         * As of filters should not be applied on the statement creation page
+         * ticket # 1427 - Muhammad Ahmed
+         */
+        session()->forget('asofDefault');
+        
         $topic = Camp::getAgreementTopic($topic_num);
 
         $camp = Camp::getLiveCamp($topic_num, $camp_num);
@@ -544,6 +576,11 @@ class TopicController extends Controller {
      */
     public function camp_history($id, $campnum) {
 
+        /**
+         * As of filters should not be applied on the camp history page
+         * ticket # 1427 - Muhammad Ahmed
+         */
+        session()->forget('asofDefault');
 
         $topicnumArray = explode("-", $id);
         $topicnum = $topicnumArray[0];
@@ -567,12 +604,6 @@ class TopicController extends Controller {
         //if(!count($onecamp)) return back();
         $wiky = new Wiky;
 
-        /**
-         * As of filters should not be applied on the camp history page
-         * ticket # 1381 - Muhammad Ahmed
-         */
-        session()->forget('asofDefault');
-
         return view('topics.camphistory', compact('topic', 'camps', 'parentcampnum', 'onecamp', 'parentcamp', 'wiky', 'ifIamSupporter','submit_time','ifSupportDelayed','ifIamImplicitSupporter'));
     }
 
@@ -584,6 +615,12 @@ class TopicController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function statement_history($id, $campnum) {
+
+        /**
+         * As of filters should not be applied on the statement history page
+         * ticket # 1427 - Muhammad Ahmed
+         */
+        session()->forget('asofDefault');
 
         $topicnumArray = explode("-", $id);
         $topicnum = $topicnumArray[0];
@@ -653,6 +690,12 @@ class TopicController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function topic_history($id) {
+
+        /**
+         * As of filters should not be applied on the topic history page
+         * ticket # 1427 - Muhammad Ahmed
+         */
+        session()->forget('asofDefault');
 
         $topicnumArray = explode("-", $id);
         $topicnum = $topicnumArray[0];

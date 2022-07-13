@@ -128,6 +128,13 @@ class CThreadsController extends Controller
             );
         }
 
+        /**
+         * As of filters should not be applied on the camp forum pages
+         * ticket # 1427 - Muhammad Ahmed
+         */
+        session()->forget('asofDefault');
+        $liveTopic = getAgreementTopic($topic->topic_num);
+
         $topic = getArray($topicid, $topicname, $campnum);
         $camp  = Camp::getLiveCamp($topicid,$campnum);
         $threadTopic = Topic::where('topic_num', $topicid)
@@ -147,7 +154,7 @@ class CThreadsController extends Controller
                                                     ->where('topic_num', $topicid)
                                                     ->value('camp_name'),
                 // Return the name of the Topic to index View
-                'topicGeneralName' => $threadTopic->topic_name,
+                'topicGeneralName' => $liveTopic->topic_name ?? $threadTopic->topic_name,
                 'namespace_id'     => $threadTopic->namespace_id,
                 'parentcamp'       => Camp::campNameWithAncestors($camp,'',$topicname),
                 'participateFlag'  => $partcipateFlag,

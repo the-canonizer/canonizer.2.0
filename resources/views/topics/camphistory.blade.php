@@ -1,8 +1,10 @@
 @extends('layouts.app')
 @section('content')
 
+@php $liveTopic = getAgreementTopic($topic->topic_num); @endphp
+
 <div class="camp top-head">
-    <h3><b>Topic:</b>  {{ $topic->topic_name}}</h3>
+    <h3><b>Topic:</b>  {{ $liveTopic->topic_name ?? $topic->topic_name}}</h3>
     <h3><b>Camp:</b> {!! $parentcamp !!}</h3>  
 
 </div>
