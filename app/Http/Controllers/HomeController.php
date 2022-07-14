@@ -174,7 +174,6 @@ class HomeController extends Controller {
 
     public function recusriveCampDisp($childs) {
         foreach ($childs as $child) {
-             echo "child --" . $child->title . "<br/>";
             if (count($child->childrens($child->topic_num, $child->camp_num)) > 0) {
                 $this->recusriveCampDisp($child->childrens($child->topic_num, $child->camp_num));
             }

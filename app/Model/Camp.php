@@ -541,7 +541,7 @@ class Camp extends Model {
         $childsData = Camp::where('topic_num', '=', $topicnum)
                         ->where('parent_camp_num', '=', $parentcamp)
                         ->where('camp_name', '!=', 'Agreement')
-                        //->where('objector_nick_id', '=', NULL)
+                        ->where('objector_nick_id', '=', NULL)
                         //->where('go_live_time','<=',time()) 				
                         //->orderBy('submit_time', 'desc')
                         ->get()->unique('camp_num');
@@ -706,7 +706,9 @@ class Camp extends Model {
         
         foreach($nick_name_wise_support as $nickNameId=>$support_camp){
            foreach($support_camp as $support){ 
+
                if($support->camp_num == $campnum){
+                    $supportPoint = Algorithm::{$algorithm}($support->nick_name_id,$support->topic_num,$support->camp_num);
                     $support_total = 0; 
                     if($multiSupport){
                         $support_total = $support_total + round($supportPoint * 1 / (2 ** ($support->support_order)), 3);
@@ -807,8 +809,6 @@ class Camp extends Model {
     }
 
     public function getCamptSupportCount($algorithm, $topicnum, $campnum,$nick_name_id=null) {
-        $score_tree = $this->getCampAndNickNameWiseSupportTree($algorithm, $topicnum);
-        session(["score_tree_{$topicnum}_{$algorithm}"=>$score_tree]);
         if(session()->has("score_tree_{$topicnum}_{$algorithm}")){
             $score_tree = session("score_tree_{$topicnum}_{$algorithm}");
         }else{
@@ -1269,8 +1269,7 @@ class Camp extends Model {
 
         $reducedTree = Util::execute('POST', $endpoint, $headers, $requestBody);
 
-        $data = [];//json_decode($reducedTree, true);
-        
+        $data = json_decode($reducedTree, true);
         if(count($data['data']) && $data['code'] == 200 ){
             $reducedTree = $data['data'][0];
              // calling this to fill data in sessions as on main page data is loading from mongo so sessions remian blank

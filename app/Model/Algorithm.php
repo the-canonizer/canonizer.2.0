@@ -444,8 +444,7 @@ class Algorithm{
         if(!$expertCamp){ # not an expert canonized nick.
             return 0;
         }
-        $score_multiplier = self::get_mind_expert_score_multiplier($expertCamp,$topicnum,$nick_name_id);
-        
+        $score_multiplier = self::get_mind_expert_score_multiplier($expertCamp,$topicnum,$nick_name_id);        
         
 		# start with one person one vote canonize.
        
