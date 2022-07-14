@@ -407,7 +407,7 @@ class SettingsController extends Controller
            
             /* Enter support record to support table */
             $data = $request->all();
-            
+            //echo "<pre>"; print_r($data);die;
             /** IN case of delegated support check for any direct support and remove them */
             $anyDelegator = Support::where('topic_num', $data['topic_num'])->whereIn('delegate_nick_name_id', [$data['nick_name']])->where('end', '=', 0)->groupBy('nick_name_id')->get(); //#1088
  
@@ -497,30 +497,32 @@ class SettingsController extends Controller
             $last_camp =  $data['camp_num'];
             $newcamp_mail_flag = false;           
             if(isset($myDelegatedSupports) && count($myDelegatedSupports) > 0 && isset($data['delegate_nick_name_id']) && $data['delegate_nick_name_id'] == 0 &&  (!isset($data['remove_all'])) ){ // removing delegte support and directly supporting camp
-                $last_camp = $data['camp_num'];
-                $newcamp_mail_flag = true;
-                $supportTopic = new Support();
-                $supportTopic->topic_num = $topic_num;
-                $supportTopic->nick_name_id = $data['nick_name'];
-                $supportTopic->delegate_nick_name_id = $data['delegate_nick_name_id'];
-                $supportTopic->start = time();
-                $supportTopic->camp_num = $data['camp_num'];
-                $supportTopic->support_order = 1;
-                $supportTopic->save();
-                //all delegator of $data['nick_name] should also assigned with this support #1088
-                if(isset($anyDelegator) && !empty($anyDelegator))
-                {
-                   
-                    $this->addSupportToDelegates($anyDelegator,$supportTopic,$data['nick_name']);
-                }
-                /* clear the existing session for the topic to get updated support count */
-                session()->forget("topic-support-{$topic_num}");
-                session()->forget("topic-support-nickname-{$topic_num}");
-                session()->forget("topic-support-tree-{$topic_num}");
-                Session::save();
-                /* send support added mail to all supporter and subscribers */
-                if($newcamp_mail_flag){
-                    $this->emailForSupportAdded($data);   
+                if(!in_array($data['camp_num'],$data['removed_camp'])){
+                    $last_camp = $data['camp_num'];
+                    $newcamp_mail_flag = true;
+                    $supportTopic = new Support();
+                    $supportTopic->topic_num = $topic_num;
+                    $supportTopic->nick_name_id = $data['nick_name'];
+                    $supportTopic->delegate_nick_name_id = $data['delegate_nick_name_id'];
+                    $supportTopic->start = time();
+                    $supportTopic->camp_num = $data['camp_num'];
+                    $supportTopic->support_order = 1;
+                    $supportTopic->save();
+                    //all delegator of $data['nick_name] should also assigned with this support #1088
+                    if(isset($anyDelegator) && !empty($anyDelegator))
+                    {
+                    
+                        $this->addSupportToDelegates($anyDelegator,$supportTopic,$data['nick_name']);
+                    }
+                    /* clear the existing session for the topic to get updated support count */
+                    session()->forget("topic-support-{$topic_num}");
+                    session()->forget("topic-support-nickname-{$topic_num}");
+                    session()->forget("topic-support-tree-{$topic_num}");
+                    Session::save();
+                    /* send support added mail to all supporter and subscribers */
+                    if($newcamp_mail_flag){
+                        $this->emailForSupportAdded($data);   
+                    }
                 }
             }else if (isset($data['support_order']) && isset($data['delegate_nick_name_id']) && $data['delegate_nick_name_id'] == 0 ) {
                 foreach ($data['support_order'] as $camp_num => $support_order) {
