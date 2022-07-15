@@ -418,6 +418,7 @@ $('#widget').draggable();
 			activateClearBtn();
 		}
 		function undoCampRemove(camp,ref,order,delegated){
+			console.log(order);
 			$(ref).parent(".support-sorter-element").removeClass('greay-out');
 			$(ref).parent(".support-sorter-element").find('.remove_camp').html('X');
 			$(ref).parent(".support-sorter-element").find('.remove_camp').removeClass('undo_camp');
@@ -430,11 +431,14 @@ $('#widget').draggable();
 					$(this).remove();
 				}
 			});
-
-			$(ref).parent(".support-sorter-element").append('<input type="hidden"  name="support_order['+camp+']" value="'+order+'">');
+			$(ref).parent(".support-sorter-element").append('<input type="hidden" class="final_support_order"  name="support_order['+camp+']" value="'+order+'">');
 			$(ref).parent(".support-sorter-element").append('<input type="hidden"  name="camp['+camp+']" value="'+camp+'">');
 			$(ref).parent(".support-sorter-element").append('<input type="hidden"  name="delegated['+camp+']" value="'+delegated+'">');
 			$('#remove_all').prop('checked', false); // Unchecks it
+			$( ".column" ).find('.x-btn').each(function(i,v){
+				//$(v).parent(".support-sorter-element").find('.support_order').text(i+1);
+				$(v).parent(".support-sorter-element").find('.final_support_order').val(i+1);
+			});
 		}
 
 		function activateClearBtn(){
