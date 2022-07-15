@@ -2,17 +2,16 @@
 @section('content')
 
 <?php if (!empty($topic)) {
-              $topicBreadName = "";
                 $currentLive = 1;
                 $currentTime = time();
-                 $topicNum = 0;
-                 $topicBreadName = $topic->topic_name; 
-                   $topicNum = $topic->topic_num;
-                   $urltitle      = $topicNum."-".preg_replace('/[^A-Za-z0-9\-]/', '-', $topic->topic_name);
-                   $url_portion = \App\Model\Camp::getSeoBasedUrlPortion($topicNum,$currentLive);
+                $topicNum = 0;
+                $liveTopic = getAgreementTopic($topic->topic_num);
+                $topicNum = $topic->topic_num;
+                $urltitle      = $topicNum."-".preg_replace('/[^A-Za-z0-9\-]/', '-', $topic->topic_name);
+                $url_portion = \App\Model\Camp::getSeoBasedUrlPortion($topicNum,$currentLive);
            ?>
 <div class="camp top-head">
-    <h3><b>Topic:</b>  <a href="/topic/{{$url_portion}}" >{{ $topicBreadName}}</a></h3>
+    <h3><b>Topic:</b>  <a href="/topic/{{$url_portion}}" >{{ $liveTopic->topic_name ?? '' }}</a></h3>
 </div>
 <?php } ?>
 <div class="page-titlePnl">

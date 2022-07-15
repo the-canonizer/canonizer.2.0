@@ -1,14 +1,17 @@
 @extends('layouts.app')
 @section('content') 
 
-<?php $topic_camp_link = \App\Model\Camp::getTopicCampUrl($topic->topic_num,1); ?>
+<?php 
+	$topic_camp_link = \App\Model\Camp::getTopicCampUrl($topic->topic_num,1);
+	$liveTopic = getAgreementTopic($topic->topic_num);
+?>
 <div class="page-titlePnl">
     <h1 class="page-title">Supported Camps</h1>
 </div> 
 <div class="camp top-head">
 	<h3>
 		<b>Topic:</b> 
-		{{ isset($topicData->topic_name)? $topicData->topic_name :''}}
+		{{ isset($liveTopic->topic_name)? $liveTopic->topic_name :''}}
 	</h3>
 	<h3>
 		<b>Camp:</b>
