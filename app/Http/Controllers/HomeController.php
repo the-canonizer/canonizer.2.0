@@ -39,6 +39,13 @@ class HomeController extends Controller {
     public function index(Request $request, $params = null) {
         
 		//session()->flush();
+        if (Auth::check()) {
+            if (!session('defaultUserAlgo')) {
+                $defaultAlgo = Auth::user()->default_algo;
+                 session()->put('defaultAlgo',$defaultAlgo);
+                 session()->put('defaultUserAlgo',$defaultAlgo);
+            }
+        }
         $namespaces = Namespaces::all();
          if(null == session('defaultNamespaceId')){
             session()->put('defaultNamespaceId',1);

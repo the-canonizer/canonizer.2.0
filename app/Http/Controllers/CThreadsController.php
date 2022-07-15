@@ -85,11 +85,11 @@ class CThreadsController extends Controller
                 $userNicknames = Nickname::topicNicknameUsed($topicid);
 
                 if (count($userNicknames) > 0) {
-                    $threads = CThread::join('post', 'thread.id', '=', 'post.c_thread_id' )->
+                    $threads = CThread::leftJoin('post', 'thread.id', '=', 'post.c_thread_id' )->
                                         select('thread.*', 'post.body')->
                                         where('camp_id', $campnum)->
                                         where('topic_id', $topicid)->
-                                        where('post.user_id', $userNicknames[0]->id)->
+                                        where('post.user_id', $userNicknames[0]->id)->groupBy('thread.id')->
                                         latest()->paginate(20);
                 }
                 else {
