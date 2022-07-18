@@ -15,7 +15,7 @@ class AddUniqueableColumnToJobsTable extends Migration
     {
         if (!Schema::hasColumn('jobs', 'unique_id')) {
             Schema::table('jobs', function($table) {
-                $table->string('unique_id')->nullable();
+                $table->string('unique_id', 191)->nullable();
                 $table->unique(['queue', 'unique_id'], 'jobs_queue_unique_id_unique');
             });
         }
