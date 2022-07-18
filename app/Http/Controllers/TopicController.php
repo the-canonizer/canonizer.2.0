@@ -358,6 +358,11 @@ class TopicController extends Controller {
         $algorithm = session('defaultAlgo', 'blind_popularity');
         $topicnum = $topicnumArray[0];
         if(Auth::user() && Auth::user()->id){
+            if (!session('defaultUserAlgo')) {
+                $defaultAlgo = Auth::user()->default_algo;
+                session()->put('defaultAlgo',$defaultAlgo);
+                session()->put('defaultUserAlgo',$defaultAlgo);
+            }
             $userid = Auth::user()->id;
              //check if logged in user supporting this cam
             $userNicknames = Nickname::personNicknameArray();
