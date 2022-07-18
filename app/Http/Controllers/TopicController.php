@@ -1287,6 +1287,12 @@ class TopicController extends Controller {
     }
 
     public function usersupports(Request $request, $id) {
+        
+        /**
+         * As of filters should not be applied on the user topics supported page
+         * ticket # 1427 - Muhammad Ahmed
+         */
+        session()->forget('asofDefault');
 
         $nickName = Nickname::find($id);
         $topic_num = $request->get('topicnum'); 

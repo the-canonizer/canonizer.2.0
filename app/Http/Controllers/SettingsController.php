@@ -254,6 +254,12 @@ class SettingsController extends Controller
      */
     public function support($id = null, $campnums = null)
     {
+        /**
+         * As of filters should not be applied on the topic support page
+         * ticket # 1427 - Muhammad Ahmed
+         */
+        session()->forget('asofDefault');
+        
         $as_of_time = time();
         if (isset($id)) { 
             $topicnumArray = explode("-", $id);
