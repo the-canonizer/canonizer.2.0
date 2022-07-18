@@ -1,6 +1,7 @@
 <?php
 
 use Carbon\Carbon;
+use App\Model\Topic;
 
 function to_local_time($unixtime) {
     if(!is_numeric($unixtime)){
@@ -36,3 +37,16 @@ function to_local_time($unixtime) {
 
  	return $label;
  }
+
+/**
+ *  Get live topic array
+ *  ticket # 1427
+ */
+function getAgreementTopic($topic_num) {
+
+    return Topic::where('topic_num', $topic_num)
+                ->where('objector_nick_id', '=', NULL)
+                ->where('go_live_time', '<=', time())
+                ->orderBy('go_live_time', 'desc')
+                ->first();
+}
