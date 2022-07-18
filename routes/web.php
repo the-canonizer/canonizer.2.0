@@ -98,6 +98,8 @@ Route::get('statement/history/{id}/{campnum}', 'TopicController@statement_histor
 Route::get('topic-history/{id}', 'TopicController@topic_history');
 Route::get('api/v1/getcampoutline/{topic_num}/{camp_num}/{add_supporters}', 'ApiController@getcampoutline');
 Route::get('user/supports/{user_id}', 'TopicController@usersupports');
+Route::post('/camp/add_subscription',['as'=>'camp.subscription','uses'=>'TopicController@add_camp_subscription']);
+Route::post('/camp/add_topic_subscription',['as'=>'topic.subscription','uses'=>'TopicController@add_topic_subscription']); 
 
 Route::group([ 'middleware' => 'auth'], function() {
     Route::resource('topic', 'TopicController');
@@ -138,8 +140,6 @@ Route::group([ 'middleware' => 'auth'], function() {
     Route::get('/editnews/{topicnum}/{campnum}',['as'=>'newsfeed.edit','uses'=>'NewsFeedController@edit']);
     Route::post('/newsfeed/update',['as'=>'newsfeed.update','uses'=>'NewsFeedController@update']);
     Route::get('/newsfeed/delete/{id}', 'NewsFeedController@destroy');
-    Route::post('/camp/add_subscription',['as'=>'camp.subscription','uses'=>'TopicController@add_camp_subscription']);
-    Route::post('/camp/add_topic_subscription',['as'=>'topic.subscription','uses'=>'TopicController@add_topic_subscription']);
     Route::post('/deactivateuser',['as'=>'social.deactivateuser','uses'=>'SocialController@deactivateuser']);
     Route::post('/delete_social_link',['as'=>'social.delete_social_link','uses'=>'SocialController@delete']);
     Route::get('remove/mysupport/{topicnum}/{campnum}/{nickid}', [ 'as' => 'settings.support.remove', 'uses' => 'SettingsController@remove_support']);
