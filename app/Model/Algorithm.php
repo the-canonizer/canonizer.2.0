@@ -32,7 +32,8 @@ class Algorithm{
 			'democrat'=>'Democrat',
 			'ether' => 'Ethereum',
             'shares'=> 'Canonizer Shares',
-            'shares_sqrt' => 'Canonizer Canonizer'
+            'shares_sqrt' => 'Canonizer Canonizer',
+            'sandy_city' => "Sandy City"
         );
     }
 	
@@ -40,7 +41,7 @@ class Algorithm{
         @return all the available algorithm key values
     */
     public static function getKeyList(){
-        return array('blind_popularity','mind_experts','computer_science_experts','PhD','christian','secular','mormon','uu','atheist','transhumanist','united_utah','republican','democrat', 'ether','shares','shares_sqrt','mind_experts_non_special'
+        return array('blind_popularity','mind_experts','computer_science_experts','PhD','christian','secular','mormon','uu','atheist','transhumanist','united_utah','republican','democrat', 'ether','shares','shares_sqrt','mind_experts_non_special','sandy_city'
         );
     }
     
@@ -187,6 +188,16 @@ class Algorithm{
 
     }
 
+    public static function sandy_city_algo($nick_name_id){
+        $user=\App\Model\Nickname::getUserByNickName($nick_name_id);
+        $score = 0;
+        if($user && $user->city !=='' && str_contains(strtolower($user->city),'sandy')){
+            $score = 1;
+        }
+        return $score;
+
+    }
+
     public static function blind_popularity($nick_name_id = null,$topicnum=0,$campnum=0){
         return 1;
     }
@@ -205,6 +216,9 @@ class Algorithm{
 
     public static function computer_science_experts($nick_name_id,$topicnum=0,$campnum=0){
         return self::camp_tree_count(124,$nick_name_id,$topicnum,$campnum);
+    }
+    public static function sandy_city($nick_name_id,$topicnum=0,$campnum=0){
+        return self::sandy_city_algo($nick_name_id);
     }
 
     /**

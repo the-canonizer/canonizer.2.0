@@ -928,7 +928,7 @@ class Camp extends Model {
                 //$selected = '';
                 $selected = ($campnum == $activeCamp) && $activeCampDefault ? "color:#08b608; font-weight:bold" : "";
                 if (($campnum == $activeCamp) && $activeCampDefault) {
-                    session(['supportCountTotal' => $array['score']]);
+                    session(['supportCountTotal' => round($array['score'],2)]);
                 }
                 $support_tree = '';
                 if($add_supporter){
