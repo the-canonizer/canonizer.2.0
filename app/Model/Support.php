@@ -195,8 +195,9 @@ class Support extends Model {
             if(!empty($nickName)){
                 $supportData_child->whereIn('nick_name_id',$nickName);
             }
+            $results_child = $supportData_child->get()->toArray();
         }
-        $results_child = $supportData_child->get()->toArray();
+        
         foreach($results as $value){
             $value->end = time();
             $value->save();
