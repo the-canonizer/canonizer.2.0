@@ -236,10 +236,12 @@ class CThreadsController extends Controller
      */
     public function store(Request $request, $topicid, $topicname, $campnum)
     {
+        $title = trim(preg_replace('/\s\s+/', ' ', str_replace("\n", " ",  request('title'))));
+         
         //Validate the request for Error Handling
         $thread_flag = CThread::where('camp_id', $campnum)->
                                 where('topic_id', $topicid)->
-                                where('title', $request->{'title'})->get();
+                                where('title', $title)->get();
         $messagesVal = [
             'title.regex' => 'Title can only contain space and alphanumeric characters.',
             'title.required' => 'Title is required.',
@@ -253,7 +255,7 @@ class CThreadsController extends Controller
                   'nick_name' => 'required'
               ],$messagesVal
           );
-
+        
         if (count($thread_flag) > 0) {
 
             // Return Url if thread name found
@@ -265,7 +267,7 @@ class CThreadsController extends Controller
         $thread = CThread::create(
             [
             'user_id'  => request('nick_name'),
-            'title'    => request('title'),
+            'title'    => $title,
             'body'     => request('title'),
             'camp_id'  => $campnum,
             'topic_id' => $topicid
