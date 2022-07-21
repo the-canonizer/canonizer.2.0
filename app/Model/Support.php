@@ -190,19 +190,20 @@ class Support extends Model {
             $supportData->whereIn('nick_name_id',$nickName);
         }
         $results = $supportData->get();
-
+        if($campNum!=""){
+            $supportData_child = self::where('topic_num',$topicNum)->where('camp_num',$campNum)->where('end','=',0);
+            if(!empty($nickName)){
+                $supportData_child->whereIn('nick_name_id',$nickName);
+            }
+        }
+        $results_child = $supportData_child->get()->toArray();
         foreach($results as $value){
             $value->end = time();
             $value->save();
-
             //1311 and 1334
             //if child camp have no same support of parent camp then adding support
             if($campNum!=""){
-                $supportData_child = self::where('topic_num',$topicNum)->where('camp_num',$campNum)->where('end','=',0);
-                if(!empty($nickName)){
-                    $supportData_child->whereIn('nick_name_id',$nickName);
-                }
-                $results_child = $supportData_child->get()->toArray();
+                
                 if(empty($results_child)){
                     $supportTopic =  new self();
                     $supportTopic->topic_num = $value->topic_num;
@@ -214,7 +215,7 @@ class Support extends Model {
                     $supportTopic->save();         
                 }
             }
-
+            
             //support order changes 
             $higherSupportNumbers = self::where('topic_num',$topicNum)
                 ->where('end','=',0)
