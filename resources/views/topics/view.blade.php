@@ -350,6 +350,11 @@ $('#camp_subscription').click(function(){
           $('#subscription_msg').html(res.message);
           $('#camp_subscription_notify').show().fadeOut(5000);
           $("#subs_id").val(res.id);
+        },
+        error:function(err){
+            if(err.status == 401) {
+                window.location.href = "{{ route('login')}}"
+            }
         }
     })
 
@@ -367,6 +372,11 @@ $('#topic_subscription').click(function(){
           $('#topic_subscription_msg').html(res.message);
           $('#topic_subscription_notify').show().fadeOut(5000);
           $("#topic_subs_id").val(res.id);
+        },
+        error:function(err){
+            if(err.status == 401) {
+                window.location.href = "{{ route('login')}}"
+            }
         }
     })
 
