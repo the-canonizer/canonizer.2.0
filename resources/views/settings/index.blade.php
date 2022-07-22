@@ -562,8 +562,8 @@
 			street_number:'address_1',
 			sublocality_level_1:'address_1',
 			route:'address_1',
-			locality:'address_2',
-			administrative_area_level_2:'city',
+			locality:'city',
+			administrative_area_level_2:'address_2',
 			administrative_area_level_1:'state',
 			country:'country',
 			postal_code:'postal_code'
