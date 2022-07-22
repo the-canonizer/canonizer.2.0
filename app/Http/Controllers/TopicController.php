@@ -364,6 +364,11 @@ class TopicController extends Controller {
         $algorithm = session('defaultAlgo', 'blind_popularity');
         $topicnum = $topicnumArray[0];
         if(Auth::user() && Auth::user()->id){
+            if (!session('defaultUserAlgo')) {
+                $defaultAlgo = Auth::user()->default_algo;
+                session()->put('defaultAlgo',$defaultAlgo);
+                session()->put('defaultUserAlgo',$defaultAlgo);
+            }
             $userid = Auth::user()->id;
              //check if logged in user supporting this cam
             $userNicknames = Nickname::personNicknameArray();
@@ -1287,6 +1292,12 @@ class TopicController extends Controller {
     }
 
     public function usersupports(Request $request, $id) {
+        
+        /**
+         * As of filters should not be applied on the user topics supported page
+         * ticket # 1427 - Muhammad Ahmed
+         */
+        session()->forget('asofDefault');
 
         $nickName = Nickname::find($id);
         $topic_num = $request->get('topicnum'); 
@@ -1587,8 +1598,11 @@ class TopicController extends Controller {
     }
 
     public function add_camp_subscription(Request $request){
+        session()->flash('erro_login', 'Your session has been expired.');
+        if(!Auth::check()) {
+            return response()->json(['result' => "Error", 'message' => 'Your session has been expired.'], 401);
+        }
         try{
-
             $all = $request->all();
              $id = isset($all['id']) ? $all['id'] : null;
              if($all['checked'] == 'true'){
@@ -1645,6 +1659,10 @@ class TopicController extends Controller {
     }
 
     public function add_topic_subscription(Request $request){
+        if(!Auth::check()) {
+            session()->flash('erro_login', 'Your session has been expired.');
+            return response()->json(['result' => "Error", 'message' => 'Your session has been expired.'], 401);
+        }
         try{
             $all = $request->all();
              $id = isset($all['id']) ? $all['id'] : null;

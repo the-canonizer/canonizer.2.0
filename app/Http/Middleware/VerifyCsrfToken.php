@@ -13,5 +13,7 @@ class VerifyCsrfToken extends BaseVerifier
      */
     protected $except = [
         //
+        '/camp/add_subscription',
+        '/camp/add_topic_subscription'
     ];
 }
