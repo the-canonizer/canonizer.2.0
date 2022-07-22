@@ -605,7 +605,6 @@
 	function fillInAddress() {
 	  document.getElementById('address_1').value = "";
 	  const place = autocomplete.getPlace();
-      console.log('place',place);	  
 	  ifAddressSelected = true;
 	  if(place && place.address_components)
 	  for (const component of place.address_components) {
