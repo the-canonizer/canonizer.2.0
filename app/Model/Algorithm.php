@@ -462,7 +462,7 @@ class Algorithm{
         
 		# start with one person one vote canonize.
        
-         if($topic_num == 81){  // mind expert special case
+         if($topic_num == 81 || $topic_num == 124){  // mind expert special case
             $expertCampReducedTree = $expertCamp->getCampAndNickNameWiseSupportTree('blind_popularity',$topicnum,true); # only need to canonize this branch
             $total_score = 0;
             if(array_key_exists('camp_wise_tree',$expertCampReducedTree) && array_key_exists($expertCamp->camp_num,$expertCampReducedTree['camp_wise_tree']) && count($expertCampReducedTree['camp_wise_tree'][$expertCamp->camp_num]) > 0){
