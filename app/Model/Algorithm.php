@@ -33,7 +33,8 @@ class Algorithm{
 			'ether' => 'Ethereum',
             'shares'=> 'Canonizer Shares',
             'shares_sqrt' => 'Canonizer Canonizer',
-            'sandy_city' => "Sandy City"
+            'sandy_city' => "Sandy City",
+            'sandy_city_council' => "Sandy City Council"
         );
     }
 	
@@ -41,7 +42,7 @@ class Algorithm{
         @return all the available algorithm key values
     */
     public static function getKeyList(){
-        return array('blind_popularity','mind_experts','computer_science_experts','PhD','christian','secular','mormon','uu','atheist','transhumanist','united_utah','republican','democrat', 'ether','shares','shares_sqrt','mind_experts_non_special','sandy_city'
+        return array('blind_popularity','mind_experts','computer_science_experts','PhD','christian','secular','mormon','uu','atheist','transhumanist','united_utah','republican','democrat', 'ether','shares','shares_sqrt','mind_experts_non_special','sandy_city','sandy_city_council'
         );
     }
     
@@ -198,6 +199,16 @@ class Algorithm{
 
     }
 
+    public static function sandy_city_council_algo($nick_name_id){
+        $nick_name_list=[1,346];
+        $score = 0;
+        if(in_array($nick_name_id,$nick_name_list)){
+            $score = 1;
+        }
+        return $score;
+
+    }
+
     public static function blind_popularity($nick_name_id = null,$topicnum=0,$campnum=0){
         return 1;
     }
@@ -219,6 +230,10 @@ class Algorithm{
     }
     public static function sandy_city($nick_name_id,$topicnum=0,$campnum=0){
         return self::sandy_city_algo($nick_name_id);
+    }
+
+    public static function sandy_city_council($nick_name_id,$topicnum=0,$campnum=0){
+        return self::sandy_city_council_algo($nick_name_id);
     }
 
     /**
