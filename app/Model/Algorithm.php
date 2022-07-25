@@ -201,9 +201,10 @@ class Algorithm{
 
     public static function sandy_city_council_algo($nick_name_id){
         $nick_name_list=[1,346];
+        $nick_name_score_list = [1=>1,346=>1];
         $score = 0;
         if(in_array($nick_name_id,$nick_name_list)){
-            $score = 1;
+            $score = $nick_name_score_list[$nick_name_id];
         }
         return $score;
 

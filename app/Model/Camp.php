@@ -726,7 +726,7 @@ class Camp extends Model {
 
     public function getCampAndNickNameWiseSupportTree($algorithm, $topicnum){
         $as_of_time = time();
-        $is_add_reminder_back_flag = ($algorithm == 'blind_popularity') ? 1 : 0;
+        $is_add_reminder_back_flag = 1;//($algorithm == 'blind_popularity') ? 1 : 0;
         $nick_name_support_tree=[];
         $nick_name_wise_support=[];
         $camp_wise_support = [];
@@ -816,8 +816,6 @@ class Camp extends Model {
             session(["score_tree_{$topicnum}_{$algorithm}"=>$score_tree]);
         }
         
-         
-
          $support_total = 0;
          if(array_key_exists('camp_wise_tree',$score_tree) && count($score_tree['camp_wise_tree']) > 0 && array_key_exists($campnum,$score_tree['camp_wise_tree'])){
              if(count($score_tree['camp_wise_tree'][$campnum]) > 0){
