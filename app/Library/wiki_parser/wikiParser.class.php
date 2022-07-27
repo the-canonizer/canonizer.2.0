@@ -94,11 +94,27 @@ class wikiParser
         return wikiParser::$config_ini;
     }    
     
+    public function modifyYouTubeVimeoLink($link)
+    {
+        $wiki_text = $link;
+        if (strpos($link, 'youtube.com') || strpos($link, 'vimeo.com')) {
+            $link = str_replace('youtube.com/watch?v=', 'youtube.com/embed/', $link);
+            if (strpos($link, 'vimeo.com')) {
+                $videoId = end(explode('/', $link));
+                $link = "https://player.vimeo.com/video/" . $videoId;
+
+            }
+            // $link = str_replace('vimeo.com/', 'player.vimeo.com/video/', $link);
+            $wiki_text = '<br/><iframe src="' . $link . '" frameborder="0" width="560" height="315" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><br/>';
+        }
+        return $wiki_text;
+    }
+    
     public function parse($wiki_text)
     {
         //Parse Section
         //For each section on the config.ini
-		
+  
 		$m = preg_match_all( "/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/", $wiki_text, $match);
 				
 			if ($m) {
@@ -118,7 +134,7 @@ class wikiParser
 				}
 			}
         
-		
+  
         $parser_order_config = wikiParser::getConfigINI();
         
         $file_parsing_order = $parser_order_config['FileParsingOrder'];
@@ -150,7 +166,17 @@ class wikiParser
             }            
         }
 		
-		
+		$m = preg_match_all( "/(https)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/", $wiki_text, $match);
+				
+		if ($m) {
+			$links = $match[0];
+			foreach($links as $link) {
+				$link = trim(strip_tags($link));
+				$modifyYouTubeOrVimeo = $this->modifyYouTubeVimeoLink($link);
+                $wiki_text = str_replace($link, $modifyYouTubeOrVimeo, $wiki_text);
+			}
+		}
+
         return $wiki_text;
     }
 
