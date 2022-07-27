@@ -8,6 +8,20 @@
         <strong>Success! </strong>{{ Session::get('success')}}    
     </div>
   @endif
+  @if(Session::has('error'))
+  <div class="alert alert-danger">
+      <strong>Error!</strong>{{ Session::get('error')}}    
+  </div>
+  @endif
+  @if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+  @endif
   <form class="form-inline mt-5" method="POST" action="{{ URL::to('/')}}/forum/{{ $topicName }}/{{ $campNum }}/threads/{{ $thread->id }}/edit">
     {{ csrf_field() }}
     <div class="form-group  col-sm-8 mb-2">
@@ -29,15 +43,7 @@
       <button type="submit" class="btn btn-primary mb-2">Submit</button>
     </div>
   </form>
-  @if ($errors->any())
-    <div class="alert alert-danger">
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-  @endif
+
   <a style="margin: 25px; text-decoration: underline" href="{{ URL::to('/')}}/forum/{{ $topicName }}/{{ $campNum }}/threads?by=me">List of All Camp Threads</a>
 </div>
 
