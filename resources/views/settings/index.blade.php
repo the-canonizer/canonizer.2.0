@@ -642,7 +642,8 @@
             $("#birthday").datepicker({
                 changeMonth: true,
                 changeYear: true,
-				maxDate: 0
+				maxDate: 0,
+                yearRange: "1900:+00"
             });
             $('#mobile_carrier').change(function(e){
             	if(e.target.value == 'non_usa'){
