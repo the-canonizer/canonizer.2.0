@@ -197,15 +197,15 @@ class Support extends Model {
             }
             $results_child = $supportData_child->get()->toArray();
         }
-        
+        //echo "data show here - <pre> "; print_r($results);
         foreach($results as $value){
             $value->end = time();
             $value->save();
-            //1311 and 1334
+            //1311 and 1334 1398 
             //if child camp have no same support of parent camp then adding support
             if($campNum!=""){
                 
-                if(empty($results_child)){
+                if(empty($results_child) && $p_campNum==$value->camp_num){
                     $supportTopic =  new self();
                     $supportTopic->topic_num = $value->topic_num;
                     $supportTopic->nick_name_id = $value->nick_name_id;
@@ -215,6 +215,7 @@ class Support extends Model {
                     $supportTopic->support_order = $value->support_order;
                     $supportTopic->save();         
                 }
+                
             }
             
             //support order changes 

@@ -261,7 +261,7 @@ class CThreadsController extends Controller
             // Return Url if thread name found
             $return_url = 'forum/'.$topicid.'-'.$topicname.'/'.$campnum.'/threads/create';
 
-            return redirect($return_url)->with('error', 'Thread title must be unique!');
+            return redirect($return_url)->with('error', ' Thread title must be unique!');
         }
 
         $thread = CThread::create(
@@ -337,6 +337,10 @@ class CThreadsController extends Controller
 
         $campArr = preg_split("/[-]/", $campNum);
         $topicArr = preg_split("/[-]/", $topicName);
+       
+        $request->title = trim(preg_replace('/\s\s+/', ' ', str_replace("\n", " ",  request('title'))));
+        $title  = trim(preg_replace('/\s\s+/', ' ', str_replace("\n", " ",  request('title'))));
+        $old_title = request('thread_title_name');
         $messagesVal = [
             'title.regex' => 'Title must only contain space and alphanumeric characters.',
             'title.required' => 'Title is required.',
@@ -347,24 +351,26 @@ class CThreadsController extends Controller
             $request, [
                 'title' => [
                     'required', 'regex:/^[a-zA-Z0-9\s]+$/', 'max:100', Rule::unique('thread')->ignore($threadId)
-                        ->where(function ($query) use ($campArr, $topicArr) {
-                            return $query->where('camp_id', $campArr[0])->where('topic_id', $topicArr[0]);
-                        })
                 ],
             ], $messagesVal
           );
-          
 
-          $title = request('title');
-          $old_title = request('thread_title_name');
-          DB::update('update thread set title =?, updated_at = ? where id = ?', [$title, time(), $threadId]);
+          //Validate the request for Error Handling
+          $thread_flag = CThread::where('camp_id', $campArr[0])->
+            where('topic_id', $topicArr[0])->
+            where('title', $title)->get();
+          //print_r(count($thread_flag) );die;
+          if (count($thread_flag) == 0) {
+            
+            DB::update('update thread set title =?, updated_at = ? where id = ?', [$title, time(), $threadId]);
 
-          $return_url = 'forum/'.$topicName.'/'.$campNum.'/threads/';//.$threadId.'/edit';
-          if (strcmp($title, $old_title) !== 0) {
-            return redirect($return_url)->with('success', 'Thread title updated.');
+            $return_url = 'forum/'.$topicName.'/'.$campNum.'/threads/';//.$threadId.'/edit';
+            
+            return redirect($return_url)->with('success', ' Thread title updated.');
           }
           else {
-            return redirect($return_url);
+            $return_url = 'forum/'.$topicName.'/'.$campNum.'/threads/'.$threadId.'/edit';
+            return redirect($return_url)->with('error', ' Thread title must be unique!');
           }
           //return redirect($return_url)->with('success', 'Thread title updated.');
 

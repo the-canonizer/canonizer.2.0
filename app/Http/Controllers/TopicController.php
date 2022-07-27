@@ -1713,8 +1713,8 @@ class TopicController extends Controller {
                 }
             }
             else{
-                //$parent_camp_num != $campOldData->parent_camp_num = 1338
-                if($parent_camp_num != $old_parent_camp_num){
+                
+                if($parent_camp_num != $old_parent_camp_num){ //1338
                     //1262 and 1191
                     $allParentCamps = Camp::getAllParent($campOldData);
                     //get supporters of all child camps of current camp
@@ -1724,9 +1724,10 @@ class TopicController extends Controller {
                         ->pluck('nick_name_id');
                     //remove all supports from parent camp if there any child supporter
                     if(sizeof($allChildSupporters) > 0){
-                        foreach($allParentCamps as $p ){
-                            Support::removeSupport($topic_num,$p,$allChildSupporters,$camp_num); //$p
-                        }
+                       // foreach($allParentCamps as $p ){
+                            Support::removeSupport($topic_num,$parent_camp_num,$allChildSupporters,$camp_num); //$p
+                       // }
+                       
                     }
                 }
             }
