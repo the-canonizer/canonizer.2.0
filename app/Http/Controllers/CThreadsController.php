@@ -349,17 +349,21 @@ class CThreadsController extends Controller
 
           $this->validate(
             $request, [
-                'title' => [
-                    'required', 'regex:/^[a-zA-Z0-9\s]+$/', 'max:100', Rule::unique('thread')->ignore($threadId)
-                ],
+                'title' => 'required', 'regex:/^[a-zA-Z0-9\s]+$/', 'max:100'
+                    // Rule::unique('thread')->ignore($threadId)
+                
             ], $messagesVal
           );
 
+          if(strcmp($title,$old_title)==0)
+          {
+            $return_url = 'forum/'.$topicName.'/'.$campNum.'/threads/'.$threadId.'/edit';
+            return redirect($return_url);
+          }
           //Validate the request for Error Handling
           $thread_flag = CThread::where('camp_id', $campArr[0])->
             where('topic_id', $topicArr[0])->
             where('title', $title)->get();
-          //print_r(count($thread_flag) );die;
           if (count($thread_flag) == 0) {
             
             DB::update('update thread set title =?, updated_at = ? where id = ?', [$title, time(), $threadId]);
@@ -372,7 +376,6 @@ class CThreadsController extends Controller
             $return_url = 'forum/'.$topicName.'/'.$campNum.'/threads/'.$threadId.'/edit';
             return redirect($return_url)->with('error', ' Thread title must be unique!');
           }
-          //return redirect($return_url)->with('success', 'Thread title updated.');
 
     }
  
