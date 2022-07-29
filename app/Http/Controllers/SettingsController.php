@@ -505,7 +505,7 @@ class SettingsController extends Controller
             $last_camp =  $data['camp_num'];
             $newcamp_mail_flag = false;           
             if(isset($myDelegatedSupports) && count($myDelegatedSupports) > 0 && isset($data['delegate_nick_name_id']) && $data['delegate_nick_name_id'] == 0 &&  (!isset($data['remove_all'])) ){ // removing delegte support and directly supporting camp
-                if(!in_array($data['camp_num'],$data['removed_camp'])){
+                //if(!in_array($data['camp_num'],$data['removed_camp'])){ //1500 ticket number
                     $last_camp = $data['camp_num'];
                     $newcamp_mail_flag = true;
                     $supportTopic = new Support();
@@ -531,7 +531,7 @@ class SettingsController extends Controller
                     if($newcamp_mail_flag){
                         $this->emailForSupportAdded($data);   
                     }
-                }
+               // }
             }else if (isset($data['support_order']) && isset($data['delegate_nick_name_id']) && $data['delegate_nick_name_id'] == 0 ) {
                 foreach ($data['support_order'] as $camp_num => $support_order) {
                     $last_camp = $camp_num;
@@ -623,7 +623,7 @@ class SettingsController extends Controller
                         $support = Support::where('topic_num', $topic_num)->where('camp_num','=', $k)->where('nick_name_id','=',$data['nick_name'])->where('delegate_nick_name_id','=',$d)->where('end', '=', 0)->get();
                         if($support && count($support)> 0 ){
                             $support[0]->end = time();
-                            $support[0]->save();  
+                            $support[0]->save(); 
                         }
                     }
                 }
