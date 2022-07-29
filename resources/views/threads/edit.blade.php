@@ -10,16 +10,15 @@
   @endif
   @if(Session::has('error'))
   <div class="alert alert-danger">
-      <strong>Error!</strong>{{ Session::get('error')}}    
+      <strong>Error!</strong> <span>{{ Session::get('error')}}   </span> 
   </div>
   @endif
   @if ($errors->any())
     <div class="alert alert-danger">
-        <ul>
+        <strong>Error! </strong>
             @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
+             <span> {{ $error }} </span> <br/>
             @endforeach
-        </ul>
     </div>
   @endif
   <form class="form-inline mt-5" method="POST" action="{{ URL::to('/')}}/forum/{{ $topicName }}/{{ $campNum }}/threads/{{ $thread->id }}/edit">
