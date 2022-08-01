@@ -197,23 +197,24 @@ class Support extends Model {
             }
             $results_child = $supportData_child->get()->toArray();
         }
-        //echo "data show here - <pre> "; print_r($results);
+      
         foreach($results as $value){
-            $value->end = time();
-            $value->save();
+            //$value->end = time();
+            //$value->save();
             //1311 and 1334 1398 
             //if child camp have no same support of parent camp then adding support
-            if($campNum!=""){
-                
-                if(empty($results_child) && $p_campNum==$value->camp_num){
-                    $supportTopic =  new self();
+            if($campNum!=""){ 
+                if(!empty($results_child) && $p_campNum==$value->camp_num){
+                    $value->end = time();
+                    $value->save();
+                    /*$supportTopic =  new self();
                     $supportTopic->topic_num = $value->topic_num;
                     $supportTopic->nick_name_id = $value->nick_name_id;
                     $supportTopic->delegate_nick_name_id = $value->delegate_nick_name_id;
                     $supportTopic->start = time();
                     $supportTopic->camp_num = $campNum; //add child camp with support
                     $supportTopic->support_order = $value->support_order;
-                    $supportTopic->save();         
+                    $supportTopic->save(); */        
                 }
                 
             }

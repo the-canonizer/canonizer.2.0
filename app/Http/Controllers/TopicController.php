@@ -1717,7 +1717,7 @@ class TopicController extends Controller {
                     ->pluck('nick_name_id');
                 //remove all supports from parent camp if there any child supporter
                 if(sizeof($allChildSupporters) > 0){  
-                    Support::removeSupport($topic_num,$parent_camp_num,$allChildSupporters);
+                    Support::removeSupport($topic_num,$parent_camp_num,$allChildSupporters,$camp_num);
                 }
             }
             else{
@@ -1732,10 +1732,7 @@ class TopicController extends Controller {
                         ->pluck('nick_name_id');
                     //remove all supports from parent camp if there any child supporter
                     if(sizeof($allChildSupporters) > 0){
-                       // foreach($allParentCamps as $p ){
-                            Support::removeSupport($topic_num,$parent_camp_num,$allChildSupporters,$camp_num); //$p
-                       // }
-                       
+                            Support::removeSupport($topic_num,$parent_camp_num,$allChildSupporters,$camp_num); //$p 
                     }
                 }
             }
