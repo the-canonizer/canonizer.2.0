@@ -777,12 +777,13 @@ class TopicController extends Controller {
         }
         $topicnum = (isset($all['topic_num'])) ? $all['topic_num'] : null;
         if($topicnum!=null){
-
-            if(strtolower(trim($all['camp_name'])) == 'agreement'){
-                $validator->after(function ($validator){
-                      $validator->errors()->add('camp_name', 'The camp name has already been taken');
-                 }); 
-             }
+            if((!empty($all['camp_num']) && $all['camp_num'] != 1) || empty($all['camp_num'])) {
+                if(strtolower(trim($all['camp_name'])) == 'agreement') {
+                    $validator->after(function ($validator){
+                          $validator->errors()->add('camp_name', 'The camp name has already been taken');
+                     }); 
+                }
+            }
 
             $old_parent_camps = Camp::getAllTopicCamp($topicnum);
             /**
