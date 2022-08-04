@@ -154,6 +154,7 @@ class SocialController extends Controller
 	}
 
 	protected function createNickname($userID, $nickname) {
+		$nickname = substr($nickname, 0, 40);
         $nicknameCreated = false;
         if(empty($userID) || empty($nickname)) {
             return $nicknameCreated;
