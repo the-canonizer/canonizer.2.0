@@ -205,7 +205,7 @@ class Camp extends Model {
             $query->whereIn('namespace_id',explode(',', session('defaultNamespaceId', 1)));
         }
 
-        if (isset($_REQUEST['asof']) && $_REQUEST['asof'] == 'review') {
+        if ((isset($_REQUEST['asof']) && $_REQUEST['asof'] == "review") || (session('asofDefault')=="review" && !isset($_REQUEST['asof']))) {
             $query->whereRaw('topic.go_live_time in (select max(topic.go_live_time) from topic where topic.topic_num=topic.topic_num and topic.objector_nick_id is null group by topic.topic_num)');
           
         }else{

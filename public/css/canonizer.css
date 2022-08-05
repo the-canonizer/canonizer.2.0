@@ -2177,3 +2177,11 @@ a.verification-link:active {
 .select2-results__option {
     padding: 0.3rem 0.75rem;
 }
+
+.disable-btn {
+    cursor: not-allowed !important;
+}
+
+.disable-btn:active {
+	pointer-events: none !important;
+}
