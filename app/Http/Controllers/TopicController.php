@@ -1705,12 +1705,12 @@ class TopicController extends Controller {
     private function checkParentCampChanged($topic_num, $camp_num, $parent_camp_num, $in_review_status,$old_parent_camp_num="") {
         
         //while updating camp check if any old support then remove it if parent camp changed
-        $campOldData = Camp::getLiveCamp($topic_num,$camp_num);
+        $livecamp = Camp::getLiveCamp($topic_num,$camp_num);
 
         if(isset($parent_camp_num) && $parent_camp_num!=''){
             if($in_review_status){
                 //#924 start
-                $allChildCamps = Camp::getAllChildCamps($campOldData);
+                $allChildCamps = Camp::getAllChildCamps($livecamp);
                 //get supporters of all child camps of current camp
                 $allChildSupporters = Support::where('topic_num',$topic_num)
                     ->where('end',0)
@@ -1718,23 +1718,36 @@ class TopicController extends Controller {
                     ->pluck('nick_name_id');
                 //remove all supports from parent camp if there any child supporter
                 if(sizeof($allChildSupporters) > 0){  
-                    Support::removeSupport($topic_num,$parent_camp_num,$allChildSupporters,$camp_num);
+                    Support::removeSupport($topic_num,$parent_camp_num,$allChildSupporters,$allChildCamps);
                 }
             }
             else{
-                
-                if($parent_camp_num != $old_parent_camp_num){ //1338
-                    //1262 and 1191
-                    $allParentCamps = Camp::getAllParent($campOldData);
-                    //get supporters of all child camps of current camp
-                    $allChildSupporters = Support::where('topic_num',$topic_num)
+
+                //Here we check camp parent is change or not (#1338)
+                if ($parent_camp_num != $old_parent_camp_num) {
+                    
+                    //We get all parent camps of current camp (#1262 ,#1191)
+                    $allParentCamps = Camp::getAllParent($livecamp);
+
+                    //Get supporters of all parent camps 
+                    $allParentsSupporters = Support::where('topic_num',$topic_num)
                         ->where('end',0)
-                        ->whereIn('camp_num',$allParentCamps) //$allChildCamps changes with $allParentCamps 1262 and 1191
+                        ->whereIn('camp_num',$allParentCamps)
                         ->pluck('nick_name_id');
+
+
+                    //We get all child camps of current live camp
+                    $allChildCamps = Camp::getAllChildCamps($livecamp);
+                    //Get supporters of all Child camps 
+                    $allChildSupporters = Support::where('topic_num',$topic_num)
+                    ->where('end',0)
+                    ->whereIn('camp_num',$allChildCamps) 
+                    ->pluck('nick_name_id');
+                   
                     //remove all supports from parent camp if there any child supporter
-                    if(sizeof($allChildSupporters) > 0){
+                    if(sizeof($allParentsSupporters) > 0){
                         foreach($allParentCamps as $p){
-                            Support::removeSupport($topic_num,$p,$allChildSupporters,$camp_num); //$p  parent_camp_num
+                            Support::removeSupport($topic_num,$p,$allParentsSupporters,$allChildCamps); //$p  parent_camp_num
                         }
                     }
                 }

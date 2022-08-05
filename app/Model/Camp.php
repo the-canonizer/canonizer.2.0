@@ -465,14 +465,16 @@ class Camp extends Model {
 
     public static function getAllChildCamps($camp, $includeLiveCamps=false) {
         $camparray = [];
+        Camp::$chilcampArray = [];
+        Camp::$childtempArray = [];
         if ($camp) {
             $key = $camp->topic_num . '-' . $camp->camp_num . '-' . $camp->parent_camp_num;
             $key1 = $camp->topic_num . '-' . $camp->parent_camp_num . '-' . $camp->camp_num;
-           if (in_array($key, Camp::$chilcampArray) || in_array($key1, Camp::$chilcampArray)) {
+           if (in_array($key, Camp::$chilcampArray) || in_array($key1, Camp::$childtempArray)) {
                 return [];/** Skip repeated recursions* */
             }
             Camp::$chilcampArray[] = $key;
-            Camp::$chilcampArray[] = $key1;
+            Camp::$childtempArray[] = $key1;
             $camparray[] = $camp->camp_num;
             if($includeLiveCamps){
                 //adding go_live_time condition Sunil Talentelgia //->where('go_live_time', '<=', time())
@@ -1588,11 +1590,11 @@ class Camp extends Model {
         if ($camp) {
             $key = $camp->topic_num . '-' . $camp->camp_num . '-' . $camp->parent_camp_num;
             $key1 = $camp->topic_num . '-' . $camp->parent_camp_num . '-' . $camp->camp_num;
-            if (in_array($key, Camp::$chilcampArray) || in_array($key1, Camp::$chilcampArray)) {
+            if (in_array($key, Camp::$chilcampArray) || in_array($key1, Camp::$childtempArray)) {
                 return [];/** Skip repeated recursions* */
              }
             Camp::$chilcampArray[] = $key;
-            Camp::$chilcampArray[] = $key1;
+            Camp::$childtempArray[] = $key1;
             Camp::$campChildren[] = $camp->camp_num;
             //adding go_live_time condition Sunil Talentelgia
             $childCamps = Camp::where('topic_num', $camp->topic_num)->where('parent_camp_num', $camp->camp_num)->where('go_live_time', '<=', time())->groupBy('camp_num')->latest('submit_time')->get();

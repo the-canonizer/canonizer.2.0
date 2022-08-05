@@ -181,7 +181,7 @@ class Support extends Model {
         return $supporters;
     }
 
-    public static function removeSupport($topicNum,$p_campNum,$nickName = [],$campNum="") {
+    public static function removeSupport($topicNum,$p_campNum,$nickName = [],$campNum=[]) {
         if(empty($topicNum) || empty($p_campNum) || empty($nickName)){
             return;
         }
@@ -191,8 +191,8 @@ class Support extends Model {
         }
         $results = $supportData->get();
         $results_child = [];
-        if($campNum!=""){
-            $supportData_child = self::where('topic_num',$topicNum)->where('camp_num',$campNum)->where('end','=',0);
+        if(!empty($campNum)){
+            $supportData_child = self::where('topic_num',$topicNum)->whereIn('camp_num',$campNum)->where('end','=',0);
             if(!empty($nickName)){
                 $supportData_child->whereIn('nick_name_id',$nickName);
             }
@@ -203,35 +203,16 @@ class Support extends Model {
             //$value->end = time();
             //$value->save();
            
-            if($campNum!=""){ 
+            if(!empty($campNum)){ 
                 //1311 and 1334 1398 
                 //if child camp have  same support of parent camp then remove support from parent
-                if(!empty($results_child)){ // && $p_campNum==$value->camp_num
-
+                if(!empty($results_child)){ 
                    if(array_search($value->nick_name_id, array_column($results_child, 'nick_name_id')) !== FALSE) { //found
                         $value->end = time();
                         $value->save();
                         
                     } 
                 }
-                else{
-                    
-                    if(!empty($nickName)){
-                        if (in_array($value->nick_name_id, $nickName->all())){
-                            $value->end = time();
-                            $value->save();
-                            $supportTopic =  new self();
-                            $supportTopic->topic_num = $value->topic_num;
-                            $supportTopic->nick_name_id = $value->nick_name_id;
-                            $supportTopic->delegate_nick_name_id = $value->delegate_nick_name_id;
-                            $supportTopic->start = time();
-                            $supportTopic->camp_num = $value->camp_num; //add child camp with support
-                            $supportTopic->support_order = $value->support_order;
-                            $supportTopic->save();
-                        }
-                    }
-                }
-               
             }
             
             //support order changes 
@@ -253,8 +234,6 @@ class Support extends Model {
                 $create->save();
             }
         }
-        
-        
        
     }
 
