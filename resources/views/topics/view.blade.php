@@ -301,7 +301,22 @@ change camps with them."><i class="fa fa-question"></i></a>
             </div>
     </div>              
     </div>
-<?php } ?>
+<?php }
+    $dateModified = false;
+    if (strtotime(session('asofdateDefault')) > time() && session('asofDefault') == 'bydate') {
+        session([
+            'asofdateDefault' => date("Y/m/d H:i:s")
+        ]);
+        $dateModified = true;
+    }
+?>
+@if (!empty($dateModified))
+   <script>
+    $(document).ready(function() {
+        $('#asofdate').val("{{ session('asofdateDefault') }}");
+    });
+   </script>
+@endif
 <script>
 $('.singleClick').click(function(e) {
     e.stopPropagation();
