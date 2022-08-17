@@ -7,6 +7,12 @@
 </div>
 @endif
 
+@if(Session::has('warningDelegate'))
+<div class="alert alert-danger">
+    <strong>Error! </strong>{{ Session::get('warningDelegate')}}    
+</div>
+@endif
+
 @if(Session::has('success'))
 <div class="alert alert-success">
     <strong>Success! </strong>{{ Session::get('success')}}    
