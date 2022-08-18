@@ -298,6 +298,18 @@ class SettingsController extends Controller
             $parentSupport = Camp::validateParentsupport($topicnum, $campnum, $userNickname, $confirm_support);
             $childSupport = Camp::validateChildsupport($topicnum, $campnum, $userNickname, $confirm_support);
            
+            /**
+             * If user B has delegate his support to User A, then User A cannot delegate his support to user B.
+             * Ticket # 1501
+             * Muhammad Ahmed
+             */
+            $isDelegatedUserSupport = Support::where('topic_num', $topicnum)->where('end', '=', 0)->where('nick_name_id', $delegate_nick_name_id)->whereIn('delegate_nick_name_id', $userNickname)->first();
+            
+            if(count($isDelegatedUserSupport)) {
+                Session::flash('warningDelegate', 'You already have delegate support, you cannot delegate your support to this user');
+                return redirect()->back();
+            }
+
             if ($alreadySupport->count() > 0) {
                 if($alreadySupport[0]->delegate_nick_name_id!=0){
                     $nickName = Nickname::where('id',$alreadySupport[0]->delegate_nick_name_id)->first();
