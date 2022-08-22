@@ -79,7 +79,7 @@ Route::get('login', [ 'as' => 'login', 'uses' => 'Auth\LoginController@showLogin
 Route::post('login', [ 'as' => 'login', 'uses' => 'Auth\LoginController@login','middleware'    => 'checkstatus']);
 // social login url 
 Route::get('login/{provider}', 'SocialController@redirect');
-Route::get('login/{provider}/callback','SocialController@Callback');
+Route::get('login/{provider}/callback',[ 'uses' =>'SocialController@Callback' , 'middleware' => 'checkstatus']);
 Route::get('verify-otp', ['as' => 'login.otp', 'uses' => 'Auth\LoginController@getOtpForm']);
 Route::post('verify-otp', 'Auth\LoginController@validateLoginOtp');
 
