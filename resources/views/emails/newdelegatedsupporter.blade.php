@@ -21,9 +21,11 @@
 		@if(isset($data['support_list']) && count($data['support_list']) > 0)
 			@foreach($data['support_list'] as $support)
 		 	<li>You are subscribed to {!!$support!!}</li>
-		 @endforeach
+		 	@endforeach
 		@else
-			<li>You are subscribed to <a href="{{ $link }}">{{ $data['support_camp']}} </a></li>
+			@if(!empty($data['support_camp']))
+				<li>You are subscribed to <a href="{{ $link }}">{{ $data['support_camp']}} </a></li>
+			@endif
 		@endif	
 	
 </ul>
@@ -32,18 +34,19 @@
 	<h4>You are receiving this e-mail because:</h4>
 		<ul>
 			@if(isset($data['support_list']) && count($data['support_list']) > 0)
-			@foreach($data['support_list'] as $support)
-			 	<li>You are directly supporting {!!$support!!}</li>
-			@endforeach
-			
+				@foreach($data['support_list'] as $support)
+					<li>You are directly supporting {!!$support!!}</li>
+				@endforeach
 			@else
-			<li>You are directly supporting <a href="{{ $link }}">{{ $data['support_camp']}} </a></li>
+				@if(!empty($data['support_camp']))
+					<li>You are directly supporting <a href="{{ $link }}">{{ $data['support_camp']}} </a></li>
+				@endif
 			@endif
 
 			@if(isset($data['also_subscriber']) && $data['also_subscriber'] == 1 && isset($data['sub_support_list']) && count($data['sub_support_list']) > 0)
-			@foreach($data['sub_support_list'] as $support)
-			 	<li>You are subscribed to {!!$support!!}</li>
-			 @endforeach
+				@foreach($data['sub_support_list'] as $support)
+					<li>You are subscribed to {!!$support!!}</li>
+				@endforeach
 			@endif
 
 		</ul>
