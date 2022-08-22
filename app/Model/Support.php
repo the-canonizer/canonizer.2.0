@@ -206,7 +206,7 @@ class Support extends Model {
                    if(array_search($value->nick_name_id, array_column($results_child, 'nick_name_id')) !== FALSE) { //found
                         $value->end = time();
                         $value->save();
-                        $this->supportOrderChanges($value);
+                        self::supportOrderChanges($value);
                     } 
                 }
             }
@@ -238,7 +238,7 @@ class Support extends Model {
         Work : support order change
         Return : True value
     */
-    private function supportOrderChanges($value){
+    public function supportOrderChanges($value){
         
         $higherSupportNumbers = self::where('topic_num', $value->topic_num)
         ->where('end','=',0)
