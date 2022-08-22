@@ -206,7 +206,7 @@ class Camp extends Model {
         }
 
         if ((isset($_REQUEST['asof']) && $_REQUEST['asof'] == "review") || (session('asofDefault')=="review" && !isset($_REQUEST['asof']))) {
-            $query->whereRaw('topic.go_live_time in (select max(topic.go_live_time) from topic where topic.topic_num=topic.topic_num and topic.objector_nick_id is null group by topic.topic_num)');
+            $query->whereRaw('topic.go_live_time in (select max(topic.go_live_time) from topic where topic.topic_num=topic.topic_num and topic.objector_nick_id is null and topic.grace_period = 0 group by topic.topic_num)');
           
         }else{
             $query->where('camp.go_live_time', '<=', $as_of_time);

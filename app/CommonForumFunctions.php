@@ -328,16 +328,8 @@ class CommonForumFunctions
         } else {
             $mailerObj = new ForumPostSubmittedMail($user, $link, $data);
         }
-        $get_flags = DB::table('person')->where('email', '=', $email)
-            ->where('private_flags', 'like', '%email%')
-            ->get();
-
-        //if it is not null then email is private
-        if (count($get_flags) > 0) {
-            Mail::bcc($email)->send($mailerObj);
-        } else {
-            Mail::to($email)->send($mailerObj);
-        }
+        
+        Mail::to($email)->send($mailerObj);
     }
 
     /**

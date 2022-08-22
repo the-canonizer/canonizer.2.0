@@ -389,6 +389,9 @@ class TopicController extends Controller {
         }
         if(session('campnum')) {
 			session()->forget('campnum');
+            if(Session::has('warningDelegate')) {
+                Session::flash('warningDelegate', Session::get('warningDelegate'));
+            }
 			return redirect()->refresh();
 		}
         $topicData = [];

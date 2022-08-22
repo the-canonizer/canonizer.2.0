@@ -21,6 +21,11 @@ class CheckStatus
             // return redirect('/login')->with('erro_login', 'User is no longer active on canonizer');
             return redirect('/login')->with('erro_login', 'Your account is not verified yet. You must have received the verification code in your registered email or mobile. If not then you can request for new code by clicking on the button below.');
         }
+        if(Auth::check() && Auth::user()->is_active ==0 ){
+            Auth::logout();
+            // return redirect('/login')->with('erro_login', 'User is no longer active on canonizer');
+            return redirect('/login')->with('erro_login', 'Your account has been suspended temporarily. Please contact support@canonizer.com for further assistance.');
+        }
         return $response;
     }
 }
