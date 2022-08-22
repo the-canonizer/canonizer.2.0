@@ -238,7 +238,7 @@ class Support extends Model {
         Work : support order change
         Return : True value
     */
-    public function supportOrderChanges($value){
+    public static function supportOrderChanges($value){
         
         $higherSupportNumbers = self::where('topic_num', $value->topic_num)
         ->where('end','=',0)
