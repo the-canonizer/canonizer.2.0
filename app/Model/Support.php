@@ -199,10 +199,6 @@ class Support extends Model {
             $results_child = $supportData_child->get()->toArray();
         }
         foreach($results as $value){
-           
-            //$value->end = time();
-            //$value->save();
-           
             if(!empty($campNum)){ 
                 //1311 and 1334 1398 
                 //if child camp have  same support of parent camp then remove support from parent
@@ -210,28 +206,9 @@ class Support extends Model {
                    if(array_search($value->nick_name_id, array_column($results_child, 'nick_name_id')) !== FALSE) { //found
                         $value->end = time();
                         $value->save();
-                        
+                        self::supportOrderChanges($value);
                     } 
                 }
-            }
-            
-            //support order changes 
-            $higherSupportNumbers = self::where('topic_num',$topicNum)
-                ->where('end','=',0)
-                ->where('nick_name_id',$value->nick_name_id)
-                ->where('support_order','>',$value->support_order)->get(); 
-            foreach($higherSupportNumbers as $support){
-                $support->end = time();
-                $support->save();
-                $create = new self();
-                $create->topic_num = $support->topic_num;
-                $create->nick_name_id = $support->nick_name_id;
-                //delegate nick name id add if any delegate
-                $create->delegate_nick_name_id = $support->delegate_nick_name_id; 
-                $create->start = time();
-                $create->camp_num = $support->camp_num;
-                $create->support_order = ($support->support_order - 1);
-                $create->save();
             }
         }
        
@@ -254,5 +231,32 @@ class Support extends Model {
             else{
                 return $supportId;
             }       
+    }
+
+    /*
+        Function : supportOrderChanges
+        Work : support order change
+        Return : True value
+    */
+    public static function supportOrderChanges($value){
+        
+        $higherSupportNumbers = self::where('topic_num', $value->topic_num)
+        ->where('end','=',0)
+        ->where('nick_name_id',$value->nick_name_id)
+        ->where('support_order','>',$value->support_order)->get(); 
+        foreach($higherSupportNumbers as $support){
+            $support->end = time();
+            $support->save();
+            $create = new self();
+            $create->topic_num = $support->topic_num;
+            $create->nick_name_id = $support->nick_name_id;
+            //delegate nick name id add if any delegate
+            $create->delegate_nick_name_id = $support->delegate_nick_name_id; 
+            $create->start = time();
+            $create->camp_num = $support->camp_num;
+            $create->support_order = ($support->support_order - 1);
+            $create->save();
+        }
+        return true;
     }
 }
