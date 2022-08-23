@@ -607,7 +607,7 @@ class TopicController extends Controller {
         if (Auth::check()) {
             $nickNames = Nickname::personNicknameArray();
             $ifIamSupporter = Support::ifIamSupporter($topicnum, $campnum, $nickNames,$submit_time);
-            $ifSupportDelayed = Support::ifIamSupporter($topicnum, $campnum, $nickNames,$submit_time, $delayed=true);
+            $ifSupportDelayed = 0;//Support::ifIamSupporter($topicnum, $campnum, $nickNames,$submit_time, $delayed=true);
             if(count($statementHistory) > 0){
                 foreach($statementHistory as $val){
                     $submitterUserID = Nickname::getUserIDByNickName($val->submitter_nick_id);
