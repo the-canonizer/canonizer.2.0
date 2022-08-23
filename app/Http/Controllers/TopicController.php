@@ -329,6 +329,12 @@ class TopicController extends Controller {
      */
     public function manage_topic(Request $request, $id) {
 
+        /**
+         * As of filters should not be applied on the manage topic page
+         * ticket # 1427 - Muhammad Ahmed
+         */
+        session()->forget('asofDefault');
+
         $paramArray = explode("-", $id);
         $id = $paramArray[0];
         $objection = (isset($paramArray[1]) && $paramArray[1] == 'objection') ? $paramArray[1] : null;
@@ -358,6 +364,11 @@ class TopicController extends Controller {
         $algorithm = session('defaultAlgo', 'blind_popularity');
         $topicnum = $topicnumArray[0];
         if(Auth::user() && Auth::user()->id){
+            if (!session('defaultUserAlgo')) {
+                $defaultAlgo = Auth::user()->default_algo;
+                session()->put('defaultAlgo',$defaultAlgo);
+                session()->put('defaultUserAlgo',$defaultAlgo);
+            }
             $userid = Auth::user()->id;
              //check if logged in user supporting this cam
             $userNicknames = Nickname::personNicknameArray();
@@ -368,8 +379,19 @@ class TopicController extends Controller {
             $ifIamSupporter = false;
         }
 
+        $topicDetail = Topic::getLiveTopic($topicnum);
+        $totalCamps = 1;
+        if(!empty($topicDetail)) {
+            $totalCamps = $topicDetail->camps()->whereNull('object_time')->distinct('camp_num')->pluck('camp_num')->count();
+        }
+        if($totalCamps > 50 && !isset($_REQUEST['filter']) && $_SESSION['filterchange'] < 1) {
+            $_SESSION['filterchange'] = '1.000';
+        }
         if(session('campnum')) {
 			session()->forget('campnum');
+            if(Session::has('warningDelegate')) {
+                Session::flash('warningDelegate', Session::get('warningDelegate'));
+            }
 			return redirect()->refresh();
 		}
         $topicData = [];
@@ -434,7 +456,13 @@ class TopicController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function create_camp(Request $request, $topicnum, $parentcampnum) {
+
+        /**
+         * As of filters should not be applied on the camp creation page
+         * ticket # 1427 - Muhammad Ahmed
+         */
         session()->forget('asofDefault');
+
         $topicnumArray = explode("-", $topicnum);
         $topicnum = $topicnumArray[0];
 		
@@ -458,6 +486,12 @@ class TopicController extends Controller {
      */
     public function manage_camp($id) {
 
+        /**
+         * As of filters should not be applied on the manage camp page
+         * ticket # 1427 - Muhammad Ahmed
+         */
+        session()->forget('asofDefault');
+
         $paramArray = explode("-", $id);
         $id = $paramArray[0];
         $objection = (isset($paramArray[1]) && $paramArray[1] == 'objection') ? $paramArray[1] : null;
@@ -470,8 +504,9 @@ class TopicController extends Controller {
 
         $topic = Camp::getAgreementTopic($camp->topic_num);
 
-        $parentcamp = Camp::campNameWithAncestors($camp, '',$topic->topic_name);
+        $onecamp = Camp::getLiveCamp($camp->topic_num, $camp->camp_num);
 
+        $parentcamp = Camp::campNameWithAncestors($onecamp, '',$topic->topic_name);
         //$parentcampsData = Camp::getAllParentCampNew($camp->topic_num);
 
         $parentcampsData = Camp::getAllParentCamp($camp->topic_num,['nofilter' => true]);//1070
@@ -493,6 +528,12 @@ class TopicController extends Controller {
      */
     public function manage_statement($id) {
 
+        /**
+         * As of filters should not be applied on the manage statement page
+         * ticket # 1427 - Muhammad Ahmed
+         */
+        session()->forget('asofDefault');
+        
         $paramArray = explode("-", $id);
         $id = $paramArray[0];
         $objection = (isset($paramArray[1]) && $paramArray[1] == 'objection') ? $paramArray[1] : null;
@@ -523,6 +564,13 @@ class TopicController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function create_statement($topic_num, $camp_num) {
+
+        /**
+         * As of filters should not be applied on the statement creation page
+         * ticket # 1427 - Muhammad Ahmed
+         */
+        session()->forget('asofDefault');
+        
         $topic = Camp::getAgreementTopic($topic_num);
 
         $camp = Camp::getLiveCamp($topic_num, $camp_num);
@@ -544,6 +592,11 @@ class TopicController extends Controller {
      */
     public function camp_history($id, $campnum) {
 
+        /**
+         * As of filters should not be applied on the camp history page
+         * ticket # 1427 - Muhammad Ahmed
+         */
+        session()->forget('asofDefault');
 
         $topicnumArray = explode("-", $id);
         $topicnum = $topicnumArray[0];
@@ -567,12 +620,6 @@ class TopicController extends Controller {
         //if(!count($onecamp)) return back();
         $wiky = new Wiky;
 
-        /**
-         * As of filters should not be applied on the camp history page
-         * ticket # 1381 - Muhammad Ahmed
-         */
-        session()->forget('asofDefault');
-
         return view('topics.camphistory', compact('topic', 'camps', 'parentcampnum', 'onecamp', 'parentcamp', 'wiky', 'ifIamSupporter','submit_time','ifSupportDelayed','ifIamImplicitSupporter'));
     }
 
@@ -584,6 +631,12 @@ class TopicController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function statement_history($id, $campnum) {
+
+        /**
+         * As of filters should not be applied on the statement history page
+         * ticket # 1427 - Muhammad Ahmed
+         */
+        session()->forget('asofDefault');
 
         $topicnumArray = explode("-", $id);
         $topicnum = $topicnumArray[0];
@@ -607,7 +660,7 @@ class TopicController extends Controller {
         if (Auth::check()) {
             $nickNames = Nickname::personNicknameArray();
             $ifIamSupporter = Support::ifIamSupporter($topicnum, $campnum, $nickNames,$submit_time);
-            $ifSupportDelayed = 0;//Support::ifIamSupporter($topicnum, $campnum, $nickNames,$submit_time, $delayed=true);
+            $ifSupportDelayed = Support::ifIamSupporter($topicnum, $campnum, $nickNames,$submit_time, $delayed=true);
             if(count($statementHistory) > 0){
                 foreach($statementHistory as $val){
                     $submitterUserID = Nickname::getUserIDByNickName($val->submitter_nick_id);
@@ -653,6 +706,12 @@ class TopicController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function topic_history($id) {
+
+        /**
+         * As of filters should not be applied on the topic history page
+         * ticket # 1427 - Muhammad Ahmed
+         */
+        session()->forget('asofDefault');
 
         $topicnumArray = explode("-", $id);
         $topicnum = $topicnumArray[0];
@@ -721,12 +780,13 @@ class TopicController extends Controller {
         }
         $topicnum = (isset($all['topic_num'])) ? $all['topic_num'] : null;
         if($topicnum!=null){
-
-            if(strtolower(trim($all['camp_name'])) == 'agreement'){
-                $validator->after(function ($validator){
-                      $validator->errors()->add('camp_name', 'The camp name has already been taken');
-                 }); 
-             }
+            if((!empty($all['camp_num']) && $all['camp_num'] != 1) || empty($all['camp_num'])) {
+                if(strtolower(trim($all['camp_name'])) == 'agreement') {
+                    $validator->after(function ($validator){
+                          $validator->errors()->add('camp_name', 'The camp name has already been taken');
+                     }); 
+                }
+            }
 
             $old_parent_camps = Camp::getAllTopicCamp($topicnum);
             /**
@@ -1244,6 +1304,12 @@ class TopicController extends Controller {
     }
 
     public function usersupports(Request $request, $id) {
+        
+        /**
+         * As of filters should not be applied on the user topics supported page
+         * ticket # 1427 - Muhammad Ahmed
+         */
+        session()->forget('asofDefault');
 
         $nickName = Nickname::find($id);
         $topic_num = $request->get('topicnum'); 
@@ -1544,8 +1610,11 @@ class TopicController extends Controller {
     }
 
     public function add_camp_subscription(Request $request){
+        session()->flash('erro_login', 'Your session has been expired.');
+        if(!Auth::check()) {
+            return response()->json(['result' => "Error", 'message' => 'Your session has been expired.'], 401);
+        }
         try{
-
             $all = $request->all();
              $id = isset($all['id']) ? $all['id'] : null;
              if($all['checked'] == 'true'){
@@ -1602,6 +1671,10 @@ class TopicController extends Controller {
     }
 
     public function add_topic_subscription(Request $request){
+        if(!Auth::check()) {
+            session()->flash('erro_login', 'Your session has been expired.');
+            return response()->json(['result' => "Error", 'message' => 'Your session has been expired.'], 401);
+        }
         try{
             $all = $request->all();
              $id = isset($all['id']) ? $all['id'] : null;
@@ -1635,12 +1708,12 @@ class TopicController extends Controller {
     private function checkParentCampChanged($topic_num, $camp_num, $parent_camp_num, $in_review_status,$old_parent_camp_num="") {
         
         //while updating camp check if any old support then remove it if parent camp changed
-        $campOldData = Camp::getLiveCamp($topic_num,$camp_num);
+        $livecamp = Camp::getLiveCamp($topic_num,$camp_num);
 
         if(isset($parent_camp_num) && $parent_camp_num!=''){
             if($in_review_status){
                 //#924 start
-                $allChildCamps = Camp::getAllChildCamps($campOldData);
+                $allChildCamps = Camp::getAllChildCamps($livecamp);
                 //get supporters of all child camps of current camp
                 $allChildSupporters = Support::where('topic_num',$topic_num)
                     ->where('end',0)
@@ -1648,23 +1721,36 @@ class TopicController extends Controller {
                     ->pluck('nick_name_id');
                 //remove all supports from parent camp if there any child supporter
                 if(sizeof($allChildSupporters) > 0){  
-                    Support::removeSupport($topic_num,$parent_camp_num,$allChildSupporters);
+                    Support::removeSupport($topic_num,$parent_camp_num,$allChildSupporters,$allChildCamps);
                 }
             }
             else{
-                //$parent_camp_num != $campOldData->parent_camp_num = 1338
-                if($parent_camp_num != $old_parent_camp_num){
-                    //1262 and 1191
-                    $allParentCamps = Camp::getAllParent($campOldData);
-                    //get supporters of all child camps of current camp
-                    $allChildSupporters = Support::where('topic_num',$topic_num)
+
+                //Here we check camp parent is change or not (#1338)
+                if ($parent_camp_num != $old_parent_camp_num) {
+                    
+                    //We get all parent camps of current camp (#1262 ,#1191)
+                    $allParentCamps = Camp::getAllParent($livecamp);
+
+                    //Get supporters of all parent camps 
+                    $allParentsSupporters = Support::where('topic_num',$topic_num)
                         ->where('end',0)
-                        ->whereIn('camp_num',$allParentCamps) //$allChildCamps changes with $allParentCamps 1262 and 1191
+                        ->whereIn('camp_num',$allParentCamps)
                         ->pluck('nick_name_id');
+
+
+                    //We get all child camps of current live camp
+                    $allChildCamps = Camp::getAllChildCamps($livecamp);
+                    //Get supporters of all Child camps 
+                    $allChildSupporters = Support::where('topic_num',$topic_num)
+                    ->where('end',0)
+                    ->whereIn('camp_num',$allChildCamps) 
+                    ->pluck('nick_name_id');
+                   
                     //remove all supports from parent camp if there any child supporter
-                    if(sizeof($allChildSupporters) > 0){
-                        foreach($allParentCamps as $p ){
-                            Support::removeSupport($topic_num,$p,$allChildSupporters,$camp_num); //$p
+                    if(sizeof($allParentsSupporters) > 0){
+                        foreach($allParentCamps as $p){
+                            Support::removeSupport($topic_num,$p,$allParentsSupporters,$allChildCamps); //$p  parent_camp_num
                         }
                     }
                 }
