@@ -383,14 +383,20 @@ class Algorithm{
         })->last();
         return $expertCamp;
     }
-    public static function mind_experts_non_special($topicnum,$nick_name_id){
+    public static function mind_experts_non_special($topicnum,$nick_name_id,$topic_num){
         $expertCamp = self::get_expert_camp($topicnum,$nick_name_id);
         if(!$expertCamp){ # not an expert canonized nick.
             return 0;
         }
 
         $score_multiplier = self::get_mind_expert_score_multiplier($expertCamp,$topicnum,$nick_name_id);
-        $expertCampReducedTree = $expertCamp->getCampAndNickNameWiseSupportTree('mind_experts',$topicnum); # only need to canonize this branch
+        if($topic_num == 124){
+            $expertCampReducedTree = $expertCamp->getCampAndNickNameWiseSupportTree('computer_science_experts',$topicnum); # only need to canonize this branch
+
+        }else{
+            $expertCampReducedTree = $expertCamp->getCampAndNickNameWiseSupportTree('mind_experts',$topicnum); # only need to canonize this branch
+
+        }
              // Check if user supports himself
         if(array_key_exists('camp_wise_tree',$expertCampReducedTree) && array_key_exists($expertCamp->camp_num,$expertCampReducedTree['camp_wise_tree'])){
             return $expertCampReducedTree['camp_wise_tree'][$expertCamp->camp_num];
@@ -493,7 +499,7 @@ class Algorithm{
             
             return $total_score * $score_multiplier;
         }else{
-           $expertCampReducedTree = self::mind_experts_non_special($topicnum,$nick_name_id); # only need to canonize this branch
+           $expertCampReducedTree = self::mind_experts_non_special($topicnum,$nick_name_id,$topic_num); # only need to canonize this branch
             $total_score = 0;
             if(count($expertCampReducedTree) > 0){
                 foreach($expertCampReducedTree as $tree_node){
