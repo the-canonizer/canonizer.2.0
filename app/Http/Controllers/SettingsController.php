@@ -309,7 +309,7 @@ class SettingsController extends Controller
             $isDelegatedUserSupport = Support::where('topic_num', $topicnum)->where('end', '=', 0)->where('nick_name_id', $delegate_nick_name_id)->whereIn('delegate_nick_name_id', $userNickname)->first();
             
             if(count($isDelegatedUserSupport)) {
-                Session::flash('warningDelegate', $delegatedSupportterNickname .' is already delegating support you , you cannot delegate your support to this user');
+                Session::flash('warningDelegate', $delegatedSupportterNickname .' is already delegating support to you, you cannot delegate your support to this user.');
                 return redirect()->back();
             }
 
