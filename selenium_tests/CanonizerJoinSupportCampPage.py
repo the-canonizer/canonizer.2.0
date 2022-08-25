@@ -1,6 +1,6 @@
 from CanonizerBase import Page
 from Identifiers import JoinSupportCampPageIdentifiers, BrowsePageIdentifiers, TopicUpdatePageIdentifiers, \
-    CreateNewTopicPageIdentifiers
+    CreateNewTopicPageIdentifiers, JoinAndSupportCampPage
 from selenium.common.exceptions import NoSuchElementException
 import time
 
@@ -28,19 +28,29 @@ class CanonizerJoinSupportCampPage(Page):
         if title == self.supported_camps:
             return CanonizerJoinSupportCampPage(self.driver)
 
+    def user_must_be_signin_to_join_or_support_camp(self):
+        self.load_topic_page()
+        # Click on Create New Camp
+        time.sleep(3)
+        self.hover(*JoinSupportCampPageIdentifiers.JOINSUPPORTCAMP)
+        self.find_element(*JoinSupportCampPageIdentifiers.JOINSUPPORTCAMP).click()
+        title = self.find_element(*JoinSupportCampPageIdentifiers.TITLE).text
+        if title == 'Log in':
+            return CanonizerJoinSupportCampPage(self.driver)
+        else:
+            print("title does not match")
+
     def load_direct_join_and_support_page(self):
         self.load_topic_page()
         # Click on Create New Camp
         time.sleep(3)
-        try:
-            self.hover(*JoinSupportCampPageIdentifiers.JOINSUPPORTCAMP)
-            self.find_element(*JoinSupportCampPageIdentifiers.JOINSUPPORTCAMP).click()
-            page_title = self.find_element(*JoinSupportCampPageIdentifiers.PAGE_TITLE).text
-
-            if page_title == self.supported_camps:
-                return CanonizerJoinSupportCampPage(self.driver)
-        except NoSuchElementException:
-            return False
+        self.hover(*JoinSupportCampPageIdentifiers.JOINSUPPORTCAMP)
+        self.find_element(*JoinSupportCampPageIdentifiers.JOINSUPPORTCAMP).click()
+        page_title = self.find_element(*JoinSupportCampPageIdentifiers.PAGE_TITLE).text
+        if page_title == "Supported Camps":
+         return CanonizerJoinSupportCampPage(self.driver)
+        else:
+            print("title does not match")
 
     def verify_warning_directly_supporting_child_camp(self):
         self.load_topic_page()
@@ -55,17 +65,24 @@ class CanonizerJoinSupportCampPage(Page):
             return False
 
     def verify_support_to_child_camp(self):
-        self.load_topic_page()
+        self.hover(*JoinAndSupportCampPage.BROWSE)
+        self.find_element(*JoinAndSupportCampPage.BROWSE).click()
+
+        # Browse to Topic Name
+        self.hover(*JoinAndSupportCampPage.TOPIC_IDENTIFIER)
+        self.find_element(*JoinAndSupportCampPage.TOPIC_IDENTIFIER).click()
         count_before_support = self.find_element(*JoinSupportCampPageIdentifiers.COUNT_BEFORE_SUPPORT).text
-        self.hover(*JoinSupportCampPageIdentifiers.CHILD_CAMP)
-        self.find_element(*JoinSupportCampPageIdentifiers.CHILD_CAMP).click()
+        self.hover(*JoinAndSupportCampPage.CHILD_CAMP)
+        self.find_element(*JoinAndSupportCampPage.CHILD_CAMP).click()
         try:
             self.find_element(*JoinSupportCampPageIdentifiers.JOIN_CAMP_SUPPORT).click()
             self.find_element(*JoinSupportCampPageIdentifiers.SUBMIT).click()
             count_after_support = self.find_element(*JoinSupportCampPageIdentifiers.COUNT_BEFORE_SUPPORT).text
-            self.find_element(*JoinSupportCampPageIdentifiers.PARENT_CAMP).click()
+            self.find_element(*JoinAndSupportCampPage.PARENT_CAMP).click()
             support = self.find_element(*JoinSupportCampPageIdentifiers.JOIN_CAMP_SUPPORT).text
             if count_after_support > count_before_support and support == 'Directly Join and Support':
+                self.find_element(*JoinAndSupportCampPage.CHILD_CAMP).click()
+                self.find_element(*JoinAndSupportCampPage.REMOVE_SUPPORT).click()
                 return CanonizerJoinSupportCampPage(self.driver)
         except NoSuchElementException:
             return False

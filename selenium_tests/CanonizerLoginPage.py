@@ -88,7 +88,11 @@ class CanonizerLoginPage(Page):
             Retrun the result to the main program
         """
         self.login(user, password)
-        return CanonizerLoginPage(self.driver)
+        title = self.find_element(*HomePageIdentifiers.HEADING).text
+        if title == "Canonizer Main Page":
+          return CanonizerLoginPage(self.driver)
+        else:
+            print("Title does not match")
 
     def login_with_invalid_user(self, user, password):
         """
@@ -103,8 +107,11 @@ class CanonizerLoginPage(Page):
         """
         self.login(user, password)
         error = self.find_element(*LoginPageIdentifiers.ERROR_MESSAGE).text
-        if error == "These credentials do not match our records.":
+        if error == "These dcredentials do not match our records.":
             return CanonizerLoginPage(self.driver)
+        else:
+            return print("Error is not matching")
+
 
     def login_page_should_have_register_option_for_new_users(self):
         """
@@ -112,21 +119,27 @@ class CanonizerLoginPage(Page):
         :return:
             Return the result to the main program.
         """
-        result = self.find_element(*LoginPageIdentifiers.SIGNUPNOW).text
-        if result == "Sign up Now":
+        link = self.find_element(*LoginPageIdentifiers.SIGNUPNOW).text
+        if link == "Sign up Now":
             return CanonizerLoginPage(self.driver)
+        else:
+            print("Sign up link now found")
 
     def login_with_blank_email(self, password):
         self.login('', password)
         error = self.find_element(*LoginPageIdentifiers.ERROR_EMAIL).text
-        if error == "The Email/Phone Number field is required.":
+        if error == "The Email/Phone Number field is requiredzx.":
             return CanonizerLoginPage(self.driver)
+        else:
+            print("Error not found or not matching")
 
     def login_with_blank_password(self, email):
         self.login(email, '')
         error = self.find_element(*LoginPageIdentifiers.ERROR_BLANK_PASSWORD).text
         if error == "The password is required.":
             return CanonizerLoginPage(self.driver)
+        else:
+            print("Error not found or not matching")
 
     def login_page_mandatory_fields_are_marked_with_asterisk(self):
         """
@@ -143,6 +156,8 @@ class CanonizerLoginPage(Page):
         text = self.find_element(*LoginPageIdentifiers.FORGOTPASSWORD).text
         if text == 'Forgot Password':
             return CanonizerLoginPage(self.driver)
+        else:
+            print("Link  not found or not matching")
 
     def click_request_otp_button(self):
         self.find_element(*LoginPageIdentifiers.REQUEST_OTP).click()

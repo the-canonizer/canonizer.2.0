@@ -1,3 +1,5 @@
+from selenium.webdriver.common.by import By
+
 from CanonizerBase import Page
 from Identifiers import CreateNewTopicPageIdentifiers, BrowsePageIdentifiers
 from selenium.common.exceptions import NoSuchElementException
@@ -26,6 +28,8 @@ class CanonizerCreateNewTopicPage(Page):
         page_title = self.find_element(*CreateNewTopicPageIdentifiers.PAGE_TITLE).text
         if page_title == 'Create New Topic':
             return CanonizerCreateNewTopicPage(self.driver)
+        else:
+            print("title is not matching")
 
     def create_topic_without_user_login(self):
         self.hover(*CreateNewTopicPageIdentifiers.CREATE_NEW_TOPIC)
@@ -33,6 +37,8 @@ class CanonizerCreateNewTopicPage(Page):
         title = self.find_element(*CreateNewTopicPageIdentifiers.LOGIN_TITLE).text
         if title == self.login:
             return CanonizerCreateNewTopicPage(self.driver)
+        else:
+            print("Login page not found")
 
     def enter_nick_name(self, nickname):
         self.find_element(*CreateNewTopicPageIdentifiers.NICK_NAME).send_keys(nickname)
@@ -71,12 +77,16 @@ class CanonizerCreateNewTopicPage(Page):
         error = self.find_element(*CreateNewTopicPageIdentifiers.ERROR_NICK_NAME)
         if error == "The nick name field is required.":
             return CanonizerCreateNewTopicPage(self.driver)
+        else:
+            print("Nick name is not blank")
 
     def create_topic_with_blank_topic_name(self, nickname, namespace, note):
         self.create_topic(nickname, '', namespace, note)
         error = self.find_element(*CreateNewTopicPageIdentifiers.ERROR_TOPIC_NAME).text
         if error == "Topic name is required.":
             return CanonizerCreateNewTopicPage(self.driver)
+        else:
+            print("Error message is not correct")
 
     def create_topic_with_blank_spaces_topic_name(self, nickname, topic_name, namespace, note):
         self.create_topic(nickname, "        ", namespace, note)
@@ -107,52 +117,61 @@ class CanonizerCreateNewTopicPage(Page):
         error = self.find_element(*CreateNewTopicPageIdentifiers.ERROR_DUPLICATE_TOPIC_NAME).text
         if error == "The topic name has already been taken.":
             return CanonizerCreateNewTopicPage(self.driver)
+        else:
+            print("Error message not found or is incorrect")
 
     def create_topic_with_valid_data(self, nickname, topic_name, namespace, note):
         self.create_topic(nickname, topic_name, namespace, note)
         success_message = self.find_element(*CreateNewTopicPageIdentifiers.SUCCESS_MESSAGE_TOPIC_CREATION).text
         if success_message == "Success! Topic created successfully.":
             return CanonizerCreateNewTopicPage(self.driver)
+        else:
+            print("Success message not found or is incorrect")
 
     def create_topic_with_invalid_data(self, nickname, topic_name, namespace, note):
         self.create_topic(nickname, topic_name, namespace, note)
         error = self.find_element(*CreateNewTopicPageIdentifiers.INVALID_TOPIC_NAME).text
         if error == 'Topic name can only contain space and alphanumeric characters.':
             return CanonizerCreateNewTopicPage(self.driver)
+        else:
+            print("Error message not found or is incorrect")
 
     def verify_single_support_on_new_topic_creation(self, nickname, topic_name, namespace, note):
         self.create_topic(nickname, topic_name, namespace, note)
 
         success_message = self.find_element(*CreateNewTopicPageIdentifiers.SUCCESS_MESSAGE_TOPIC_CREATION).text
-        if success_message == 'Success! Topic created successfully.':
+        if 'Success! Topic created successfully.' in success_message:
             self.hover(*CreateNewTopicPageIdentifiers.CREATED_TOPIC_NAME)
             self.find_element(*CreateNewTopicPageIdentifiers.CREATED_TOPIC_NAME).click()
             support_badge = self.find_element(*CreateNewTopicPageIdentifiers.SUPPORT_BADGE).text
             manage_support = self.find_element(*CreateNewTopicPageIdentifiers.JOIN_CAMP_SUPPORT).text
             if support_badge == '1' and manage_support == 'Manage Support':
                 return CanonizerCreateNewTopicPage(self.driver)
-            else:
-                return False
-        else:
-            return False
+
 
     def create_topic_with_invalid_topic_name(self, nickname, topic_name, namespace, note):
         self.create_topic(nickname, topic_name, namespace, note)
         error = self.find_element(*CreateNewTopicPageIdentifiers.INVALID_TOPIC_NAME).text
         if error == 'Topic name can only contain space and alphanumeric characters.':
             return CanonizerCreateNewTopicPage(self.driver)
+        else:
+            print("Error message not found or is incorrect")
 
     def create_topic_without_entering_mandatory_fields(self, nickname, topic_name, namespace, note):
         self.create_topic('', '', '', '')
         error = self.find_element(*CreateNewTopicPageIdentifiers.ERROR_TOPIC_NAME).text
         if error == 'Topic name is required.':
             return CanonizerCreateNewTopicPage(self.driver)
+        else:
+            print("Error message not found or is incorrect")
 
     def create_topic_with_entering_data_only_in_mandatory_fields(self, nickname, topic_name, namespace, note):
         self.create_topic(nickname, topic_name, namespace, '')
         success_message = self.find_element(*CreateNewTopicPageIdentifiers.SUCCESS_MESSAGE_TOPIC_CREATION).text
         if success_message == "Success! Topic created successfully.":
             return CanonizerCreateNewTopicPage(self.driver)
+        else:
+            print("Success message not found or is incorrect")
 
     def create_topic_name_with_enter_key(self, nickname, topic_name, namespace, note):
         self.entering_data_fields(nickname, topic_name, namespace, note)
@@ -160,15 +179,36 @@ class CanonizerCreateNewTopicPage(Page):
         success_message = self.find_element(*CreateNewTopicPageIdentifiers.SUCCESS_MESSAGE_TOPIC_CREATION).text
         if success_message == "Success! Topic created successfully.":
             return CanonizerCreateNewTopicPage(self.driver)
+        else:
+            print("Success message not found or is incorrect")
 
     def validation_of_nick_name_dropdown(self):
         self.find_element(*CreateNewTopicPageIdentifiers.NICK_NAME).click()
         nick_names = Select(self.find_element(*CreateNewTopicPageIdentifiers.NICK_NAME))
         nick_name_values = nick_names.options
         nick_name_list = []
+        nick_name_list_2 = []
         for ele in nick_name_values:
             nick_name_list.append(ele.text)
-        if nick_name_list:
+        self.find_element(*CreateNewTopicPageIdentifiers.USERNAME).click()
+        self.find_element(*CreateNewTopicPageIdentifiers.ACCOUNT_SETTING).click()
+        self.find_element(*CreateNewTopicPageIdentifiers.NICK_NAME_TAB).click()
+        rows = self.find_element(*CreateNewTopicPageIdentifiers.NICK_NAME_TABLE)
+        row = rows.find_elements(By.TAG_NAME, "tr")
+        for i in row:
+            temp = i.text
+            temp = temp.split(" ")
+            temp.pop(0)
+            temp.pop(0)
+            temp.pop()
+            str1 = ""
+            for ele in temp:
+                str1 += ele
+                str1 += " "
+            str1 = str1.rstrip()
+            nick_name_list_2.append(str1)
+        nick_name_list_2.pop(0)
+        if nick_name_list.sort() == nick_name_list_2.sort():
             return CanonizerCreateNewTopicPage(self.driver)
         else:
             return False
@@ -179,12 +219,16 @@ class CanonizerCreateNewTopicPage(Page):
         success_message = self.find_element(*CreateNewTopicPageIdentifiers.SUCCESS_MESSAGE_TOPIC_CREATION).text
         if success_message == "Success! Topic created successfully.":
             return CanonizerCreateNewTopicPage(self.driver)
+        else:
+            print("Success message not found or is incorrect")
 
     def create_topic_name_with_trailing_space(self, nickname, topic_name, namespace, note):
         self.create_topic(nickname, topic_name, namespace, note)
         success_message = self.find_element(*CreateNewTopicPageIdentifiers.SUCCESS_MESSAGE_TOPIC_CREATION).text
         if success_message == "Success! Topic created successfully.":
             return CanonizerCreateNewTopicPage(self.driver)
+        else:
+            print("Success message not found or is incorrect")
 
     def verifying_nick_name_from_dropdown_while_creating_topic(self, nickname, topic_name, namespace, note):
         self.create_topic(nickname, topic_name, namespace, note)
@@ -217,3 +261,4 @@ class CanonizerCreateNewTopicPage(Page):
                 return CanonizerCreateNewTopicPage(self.driver)
         except NoSuchElementException:
             return False
+

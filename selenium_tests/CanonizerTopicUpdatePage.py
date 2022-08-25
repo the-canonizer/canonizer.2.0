@@ -142,6 +142,8 @@ class CanonizerTopicUpdatePage(Page):
         error = self.find_element(*TopicUpdatePageIdentifiers.ERROR_TOPIC_NAME).text
         if error == "Topic name is required.":
             return CanonizerTopicUpdatePage(self.driver)
+        else:
+            print("Error not found or not matching")
 
     def submit_update_with_blank_other_namespace_name(self, nickname, topic_name, namespace, note):
         self.submit_update(nickname, topic_name, namespace, '', note)
@@ -153,6 +155,8 @@ class CanonizerTopicUpdatePage(Page):
         error = self.find_element(*TopicUpdatePageIdentifiers.ERROR_DUPLICATE_TOPIC_NAME).text
         if error == "The topic name has already been taken.":
             return CanonizerTopicUpdatePage(self.driver)
+        else:
+            print("Error not found or not matching")
 
     def submit_update_with_invalid_topic_name(self, nick_name, topic_name, namespace, note):
         self.find_element(*TopicUpdatePageIdentifiers.TOPIC_NAME).clear()

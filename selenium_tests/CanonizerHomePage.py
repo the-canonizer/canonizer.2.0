@@ -45,7 +45,6 @@ class CanonizerMainPage(Page):
 
     def check_scroll_to_top_click(self):
         self.driver.execute_script(self.window_scroll)
-        time.sleep(3)
         self.hover(*HomePageIdentifiers.CANONIZER_LOGO)
         self.find_element(*HomePageIdentifiers.CANONIZER_LOGO).click()
         return CanonizerHomePage(self.driver)
@@ -89,39 +88,38 @@ class CanonizerHomePage(Page):
         title = self.find_element(*HomePageIdentifiers.FOOTER).text
         current_year = datetime.now().year
         if '(2006 - ' + str(current_year) + ')' in title:
-            return CanonizerWhitePaper(self.driver)
+            return CanonizerHomePage(self.driver)
 
     def verify_footer_for_privacy_policy(self):
         privacy_policy = self.find_element(*HomePageIdentifiers.PRIVACY_P0LICY).text
         heading = self.find_element(*HomePageIdentifiers.HEADING).text
         if privacy_policy == 'Privacy Policy' and heading == self.main_page:
-            return CanonizerWhitePaper(self.driver)
+            return CanonizerHomePage(self.driver)
 
     def verify_footer_for_copy_right_year(self):
         copy_right = self.find_element(*HomePageIdentifiers.COPY_RIGHT).text
         heading = self.find_element(*HomePageIdentifiers.HEADING).text
         if '2006 - 2022' in copy_right and heading == self.main_page:
-            return CanonizerWhitePaper(self.driver)
+            return CanonizerHomePage(self.driver)
 
     def verify_footer_for_support_canonizer(self):
         support = self.find_element(*HomePageIdentifiers.SUPPORT).text
         heading = self.find_element(*HomePageIdentifiers.HEADING).text
         if 'support' in support and heading == self.main_page:
-            return CanonizerWhitePaper(self.driver)
+            return CanonizerHomePage(self.driver)
 
     def verify_footer_for_terms_and_services(self):
         terms_and_services = self.find_element(*HomePageIdentifiers.TERMS_AND_SERVICES).text
         heading = self.find_element(*HomePageIdentifiers.HEADING).text
         if 'Terms & Services' in terms_and_services and heading == self.main_page:
-            return CanonizerWhitePaper(self.driver)
+            return CanonizerHomePage(self.driver)
 
     def check_garbage_url(self):
         """
         This function is to check Garbage URL
         :return:
         """
-        if self.find_element(*HomePageIdentifiers.GARBAGE_URL).text:
-            return CanonizerWhitePaper(self.driver)
+        return self.find_element(*HomePageIdentifiers.GARBAGE_URL).text
 
 
 class WhatIsCanonizerPage(Page):
@@ -141,6 +139,7 @@ class CanonizerWhitePaper(Page):
 
 
 class CanonizerBlog(Page):
+
     def check_blog_page_should_open(self):
         self.hover(*HomePageIdentifiers.BLOG)
         self.find_element(*HomePageIdentifiers.BLOG).click()
@@ -155,11 +154,7 @@ class CanonizerBlog(Page):
         """
         self.hover(*HomePageIdentifiers.BLOG)
         self.find_element(*HomePageIdentifiers.BLOG).click()
-        text = self.find_element(*HomePageIdentifiers.BLOG_FOOTER).text
-        currentyear = datetime.now().year
-        if '(2006 -' + str(currentyear) + ')' in text:
-            return CanonizerBlog(self.driver)
-
+        return self.find_element(*HomePageIdentifiers.BLOG_FOOTER).text
 
 class CanonizerAlgorithmInformation(Page):
     def check_algorithm_information_page_should_open(self):
@@ -256,5 +251,4 @@ class CanonizerServices(Page):
     def check_services_page_should_open(self):
         self.hover(*HomePageIdentifiers.SERVICES)
         self.find_element(*HomePageIdentifiers.SERVICES).click()
-        time.sleep(2)
         return CanonizerServices(self.driver)

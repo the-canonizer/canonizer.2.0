@@ -97,7 +97,8 @@ class CanonizerRegisterPage(Page):
         error = self.find_element(*RegistrationPageIdentifiers.ERROR_PASSWORD).text
         if error == 'Password must be at least 8 characters, including at least one digit, one lower case letter and one special character(@,# !,$..).':
             return CanonizerRegisterPage(self.driver)
-
+        else:
+            print("Error message is not matching")
     def registration_with_different_confirmation_password(self, REG_LIST_8):
         self.register(REG_LIST_8[0], REG_LIST_8[1], REG_LIST_8[2], REG_LIST_8[3], REG_LIST_8[4], REG_LIST_8[5],
                       REG_LIST_8[6])
@@ -128,6 +129,8 @@ class CanonizerRegisterPage(Page):
         error = self.find_element(*RegistrationPageIdentifiers.ERROR_DUPLICATE_EMAIL).text
         if error == 'The email has already been taken.':
             return CanonizerRegisterPage(self.driver)
+        else:
+            print("Error not found or not matching")
 
     def registration_with_blank_spaces_first_name(self, REG_LIST_1):
         self.register(REG_LIST_1[0], REG_LIST_1[1], REG_LIST_1[2], REG_LIST_1[3], REG_LIST_1[4], REG_LIST_1[5],
@@ -139,6 +142,7 @@ class CanonizerRegisterPage(Page):
     def check_login_page_open_click_login_here_link(self):
         self.hover(*RegistrationPageIdentifiers.LOGINOPTION)
         self.find_element(*RegistrationPageIdentifiers.LOGINOPTION).click()
+        return CanonizerRegisterPage(self.driver)
 
     def registration_with_blank_captcha(self, firstname, middlename, lastname, user, password, confirmpassword):
         self.register(firstname, middlename, lastname, user, password, confirmpassword, '')

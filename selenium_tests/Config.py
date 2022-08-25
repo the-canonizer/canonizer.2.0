@@ -27,12 +27,16 @@ elif platform.system() == 'Linux':
 else:
     print("Unknown OS")
     exit(1)
-# Login Page Configuration Parameters
 
 DEFAULT_USER = "sania.mohan@talentelgia.in"
 DEFAULT_PASS = "Test@123"
 DEFAULT_UNVERIFIED_EMAIL = "sania@gmail.com"
 DEFAULT_UNVERIFIED_PASSWORD = 'Test@123'
+# Login Page Configuration Parameters
+UNVERIFY_EMAIL = "cano2@yopmail.com"
+UNVERIFY_PASS = "Test@123"
+#DEFAULT_USER = "rupali.chavan9860@gmail.com "
+#DEFAULT_PASS = "Rupali@12345"
 
 #DEFAULT_USER = "r_canonizer_user@yopmail.com"
 #DEFAULT_PASS = "Rupali@12345"
@@ -43,12 +47,17 @@ DEFAULT_INVALID_PHONE_NUMBER = "1212121212"
 DEFAULT_VALID_PHONE_NUMBER = ""
 DEFAULT_INVALID_OTP = "123456789"
 DEFAULT_INVALID_EMAIL_FORMAT = "test@test"
+VERIFY_EMAIL = "anil.podi@zibtek.in"
+VERIFY_PASS = "Zibtek#2455"
+PASS_UPPERCASE = "POOJA@123456"
+PASS_LOWERCASE = "pooja@123456"
 
 # Registration Page Configuration Parameters
 DEFAULT_FIRST_NAME = "Rupali"
 DEFAULT_MIDDLE_NAME = "A"
 DEFAULT_LAST_NAME = "Chavan"
 INVALID_NAME_REGISTER = "invalidname!@#$%1"
+
 REG_LIST_1 = [
     "      ",
     DEFAULT_MIDDLE_NAME,
@@ -190,11 +199,16 @@ FILE_WITH_SAME_NAME = "/Users/himmatpratapsinghgill/Desktop/female-silhoutte-ava
 FILE_WITH_ZERO_BYTES = "C:\\Users\\Ajay\\Desktop\\Canonizer\\New Bitmap Image.bmp"
 INVALID_FILE_FORMAT = "/Users/himmatpratapsinghgill/Desktop/sample files/file_example_PPT_1MB.ppt"
 
+# FILE_WITH_MORE_THAN_5MB = "H:\\Astronomy\\Images\\PIA00272.jpg"
+RECENT_FILE = "/home/bhavya/Pictures/sample.gif"
+OTHER_FILE_TYPE = "/home/bhavya/Pictures/text.txt"
+
+
 # Create New Topic Configuration Parameters
-DEFAULT_NICK_NAME = "Pooja"
+DEFAULT_NICK_NAME = "Rupali C"
 DEFAULT_TOPIC_NAME = ""
 DEFAULT_NAMESPACE = ""
-DEFAULT_NOTE = ""
+DEFAULT_NOTE = "Automated note"
 DUPLICATE_TOPIC_NAME = "Theories of Consciousness"
 DUPLICATE_CAMP_NAME = "Levels Of Testing"
 INVALID_TOPIC_NAME = "Test@1234567"
@@ -285,7 +299,7 @@ CAMP_LIST_10 = [
     ""
 ]
 CREATE_CAMP_LIST_1 = [
-    "Test",
+    "",
     "",
     "",
     "",
@@ -294,15 +308,6 @@ CREATE_CAMP_LIST_1 = [
     ""
 ]
 CREATE_CAMP_LIST_2 = [
-    "Test",
-    "",
-    "",
-    "",
-    "",
-    "",
-    ""
-]
-CREATE_CAMP_LIST_3 = [
     "",
     "",
     DUPLICATE_CAMP_NAME,
@@ -311,7 +316,7 @@ CREATE_CAMP_LIST_3 = [
     "",
     ""
 ]
-CREATE_CAMP_LIST_4 = [
+CREATE_CAMP_LIST_3 = [
     "",
     "",
     INVALID_CAMP_NAME,
@@ -320,6 +325,7 @@ CREATE_CAMP_LIST_4 = [
     "",
     ""
 ]
+
 # Change Password Configuration Parameters
 DEFAULT_CURRENT_PASSWORD = "Pooja@123456"
 DEFAULT_NEW_PASSWORD = "Test@12345"

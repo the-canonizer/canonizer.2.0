@@ -21,6 +21,8 @@ class Page(object):
         return self.driver.title
 
     def get_url(self):
+        WebDriverWait(self.driver, 10).until(EC.url_contains(self.driver.current_url))
+
         return self.driver.current_url
 
     def hover(self, *locator):

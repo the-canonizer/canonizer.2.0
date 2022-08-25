@@ -1,3 +1,5 @@
+import time
+
 from CanonizerBase import Page
 from Identifiers import ForgotPasswordIdentifiers
 
@@ -7,7 +9,11 @@ class CanonizerForgotPasswordPage(Page):
     def click_forgot_password_page_button(self):
         self.hover(*ForgotPasswordIdentifiers.FORGOT_PASSWORD)
         self.find_element(*ForgotPasswordIdentifiers.FORGOT_PASSWORD).click()
-        return CanonizerForgotPasswordPage(self.driver)
+        title = self.find_element(*ForgotPasswordIdentifiers.TITLE).text
+        if title == "Forgot Password":
+            return CanonizerForgotPasswordPage(self.driver)
+        else:
+            print("Title does not match")
 
     def enter_email(self, email):
         self.find_element(*ForgotPasswordIdentifiers.EMAIL).send_keys(email)

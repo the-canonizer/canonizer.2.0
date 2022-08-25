@@ -23,7 +23,11 @@ class CanonizerAccountSettingsPage(Page):
 
         self.hover(*AccountSettingsIdentifiers.ACCOUNT_SETTINGS)
         self.find_element(*AccountSettingsIdentifiers.ACCOUNT_SETTINGS).click()
-        return CanonizerAccountSettingsPage(self.driver)
+        page_title = self.find_element(*AccountSettingsManageProfileInfoIdentifiers.PAGE_TITLE).text
+        if page_title == 'Profile':
+            return CanonizerAccountSettingsPage(self.driver)
+        else:
+            print("Title not found")
 
     def click_username_link_button(self):
         """
@@ -56,6 +60,8 @@ class CanonizerAccountSettingsPage(Page):
         page_title = self.find_element(*AccountSettingsManageProfileInfoIdentifiers.PAGE_TITLE).text
         if page_title == 'Profile':
             return CanonizerAccountSettingsPage(self.driver)
+        else:
+            print("Title not found")
 
     def click_account_settings_add_manage_nick_names_page_button(self):
         """
@@ -434,7 +440,7 @@ class AccountSettingsManageProfileInfoPage(Page):
         return \
             self.find_element(*AccountSettingsManageProfileInfoIdentifiers.FIRST_NAME_ASTRK) and \
             self.find_element(*AccountSettingsManageProfileInfoIdentifiers.LAST_NAME_ASTRK) and \
-            self.find_element(*AccountSettingsManageProfileInfoIdentifiers.COUNTRY_ASTRK) and \
+            self.find_element(*AccountSettingsManageProfileInfoIdentifiers.CARRIER_ASTRK) and \
             self.find_element(*AccountSettingsManageProfileInfoIdentifiers.PHONE_NUMBER_ASTRK)
 
     def update_profile_with_blank_first_name(self, middle_name, last_name):
@@ -460,14 +466,14 @@ class AccountSettingsManageProfileInfoPage(Page):
         self.find_element(*AccountSettingsManageProfileInfoIdentifiers.PHONE_NUMBER).clear()
         self.verify_phone_number('1234')
         error = self.find_element(*AccountSettingsManageProfileInfoIdentifiers.ERROR_PHONE_NUMBER).text
-        if error == 'The phone number must be 10 digits.':
+        if error == 'Enter the valid phone number.':
             return AccountSettingsMySupportsPage(self.driver)
 
     def verify_phone_number_with_characters(self):
         self.find_element(*AccountSettingsManageProfileInfoIdentifiers.PHONE_NUMBER).clear()
         self.verify_phone_number('233cc')
         error = self.find_element(*AccountSettingsManageProfileInfoIdentifiers.ERROR_PHONE_NUMBER).text
-        if error == 'The phone number must be 10 digits.':
+        if error == 'Enter the valid phone number.':
             return AccountSettingsMySupportsPage(self.driver)
 
     def update_profile_with_invalid_first_name(self, firstname, middle_name, last_name, ):
@@ -525,11 +531,8 @@ class AccountSettingsManageProfileInfoPage(Page):
     def verify_dob_on_profile_info(self):
         dob = self.find_element(*AccountSettingsManageProfileInfoIdentifiers.DOB)
         dob = dob.get_attribute('value')
-        try:
-            datetime.datetime.strptime(dob, '%d/%m/%Y')
-            return AccountSettingsMySupportsPage(self.driver)
-        except ValueError:
-            raise ValueError("Incorrect data format, should be YYYY-MM-DD")
+        datetime.datetime.strptime(dob, '%m/%d/%Y')
+        return AccountSettingsMySupportsPage(self.driver)
 
     def verify_phone_number_with_valid_length_phone_number(self):
         self.find_element(*AccountSettingsManageProfileInfoIdentifiers.PHONE_NUMBER).clear()

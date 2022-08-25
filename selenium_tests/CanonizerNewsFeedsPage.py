@@ -27,6 +27,8 @@ class CanonizerAddNewsFeedsPage(Page):
         title = self.find_element(*AddNewsPageIdentifiers.TITLE).text
         if title == 'Add News':
             return CanonizerAddNewsFeedsPage(self.driver)
+        else:
+            print("Title is not matching")
 
     def add_news_page_mandatory_fields_are_marked_with_asterisk(self):
         """
@@ -64,12 +66,16 @@ class CanonizerAddNewsFeedsPage(Page):
         error = self.find_element(*AddNewsPageIdentifiers.ERROR_DISPLAY_TEXT).text
         if error == 'Display text is required.':
             return CanonizerAddNewsFeedsPage(self.driver)
+        else:
+            print("Error not found or not matching")
 
     def create_news_with_blank_link(self, display_text, available_for_child_camps):
         self.create_news(display_text, '', available_for_child_camps)
         error = self.find_element(*AddNewsPageIdentifiers.ERROR_LINK).text
         if error == 'Link is required.':
             return CanonizerAddNewsFeedsPage(self.driver)
+        else:
+            print("Error not found or not matching")
 
     def create_new_with_blank_fields(self, link, display_text, available_for_child_camps):
         self.create_news(link, display_text, available_for_child_camps)
@@ -77,6 +83,8 @@ class CanonizerAddNewsFeedsPage(Page):
         error_link = self.find_element(*AddNewsPageIdentifiers.ERROR_LINK).text
         if error_text == 'Display text is required.' and error_link == 'Link is required.':
             return CanonizerAddNewsFeedsPage(self.driver)
+        else:
+            print("Error not found or not matching")
 
     def click_add_news_cancel_button(self):
         self.load_add_news_feed_page()
@@ -86,6 +94,8 @@ class CanonizerAddNewsFeedsPage(Page):
         heading = self.find_element(*AddNewsPageIdentifiers.HEADING).text
         if heading == 'Camp: Agreement':
             return CanonizerAddNewsFeedsPage(self.driver)
+        else:
+            print("Heading not found or not matching")
 
     def create_news_with_invalid_link_format(self, display_text, link, available_for_child_camps):
         self.create_news(display_text, link, available_for_child_camps)
@@ -98,6 +108,8 @@ class CanonizerAddNewsFeedsPage(Page):
         success_message = self.find_element(*AddNewsPageIdentifiers.SUCCESS_MESSAGE).text
         if success_message == 'Success! News added successfully':
             return CanonizerAddNewsFeedsPage(self.driver)
+        else:
+            print("Success message not found or not matching")
 
     def create_news_with_enter_key(self, display_text, link, available_for_child_camps):
         self.enter_display_text(display_text)
@@ -107,12 +119,16 @@ class CanonizerAddNewsFeedsPage(Page):
         success_message = self.find_element(*AddNewsPageIdentifiers.SUCCESS_MESSAGE).text
         if success_message == 'Success! News added successfully':
             return CanonizerAddNewsFeedsPage(self.driver)
+        else:
+            print("Success message not found or not matching")
 
     def create_news_with_duplicate_data(self, display_text, link, available_for_child_camps):
         self.create_news(display_text, link, available_for_child_camps)
         success_message = self.find_element(*AddNewsPageIdentifiers.SUCCESS_MESSAGE).text
         if success_message == 'Success! News added successfully':
             return CanonizerAddNewsFeedsPage(self.driver)
+        else:
+            print("Success message not found or not matching")
 
     def create_news_with_invalid_data(self, display_text, link, available_for_child_camps):
         self.create_news(display_text, link, available_for_child_camps)
@@ -120,6 +136,8 @@ class CanonizerAddNewsFeedsPage(Page):
         error_link = self.find_element(*AddNewsPageIdentifiers.ERROR_LINK).text
         if error_text == 'Display text can only contain space, full stop (.) and alphanumeric characters.' and error_link == 'Link is invalid. (Example: https://www.example.com?post=1234)':
             return CanonizerAddNewsFeedsPage(self.driver)
+        else:
+            print("Error not found or not matching")
 
     def create_news_with_invalid_data_with_enter_key(self, display_text, link, available_for_child_camps):
         self.enter_display_text(display_text)
@@ -135,6 +153,8 @@ class CanonizerAddNewsFeedsPage(Page):
         success_message = self.find_element(*AddNewsPageIdentifiers.SUCCESS_MESSAGE).text
         if success_message == 'Success! News added successfully':
             return CanonizerAddNewsFeedsPage(self.driver)
+        else:
+            print("Success message not found or not matching")
 
 
 class CanonizerEditNewsFeedsPage(Page):
@@ -167,6 +187,8 @@ class CanonizerEditNewsFeedsPage(Page):
         print("Heading", heading)
         if heading == 'Camp: Agreement':
             return CanonizerEditNewsFeedsPage(self.driver)
+        else:
+            print("Heading not found or not matching")
 
     def update_display_text(self, display_text):
         self.find_element(*EditNewsPageIdentifiers.DISPLAY_TEXT).send_keys(display_text)
@@ -196,6 +218,8 @@ class CanonizerEditNewsFeedsPage(Page):
         error = self.find_element(*EditNewsPageIdentifiers.ERROR_DISPLAY_TEXT).text
         if error == 'Display text is required.':
             return CanonizerAddNewsFeedsPage(self.driver)
+        else:
+            print("Error not found or not matching")
 
     def update_news_with_blank_link(self, display_text, available_for_child_camps):
         self.find_element(*EditNewsPageIdentifiers.LINK).clear()
@@ -203,6 +227,8 @@ class CanonizerEditNewsFeedsPage(Page):
         error = self.find_element(*EditNewsPageIdentifiers.ERROR_LINK).text
         if error == 'Link is required.':
             return CanonizerAddNewsFeedsPage(self.driver)
+        else:
+            print("Error not found or not matching")
 
     def update_news_with_invalid_link_format(self, display_text, link, available_for_child_camps):
         self.find_element(*EditNewsPageIdentifiers.DISPLAY_TEXT).clear()
@@ -211,6 +237,8 @@ class CanonizerEditNewsFeedsPage(Page):
         error = self.find_element(*EditNewsPageIdentifiers.ERROR_INVALID_LINK).text
         if error == 'Link is invalid. (Example: https://www.example.com?post=1234)':
             return CanonizerAddNewsFeedsPage(self.driver)
+        else:
+            print("Error not found or not matching")
 
     def update_news_with_valid_data(self, display_text, link, available_for_child_camps):
         self.find_element(*EditNewsPageIdentifiers.DISPLAY_TEXT).clear()
@@ -219,6 +247,8 @@ class CanonizerEditNewsFeedsPage(Page):
         success = self.find_element(*EditNewsPageIdentifiers.UPDATE_SUCCESS).text
         if success == 'Success! News updated successfully':
             return self
+        else:
+            print("Message not found or not matching")
 
     def update_news_with_trailing_spaces(self, display_text, link, available_for_child_camps):
         self.find_element(*EditNewsPageIdentifiers.DISPLAY_TEXT).clear()
@@ -227,6 +257,8 @@ class CanonizerEditNewsFeedsPage(Page):
         success = self.find_element(*EditNewsPageIdentifiers.UPDATE_SUCCESS).text
         if success == 'Success! News updated successfully':
             return self
+        else:
+            print("Message not found or not matching")
 
     def update_news_with_duplicate_data(self, display_text, link, available_for_child_camps):
         self.find_element(*EditNewsPageIdentifiers.DISPLAY_TEXT).clear()
@@ -235,6 +267,8 @@ class CanonizerEditNewsFeedsPage(Page):
         success = self.find_element(*EditNewsPageIdentifiers.UPDATE_SUCCESS).text
         if success == 'Success! News updated successfully':
             return self
+        else:
+            print("Message not found or not matching")
 
     def update_news_with_invalid_data(self, display_text, link, available_for_child_camps):
         self.find_element(*EditNewsPageIdentifiers.DISPLAY_TEXT).clear()
@@ -244,6 +278,8 @@ class CanonizerEditNewsFeedsPage(Page):
         error2 = self.find_element(*EditNewsPageIdentifiers.ERROR_LINK).text
         if error1 == 'Display text can only contain space, full stop (.) and alphanumeric characters.' and error2 == 'Link is invalid. (Example: https://www.example.com?post=1234)':
             return CanonizerAddNewsFeedsPage(self.driver)
+        else:
+            print("Error not found or not matching")
 
     def edit_news_page_mandatory_fields_are_marked_with_asterisk(self):
         """
@@ -270,6 +306,7 @@ class CanonizerDeleteNewsFeedsPage(Page):
 
     def delete_news_button_visibility(self):
         self.find_element(*DeleteNewsPageIdentifiers.DELETE_NEWS).click()
+        time.sleep(3)
         if self.find_element(*DeleteNewsPageIdentifiers.DELETE_NEWS_ICON):
             return CanonizerDeleteNewsFeedsPage(self.driver)
 
@@ -280,13 +317,17 @@ class CanonizerDeleteNewsFeedsPage(Page):
         success = self.find_element(*DeleteNewsPageIdentifiers.SUCCESS_MESSAGE).text
         if success == 'Success! News deleted successfully':
             return CanonizerDeleteNewsFeedsPage(self.driver)
+        else:
+            print("Message not found or not matching")
 
     def delete_child_news(self):
         self.hover(*DeleteNewsPageIdentifiers.CHILD_NEWS)
         self.find_element(*DeleteNewsPageIdentifiers.CHILD_NEWS).click()
-        self.find_element(*DeleteNewsPageIdentifiers.DELETE_NEWS).click()
+        self.find_element(*DeleteNewsPageIdentifiers.DELETE_CHILD_NEWS).click()
         self.find_element(*DeleteNewsPageIdentifiers.DELETE_CHILD_NEWS_ICON).click()
         self.driver.switch_to.alert.accept()
         success = self.find_element(*DeleteNewsPageIdentifiers.SUCCESS_MESSAGE).text
         if success == 'Success! News deleted successfully':
             return CanonizerDeleteNewsFeedsPage(self.driver)
+        else:
+            print("Message not found or not matching")

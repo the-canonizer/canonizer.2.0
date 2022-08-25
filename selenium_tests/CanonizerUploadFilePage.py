@@ -23,9 +23,12 @@ class CanonizerUploadFilePage(Page):
             self.hover(*UploadFileIdentifiers.UPLOADFILE)
             self.find_element(*UploadFileIdentifiers.UPLOADFILE).click()
             upload_title = self.find_element(*UploadFileIdentifiers.UPLOAD_TITLE).text
+            time.sleep(3)
             if upload_title in 'Upload Files, Max size 5 MB':
                 time.sleep(3)
                 return CanonizerUploadFilePage(self.driver)
+            else:
+                print("Heading is not matching")
 
     def upload_file_without_user_login(self):
         title = self.find_element(*UploadFileIdentifiers.TITLE).text
@@ -60,22 +63,10 @@ class CanonizerUploadFilePage(Page):
 
     def upload_file_with_blank_file(self):
         self.click_upload_button()
+        time.sleep(3)
         error = self.find_element(*UploadFileIdentifiers.ERROR_FILE_NAME).text
         if error == 'Error! The file field is required':
             return CanonizerUploadFilePage(self.driver)
-
-
-    def upload_file_with_size_file_more_than_5mb(self, originalfilename, newfilename):
-        self.upload(originalfilename, newfilename)
-        return self.find_element(*UploadFileIdentifiers.ERROR_FILE_SIZE).text
-
-    def upload_file_with_valid_format(self, originalfilename, newfilename):
-        self.upload(originalfilename, newfilename)
-        return self.find_element(*UploadFileIdentifiers.SUCCESS_UPLOAD).text
-
-    def upload_file_with_same_file_name(self, originalfilename, newfilename):
-        self.upload(originalfilename, newfilename)
-        return self.find_element(*UploadFileIdentifiers.SAME_FILE_NAME_ERROR).text
 
     def upload_file_with_size_file_more_than_5mb(self, originalfilename, file_name):
         self.enter_originalfile_name(originalfilename)
@@ -138,7 +129,7 @@ class CanonizerUploadFilePage(Page):
         self.hover(*UploadFileIdentifiers.UPLOADED_FILE)
         self.find_element(*UploadFileIdentifiers.UPLOADED_FILE).click()
         return CanonizerUploadFilePage(self.driver)
-    """
+
     def open_uploaded_file(self):
         try:
             self.hover(*UploadFileIdentifiers.UPLOADED_FILE)
@@ -147,9 +138,7 @@ class CanonizerUploadFilePage(Page):
             return CanonizerUploadFilePage(self.driver)
         except NoSuchElementException:
             return False
-<<<<<<< HEAD
-        return True
-    """
+
 
     def upload_file_with_invalid_file_name_format(self, originalfilename):
         self.upload(originalfilename)
@@ -185,5 +174,16 @@ class CanonizerUploadFilePage(Page):
             return CanonizerUploadFilePage(self.driver)
         except WebDriverException:
             return False
+
+    def verify_file_upload_warning(self):
+        self.load_file_upload_page()
+        warning = self.find_element(*UploadFileIdentifiers.WARNING).text
+        if warning == 'Warning : Once a file will be uploaded there is no way to delete the file.':
+            return CanonizerUploadFilePage(self.driver)
+        else:
+            print("Warning is not seen"
+                  "")
+
+
 
 

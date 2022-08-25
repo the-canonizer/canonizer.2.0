@@ -7,7 +7,6 @@ class CanonizerSearchPage(Page):
     Class Name: CanonizerSearchPage
     Description: Test the functionality of Canonizer Search Page
     """
-
     def click_search_button(self):
         """
         This function is to click on the Google Search button
@@ -22,6 +21,8 @@ class CanonizerSearchPage(Page):
             self.hover(*CanonizerSearchPageIdentifiers.SEARCH_BUTTON)
             self.find_element(*CanonizerSearchPageIdentifiers.SEARCH_BUTTON).click()
             return CanonizerSearchPage(self.driver)
+        else:
+            print("Title not found or not matching")
 
     def enter_search_keyword(self, search_keyword):
         self.find_element(*CanonizerSearchPageIdentifiers.SEARCH_KEYWORD).send_keys(search_keyword)
@@ -57,6 +58,8 @@ class CanonizerSearchPage(Page):
             self.hover(*CanonizerSearchPageIdentifiers.SEARCH_BUTTON)
             self.find_element(*CanonizerSearchPageIdentifiers.SEARCH_BUTTON).click()
             return CanonizerSearchPage(self.driver)
+        else:
+            print("Title not found or not matching")
 
     def click_search_button_keyword_web(self, search_keyword):
         """
@@ -69,6 +72,8 @@ class CanonizerSearchPage(Page):
             self.enter_search_keyword(search_keyword)
             self.click_search_button_web()
             return CanonizerSearchPage(self.driver)
+        else:
+            print("Title not found or not matching")
 
     def click_search_button_keyword_canonizer_com(self, search_keyword):
         """
@@ -81,6 +86,8 @@ class CanonizerSearchPage(Page):
             self.enter_search_keyword(search_keyword)
             self.click_search_button()
             return CanonizerSearchPage(self.driver)
+        else:
+            print("Title not found or not matching")
 
     def verify_search_button_placeholder(self):
         search = self.find_element(*CanonizerSearchPageIdentifiers.SEARCH_KEYWORD)
