@@ -37,7 +37,7 @@
                         <input type="hidden" name="_token" value="{{ csrf_token() }}" />
                         <div class="form-group">
                             <div class="custom-file w-100">
-                                <input class="custom-file-input w-100" id="file" name="file" type="file" />
+                                <input class="custom-file-input w-100 cursor-pointer" id="file" name="file" type="file" />
                                 <label for="file" class="custom-file-control text-nowrap overflow-hidden">Choose File...</label>
                             </div>
                         </div>
@@ -47,7 +47,7 @@
 
                         </div>
                         <p style="color:red">Warning : Once a file will be uploaded there is no way to delete the file.</p>
-                        <button id="upload_file" class="btn btn-sm btn-primary">Upload</button>
+                        <button id="upload_file" class="btn btn-sm btn-primary cursor-pointer">Upload</button>
                     </form>
                     <div class="mt-3 bg-white table-responsive">
                         <table class="table table-striped">
