@@ -1400,6 +1400,29 @@ class TopicController extends Controller {
                     //go live               
                     $topic->go_live_time = strtotime(date('Y-m-d H:i:s'));
                     $topic->update();
+
+                    /**
+                     * On agree to some change check if there are some changes on same topic which has less go live time then the agreed change
+                     * Change thier go live time to less than 1 minutes than current time
+                     * Ticket # 1477
+                     * Sajid Rafique
+                     */
+                    $inReviewTopicChanges = Topic::where([['topic_num', '=', $data['topic_num']], 
+                                    ['submit_time', '<', $topic->submit_time],
+                                    ['go_live_time', '>', Carbon::now()->timestamp]])->whereNull('objector_nick_id')->get();
+                    
+                    
+                    if(count($inReviewTopicChanges)) {
+                        $topicIds = [];
+                        foreach ($inReviewTopicChanges as $topic) {
+                            $topicIds[] = $topic->id;
+                        }
+                        
+                        if(count($topicIds)) {
+                            Topic::whereIn('id', $topicIds)->update(['go_live_time' => strtotime(date('Y-m-d H:i:s')) - 1]);
+                        }
+                    }
+
                     //clear log
                     ChangeAgreeLog::where('topic_num', '=', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('change_id', '=', $changeID)->where('change_for', '=', $data['change_for'])->delete(); 
                     // Dispatch Job
