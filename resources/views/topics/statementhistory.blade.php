@@ -65,15 +65,15 @@
                             $isGraceFlag = false;
                             $liveStatement = \App\Model\Statement::getLiveStatement($data->topic_num,$data->camp_num);
                             $camp = \App\Model\Camp::where('camp_num','=',$data->camp_num)->where('topic_num','=',$data->topic_num)->get();
-                            $nickNamesData = \App\Model\Nickname::personNicknameArray();
+                            //$nickNamesData = \App\Model\Nickname::personNicknameArray();
                             $supported_camps = [];
-                            if(sizeof($nickNamesData) > 0){
-                                foreach ($nickNamesData as $key => $value) {
-                                    $nickName = \App\Model\Nickname::find($value);
-                                    $supported_camp = $nickName->getSupportCampList();
-                                    $supported_camps = array_merge($supported_camps,$supported_camp);
-                                }
-                            }
+                            // if(sizeof($nickNamesData) > 0){
+                            //     foreach ($nickNamesData as $key => $value) {
+                            //         $nickName = \App\Model\Nickname::find($value);
+                            //         $supported_camp = $nickName->getSupportCampList();
+                            //         $supported_camps = array_merge($supported_camps,$supported_camp);
+                            //     }
+                            // }
                             $ifSupportingThisCampOrChild = 0;
                             if(isset($supported_camps) && sizeof($supported_camps) > 0){ 
                                 foreach ($supported_camps as $key => $value) {
