@@ -50,8 +50,11 @@ class CanonizerService implements ShouldQueue
             'topic_num'     => $this->canonizerData['topic_num'],
             'asofdate'      => $this->canonizerData['asOfDate'],
             'algorithm'     => $this->canonizerData['algorithm'],
-            'update_all'    => $updateAll
+            'update_all'    => $updateAll,
+            "is_disabled" =>  $this->canonizerData['is_disabled'],
+            "is_one_level" => $this->canonizerData['is_one_level']
         ];
+
 
         //$appURL = env('CS_APP_URL');
         //$endpointCSStoreTree = env('CS_STORE_TREE');

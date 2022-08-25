@@ -169,6 +169,8 @@ class TopicController extends Controller {
             $topic->go_live_time = $current_time; //strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
             $topic->language = 'English';
             $topic->note = isset($all['note']) ? $all['note'] : "";
+            $topic->is_disabled =  !empty($all['is_disabled']) ? $all['is_disabled'] : 0;
+            $topic->is_one_level =  !empty($all['is_one_level']) ? $all['is_one_level'] : 0;
             //#1373 grace period for the topic when no supporter is there should be 0
             $topic->grace_period = 0;
 
@@ -251,7 +253,7 @@ class TopicController extends Controller {
             if ($eventtype == "CREATE") {
                 // Dispatch Job
                 if(isset($topic)) {
-                    Util::dispatchJob($topic, 1, 1);
+                    Util::dispatchJob($topic, 1, 1, $topic->is_disabled, $topic->is_disabled);
                 }
                 
                 // send history link in email
@@ -268,7 +270,7 @@ class TopicController extends Controller {
             } else if ($eventtype == "OBJECTION") {
                  // Dispatch Job
                  if(isset($topic)) {
-                    Util::dispatchJob($topic, 1, 1);
+                    Util::dispatchJob($topic, 1, 1, $topic->is_disabled, $topic->is_disabled);
                 }
 
                 $user = Nickname::getUserByNickName($all['submitter']);
@@ -304,7 +306,7 @@ class TopicController extends Controller {
             else if ($eventtype == "UPDATE") {
                 // Dispatch Job
                 if(isset($topic)) {
-                    Util::dispatchJob($topic, 1, 1);
+                    Util::dispatchJob($topic, 1, 1, $topic->is_disabled, $topic->is_disabled);
                 }
             }
         } catch (Exception $e) {
@@ -850,6 +852,8 @@ class TopicController extends Controller {
             $camp->camp_about_nick_id = isset($all['nick_name']) ? $all['nick_name'] : "";  
         }
         $camp->grace_period = 1;
+        $camp->is_disabled =  !empty($all['is_disabled']) ? $all['is_disabled'] : 0;
+        $camp->is_one_level =  !empty($all['is_one_level']) ? $all['is_one_level'] : 0;
 
         $eventtype = "CREATE";
         if (isset($all['camp_num'])) {
@@ -917,7 +921,7 @@ class TopicController extends Controller {
             if ($eventtype == "CREATE") {
                 // Dispatch Job
                 if(isset($topic)) {
-                    Util::dispatchJob($topic, $camp->camp_num, 1);
+                     Util::dispatchJob($topic, $camp->camp_num, 1, $camp->is_disabled, $camp->is_disabled);
                 }
 
                 // send history link in email
@@ -952,7 +956,7 @@ class TopicController extends Controller {
             } else if ($eventtype == "OBJECTION") {
                 // Dispatch Job
                 if(isset($topic)) {
-                    Util::dispatchJob($topic, $camp->camp_num, 1);
+                    Util::dispatchJob($topic, $camp->camp_num, 1, $camp->is_disabled, $camp->is_disabled);
                 }
                 
                 $user = Nickname::getUserByNickName($all['submitter']);
@@ -1004,7 +1008,7 @@ class TopicController extends Controller {
                 #1101 end
                 // Dispatch Job
                 if(isset($topic)) {
-                    Util::dispatchJob($topic, $camp->camp_num, 1);
+                    Util::dispatchJob($topic, $camp->camp_num, 1, $camp->is_disabled, $camp->is_disabled);
                 }              
             }
 
