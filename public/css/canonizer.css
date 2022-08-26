@@ -2185,3 +2185,7 @@ a.verification-link:active {
 .disable-btn:active {
 	pointer-events: none !important;
 }
+
+.cursor-pointer {
+    cursor: pointer !important;
+}
