@@ -670,7 +670,8 @@ class Camp extends Model {
     public function delegateSupportTree($algorithm, $topicnum, $campnum, $delegateNickId, $parent_support_order, $parent_score,$multiSupport,$array=[]){
         $nick_name_support_tree=[];
         $nick_name_wise_support=[];
-        $is_add_reminder_back_flag = ($algorithm == 'blind_popularity') ? 1 : 0;
+        $nick_name_delegate_support_tree = [];
+        $is_add_reminder_back_flag =1; //($algorithm == 'blind_popularity') ? 1 : 0;
 		/* Delegated Support */
         if(session()->has("topic-support-{$topicnum}")){
             $delegatedSupports = session("topic-support-{$topicnum}")->filter(function($item) use ($delegateNickId) {
@@ -708,8 +709,6 @@ class Camp extends Model {
         
         foreach($nick_name_wise_support as $nickNameId=>$support_camp){
            foreach($support_camp as $support){ 
-
-               if($support->camp_num == $campnum){
                     $supportPoint = Algorithm::{$algorithm}($support->nick_name_id,$support->topic_num,$support->camp_num);
                     $support_total = 0; 
                     if($multiSupport){
@@ -717,13 +716,46 @@ class Camp extends Model {
                     }else{
                         $support_total = $support_total + $supportPoint;
                     } 
-                    $nick_name_support_tree[$support->nick_name_id]['score'] = ($is_add_reminder_back_flag) ? $parent_score : $support_total;
-                    $delegateTree = $this->delegateSupportTree($algorithm, $topicnum,$campnum, $support->nick_name_id, $parent_support_order,$parent_score,$multiSupport,[]);
-                    $nick_name_support_tree[$support->nick_name_id]['delegates'] = $delegateTree;
-                }               
+                    $nick_name_support_tree[$support->nick_name_id][$support->support_order][$support->camp_num]['score']  = $support_total;
                }
         }
-       return $nick_name_support_tree;
+       
+        if(count($nick_name_support_tree) > 0){
+            foreach($nick_name_support_tree as $nickNameId=>$scoreData){
+                ksort($scoreData);
+                $index = 0;
+                $multiSupport =  count($scoreData) > 1 ? 1 : 0;
+                foreach($scoreData as $support_order=>$camp_score){
+                    $index = $index +1;
+                   foreach($camp_score as $campNum=>$score){
+                        if($support_order > 1 && $index == count($scoreData)  && $is_add_reminder_back_flag){
+                            if(count(array_keys($nick_name_support_tree[$nickNameId][1])) > 0){
+                            $campNumber = array_keys($nick_name_support_tree[$nickNameId][1])[0];
+                            $nick_name_support_tree[$nickNameId][1][$campNumber]['score']=$nick_name_support_tree[$nickNameId][1][$campNumber]['score'] + $score['score'];
+                            $delegateTree = $this->delegateSupportTree($algorithm, $topicnum,$campNumber, $nickNameId, $parent_support_order,$parent_score,$multiSupport ,[]);
+                            $nick_name_support_tree[$nickNameId][1][$campNumber]['delegates'] = $delegateTree;
+                        }
+                    }
+                    $delegateTree = $this->delegateSupportTree($algorithm, $topicnum,$campNum, $nickNameId, $parent_support_order, $parent_score,$multiSupport,[]);
+                    $nick_name_support_tree[$nickNameId][$support_order][$campNum]['delegates'] = $delegateTree;
+                   }
+                }
+            }
+        }
+        if(count($nick_name_support_tree) > 0){
+            foreach($nick_name_support_tree as $nick=>$data){
+                foreach($data as $support_order=>$camp_score){
+                   foreach($camp_score as $campNum=>$score){
+                        if($campNum == $campnum){
+                            $nick_name_delegate_support_tree[$nick]['score'] =   $score['score'];
+                            $nick_name_delegate_support_tree[$nick]['delegates'] = $score['delegates'];
+                        }
+                   }
+                }
+               
+            }
+        }         
+       return $nick_name_delegate_support_tree;
     }
 
     public function getCampAndNickNameWiseSupportTree($algorithm, $topicnum){
@@ -770,13 +802,14 @@ class Camp extends Model {
                                   
            }
         }
+        
         if(count($nick_name_support_tree) > 0){
             foreach($nick_name_support_tree as $nickNameId=>$scoreData){
                 ksort($scoreData);
                 $index = 0;
+                $multiSupport =  count($scoreData) > 1 ? 1 : 0;
                 foreach($scoreData as $support_order=>$camp_score){
                     $index = $index +1;
-                    $multiSupport =  count($camp_score) > 1 ? 1 : 0;
                    foreach($camp_score as $campNum=>$score){
                         if($support_order > 1 && $index == count($scoreData)  && $is_add_reminder_back_flag){
                             if(count(array_keys($nick_name_support_tree[$nickNameId][1])) > 0){
