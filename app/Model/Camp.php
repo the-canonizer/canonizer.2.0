@@ -670,7 +670,7 @@ class Camp extends Model {
     public function delegateSupportTree($algorithm, $topicnum, $campnum, $delegateNickId, $parent_support_order, $parent_score,$multiSupport,$array=[]){
         $nick_name_support_tree=[];
         $nick_name_wise_support=[];
-        $is_add_reminder_back_flag = 1;// ($algorithm == 'blind_popularity') ? 1 : 0;
+        $is_add_reminder_back_flag = ($algorithm == 'blind_popularity') ? 1 : 0;
 		/* Delegated Support */
         if(session()->has("topic-support-{$topicnum}")){
             $delegatedSupports = session("topic-support-{$topicnum}")->filter(function($item) use ($delegateNickId) {
@@ -717,7 +717,7 @@ class Camp extends Model {
                     }else{
                         $support_total = $support_total + $supportPoint;
                     } 
-                    $nick_name_support_tree[$support->nick_name_id]['score'] =  $support_total;
+                    $nick_name_support_tree[$support->nick_name_id]['score'] = ($is_add_reminder_back_flag) ? $parent_score : $support_total;
                     $delegateTree = $this->delegateSupportTree($algorithm, $topicnum,$campnum, $support->nick_name_id, $parent_support_order,$parent_score,$multiSupport,[]);
                     $nick_name_support_tree[$support->nick_name_id]['delegates'] = $delegateTree;
                 }               
