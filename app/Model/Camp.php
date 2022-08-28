@@ -717,7 +717,7 @@ class Camp extends Model {
                     }else{
                         $support_total = $support_total + $supportPoint;
                     } 
-                    $nick_name_support_tree[$support->nick_name_id]['score'] = ($is_add_reminder_back_flag) ? $parent_score : $support_total;
+                    $nick_name_support_tree[$support->nick_name_id]['score'] =  $support_total;
                     $delegateTree = $this->delegateSupportTree($algorithm, $topicnum,$campnum, $support->nick_name_id, $parent_support_order,$parent_score,$multiSupport,[]);
                     $nick_name_support_tree[$support->nick_name_id]['delegates'] = $delegateTree;
                 }               
