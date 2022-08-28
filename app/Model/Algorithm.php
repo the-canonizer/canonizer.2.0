@@ -29,6 +29,7 @@ class Algorithm{
             'transhumanist'=>'Transhumanist',
 			'united_utah'=>'United Utah',
 			'republican'=>'Republican',
+            'forward_party'=>'Forward Party',
 			'democrat'=>'Democrat',
 			'ether' => 'Ethereum',
             'shares'=> 'Canonizer Shares',
@@ -42,8 +43,7 @@ class Algorithm{
         @return all the available algorithm key values
     */
     public static function getKeyList(){
-        return array('blind_popularity','mind_experts','computer_science_experts','PhD','christian','secular','mormon','uu','atheist','transhumanist','united_utah','republican','democrat', 'ether','shares','shares_sqrt','mind_experts_non_special','sandy_city','sandy_city_council'
-        );
+        return array('blind_popularity','mind_experts','computer_science_experts','PhD','christian','secular','mormon','uu','atheist','transhumanist','united_utah','republican','democrat', 'ether','shares','shares_sqrt','mind_experts_non_special','sandy_city','sandy_city_council','forward_party');
     }
     
     /**
@@ -74,7 +74,7 @@ class Algorithm{
                 return DB::select("$sql $sql2");
             });
            
-		 if($political==true && $topicnum==231 && ($campnum==2 ||  $campnum==3 || $campnum==4) ) {						
+		 if($political == true && $topicnum ==231 && ($campnum == 2 ||  $campnum == 3 || $campnum == 4 || $campnum == 6) ) {						
                       	
 			if($result[0]->support_order==1)
 				$total = $result[0]->countTotal / 2;
@@ -336,6 +336,13 @@ class Algorithm{
 	public static function democrat($nick_name_id,$topicnum=0,$campnum=0){
         $condition = '(topic_num = 231 and camp_num = 4)';
         return self::camp_count($nick_name_id,$condition,true,231,4);
+    }
+
+    // Forward party Algorith using related topic and camp
+
+    public static function forward_party($nick_name_id,$topicnum=0,$campnum=0){
+        $condition = '(topic_num = 231 and camp_num = 6)';
+        return self::camp_count($nick_name_id,$condition,true,231,6);
     }
 
     public static function get_expert_camp($topicnum,$nick_name_id){
