@@ -303,10 +303,13 @@ class SettingsController extends Controller
              * Ticket # 1501
              * Muhammad Ahmed
              */
+            
+            $delegatedSupporter= Nickname::select('nick_name')->where('id',$delegate_nick_name_id)->first();
+            $delegatedSupportterNickname = $delegatedSupporter->nick_name ? $delegatedSupporter->nick_name : "Anonymous";
             $isDelegatedUserSupport = Support::where('topic_num', $topicnum)->where('end', '=', 0)->where('nick_name_id', $delegate_nick_name_id)->whereIn('delegate_nick_name_id', $userNickname)->first();
             
             if(count($isDelegatedUserSupport)) {
-                Session::flash('warningDelegate', 'You already have delegate support, you cannot delegate your support to this user');
+                Session::flash('warningDelegate', $delegatedSupportterNickname .' is already delegating support to you, you cannot delegate your support to this user.');
                 return redirect()->back();
             }
 

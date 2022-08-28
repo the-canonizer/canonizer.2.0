@@ -897,10 +897,13 @@ class Camp extends Model {
         $html = '<ul class="childrenNode">';
 		$action = Route::getCurrentRoute()->getActionMethod();
         //$onecamp =  self::getLiveCamp($this->topic_num, $activeCamp);
-        
+
         if ($currentCamp == $activeCamp && $action != "index") { 
             $url_portion = self::getSeoBasedUrlPortion($this->topic_num,$currentCamp);
-            $html = '<ul><li class="create-new-li"><span><a href="' . url('camp/create/'.$url_portion) . '">&lt;Start new supporting camp here&gt;</a></span></li>';
+           
+            if($traversedTreeArray['parent_camp_is_one_level'] != 1 || $traversedTreeArray['is_one_level'] == 1 || $traversedTreeArray['parent_camp_is_disabled'] != 1 || $traversedTreeArray['is_disabled'] != 1 ){
+                $html = '<ul><li class="create-new-li"><span><a href="' . url('camp/create/'.$url_portion) . '">&lt;Start new supporting camp here&gt;</a></span></li>';
+            }
         }
         if (is_array($traversedTreeArray)) {
             foreach ($traversedTreeArray as $campnum => $array) {
@@ -1270,6 +1273,8 @@ class Camp extends Model {
         $reducedTree = Util::execute('POST', $endpoint, $headers, $requestBody);
 
         $data = json_decode($reducedTree, true);
+
+       //dd($data);
         if(count($data['data']) && $data['code'] == 200 ){
             $reducedTree = $data['data'][0];
              // calling this to fill data in sessions as on main page data is loading from mongo so sessions remian blank
