@@ -384,7 +384,7 @@ class TopicController extends Controller {
         if(!empty($topicDetail)) {
             $totalCamps = $topicDetail->camps()->whereNull('object_time')->distinct('camp_num')->pluck('camp_num')->count();
         }
-        if($totalCamps > 50 && !isset($_REQUEST['filter']) && $_SESSION['filterchange'] < 1) {
+        if($totalCamps > 50 && !isset($_REQUEST['filter']) && !isset($_SESSION['filterchange']) && $_SESSION['filterchange'] < 1) {
             $_SESSION['filterchange'] = '1.000';
         }
         if(session('campnum')) {
