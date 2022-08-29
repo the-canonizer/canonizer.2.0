@@ -23,6 +23,7 @@ class Camp extends Model {
     protected static $campChildren = [];
     protected static $totalSupports = [];
     protected static $totalNickNameSupports = [];
+    protected static $showCreateCampLink = 1;
 
     const AGREEMENT_CAMP = "Agreement";
 
@@ -930,13 +931,18 @@ class Camp extends Model {
         $html = '<ul class="childrenNode">';
 		$action = Route::getCurrentRoute()->getActionMethod();
         //$onecamp =  self::getLiveCamp($this->topic_num, $activeCamp);
-
+        
         if ($currentCamp == $activeCamp && $action != "index") { 
+            // dd([$currentCamp, $activeCamp]);
             $url_portion = self::getSeoBasedUrlPortion($this->topic_num,$currentCamp);
            
             if($isDisabled == 0 && $isParentOneLevel == 0){
                 $html = '<ul><li class="create-new-li"><span><a href="' . url('camp/create/'.$url_portion) . '">&lt;Start new supporting camp here&gt;</a></span></li>';
             }
+        }
+        // dd([$currentCamp,$activeCamp]);
+        if(($isDisabled == 1 || $isParentOneLevel == 1) && $currentCamp == $activeCamp){
+            $this->showCreateCampLink = 0;
         }
         if (is_array($traversedTreeArray)) {
             foreach ($traversedTreeArray as $campnum => $array) {
@@ -1374,10 +1380,10 @@ class Camp extends Model {
         $html .= '<div class="tp-title"><a style="' . $selected . '" href="' . $reducedTree[$this->camp_num][$linkKey] . '">' . $reducedTree[$this->camp_num][$titleKey] . '</a><div class="badge">' .round($reducedTree[$this->camp_num]['score'], 2) . '</div>'.$support_tree_html.'</div>';  
         $isParentOneLevel = 0;
         $isOneLevel = $reducedTree[$this->camp_num]['is_one_level'];
-        $isDisabled = $reducedTree[$this->camp_num]['is_disabled'];       
+        $isDisabled = $reducedTree[$this->camp_num]['is_disabled'];
         $html .= $this->buildCampTree($reducedTree[$this->camp_num]['children'], $this->camp_num, $activeCamp, $activeCampDefault,$add_supporter,$arrowposition, $linkKey, $titleKey, $isDisabled, $isOneLevel, $isParentOneLevel);
         $html .= "</li>";
-        return $html;
+        return [ $html, $this->showCreateCampLink ];
     }
 
     public static function getCampSubscription($topicnum,$campnum,$userid=null){
