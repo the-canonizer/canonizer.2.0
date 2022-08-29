@@ -1,4 +1,9 @@
 <?php include(app_path() . '/Library/wiki_parser/wikiParser.class.php'); ?>
+@php
+    $getCampTree = $topic->campTreeHtml($parentcampnum, 1, false, 'fa-arrow-down', $topic, $fetchTopicHistory);
+    $campTree = $getCampTree[0];
+    $showCreateCampLink = $getCampTree[1] ?? 1;
+@endphp
 @extends('layouts.app')
 @section('content')
 @if(Session::has('error'))
@@ -111,7 +116,7 @@ if(isset($topic) && count($topic) > 0 ) {?>
                             $title      = preg_replace('/[^A-Za-z0-9\-]/', '-', $topic->topic_name);						  
                             $topic_id  = $topic->topic_num."-".$title;
                         ?>
-                        {!! $topic->campTreeHtml($parentcampnum, 1, false, 'fa-arrow-down', $topic, $fetchTopicHistory) !!} 
+                        {!! $campTree !!} 
                     </ul>
                 </div>
               
