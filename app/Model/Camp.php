@@ -1034,6 +1034,8 @@ class Camp extends Model {
             $array[$child->camp_num]['link'] = self::getTopicCampUrl($child->topic_num,$child->camp_num). $queryString .'#statement';
             $array[$child->camp_num]['review_link'] = self::getTopicCampUrl($child->topic_num,$child->camp_num). $queryString .'#statement';
             $array[$child->camp_num]['score'] = $this->getCamptSupportCount($algorithm, $child->topic_num, $child->camp_num);
+            $array[$child->camp_num]['is_disabled'] = $child->is_disabled;
+            $array[$child->camp_num]['is_one_level'] = $child->is_one_level;
            $children = $this->traverseCampTree($algorithm, $child->topic_num, $child->camp_num, $child->parent_camp_num);
            $array[$child->camp_num]['children'] = is_array($children) ? $children : [];
         }
@@ -1229,6 +1231,8 @@ class Camp extends Model {
         $tree[$this->camp_num]['link'] = self::getTopicCampUrl($this->topic_num,$this->camp_num);//  url('topic/' . $topic_id . '/' . $this->camp_num.'#statement');
         $tree[$this->camp_num]['review_link'] = self::getTopicCampUrl($this->topic_num,$this->camp_num);
         $tree[$this->camp_num]['score'] =  $this->getCamptSupportCount($algorithm, $this->topic_num, $this->camp_num,$nick_name_id);
+        $tree[$this->camp_num]['is_disabled'] =  $topic->is_disabled;
+        $tree[$this->camp_num]['is_one_level'] =  $topic->is_one_level;
        
         $tree[$this->camp_num]['children'] = $this->traverseCampTree($algorithm, $this->topic_num, $this->camp_num);
                
