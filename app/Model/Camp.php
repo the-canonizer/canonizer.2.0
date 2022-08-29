@@ -926,7 +926,7 @@ class Camp extends Model {
     //     return $supportCountTotal;
     // }
 
-    public function buildCampTree($traversedTreeArray, $currentCamp = null, $activeCamp = null, $activeCampDefault = false,$add_supporter = false, $arrowposition, $linkKey = 'link', $titleKey = 'title') {
+    public function buildCampTree($traversedTreeArray, $currentCamp = null, $activeCamp = null, $activeCampDefault = false,$add_supporter = false, $arrowposition, $linkKey = 'link', $titleKey = 'title', $isDisabled = 0, $isOneLevel = 0, $isParentOneLevel = 0) {
         $html = '<ul class="childrenNode">';
 		$action = Route::getCurrentRoute()->getActionMethod();
         //$onecamp =  self::getLiveCamp($this->topic_num, $activeCamp);
@@ -934,7 +934,7 @@ class Camp extends Model {
         if ($currentCamp == $activeCamp && $action != "index") { 
             $url_portion = self::getSeoBasedUrlPortion($this->topic_num,$currentCamp);
            
-            if($traversedTreeArray['parent_camp_is_one_level'] != 1 || $traversedTreeArray['is_one_level'] == 1 || $traversedTreeArray['parent_camp_is_disabled'] != 1 || $traversedTreeArray['is_disabled'] != 1 ){
+            if($isDisabled == 0 && $isParentOneLevel == 0){
                 $html = '<ul><li class="create-new-li"><span><a href="' . url('camp/create/'.$url_portion) . '">&lt;Start new supporting camp here&gt;</a></span></li>';
             }
         }
@@ -980,7 +980,10 @@ class Camp extends Model {
                 $html .= '<span class="' . $class . '">' . $icon . '</span><div class="tp-title"><a style="' . $selected . '" href="' . $array[$linkKey] . '">' . $array[$titleKey] . '</a> <div class="badge">' . round($array['score'] ,2).'</div>'.$support_tree_html;
                
                 $html .= '</div>';
-                $html .= $this->buildCampTree($array['children'], $campnum, $activeCamp, $activeCampDefault,$add_supporter,$arrowposition, $linkKey, $titleKey);
+                $isParentOneLevel = $isOneLevel;
+                $isOneLevel = ($array['is_one_level'] == 1 || $isOneLevel == 1) ? 1 : 0;
+                $isDisabled = ($array['is_disabled'] == 1 || $isDisabled == 1) ? 1 : 0;
+                $html .= $this->buildCampTree($array['children'], $campnum, $activeCamp, $activeCampDefault,$add_supporter,$arrowposition, $linkKey, $titleKey, $isDisabled, $isOneLevel, $isParentOneLevel);
                 $html .= '</li>';
             }
         }
@@ -1307,7 +1310,6 @@ class Camp extends Model {
 
         $data = json_decode($reducedTree, true);
 
-       //dd($data);
         if(count($data['data']) && $data['code'] == 200 ){
             $reducedTree = $data['data'][0];
              // calling this to fill data in sessions as on main page data is loading from mongo so sessions remian blank
@@ -1365,8 +1367,11 @@ class Camp extends Model {
  	      $icon = '<i class="fa '.$arrowposition.'"></i>';
         
 		$html .= '<span class="' . $parentClass . '">'. $icon.' </span>';
-        $html .= '<div class="tp-title"><a style="' . $selected . '" href="' . $reducedTree[$this->camp_num][$linkKey] . '">' . $reducedTree[$this->camp_num][$titleKey] . '</a><div class="badge">' .round($reducedTree[$this->camp_num]['score'], 2) . '</div>'.$support_tree_html.'</div>';         
-        $html .= $this->buildCampTree($reducedTree[$this->camp_num]['children'], $this->camp_num, $activeCamp, $activeCampDefault,$add_supporter,$arrowposition, $linkKey, $titleKey);
+        $html .= '<div class="tp-title"><a style="' . $selected . '" href="' . $reducedTree[$this->camp_num][$linkKey] . '">' . $reducedTree[$this->camp_num][$titleKey] . '</a><div class="badge">' .round($reducedTree[$this->camp_num]['score'], 2) . '</div>'.$support_tree_html.'</div>';  
+        $isParentOneLevel = 0;
+        $isOneLevel = $reducedTree[$this->camp_num]['is_one_level'];
+        $isDisabled = $reducedTree[$this->camp_num]['is_disabled'];       
+        $html .= $this->buildCampTree($reducedTree[$this->camp_num]['children'], $this->camp_num, $activeCamp, $activeCampDefault,$add_supporter,$arrowposition, $linkKey, $titleKey, $isDisabled, $isOneLevel, $isParentOneLevel);
         $html .= "</li>";
         return $html;
     }
