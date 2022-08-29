@@ -71,7 +71,7 @@
         <div class="form-group row">
             <div class="col-12">
                 <a href="{{ url('/login/google') }}" class="btn google btn-google-plus social-login-btn"><i class="fa fa-google fa-fw"></i> Google+</a>
-                {{-- <a href="{{ url('/login/facebook') }}" class="btn facebook btn-facebook social-login-btn"> <i class="fa fa-facebook fa-fw"></i> Facebook</a> --}}
+                <a href="{{ url('/login/facebook') }}" class="btn facebook btn-facebook social-login-btn"> <i class="fa fa-facebook fa-fw"></i> Facebook</a>
                 <a href="{{ url('/login/twitter') }}" class="btn twitter btn-twitter social-login-btn"><i class="fa fa-twitter fa-fw"></i> Twitter</a>
                 <a href="{{ url('/login/github') }}" class="btn github btn-github social-login-btn"><i class="fa fa-github fa-fw"></i> GitHub</a>
                 <a href="{{ url('/login/linkedin') }}" class="btn linkedin btn-linkedin social-login-btn"><i class="fa fa-linkedin fa-fw"></i> Linkedin</a>
