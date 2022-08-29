@@ -931,9 +931,8 @@ class Camp extends Model {
         $html = '<ul class="childrenNode">';
 		$action = Route::getCurrentRoute()->getActionMethod();
         //$onecamp =  self::getLiveCamp($this->topic_num, $activeCamp);
-        
+
         if ($currentCamp == $activeCamp && $action != "index") { 
-            // dd([$currentCamp, $activeCamp]);
             $url_portion = self::getSeoBasedUrlPortion($this->topic_num,$currentCamp);
            
             if($isDisabled == 0 && $isParentOneLevel == 0){
