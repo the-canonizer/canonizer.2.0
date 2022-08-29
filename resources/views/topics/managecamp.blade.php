@@ -151,7 +151,13 @@
                     @endforeach
 					
                 </select>    
-			</div> 			
+			</div>
+            <div class="form-group">
+                <input type="checkbox" id="is_disabled" name="is_disabled" {{ !empty($camp->is_disabled) ? 'checked' : '' }} value="1">
+                <label for="is_disabled"> Disable additional sub camps</label><br>
+                <input type="checkbox" id="is_one_level" name="is_one_level" {{ !empty($camp->is_one_level) ? 'checked' : '' }} value="1">
+                <label for="is_one_level"> Single level camps only </label><br>
+            </div>  			
             <?php } ?>
             <button type="submit" id="submit" class="btn btn-login">
 			<?php if($objection=="objection") { ?> Submit Objection <?php } else {?>

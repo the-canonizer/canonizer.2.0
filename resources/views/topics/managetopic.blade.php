@@ -109,6 +109,13 @@
                 <textarea class="form-control" rows="4" name="note" id="note">@if(sizeof(old() > 0)) {{ old('note') }} @else {{$topicupdate == 'update'? $topic->note : ""}} @endif</textarea>
 				@if ($errors->has('note')) <p class="help-block">{{ $errors->first('note') }}</p> @endif
             </div>
+
+            <div class="form-group">
+                <input type="checkbox" id="is_disabled" name="is_disabled" {{ !empty($topic->is_disabled) ? 'checked' : '' }} value="1">
+                <label for="is_disabled"> Disable additional sub camps</label><br>
+                <input type="checkbox" id="is_one_level" name="is_one_level" {{ !empty($topic->is_one_level) ? 'checked' : '' }} value="1">
+                <label for="is_one_level"> Single level camps only </label><br>
+            </div> 
             <?php } ?>
             <?php if($objection=="objection") { ?>
             <button type="submit" id="submit-objection" class="btn btn-login">Submit Objection</button>

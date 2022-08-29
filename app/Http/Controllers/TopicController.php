@@ -169,6 +169,8 @@ class TopicController extends Controller {
             $topic->go_live_time = $current_time; //strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
             $topic->language = 'English';
             $topic->note = isset($all['note']) ? $all['note'] : "";
+            $topic->is_disabled =  !empty($all['is_disabled']) ? $all['is_disabled'] : 0;
+            $topic->is_one_level =  !empty($all['is_one_level']) ? $all['is_one_level'] : 0;
             //#1373 grace period for the topic when no supporter is there should be 0
             $topic->grace_period = 0;
 
@@ -251,7 +253,7 @@ class TopicController extends Controller {
             if ($eventtype == "CREATE") {
                 // Dispatch Job
                 if(isset($topic)) {
-                    Util::dispatchJob($topic, 1, 1);
+                    Util::dispatchJob($topic, 1, 1, $topic->is_disabled, $topic->is_disabled);
                 }
                 
                 // send history link in email
@@ -268,7 +270,7 @@ class TopicController extends Controller {
             } else if ($eventtype == "OBJECTION") {
                  // Dispatch Job
                  if(isset($topic)) {
-                    Util::dispatchJob($topic, 1, 1);
+                    Util::dispatchJob($topic, 1, 1, $topic->is_disabled, $topic->is_disabled);
                 }
 
                 $user = Nickname::getUserByNickName($all['submitter']);
@@ -304,7 +306,7 @@ class TopicController extends Controller {
             else if ($eventtype == "UPDATE") {
                 // Dispatch Job
                 if(isset($topic)) {
-                    Util::dispatchJob($topic, 1, 1);
+                    Util::dispatchJob($topic, 1, 1, $topic->is_disabled, $topic->is_disabled);
                 }
             }
         } catch (Exception $e) {
@@ -384,7 +386,7 @@ class TopicController extends Controller {
         if(!empty($topicDetail)) {
             $totalCamps = $topicDetail->camps()->whereNull('object_time')->distinct('camp_num')->pluck('camp_num')->count();
         }
-        if($totalCamps > 50 && !isset($_REQUEST['filter']) && $_SESSION['filterchange'] < 1) {
+        if($totalCamps > 50 && !isset($_REQUEST['filter']) && !isset($_SESSION['filterchange']) && $_SESSION['filterchange'] < 1) {
             $_SESSION['filterchange'] = '1.000';
         }
         if(session('campnum')) {
@@ -850,6 +852,8 @@ class TopicController extends Controller {
             $camp->camp_about_nick_id = isset($all['nick_name']) ? $all['nick_name'] : "";  
         }
         $camp->grace_period = 1;
+        $camp->is_disabled =  !empty($all['is_disabled']) ? $all['is_disabled'] : 0;
+        $camp->is_one_level =  !empty($all['is_one_level']) ? $all['is_one_level'] : 0;
 
         $eventtype = "CREATE";
         if (isset($all['camp_num'])) {
@@ -917,7 +921,7 @@ class TopicController extends Controller {
             if ($eventtype == "CREATE") {
                 // Dispatch Job
                 if(isset($topic)) {
-                    Util::dispatchJob($topic, $camp->camp_num, 1);
+                     Util::dispatchJob($topic, $camp->camp_num, 1, $camp->is_disabled, $camp->is_disabled);
                 }
 
                 // send history link in email
@@ -952,7 +956,7 @@ class TopicController extends Controller {
             } else if ($eventtype == "OBJECTION") {
                 // Dispatch Job
                 if(isset($topic)) {
-                    Util::dispatchJob($topic, $camp->camp_num, 1);
+                    Util::dispatchJob($topic, $camp->camp_num, 1, $camp->is_disabled, $camp->is_disabled);
                 }
                 
                 $user = Nickname::getUserByNickName($all['submitter']);
@@ -1004,7 +1008,7 @@ class TopicController extends Controller {
                 #1101 end
                 // Dispatch Job
                 if(isset($topic)) {
-                    Util::dispatchJob($topic, $camp->camp_num, 1);
+                    Util::dispatchJob($topic, $camp->camp_num, 1, $camp->is_disabled, $camp->is_disabled);
                 }              
             }
 
@@ -1400,6 +1404,29 @@ class TopicController extends Controller {
                     //go live               
                     $topic->go_live_time = strtotime(date('Y-m-d H:i:s'));
                     $topic->update();
+
+                    /**
+                     * On agree to some change check if there are some changes on same topic which has less go live time then the agreed change
+                     * Change thier go live time to less than 1 minutes than current time
+                     * Ticket # 1477
+                     * Sajid Rafique
+                     */
+                    $inReviewTopicChanges = Topic::where([['topic_num', '=', $data['topic_num']], 
+                                    ['submit_time', '<', $topic->submit_time],
+                                    ['go_live_time', '>', Carbon::now()->timestamp]])->whereNull('objector_nick_id')->get();
+                    
+                    
+                    if(count($inReviewTopicChanges)) {
+                        $topicIds = [];
+                        foreach ($inReviewTopicChanges as $topic) {
+                            $topicIds[] = $topic->id;
+                        }
+                        
+                        if(count($topicIds)) {
+                            Topic::whereIn('id', $topicIds)->update(['go_live_time' => strtotime(date('Y-m-d H:i:s')) - 1]);
+                        }
+                    }
+
                     //clear log
                     ChangeAgreeLog::where('topic_num', '=', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('change_id', '=', $changeID)->where('change_for', '=', $data['change_for'])->delete(); 
                     // Dispatch Job

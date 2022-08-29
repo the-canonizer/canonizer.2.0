@@ -136,7 +136,7 @@
                         </li>
 
 						<?php if($route=='show' and strpos(Request::fullUrl(), 'forum' ) == 0 ) { 
-                        if($id!=null && $campNum !=null){ ?>
+                        if($id!=null && $campNum !=null && $showCreateCampLink == 1){ ?>
 						<li class="nav-item">
                             <a class="nav-link" href='{{ url("$campUrl")}}'>
 

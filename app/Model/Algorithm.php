@@ -29,6 +29,7 @@ class Algorithm{
             'transhumanist'=>'Transhumanist',
 			'united_utah'=>'United Utah',
 			'republican'=>'Republican',
+            'forward_party'=>'Forward Party',
 			'democrat'=>'Democrat',
 			'ether' => 'Ethereum',
             'shares'=> 'Canonizer Shares',
@@ -42,8 +43,7 @@ class Algorithm{
         @return all the available algorithm key values
     */
     public static function getKeyList(){
-        return array('blind_popularity','mind_experts','computer_science_experts','PhD','christian','secular','mormon','uu','atheist','transhumanist','united_utah','republican','democrat', 'ether','shares','shares_sqrt','mind_experts_non_special','sandy_city','sandy_city_council'
-        );
+        return array('blind_popularity','mind_experts','computer_science_experts','PhD','christian','secular','mormon','uu','atheist','transhumanist','united_utah','republican','democrat', 'ether','shares','shares_sqrt','mind_experts_non_special','sandy_city','sandy_city_council','forward_party');
     }
     
     /**
@@ -74,7 +74,7 @@ class Algorithm{
                 return DB::select("$sql $sql2");
             });
            
-		 if($political==true && $topicnum==231 && ($campnum==2 ||  $campnum==3 || $campnum==4) ) {						
+		 if($political == true && $topicnum ==231 && ($campnum == 2 ||  $campnum == 3 || $campnum == 4 || $campnum == 6) ) {						
                       	
 			if($result[0]->support_order==1)
 				$total = $result[0]->countTotal / 2;
@@ -338,6 +338,13 @@ class Algorithm{
         return self::camp_count($nick_name_id,$condition,true,231,4);
     }
 
+    // Forward party Algorith using related topic and camp
+
+    public static function forward_party($nick_name_id,$topicnum=0,$campnum=0){
+        $condition = '(topic_num = 231 and camp_num = 6)';
+        return self::camp_count($nick_name_id,$condition,true,231,6);
+    }
+
     public static function get_expert_camp($topicnum,$nick_name_id){
         $camps = new Collection;
         if(!isset($_REQUEST['asof']) || (isset($_REQUEST['asof']) && $_REQUEST['asof']=="default")) {
@@ -383,14 +390,20 @@ class Algorithm{
         })->last();
         return $expertCamp;
     }
-    public static function mind_experts_non_special($topicnum,$nick_name_id){
+    public static function mind_experts_non_special($topicnum,$nick_name_id,$topic_num){
         $expertCamp = self::get_expert_camp($topicnum,$nick_name_id);
         if(!$expertCamp){ # not an expert canonized nick.
             return 0;
         }
 
         $score_multiplier = self::get_mind_expert_score_multiplier($expertCamp,$topicnum,$nick_name_id);
-        $expertCampReducedTree = $expertCamp->getCampAndNickNameWiseSupportTree('mind_experts',$topicnum); # only need to canonize this branch
+        if($topic_num == 124){
+            $expertCampReducedTree = $expertCamp->getCampAndNickNameWiseSupportTree('computer_science_experts',$topicnum); # only need to canonize this branch
+
+        }else{
+            $expertCampReducedTree = $expertCamp->getCampAndNickNameWiseSupportTree('mind_experts',$topicnum); # only need to canonize this branch
+
+        }
              // Check if user supports himself
         if(array_key_exists('camp_wise_tree',$expertCampReducedTree) && array_key_exists($expertCamp->camp_num,$expertCampReducedTree['camp_wise_tree'])){
             return $expertCampReducedTree['camp_wise_tree'][$expertCamp->camp_num];
@@ -493,7 +506,7 @@ class Algorithm{
             
             return $total_score * $score_multiplier;
         }else{
-           $expertCampReducedTree = self::mind_experts_non_special($topicnum,$nick_name_id); # only need to canonize this branch
+           $expertCampReducedTree = self::mind_experts_non_special($topicnum,$nick_name_id,$topic_num); # only need to canonize this branch
             $total_score = 0;
             if(count($expertCampReducedTree) > 0){
                 foreach($expertCampReducedTree as $tree_node){

@@ -67,6 +67,12 @@
                 <textarea class="form-control" rows="4" name="note" id="note">{{ old('note') }}</textarea>
                 @if ($errors->has('note')) <p class="help-block">{{ $errors->first('note') }}</p> @endif
             </div>    
+            <div class="form-group">
+                <input type="checkbox" id="is_disabled" name="is_disabled" value="1">
+                <label for="is_disabled"> Disable additional sub camps</label><br>
+                <input type="checkbox" id="is_one_level" name="is_one_level" value="1">
+                <label for="is_one_level"> Single level camps only </label><br>
+            </div>    
 
             <button type="submit" id="submit" class="btn btn-login">Create Topic</button>
         </form>
