@@ -1,9 +1,12 @@
 <?php include(app_path() . '/Library/wiki_parser/wikiParser.class.php'); ?>
-@php
-    $getCampTree = $topic->campTreeHtml($parentcampnum, 1, false, 'fa-arrow-down', $topic, $fetchTopicHistory);
-    $campTree = $getCampTree[0];
-    $showCreateCampLink = $getCampTree[1] ?? 1;
-@endphp
+
+<?php
+    if(isset($topic) && count($topic) > 0 ) {
+        $getCampTree = $topic->campTreeHtml($parentcampnum, 1, false, 'fa-arrow-down', $topic, $fetchTopicHistory);
+        $campTree = $getCampTree[0];
+        $showCreateCampLink = $getCampTree[1] ?? 1;
+    }
+?>
 @extends('layouts.app')
 @section('content')
 @if(Session::has('error'))
