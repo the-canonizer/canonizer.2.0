@@ -83,7 +83,7 @@
 
 <div class="alert alert-success">
    <div style="text-align:center">
-     <a href="{{ route('settings.support')}}"><input type="button" name="cancel" class="btn btn-login" value="Cancel"></a>
+     <a href="{{ redirect()->back()->getTargetUrl() }}"><input type="button" name="cancel" class="btn btn-login" value="Cancel"></a>
      <input type="button" id="confirm_submit" name="submit" class="btn btn-login" value="Submit">
    </div>    
 </div>	
@@ -298,13 +298,9 @@
 						
 					</div>	
 
-						<?php  
-						$link = \App\Model\Camp::getTopicCampUrl($topic->topic_num,session('campnum'));
-						?>
-
 					<!-- button Section -->
 						<button type="submit" id="submit"  class="btn btn-success">Submit</button>
-							<a  class="btn btn-login" href="<?php echo $link; ?>">Cancel</a>						
+							<a  class="btn btn-login" href="{{ redirect()->back()->getTargetUrl() }}">Cancel</a>						
 					<!-- ends here -->
 					
 					
