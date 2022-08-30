@@ -1273,7 +1273,8 @@ class TopicController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function index() {
-        //
+        //Fixes #1205 redirected get request for topic back
+        return redirect()->back();
     }
 
     /**
