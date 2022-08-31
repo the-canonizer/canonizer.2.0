@@ -307,6 +307,16 @@ class TopicController extends Controller {
                 // Dispatch Job
                 if(isset($topic)) {
                     Util::dispatchJob($topic, 1, 1);
+                    $currentTime = time();
+                    if (($currentTime < $topic->go_live_time && $currentTime >= $topic->submit_time) && $topic->grace_period && $topic->objector_nick_id == null) {
+                        Util::dispatchJob($topic, 1, 1, 1);
+                        Util::dispatchJob($topic, 1, 1, 24);
+                    }
+                    else {
+                        if($current_time < $topic->go_live_time && $topic->objector_nick_id == null) {
+                            Util::dispatchJob($topic, 1, 1, 24);
+                        }
+                    }
                 }
             }
         } catch (Exception $e) {
@@ -1009,6 +1019,16 @@ class TopicController extends Controller {
                 // Dispatch Job
                 if(isset($topic)) {
                     Util::dispatchJob($topic, $camp->camp_num, 1);
+                    $currentTime = time();
+                    if (($currentTime < $camp->go_live_time && $currentTime >= $camp->submit_time) && $camp->grace_period && $camp->objector_nick_id == null) {
+                        Util::dispatchJob($topic, $camp->camp_num, 1, 1);
+                        Util::dispatchJob($topic, $camp->camp_num, 1, 24);
+                    }
+                    else {
+                        if($currentTime < $camp->go_live_time && $camp->objector_nick_id == null) {
+                            Util::dispatchJob($topic, $camp->camp_num, 1, 24);
+                        }
+                    }
                 }              
             }
 
