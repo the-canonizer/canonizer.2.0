@@ -1,5 +1,8 @@
 <?php include(app_path() . '/Library/wiki_parser/wikiParser.class.php'); ?>
 @php
+    session(['supportCountTotal'=>0]);
+    $title      = preg_replace('/[^A-Za-z0-9\-]/', '-', $topic->topic_name);						  
+    $topic_id  = $topic->topic_num."-".$title;
     $getCampTree = $topic->campTreeHtml($parentcampnum, 1, false, 'fa-arrow-down', $topic, $fetchTopicHistory);
     $campTree = $getCampTree[0];
     $showCreateCampLink = $getCampTree[1] ?? 1;
@@ -111,11 +114,6 @@ if(isset($topic) && count($topic) > 0 ) {?>
             <div class="row">
                 <div class="tree treeview col-sm-12">
                     <ul class="mainouter">
-                        <?php 
-                            session(['supportCountTotal'=>0]);
-                            $title      = preg_replace('/[^A-Za-z0-9\-]/', '-', $topic->topic_name);						  
-                            $topic_id  = $topic->topic_num."-".$title;
-                        ?>
                         {!! $campTree !!} 
                     </ul>
                 </div>
