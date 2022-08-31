@@ -253,7 +253,7 @@ class TopicController extends Controller {
             if ($eventtype == "CREATE") {
                 // Dispatch Job
                 if(isset($topic)) {
-                    Util::dispatchJob($topic, 1, 1, $topic->is_disabled, $topic->is_disabled);
+                    Util::dispatchJob($topic, 1, 1);
                 }
                 
                 // send history link in email
@@ -270,7 +270,7 @@ class TopicController extends Controller {
             } else if ($eventtype == "OBJECTION") {
                  // Dispatch Job
                  if(isset($topic)) {
-                    Util::dispatchJob($topic, 1, 1, $topic->is_disabled, $topic->is_disabled);
+                    Util::dispatchJob($topic, 1, 1);
                 }
 
                 $user = Nickname::getUserByNickName($all['submitter']);
@@ -306,7 +306,7 @@ class TopicController extends Controller {
             else if ($eventtype == "UPDATE") {
                 // Dispatch Job
                 if(isset($topic)) {
-                    Util::dispatchJob($topic, 1, 1, $topic->is_disabled, $topic->is_disabled);
+                    Util::dispatchJob($topic, 1, 1);
                 }
             }
         } catch (Exception $e) {
@@ -921,7 +921,7 @@ class TopicController extends Controller {
             if ($eventtype == "CREATE") {
                 // Dispatch Job
                 if(isset($topic)) {
-                     Util::dispatchJob($topic, $camp->camp_num, 1, $camp->is_disabled, $camp->is_disabled);
+                     Util::dispatchJob($topic, $camp->camp_num, 1);
                 }
 
                 // send history link in email
@@ -956,7 +956,7 @@ class TopicController extends Controller {
             } else if ($eventtype == "OBJECTION") {
                 // Dispatch Job
                 if(isset($topic)) {
-                    Util::dispatchJob($topic, $camp->camp_num, 1, $camp->is_disabled, $camp->is_disabled);
+                    Util::dispatchJob($topic, $camp->camp_num, 1);
                 }
                 
                 $user = Nickname::getUserByNickName($all['submitter']);
@@ -1008,7 +1008,7 @@ class TopicController extends Controller {
                 #1101 end
                 // Dispatch Job
                 if(isset($topic)) {
-                    Util::dispatchJob($topic, $camp->camp_num, 1, $camp->is_disabled, $camp->is_disabled);
+                    Util::dispatchJob($topic, $camp->camp_num, 1);
                 }              
             }
 
