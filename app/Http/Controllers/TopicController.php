@@ -1395,9 +1395,7 @@ class TopicController extends Controller {
         } else if (isset($data['change_for']) && $data['change_for'] == 'camp') {
             $camp = Camp::where('id', $changeID)->first();
 			if(isset($camp)) {
-                //sunil Talentelgia- while updating camp check if any old support then remove it if parent camp changed 1076 / 1211
-                $this->checkParentCampChanged($camp->topic_num,$camp->camp_num,$camp->parent_camp_num,$in_review_status=true); 
-                //end 1076
+                
                 $submitterNickId = $camp->submitter_nick_id;
                 $agreeCount = ChangeAgreeLog::where('topic_num', '=', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('change_id', '=', $changeID)->where('change_for', '=', $data['change_for'])->count();
                 $supporters = Support::getAllSupporters($data['topic_num'], $data['camp_num'],$submitterNickId);
@@ -1408,6 +1406,9 @@ class TopicController extends Controller {
                     //clear log
                     ChangeAgreeLog::where('topic_num', '=', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('change_id', '=', $changeID)->where('change_for', '=', $data['change_for'])->delete();
                     $topic = $camp->topic;
+                    //sunil Talentelgia- while updating camp check if any old support then remove it if parent camp changed 1076 / 1211
+                    $this->checkParentCampChanged($camp->topic_num,$camp->camp_num,$camp->parent_camp_num,$in_review_status=true); 
+                    //end 1076
                     // Dispatch Job
                     if(isset($topic)) {
                         Util::dispatchJob($topic, $camp->camp_num, 1);
@@ -1760,8 +1761,8 @@ class TopicController extends Controller {
 
         if(isset($parent_camp_num) && $parent_camp_num!=''){
             if($in_review_status){
-                
-                $allChildCamps = Camp::getAllChildCamps($livecamp);
+               /* $allChildCamps = Camp::getAllChildCamps($livecamp,$in_review_status);
+            
                 //get supporters of all child camps of current camp
                 $allChildSupporters = Support::where('topic_num',$topic_num)
                     ->where('end',0)
@@ -1770,7 +1771,25 @@ class TopicController extends Controller {
 
                 if(sizeof($allChildSupporters) > 0){  
                     Support::removeSupport($topic_num,$parent_camp_num,$allChildSupporters,$allChildCamps);
-                }
+                }*/
+                 //We have feched all parent camps hierarchy based on changed camp (#1262 ,#1191)
+                 $allParentCamps = Camp::getAllParent($livecamp);
+
+                 //We have feched all supporters based on all parent camps hierarchy 
+                 $allParentsSupporters = Support::where('topic_num',$topic_num)
+                     ->where('end',0)
+                     ->whereIn('camp_num',$allParentCamps)
+                     ->pluck('nick_name_id');
+
+                 //We have feched all child camps hierarchy based on current live camp
+                 $allChildCamps = Camp::getAllChildCamps($livecamp);
+
+                
+                 if(sizeof($allParentsSupporters) > 0) {
+                     foreach($allParentCamps as $parent) {
+                         Support::removeSupport($topic_num, $parent, $allParentsSupporters, $allChildCamps);
+                     }
+                 }
             }
             else{
 
