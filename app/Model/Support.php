@@ -180,28 +180,37 @@ class Support extends Model {
         }
         return $supporters;
     }
+    /*
+    * Function : removeSupport
+    * Use : While changing parent camp , only common support should get removed from parent camp(if any) 
+    * and if any support is not common then it should remain the same for that camp.
+    */
+    public static function removeSupport($topicNum, $p_campNum, $nickName = [], $campNum=[]) {
 
-    public static function removeSupport($topicNum,$p_campNum,$nickName = [],$campNum=[]) {
-        if(empty($topicNum) || empty($p_campNum) || empty($nickName)){
-            return;
-        }
+        if(empty($topicNum) || empty($p_campNum) || empty($nickName)) {
+            return ;
+        } 
+
         $supportData = self::where('topic_num',$topicNum)->where('camp_num',$p_campNum)->where('end','=',0);
-        if(!empty($nickName)){
+
+        if(!empty($nickName)) {
             $supportData->whereIn('nick_name_id',$nickName);
         }
+
         $results = $supportData->get();
         $results_child = [];
-        if(!empty($campNum)){
+
+        if(!empty($campNum)) {
             $supportData_child = self::where('topic_num',$topicNum)->whereIn('camp_num',$campNum)->where('end','=',0);
             if(!empty($nickName)){
                 $supportData_child->whereIn('nick_name_id',$nickName);
             }
             $results_child = $supportData_child->get()->toArray();
         }
-        foreach($results as $value){
+
+        foreach($results as $value) { 
             if(!empty($campNum)){ 
-                //1311 and 1334 1398 
-                //if child camp have  same support of parent camp then remove support from parent
+                //if child camp have same supportter of parent camp then remove supportter from parent
                 if(!empty($results_child)){ 
                    if(array_search($value->nick_name_id, array_column($results_child, 'nick_name_id')) !== FALSE) { //found
                         $value->end = time();
@@ -210,9 +219,9 @@ class Support extends Model {
                     } 
                 }
             }
-        }
+        } 
        
-    }
+    } 
 
     public static function getAllChildDelegateNicknameId($topic_num,$nick_name_id, $supportId=[]) {
         $as_of_time = time();
@@ -235,8 +244,8 @@ class Support extends Model {
 
     /*
         Function : supportOrderChanges
-        Work : support order change
-        Return : True value
+        Work : support order re-change
+        Return : True
     */
     public static function supportOrderChanges($value){
         
