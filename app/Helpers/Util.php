@@ -66,7 +66,7 @@ class Util
      * @param boolean $updateAll
      * @return void
      */
-    public function dispatchJob($topic, $campNum = 1, $updateAll = 0, $is_disabled = 0, $is_one_level = 0, $delay = null) {
+    public function dispatchJob($topic, $campNum = 1, $updateAll = 0, $delay = null) {
         try{
             $selectedAlgo = 'blind_popularity';
             if(session('defaultAlgo')) {
@@ -84,9 +84,7 @@ class Util
                 'algorithm' => $selectedAlgo,
                 'asOfDate'  => $asOfDefaultDate,
                 'asOf'      => $asOf,
-                'updateAll' => $updateAll,
-                "is_disabled" => $is_disabled,
-                "is_one_level" => $is_one_level
+                'updateAll' => $updateAll
             ];
 
            // dd($canonizerServiceData);
@@ -113,9 +111,7 @@ class Util
                             'algorithm' => $selectedAlgo,
                             'asOfDate'  => $asOfDefaultDate,
                             'asOf'      => $asOf,
-                            'updateAll' => 1,
-                            "is_disabled" => $is_disabled,
-                            "is_one_level" => $is_one_level
+                            'updateAll' => 1
                         ];
                         // Dispact job when create a camp
                         CanonizerService::dispatch($canonizerServiceData)

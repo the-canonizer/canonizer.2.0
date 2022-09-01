@@ -253,7 +253,7 @@ class TopicController extends Controller {
             if ($eventtype == "CREATE") {
                 // Dispatch Job
                 if(isset($topic)) {
-                    Util::dispatchJob($topic, 1, 1, $topic->is_disabled, $topic->is_disabled);
+                    Util::dispatchJob($topic, 1, 1);
                 }
                 
                 // send history link in email
@@ -270,7 +270,7 @@ class TopicController extends Controller {
             } else if ($eventtype == "OBJECTION") {
                  // Dispatch Job
                  if(isset($topic)) {
-                    Util::dispatchJob($topic, 1, 1, $topic->is_disabled, $topic->is_disabled);
+                    Util::dispatchJob($topic, 1, 1);
                 }
 
                 $user = Nickname::getUserByNickName($all['submitter']);
@@ -306,15 +306,15 @@ class TopicController extends Controller {
             else if ($eventtype == "UPDATE") {
                 // Dispatch Job
                 if(isset($topic)) {
-                    Util::dispatchJob($topic, 1, 1, $topic->is_disabled, $topic->is_disabled);
+                    Util::dispatchJob($topic, 1, 1);
                     $currentTime = time();
                     if (($currentTime < $topic->go_live_time && $currentTime >= $topic->submit_time) && $topic->grace_period && $topic->objector_nick_id == null) {
-                        Util::dispatchJob($topic, 1, 1, $topic->is_disabled, $topic->is_disabled, 1);
-                        Util::dispatchJob($topic, 1, 1, $topic->is_disabled, $topic->is_disabled, 24);
+                        Util::dispatchJob($topic, 1, 1, 1);
+                        Util::dispatchJob($topic, 1, 1, 24);
                     }
                     else {
                         if($current_time < $topic->go_live_time && $topic->objector_nick_id == null) {
-                            Util::dispatchJob($topic, 1, 1, $topic->is_disabled, $topic->is_disabled, 24);
+                            Util::dispatchJob($topic, 1, 1, 24);
                         }
                     }
                 }
@@ -931,7 +931,7 @@ class TopicController extends Controller {
             if ($eventtype == "CREATE") {
                 // Dispatch Job
                 if(isset($topic)) {
-                     Util::dispatchJob($topic, $camp->camp_num, 1, $camp->is_disabled, $camp->is_disabled);
+                     Util::dispatchJob($topic, $camp->camp_num, 1);
                 }
 
                 // send history link in email
@@ -966,7 +966,7 @@ class TopicController extends Controller {
             } else if ($eventtype == "OBJECTION") {
                 // Dispatch Job
                 if(isset($topic)) {
-                    Util::dispatchJob($topic, $camp->camp_num, 1, $camp->is_disabled, $camp->is_disabled);
+                    Util::dispatchJob($topic, $camp->camp_num, 1);
                 }
                 
                 $user = Nickname::getUserByNickName($all['submitter']);
@@ -1018,15 +1018,15 @@ class TopicController extends Controller {
                 #1101 end
                 // Dispatch Job
                 if(isset($topic)) {
-                    Util::dispatchJob($topic, $camp->camp_num, 1, $camp->is_disabled, $camp->is_disabled);
+                    Util::dispatchJob($topic, $camp->camp_num, 1);
                     $currentTime = time();
                     if (($currentTime < $camp->go_live_time && $currentTime >= $camp->submit_time) && $camp->grace_period && $camp->objector_nick_id == null) {
-                        Util::dispatchJob($topic, $camp->camp_num, 1, $camp->is_disabled, $camp->is_disabled, 1);
-                        Util::dispatchJob($topic, $camp->camp_num, 1, $camp->is_disabled, $camp->is_disabled, 24);
+                        Util::dispatchJob($topic, $camp->camp_num, 1, 1);
+                        Util::dispatchJob($topic, $camp->camp_num, 1, 24);
                     }
                     else {
-                        if($current_time < $camp->go_live_time && $camp->objector_nick_id == null) {
-                            Util::dispatchJob($topic, $camp->camp_num, 1, $camp->is_disabled, $camp->is_disabled, 24);
+                        if($currentTime < $camp->go_live_time && $camp->objector_nick_id == null) {
+                            Util::dispatchJob($topic, $camp->camp_num, 1, 24);
                         }
                     }
                 }              
