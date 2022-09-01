@@ -169,8 +169,6 @@ class TopicController extends Controller {
             $topic->go_live_time = $current_time; //strtotime(date('Y-m-d H:i:s', strtotime('+7 days')));
             $topic->language = 'English';
             $topic->note = isset($all['note']) ? $all['note'] : "";
-            $topic->is_disabled =  !empty($all['is_disabled']) ? $all['is_disabled'] : 0;
-            $topic->is_one_level =  !empty($all['is_one_level']) ? $all['is_one_level'] : 0;
             //#1373 grace period for the topic when no supporter is there should be 0
             $topic->grace_period = 0;
 
@@ -485,6 +483,8 @@ class TopicController extends Controller {
         
 		$parentcampsData = Camp::getAllParentCamp($topicnum,['nofilter'=>true]);
 
+        $parentcampsData = Camp::filterParentCampForForm($parentcampsData);
+
         $nickNames = Nickname::topicNicknameUsed($topicnum);
         $allNicknames = Nickname::orderBy('nick_name', 'ASC')->get();
         return view('topics.camp_create', compact('camp','parentcampsData','topic', 'parentcampnum', 'parentcamp', 'nickNames', 'allNicknames'));
@@ -522,6 +522,8 @@ class TopicController extends Controller {
         //$parentcampsData = Camp::getAllParentCampNew($camp->topic_num);
 
         $parentcampsData = Camp::getAllParentCamp($camp->topic_num,['nofilter' => true]);//1070
+
+        $parentcampsData = Camp::filterParentCampForForm($parentcampsData);
 
         $childCamps = array_unique(Camp::getAllChildCamps($camp));
 
