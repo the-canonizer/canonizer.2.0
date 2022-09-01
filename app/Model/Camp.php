@@ -438,7 +438,7 @@ class Camp extends Model {
         $campHierarchy = array();
         foreach ($parentCamps as $camp){
             $camp['children'] = [];
-            $campHierarchy[$camp->parent_camp_num][] = $camp;
+            $campHierarchy[$camp->parent_camp_num ?? 0][] = $camp;
         }
         $tree = self::createTree($campHierarchy, $campHierarchy[0]);
 
