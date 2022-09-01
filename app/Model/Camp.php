@@ -434,6 +434,48 @@ class Camp extends Model {
                         ->orderBy('submit_time', 'camp_name')->groupBy('camp_num')->get();
     }
 
+    public static function filterParentCampForForm($parentCamps = []) {
+        $campHierarchy = array();
+        foreach ($parentCamps as $camp){
+            $camp['children'] = [];
+            $campHierarchy[$camp->parent_camp_num][] = $camp;
+        }
+        $tree = self::createTree($campHierarchy, $campHierarchy[0]);
+
+        $parents = self::createParentForForm($tree);
+
+        return $parents;
+
+    }
+
+    public static function createParentForForm($tree = []) {
+        $parents = [];
+        foreach ($tree as $camp) {
+            if ($camp->is_disabled != 1) {
+                if ($camp->is_one_level == 1) {
+                    $camp['children'] = [];
+                }
+                $parents[] = $camp;
+                if (!empty($camp['children'])) {
+                    $children = self::createParentForForm($camp['children']);
+                    $parents = array_merge($parents, $children);
+                }
+            }
+        }
+        return $parents;
+    }
+
+    public static function createTree(&$list, $parent){
+        $tree = array();
+        foreach ($parent as $l){
+            if(isset($list[$l->camp_num])){
+                $l['children'] = self::createTree($list, $list[$l->camp_num]);
+            }
+            $tree[] = $l;
+        } 
+        return $tree;
+    }
+
     public static function getAllParentCampNew($topicnum) {
         return self::where('topic_num', $topicnum)
                         ->where('objector_nick_id', '=', NULL)
@@ -1230,17 +1272,24 @@ class Camp extends Model {
         $topic_name = (isset($topic) && isset($topic->topic_name)) ? $topic->topic_name: '';
         $title = preg_replace('/[^A-Za-z0-9\-]/', '-', $topic_name);        
         $topic_id = $this->topic_num . "-" . $title;
+        $agreementCamp = self::getLiveCamp($this->topic->topic_num, 1, ['nofilter'=>false]);
+        $isDisabled = 0;
+        $isOneLevel = 0;
+        if (!empty($agreementCamp)) {
+            $isDisabled = $agreementCamp->is_disabled ?? 0;
+            $isOneLevel = $agreementCamp->is_one_level ?? 0;
+        }
+
         $tree = [];
         $tree[$this->camp_num]['title'] = $topic_name;
         $tree[$this->camp_num]['review_title'] = $topic_name;
         $tree[$this->camp_num]['link'] = self::getTopicCampUrl($this->topic_num,$this->camp_num);//  url('topic/' . $topic_id . '/' . $this->camp_num.'#statement');
         $tree[$this->camp_num]['review_link'] = self::getTopicCampUrl($this->topic_num,$this->camp_num);
         $tree[$this->camp_num]['score'] =  $this->getCamptSupportCount($algorithm, $this->topic_num, $this->camp_num,$nick_name_id);
-        $tree[$this->camp_num]['is_disabled'] =  $topic->is_disabled;
-        $tree[$this->camp_num]['is_one_level'] =  $topic->is_one_level;
+        $tree[$this->camp_num]['is_disabled'] =  $isDisabled;
+        $tree[$this->camp_num]['is_one_level'] =  $isOneLevel;
        
         $tree[$this->camp_num]['children'] = $this->traverseCampTree($algorithm, $this->topic_num, $this->camp_num);
-               
         return $reducedTree = TopicSupport::sumTranversedArraySupportCount($tree);
     }
 

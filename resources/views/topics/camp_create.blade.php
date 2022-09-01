@@ -50,7 +50,6 @@
             <div class="form-group">
                 <label for="parent_camp_num">Parent Camp <span style="color:red">*</span></label>
                 @php
-                    $parentcampsData = $parentcampsData->toArray();
                     function sortByCampName($a, $b) {
                         return $a['camp_name'] >= $b['camp_name'];
                     }
