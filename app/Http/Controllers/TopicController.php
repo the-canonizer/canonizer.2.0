@@ -675,6 +675,7 @@ class TopicController extends Controller {
             $nickNames = Nickname::personNicknameArray();
             $ifIamSupporter = Support::ifIamSupporter($topicnum, $campnum, $nickNames,$submit_time);
             $ifSupportDelayed = Support::ifIamSupporter($topicnum, $campnum, $nickNames,$submit_time, $delayed=true);
+            $ifIamImplicitSupporter = Support::ifIamImplicitSupporter($topicnum, $campnum, $nickNames,$submit_time);
             if(count($statementHistory) > 0){
                 foreach($statementHistory as $val){
                     $submitterUserID = Nickname::getUserIDByNickName($val->submitter_nick_id);
@@ -706,7 +707,7 @@ class TopicController extends Controller {
 
         }
         $wiky = new Wiky;
-        return view('topics.statementhistory', compact('topic', 'statement', 'parentcampnum', 'onecamp', 'parentcamp', 'wiky', 'ifIamSupporter','submit_time','ifSupportDelayed'));
+        return view('topics.statementhistory', compact('topic', 'statement', 'parentcampnum', 'onecamp', 'parentcamp', 'wiky', 'ifIamSupporter','submit_time','ifSupportDelayed', 'ifIamImplicitSupporter'));
     }
 
     public function filterArr($arr){                    
