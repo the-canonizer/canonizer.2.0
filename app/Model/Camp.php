@@ -528,19 +528,16 @@ class Camp extends Model {
                 $childCamps = Camp::where('topic_num', $camp->topic_num)->where('parent_camp_num', $camp->camp_num)->groupBy('camp_num')->latest('submit_time')->get();
             }
             foreach ($childCamps as $child) {
-                /**
-                 * Adding check to skip camps rejected ones
-                 * ticket # 1310 - Muhammad Ahmad
-                 */
+                /***
+                 ** Adding check to skip camps rejected ones 
+                **/
                 if($includeLiveCamps){
-                    //adding go_live_time condition Sunil Talentelgia //->where('go_live_time', '<=', time())
-                    // $latestParent = Camp::where('topic_num', $child->topic_num)->where('camp_num', $child->camp_num)->latest('submit_time')->where('go_live_time', '<=', time())->where('objector_nick_id', NULL)->first();
-                    $latestParent = Camp::where('topic_num', $child->topic_num)->where('camp_num', $child->camp_num)->latest('submit_time')->where('go_live_time', '<=', time())->first();
+                    $latestParent = Camp::where('topic_num', $child->topic_num)->where('camp_num', $child->camp_num)->latest('submit_time')->where('go_live_time', '<=', time())->where('objector_nick_id', NULL)->first();
                 }
                 else{
-                    //$latestParent = Camp::where('topic_num', $child->topic_num)->where('camp_num', $child->camp_num)->latest('submit_time')->where('objector_nick_id', NULL)->first();
-                    $latestParent = Camp::where('topic_num', $child->topic_num)->where('camp_num', $child->camp_num)->latest('submit_time')->first();
+                    $latestParent = Camp::where('topic_num', $child->topic_num)->where('camp_num', $child->camp_num)->where('objector_nick_id', NULL)->latest('submit_time')->first();
                 }
+
                 if($latestParent->parent_camp_num == $camp->camp_num ){ 
                     $camparray = array_merge($camparray, self::getAllChildCamps($child)); 
 
