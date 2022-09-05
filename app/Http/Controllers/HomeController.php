@@ -174,9 +174,17 @@ class HomeController extends Controller {
         if(empty($_REQUEST['namespace']) && session()->has('defaultNamespaceId')){
             session()->forget('defaultNamespaceId');
         }
+
+        if (!Auth::check()) {
+            unset($_REQUEST['namespace']);
+            unset($_REQUEST['my']);
+            session()->forget('defaultNamespaceId');
+        }
+        
         $topics = Camp::getBrowseTopic();
         $namespaces = Namespaces::all();
         return view('browse', compact('topics', 'namespaces'));
+        
     }
 
     public function recusriveCampDisp($childs) {
