@@ -9,6 +9,7 @@ use App\Model\Support;
 use App\Jobs\CanonizerService;
 use App\Model\Namespaces;
 use Illuminate\Support\Facades\Log;
+use Carbon\Carbon;
 
 /*
 |=================================================================
@@ -65,8 +66,7 @@ class Util
      * @param boolean $updateAll
      * @return void
      */
-    public function dispatchJob($topic, $campNum = 1, $updateAll = 0, $is_disabled = 0, $is_one_level = 0) {
-
+    public function dispatchJob($topic, $campNum = 1, $updateAll = 0, $delay = null) {
         try{
             $selectedAlgo = 'blind_popularity';
             if(session('defaultAlgo')) {
@@ -84,17 +84,19 @@ class Util
                 'algorithm' => $selectedAlgo,
                 'asOfDate'  => $asOfDefaultDate,
                 'asOf'      => $asOf,
-                'updateAll' => $updateAll,
-                "is_disabled" => $is_disabled,
-                "is_one_level" => $is_one_level
+                'updateAll' => $updateAll
             ];
 
            // dd($canonizerServiceData);
             // Dispact job when create a camp
-            CanonizerService::dispatch($canonizerServiceData)
-                ->onQueue('canonizer-service')
-                ->unique(Topic::class, $topic->topic_num);
-
+            if ($delay) {
+                $delayTime = Carbon::now()->addHours($delay);
+                CanonizerService::dispatch($canonizerServiceData)->delay($delayTime)->onQueue('canonizer-service-delay');
+                
+            } else {
+                CanonizerService::dispatch($canonizerServiceData)->onQueue('canonizer-service')->unique(Topic::class, $topic->topic_num);
+            }
+            
             // Incase the topic is mind expert then find all the affected topics 
             if($topic->topic_num == 81) {
                 $camp = Camp::where('topic_num', $topic->topic_num)->where('camp_num', '=', $campNum)->where('go_live_time', '<=', time())->latest('submit_time')->first();
@@ -109,9 +111,7 @@ class Util
                             'algorithm' => $selectedAlgo,
                             'asOfDate'  => $asOfDefaultDate,
                             'asOf'      => $asOf,
-                            'updateAll' => 1,
-                            "is_disabled" => $is_disabled,
-                            "is_one_level" => $is_one_level
+                            'updateAll' => 1
                         ];
                         // Dispact job when create a camp
                         CanonizerService::dispatch($canonizerServiceData)
