@@ -91,10 +91,10 @@ class Util
             // Dispact job when create a camp
             if ($delay) {
                 $delayTime = Carbon::now()->addHours($delay);
-                CanonizerService::dispatch($canonizerServiceData)->delay($delayTime)->onQueue('canonizer-service-delay');
+                CanonizerService::dispatch($canonizerServiceData)->delay($delayTime)->onQueue(config('app.DELAY_QUEUE_SERVICE_NAME'));
                 
             } else {
-                CanonizerService::dispatch($canonizerServiceData)->onQueue('canonizer-service')->unique(Topic::class, $topic->topic_num);
+                CanonizerService::dispatch($canonizerServiceData)->onQueue(config('app.QUEUE_SERVICE_NAME'))->unique(Topic::class, $topic->topic_num);
             }
             
             // Incase the topic is mind expert then find all the affected topics 
@@ -115,7 +115,7 @@ class Util
                         ];
                         // Dispact job when create a camp
                         CanonizerService::dispatch($canonizerServiceData)
-                            ->onQueue('canonizer-service')
+                            ->onQueue(config('app.QUEUE_SERVICE_NAME'))
                             ->unique(Topic::class, $topic->topic_num);
                     }
                 }
