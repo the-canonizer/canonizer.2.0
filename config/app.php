@@ -44,6 +44,8 @@ return [
     'CS_GET_HOME_PAGE_DATA' => env('CS_GET_HOME_PAGE_DATA', ''),
     'CS_CRON_DATE'          => env('CS_CRON_DATE', ''),
     'PAGE_PER_RECORD'       => env('PAGE_PER_RECORD', 20),
+    'QUEUE_SERVICE_NAME'    => env('QUEUE_SERVICE_NAME'),
+    'DELAY_QUEUE_SERVICE_NAME'   => env('DELAY_QUEUE_SERVICE_NAME'),
 
     /*
     |--------------------------------------------------------------------------
