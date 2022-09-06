@@ -81,20 +81,19 @@ class Algorithm{
             $sqlQuery = "select count(*) as countTotal,support_order,camp_num from support where nick_name_id = $nick_name_id and topic_num = ".$topicnum." and ((start < $as_of_time) and ((end = 0) or (end > $as_of_time)))";	
             $supportCount = DB::select("$sqlQuery");
             if($supportCount[0]->countTotal > 1 && $topic_num!=231){
-                $supportPoint = $result[0]->countTotal;
-                $total = $total + round($supportPoint * 1 / (2 ** ($result[0]->support_order)), 3);
-            }else{
+                if($result[0]->support_order == 1){
+                    for($i=1; $i<=$supportCount[0]->countTotal; $i++){
+                        $supportPoint = $result[0]->countTotal;
+                        $total = $total + round($supportPoint * 1 / (2 ** ($i)), 3);
+                    }
+                }else{
+                    $supportPoint = $result[0]->countTotal;
+                    $total = $total + round($supportPoint * 1 / (2 ** ($result[0]->support_order)), 3);
+                }
+                
+             }else{
                 $total = $result[0]->countTotal;
             }     	
-			// if($result[0]->support_order==1)
-			// 	$total = $result[0]->countTotal / 2;
-			// else if($result[0]->support_order==2)
-			// 	$total = $result[0]->countTotal / 4;
-			// else if($result[0]->support_order==3)
-			// 	$total = $result[0]->countTotal / 6;
-			// else if($result[0]->support_order==4)
-			// 	$total = $result[0]->countTotal / 8;
-			// else $total = $result[0]->countTotal;
 			
 		 } else {
 			$total = $result[0]->countTotal; 
