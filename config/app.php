@@ -201,6 +201,8 @@ return [
         //Laravel\Socialite\SocialiteServiceProvider::class,
         App\Library\Socialite\SocialiteServiceProvider::class,
         Com\NickelIT\UniqueableJobs\UniqueableJobsServiceProvider::class,
+        Stevebauman\Purify\PurifyServiceProvider::class
+
     ],
 
     /*
