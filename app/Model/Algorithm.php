@@ -81,10 +81,13 @@ class Algorithm{
             $sqlQuery = "select count(*) as countTotal,support_order,camp_num from support where nick_name_id = $nick_name_id and topic_num = ".$topicnum." and ((start < $as_of_time) and ((end = 0) or (end > $as_of_time)))";	
             $supportCount = DB::select("$sqlQuery");
             if($supportCount[0]->countTotal > 1 && $topic_num!=231){
+                // echo "<pre>"; print_r($supportCount);print_r($result);
                 if($result[0]->support_order == 1){
                     for($i=1; $i<=$supportCount[0]->countTotal; $i++){
                         $supportPoint = $result[0]->countTotal;
-                        $total = $total + round($supportPoint * 1 / (2 ** ($i)), 3);
+                        if($i == 1 || $i == $supportCount[0]->countTotal){ // adding only last reminder
+                            $total = $total + round($supportPoint * 1 / (2 ** ($i)), 3);
+                        }
                     }
                 }else{
                     $supportPoint = $result[0]->countTotal;
