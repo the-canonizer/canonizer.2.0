@@ -1029,11 +1029,11 @@ class TopicController extends Controller {
                     $delayLiveTimeInSeconds = (24*60*60) + 10; // 24 hour commit time + 10 seconds for delay job
                     if (($currentTime < $camp->go_live_time && $currentTime >= $camp->submit_time) && $camp->grace_period && $camp->objector_nick_id == null) {
                         Util::dispatchJob($topic, $camp->camp_num, 1, $delayCommitTimeInSeconds);
-                        Util::dispatchJob($topic, $camp->camp_num, 1, $delayLiveTimeInSeconds);
+                        Util::dispatchJob($topic, $camp->camp_num, 1, $delayLiveTimeInSeconds, $camp->id);
                     }
                     else {
                         if($currentTime < $camp->go_live_time && $camp->objector_nick_id == null) {
-                            Util::dispatchJob($topic, $camp->camp_num, 1, $delayLiveTimeInSeconds);
+                            Util::dispatchJob($topic, $camp->camp_num, 1, $delayLiveTimeInSeconds, $camp->id);
                         }
                     }
                 }              

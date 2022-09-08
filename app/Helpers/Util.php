@@ -129,8 +129,12 @@ class Util
     }
 
     //This function only work when we changes parent camp. 
-    public function checkParentCampChanged($topic_num, $camp_num, $parent_camp_num, $in_review_status,$old_parent_camp_num="") {
-        
+    public function checkParentCampChanged($changeID) {
+        $camp = Camp::where('id', $changeID)->first();
+        $topic_num = $camp->topic_num;
+        $camp_num = $camp->camp_num;
+        $parent_camp_num = $camp->parent_camp_num;
+        $in_review_status=true;
         //We have fetched new live camp record
         $livecamp = Camp::getLiveCamp($topic_num,$camp_num);
 
