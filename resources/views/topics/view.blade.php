@@ -264,7 +264,7 @@ change camps with them."><i class="fa fa-question"></i></a>
                             $parentCampTitle = '';
                             $parentCampData = \App\Model\Camp::getLiveCamp($camp->topic_num, $camp->parent_camp_num);
                             if (!empty($parentCampData)) {
-                                $parentCampTitle = $parentCampData->title;
+                                $parentCampTitle = $parentCampData->camp_name;
                             }
                         @endphp
                         Parent Camp : {{ $parentCampTitle }}<br/>

@@ -174,18 +174,14 @@
     <script>
         
         $(document).ready(function () {
+            setIsOneLevelCheckBox();
             $("#datepicker").datepicker({
                 changeMonth: true,
                 changeYear: true
             });
 
             $('#is_disabled').click(function() {
-                if ($('#is_disabled').is(':checked') === true) {
-                    $('#is_one_level').prop('checked', false);
-                    $('#is_one_level').prop('disabled', true);
-                } else {
-                    $('#is_one_level').prop('disabled', false);
-                }
+                setIsOneLevelCheckBox();
             });
             
             $('#is_disabled_label').hover(function () {
@@ -202,6 +198,15 @@
 
             $('#parent_camp_num').select2();
         })
+
+        function setIsOneLevelCheckBox() {
+            if ($('#is_disabled').is(':checked') === true) {
+                $('#is_one_level').prop('checked', false);
+                $('#is_one_level').prop('disabled', true);
+            } else {
+                $('#is_one_level').prop('disabled', false);
+            }
+        }
         
         function validateURL(link)
         {
