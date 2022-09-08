@@ -523,7 +523,7 @@ class TopicController extends Controller {
 
         $parentcampsData = Camp::getAllParentCamp($camp->topic_num,['nofilter' => true]);//1070
 
-        $parentcampsData = Camp::filterParentCampForForm($parentcampsData);
+        $parentcampsData = Camp::filterParentCampForForm($parentcampsData, $camp->topic_num, $camp->parent_camp_num);
 
         $childCamps = array_unique(Camp::getAllChildCamps($camp));
 
@@ -801,6 +801,12 @@ class TopicController extends Controller {
                           $validator->errors()->add('camp_name', 'The camp name has already been taken');
                      }); 
                 }
+            }
+
+            if(empty($all['camp_num']) && empty($all['parent_camp_num'])) {
+                $validator->after(function ($validator){
+                    $validator->errors()->add('parent_camp_num', 'The parent camp is required.');
+                }); 
             }
 
             $old_parent_camps = Camp::getAllTopicCamp($topicnum);
