@@ -91,7 +91,7 @@
                     }
                     usort($parentcampsData, 'sortByCampName');
                 @endphp
-                <select  name="parent_camp_num" id="parent_camp_num" class="form-control" <?php //if($objection=="objection") { ?> disabled <?php //} ?>> <!-- disabling for now because its causing issues in support -->
+                <select  name="parent_camp_num" id="parent_camp_num" class="form-control" <?php if($objection=="objection") { ?> disabled <?php } ?>>
                     @foreach($parentcampsData as $parent)
 					<?php if(($camp->camp_num != $parent['camp_num'] ) && (  !in_array($parent['camp_num'], $childCamps))) {
                     ?>
