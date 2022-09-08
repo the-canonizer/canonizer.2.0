@@ -128,36 +128,41 @@ class Util
         
     }
 
-    //This function only work when we changes parent camp. 
+    /**
+     * This function only work when we changes parent camp.
+     * @param int $campChangeId
+     */
     public function checkParentCampChanged($changeID) {
         $camp = Camp::where('id', $changeID)->first();
-        $topic_num = $camp->topic_num;
-        $camp_num = $camp->camp_num;
-        $parent_camp_num = $camp->parent_camp_num;
-        $in_review_status=true;
-        //We have fetched new live camp record
-        $livecamp = Camp::getLiveCamp($topic_num,$camp_num);
+        if(!empty($camp)) {
+            $topic_num = $camp->topic_num;
+            $camp_num = $camp->camp_num;
+            $parent_camp_num = $camp->parent_camp_num;
+            $in_review_status=true;
+            //We have fetched new live camp record
+            $livecamp = Camp::getLiveCamp($topic_num,$camp_num);
 
-        if(isset($parent_camp_num) && $parent_camp_num!=''){
-            if($in_review_status){
-                 //We have feched all parent camps hierarchy based on changed camp (#1262 ,#1191)
-                 $allParentCamps = Camp::getAllParent($livecamp);
+            if(isset($parent_camp_num) && $parent_camp_num!=''){
+                if($in_review_status){
+                    //We have feched all parent camps hierarchy based on changed camp (#1262 ,#1191)
+                    $allParentCamps = Camp::getAllParent($livecamp);
 
-                 //We have feched all supporters based on all parent camps hierarchy 
-                 $allParentsSupporters = Support::where('topic_num',$topic_num)
-                     ->where('end',0)
-                     ->whereIn('camp_num',$allParentCamps)
-                     ->pluck('nick_name_id');
+                    //We have feched all supporters based on all parent camps hierarchy 
+                    $allParentsSupporters = Support::where('topic_num',$topic_num)
+                        ->where('end',0)
+                        ->whereIn('camp_num',$allParentCamps)
+                        ->pluck('nick_name_id');
 
-                 //We have feched all child camps hierarchy based on current live camp
-                 $allChildCamps = Camp::getAllChildCamps($livecamp);
+                    //We have feched all child camps hierarchy based on current live camp
+                    $allChildCamps = Camp::getAllChildCamps($livecamp);
 
-                
-                 if(sizeof($allParentsSupporters) > 0) {
-                     foreach($allParentCamps as $parent) {
-                         Support::removeSupport($topic_num, $parent, $allParentsSupporters, $allChildCamps);
-                     }
-                 }
+                    
+                    if(sizeof($allParentsSupporters) > 0) {
+                        foreach($allParentCamps as $parent) {
+                            Support::removeSupport($topic_num, $parent, $allParentsSupporters, $allChildCamps);
+                        }
+                    }
+                }
             }
         }
     }
