@@ -90,9 +90,10 @@ class Util
            // dd($canonizerServiceData);
             // Dispact job when create a camp
             if ($delay) {
-                $delayTime = Carbon::now()->addHours($delay);
+                $delayTime = Carbon::now()->addSeconds($delay);
+                // Job delay coming in seconds, update the service asOfDate for delay job execution.
+                $canonizerServiceData['asOfDate'] = $delayTime->timestamp;
                 CanonizerService::dispatch($canonizerServiceData)->delay($delayTime)->onQueue(config('app.DELAY_QUEUE_SERVICE_NAME'));
-                
             } else {
                 CanonizerService::dispatch($canonizerServiceData)->onQueue(config('app.QUEUE_SERVICE_NAME'))->unique(Topic::class, $topic->topic_num);
             }

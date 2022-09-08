@@ -306,13 +306,15 @@ class TopicController extends Controller {
                 if(isset($topic)) {
                     Util::dispatchJob($topic, 1, 1);
                     $currentTime = time();
+                    $delayCommitTimeInSeconds = (1*60*60) + 10; // 1 hour commit time + 10 seconds for delay job
+                    $delayLiveTimeInSeconds = (24*60*60) + 10; // 24 hour commit time + 10 seconds for delay job
                     if (($currentTime < $topic->go_live_time && $currentTime >= $topic->submit_time) && $topic->grace_period && $topic->objector_nick_id == null) {
-                        Util::dispatchJob($topic, 1, 1, 1);
-                        Util::dispatchJob($topic, 1, 1, 24);
+                        Util::dispatchJob($topic, 1, 1, $delayCommitTimeInSeconds);
+                        Util::dispatchJob($topic, 1, 1, $delayLiveTimeInSeconds);
                     }
                     else {
                         if($current_time < $topic->go_live_time && $topic->objector_nick_id == null) {
-                            Util::dispatchJob($topic, 1, 1, 24);
+                            Util::dispatchJob($topic, 1, 1, $delayLiveTimeInSeconds);
                         }
                     }
                 }
@@ -934,7 +936,7 @@ class TopicController extends Controller {
             if ($eventtype == "CREATE") {
                 // Dispatch Job
                 if(isset($topic)) {
-                     Util::dispatchJob($topic, $camp->camp_num, 1);
+                    Util::dispatchJob($topic, $camp->camp_num, 1);
                 }
 
                 // send history link in email
@@ -1023,13 +1025,15 @@ class TopicController extends Controller {
                 if(isset($topic)) {
                     Util::dispatchJob($topic, $camp->camp_num, 1);
                     $currentTime = time();
+                    $delayCommitTimeInSeconds = (1*60*60) + 10; // 1 hour commit time + 10 seconds for delay job
+                    $delayLiveTimeInSeconds = (24*60*60) + 10; // 24 hour commit time + 10 seconds for delay job
                     if (($currentTime < $camp->go_live_time && $currentTime >= $camp->submit_time) && $camp->grace_period && $camp->objector_nick_id == null) {
-                        Util::dispatchJob($topic, $camp->camp_num, 1, 1);
-                        Util::dispatchJob($topic, $camp->camp_num, 1, 24);
+                        Util::dispatchJob($topic, $camp->camp_num, 1, $delayCommitTimeInSeconds);
+                        Util::dispatchJob($topic, $camp->camp_num, 1, $delayLiveTimeInSeconds);
                     }
                     else {
                         if($currentTime < $camp->go_live_time && $camp->objector_nick_id == null) {
-                            Util::dispatchJob($topic, $camp->camp_num, 1, 24);
+                            Util::dispatchJob($topic, $camp->camp_num, 1, $delayLiveTimeInSeconds);
                         }
                     }
                 }              
