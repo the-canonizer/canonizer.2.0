@@ -101,7 +101,7 @@
 					@endforeach
 					
                 </select>
-                <input type="hidden" id="parent_camp_num" name="parent_camp_num" value="{{ $parentcampnum }}">
+                {{-- <input type="hidden" id="parent_camp_num" name="parent_camp_num" value="{{ $parentcampnum }}"> --}}
                 <input type="hidden" id="old_parent_camp_num" name="old_parent_camp_num" value="{{ $camp->parent_camp_num }}">
                 
                  @if ($errors->has('parent_camp_num')) <p class="help-block">{{ $errors->first('parent_camp_num') }}</p> @endif
