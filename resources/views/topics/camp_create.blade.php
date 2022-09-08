@@ -135,6 +135,15 @@
             return true;
         });
 
+        $('#is_disabled').click(function() {
+            if ($('#is_disabled').is(':checked') === true) {
+                $('#is_one_level').prop('checked', false);
+                $('#is_one_level').prop('disabled', true);
+            } else {
+                $('#is_one_level').prop('disabled', false);
+            }
+        });
+
         $('#is_disabled_label').hover(function () {
             $('#is_disabled').tooltip().mouseover()
         }, function () {

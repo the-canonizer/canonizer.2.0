@@ -210,6 +210,8 @@
                                 <?php } ?>
                                 
                                 <br/>
+                                <b>Disable additional sub camps :</b> {{  ($data->is_disabled == 1) ? 'Yes' : 'No' }} <br/>
+                                <b>Single level camps only :</b> {{ ($data->is_one_level == 1) ? 'Yes' : 'No' }} <br/>
                                 <b>Submitter Nick Name :</b> 
                                 <?php
                                   $namespace_id = 1;

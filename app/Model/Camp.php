@@ -434,18 +434,22 @@ class Camp extends Model {
                         ->orderBy('submit_time', 'camp_name')->groupBy('camp_num')->get();
     }
 
-    public static function filterParentCampForForm($parentCamps = []) {
+    public static function filterParentCampForForm($parentCamps = [], $topic_num = null, $existingParent = null) {
         $campHierarchy = array();
         foreach ($parentCamps as $camp){
             $camp['children'] = [];
             $campHierarchy[$camp->parent_camp_num ?? 0][] = $camp;
         }
         $tree = self::createTree($campHierarchy, $campHierarchy[0]);
-
-        $parents = self::createParentForForm($tree);
-
+        $parents = self::createParentForForm($tree); 
+        $parents = self::removeKeyFromArray($parents, 'children');
+        if (!empty($topic_num) && !empty($existingParent)) {
+            $existingParentCamp = self::getLiveCamp($topic_num, $existingParent);
+            if (!empty($existingParentCamp)) {
+                $parents = array_merge($parents, [$existingParentCamp]);
+            }
+        }
         return $parents;
-
     }
 
     public static function createParentForForm($tree = []) {
@@ -474,6 +478,13 @@ class Camp extends Model {
             $tree[] = $l;
         } 
         return $tree;
+    }
+
+    public static function removeKeyFromArray($array, $keyToRemove) {
+        foreach ($array as $ele) {
+            unset($ele[$keyToRemove]);
+        }
+        return $array;
     }
 
     public static function getAllParentCampNew($topicnum) {
