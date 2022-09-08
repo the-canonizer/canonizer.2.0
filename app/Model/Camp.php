@@ -907,7 +907,7 @@ class Camp extends Model {
          }         
         return $support_total;
     }
-// Commenting old logic code
+    // Commenting old logic code
     // public function getCamptSupportCount($algorithm, $topicnum, $campnum,$nick_name_id=null) {
     //     $supportCountTotal = 0;
        
