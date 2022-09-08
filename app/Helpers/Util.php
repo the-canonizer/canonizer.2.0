@@ -66,7 +66,7 @@ class Util
      * @param boolean $updateAll
      * @return void
      */
-    public function dispatchJob($topic, $campNum = 1, $updateAll = 0, $delay = null) {
+    public function dispatchJob($topic, $campNum = 1, $updateAll = 0, $delay = null, $campChangeID = null) {
         try{
             $selectedAlgo = 'blind_popularity';
             if(session('defaultAlgo')) {
@@ -84,14 +84,15 @@ class Util
                 'algorithm' => $selectedAlgo,
                 'asOfDate'  => $asOfDefaultDate,
                 'asOf'      => $asOf,
-                'updateAll' => $updateAll
+                'updateAll' => $updateAll,
+                'campChangeID' => $campChangeID
             ];
 
            // dd($canonizerServiceData);
             // Dispact job when create a camp
             if ($delay) {
-                $delayTime = Carbon::now()->addSeconds($delay);
                 // Job delay coming in seconds, update the service asOfDate for delay job execution.
+                $delayTime = Carbon::now()->addSeconds($delay);
                 $canonizerServiceData['asOfDate'] = $delayTime->timestamp;
                 CanonizerService::dispatch($canonizerServiceData)->delay($delayTime)->onQueue(config('app.DELAY_QUEUE_SERVICE_NAME'));
             } else {
@@ -125,6 +126,45 @@ class Util
             Log::error("Util :: DispatchJob :: message: ".$ex->getMessage());
         }
         
+    }
+
+    /**
+     * This function only work when we changes parent camp.
+     * @param int $campChangeId
+     */
+    public function checkParentCampChanged($changeID) {
+        $camp = Camp::where('id', $changeID)->first();
+        if(!empty($camp)) {
+            $topic_num = $camp->topic_num;
+            $camp_num = $camp->camp_num;
+            $parent_camp_num = $camp->parent_camp_num;
+            $in_review_status=true;
+            //We have fetched new live camp record
+            $livecamp = Camp::getLiveCamp($topic_num,$camp_num);
+
+            if(isset($parent_camp_num) && $parent_camp_num!=''){
+                if($in_review_status){
+                    //We have feched all parent camps hierarchy based on changed camp (#1262 ,#1191)
+                    $allParentCamps = Camp::getAllParent($livecamp);
+
+                    //We have feched all supporters based on all parent camps hierarchy 
+                    $allParentsSupporters = Support::where('topic_num',$topic_num)
+                        ->where('end',0)
+                        ->whereIn('camp_num',$allParentCamps)
+                        ->pluck('nick_name_id');
+
+                    //We have feched all child camps hierarchy based on current live camp
+                    $allChildCamps = Camp::getAllChildCamps($livecamp);
+
+                    
+                    if(sizeof($allParentsSupporters) > 0) {
+                        foreach($allParentCamps as $parent) {
+                            Support::removeSupport($topic_num, $parent, $allParentsSupporters, $allChildCamps);
+                        }
+                    }
+                }
+            }
+        }
     }
 
 

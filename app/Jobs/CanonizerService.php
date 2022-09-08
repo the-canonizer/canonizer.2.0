@@ -45,6 +45,9 @@ class CanonizerService implements ShouldQueue
         if(array_key_exists('updateAll', $this->canonizerData)) {
             $updateAll = $this->canonizerData['updateAll'];
         }
+        if(!empty($this->canonizerData['campChangeID'])) {
+            Util::checkParentCampChanged($this->canonizerData['campChangeID']);
+        }
         
         $requestBody = [
             'topic_num'     => $this->canonizerData['topic_num'],
