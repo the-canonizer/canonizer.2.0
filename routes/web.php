@@ -200,4 +200,4 @@ Route::post('verifyCode', 'Auth\ForgotPasswordController@getVerificationCode')->
 
 
 // Fixes #1205 when a post method is being accesed through get it will be redirected back
-Route::get('{any}', function () {return redirect()->back();})->where('any', '.*');
+// Route::get('{any}', function () {return redirect()->back();})->where('any', '.*');
