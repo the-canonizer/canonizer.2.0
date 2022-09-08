@@ -35,6 +35,11 @@
     <strong>Warning! </strong>{{ Session::get('warningDelegate')}} 
 </div>
 @endif
+@if(Session::has('error'))
+<div class="alert alert-danger">
+    <strong>Error! </strong>{{ Session::get('error')}} 
+</div>
+@endif
 
 <?php $removedCampList = array(); ?>
 @if(Session::has('confirm') && Session::has('warning') && Session::get('confirm') !='samecamp')
