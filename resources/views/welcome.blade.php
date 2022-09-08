@@ -84,7 +84,7 @@
                                 <a style="" href="@php echo  $url; @endphp" bis_skin_checked="1">
                                     <?php echo $asOf == "review" ? $topic['tree_structure'][1]['review_title']: $topic['topic_name'] ; ?>
                                 </a>
-                                <div class="badge" bis_skin_checked="1">@php echo $topic['topic_score'] @endphp</div>
+                                <div class="badge" bis_skin_checked="1">@php echo round($topic['topic_score'],2) @endphp</div>
                             </div>
                          </li>
                         
@@ -254,7 +254,7 @@
                                 <a style="" href="@php echo  $url; @endphp" bis_skin_checked="1">
                                     <?php echo $topicData[0]->topic_name; ?>
                                 </a>
-                                <div class="badge" bis_skin_checked="1">@php echo $topic->score; @endphp</div>
+                                <div class="badge" bis_skin_checked="1">@php echo round($topic->score,2); @endphp</div>
                             </div>
                         </li>
 

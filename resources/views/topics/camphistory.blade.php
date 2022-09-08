@@ -1,8 +1,10 @@
 @extends('layouts.app')
 @section('content')
 
+@php $liveTopic = getAgreementTopic($topic->topic_num); @endphp
+
 <div class="camp top-head">
-    <h3><b>Topic:</b>  {{ $topic->topic_name}}</h3>
+    <h3><b>Topic:</b>  {{ $liveTopic->topic_name ?? $topic->topic_name}}</h3>
     <h3><b>Camp:</b> {!! $parentcamp !!}</h3>  
 
 </div>
@@ -75,16 +77,16 @@
                         $grace_second = date('s',strtotime($intervalTime));
                         $submitterUserID = App\Model\Nickname::getUserIDByNickName($data->submitter_nick_id);
                         $pCamp = App\Model\Camp::getLiveCamp($data->topic_num,$data->parent_camp_num);
-                        $nickNamesData = \App\Model\Nickname::personNicknameArray();
+                        //$nickNamesData = \App\Model\Nickname::personNicknameArray();
                             $supported_camps = [];
-                            if(sizeof($nickNamesData) > 0){
-                              foreach ($nickNamesData as $key => $value) {
-                                   $nickName = \App\Model\Nickname::find($value);
-                                   $supported_camp = $nickName->getSupportCampList();
-                                  // echo "<pre>"; print_r($supported_camp); die;
-                                   $supported_camps = $supported_camps+$supported_camp; //array_merge($supported_camps,$supported_camp);
-                              }
-                            }
+                            // if(sizeof($nickNamesData) > 0){
+                            //   foreach ($nickNamesData as $key => $value) {
+                            //        $nickName = \App\Model\Nickname::find($value);
+                            //        $supported_camp = $nickName->getSupportCampList();
+                            //       // echo "<pre>"; print_r($supported_camp); die;
+                            //        $supported_camps = $supported_camps+$supported_camp; //array_merge($supported_camps,$supported_camp);
+                            //   }
+                            // }
 
                             $ifSupportingThisCamp = 0;
                             if(isset($supported_camps) && sizeof($supported_camps) > 0){
@@ -208,6 +210,8 @@
                                 <?php } ?>
                                 
                                 <br/>
+                                <b>Disable additional sub camps :</b> {{  ($data->is_disabled == 1) ? 'Yes' : 'No' }} <br/>
+                                <b>Single level camps only :</b> {{ ($data->is_one_level == 1) ? 'Yes' : 'No' }} <br/>
                                 <b>Submitter Nick Name :</b> 
                                 <?php
                                   $namespace_id = 1;

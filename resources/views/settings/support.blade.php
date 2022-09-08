@@ -1,14 +1,17 @@
 @extends('layouts.app')
 @section('content') 
 
-<?php $topic_camp_link = \App\Model\Camp::getTopicCampUrl($topic->topic_num,1); ?>
+<?php 
+	$topic_camp_link = \App\Model\Camp::getTopicCampUrl($topic->topic_num,1);
+	$liveTopic = getAgreementTopic($topic->topic_num);
+?>
 <div class="page-titlePnl">
     <h1 class="page-title">Supported Camps</h1>
 </div> 
 <div class="camp top-head">
 	<h3>
 		<b>Topic:</b> 
-		{{ isset($topicData->topic_name)? $topicData->topic_name :''}}
+		{{ isset($liveTopic->topic_name)? $liveTopic->topic_name :''}}
 	</h3>
 	<h3>
 		<b>Camp:</b>
@@ -80,7 +83,7 @@
 
 <div class="alert alert-success">
    <div style="text-align:center">
-     <a href="{{ route('settings.support')}}"><input type="button" name="cancel" class="btn btn-login" value="Cancel"></a>
+     <a href="{{ redirect()->back()->getTargetUrl() }}"><input type="button" name="cancel" class="btn btn-login" value="Cancel"></a>
      <input type="button" id="confirm_submit" name="submit" class="btn btn-login" value="Submit">
    </div>    
 </div>	
@@ -295,13 +298,9 @@
 						
 					</div>	
 
-						<?php  
-						$link = \App\Model\Camp::getTopicCampUrl($topic->topic_num,session('campnum'));
-						?>
-
 					<!-- button Section -->
 						<button type="submit" id="submit"  class="btn btn-success">Submit</button>
-							<a  class="btn btn-login" href="<?php echo $link; ?>">Cancel</a>						
+							<a  class="btn btn-login" href="{{ redirect()->back()->getTargetUrl() }}">Cancel</a>						
 					<!-- ends here -->
 					
 					
@@ -415,6 +414,7 @@ $('#widget').draggable();
 			activateClearBtn();
 		}
 		function undoCampRemove(camp,ref,order,delegated){
+			console.log(order);
 			$(ref).parent(".support-sorter-element").removeClass('greay-out');
 			$(ref).parent(".support-sorter-element").find('.remove_camp').html('X');
 			$(ref).parent(".support-sorter-element").find('.remove_camp').removeClass('undo_camp');
@@ -427,11 +427,14 @@ $('#widget').draggable();
 					$(this).remove();
 				}
 			});
-
-			$(ref).parent(".support-sorter-element").append('<input type="hidden"  name="support_order['+camp+']" value="'+order+'">');
+			$(ref).parent(".support-sorter-element").append('<input type="hidden" class="final_support_order"  name="support_order['+camp+']" value="'+order+'">');
 			$(ref).parent(".support-sorter-element").append('<input type="hidden"  name="camp['+camp+']" value="'+camp+'">');
 			$(ref).parent(".support-sorter-element").append('<input type="hidden"  name="delegated['+camp+']" value="'+delegated+'">');
 			$('#remove_all').prop('checked', false); // Unchecks it
+			$( ".column" ).find('.x-btn').each(function(i,v){
+				//$(v).parent(".support-sorter-element").find('.support_order').text(i+1);
+				$(v).parent(".support-sorter-element").find('.final_support_order').val(i+1);
+			});
 		}
 
 		function activateClearBtn(){

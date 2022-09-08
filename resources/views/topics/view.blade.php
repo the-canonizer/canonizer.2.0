@@ -1,9 +1,27 @@
 <?php include(app_path() . '/Library/wiki_parser/wikiParser.class.php'); ?>
+
+@php
+if(!empty($topic)) {
+    session(['supportCountTotal'=>0]);
+    $title      = preg_replace('/[^A-Za-z0-9\-]/', '-', $topic->topic_name);						  
+    $topic_id  = $topic->topic_num."-".$title;
+    $getCampTree = $topic->campTreeHtml($parentcampnum, 1, false, 'fa-arrow-down', $topic, $fetchTopicHistory);
+    $campTree = $getCampTree[0];
+    $showCreateCampLink = $getCampTree[1] ?? 1;
+}
+@endphp
+
 @extends('layouts.app')
 @section('content')
 @if(Session::has('error'))
 <div class="alert alert-danger">
     <strong>Error! </strong>{{ Session::get('error')}}    
+</div>
+@endif
+
+@if(Session::has('warningDelegate'))
+<div class="alert alert-danger">
+    <strong>Error! </strong>{{ Session::get('warningDelegate')}}    
 </div>
 @endif
 
@@ -100,12 +118,7 @@ if(isset($topic) && count($topic) > 0 ) {?>
             <div class="row">
                 <div class="tree treeview col-sm-12">
                     <ul class="mainouter">
-                        <?php 
-                            session(['supportCountTotal'=>0]);
-                            $title      = preg_replace('/[^A-Za-z0-9\-]/', '-', $topic->topic_name);						  
-                            $topic_id  = $topic->topic_num."-".$title;
-                        ?>
-                        {!! $topic->campTreeHtml($parentcampnum, 1, false, 'fa-arrow-down', $topic, $fetchTopicHistory) !!} 
+                        {!! $campTree !!} 
                     </ul>
                 </div>
               
@@ -246,6 +259,16 @@ change camps with them."><i class="fa fa-question"></i></a>
             <div class="row">
                 <div class="tree col-sm-12">
                     Camp Name : <?php echo $camp->camp_name;?> <br/>
+                    @if (!empty($camp->parent_camp_num))
+                        @php
+                            $parentCampTitle = '';
+                            $parentCampData = \App\Model\Camp::getLiveCamp($camp->topic_num, $camp->parent_camp_num);
+                            if (!empty($parentCampData)) {
+                                $parentCampTitle = $parentCampData->camp_name;
+                            }
+                        @endphp
+                        Parent Camp : {{ $parentCampTitle }}<br/>
+                    @endif
 					Keywords : <?php echo $camp->key_words;?><br/>
                     @if( $camp->camp_about_url )
                         Camp About URL : <a href="<?php echo (( strpos ($camp->camp_about_url, 'http') === 0 ) ||( strpos ($camp->camp_about_url, 'https') === 0 )) ? $camp->camp_about_url : 'http://' . $camp->camp_about_url; ?>" target="_blank" >
@@ -257,6 +280,8 @@ change camps with them."><i class="fa fa-question"></i></a>
                     @endif
 
 					Camp About Nick Name : <?php echo (isset($camp->nickname->nick_name)) ? $camp->nickname->nick_name : "No nickname associated";?> <br/>
+                    Disable additional sub camps : {{  ($camp->is_disabled == 1) ? 'Yes' : 'No' }} <br/>
+                    Single level camps only : {{ ($camp->is_one_level == 1) ? 'Yes' : 'No' }} <br/>
                 </div>
               
             </div>    
@@ -301,7 +326,22 @@ change camps with them."><i class="fa fa-question"></i></a>
             </div>
     </div>              
     </div>
-<?php } ?>
+<?php }
+    $dateModified = false;
+    if (strtotime(session('asofdateDefault')) > time() && session('asofDefault') == 'bydate') {
+        session([
+            'asofdateDefault' => date("Y/m/d H:i:s")
+        ]);
+        $dateModified = true;
+    }
+?>
+@if (!empty($dateModified))
+   <script>
+    $(document).ready(function() {
+        $('#asofdate').val("{{ session('asofdateDefault') }}");
+    });
+   </script>
+@endif
 <script>
 $('.singleClick').click(function(e) {
     e.stopPropagation();
@@ -350,6 +390,11 @@ $('#camp_subscription').click(function(){
           $('#subscription_msg').html(res.message);
           $('#camp_subscription_notify').show().fadeOut(5000);
           $("#subs_id").val(res.id);
+        },
+        error:function(err){
+            if(err.status == 401) {
+                window.location.href = "{{ route('login')}}"
+            }
         }
     })
 
@@ -367,6 +412,11 @@ $('#topic_subscription').click(function(){
           $('#topic_subscription_msg').html(res.message);
           $('#topic_subscription_notify').show().fadeOut(5000);
           $("#topic_subs_id").val(res.id);
+        },
+        error:function(err){
+            if(err.status == 401) {
+                window.location.href = "{{ route('login')}}"
+            }
         }
     })
 

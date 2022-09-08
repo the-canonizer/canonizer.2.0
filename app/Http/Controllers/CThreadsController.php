@@ -85,11 +85,11 @@ class CThreadsController extends Controller
                 $userNicknames = Nickname::topicNicknameUsed($topicid);
 
                 if (count($userNicknames) > 0) {
-                    $threads = CThread::join('post', 'thread.id', '=', 'post.c_thread_id' )->
+                    $threads = CThread::leftJoin('post', 'thread.id', '=', 'post.c_thread_id' )->
                                         select('thread.*', 'post.body')->
                                         where('camp_id', $campnum)->
                                         where('topic_id', $topicid)->
-                                        where('post.user_id', $userNicknames[0]->id)->
+                                        where('post.user_id', $userNicknames[0]->id)->groupBy('thread.id')->
                                         latest()->paginate(20);
                 }
                 else {
@@ -128,6 +128,13 @@ class CThreadsController extends Controller
             );
         }
 
+        /**
+         * As of filters should not be applied on the camp forum pages
+         * ticket # 1427 - Muhammad Ahmed
+         */
+        session()->forget('asofDefault');
+        $liveTopic = getAgreementTopic($topic->topic_num);
+
         $topic = getArray($topicid, $topicname, $campnum);
         $camp  = Camp::getLiveCamp($topicid,$campnum);
         $threadTopic = Topic::where('topic_num', $topicid)
@@ -147,7 +154,7 @@ class CThreadsController extends Controller
                                                     ->where('topic_num', $topicid)
                                                     ->value('camp_name'),
                 // Return the name of the Topic to index View
-                'topicGeneralName' => $threadTopic->topic_name,
+                'topicGeneralName' => $liveTopic->topic_name ?? $threadTopic->topic_name,
                 'namespace_id'     => $threadTopic->namespace_id,
                 'parentcamp'       => Camp::campNameWithAncestors($camp,'',$topicname),
                 'participateFlag'  => $partcipateFlag,
@@ -229,10 +236,12 @@ class CThreadsController extends Controller
      */
     public function store(Request $request, $topicid, $topicname, $campnum)
     {
+        $title = trim(preg_replace('/\s\s+/', ' ', str_replace("\n", " ",  request('title'))));
+         
         //Validate the request for Error Handling
         $thread_flag = CThread::where('camp_id', $campnum)->
                                 where('topic_id', $topicid)->
-                                where('title', $request->{'title'})->get();
+                                where('title', $title)->get();
         $messagesVal = [
             'title.regex' => 'Title can only contain space and alphanumeric characters.',
             'title.required' => 'Title is required.',
@@ -246,19 +255,19 @@ class CThreadsController extends Controller
                   'nick_name' => 'required'
               ],$messagesVal
           );
-
+        
         if (count($thread_flag) > 0) {
 
             // Return Url if thread name found
             $return_url = 'forum/'.$topicid.'-'.$topicname.'/'.$campnum.'/threads/create';
 
-            return redirect($return_url)->with('error', 'Thread title must be unique!');
+            return redirect($return_url)->with('error', ' Thread title must be unique!');
         }
 
         $thread = CThread::create(
             [
             'user_id'  => request('nick_name'),
-            'title'    => request('title'),
+            'title'    => $title,
             'body'     => request('title'),
             'camp_id'  => $campnum,
             'topic_id' => $topicid
@@ -328,6 +337,10 @@ class CThreadsController extends Controller
 
         $campArr = preg_split("/[-]/", $campNum);
         $topicArr = preg_split("/[-]/", $topicName);
+       
+        $request->title = trim(preg_replace('/\s\s+/', ' ', str_replace("\n", " ",  request('title'))));
+        $title  = trim(preg_replace('/\s\s+/', ' ', str_replace("\n", " ",  request('title'))));
+        $old_title = request('thread_title_name');
         $messagesVal = [
             'title.regex' => 'Title must only contain space and alphanumeric characters.',
             'title.required' => 'Title is required.',
@@ -336,28 +349,33 @@ class CThreadsController extends Controller
 
           $this->validate(
             $request, [
-                'title' => [
-                    'required', 'regex:/^[a-zA-Z0-9\s]+$/', 'max:100', Rule::unique('thread')->ignore($threadId)
-                        ->where(function ($query) use ($campArr, $topicArr) {
-                            return $query->where('camp_id', $campArr[0])->where('topic_id', $topicArr[0]);
-                        })
-                ],
+                'title' => 'required', 'regex:/^[a-zA-Z0-9\s]+$/', 'max:100'
+                    // Rule::unique('thread')->ignore($threadId)
+                
             ], $messagesVal
           );
-          
 
-          $title = request('title');
-          $old_title = request('thread_title_name');
-          DB::update('update thread set title =?, updated_at = ? where id = ?', [$title, time(), $threadId]);
-
-          $return_url = 'forum/'.$topicName.'/'.$campNum.'/threads/';//.$threadId.'/edit';
-          if (strcmp($title, $old_title) !== 0) {
-            return redirect($return_url)->with('success', 'Thread title updated.');
-          }
-          else {
+          if(strcmp($title,$old_title)==0)
+          {
+            $return_url = 'forum/'.$topicName.'/'.$campNum.'/threads/'.$threadId.'/edit';
             return redirect($return_url);
           }
-          //return redirect($return_url)->with('success', 'Thread title updated.');
+          //Validate the request for Error Handling
+          $thread_flag = CThread::where('camp_id', $campArr[0])->
+            where('topic_id', $topicArr[0])->
+            where('title', $title)->get();
+          if (count($thread_flag) == 0) {
+            
+            DB::update('update thread set title =?, updated_at = ? where id = ?', [$title, time(), $threadId]);
+
+            $return_url = 'forum/'.$topicName.'/'.$campNum.'/threads/';//.$threadId.'/edit';
+            
+            return redirect($return_url)->with('success', ' Thread title updated.');
+          }
+          else {
+            $return_url = 'forum/'.$topicName.'/'.$campNum.'/threads/'.$threadId.'/edit';
+            return redirect($return_url)->with('error', ' Thread title must be unique!');
+          }
 
     }
  

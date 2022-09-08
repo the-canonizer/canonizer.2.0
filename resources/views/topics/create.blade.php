@@ -66,7 +66,7 @@
                 <label for="">Edit summary (Briefly describe your changes)</label>
                 <textarea class="form-control" rows="4" name="note" id="note">{{ old('note') }}</textarea>
                 @if ($errors->has('note')) <p class="help-block">{{ $errors->first('note') }}</p> @endif
-            </div>    
+            </div>  
 
             <button type="submit" id="submit" class="btn btn-login">Create Topic</button>
         </form>

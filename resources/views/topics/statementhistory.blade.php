@@ -2,8 +2,10 @@
 @extends('layouts.app')
 @section('content')
 
+@php $liveTopic = getAgreementTopic($topic->topic_num); @endphp
+
 <div class="camp top-head">
-    <h3><b>Topic:</b>  {{ $topic->topic_name}}</h3>
+    <h3><b>Topic:</b>  {{ $liveTopic->topic_name ?? $topic->topic_name}}</h3>
     <h3><b>Camp:</b> {!! $parentcamp !!}</h3>  
 </div>
 
@@ -65,15 +67,15 @@
                             $isGraceFlag = false;
                             $liveStatement = \App\Model\Statement::getLiveStatement($data->topic_num,$data->camp_num);
                             $camp = \App\Model\Camp::where('camp_num','=',$data->camp_num)->where('topic_num','=',$data->topic_num)->get();
-                            $nickNamesData = \App\Model\Nickname::personNicknameArray();
+                            //$nickNamesData = \App\Model\Nickname::personNicknameArray();
                             $supported_camps = [];
-                            if(sizeof($nickNamesData) > 0){
-                                foreach ($nickNamesData as $key => $value) {
-                                    $nickName = \App\Model\Nickname::find($value);
-                                    $supported_camp = $nickName->getSupportCampList();
-                                    $supported_camps = array_merge($supported_camps,$supported_camp);
-                                }
-                            }
+                             // if(sizeof($nickNamesData) > 0){
+                            //     foreach ($nickNamesData as $key => $value) {
+                            //         $nickName = \App\Model\Nickname::find($value);
+                            //         $supported_camp = $nickName->getSupportCampList();
+                            //         $supported_camps = array_merge($supported_camps,$supported_camp);
+                            //     }
+                            // }
                             $ifSupportingThisCampOrChild = 0;
                             if(isset($supported_camps) && sizeof($supported_camps) > 0){ 
                                 foreach ($supported_camps as $key => $value) {
@@ -141,7 +143,7 @@
                             $isagreeFlag = true;
                             $isGraceFlag = TRUE;
                             if($ifIamSupporter){
-                            $isAgreed = App\Model\ChangeAgreeLog::isAgreed($data->id,$ifIamSupporter);
+                            $isAgreed = App\Model\ChangeAgreeLog::isAgreed($data->id,$ifIamImplicitSupporter);
                             }
                             
                             if(Auth::check()){
@@ -214,7 +216,7 @@
                   @endif 
 				  
 				 <div class="CmpHistoryPnl-footer">
-				    <?php if($currentTime < $data->go_live_time && $currentTime >= $data->submit_time && ($ifIamSupporter)) { ?>
+				    <?php if($currentTime < $data->go_live_time && $currentTime >= $data->submit_time && ($ifIamImplicitSupporter)) { ?>
                         <a id="object" class="btn btn-historysmt mb-1" href="<?php echo url('manage/statement/'.$data->id.'-objection');?>">Object</a>
                     <?php }else if($currentTime < $data->go_live_time && $currentTime >= $data->submit_time && $ifSupportDelayed){ ?>
                         <button type="button" onClick="disagreementPopup()" class="btn btn-historysmt mb-1 disable-btn">Object &nbsp;<i title="Only direct supporters at the time this change was submitted can object." class="fa fa-info-circle" aria-hidden="true"></i></button>
@@ -234,7 +236,7 @@
                </script>
 				 </div>
                                  @if(Auth::check())
-                                 @if($isagreeFlag && $ifIamSupporter   && Auth::user()->id != $submitterUserID)
+                                 @if($isagreeFlag && $ifIamImplicitSupporter   && Auth::user()->id != $submitterUserID)
                                 <div class="CmpHistoryPnl-footer">
                                     <div>
                                       <!--if($stmentLength ==1 || ($stmentLength >1 &&  $liveStatement && $data->submit_time  > $liveStatement->submit_time))   --> 
@@ -263,7 +265,7 @@
                         <input type="hidden" name="topic_num" value="{{ $topic->topic_num}}" />
                         <input type="hidden" name="camp_num" value="{{ $onecamp->camp_num}}" />
                         <input type="hidden" name="statement" value="" id="agree_to_statement"/>
-                        <input type="hidden" name="nick_name_id" value="{{ $ifIamSupporter }}" />
+                        <input type="hidden" name="nick_name_id" value="{{ $ifIamImplicitSupporter }}" />
                         <input type="hidden" name="change_for" value="statement" />
                     </form>
 			   <?php } 

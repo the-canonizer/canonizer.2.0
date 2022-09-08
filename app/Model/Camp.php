@@ -23,6 +23,7 @@ class Camp extends Model {
     protected static $campChildren = [];
     protected static $totalSupports = [];
     protected static $totalNickNameSupports = [];
+    protected static $showCreateCampLink = 1;
 
     const AGREEMENT_CAMP = "Agreement";
 
@@ -205,8 +206,8 @@ class Camp extends Model {
             $query->whereIn('namespace_id',explode(',', session('defaultNamespaceId', 1)));
         }
 
-        if (isset($_REQUEST['asof']) && $_REQUEST['asof'] == 'review') {
-            $query->whereRaw('topic.go_live_time in (select max(topic.go_live_time) from topic where topic.topic_num=topic.topic_num and topic.objector_nick_id is null group by topic.topic_num)');
+        if ((isset($_REQUEST['asof']) && $_REQUEST['asof'] == "review") || (session('asofDefault')=="review" && !isset($_REQUEST['asof']))) {
+            $query->whereRaw('topic.go_live_time in (select max(topic.go_live_time) from topic where topic.topic_num=topic.topic_num and topic.objector_nick_id is null and topic.grace_period = 0 group by topic.topic_num)');
           
         }else{
             $query->where('camp.go_live_time', '<=', $as_of_time);
@@ -433,6 +434,60 @@ class Camp extends Model {
                         ->orderBy('submit_time', 'camp_name')->groupBy('camp_num')->get();
     }
 
+    public static function filterParentCampForForm($parentCamps = [], $topic_num = null, $existingParent = null) {
+        $campHierarchy = array();
+        foreach ($parentCamps as $camp){
+            $camp['children'] = [];
+            $campHierarchy[$camp->parent_camp_num ?? 0][] = $camp;
+        }
+        $tree = self::createTree($campHierarchy, $campHierarchy[0]);
+        $parents = self::createParentForForm($tree); 
+        $parents = self::removeKeyFromArray($parents, 'children');
+        if (!empty($topic_num) && !empty($existingParent)) {
+            $existingParentCamp = self::getLiveCamp($topic_num, $existingParent);
+            if (!empty($existingParentCamp)) {
+                $parents = array_merge($parents, [$existingParentCamp]);
+            }
+        }
+        $parents = array_map("unserialize", array_unique(array_map("serialize", $parents)));
+        return $parents;
+    }
+
+    public static function createParentForForm($tree = []) {
+        $parents = [];
+        foreach ($tree as $camp) {
+            if ($camp->is_disabled != 1) {
+                if ($camp->is_one_level == 1) {
+                    $camp['children'] = [];
+                }
+                $parents[] = $camp;
+                if (!empty($camp['children'])) {
+                    $children = self::createParentForForm($camp['children']);
+                    $parents = array_merge($parents, $children);
+                }
+            }
+        }
+        return $parents;
+    }
+
+    public static function createTree(&$list, $parent){
+        $tree = array();
+        foreach ($parent as $l){
+            if(isset($list[$l->camp_num])){
+                $l['children'] = self::createTree($list, $list[$l->camp_num]);
+            }
+            $tree[] = $l;
+        } 
+        return $tree;
+    }
+
+    public static function removeKeyFromArray($array, $keyToRemove) {
+        foreach ($array as $ele) {
+            unset($ele[$keyToRemove]);
+        }
+        return $array;
+    }
+
     public static function getAllParentCampNew($topicnum) {
         return self::where('topic_num', $topicnum)
                         ->where('objector_nick_id', '=', NULL)
@@ -455,7 +510,7 @@ class Camp extends Model {
         if (!empty($camp)) {
             if ($camp->parent_camp_num) {
                 $camparray[] = $camp->parent_camp_num;
-
+                //$pcamp = Camp::where('topic_num', $camp->topic_num)->where('camp_num', $camp->parent_camp_num)->groupBy('camp_num')->orderBy('submit_time', 'desc')->first();
                 $pcamp = self::getLiveCamp($camp->topic_num, $camp->parent_camp_num); //Camp::where('topic_num', $camp->topic_num)->where('camp_num', $camp->parent_camp_num)->groupBy('camp_num')->orderBy('submit_time', 'desc')->first();
                 return self::getAllParent($pcamp, $camparray);
             }
@@ -465,14 +520,16 @@ class Camp extends Model {
 
     public static function getAllChildCamps($camp, $includeLiveCamps=false) {
         $camparray = [];
+        Camp::$chilcampArray = [];
+        Camp::$childtempArray = [];
         if ($camp) {
             $key = $camp->topic_num . '-' . $camp->camp_num . '-' . $camp->parent_camp_num;
             $key1 = $camp->topic_num . '-' . $camp->parent_camp_num . '-' . $camp->camp_num;
-           if (in_array($key, Camp::$chilcampArray) || in_array($key1, Camp::$chilcampArray)) {
+           if (in_array($key, Camp::$chilcampArray) || in_array($key1, Camp::$childtempArray)) {
                 return [];/** Skip repeated recursions* */
             }
             Camp::$chilcampArray[] = $key;
-            Camp::$chilcampArray[] = $key1;
+            Camp::$childtempArray[] = $key1;
             $camparray[] = $camp->camp_num;
             if($includeLiveCamps){
                 //adding go_live_time condition Sunil Talentelgia //->where('go_live_time', '<=', time())
@@ -668,7 +725,8 @@ class Camp extends Model {
     public function delegateSupportTree($algorithm, $topicnum, $campnum, $delegateNickId, $parent_support_order, $parent_score,$multiSupport,$array=[]){
         $nick_name_support_tree=[];
         $nick_name_wise_support=[];
-        $is_add_reminder_back_flag = ($algorithm == 'blind_popularity') ? 1 : 0;
+        $nick_name_delegate_support_tree = [];
+        $is_add_reminder_back_flag =1; //($algorithm == 'blind_popularity') ? 1 : 0;
 		/* Delegated Support */
         if(session()->has("topic-support-{$topicnum}")){
             $delegatedSupports = session("topic-support-{$topicnum}")->filter(function($item) use ($delegateNickId) {
@@ -706,8 +764,6 @@ class Camp extends Model {
         
         foreach($nick_name_wise_support as $nickNameId=>$support_camp){
            foreach($support_camp as $support){ 
-
-               if($support->camp_num == $campnum){
                     $supportPoint = Algorithm::{$algorithm}($support->nick_name_id,$support->topic_num,$support->camp_num);
                     $support_total = 0; 
                     if($multiSupport){
@@ -715,18 +771,51 @@ class Camp extends Model {
                     }else{
                         $support_total = $support_total + $supportPoint;
                     } 
-                    $nick_name_support_tree[$support->nick_name_id]['score'] = ($is_add_reminder_back_flag) ? $parent_score : $support_total;
-                    $delegateTree = $this->delegateSupportTree($algorithm, $topicnum,$campnum, $support->nick_name_id, $parent_support_order,$parent_score,$multiSupport,[]);
-                    $nick_name_support_tree[$support->nick_name_id]['delegates'] = $delegateTree;
-                }               
+                    $nick_name_support_tree[$support->nick_name_id][$support->support_order][$support->camp_num]['score']  = $support_total;
                }
         }
-       return $nick_name_support_tree;
+       
+        if(count($nick_name_support_tree) > 0){
+            foreach($nick_name_support_tree as $nickNameId=>$scoreData){
+                ksort($scoreData);
+                $index = 0;
+                $multiSupport =  count($scoreData) > 1 ? 1 : 0;
+                foreach($scoreData as $support_order=>$camp_score){
+                    $index = $index +1;
+                   foreach($camp_score as $campNum=>$score){
+                        if($support_order > 1 && $index == count($scoreData)  && $is_add_reminder_back_flag){
+                            if(count(array_keys($nick_name_support_tree[$nickNameId][1])) > 0){
+                            $campNumber = array_keys($nick_name_support_tree[$nickNameId][1])[0];
+                            $nick_name_support_tree[$nickNameId][1][$campNumber]['score']=$nick_name_support_tree[$nickNameId][1][$campNumber]['score'] + $score['score'];
+                            $delegateTree = $this->delegateSupportTree($algorithm, $topicnum,$campNumber, $nickNameId, $parent_support_order,$parent_score,$multiSupport ,[]);
+                            $nick_name_support_tree[$nickNameId][1][$campNumber]['delegates'] = $delegateTree;
+                        }
+                    }
+                    $delegateTree = $this->delegateSupportTree($algorithm, $topicnum,$campNum, $nickNameId, $parent_support_order, $parent_score,$multiSupport,[]);
+                    $nick_name_support_tree[$nickNameId][$support_order][$campNum]['delegates'] = $delegateTree;
+                   }
+                }
+            }
+        }
+        if(count($nick_name_support_tree) > 0){
+            foreach($nick_name_support_tree as $nick=>$data){
+                foreach($data as $support_order=>$camp_score){
+                   foreach($camp_score as $campNum=>$score){
+                        if($campNum == $campnum){
+                            $nick_name_delegate_support_tree[$nick]['score'] =   $score['score'];
+                            $nick_name_delegate_support_tree[$nick]['delegates'] = $score['delegates'];
+                        }
+                   }
+                }
+               
+            }
+        }         
+       return $nick_name_delegate_support_tree;
     }
 
     public function getCampAndNickNameWiseSupportTree($algorithm, $topicnum){
         $as_of_time = time();
-        $is_add_reminder_back_flag = ($algorithm == 'blind_popularity') ? 1 : 0;
+        $is_add_reminder_back_flag = 1;//($algorithm == 'blind_popularity') ? 1 : 0;
         $nick_name_support_tree=[];
         $nick_name_wise_support=[];
         $camp_wise_support = [];
@@ -768,13 +857,14 @@ class Camp extends Model {
                                   
            }
         }
+        
         if(count($nick_name_support_tree) > 0){
             foreach($nick_name_support_tree as $nickNameId=>$scoreData){
                 ksort($scoreData);
                 $index = 0;
+                $multiSupport =  count($scoreData) > 1 ? 1 : 0;
                 foreach($scoreData as $support_order=>$camp_score){
                     $index = $index +1;
-                    $multiSupport =  count($camp_score) > 1 ? 1 : 0;
                    foreach($camp_score as $campNum=>$score){
                         if($support_order > 1 && $index == count($scoreData)  && $is_add_reminder_back_flag){
                             if(count(array_keys($nick_name_support_tree[$nickNameId][1])) > 0){
@@ -816,8 +906,6 @@ class Camp extends Model {
             session(["score_tree_{$topicnum}_{$algorithm}"=>$score_tree]);
         }
         
-         
-
          $support_total = 0;
          if(array_key_exists('camp_wise_tree',$score_tree) && count($score_tree['camp_wise_tree']) > 0 && array_key_exists($campnum,$score_tree['camp_wise_tree'])){
              if(count($score_tree['camp_wise_tree'][$campnum]) > 0){
@@ -893,14 +981,19 @@ class Camp extends Model {
     //     return $supportCountTotal;
     // }
 
-    public function buildCampTree($traversedTreeArray, $currentCamp = null, $activeCamp = null, $activeCampDefault = false,$add_supporter = false, $arrowposition, $linkKey = 'link', $titleKey = 'title') {
+    public function buildCampTree($traversedTreeArray, $currentCamp = null, $activeCamp = null, $activeCampDefault = false,$add_supporter = false, $arrowposition, $linkKey = 'link', $titleKey = 'title', $isDisabled = 0, $isOneLevel = 0, $isParentOneLevel = 0) {
         $html = '<ul class="childrenNode">';
 		$action = Route::getCurrentRoute()->getActionMethod();
-        //$onecamp =  self::getLiveCamp($this->topic_num, $activeCamp);
-        
+
         if ($currentCamp == $activeCamp && $action != "index") { 
             $url_portion = self::getSeoBasedUrlPortion($this->topic_num,$currentCamp);
-            $html = '<ul><li class="create-new-li"><span><a href="' . url('camp/create/'.$url_portion) . '">&lt;Start new supporting camp here&gt;</a></span></li>';
+           
+            if($isDisabled == 0 && $isParentOneLevel == 0){
+                $html = '<ul><li class="create-new-li"><span><a href="' . url('camp/create/'.$url_portion) . '">&lt;Start new supporting camp here&gt;</a></span></li>';
+            }
+        }
+        if(($isDisabled == 1 || $isParentOneLevel == 1) && $currentCamp == $activeCamp){
+            $this->showCreateCampLink = 0;
         }
         if (is_array($traversedTreeArray)) {
             foreach ($traversedTreeArray as $campnum => $array) {
@@ -928,7 +1021,7 @@ class Camp extends Model {
                 //$selected = '';
                 $selected = ($campnum == $activeCamp) && $activeCampDefault ? "color:#08b608; font-weight:bold" : "";
                 if (($campnum == $activeCamp) && $activeCampDefault) {
-                    session(['supportCountTotal' => $array['score']]);
+                    session(['supportCountTotal' => round($array['score'],2)]);
                 }
                 $support_tree = '';
                 if($add_supporter){
@@ -944,7 +1037,10 @@ class Camp extends Model {
                 $html .= '<span class="' . $class . '">' . $icon . '</span><div class="tp-title"><a style="' . $selected . '" href="' . $array[$linkKey] . '">' . $array[$titleKey] . '</a> <div class="badge">' . round($array['score'] ,2).'</div>'.$support_tree_html;
                
                 $html .= '</div>';
-                $html .= $this->buildCampTree($array['children'], $campnum, $activeCamp, $activeCampDefault,$add_supporter,$arrowposition, $linkKey, $titleKey);
+                $isParentOneLevel = $isOneLevel;
+                $is_one_Level = ($array['is_one_level'] == 1 || $isOneLevel == 1) ? 1 : 0;
+                $is_disabled = ($array['is_disabled'] == 1 || $isDisabled == 1) ? 1 : 0;
+                $html .= $this->buildCampTree($array['children'], $campnum, $activeCamp, $activeCampDefault,$add_supporter,$arrowposition, $linkKey, $titleKey, $is_disabled, $is_one_Level, $isParentOneLevel);
                 $html .= '</li>';
             }
         }
@@ -995,6 +1091,8 @@ class Camp extends Model {
             $array[$child->camp_num]['link'] = self::getTopicCampUrl($child->topic_num,$child->camp_num). $queryString .'#statement';
             $array[$child->camp_num]['review_link'] = self::getTopicCampUrl($child->topic_num,$child->camp_num). $queryString .'#statement';
             $array[$child->camp_num]['score'] = $this->getCamptSupportCount($algorithm, $child->topic_num, $child->camp_num);
+            $array[$child->camp_num]['is_disabled'] = $child->is_disabled;
+            $array[$child->camp_num]['is_one_level'] = $child->is_one_level;
            $children = $this->traverseCampTree($algorithm, $child->topic_num, $child->camp_num, $child->parent_camp_num);
            $array[$child->camp_num]['children'] = is_array($children) ? $children : [];
         }
@@ -1184,15 +1282,24 @@ class Camp extends Model {
         $topic_name = (isset($topic) && isset($topic->topic_name)) ? $topic->topic_name: '';
         $title = preg_replace('/[^A-Za-z0-9\-]/', '-', $topic_name);        
         $topic_id = $this->topic_num . "-" . $title;
+        $agreementCamp = self::getLiveCamp($this->topic->topic_num, 1, ['nofilter'=>false]);
+        $isDisabled = 0;
+        $isOneLevel = 0;
+        if (!empty($agreementCamp)) {
+            $isDisabled = $agreementCamp->is_disabled ?? 0;
+            $isOneLevel = $agreementCamp->is_one_level ?? 0;
+        }
+
         $tree = [];
         $tree[$this->camp_num]['title'] = $topic_name;
         $tree[$this->camp_num]['review_title'] = $topic_name;
         $tree[$this->camp_num]['link'] = self::getTopicCampUrl($this->topic_num,$this->camp_num);//  url('topic/' . $topic_id . '/' . $this->camp_num.'#statement');
         $tree[$this->camp_num]['review_link'] = self::getTopicCampUrl($this->topic_num,$this->camp_num);
         $tree[$this->camp_num]['score'] =  $this->getCamptSupportCount($algorithm, $this->topic_num, $this->camp_num,$nick_name_id);
+        $tree[$this->camp_num]['is_disabled'] =  $isDisabled;
+        $tree[$this->camp_num]['is_one_level'] =  $isOneLevel;
        
         $tree[$this->camp_num]['children'] = $this->traverseCampTree($algorithm, $this->topic_num, $this->camp_num);
-               
         return $reducedTree = TopicSupport::sumTranversedArraySupportCount($tree);
     }
 
@@ -1270,6 +1377,7 @@ class Camp extends Model {
         $reducedTree = Util::execute('POST', $endpoint, $headers, $requestBody);
 
         $data = json_decode($reducedTree, true);
+
         if(count($data['data']) && $data['code'] == 200 ){
             $reducedTree = $data['data'][0];
              // calling this to fill data in sessions as on main page data is loading from mongo so sessions remian blank
@@ -1327,10 +1435,13 @@ class Camp extends Model {
  	      $icon = '<i class="fa '.$arrowposition.'"></i>';
         
 		$html .= '<span class="' . $parentClass . '">'. $icon.' </span>';
-        $html .= '<div class="tp-title"><a style="' . $selected . '" href="' . $reducedTree[$this->camp_num][$linkKey] . '">' . $reducedTree[$this->camp_num][$titleKey] . '</a><div class="badge">' .round($reducedTree[$this->camp_num]['score'], 2) . '</div>'.$support_tree_html.'</div>';         
-        $html .= $this->buildCampTree($reducedTree[$this->camp_num]['children'], $this->camp_num, $activeCamp, $activeCampDefault,$add_supporter,$arrowposition, $linkKey, $titleKey);
+        $html .= '<div class="tp-title"><a style="' . $selected . '" href="' . $reducedTree[$this->camp_num][$linkKey] . '">' . $reducedTree[$this->camp_num][$titleKey] . '</a><div class="badge">' .round($reducedTree[$this->camp_num]['score'], 2) . '</div>'.$support_tree_html.'</div>';  
+        $isParentOneLevel = 0;
+        $isOneLevel = $reducedTree[$this->camp_num]['is_one_level'];
+        $isDisabled = $reducedTree[$this->camp_num]['is_disabled'];
+        $html .= $this->buildCampTree($reducedTree[$this->camp_num]['children'], $this->camp_num, $activeCamp, $activeCampDefault,$add_supporter,$arrowposition, $linkKey, $titleKey, $isDisabled, $isOneLevel, $isParentOneLevel);
         $html .= "</li>";
-        return $html;
+        return [ $html, $this->showCreateCampLink ];
     }
 
     public static function getCampSubscription($topicnum,$campnum,$userid=null){
@@ -1590,11 +1701,11 @@ class Camp extends Model {
         if ($camp) {
             $key = $camp->topic_num . '-' . $camp->camp_num . '-' . $camp->parent_camp_num;
             $key1 = $camp->topic_num . '-' . $camp->parent_camp_num . '-' . $camp->camp_num;
-            if (in_array($key, Camp::$chilcampArray) || in_array($key1, Camp::$chilcampArray)) {
+            if (in_array($key, Camp::$chilcampArray) || in_array($key1, Camp::$childtempArray)) {
                 return [];/** Skip repeated recursions* */
              }
             Camp::$chilcampArray[] = $key;
-            Camp::$chilcampArray[] = $key1;
+            Camp::$childtempArray[] = $key1;
             Camp::$campChildren[] = $camp->camp_num;
             //adding go_live_time condition Sunil Talentelgia
             $childCamps = Camp::where('topic_num', $camp->topic_num)->where('parent_camp_num', $camp->camp_num)->where('go_live_time', '<=', time())->groupBy('camp_num')->latest('submit_time')->get();

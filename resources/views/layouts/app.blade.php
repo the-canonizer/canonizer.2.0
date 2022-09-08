@@ -136,7 +136,7 @@
                         </li>
 
 						<?php if($route=='show' and strpos(Request::fullUrl(), 'forum' ) == 0 ) { 
-                        if($id!=null && $campNum !=null){ ?>
+                        if($id!=null && $campNum !=null && $showCreateCampLink == 1){ ?>
 						<li class="nav-item">
                             <a class="nav-link" href='{{ url("$campUrl")}}'>
 
@@ -254,7 +254,10 @@
                             <ul class="sidenav-second-level collapse show" id="asof">
                                 <li>
 								 <form name="as_of" id="as_of" method="GET">
-                                 <input type="hidden" id="filter" name="filter" value="{{ isset($_REQUEST['filter']) && !empty($_REQUEST['filter']) ? $_REQUEST['filter'] : '0.000' }}"/>
+                                    @if (isset($_GET['namespace']))
+                                        <input type="hidden" name="namespace" value="{{ $_GET['namespace'] }}">
+                                    @endif
+                                    <input type="hidden" id="filter" name="filter" value="{{ isset($_REQUEST['filter']) && !empty($_REQUEST['filter']) ? $_REQUEST['filter'] : '0.000' }}"/>
 								   <input type="hidden" name="_token" value="{{ csrf_token() }}">
 									<div class="radio radio-primary">
 										<input type="radio" <?php echo (session('asofDefault')=="review") ? "checked='checked'" : '';?> class="asofdate" name="asof" id="radio1" value="review">

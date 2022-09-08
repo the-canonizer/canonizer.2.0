@@ -25,11 +25,11 @@
                 <input type="hidden" name="topic_num" value="{{$topicnum}}"/>
                 <input type="hidden" name="camp_num" value="{{$campnum}}" />
                 <input type="hidden" name="topic_slug" value="{{$topic}}" />
-                <div style="float:left;clear:both;width:100%" id="sortable" class="nubeT">
+                <div style="float:left;clear:both;width:100%;" id="sortable" class="nubeT">
                     @foreach($news as $key=>$feed)
                     <div style="position: relative;" class="sortable rowNews " title="drag & drop to change order">
                         <input type="hidden" class="final_news_order" name="news_order[]" id="news_order_{{$key + 1}}" value="{{ $key + 1  }}">
-                        <span class="stepNum inset news_order">{{$key+1}}</span>
+                        <span class="stepNum inset news_order" style="cursor:pointer;">{{$key+1}}</span>
                         <div class="form-group col-sm-6">
                             <label for="topic name">Display Text ( Limit 256 Chars ) <span style="color:red">*</span></label>
                             <textarea style="min-height: 61px;" onkeydown="restrictTextField(event,256)" type="text" name="display_text[]" class="form-control" id="display_text">{{ old('display_text.'.$key,$feed->display_text)}}</textarea>
@@ -56,13 +56,18 @@
     </div>   
 </div>  <!-- /.right-whitePnl-->
 
+<style>
+        .sortable {
+            cursor:context-menu !important;
+        }
+    </style>
 <script>
     $(function () {
         $('#sortable').sortable({
             containment: "parent",
             placeholder: "ui-state-highlight",
-            cursor: 'move',
-            opacity: 0.6,
+            cursor: "move",
+          //  opacity: 0.6,
             update: function (event, ui) {
                   $("#sortable").find('.sortable').each(function (i, v) {
                     $(v).find('.news_order').text(i + 1);

@@ -86,7 +86,6 @@
              <div class="form-group">
                 <label for="parent_camp_num">Parent Camp <span style="color:red">*</span></label>
                 @php
-                    $parentcampsData = $parentcampsData->toArray();
                     function sortByCampName($a, $b) {
                         return $a['camp_name'] >= $b['camp_name'];
                     }
@@ -152,7 +151,15 @@
                     @endforeach
 					
                 </select>    
-			</div> 			
+			</div>
+            <div class="form-group">
+                <input type="checkbox" id="is_disabled" name="is_disabled" {{ !empty($camp->is_disabled) ? 'checked' : '' }} value="1" data-toggle="tooltip" data-placement="top" title="Disable the ability to add additional sub camps.">
+                <label for="is_disabled" id="is_disabled_label"> Disable additional sub camps</label>
+            </div> 
+            <div class="form-group">
+                <input type="checkbox" id="is_one_level" name="is_one_level" {{ !empty($camp->is_one_level) ? 'checked' : '' }} value="1" data-toggle="tooltip" data-placement="top" title="Disable the ability to add additional sub camps beyond direct sub camps.">
+                <label for="is_one_level" id="is_one_level_label"> Single level camps only </label>
+            </div>		
             <?php } ?>
             <button type="submit" id="submit" class="btn btn-login">
 			<?php if($objection=="objection") { ?> Submit Objection <?php } else {?>
@@ -168,13 +175,39 @@
     <script>
         
         $(document).ready(function () {
+            setIsOneLevelCheckBox();
             $("#datepicker").datepicker({
                 changeMonth: true,
                 changeYear: true
             });
 
+            $('#is_disabled').click(function() {
+                setIsOneLevelCheckBox();
+            });
+            
+            $('#is_disabled_label').hover(function () {
+                $('#is_disabled').tooltip().mouseover()
+            }, function () {
+                $('#is_disabled').tooltip().mouseleave()
+            });
+
+            $('#is_one_level_label').hover(function () {
+                $('#is_one_level').tooltip().mouseover()
+            }, function () {
+                $('#is_one_level').tooltip().mouseleave()
+            });
+
             $('#parent_camp_num').select2();
         })
+
+        function setIsOneLevelCheckBox() {
+            if ($('#is_disabled').is(':checked') === true) {
+                $('#is_one_level').prop('checked', false);
+                $('#is_one_level').prop('disabled', true);
+            } else {
+                $('#is_one_level').prop('disabled', false);
+            }
+        }
         
         function validateURL(link)
         {

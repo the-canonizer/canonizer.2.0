@@ -180,64 +180,48 @@ class Support extends Model {
         }
         return $supporters;
     }
+    /*
+    * Function : removeSupport
+    * Use : While changing parent camp , only common support should get removed from parent camp(if any) 
+    * and if any support is not common then it should remain the same for that camp.
+    */
+    public static function removeSupport($topicNum, $p_campNum, $nickName = [], $campNum=[]) {
 
-    public static function removeSupport($topicNum,$p_campNum,$nickName = [],$campNum="") {
-        if(empty($topicNum) || empty($p_campNum) || empty($nickName)){
-            return;
-        }
+        if(empty($topicNum) || empty($p_campNum) || empty($nickName)) {
+            return ;
+        } 
+
         $supportData = self::where('topic_num',$topicNum)->where('camp_num',$p_campNum)->where('end','=',0);
-        if(!empty($nickName)){
+
+        if(!empty($nickName)) {
             $supportData->whereIn('nick_name_id',$nickName);
         }
+
         $results = $supportData->get();
+        $results_child = [];
 
-        foreach($results as $value){
-            $value->end = time();
-            $value->save();
-
-            //1311 and 1334
-            //if child camp have no same support of parent camp then adding support
-            if($campNum!=""){
-                $supportData_child = self::where('topic_num',$topicNum)->where('camp_num',$campNum)->where('end','=',0);
-                if(!empty($nickName)){
-                    $supportData_child->whereIn('nick_name_id',$nickName);
-                }
-                $results_child = $supportData_child->get()->toArray();
-                if(empty($results_child)){
-                    $supportTopic =  new self();
-                    $supportTopic->topic_num = $value->topic_num;
-                    $supportTopic->nick_name_id = $value->nick_name_id;
-                    $supportTopic->delegate_nick_name_id = $value->delegate_nick_name_id;
-                    $supportTopic->start = time();
-                    $supportTopic->camp_num = $campNum; //add child camp with support
-                    $supportTopic->support_order = $value->support_order;
-                    $supportTopic->save();         
-                }
+        if(!empty($campNum)) {
+            $supportData_child = self::where('topic_num',$topicNum)->whereIn('camp_num',$campNum)->where('end','=',0);
+            if(!empty($nickName)){
+                $supportData_child->whereIn('nick_name_id',$nickName);
             }
-
-            //support order changes 
-            $higherSupportNumbers = self::where('topic_num',$topicNum)
-                ->where('end','=',0)
-                ->where('nick_name_id',$value->nick_name_id)
-                ->where('support_order','>',$value->support_order)->get(); 
-            foreach($higherSupportNumbers as $support){
-                $support->end = time();
-                $support->save();
-                $create = new self();
-                $create->topic_num = $support->topic_num;
-                $create->nick_name_id = $support->nick_name_id;
-                //delegate nick name id add if any delegate
-                $create->delegate_nick_name_id = $support->delegate_nick_name_id; 
-                $create->start = time();
-                $create->camp_num = $support->camp_num;
-                $create->support_order = ($support->support_order - 1);
-                $create->save();
-            }
+            $results_child = $supportData_child->get()->toArray();
         }
 
-        
+        foreach($results as $value) { 
+            if(!empty($campNum)){ 
+                //if child camp have same supportter of parent camp then remove supportter from parent
+                if(!empty($results_child)){ 
+                   if(array_search($value->nick_name_id, array_column($results_child, 'nick_name_id')) !== FALSE) { //found
+                        $value->end = time();
+                        $value->save();
+                        self::supportOrderChanges($value);
+                    } 
+                }
+            }
+        } 
        
-    }
+    } 
 
     public static function getAllChildDelegateNicknameId($topic_num,$nick_name_id, $supportId=[]) {
         $as_of_time = time();
@@ -256,5 +240,32 @@ class Support extends Model {
             else{
                 return $supportId;
             }       
+    }
+
+    /*
+        Function : supportOrderChanges
+        Work : support order re-change
+        Return : True
+    */
+    public static function supportOrderChanges($value){
+        
+        $higherSupportNumbers = self::where('topic_num', $value->topic_num)
+        ->where('end','=',0)
+        ->where('nick_name_id',$value->nick_name_id)
+        ->where('support_order','>',$value->support_order)->get(); 
+        foreach($higherSupportNumbers as $support){
+            $support->end = time();
+            $support->save();
+            $create = new self();
+            $create->topic_num = $support->topic_num;
+            $create->nick_name_id = $support->nick_name_id;
+            //delegate nick name id add if any delegate
+            $create->delegate_nick_name_id = $support->delegate_nick_name_id; 
+            $create->start = time();
+            $create->camp_num = $support->camp_num;
+            $create->support_order = ($support->support_order - 1);
+            $create->save();
+        }
+        return true;
     }
 }

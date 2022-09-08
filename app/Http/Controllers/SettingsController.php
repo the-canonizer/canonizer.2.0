@@ -254,6 +254,12 @@ class SettingsController extends Controller
      */
     public function support($id = null, $campnums = null)
     {
+        /**
+         * As of filters should not be applied on the topic support page
+         * ticket # 1427 - Muhammad Ahmed
+         */
+        session()->forget('asofDefault');
+        
         $as_of_time = time();
         if (isset($id)) { 
             $topicnumArray = explode("-", $id);
@@ -292,6 +298,21 @@ class SettingsController extends Controller
             $parentSupport = Camp::validateParentsupport($topicnum, $campnum, $userNickname, $confirm_support);
             $childSupport = Camp::validateChildsupport($topicnum, $campnum, $userNickname, $confirm_support);
            
+            /**
+             * If user B has delegate his support to User A, then User A cannot delegate his support to user B.
+             * Ticket # 1501
+             * Muhammad Ahmed
+             */
+            
+            $delegatedSupporter= Nickname::select('nick_name')->where('id',$delegate_nick_name_id)->first();
+            $delegatedSupportterNickname = $delegatedSupporter->nick_name ? $delegatedSupporter->nick_name : "Anonymous";
+            $isDelegatedUserSupport = Support::where('topic_num', $topicnum)->where('end', '=', 0)->where('nick_name_id', $delegate_nick_name_id)->whereIn('delegate_nick_name_id', $userNickname)->first();
+            
+            if(count($isDelegatedUserSupport)) {
+                Session::flash('warningDelegate', $delegatedSupportterNickname .' is already delegating support to you, you cannot delegate your support to this user.');
+                return redirect()->back();
+            }
+
             if ($alreadySupport->count() > 0) {
                 if($alreadySupport[0]->delegate_nick_name_id!=0){
                     $nickName = Nickname::where('id',$alreadySupport[0]->delegate_nick_name_id)->first();
@@ -407,7 +428,7 @@ class SettingsController extends Controller
            
             /* Enter support record to support table */
             $data = $request->all();
-            
+            //echo "<pre>"; print_r($data);die;
             /** IN case of delegated support check for any direct support and remove them */
             $anyDelegator = Support::where('topic_num', $data['topic_num'])->whereIn('delegate_nick_name_id', [$data['nick_name']])->where('end', '=', 0)->groupBy('nick_name_id')->get(); //#1088
  
@@ -479,17 +500,19 @@ class SettingsController extends Controller
             /** end of this commentted code */
             /** if user is delegating to someone else or is directly supporting  then all the old delegated  supports will be removed #702 **/
             if(isset($myDelegatedSupports) && count($myDelegatedSupports) > 0){
+                $delegatedCampList = [];
+                $delegated_nick_name_id = 0;
                 foreach ($mysupports as $singleSupport) {
-                     if(in_array($singleSupport->camp_num,$myDelegatedSupports)){
+                    if(in_array($singleSupport->camp_num,$myDelegatedSupports)){
                         $singleSupport->end = time();
                         $singleSupport->save();
-                        $mailData = $data;
-                        $mailData['camp_num'] = $singleSupport->camp_num;
-
-                        if(!$ifSupportChildCamp) {
-                            $this->emailForSupportDeleted($mailData);
-                        }    
+                        $delegatedCampList[] = $singleSupport->camp_num;  
+                        $delegated_nick_name_id = $singleSupport->delegate_nick_name_id;
                     }             
+                }
+                
+                if(count($delegatedCampList) > 0) {
+                    $this->mailWhenDelegateSupportRemoved($data['topic_num'],$data['nick_name'],$delegated_nick_name_id,$delegatedCampList);
                 }
             }    
             
@@ -497,31 +520,33 @@ class SettingsController extends Controller
             $last_camp =  $data['camp_num'];
             $newcamp_mail_flag = false;           
             if(isset($myDelegatedSupports) && count($myDelegatedSupports) > 0 && isset($data['delegate_nick_name_id']) && $data['delegate_nick_name_id'] == 0 &&  (!isset($data['remove_all'])) ){ // removing delegte support and directly supporting camp
-                $last_camp = $data['camp_num'];
-                $newcamp_mail_flag = true;
-                $supportTopic = new Support();
-                $supportTopic->topic_num = $topic_num;
-                $supportTopic->nick_name_id = $data['nick_name'];
-                $supportTopic->delegate_nick_name_id = $data['delegate_nick_name_id'];
-                $supportTopic->start = time();
-                $supportTopic->camp_num = $data['camp_num'];
-                $supportTopic->support_order = 1;
-                $supportTopic->save();
-                //all delegator of $data['nick_name] should also assigned with this support #1088
-                if(isset($anyDelegator) && !empty($anyDelegator))
-                {
-                   
-                    $this->addSupportToDelegates($anyDelegator,$supportTopic,$data['nick_name']);
-                }
-                /* clear the existing session for the topic to get updated support count */
-                session()->forget("topic-support-{$topic_num}");
-                session()->forget("topic-support-nickname-{$topic_num}");
-                session()->forget("topic-support-tree-{$topic_num}");
-                Session::save();
-                /* send support added mail to all supporter and subscribers */
-                if($newcamp_mail_flag){
-                    $this->emailForSupportAdded($data);   
-                }
+                //if(!in_array($data['camp_num'],$data['removed_camp'])){ //1500 ticket number
+                    $last_camp = $data['camp_num'];
+                    $newcamp_mail_flag = true;
+                    $supportTopic = new Support();
+                    $supportTopic->topic_num = $topic_num;
+                    $supportTopic->nick_name_id = $data['nick_name'];
+                    $supportTopic->delegate_nick_name_id = $data['delegate_nick_name_id'];
+                    $supportTopic->start = time();
+                    $supportTopic->camp_num = $data['camp_num'];
+                    $supportTopic->support_order = 1;
+                    $supportTopic->save();
+                    //all delegator of $data['nick_name] should also assigned with this support #1088
+                    if(isset($anyDelegator) && !empty($anyDelegator))
+                    {
+                    
+                        $this->addSupportToDelegates($anyDelegator,$supportTopic,$data['nick_name']);
+                    }
+                    /* clear the existing session for the topic to get updated support count */
+                    session()->forget("topic-support-{$topic_num}");
+                    session()->forget("topic-support-nickname-{$topic_num}");
+                    session()->forget("topic-support-tree-{$topic_num}");
+                    Session::save();
+                    /* send support added mail to all supporter and subscribers */
+                    if($newcamp_mail_flag){
+                        $this->emailForSupportAdded($data);   
+                    }
+               // }
             }else if (isset($data['support_order']) && isset($data['delegate_nick_name_id']) && $data['delegate_nick_name_id'] == 0 ) {
                 foreach ($data['support_order'] as $camp_num => $support_order) {
                     $last_camp = $camp_num;
@@ -613,7 +638,7 @@ class SettingsController extends Controller
                         $support = Support::where('topic_num', $topic_num)->where('camp_num','=', $k)->where('nick_name_id','=',$data['nick_name'])->where('delegate_nick_name_id','=',$d)->where('end', '=', 0)->get();
                         if($support && count($support)> 0 ){
                             $support[0]->end = time();
-                            $support[0]->save();  
+                            $support[0]->save(); 
                         }
                     }
                 }
