@@ -33,7 +33,7 @@
             </ul>
 
             <div id="myTabContent" class="" style="margin-top:20px;">
-			<form name="verify_number" action="{{ route('settings.phone.verify',['id'=>$user->id])}}" method="post">
+			<form name="verify_number" action="{{ route('settings.phone.verify')}}" method="post">
                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
 				   <input type="hidden" name="verify_phone" value="1">
                    <div class="row">
@@ -101,7 +101,7 @@
 					</div>
 					</form>
 					<hr/>
-                    <form action="{{ route('settings.profile.update',['id'=>$user->id])}}" method="post">
+                    <form action="{{ route('settings.profile.update')}}" method="post">
                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
 						<?php $private_flags = explode(",",$user->private_flags); ?>
                         <div class="row">
