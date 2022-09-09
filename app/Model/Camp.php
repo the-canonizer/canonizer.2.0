@@ -434,18 +434,23 @@ class Camp extends Model {
                         ->orderBy('submit_time', 'camp_name')->groupBy('camp_num')->get();
     }
 
-    public static function filterParentCampForForm($parentCamps = []) {
+    public static function filterParentCampForForm($parentCamps = [], $topic_num = null, $existingParent = null) {
         $campHierarchy = array();
         foreach ($parentCamps as $camp){
             $camp['children'] = [];
             $campHierarchy[$camp->parent_camp_num ?? 0][] = $camp;
         }
         $tree = self::createTree($campHierarchy, $campHierarchy[0]);
-
-        $parents = self::createParentForForm($tree);
-
+        $parents = self::createParentForForm($tree); 
+        $parents = self::removeKeyFromArray($parents, 'children');
+        if (!empty($topic_num) && !empty($existingParent)) {
+            $existingParentCamp = self::getLiveCamp($topic_num, $existingParent);
+            if (!empty($existingParentCamp)) {
+                $parents = array_merge($parents, [$existingParentCamp]);
+            }
+        }
+        $parents = array_map("unserialize", array_unique(array_map("serialize", $parents)));
         return $parents;
-
     }
 
     public static function createParentForForm($tree = []) {
@@ -474,6 +479,13 @@ class Camp extends Model {
             $tree[] = $l;
         } 
         return $tree;
+    }
+
+    public static function removeKeyFromArray($array, $keyToRemove) {
+        foreach ($array as $ele) {
+            unset($ele[$keyToRemove]);
+        }
+        return $array;
     }
 
     public static function getAllParentCampNew($topicnum) {
@@ -969,7 +981,6 @@ class Camp extends Model {
     public function buildCampTree($traversedTreeArray, $currentCamp = null, $activeCamp = null, $activeCampDefault = false,$add_supporter = false, $arrowposition, $linkKey = 'link', $titleKey = 'title', $isDisabled = 0, $isOneLevel = 0, $isParentOneLevel = 0) {
         $html = '<ul class="childrenNode">';
 		$action = Route::getCurrentRoute()->getActionMethod();
-        //$onecamp =  self::getLiveCamp($this->topic_num, $activeCamp);
 
         if ($currentCamp == $activeCamp && $action != "index") { 
             $url_portion = self::getSeoBasedUrlPortion($this->topic_num,$currentCamp);
@@ -978,7 +989,6 @@ class Camp extends Model {
                 $html = '<ul><li class="create-new-li"><span><a href="' . url('camp/create/'.$url_portion) . '">&lt;Start new supporting camp here&gt;</a></span></li>';
             }
         }
-        // dd([$currentCamp,$activeCamp]);
         if(($isDisabled == 1 || $isParentOneLevel == 1) && $currentCamp == $activeCamp){
             $this->showCreateCampLink = 0;
         }
@@ -1025,9 +1035,9 @@ class Camp extends Model {
                
                 $html .= '</div>';
                 $isParentOneLevel = $isOneLevel;
-                $isOneLevel = ($array['is_one_level'] == 1 || $isOneLevel == 1) ? 1 : 0;
-                $isDisabled = ($array['is_disabled'] == 1 || $isDisabled == 1) ? 1 : 0;
-                $html .= $this->buildCampTree($array['children'], $campnum, $activeCamp, $activeCampDefault,$add_supporter,$arrowposition, $linkKey, $titleKey, $isDisabled, $isOneLevel, $isParentOneLevel);
+                $is_one_Level = ($array['is_one_level'] == 1 || $isOneLevel == 1) ? 1 : 0;
+                $is_disabled = ($array['is_disabled'] == 1 || $isDisabled == 1) ? 1 : 0;
+                $html .= $this->buildCampTree($array['children'], $campnum, $activeCamp, $activeCampDefault,$add_supporter,$arrowposition, $linkKey, $titleKey, $is_disabled, $is_one_Level, $isParentOneLevel);
                 $html .= '</li>';
             }
         }

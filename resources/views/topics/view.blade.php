@@ -259,6 +259,16 @@ change camps with them."><i class="fa fa-question"></i></a>
             <div class="row">
                 <div class="tree col-sm-12">
                     Camp Name : <?php echo $camp->camp_name;?> <br/>
+                    @if (!empty($camp->parent_camp_num))
+                        @php
+                            $parentCampTitle = '';
+                            $parentCampData = \App\Model\Camp::getLiveCamp($camp->topic_num, $camp->parent_camp_num);
+                            if (!empty($parentCampData)) {
+                                $parentCampTitle = $parentCampData->camp_name;
+                            }
+                        @endphp
+                        Parent Camp : {{ $parentCampTitle }}<br/>
+                    @endif
 					Keywords : <?php echo $camp->key_words;?><br/>
                     @if( $camp->camp_about_url )
                         Camp About URL : <a href="<?php echo (( strpos ($camp->camp_about_url, 'http') === 0 ) ||( strpos ($camp->camp_about_url, 'https') === 0 )) ? $camp->camp_about_url : 'http://' . $camp->camp_about_url; ?>" target="_blank" >
@@ -270,6 +280,8 @@ change camps with them."><i class="fa fa-question"></i></a>
                     @endif
 
 					Camp About Nick Name : <?php echo (isset($camp->nickname->nick_name)) ? $camp->nickname->nick_name : "No nickname associated";?> <br/>
+                    Disable additional sub camps : {{  ($camp->is_disabled == 1) ? 'Yes' : 'No' }} <br/>
+                    Single level camps only : {{ ($camp->is_one_level == 1) ? 'Yes' : 'No' }} <br/>
                 </div>
               
             </div>    
