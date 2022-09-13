@@ -9,7 +9,8 @@ use App\CommonForumFunctions;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\Session;
+use App\Model\Nickname;
 
 /**
  * ReplyController Class Doc Comment
@@ -60,6 +61,14 @@ class ReplyController extends Controller
             // $request->headers->get('referer')
             return redirect()->back()->withErrors([ 'body' => 'This field is required' ]);
         }
+
+        $userNicknames = Nickname::personNicknameArray();
+        // check the authorization of request nickname w.r.t current logged in user. 
+        if (count($userNicknames) && !in_array($request['nick_name'], $userNicknames)) { 
+            Session::flash('warning', " Unauthorized action"); 
+            return redirect()->back(); 
+        } 
+
         /**
         * The below code is used to save the data into the database.
         */

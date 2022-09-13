@@ -20,6 +20,7 @@ use App\Mail\ForumThreadCreatedMail;
 use App\Model\Support;
 use App\CommonForumFunctions;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Session;
 
 /**
  * CThreadsController Class Doc Comment
@@ -263,6 +264,13 @@ class CThreadsController extends Controller
 
             return redirect($return_url)->with('error', ' Thread title must be unique!');
         }
+
+        $userNicknames = Nickname::personNicknameArray();
+        // check the authorization of request nickname w.r.t current logged in user. 
+        if (count($userNicknames) && !in_array($request['nick_name'], $userNicknames)) { 
+            Session::flash('warning', " Unauthorized action"); 
+            return redirect()->back(); 
+        } 
 
         $thread = CThread::create(
             [

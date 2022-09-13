@@ -36,6 +36,11 @@
 </div>
 @endif
 
+@if(Session::has('warning'))
+<div class="alert alert-warning">
+    <strong>Warning! </strong>{{ Session::get('warning')}}    
+</div>
+@endif
 
 <div class="right-whitePnl">
    <div class="row col-sm-12 justify-content-between">
