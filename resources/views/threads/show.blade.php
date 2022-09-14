@@ -1,7 +1,11 @@
 @extends('layouts.app')
 
 @section('content')
-
+@if(Session::has('warning'))
+  <div class="alert alert-warning">
+      <strong>Warning! </strong>{{ Session::get('warning')}}    
+  </div>
+@endif
 <div class="camp top-head">
   <hr>
   <h3><b>Topic: <a href="{{ URL::to('/')}}/topic/{{ $topicname }}"> {{ $topicGeneralName }}</a></b></h3>

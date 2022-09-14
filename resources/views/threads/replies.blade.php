@@ -1,6 +1,6 @@
 <div class="panel panel-default">
     <div class="panel-heading">
-
+       
         <div class="level">
             <?php
                 $topic = App\Model\Topic::getLiveTopic($threads->topic_id); 

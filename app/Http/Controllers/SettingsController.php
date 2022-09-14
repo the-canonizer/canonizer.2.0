@@ -428,12 +428,11 @@ class SettingsController extends Controller
             $data = $request->all();
 
             $userNicknames = Nickname::personNicknameArray();
-            // #1605 check the authorization of request nickname w.r.t current logged in user.
-            if (count($userNicknames) && !in_array($data['nick_name'], $userNicknames)) {
-                Session::flash('warning', "Unauthorized action");
-                return redirect()->back();
-            }
-            //echo "<pre>"; print_r($data);die;
+            // #1605 check the authorization of request nickname w.r.t current logged in user. 
+            if (count($userNicknames) && !in_array($data['nick_name'], $userNicknames)) { 
+                Session::flash('warning', "Unauthorized action"); 
+                return redirect()->back(); 
+            } 
 
             /** IN case of delegated support check for any direct support and remove them */
             $anyDelegator = Support::where('topic_num', $data['topic_num'])->whereIn('delegate_nick_name_id', [$data['nick_name']])->where('end', '=', 0)->groupBy('nick_name_id')->get(); //#1088

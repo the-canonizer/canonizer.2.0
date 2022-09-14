@@ -176,9 +176,9 @@ class HomeController extends Controller {
         }
 
         if (!Auth::check()) {
-            unset($_REQUEST['namespace']);
+            //unset($_REQUEST['namespace']);
             unset($_REQUEST['my']);
-            session()->forget('defaultNamespaceId');
+            //session()->forget('defaultNamespaceId');
         }
         
         $topics = Camp::getBrowseTopic();

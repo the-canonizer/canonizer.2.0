@@ -9,6 +9,11 @@
     <strong>Error!</strong>{{ Session::get('error')}}    
 </div>
 @endif
+@if(Session::has('warning'))
+<div class="alert alert-warning">
+    <strong>Warning! </strong>{{ Session::get('warning')}}    
+</div>
+@endif
 
 @if(Session::has('success'))
 <div class="alert alert-success">
