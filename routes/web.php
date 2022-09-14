@@ -194,14 +194,13 @@ Route::get('getVerificationCode', 'Auth\ForgotPasswordController@showVerificatio
 Route::post('verifyCode', 'Auth\ForgotPasswordController@getVerificationCode')->middleware('XssSanitization');
 
 
-
-
+Route::get('/', 'HomeController@index');
 
 // Fixes #1205 when a post method is being accesed through get it will be redirected back
 Route::get('{any}', function () {
     if (!empty(request()->headers->get('referer'))) {
         return redirect()->back();
     } else {
-        return redirect('/home');
+        return redirect('/');
     }
 })->where('any', '.*');
