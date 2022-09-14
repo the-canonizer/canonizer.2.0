@@ -17,6 +17,9 @@ if (version_compare(PHP_VERSION, '7.2.0', '>=')) {
     error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
 }
 
+Route::get('captcha-handler', 'LaravelCaptcha\Controllers\CaptchaHandlerController@index');
+Route::get('simple-captcha-handler', 'LaravelCaptcha\Controllers\SimpleCaptchaHandlerController@index');
+
 Route::get('/admin/login', 'Admin\LoginController@getLogin');
 Route::post('/admin/login', 'Admin\LoginController@postLogin')->middleware('XssSanitization');
 Route::get('/archievefiles', 'Admin\ActionController@archievefiles');
@@ -181,11 +184,6 @@ Route::post(
     '/forum/{topicid}-{topicname}/{campnum}/threads/{thread}/replies', ['uses' => 'ReplyController@store']
 )->middleware('XssSanitization');
 
-if (env('APP_DEBUG')) {
-    Route::get('/', 'HomeController@index');
-} else {
-    Route::get('/{params?}', 'HomeController@index')->where('params', '(.*)');
-}
 Route::get('user/supports/{user_id}', 'TopicController@usersupports')->name('user_supports');
 
 Route::get('/topic/notifysupporter',function(){
@@ -196,8 +194,13 @@ Route::get('getVerificationCode', 'Auth\ForgotPasswordController@showVerificatio
 Route::post('verifyCode', 'Auth\ForgotPasswordController@getVerificationCode')->middleware('XssSanitization');
 
 
-
-
+Route::get('/', 'HomeController@index');
 
 // Fixes #1205 when a post method is being accesed through get it will be redirected back
-// Route::get('{any}', function () {return redirect()->back();})->where('any', '.*');
+Route::get('{any}', function () {
+    if (!empty(request()->headers->get('referer'))) {
+        return redirect()->back();
+    } else {
+        return redirect('/');
+    }
+})->where('any', '.*');
