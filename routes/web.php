@@ -198,7 +198,7 @@ Route::get('/', 'HomeController@index');
 
 // Fixes #1205 when a post method is being accesed through get it will be redirected back
 Route::get('{any}', function () {
-    if (!empty(request()->headers->get('referer'))) {
+    if (!empty(url()->previous())) {
         return redirect()->back();
     } else {
         return redirect('/');
