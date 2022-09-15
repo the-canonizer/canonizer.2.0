@@ -180,9 +180,14 @@
         
         $(document).ready(function () {
             setIsOneLevelCheckBox();
+            setIsDisabledCheckBox();
             $("#datepicker").datepicker({
                 changeMonth: true,
                 changeYear: true
+            });
+
+            $('#is_one_level').click(function() {
+                setIsDisabledCheckBox();
             });
 
             $('#is_disabled').click(function() {
@@ -204,12 +209,15 @@
             $('#parent_camp_num').select2();
         })
 
+        function setIsDisabledCheckBox() {
+            if ($('#is_one_level').is(':checked') === true) {
+                $('#is_disabled').prop('checked', false);
+            }
+        }
+
         function setIsOneLevelCheckBox() {
             if ($('#is_disabled').is(':checked') === true) {
                 $('#is_one_level').prop('checked', false);
-                $('#is_one_level').prop('disabled', true);
-            } else {
-                $('#is_one_level').prop('disabled', false);
             }
         }
         
