@@ -31,7 +31,7 @@
 @endif
 
 @if(Session::has('warning'))
-<div class="alert alert-warning">
+<div class="alert alert-danger">
     <strong>Warning! </strong>{{ Session::get('warning')}}    
 </div>
 @endif
