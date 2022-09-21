@@ -94,7 +94,16 @@ class Statement extends Model {
                             ->where('camp_num', $campnum)->get();
        
     }
-    
-    
+
+    public static function inReviewOrLiveStatementCount($topicnum, $campnum) {
+        $currentTime = time();
+        return self::where('topic_num', $topicnum)
+                    ->where('camp_num', $campnum)
+                    ->where(function($q) use ($currentTime) {
+                        $q->where('grace_period', 0)
+                        ->orWhere('go_live_time', '<=', $currentTime)
+                        ->orWhere('submit_time', '<=', ($currentTime - 3600));
+                    })->count();
+    } 
 
 }
