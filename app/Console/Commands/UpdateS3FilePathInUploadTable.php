@@ -41,7 +41,7 @@ class UpdateS3FilePathInUploadTable extends Command
         $uploadRecords = Upload::where('file_path',null)->get();
         if($uploadRecords){
             foreach($uploadRecords as $val){
-                $val->file_path = "https://canonizer-public-file.s3.us-east-2.amazonaws.com/".$val->file_name;
+                $val->file_path = env('AWS_URL')."/".$val->file_name;
                 $val->update();
             }
         }
