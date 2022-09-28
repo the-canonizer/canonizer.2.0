@@ -13,6 +13,8 @@ class Upload extends Model
     protected $table = 'uploads';
     
     public function getShortCode(){
+
+        return '[[file:'.$this->file_path;
         $pos = strrpos( $this->file_name, ".");
         if ($pos === false)
         return false;

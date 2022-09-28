@@ -2,9 +2,10 @@
 
 namespace App;
 
+use App\Facades\Util;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Auth\Passwords\CanResetPassword;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 
 class User extends Authenticatable implements CanResetPasswordContract
@@ -49,5 +50,9 @@ class User extends Authenticatable implements CanResetPasswordContract
      */
     public static function getById($id) {
         return User::where('id', $id)->first();
+    }
+
+    public static function ownerCode($userID){
+        return $ownerCode = Util::canon_encode($userID);
     }
 }
