@@ -13,6 +13,11 @@
       <strong>Error!</strong> <span>{{ Session::get('error')}}   </span> 
   </div>
   @endif
+  @if(Session::has('warning'))
+    <div class="alert alert-danger">
+        <strong>Warning! </strong>{{ Session::get('warning')}}    
+    </div>
+  @endif
   @if ($errors->any())
     <div class="alert alert-danger">
         <strong>Error! </strong>

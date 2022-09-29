@@ -23,6 +23,11 @@
 </div>
 @endif
 
+@if(Session::has('warning'))
+<div class="alert alert-danger">
+    <strong>Warning! </strong>{{ Session::get('warning')}}    
+</div>
+@endif
 
 <div class="right-whitePnl">
 <div class="row col-sm-12 justify-content-between">
@@ -138,9 +143,12 @@
         $('#is_disabled').click(function() {
             if ($('#is_disabled').is(':checked') === true) {
                 $('#is_one_level').prop('checked', false);
-                $('#is_one_level').prop('disabled', true);
-            } else {
-                $('#is_one_level').prop('disabled', false);
+            }
+        });
+
+        $('#is_one_level').click(function() {
+            if ($('#is_one_level').is(':checked') === true) {
+                $('#is_disabled').prop('checked', false);
             }
         });
 

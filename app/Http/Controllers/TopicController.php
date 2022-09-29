@@ -82,6 +82,13 @@ class TopicController extends Controller {
             //'note' => 'required'
         ];
 
+        $userNicknames = Nickname::personNicknameArray();
+        // check the authorization of request nickname w.r.t current logged in user. 
+        if (count($userNicknames) && !in_array($all['nick_name'], $userNicknames)) { 
+            Session::flash('warning', " Unauthorized action"); 
+            return redirect()->back(); 
+        } 
+
         /**
          * @updated By Talentelgia
          */
@@ -795,6 +802,14 @@ class TopicController extends Controller {
                         'objection_reason' => 'required|max:100',
             ],$messagesVal);
         }
+
+        $userNicknames = Nickname::personNicknameArray();
+        // check the authorization of request nickname w.r.t current logged in user. 
+        if (count($userNicknames) && !in_array($all['nick_name'], $userNicknames)) { 
+            Session::flash('warning', " Unauthorized action"); 
+            return redirect()->back(); 
+        } 
+
         $topicnum = (isset($all['topic_num'])) ? $all['topic_num'] : null;
         if($topicnum!=null){
             if((!empty($all['camp_num']) && $all['camp_num'] != 1) || empty($all['camp_num'])) {
@@ -1100,6 +1115,13 @@ class TopicController extends Controller {
             return back()->withErrors($validator->errors())->withInput($request->all());
         }
 
+        $userNicknames = Nickname::personNicknameArray();
+        // check the authorization of request nickname w.r.t current logged in user. 
+        if (count($userNicknames) && !in_array($all['nick_name'], $userNicknames)) { 
+            Session::flash('warning', " Unauthorized action"); 
+            return redirect()->back(); 
+        } 
+        
         $go_live_time = $currentTime;
         $statement = new Statement();
 

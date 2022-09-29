@@ -166,7 +166,7 @@ if(isset($topic) && count($topic) > 0 ) {?>
             </div>
             <div class="footer">
 			<?php 
-			$statementCount = count($camp->anystatement($camp->topic_num,$camp->camp_num));
+			$statementCount = \App\Model\Statement::inReviewOrLiveStatementCount($camp->topic_num,$camp->camp_num);
 			$url_portion = \App\Model\Camp::getSeoBasedUrlPortion($camp->topic_num,$camp->camp_num);
 			if($statementCount > 0) { 
                 

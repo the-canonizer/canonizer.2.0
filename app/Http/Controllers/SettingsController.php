@@ -44,7 +44,7 @@ class SettingsController extends Controller
     public function profile_update(Request $request)
     {
         $input = $request->all();
-        $id = (isset($_GET['id'])) ? $_GET['id'] : '';
+        $id = Auth::user()->id;
         $private_flags = array();
         
         $messages = [
@@ -141,7 +141,7 @@ class SettingsController extends Controller
     public function phone_verify(Request $request)
     {
         $input = $request->all();
-        $id = (isset($_GET['id'])) ? $_GET['id'] : '';
+        $id = Auth::user()->id;
         $private_flags = array();
 
 
@@ -407,7 +407,6 @@ class SettingsController extends Controller
      */
     public function add_support(Request $request)
     {
-       
         $id = Auth::user()->id;
         $alreadyMailed = [];
         $as_of_time = time();
@@ -425,10 +424,16 @@ class SettingsController extends Controller
                     ->withErrors($validator)
                     ->withInput();
             }
-           
             /* Enter support record to support table */
             $data = $request->all();
-            //echo "<pre>"; print_r($data);die;
+
+            $userNicknames = Nickname::personNicknameArray();
+            // #1605 check the authorization of request nickname w.r.t current logged in user. 
+            if (count($userNicknames) && !in_array($data['nick_name'], $userNicknames)) { 
+                Session::flash('warning', "Unauthorized action"); 
+                return redirect()->back(); 
+            } 
+
             /** IN case of delegated support check for any direct support and remove them */
             $anyDelegator = Support::where('topic_num', $data['topic_num'])->whereIn('delegate_nick_name_id', [$data['nick_name']])->where('end', '=', 0)->groupBy('nick_name_id')->get(); //#1088
  
@@ -436,8 +441,6 @@ class SettingsController extends Controller
                 $data = $this->removeDirectSupport($data);
             }
 
-            
-            $userNicknames = Nickname::personNicknameArray();
             $topic_num = $data['topic_num'];
             $mysupportArray = [];
             $myDelegatedSupports = [];

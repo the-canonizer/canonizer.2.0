@@ -8,9 +8,16 @@ public/robots.txt
 .bashrc
 .profile
 storage/logs/laravel.log
-.DS_Store
 /.idea/
 /node_modules/
 /composer.json.org
 /package-lock.json
 /production_01122019.sql
+
+# OS generated files #
+######################
+.DS_Store
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db

@@ -51,7 +51,7 @@ class HomeController extends Controller {
             session()->put('defaultNamespaceId',1);
         }
         $page_no = isset($_REQUEST['page']) ? $_REQUEST['page'] : 1; 
-
+        $filter = isset($_REQUEST['filter']) && is_numeric($_REQUEST['filter']) ? $_REQUEST['filter'] : 0.000;
         ### Added by ali Ahmad
         ### Canonizer Service ticket CS17
         ### Date : 18-01-2022
@@ -99,7 +99,8 @@ class HomeController extends Controller {
                 "namespace_id" => session('defaultNamespaceId'),
                 "asofdate" =>  $asOfDefaultDate,
                 "algorithm" => $selectedAlgo,
-                "asof"=>$asOf
+                "asof"=>$asOf,
+                "filter"=>$filter
             ];
 
             $appURL = config('app.CS_APP_URL');
@@ -115,7 +116,7 @@ class HomeController extends Controller {
                 $fromExistingCode = 0;
             }
         }
-      
+        
         if($fromExistingCode){
             $previous = 0;
             $topics =  Camp::sortTopicsBasedOnScore(Camp::getAllAgreementTopic(20, $_REQUEST));
@@ -174,9 +175,17 @@ class HomeController extends Controller {
         if(empty($_REQUEST['namespace']) && session()->has('defaultNamespaceId')){
             session()->forget('defaultNamespaceId');
         }
+
+        if (!Auth::check()) {
+            //unset($_REQUEST['namespace']);
+            unset($_REQUEST['my']);
+            //session()->forget('defaultNamespaceId');
+        }
+        
         $topics = Camp::getBrowseTopic();
         $namespaces = Namespaces::all();
         return view('browse', compact('topics', 'namespaces'));
+        
     }
 
     public function recusriveCampDisp($childs) {
