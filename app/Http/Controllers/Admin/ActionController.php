@@ -18,13 +18,14 @@ class ActionController extends Controller
 		$dbpass = getenv('PDB_PASS');
 		$dbname = getenv('PDB_NAME');
 		$dbport = getenv('PDB_PORT');
+		$db_host = getenv('DB_HOST');
 		$dbexportPath = "$dbname.sql";
 		if(function_exists('exec')) {
 			
 			  $mysqldump =  (stristr(PHP_OS, 'WIN')) ? exec("where mysqldump") : exec("which mysqldump");
    			try{
 				 $command = "$mysqldump --column-statistics=0  -P $dbport -h $dbhost -u$dbuser '-p$dbpass' $dbname > $dbexportPath";
-				 echo $command; die;
+				 echo "$command $db_host"; die;
 				 $output=array();
 				exec($command,$output,$worked);
 			}catch(\Exception $e){
