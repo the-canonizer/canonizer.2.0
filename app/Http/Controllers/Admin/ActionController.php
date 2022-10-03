@@ -18,7 +18,7 @@ class ActionController extends Controller
 		$dbpass = getenv('PDB_PASS');
 		$dbname = getenv('PDB_NAME');
 		$dbport = getenv('PDB_PORT');
-		$db_host = getenv('DB_HOST');
+		$db_host = getenv('DB_HOST','localhost');
 		$dbexportPath = "$dbname.sql";
 		if(function_exists('exec')) {
 			
