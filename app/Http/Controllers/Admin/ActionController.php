@@ -13,12 +13,12 @@ class ActionController extends Controller
   
    public function copydatabase(){
    		ini_set('max_execution_time', 0);
-   		$dbhost = getenv('PDB_HOST');
-		$dbuser = getenv('PDB_USER');
-		$dbpass = getenv('PDB_PASS');
-		$dbname = getenv('PDB_NAME');
-		$dbport = getenv('PDB_PORT');
-		$db_host = getenv('DB_HOST','localhost');
+   		$dbhost = env('PDB_HOST');
+		$dbuser = env('PDB_USER');
+		$dbpass = env('PDB_PASS');
+		$dbname = env('PDB_NAME');
+		$dbport = env('PDB_PORT');
+		$db_host = env('DB_HOST');
 		$dbexportPath = "$dbname.sql";
 		if(function_exists('exec')) {
 			
