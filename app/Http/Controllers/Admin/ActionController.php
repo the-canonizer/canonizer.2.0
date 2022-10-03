@@ -13,19 +13,17 @@ class ActionController extends Controller
   
    public function copydatabase(){
    		ini_set('max_execution_time', 0);
-   		$dbhost = env('PDB_HOST');
-		$dbuser = env('PDB_USER');
-		$dbpass = env('PDB_PASS');
-		$dbname = env('PDB_NAME');
-		$dbport = env('PDB_PORT');
-		$db_host = env('DB_HOST');
+   		$dbhost = getenv('PDB_HOST');
+		$dbuser = getenv('PDB_USER');
+		$dbpass = getenv('PDB_PASS');
+		$dbname = getenv('PDB_NAME');
+		$dbport = getenv('PDB_PORT');
 		$dbexportPath = "$dbname.sql";
 		if(function_exists('exec')) {
 			
 			  $mysqldump =  (stristr(PHP_OS, 'WIN')) ? exec("where mysqldump") : exec("which mysqldump");
    			try{
 				 $command = "$mysqldump --column-statistics=0  -P $dbport -h $dbhost -u$dbuser '-p$dbpass' $dbname > $dbexportPath";
-				 echo "$command $db_host"; die;
 				 $output=array();
 				exec($command,$output,$worked);
 			}catch(\Exception $e){
