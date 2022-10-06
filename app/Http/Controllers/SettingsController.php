@@ -596,38 +596,40 @@ class SettingsController extends Controller
                     $this->emailForSupportAdded($data);   
                 }
             }else if($data['delegate_nick_name_id'] !=0){
-                 $delegateUsersupports = Support::where('topic_num', $topic_num)->where('nick_name_id', $data['delegate_nick_name_id'])->where('end', '=', 0)->orderBy('support_order', 'ASC')->get();
-                 if(isset($delegateUsersupports) && count($delegateUsersupports) > 0){
+                $delegateUsersupports = Support::where('topic_num', $topic_num)->where('nick_name_id', $data['delegate_nick_name_id'])->where('end', '=', 0)->orderBy('support_order', 'ASC')->get();
+                if(isset($delegateUsersupports) && count($delegateUsersupports) > 0){
                     foreach($delegateUsersupports as $cmp){
                         $last_camp = $cmp->camp_num;
-                        if(in_array($last_camp,$mysupportArray)){ // if user is also a direct supporter end that support
-                            $support = Support::where('topic_num', $topic_num)->where('camp_num','=', $last_camp)->where('nick_name_id','=',$data['nick_name'])->where('end', '=', 0)->get();
-                            $support[0]->end = time();
-                            $support[0]->save();
+                        if(!in_array($last_camp,$data['removed_camp'])) {  //1193 check camp remove checked or not
+                            if(in_array($last_camp,$mysupportArray)){ // if user is also a direct supporter end that support
+                                $support = Support::where('topic_num', $topic_num)->where('camp_num','=', $last_camp)->where('nick_name_id','=',$data['nick_name'])->where('end', '=', 0)->get();
+                                $support[0]->end = time();
+                                $support[0]->save();
+                            }
+                            
+                            $data['camp_num'] = $cmp->camp_num;
+                            $supportTopic = new Support();
+                            $supportTopic->topic_num = $cmp->topic_num;
+                            $supportTopic->nick_name_id = $data['nick_name'];
+                            $supportTopic->delegate_nick_name_id = $data['delegate_nick_name_id'];
+                            $supportTopic->start = time();
+                            $supportTopic->camp_num = $cmp->camp_num;
+                            $supportTopic->support_order = $cmp->support_order;
+                            $supportTopic->save();
+    
+                            //all delegator of $data['nick_name] should also assigned with this support #1088
+                            if(isset($anyDelegator) && !empty($anyDelegator))
+                            {
+                                $this->addSupportToDelegates($anyDelegator,$cmp,$data['nick_name']);
+                            }
+                            /* clear the existing session for the topic to get updated support count */
+                            session()->forget("topic-support-{$cmp->topic_num}");
+                            session()->forget("topic-support-nickname-{$cmp->topic_num}");
+                            session()->forget("topic-support-tree-{$cmp->topic_num}");
+                            Session::save();
                         }
-                        
-                        $data['camp_num'] = $cmp->camp_num;
-                        $supportTopic = new Support();
-                        $supportTopic->topic_num = $cmp->topic_num;
-                        $supportTopic->nick_name_id = $data['nick_name'];
-                        $supportTopic->delegate_nick_name_id = $data['delegate_nick_name_id'];
-                        $supportTopic->start = time();
-                        $supportTopic->camp_num = $cmp->camp_num;
-                        $supportTopic->support_order = $cmp->support_order;
-                        $supportTopic->save();
-
-                        //all delegator of $data['nick_name] should also assigned with this support #1088
-                        if(isset($anyDelegator) && !empty($anyDelegator))
-                        {
-                            $this->addSupportToDelegates($anyDelegator,$cmp,$data['nick_name']);
-                        }
-                        /* clear the existing session for the topic to get updated support count */
-                        session()->forget("topic-support-{$cmp->topic_num}");
-                        session()->forget("topic-support-nickname-{$cmp->topic_num}");
-                        session()->forget("topic-support-tree-{$cmp->topic_num}");
-                        Session::save();
                     }
-                 }                
+                }                
             }
 
             if ($last_camp == $data['camp_num']) {
