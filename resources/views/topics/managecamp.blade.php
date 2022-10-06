@@ -64,7 +64,7 @@
            
 			<div class="form-group">
                 <label for="camp_name">Nick Name <span style="color:red">*</span></label>
-                <select name="nick_name" id="nick_name" class="form-control">
+                <select name="nick_name" id="nick_name" class="form-control" onchange="checkAnyUpdate()">
                     @foreach($nickNames as $nick)
                     <option @if(old('nick_name') == $nick->id) selected @endif value="{{ $nick->id }}">{{ $nick->nick_name}}</option>
                     @endforeach
@@ -96,7 +96,7 @@
                     }
                     usort($parentcampsData, 'sortByCampName');
                 @endphp
-                <select  name="parent_camp_num" id="parent_camp_num" class="form-control" <?php if($objection=="objection") { ?> disabled <?php } ?>>
+                <select  name="parent_camp_num" id="parent_camp_num" class="form-control" <?php if($objection=="objection") { ?> disabled <?php } ?> onchange="checkAnyUpdate()">
                     @foreach($parentcampsData as $parent)
 					<?php if(($camp->camp_num != $parent['camp_num'] ) && (  !in_array($parent['camp_num'], $childCamps))) {
                     ?>
@@ -115,7 +115,7 @@
             
              <div class="form-group">
                 <label for="camp_name">Camp Name ( Limit 30 Chars ) <span style="color:red">*</span></label>
-                <input type="text" maxlength="30" onkeydown="restrictTextField(event,30)" name="camp_name" <?php if($camp->camp_name=="Agreement") echo "readonly";?> class="form-control" id="camp_name" value="@if(sizeof(old()) > 0) {{ old('camp_name') }} @else {{ $camp->camp_name}} @endif" <?php if($objection=="objection") { ?> readonly="true" <?php } ?>>
+                <input type="text" maxlength="30" onkeydown="restrictTextField(event,30)" onkeypress="checkAnyUpdate()" name="camp_name" <?php if($camp->camp_name=="Agreement") echo "readonly";?> class="form-control" id="camp_name" value="@if(sizeof(old()) > 0) {{ old('camp_name') }} @else {{ $camp->camp_name}} @endif" <?php if($objection=="objection") { ?> readonly="true" <?php } ?>>
                  @if ($errors->has('camp_name')) <p class="help-block">{{ $errors->first('camp_name') }}</p> @endif
              </div> 
              		
@@ -128,7 +128,7 @@
             <?php } else { ?>
 			<div class="form-group">
                 <label for="keywords">Keywords </label>
-                <input type="text" name="keywords" class="form-control" id="keywords" value="@if(sizeof(old()) > 0) {{ old('keywords') }} @else {{ $camp->key_words }} @endif">
+                <input type="text" name="keywords" class="form-control" id="keywords" value="@if(sizeof(old()) > 0) {{ old('keywords') }} @else {{ $camp->key_words }} @endif" onkeypress="checkAnyUpdate()">
                 @if ($errors->has('keywords')) <p class="help-block">{{ $errors->first('keywords') }}</p> @endif
             </div> 
            
@@ -136,19 +136,19 @@
             <div class="form-group">
                 <label for="">Edit summary (Briefly describe your changes) </label>
              
-                <textarea class="form-control" rows="4" name="note" id="note">@if(sizeof(old()) > 0) {{ old('note') }} @else {{$campupdate == 'update'? $camp->note : ""}} @endif</textarea>
+                <textarea class="form-control" rows="4" name="note" id="note" onkeypress="checkAnyUpdate()">@if(sizeof(old()) > 0) {{ old('note') }} @else {{$campupdate == 'update'? $camp->note : ""}} @endif</textarea>
 
                 @if ($errors->has('note')) <p class="help-block">{{ $errors->first('note') }}</p> @endif
             </div>   
             <div class="form-group">
 			     <p style="color:red">The following fields are rarely used and are for advanced users only.</p>
                 <label for="camp_about_url">Camp About URL ( Limit 1024 Chars ) </label>
-                <input type="text" name="camp_about_url" class="form-control" id="camp_about_url" value="@if(sizeof(old()) > 0) {{ old('camp_about_url') }} @else {{ $camp->camp_about_url }} @endif">
+                <input type="text" name="camp_about_url" class="form-control" id="camp_about_url" value="@if(sizeof(old()) > 0) {{ old('camp_about_url') }} @else {{ $camp->camp_about_url }} @endif" onkeypress="checkAnyUpdate()">
                 @if ($errors->has('camp_about_url')) <p class="help-block">{{ $errors->first('camp_about_url') }}</p> @endif
             </div>
             <div class="form-group" id="camp_about_nickname">
                 <label for="camp_about_nick_id">Camp About Nick Name </label>
-                <select name="camp_about_nick_id" id="camp_about_nick_id" class="form-control">
+                <select name="camp_about_nick_id" id="camp_about_nick_id" class="form-control" onchange="checkAnyUpdate()">
                     <option value="0">--Select Camp About Nick Name--</option>
 					@foreach($allNicknames as $aboutnick)
                     <option <?php if( sizeof(old()) > 0 && old('camp_about_nick_id') == $aboutnick->id){ echo 'selected'; }  elseif(sizeof(old()) == 0 && $camp->camp_about_nick_id==$aboutnick->id) { echo "selected=selected"; }?> value="{{ $aboutnick->id }}">{{ $aboutnick->nick_name}}</option>
@@ -165,9 +165,8 @@
                 <label for="is_one_level" id="is_one_level_label"> Single level camps only </label>
             </div>		
             <?php } ?>
-            <button type="submit" id="submit" class="btn btn-login">
-			<?php if($objection=="objection") { ?> Submit Objection <?php } else {?>
-			Submit Update <?php } ?>
+			<?php if($objection=="objection") { ?> <button type="submit" id="submit-objection" class="btn btn-login"> Submit Objection <?php } else {?>
+            <button type="submit" id="submit" class="btn btn-login"> Submit Update <?php } ?>
 			</button> 
             
         </form>
@@ -179,6 +178,7 @@
     <script>
         
         $(document).ready(function () {
+            $('button[type="submit"]').attr('disabled','disabled');
             setIsOneLevelCheckBox();
             setIsDisabledCheckBox();
             $("#datepicker").datepicker({
@@ -232,6 +232,10 @@
                 }
             }
             return "";
+        }
+
+        function checkAnyUpdate(){
+            $('button[type="submit"]').removeAttr('disabled');
         }
     </script>
 

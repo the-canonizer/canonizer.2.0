@@ -75,7 +75,7 @@
              </div> 
 			<div class="form-group">
                 <label for="topic name">Topic Name ( Limit 30 Chars ) <span style="color:red">*</span></label>
-                <input type="text" name="topic_name" onkeydown="restrictTextField(event,30)" class="form-control" id="topic_name" value="@if(sizeof(old()) > 0) {{ old('topic_name') }} @else {{ $topic->topic_name}} @endif" <?php if($objection=="objection") { ?> readonly="true" <?php } ?>>
+                <input type="text" name="topic_name" onkeydown="restrictTextField(event,30)" onkeypress="checkAnyUpdate()" class="form-control" id="topic_name" value="@if(sizeof(old()) > 0) {{ old('topic_name') }} @else {{ $topic->topic_name}} @endif" <?php if($objection=="objection") { ?> readonly="true" <?php } ?>>
 				@if ($errors->has('topic_name')) <p class="help-block">{{ $errors->first('topic_name') }}</p> @endif
             </div> 
 			<?php if($objection=="objection") { ?>			
@@ -111,14 +111,14 @@
            
             <div class="form-group">
                 <label for="">Edit summary (Briefly describe your changes)</label>
-                <textarea class="form-control" rows="4" name="note" id="note">@if(sizeof(old() > 0)) {{ old('note') }} @else {{$topicupdate == 'update'? $topic->note : ""}} @endif</textarea>
+                <textarea class="form-control" rows="4" name="note" id="note" onkeypress="checkAnyUpdate()">@if(sizeof(old() > 0)) {{ old('note') }} @else {{$topicupdate == 'update'? $topic->note : ""}} @endif</textarea>
 				@if ($errors->has('note')) <p class="help-block">{{ $errors->first('note') }}</p> @endif
             </div>
             <?php } ?>
             <?php if($objection=="objection") { ?>
             <button type="submit" id="submit-objection" class="btn btn-login">Submit Objection</button>
              <?php } else {?>
-            <button type="submit" id="submit" class="btn btn-login">Submit Update<?php } ?></button>
+            <button type="submit" id="submit" class="btn btn-login">Submit Update <?php } ?></button>
         </form>
     </div>
  </div>   
@@ -127,6 +127,7 @@
     <script>
        
         $(document).ready(function () {
+            $('button[type="submit"]').attr('disabled','disabled');
             $("#datepicker").datepicker({
                 changeMonth: true,
                 changeYear: true
@@ -134,6 +135,7 @@
         })
         
         function selectNamespace(){
+            $('button[type="submit"]').removeAttr('disabled');
             if($('#namespace').val() == 'other'){
                 $('#other-namespace').css('display','block');
                 $('#err-other-namespace').text("");
@@ -151,7 +153,7 @@
            var message = "";
            if($('#namespace').val() == 'other'){
                var othernamespace = ($('#create_namespace').val()).trim();
-              othernamespace = othernamespace.toLowerCase();
+               othernamespace = othernamespace.toLowerCase();
                if(othernamespace == ''){
                    valid = false;
                    message = "The Other Namespace Name field is required when namespace is other.";
@@ -169,7 +171,7 @@
            }
            if(!valid){
                e.preventDefault();
-                $('button[type="submit"]').removeAttr('disabled');
+               $('button[type="submit"]').removeAttr('disabled');
                $('.help-block').text('');
                $('#err-other-namespace').text(message);
                //alert("Error: " + message);
@@ -183,6 +185,9 @@
            
             
         // })
+        function checkAnyUpdate(){
+            $('button[type="submit"]').removeAttr('disabled');
+        }
         
         
         
