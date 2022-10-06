@@ -52,6 +52,9 @@ class HomeController extends Controller {
         }
         $page_no = isset($_REQUEST['page']) ? $_REQUEST['page'] : 1; 
         $filter = isset($_REQUEST['filter']) && is_numeric($_REQUEST['filter']) ? $_REQUEST['filter'] : 0.000;
+        if(isset($_SESSION['filterchange'])) {
+            $filter = $_SESSION['filterchange'] ?? 0.000;
+        }
         ### Added by ali Ahmad
         ### Canonizer Service ticket CS17
         ### Date : 18-01-2022
@@ -82,13 +85,13 @@ class HomeController extends Controller {
 
         $previous = 0;
 
-        $fromExistingCode = 1;
+        // $fromExistingCode = 1;
 
         $selectedAlgo = 'blind_popularity';
         if(session('defaultAlgo')) {
             $selectedAlgo = session('defaultAlgo');
         }
-       
+        
         if( ($asOfDefaultDate >= $cronDate) && ( $selectedAlgo == 'blind_popularity' || $selectedAlgo == "mind_experts")){
 
             $previous = 1; 
@@ -112,16 +115,16 @@ class HomeController extends Controller {
 
             $topics = json_decode($reducedTree, true);
             
-            if(count($topics['data']) && count($topics['data']['topic']) && $topics['status_code'] == 200){
-                $fromExistingCode = 0;
-            }
+            // if(count($topics['data']) && count($topics['data']['topic']) && $topics['status_code'] == 200){
+            //     $fromExistingCode = 0;
+            // }
         }
         
-        if($fromExistingCode){
-            $previous = 0;
-            $topics =  Camp::sortTopicsBasedOnScore(Camp::getAllAgreementTopic(20, $_REQUEST));
-        }
-
+        // Comment this code, because both mongo and database cases handled in service side.
+        // if($fromExistingCode){ 
+        //     $previous = 0;
+        //     $topics =  Camp::sortTopicsBasedOnScore(Camp::getAllAgreementTopic(20, $_REQUEST));
+        // }
         ### End of CS17 ticket ####
         
         $videopodcast = VideoPodcast::all()->first();
