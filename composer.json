@@ -13,7 +13,7 @@
         "laravel/socialite": "3.0",
         "laravel/tinker": "~1.0",
         "laravelcollective/html": "^5.4.0",
-        "stevebauman/purify": "2.0.*"
+        "stevebauman/purify": "*"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
