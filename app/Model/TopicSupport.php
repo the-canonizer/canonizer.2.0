@@ -242,10 +242,10 @@ class TopicSupport extends Model {
         foreach($traversedTreeArray as $array){
             $space_html = '';
             $nickName = Nickname::where('id',$array['index'])->first();
-            $deluserFromNickname = $nickName->getUser();
+            // $deluserFromNickname = $nickName->getUser();
             $topicData = Topic::getLiveTopic($topicnum,['nofilter'=>true]);
             $namespace_id = (isset($topicData->namespace_id)) ? $topicData->namespace_id:1;
-            $supports = $nickName->getSupportCampList($namespace_id, [], $topicnum);
+            $supports = (!empty($nickName)) ? $nickName->getSupportCampList($namespace_id, [], $topicnum) : [];
             $support_number = self::getSupportNumber($topicnum,$campnum,$supports);
             $support_txt = ($support_number) ? $support_number.":": '';
             //$childDelegateNickId= support::getAllChildDelegateNicknameId($topicnum,$array['index'],$supportId=[]);

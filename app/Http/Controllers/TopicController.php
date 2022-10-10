@@ -1422,6 +1422,26 @@ class TopicController extends Controller {
                 //go live                
                 $statement->go_live_time = strtotime(date('Y-m-d H:i:s'));
                 $statement->update();
+                /**
+                 * On agree to some change check if there are some changes on same Statement which has less go live time then the agreed change
+                 * Change their go live time to less than 1 minutes than current time
+                */
+                $inReviewStatementChanges = Statement::where([['topic_num', '=', $data['topic_num']],
+                                ['camp_num', '=', $data['camp_num']], 
+                                ['submit_time', '<', $statement->submit_time],
+                                ['go_live_time', '>', Carbon::now()->timestamp]])->whereNull('objector_nick_id')->get();
+                
+                
+                if(count($inReviewStatementChanges)) {
+                    $statementIds = [];
+                    foreach ($inReviewStatementChanges as $s) {
+                        $statementIds[] = $s->id;
+                    }
+                    
+                    if(count($statementIds)) {
+                        Statement::whereIn('id', $statementIds)->update(['go_live_time' => strtotime(date('Y-m-d H:i:s')) - 1]);
+                    }
+                }
                 //clear log
                 ChangeAgreeLog::where('topic_num', '=', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('change_id', '=', $changeID)->where('change_for', '=', $data['change_for'])->delete();
             }
@@ -1438,6 +1458,26 @@ class TopicController extends Controller {
                     //go live                
                     $camp->go_live_time = strtotime(date('Y-m-d H:i:s'));
                     $camp->update();
+                    /**
+                     * On agree to some change check if there are some changes on same Camp which has less go live time then the agreed change
+                     * Change their go live time to less than 1 minutes than current time
+                    */
+                    $inReviewCampChanges = Camp::where([['topic_num', '=', $data['topic_num']],
+                                    ['camp_num', '=', $data['camp_num']], 
+                                    ['submit_time', '<', $camp->submit_time],
+                                    ['go_live_time', '>', Carbon::now()->timestamp]])->whereNull('objector_nick_id')->get();
+                    
+                    
+                    if(count($inReviewCampChanges)) {
+                        $campIds = [];
+                        foreach ($inReviewCampChanges as $cmp) {
+                            $campIds[] = $cmp->id;
+                        }
+                        
+                        if(count($campIds)) {
+                            Camp::whereIn('id', $campIds)->update(['go_live_time' => strtotime(date('Y-m-d H:i:s')) - 1]);
+                        }
+                    }
                     //clear log
                     ChangeAgreeLog::where('topic_num', '=', $data['topic_num'])->where('camp_num', '=', $data['camp_num'])->where('change_id', '=', $changeID)->where('change_for', '=', $data['change_for'])->delete();
                     $topic = $camp->topic;
