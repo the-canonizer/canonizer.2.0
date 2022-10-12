@@ -63,15 +63,28 @@ class CanonizerService implements ShouldQueue
         //$endpointCSStoreTree = env('CS_STORE_TREE');
         $appURL = config('app.CS_APP_URL');
         $endpointCSStoreTree = config('app.CS_STORE_TREE');
-
-        if(empty($appURL) || empty($endpointCSStoreTree)) {
-            Log::error("App url or endpoints of store tree is not defined");
+        $apiToken = env('API_TOKEN');
+        if(empty($appURL) || empty($endpointCSStoreTree) || empty($apiToken)) {
+            Log::error("App url or endpoints or API Token of store tree is not defined");
             return;
         }
         $endpoint = $appURL."/".$endpointCSStoreTree;
-        $headers = array('Content-Type:multipart/form-data');
+        //$headers = array('Content-Type:multipart/form-data');
+        $headers = []; // Prepare headers for request
+        $headers[] = 'Content-Type:multipart/form-data';
+        $headers[] = 'X-Api-Token:'.$apiToken.'';
 
         $response = Util::execute('POST', $endpoint, $headers, $requestBody);
+
+        // Check the unauthorized request here...
+        if(isset($response)) {
+            $checkRes = json_decode($response, true);
+            if(array_key_exists("status_code", $checkRes) && $checkRes["status_code"] == 401) {
+                Log::error("Unauthorized action to service.");
+                $this->fail();
+                return;
+            }
+        }
         
         if(isset($response)) {
             $responseData = json_decode($response, true)['data'];
@@ -126,5 +139,9 @@ class CanonizerService implements ShouldQueue
             return false;
         }
         return true;
+    }
+
+    public function failed($e) {
+        Log::error("Job Failed!");
     }
 }
