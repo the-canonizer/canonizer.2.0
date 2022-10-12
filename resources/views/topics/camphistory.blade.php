@@ -237,74 +237,74 @@
                             </div>    
                             <div class="CmpHistoryPnl-footer">
                                
-        <?php if ($currentTime < $data->go_live_time && $currentTime >= $data->submit_time && ($ifIamImplicitSupporter) ) { ?> 
-                                    <a id="object" class="btn btn-historysmt mb-1" href="<?php echo url('manage/camp/' . $data->id . '-objection'); ?>">Object</a>
-                                <?php }else if($currentTime < $data->go_live_time && $currentTime >= $data->submit_time && $ifSupportDelayed){ ?>
-                                    <button type="button" onClick="disagreementPopup()" class="btn btn-historysmt mb-1 disable-btn"  >Object &nbsp;<i title="Only direct supporters at the time this change was submitted can object." class="fa fa-info-circle" aria-hidden="true"></i></button>
-                                <?php }else if($currentTime < $data->go_live_time && $currentTime >= $data->submit_time){ ?>
-                                    <button type="button" onClick="disagreementPopup()"  class="btn btn-historysmt mb-1 disable-btn"  >Object &nbsp;<i title="Only direct supporters at the time this change was submitted can object.." class="fa fa-info-circle" aria-hidden="true"></i></button>
-                                <?php } ?> 
-                                <a id="update" class="btn btn-historysmt mb-1" href="<?php echo url('manage/camp/' . $data->id); ?>">Submit Camp Update Based On This</a>		  
-                                <?php
-                                  $link = \App\Model\Camp::getTopicCampUrl($data->topic_num,$data->camp_num);
-                                ?>
-                                 <a id="version" class="btn btn-historysmt mb-1" href="<?php echo $link. '?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $data->go_live_time) . '&topic_history=1' ?>">View This Version</a>
-                                 <script>
-                                     var href = $('#version').attr('href');
-                                     var date = new Date(<?= $data->go_live_time ?> * 1000).toLocaleString();
-                                     href = href+date;
-                                    // $('#version').attr('href',href);
-                                 </script>
+                <?php if ($currentTime < $data->go_live_time && $currentTime >= $data->submit_time && ($ifIamImplicitSupporter) ) { ?> 
+                                        <a id="object" class="btn btn-historysmt mb-1" href="<?php echo url('manage/camp/' . $data->id . '-objection'); ?>">Object</a>
+                                        <?php }else if($currentTime < $data->go_live_time && $currentTime >= $data->submit_time && $ifSupportDelayed){ ?>
+                                            <button type="button" onClick="disagreementPopup()" class="btn btn-historysmt mb-1 disable-btn"  >Object &nbsp;<i title="Only direct supporters at the time this change was submitted can object." class="fa fa-info-circle" aria-hidden="true"></i></button>
+                                        <?php }else if($currentTime < $data->go_live_time && $currentTime >= $data->submit_time){ ?>
+                                            <button type="button" onClick="disagreementPopup()"  class="btn btn-historysmt mb-1 disable-btn"  >Object &nbsp;<i title="Only direct supporters at the time this change was submitted can object.." class="fa fa-info-circle" aria-hidden="true"></i></button>
+                                        <?php } ?> 
+                                        <a id="update" class="btn btn-historysmt mb-1" href="<?php echo url('manage/camp/' . $data->id); ?>">Submit Camp Update Based On This</a>		  
+                                        <?php
+                                        $link = \App\Model\Camp::getTopicCampUrl($data->topic_num,$data->camp_num);
+                                        ?>
+                                        <a id="version" class="btn btn-historysmt mb-1" href="<?php echo $link. '?asof=bydate&asofdate=' . date('Y/m/d H:i:s', $data->go_live_time) . '&topic_history=1' ?>">View This Version</a>
+                                        <script>
+                                            var href = $('#version').attr('href');
+                                            var date = new Date(<?= $data->go_live_time ?> * 1000).toLocaleString();
+                                            href = href+date;
+                                            // $('#version').attr('href',href);
+                                        </script>
 
-                            </div> 	
+                                    </div> 	
 
-                            @if(Auth::check())
-                            @if($isagreeFlag && $ifIamImplicitSupporter && $data->submit_time > $liveCamp->submit_time && Auth::user()->id != $submitterUserID)
-                            <div class="CmpHistoryPnl-footer">
-                                <div>
-                                    <input {{ (isset($isAgreed) && $isAgreed) ? 'checked' : '' }} {{ (isset($isAgreed) && $isAgreed) ? 'disabled' : '' }} class="agree-to-change" type="checkbox" name="agree" value="" onchange="agreeToChannge(this,'{{ $data->id}}')"> I agree with this camp change</form>
+                                    @if(Auth::check())
+                                    @if($isagreeFlag && $ifIamImplicitSupporter && $data->submit_time > $liveCamp->submit_time && Auth::user()->id != $submitterUserID)
+                                    <div class="CmpHistoryPnl-footer">
+                                        <div>
+                                            <input {{ (isset($isAgreed) && $isAgreed) ? 'checked' : '' }} {{ (isset($isAgreed) && $isAgreed) ? 'disabled' : '' }} class="agree-to-change" type="checkbox" name="agree" value="" onchange="agreeToChannge(this,'{{ $data->id}}')"> I agree with this camp change</form>
+                                        </div>
+                                    </div>
+                                    @endif
+                                    
+                                    @php
+                                        //$data->submit_time > $liveCamp->submit_time
+                                    @endphp
+                                    
+                                        @if(Auth::user()->id == $submitterUserID  &&  $isGraceFlag &&  $data->grace_period && $interval > 0)
+                                        <div class="CmpHistoryPnl-footer" id="countdowntimer_block<?php echo $data->id ;?>">
+                                            <div class="grace-period-note"><b>Note: </b>This countdown timer is the grace period in which you can make minor changes to your camp before other direct supporters are notified.</div>
+                                        <div style="float: right"> 
+                                            <div class="timer-dial" id="countdowntimer<?php echo $data->id ;?>"></div>
+                                            <a href="<?php echo url('manage/camp/'.$data->id.'-update');?>" class="btn btn-historysmt mb-1">Edit Change</a>
+                                            <a href="javascript:void(0)" onclick="notifyAndCloseTimer('<?php echo $data->id ;?>')"class="btn btn-historysmt mb-1">Commit Change</a>
+                                        </div>
+                                        </div>
+                                        @endif
+                                    @endif 
+                                    
+
                                 </div>
-                            </div>
-                            @endif
-                              
-                              @php
-                                //$data->submit_time > $liveCamp->submit_time
-                              @endphp
-                             
-                                @if(Auth::user()->id == $submitterUserID  &&  $isGraceFlag &&  $data->grace_period && $interval > 0)
-                                <div class="CmpHistoryPnl-footer" id="countdowntimer_block<?php echo $data->id ;?>">
-                                    <div class="grace-period-note"><b>Note: </b>This countdown timer is the grace period in which you can make minor changes to your camp before other direct supporters are notified.</div>
-                                   <div style="float: right"> 
-                                       <div class="timer-dial" id="countdowntimer<?php echo $data->id ;?>"></div>
-                                      <a href="<?php echo url('manage/camp/'.$data->id.'-update');?>" class="btn btn-historysmt mb-1">Edit Change</a>
-                                      <a href="javascript:void(0)" onclick="notifyAndCloseTimer('<?php echo $data->id ;?>')"class="btn btn-historysmt mb-1">Commit Change</a>
-                                   </div>
-                                </div>
-                                @endif
-                             @endif
-                            
-
-                        </div>
-                        <!-- change agreement form -->
-                        <form id="changeAgreeForm" action="<?php echo url('statement/agreetochange') ?>" method="post">
-                            <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                            <input type="hidden" name="topic_num" value="{{ $topic->topic_num}}" />
-                            <?php if(!empty($onecamp)){ ?> 
-                                    <input type="hidden" name="camp_num" value="{{ $onecamp->camp_num}}" />
-                            <?php }  ?>
-                            <input type="hidden" name="camp_id" value="" id="agree_to_camp" />
-                            <input type="hidden" name="nick_name_id" value="{{ $ifIamImplicitSupporter }}" />
-                            <input type="hidden" name="change_for" value="camp" />
-                        </form>
+                                
 
 
-    <?php
-    }
-} else {
-
-    echo "No camp history available.";
-}
-?>
+                <?php
+                }
+                } else {
+                echo "No camp history available.";
+                }
+                ?>
+            </form>
+            <!-- change agreement form -->
+            <form id="changeAgreeForm" action="<?php echo url('statement/agreetochange') ?>" method="post">
+                <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                <input type="hidden" name="topic_num" value="{{ $topic->topic_num}}" />
+                <?php if(!empty($onecamp)){ ?> 
+                        <input type="hidden" name="camp_num" value="{{ $onecamp->camp_num}}" />
+                <?php }  ?>
+                <input type="hidden" name="camp_id" value="" id="agree_to_camp" />
+                <input type="hidden" name="nick_name_id" value="{{ $ifIamImplicitSupporter }}" />
+                <input type="hidden" name="change_for" value="camp" />
             </form>
         </div>
     </div>
@@ -321,8 +321,9 @@
 
     function agreeToChannge(evt, id){
         if (evt.checked){
-        $('#agree_to_camp').val(id);
-        $('#changeAgreeForm').submit();
+            $('#agree_to_camp').val(id); 
+            console.log('check - ' + id);
+            $('#changeAgreeForm').submit();
         } else{
             console.log('uncheck - ' + id);
         }

@@ -55,7 +55,7 @@
 			 <input type="hidden" id="objection_id" name="objection_id" value="{{ $topic->id}}">
 			<?php } ?>
                          
-                         <?php if(isset($topicupdate) && $topicupdate=="update") { ?>
+            <?php if(isset($topicupdate) && $topicupdate=="update") { ?>
 			 <input type="hidden" id="topic_update" name="topic_update" value="1">
 			 <input type="hidden" id="topic_id" name="topic_id" value="{{ $topic->id}}">
 			<?php } ?>
