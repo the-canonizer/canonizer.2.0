@@ -628,6 +628,25 @@ class SettingsController extends Controller
                             session()->forget("topic-support-tree-{$cmp->topic_num}");
                             Session::save();
                         }
+                        else{ //this else condition adding only for 1629 case 
+                            if(!in_array($last_camp,$mysupportArray)) {
+                                $data['camp_num'] = $cmp->camp_num;
+                                $supportTopic = new Support();
+                                $supportTopic->topic_num = $cmp->topic_num;
+                                $supportTopic->nick_name_id = $data['nick_name'];
+                                $supportTopic->delegate_nick_name_id = $data['delegate_nick_name_id'];
+                                $supportTopic->start = time();
+                                $supportTopic->camp_num = $cmp->camp_num;
+                                $supportTopic->support_order = $cmp->support_order;
+                                $supportTopic->save();
+        
+                                //all delegator of $data['nick_name] should also assigned with this support #1088
+                                if(isset($anyDelegator) && !empty($anyDelegator))
+                                {
+                                    $this->addSupportToDelegates($anyDelegator,$cmp,$data['nick_name']);
+                                }
+                            }
+                        }
                     }
                 }                
             }
