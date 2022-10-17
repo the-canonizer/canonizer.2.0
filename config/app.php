@@ -46,6 +46,7 @@ return [
     'PAGE_PER_RECORD'       => env('PAGE_PER_RECORD', 20),
     'QUEUE_SERVICE_NAME'    => env('QUEUE_SERVICE_NAME'),
     'DELAY_QUEUE_SERVICE_NAME'   => env('DELAY_QUEUE_SERVICE_NAME'),
+    'API_TOKEN'   => env('API_TOKEN'),
 
     /*
     |--------------------------------------------------------------------------
