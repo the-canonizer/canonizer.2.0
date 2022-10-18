@@ -1245,6 +1245,16 @@ class TopicController extends Controller {
             } 
         }
 
+        /** Dispatch job for the case when the statement is in grace period by user B,
+         * so schedule a job that will run and update the tree
+         * also this will update the grace period flag as well.
+         * */
+        if($statement->grace_period == 1) {
+            $topic = Topic::getLiveTopic($all['topic_num']);
+            $delayCommitTimeInSeconds = (1*60*60) + 10; // 1 hour commit time + 10 seconds for delay job
+            Util::dispatchJob($topic, $all['camp_num'], 1, $delayCommitTimeInSeconds);
+        }
+
         $statement->save();
         if ($eventtype == "CREATE") {
            // send history link in email
