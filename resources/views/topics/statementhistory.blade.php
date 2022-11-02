@@ -1,6 +1,6 @@
 <?php include(app_path() . '/Library/wiki_parser/wikiParser.class.php'); ?>
 @extends('layouts.app')
-@section('content')
+@section('content') 
 
 @php $liveTopic = getAgreementTopic($topic->topic_num); @endphp
 
