@@ -188,4 +188,34 @@ class Util
             Log::error("Util :: GetEmailSubjectForSandbox :: message: " . $ex->getMessage());
         }
     }
+
+     /**
+     * @param $id
+     * @return String
+     */
+    public static function canon_encode($id=''):string
+    {
+        $code = 'Malia' . $id . 'Malia';
+        $code = base64_encode($code);
+        return $code;
+    }
+
+    /**
+     * @param $code
+     * @return int
+     */
+    public static function canon_decode($code = ''):int
+    {
+        $code = base64_decode($code);
+        return (int) $code=str_replace("Malia","",$code);
+    }
+
+    public static function generateShortCode($file, $shortCode = '') 
+    {
+        if(!$shortCode) {			
+            $shortCode = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);	
+        } 
+        
+        return $shortCode;
+    }
 }

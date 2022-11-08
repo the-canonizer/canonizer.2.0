@@ -19,6 +19,7 @@ class Kernel extends ConsoleKernel
         'App\Console\Commands\DeleteProcessedJobs',
         'App\Console\Commands\UpdateProcessedJobsTopicNumber',
         'App\Console\Commands\updateTopicGracePeriod',
+        'App\Console\Commands\UpdateS3FilePathInUploadTable',
     ];
 
     /**
