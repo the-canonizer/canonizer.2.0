@@ -38,11 +38,15 @@ class UpdateS3FilePathInUploadTable extends Command
      */
     public function handle()
     {
-        $uploadRecords = Upload::where('file_path',null)->get();
+        $uploadRecords = Upload::where('file_path',null)
+        ->orWhere('file_path','like',"%https://canonizer-user-file-529089637802.s3-accesspoint.us-east-2.amazonaws.com%")
+        ->get();
+        // echo $uploadRecords->count(); die;
         if($uploadRecords){
             foreach($uploadRecords as $val){
-                $val->file_path = env('AWS_URL')."/".$val->file_name;
-                $val->update();
+                // dd($val);
+                $val->file_path = env('AWS_PUBLIC_URL')."/".$val->file_name;
+                $val->save();
             }
         }
     }

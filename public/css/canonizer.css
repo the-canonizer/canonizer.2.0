@@ -2203,3 +2203,14 @@ a.verification-link:active {
 .termsnService span.s4 {-webkit-text-stroke: 0px #000000}
 .termsnService ul.ul1 {list-style-type: disc}
 .canonizerDisable {border: 1px solid #999999; background-color: #cccccc; color: #666666;}
+.videopodcast_div {
+    float: left;
+}
+.videopodcast_div .col-1, .videopodcast_div .col-2 {
+    width: 100%;
+    max-width: 100%;
+    flex: 0 0 100%;
+}
+.videopodcast_div .col-2 {
+    padding-top: 20px;
+}
