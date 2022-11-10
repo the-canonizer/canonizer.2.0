@@ -59,7 +59,7 @@
                             @foreach ($uploaded as $upload)
                                 <tr>
                                     <td style="word-break:break-all">{{ $upload->file_name }} &nbsp;&nbsp;&nbsp;<a
-                                            target="_blank" href="{{ url('files/' . $upload->file_name) }}"><i
+                                            target="_blank" href="{{ $upload->getShortCode() }}"><i
                                                 title="View file" class="fa fa-external-link"></i></a></td>
                                     <td style="word-break:break-all">{{ $upload->getShortCode() }}</td>
                                     <td>{{ to_local_time($upload->created_at) }}</td>
