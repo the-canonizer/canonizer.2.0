@@ -282,13 +282,14 @@
             <div class="col-sm-6 sameHeight">
               <div class="videopodcast_div">
                 {{-- {!!$videopodcast->html_content!!} --}}
-                <style>
-                    .center {
-                      display: block;
-                      margin-left: auto;
-                      margin-right: auto;
-                      width: 50%;
-                    }
+                    <!--- CSS is from dynamic content --->
+                    <style>
+                        .center {
+                        display: block;
+                        margin-left: auto;
+                        margin-right: auto;
+                        width: 50%;
+                        }
                     </style>
                     <div>
                         <h1>What's New at Canonizer</h1>
