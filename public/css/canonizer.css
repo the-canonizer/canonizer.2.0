@@ -2015,7 +2015,7 @@ a.verification-link:active {
     display: flex;
     width:100%;
     justify-content: space-around;
-    text-align-center;
+    text-align: center;
     flex-flow: wrap;
   }
   .bwsr-row .br-col {
@@ -2202,3 +2202,4 @@ a.verification-link:active {
 .termsnService span.s3 {font-kerning: none; background-color: #ffffff}
 .termsnService span.s4 {-webkit-text-stroke: 0px #000000}
 .termsnService ul.ul1 {list-style-type: disc}
+.canonizerDisable {border: 1px solid #999999; background-color: #cccccc; color: #666666;}

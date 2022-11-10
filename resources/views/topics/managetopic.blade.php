@@ -128,6 +128,7 @@
        
         $(document).ready(function () {
             $('button[type="submit"]').attr('disabled','disabled');
+            $('button[type="submit"]').addClass('canonizerDisable');
             $("#datepicker").datepicker({
                 changeMonth: true,
                 changeYear: true
@@ -136,6 +137,7 @@
         
         function selectNamespace(){
             $('button[type="submit"]').removeAttr('disabled');
+            $('button[type="submit"]').removeClass("canonizerDisable");
             if($('#namespace').val() == 'other'){
                 $('#other-namespace').css('display','block');
                 $('#err-other-namespace').text("");
@@ -149,6 +151,7 @@
 
         function submitTopicForm(e){
            $('button[type="submit"]').attr('disabled','disabled');
+           $('button[type="submit"]').addClass('canonizerDisable');
            var valid = true;
            var message = "";
            if($('#namespace').val() == 'other'){
@@ -172,6 +175,7 @@
            if(!valid){
                e.preventDefault();
                $('button[type="submit"]').removeAttr('disabled');
+               $('button[type="submit"]').removeClass("canonizerDisable");
                $('.help-block').text('');
                $('#err-other-namespace').text(message);
                //alert("Error: " + message);
@@ -183,10 +187,11 @@
         // $('#submit').click(function(e) {
         //    // e.preventDefault();
            
-            
+             
         // })
         function checkAnyUpdate(){
             $('button[type="submit"]').removeAttr('disabled');
+            $('button[type="submit"]').removeClass("canonizerDisable");
         }
         
         

@@ -157,11 +157,11 @@
                 </select>    
 			</div>
             <div class="form-group">
-                <input type="checkbox" id="is_disabled" name="is_disabled" {{ !empty($camp->is_disabled) ? 'checked' : '' }} value="1" data-toggle="tooltip" data-placement="top" title="Disable the ability to add additional sub camps.">
+                <input type="checkbox" id="is_disabled" onchange="checkAnyUpdate()" name="is_disabled" {{ !empty($camp->is_disabled) ? 'checked' : '' }} value="1" data-toggle="tooltip" data-placement="top" title="Disable the ability to add additional sub camps.">
                 <label for="is_disabled" id="is_disabled_label"> Disable additional sub camps</label>
             </div> 
             <div class="form-group">
-                <input type="checkbox" id="is_one_level" name="is_one_level" {{ !empty($camp->is_one_level) ? 'checked' : '' }} value="1" data-toggle="tooltip" data-placement="top" title="Disable the ability to add additional sub camps beyond direct sub camps.">
+                <input type="checkbox" id="is_one_level" onchange="checkAnyUpdate()"  name="is_one_level" {{ !empty($camp->is_one_level) ? 'checked' : '' }} value="1" data-toggle="tooltip" data-placement="top" title="Disable the ability to add additional sub camps beyond direct sub camps.">
                 <label for="is_one_level" id="is_one_level_label"> Single level camps only </label>
             </div>		
             <?php } ?>
@@ -179,6 +179,7 @@
         
         $(document).ready(function () {
             $('button[type="submit"]').attr('disabled','disabled');
+            $('button[type="submit"]').addClass('canonizerDisable');
             setIsOneLevelCheckBox();
             setIsDisabledCheckBox();
             $("#datepicker").datepicker({
@@ -236,6 +237,7 @@
 
         function checkAnyUpdate(){
             $('button[type="submit"]').removeAttr('disabled');
+            $('button[type="submit"]').removeClass("canonizerDisable");
         }
     </script>
 
