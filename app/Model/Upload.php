@@ -14,7 +14,7 @@ class Upload extends Model
     
     public function getShortCode(){
 
-        return '[[file:'.$this->file_path;
+        return $this->file_path;
         $pos = strrpos( $this->file_name, ".");
         if ($pos === false)
         return false;
