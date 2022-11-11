@@ -2214,4 +2214,9 @@ a.verification-link:active {
     padding-top: 20px;
 }
 
-.canonizerDisable {border: 1px solid #999999; background-color: #cccccc; color: #666666;}
+.canonizerDisable {
+    border: 1px solid #999999; 
+    background-color: #cccccc;  
+    color: #666666; 
+    }
+/*adding css **/
