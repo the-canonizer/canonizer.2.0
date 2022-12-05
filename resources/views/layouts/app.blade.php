@@ -39,6 +39,12 @@
 
     </head>
      <body>
+        <div class="beta_redirect_link_div">
+            <a href="{{env('BETA_URL')}}">
+                <h3><span>Early Access: Click here to experience the new version of Canonizer.com</span>
+                </h3>
+            </a>
+        </div>
         @section('sidebar')
         <nav class="navbar navbar-expand-lg" id="mainNav">
             <a class="navbar-brand" href="{{ url('/') }}">

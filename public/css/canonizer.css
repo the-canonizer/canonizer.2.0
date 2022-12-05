@@ -2220,3 +2220,29 @@ a.verification-link:active {
     color: #666666; 
     }
 /*adding css **/
+
+.beta_redirect_link_div {
+    background-color: #0000ff;
+}
+.beta_redirect_link_div h3 {
+    background-color: #0000ff;
+    text-align: center; padding: 0.25rem 1rem;
+    padding-bottom: 10px;
+    color: #fff;
+    font-size: 18px;
+    font-weight: normal;
+}
+.beta_redirect_link_div h3 span:hover{
+    border-bottom: 1px solid #fff;
+}
+
+@media screen and (max-width:1024px) {
+    .beta_redirect_link_div h3 {
+        font-size: 16px;
+    } 
+}
+@media screen and (max-width:767px) {
+    .beta_redirect_link_div h3 {
+        font-size: 14px;
+    } 
+}
