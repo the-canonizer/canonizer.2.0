@@ -281,8 +281,24 @@
             </div>
             <div class="col-sm-6 sameHeight">
               <div class="videopodcast_div">
-                {!!$videopodcast->html_content!!}
-
+                {{-- {!!$videopodcast->html_content!!} --}}
+                <!--- CSS is from dynamic content --->
+                <style>
+                    .center {
+                      display: block;
+                      margin-left: auto;
+                      margin-right: auto;
+                      width: 50%;
+                    }
+                    </style>
+                    <div>
+                        <h1>What's New at Canonizer</h1>
+                        <div style="padding:10px">
+                        <p>Introducing <a href="https://canonizer.com/videos/consciousness/">It's Not a Hard Problem; It's a Color Problem</a>, the new video that outlines the emerging consensus around the <a href="/topic/88-Theories-of-Consciousness/6-Representational-Qualia#statement">Representational Qualia Theory</a> that is revolutionizing how we understand human consciousness.</p>
+                        <a href="https://canonizer.com/videos/consciousness/"><img src="https://i.ibb.co/Hrt9f60/colorproblem.png" alt="colorproblem" border="10" class="center"></a><br/><br/>
+                        New chapters will be added as they are completed. <a href="https://canonizer.com/videos/consciousness/">Check it out!</a>
+                        </div>
+                    </div>
               </div>
                   
             </div>
