@@ -2229,7 +2229,7 @@ a.verification-link:active {
     text-align: center; padding: 0.25rem 1rem;
     padding-bottom: 10px;
     color: #fff;
-    font-size: 18px;
+    font-size: 15px;
     font-weight: normal;
 }
 .beta_redirect_link_div h3 span:hover{
@@ -2238,11 +2238,11 @@ a.verification-link:active {
 
 @media screen and (max-width:1024px) {
     .beta_redirect_link_div h3 {
-        font-size: 16px;
+        font-size: 13px;
     } 
 }
 @media screen and (max-width:767px) {
     .beta_redirect_link_div h3 {
-        font-size: 14px;
+        font-size: 11px;
     } 
 }
