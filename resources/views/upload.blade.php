@@ -62,7 +62,7 @@
                                             target="_blank" href="{{ $upload->getShortCode() }}"><i
                                                 title="View file" class="fa fa-external-link"></i></a></td>
                                     <td style="word-break:break-all">{{ $upload->getShortCode() }}</td>
-                                    <td>{{ to_local_time($upload->created_at) }}</td>
+                                    <td>{{ (date_format($upload->created_at,'M d , Y, H:i:s')) }}</td>
                                 </tr>
                             @endforeach
                         </table>
