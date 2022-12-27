@@ -69,8 +69,8 @@ class UploadController extends Controller
                 'file_type' => $file->getMimeType(),
                 'folder_id' => (isset($all['folder_id']) && !empty($all['folder_id'])) ? $all['folder_id'] : null,
                 'file_path' => $response['ObjectURL'], 
-                'created_at' => date('Y-m-d H:i:s'),
-                'updated_at' => date('Y-m-d H:i:s')
+                'created_at' => time(),
+                'updated_at' => time()
             ];
             Upload::insert($data);
             $request->session()->flash('success', 'File uploaded successfully!');
